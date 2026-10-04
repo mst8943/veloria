@@ -16,7 +16,7 @@ Hiçbir denge yargısını hissiyatla verme: önce ölç. Proje dosyalarını de
 3. Belirli bir şüpheyi sına: ilgili eylemi tekrar eden ya da ilk hafta uygulayan küçük bir bot yaz (ör. "hafta 1'de X'i görevden al", "her hafta rüşvet", "hiç karar verme"). Bir istismar iddiasını sondajla kanıtlamadan rapora yazma.
 
 ## 2. Değerlendir (kontrol listesi)
-- **Zorluk hedefleri** — ölçüt botu `advice_weighted` (ekrandaki meclis görüşlerini tartar; gerçek oyuncuya en yakın). `visible` görüşsüz zemin, `visible_wise` tavandır; `omniscient` hedef değildir. Bot listesi `--bots=a,b` ile daraltılabilir.
+- **Zorluk hedefleri** — ölçüt botu `advice_weighted` (ekrandaki meclis görüşlerini tartar; gerçek oyuncuya en yakın). `visible` görüşsüz zemin, `visible_wise` tavandır; `omniscient` hedef değildir. Bot listesi `--bots=a,b` ile daraltılabilir. `advice_quiet` alametlere tepki vermeyen teşhis botudur (tepki vermenin değerini ölçmek için advice_weighted ile kıyasla).
   Öneri hedefleri (advice_weighted): Kolay ≈ 70–85%, Normal ≈ 35–55%, Zor ≈ 15–30%. visible her seviyede advice_weighted'ın belirgin altında, visible_wise üstünde kalmalı. idle/random her seviyede ~0 kalmalı ama 15. haftadan önce ölmemeli.
 - **Baskın strateji** — tek bir eylem/döngü diğerlerinden açıkça iyi mi? Eylem başına kazanç tekrarla azalıyor mu (rüşvet, terfi)? Bedelsiz eylem var mı?
 - **Kayıp çeşitliliği** — darbe / saray darbesi / ayaklanma / yetkisiz / elit koalisyonu dağılımı. Tek tür %70'i geçiyorsa sorun.

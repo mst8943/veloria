@@ -49,6 +49,24 @@ func _run() -> void:
 	main._on_flow("gundem")
 	await _shot("1_karar")
 	if "--only-decision" in OS.get_cmdline_user_args():
+		# Darbe krizi kartı + şüphe göstergesi (yalnızca bu kipte: sonraki ekranların durumunu bozmasın).
+		sim0.week = maxi(sim0.week, 20)
+		var ar = sim0.actors.get("arden")
+		if ar != null:
+			ar.signs.append({"w": sim0.week, "text": "Arden'in subayları geç saatlere kadar karargâhta toplanıyor.", "weight": 3, "real": true})
+			ar.signs.append({"w": sim0.week, "text": "Arden kendi adamlarını başkentteki kritik birliklere atadı.", "weight": 3, "real": true})
+			main._sel.clear()
+			main._sel.append("arden")
+		sim0.week = maxi(sim0.week, 20)
+		for a in sim0.actors.values():
+			if a.insider:
+				a.ambition = 200.0
+		sim0._run_cascade()
+		main._refresh()
+		main._style_cards()
+		main._update_info()
+		main._on_flow("gundem")
+		await _shot("1_kriz")
 		quit(0)
 		return
 	main._desk.open()

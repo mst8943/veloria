@@ -14,6 +14,7 @@ const ROLE := {"army": "Ordu", "intel": "İstihbarat", "economy": "Maliye", "med
 	"gate": "Saray", "royal": "Hanedan", "opposition": "Muhalefet", "court": "Yargı"}
 
 const TIPS := {
+	"summon": "Huzura Çağır (1 mesai)\nİz bırakmaz, para istemez. Kişiyi biraz yatıştırır. Komplo kuran çoğu zaman kaçamak konuşur; temiz çıkan birinin hakkındaki dedikodular dağılır. Aynı kişi 4 haftada bir çağrılabilir.",
 	"promote": "Terfi Ettir (1 mesai)\nGüç ve minnet verir; ama onun gücü, hırsı ve sana olan borcun da büyür.",
 	"bribe": "Gizli Ödeme (1 mesai, 5 servet)\nSadakat satın alır, zamanla aşınır. Bir iz bırakır; iz dosyalara düşer.",
 	"cross": "Raporu Doğrula (1 mesai)\nBir kaynağın raporunu başka kaynaklarla kıyaslar. Sonuç gürültülüdür; kaynak karnesine işlenir.",
@@ -67,7 +68,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 Portions of this software are copyright © The FreeType Project (www.freetype.org). All rights reserved.[/font_size][/color]"""
 
 ## Nasıl oynanır penceresi (ana menüdeki bağlantı).
-const HOW_TO := "[b][font_size=26][color=#d6b25e]Nasıl oynanır[/color][/font_size][/b]\n\n• 104 hafta tahtta kal. Haftada [b]4 mesain[/b] var; kararlar, emirler ve operasyonlar mesai harcar.\n• Sayıları göremezsin; yalnızca [b]raporlar[/b] vardır ve herkes yalan söyleyebilir. Korktukça insanlar sana gerçeği söylemez; hepsi aynı cümleyi kurmaya başlar.\n• Verdiğin güç sana dönebilir. Terfi, borç ve gizli ödemeler iz bırakır.\n• Söz vermek kolaydır; vadesi gelince ya tutarsın ya da bedelini ödersin. Aynı makamı iki kişiye vaat etmek er geç duyulur.\n• Herkesin bildiği bir sır, gizli bir sırdan çok daha tehlikelidir.\n• Her kararda [b]meclisten iki kişi[/b] görüş bildirir. Gerekçeleri doğrudur ama seçicidir; [color=#d08a3d]ÇIKARI VAR[/color] olanın önerisi tarafsız olmayabilir.\n• Ertelediğin kararlar iki hafta sonra kendi kendine çözülür.\n• Oyun bittiğinde [b]Hakikat Dosyası[/b] sana kimin ne zaman yalan söylediğini gösterir."
+const HOW_TO := "[b][font_size=26][color=#d6b25e]Nasıl oynanır[/color][/font_size][/b]\n\n• 104 hafta tahtta kal. Haftada [b]4 mesain[/b] var; kararlar, emirler ve operasyonlar mesai harcar.\n• Sayıları göremezsin; yalnızca [b]raporlar[/b] vardır ve herkes yalan söyleyebilir. Korktukça insanlar sana gerçeği söylemez; hepsi aynı cümleyi kurmaya başlar.\n• Verdiğin güç sana dönebilir. Terfi, borç ve gizli ödemeler iz bırakır.\n• Söz vermek kolaydır; vadesi gelince ya tutarsın ya da bedelini ödersin. Aynı makamı iki kişiye vaat etmek er geç duyulur.\n• Herkesin bildiği bir sır, gizli bir sırdan çok daha tehlikelidir.\n• Her kararda [b]meclisten iki kişi[/b] görüş bildirir. Gerekçeleri doğrudur ama seçicidir; [color=#d08a3d]ÇIKARI VAR[/color] olanın önerisi tarafsız olmayabilir.\n• Darbe bir sabah gelmez: önce [b]alametler[/b] görünür, kişi kartında [color=#d08a3d]ŞÜPHELİ[/color] yazar. Bir kısmı dedikodudur; [b]Huzura Çağır[/b] ile yoklayabilirsin. Darbe kapına dayandığında son kararı sen verirsin.\n• Ertelediğin kararlar iki hafta sonra kendi kendine çözülür.\n• Oyun bittiğinde [b]Hakikat Dosyası[/b] sana kimin ne zaman yalan söylediğini gösterir."
 
 ## İlk haftalarda yeni oyuncuya kısa yol gösterme notları (hafta -> metin).
 const ADVICE := {
@@ -455,7 +456,7 @@ func _build_ui() -> void:
 	_act_title.add_theme_color_override("font_color", UIKit.GOLD)
 	av.add_child(_act_title)
 	var groups := [
-		["KAZAN", [["promote", "Terfi"], ["bribe", "Gizli Ödeme"]]],
+		["KAZAN", [["summon", "Huzura Çağır"], ["promote", "Terfi"], ["bribe", "Gizli Ödeme"]]],
 		["SÖZ VER", [["p_0", "Başbakanlık"], ["p_1", "Liman İhalesi"], ["p_2", "Dokunulmazlık"]]],
 		["ÖĞREN", [["cross", "Doğrula"], ["investigate", "Araştır"], ["o_sor", "Soruşturma"]]],
 		["EMRET", [["o_yaz", "Yazılı Emir"], ["o_soz", "Sözlü Emir"], ["o_ima", "İma"]]],
@@ -463,6 +464,7 @@ func _build_ui() -> void:
 		["OPERASYON", [["op_dikkat", "Dikkat Dağıt"], ["op_bol", "Muhalefeti Böl"], ["op_zayif", "Rakibi Zayıflat"]]],
 	]
 	var actions := {
+		"summon": func() -> void: _act(func(id: String) -> String: return Sim.summon(id)),
 		"promote": func() -> void: _act(func(id: String) -> String: return Sim.promote(id)),
 		"bribe": func() -> void: _act(func(id: String) -> String: return Sim.bribe(id)),
 		"cross": func() -> void: _act(func(id: String) -> String: return Sim.cross_check(id)),
@@ -1813,6 +1815,8 @@ func _rebuild_flow() -> void:
 		items.append(["Mesai %d / %d" % [Sim.mesai, Sim.mesai_max], UIKit.GOLD, ""])
 	else:
 		items.append(["Mesai bitti", UIKit.TEXT_DIM, ""])
+	if not Sim.coup_crisis.is_empty():
+		items.append(["DARBE GİRİŞİMİ" if not _mobile else "DARBE", UIKit.DANGER, "gundem"])
 	var late := 0
 	for p in Sim.pending:
 		if int(p["age"]) > 0:
@@ -2039,21 +2043,22 @@ func _rebuild_agenda() -> void:
 		var e: Dictionary = p["event"]
 		var card := PanelContainer.new()
 		# Göz önce ilk karta ve süresi dolanlara gitsin; diğerleri sakin çerçeveli.
-		var lead: bool = pi == 0 or int(p["age"]) > 0
-		var card_box := UIKit.box(Color(UIKit.PANEL, 0.96), UIKit.GOLD if lead else Color(UIKit.GOLD_DIM, 0.45), 8, 12, 2 if lead else 1)
+		var crisis: bool = e.get("crisis", false)
+		var lead: bool = pi == 0 or int(p["age"]) > 0 or crisis
+		var card_box := UIKit.box(Color(UIKit.PANEL, 0.96), UIKit.DANGER if crisis else (UIKit.GOLD if lead else Color(UIKit.GOLD_DIM, 0.45)), 8, 12, 2 if lead else 1)
 		card_box.shadow_color = Color(0, 0, 0, 0.45)
 		card_box.shadow_size = 8 if lead else 3
 		card.add_theme_stylebox_override("panel", card_box)
 		_agenda.add_child(card)
 		if lead:
-			UIKit.ornament(card, UIKit.GOLD, 18, 5)
+			UIKit.ornament(card, UIKit.DANGER if crisis else UIKit.GOLD, 18, 5)
 		_decision_cards.append(card)
 		animated.append(card)
-		if p["age"] > 0 and not _fast():
+		if (p["age"] > 0 or crisis) and not _fast():
 			# Süresi dolmak üzere: çerçeve altınla kırmızı arasında nabız gibi atar.
 			var pulse := card.create_tween().set_loops()
 			pulse.tween_property(card_box, "border_color", UIKit.DANGER, 0.9).set_trans(Tween.TRANS_SINE)
-			pulse.tween_property(card_box, "border_color", UIKit.GOLD, 0.9).set_trans(Tween.TRANS_SINE)
+			pulse.tween_property(card_box, "border_color", Color("ff8a7a") if crisis else UIKit.GOLD, 0.9).set_trans(Tween.TRANS_SINE)
 		var hb := HBoxContainer.new()
 		hb.add_theme_constant_override("separation", 14)
 		card.add_child(hb)
@@ -2086,9 +2091,9 @@ func _rebuild_agenda() -> void:
 		t.add_theme_color_override("font_color", UIKit.GOLD)
 		t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		vb.add_child(t)
-		if p["age"] > 0:
+		if p["age"] > 0 or crisis:
 			var late := Label.new()
-			late.text = "Karar bekliyor — bu hafta çözülmezse kendi kendine çözülecek."
+			late.text = "DARBE GİRİŞİMİ — bu hafta karar vermezsen saray düşer." if crisis else "Karar bekliyor — bu hafta çözülmezse kendi kendine çözülecek."
 			late.add_theme_color_override("font_color", UIKit.DANGER)
 			late.add_theme_font_size_override("font_size", _fs(13))
 			vb.add_child(late)
@@ -2097,6 +2102,13 @@ func _rebuild_agenda() -> void:
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		vb.add_child(d)
 		var council := _add_council(vb, pi)
+		if crisis:
+			var hush := Label.new()
+			hush.text = "Meclis susuyor. Bu kararı yalnız vereceksin."
+			hush.add_theme_font_override("font", UIKit.serif_italic())
+			hush.add_theme_font_size_override("font_size", _fs(15))
+			hush.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+			vb.add_child(hush)
 		for ci in e["choices"].size():
 			var b := Button.new()
 			b.text = "  %s   %s" % [["I", "II", "III", "IV"][mini(ci, 3)], str(e["choices"][ci]["label"])]
@@ -2179,6 +2191,8 @@ func _add_council(parent: VBoxContainer, pending_index: int) -> Dictionary:
 		row.tooltip_text = "%s · %s" % [a.display_name, a.title]
 		if it["stake"]:
 			row.tooltip_text += "\nSeçeneklerden en az biri onu doğrudan etkiliyor. Önerisi tarafsız olmayabilir."
+		if Sim.suspicion_level(a.id) >= 2:
+			row.tooltip_text += "\nSon zamanlarda hakkında alametler var."
 		match str(it["kind"]):
 			"evasive":
 				row.tooltip_text += "\nKaçamak konuşuyor. Korkan bir meclis kralına gerçeği söylemez."
@@ -2221,6 +2235,22 @@ func _add_council(parent: VBoxContainer, pending_index: int) -> Dictionary:
 		if int(it["warn"]) >= 0:
 			notes[int(it["warn"])] = notes.get(int(it["warn"]), []) + ["%s: karşı" % nm]
 	return notes
+
+
+## Hakikat Dosyası'nın sonu: komplonun gerçek kronolojisi ve alametlerin kaçının doğru olduğu.
+func _append_plot(plot: Array, signs: Dictionary) -> void:
+	_end_lies.append_text("\n[b][color=#d9b359][font_size=22]KOMPLO DEFTERİ — perde arkasında ne oldu[/font_size][/color][/b]\n")
+	var real := int(signs.get("real", 0))
+	var rumor := int(signs.get("rumor", 0))
+	if real + rumor > 0:
+		_end_lies.append_text("[color=gray]Son gördüğün alametlerin %d'i gerçekti, %d'i dedikoduydu.[/color]\n\n" % [real, rumor])
+	if plot.is_empty():
+		_end_lies.append_text("Sarayda kimse sana karşı örgütlenmedi.\n")
+		return
+	for l: Dictionary in plot:
+		var t: String = l["text"]
+		var col := "#c0504a" if t.contains("komploya") or t.contains("hazırlığına") or t.contains("darbe girişimini") else ("#7fae7a" if t.contains("çekildi") or t.contains("tutuklandı") or t.contains("halk") else "#d08a3d")
+		_end_lies.append_text("• Hafta %d — [b]%s[/b] [color=%s]%s[/color]\n" % [int(l["w"]), l["name"], col, t])
 
 
 ## Hakikat Dosyası'nın ikinci yarısı: danışmanların önerileri gerçekte ne kadar iyiydi?
@@ -2351,6 +2381,7 @@ func _make_card(a) -> PanelContainer:
 	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(r)
 	card.set_meta("id", a.id)
+	card.set_meta("role", r)
 	card.gui_input.connect(_on_card_input.bind(a.id))
 	# Üzerine gelince portre çerçevesinin içinde hafifçe yakınlaşır.
 	var portrait_img: Control = card_art.get_child(0)
@@ -2391,6 +2422,16 @@ func _style_cards(hover_id := "") -> void:
 		var bg := Color(UIKit.PANEL, 0.9)
 		if a != null and a.moved:
 			border = UIKit.DANGER
+		elif a != null:
+			# Şüphe göstergesi: yalnızca görülen alametlerden (docs/design/darbe_asamalari.md).
+			var lvl := Sim.suspicion_level(id)
+			var rl := card.get_meta("role", null) as Label
+			if rl != null:
+				var role := str(ROLE.get(a.domain, ""))
+				rl.text = UIKit.tr_upper(role if lvl < 2 else "%s · %s" % [role, Sim.SUSPICION_NAMES[lvl]])
+				rl.add_theme_color_override("font_color", [Color(UIKit.GOLD, 0.85), Color(UIKit.GOLD, 0.85), UIKit.AMBER.lightened(0.15), Color("ff8a7a")][lvl])
+			if lvl >= 2:
+				border = Color(UIKit.AMBER if lvl == 2 else UIKit.DANGER, 0.7)
 		if hover_id == id:
 			border = UIKit.GOLD
 			bg = Color(UIKit.PANEL_HI, 0.98)
@@ -2400,7 +2441,7 @@ func _style_cards(hover_id := "") -> void:
 		card.add_theme_stylebox_override("panel", UIKit.box(bg, border, 6, 3, 2 if selected else 1))
 
 
-const PERSON_ACTIONS := ["promote", "bribe", "p_0", "p_1", "p_2", "cross", "investigate", "o_sor", "o_yaz", "o_soz", "o_ima", "blackmail", "dismiss"]
+const PERSON_ACTIONS := ["summon", "promote", "bribe", "p_0", "p_1", "p_2", "cross", "investigate", "o_sor", "o_yaz", "o_soz", "o_ima", "blackmail", "dismiss"]
 const OP_ACTIONS := ["op_dikkat", "op_bol", "op_zayif"]
 
 
@@ -2421,6 +2462,8 @@ func _update_action_states() -> void:
 		if b:
 			var off := busy or id == "" or Sim.mesai < 1
 			if k == "bribe" and Sim.private_wealth < 5.0:
+				off = true
+			if k == "summon" and id != "" and (Sim.summon_wait(id) > 0 or Sim.actors[id].moved):
 				off = true
 			if k.begins_with("p_") and Sim.prize_taken(Sim.PRIZES[int(k.substr(2))]):
 				off = true
@@ -2457,6 +2500,9 @@ func _update_info() -> void:
 		"Güç merkezi olarak ne kadar ağırlığı var. Vazgeçilmez olanlar tehlikelidir."))
 	if a.moved:
 		_traits.add_child(_trait("Düşman", UIKit.DANGER, -1, 0, "Sana karşı fiilen harekete geçti."))
+	elif a.insider:
+		var sl := Sim.suspicion_level(a.id)
+		_traits.add_child(_trait("Tavır · " + str(Sim.SUSPICION_NAMES[sl]), [UIKit.OK, UIKit.GOLD, UIKit.AMBER, UIKit.DANGER][sl], sl, 3, _signs_tip(a)))
 	if a.obligation >= 8.0:
 		_traits.add_child(_trait("Karşılık bekliyor", Color("d9963e"), -1, 0, "Ona verdiklerinin karşılığını bekliyor."))
 	var dim := Color(UIKit.TEXT_DIM, 0.8)
@@ -2473,6 +2519,18 @@ func _update_info() -> void:
 		_traits.add_child(_trait("Söz: %s · hafta %d" % [p["prize"], p["due"]], Color("d9b359"), -1, 0, "Ona verdiğin söz ve vadesi."))
 	if _sel.size() > 1:
 		_traits.add_child(_trait("%d kişi seçili · operasyon çemberi" % _sel.size(), UIKit.GOLD, -1, 0, ""))
+
+
+## Tavır göstergesinin ipucu: son haftalarda görülen alametler.
+func _signs_tip(a) -> String:
+	var lines: Array[String] = []
+	for g: Dictionary in a.signs:
+		if int(g["w"]) > Sim.week - Sim.PLOT_SUS_WINDOW:
+			lines.append("Hafta %d — %s" % [int(g["w"]), g["text"]])
+	if lines.is_empty():
+		return "Son haftalarda hakkında bir alamet görülmedi.\nDarbeyi yalnızca ordu ya da hanedan başlatabilir; ama herkes komploya katılabilir."
+	lines.reverse()
+	return "Son alametler:\n%s\n\nAlametlerin bir kısmı dedikodudur. Huzura Çağır ile yoklayabilirsin." % "\n".join(lines.slice(0, 5))
 
 
 ## Kişi göstergesi: renkli nokta ya da kademe noktaları + kısa metin.
@@ -2557,6 +2615,10 @@ func _on_end(record: Dictionary) -> void:
 	if not council.is_empty() and int(council[0]["misled"]) > 0:
 		_end_text.append_text("[b]Meclis:[/b] seni en çok [color=#d08a3d]%s[/color] yanılttı (%d kez). Ayrıntısı Hakikat Dosyası'nda.\n" % [
 			council[0]["name"], int(council[0]["misled"])])
+	for l: Dictionary in record.get("plot", []):
+		if l["text"] == "komploya katıldı":
+			_end_text.append_text("[b]Komplo:[/b] ilk kıvılcım %d. haftada, [color=#c0504a]%s[/color]. Kronolojisi Hakikat Dosyası'nda.\n" % [int(l["w"]), l["name"]])
+			break
 	var fresh: Array = record.get("new_achievements", [])
 	if not fresh.is_empty():
 		_end_text.append_text("\n[b][color=#d9b359][font_size=22]YENİ BAŞARIM[/font_size][/color][/b]\n")
@@ -2584,6 +2646,7 @@ func _on_end(record: Dictionary) -> void:
 	for l: Dictionary in lies:
 		_end_lies.append_text("• Hafta %d — [b]%s[/b] sana şunu söyledi: \"%s\"\n   [color=gray]Gerçekte:[/color] %s\n\n" % [l["week"], l["name"], l["said"], l["truth"]])
 	_append_council(record.get("council", []))
+	_append_plot(record.get("plot", []), record.get("signs", {}))
 	# Kararlar: hepsi, sondan başa
 	_end_log.clear()
 	_end_log.append_text("[b][color=#d9b359][font_size=22]KARARLARIN[/font_size][/color][/b]   [color=gray]%d kayıt · en yenisi üstte[/color]\n\n" % hist_log.size())

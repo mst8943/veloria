@@ -60,12 +60,14 @@ Mobilde kişiler ve eylemler ayrı bir **Saray** sekmesindedir.
 3. **Korku gerçeği öldürür:** İnsanlar senden korktukça sana kötü haber vermez. Raporlar birbirine benzemeye başlarsa kimse sana gerçeği söylemiyor demektir.
 4. **Ertelemek de karardır:** Bir karar kartını iki hafta cevapsız bırakırsan kendi kendine, çoğu zaman en kötü biçimde çözülür. Süresi dolmak üzere olan kartların çerçevesi kırmızı yanıp söner.
 5. **Meclis fısıldar:** Her karar kartında iki danışman görüş bildirir ("II'yi öneririm: hazineyi rahatlatır."). Gerekçeleri doğrudur ama seçicidir; işlerine gelmeyen bedeli anmazlar. Adının yanında **ÇIKARI VAR** yazan kişiyi seçeneklerden biri doğrudan etkiliyor. Uzman olduğu konuda daha isabetlidir. Bir danışmanın önerileri sürekli ötekilerle çelişiyorsa ona dikkat et. Korkan bir meclis "Takdir sizindir" demeye başlar.
-6. **Eski kararlar geri döner:** Bugün verdiğin bir karar haftalar sonra yeni bir olay olarak karşına çıkabilir.
+6. **Darbe bir sabah gelmez:** Komplo önce **alametler** bırakır (haber şeridinde "ALAMET: …"). Kişi kartında rolün yanında **ŞÜPHELİ** ya da **TEHLİKELİ** yazar; panelde "Tavır" göstergesinin ipucu son alametleri listeler. Alametlerin bir kısmı dedikodudur. Gönlü alınan komplocu geri çekilebilir. Darbe kapına dayandığında son bir **kriz kartı** gelir: sadık birlikleri toplamak, taviz vermek ya da halka seslenmek. Kartın metni muhafızların ve sokağın durumunu anlatır; o hafta karar vermezsen saray düşer. Bir kez taviz verdiysen ikincisine inanılmayabilir.
+7. **Eski kararlar geri döner:** Bugün verdiğin bir karar haftalar sonra yeni bir olay olarak karşına çıkabilir.
 
 ## Eylemler
 
 | Eylem | Ne işe yarar | Bedeli |
 |---|---|---|
+| Huzura Çağır | Kişiyi biraz yatıştırır; komplo kuran çoğu zaman kaçamak konuşur, temiz çıkanın hakkındaki dedikodular dağılır | İz bırakmaz; aynı kişi 4 haftada bir |
 | Terfi | Güç ve minnet verir | Kişi güçlenir, hırslanır, sana borçlanırsın |
 | Gizli Ödeme | Sadakat satın alır | 5 servet; zamanla aşınır, iz bırakır |
 | Doğrula | Bir raporu başka kaynaklarla kıyaslar | Sonuç gürültülüdür |
@@ -97,7 +99,7 @@ Saltanat bittiğinde (104 hafta ya da düşüş) sana bir **ünvan** verilir (De
 - **Özet:** Nasıl bittiği, saltanat süresi, söz sicili, yeni başarımlar ve son kararların.
 - **Grafik:** "Gerçekte ne oldu" grafiği, oyun boyunca gizli kalan gidişatı gösterir.
 - **Tarihçiler:** Saray tarihçisi ve sürgündeki tarihçi saltanatını iki farklı biçimde anlatır.
-- **Hakikat Dosyası:** Kim, ne zaman, sana ne yalan söyledi. Altında **Meclis Sicili**: her danışmanın kaç öneri verdiği, kaçını dinlediğin, kaçında seni yanılttığı ve en pahalı yanıltması.
+- **Hakikat Dosyası:** Kim, ne zaman, sana ne yalan söyledi. Altında **Meclis Sicili** (her danışmanın kaç öneri verdiği, kaçını dinlediğin, kaçında seni yanılttığı) ve **Komplo Defteri** (kim ne zaman huzursuzlandı, komploya katıldı, çekildi; alametlerin kaçı gerçekti).
 - **Kararlar:** Verdiğin ve ertelediğin tüm kararlar, en yenisi üstte.
 - Saltanatın **Hükümdarlık Arşivi**'ne kaydedilir.
 - Kazandığın yeni **başarımlar** duyurulur. 15 başarımın tamamı Arşiv'de listelenir.

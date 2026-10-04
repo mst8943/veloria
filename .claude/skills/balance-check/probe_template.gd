@@ -14,6 +14,7 @@ extends SceneTree
 ##   omniscient  gizli değerleri (rebellion_drive) okur — yalnızca karşılaştırma için, hedef DEĞİL
 ##   advice_naive     visible + kartta ilk danışmanın önerisine uyar
 ##   advice_weighted  visible + meclis oylarını toplar (öneri +1, uyarı −1, ÇIKARI VAR yarım), kaçamakta rastgele
+##   advice_quiet     advice_weighted ama alametlere (şüphe göstergesine) tepki vermez (teşhis için)
 ##   advice_kessler   visible + Kessler konuşuyorsa ona, yoksa advice_weighted gibi (baskın strateji kontrolü)
 
 var sim: Node
@@ -92,7 +93,7 @@ func _play(bot: String) -> void:
 		"omniscient":
 			_act_omniscient()
 		_:
-			_act_visible()
+			_act_visible(bot.begins_with("advice_") and bot != "advice_quiet")
 
 
 # ---------------------------------------------------------------- Kararlar
@@ -103,7 +104,9 @@ func _decide(bot: String) -> void:
 		guard += 1
 		var ev: Dictionary = sim.pending[0]["event"]
 		var ci: int = rng.randi() % ev["choices"].size()
-		if bot in ["visible_wise", "omniscient"]:
+		if ev.get("crisis", false):
+			ci = _crisis_choice(bot, ev, ci)
+		elif bot in ["visible_wise", "omniscient"]:
 			ci = _wise_choice(ev)
 		elif bot.begins_with("advice_"):
 			ci = _advice_choice(bot, sim.advice_for(0), ci)
@@ -116,6 +119,8 @@ func _advice_choice(bot: String, adv: Array, fallback: int) -> int:
 		return fallback
 	if bot == "advice_naive":
 		return int(adv[0]["rec"]) if int(adv[0]["rec"]) >= 0 else fallback
+	if bot == "advice_quiet":
+		bot = "advice_weighted"
 	if bot == "advice_kessler":
 		for it: Dictionary in adv:
 			if it["actor"] == "kessler" and int(it["rec"]) >= 0:
@@ -134,6 +139,25 @@ func _advice_choice(bot: String, adv: Array, fallback: int) -> int:
 			best_v = float(votes[k])
 			best = int(k)
 	return best
+
+
+## Darbe krizi: görüşsüz bot rastgele; danışman botları kart metnindeki ipuçlarına (muhafız/sokak) bakar;
+## bilge bot gerçek olasılıklara bakar. Seçenekler: 0 topla, 1 taviz, 2 halka seslen.
+func _crisis_choice(bot: String, ev: Dictionary, fallback: int) -> int:
+	if bot in ["visible_wise", "omniscient"]:
+		var r: float = sim.crisis_chance("rally")
+		var a: float = sim.crisis_chance("appeal")
+		if maxf(r, a) < 0.4:
+			return 1
+		return 0 if r >= a else 2
+	if not bot.begins_with("advice_"):
+		return fallback
+	var cues: Dictionary = ev.get("cues", {})
+	if int(cues.get("guard", 0)) >= 2:
+		return 0
+	if int(cues.get("street", 0)) >= 2:
+		return 2
+	return 1
 
 
 func _wise_choice(ev: Dictionary) -> int:
@@ -167,7 +191,8 @@ func _act_random() -> void:
 
 
 ## Görünür bilgi: rapor bantları (0 iyi, 2 kötü), "moved" (DÜŞMAN etiketi), dosyalar, servet.
-func _act_visible() -> void:
+## alert: kişi kartındaki şüphe göstergesine tepki verir (en şüpheliyi huzura çağırır; Tehlikeli ise gizli ödeme).
+func _act_visible(alert := false) -> void:
 	var guard := 0
 	while sim.mesai > 0 and guard < 8:
 		guard += 1
@@ -194,11 +219,33 @@ func _act_visible() -> void:
 			else:
 				sim.cross_check(src)
 			continue
-		# 3) Aksi halde sırayla doğrula (bilgi topla).
+		# 3) Boş mesai: alametlere tepki (alert) ya da sırayla doğrula (bilgi topla).
+		if alert:
+			var sus := _most_suspicious()
+			if sus != "" and sim.summon_wait(sus) == 0:
+				sim.summon(sus)
+				continue
+			if sus != "" and sim.suspicion_level(sus) >= 3 and sim.private_wealth >= 5.0:
+				sim.bribe(sus)
+				continue
 		var ids: Array = sim.actors.keys()
 		if ids.is_empty():
 			return
 		sim.cross_check(ids[(sim.week + guard) % ids.size()])
+
+
+## Darbeyi yalnızca ordu ya da hanedan başlatabilir (oyuncu rehberinde ve kartlarda görünür): önce onları izle.
+func _most_suspicious() -> String:
+	var sus := ""
+	for a in sim.actors.values():
+		if a.moved or not a.insider:
+			continue
+		var lvl: int = sim.suspicion_level(a.id)
+		if lvl < 2 or (not (a.military or a.royal) and lvl < 3):
+			continue
+		if sus == "" or sim.suspicion(a.id) > sim.suspicion(sus):
+			sus = a.id
+	return sus
 
 
 func _act_omniscient() -> void:

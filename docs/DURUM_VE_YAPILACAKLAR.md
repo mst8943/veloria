@@ -1,6 +1,6 @@
 # Veloria — Durum ve Yapılacaklar (yeni oturum için devir notu)
 
-Son güncelleme: 2026-10-04 (dördüncü oturum: meclis görüşleri). Dal: `veloria`.
+Son güncelleme: 2026-10-04 (dördüncü oturum: meclis görüşleri + darbe aşamaları). Dal: `veloria`.
 
 ## Yeni oturumda ilk iş
 1. Bu dosyayı oku.
@@ -43,16 +43,24 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
   - Oyun sonu Hakikat Dosyası'nda Meclis Sicili, Özet'te "seni en çok X yanılttı".
   - `Sim.choice_value(fx)` tek doğruluk kaynağı; **sadakat terimi eklendi** (eski formül sadakati saymıyordu; tavan bot %80 → %95).
   - `probe_template`: `advice_naive`, `advice_weighted`, `advice_kessler` botları, `--bots=` süzgeci. `sim_test`: meclis testleri. `ui_shots`: `1_karar`, `5_son_3_meclis`, `--only-decision`.
+- **Dördüncü oturum (devam): Darbe aşamaları ve alametler (Faz 1) — tamamlandı**
+  - Tasarım: `docs/design/darbe_asamalari.md` (§11 ölçümler, §14 uygulamada değişenler).
+  - Komplo aşamalı (sakin → huzursuz → komplocu → hazırlıkta) ve **geri çekilebilir**. Haber şeridinde "ALAMET: …" (bir kısmı dedikodu), kişi kartında ŞÜPHELİ/TEHLİKELİ, panelde "Tavır" göstergesi.
+  - Darbe koşulu oluşunca **kriz kartı**: sadık birlikleri topla / taviz ver (giderek zorlaşır) / halka seslen. Çözülmezse ertesi hafta darbe. Krizde meclis susar.
+  - Yeni eylem **Huzura Çağır** (izsiz; komplocu çoğu zaman ele verir, temiz çıkanın dedikoduları silinir).
+  - Oyun sonu: Komplo Defteri, Özet'te "ilk kıvılcım", kayıp metninde darbe gecesi.
+  - Hatalar: İstihbarat raporu komployu ölçmüyordu; hafta ortası oyun sonunda mesai döngüleri sonsuza dönüyordu (`_end` mesaiyi sıfırlar).
+  - Zorluk yeniden ayarlandı (tablo tasarım belgesi §14).
 
-## Ölçülmüş denge (probe_template, 80 kampanya)
+## Ölçülmüş denge (probe_template, 80 kampanya, darbe aşamalarından sonra)
 | Bot | Kolay | Normal | Zor |
 |---|---|---|---|
-| visible (görüşsüz) | 55% | 16% | 10% |
-| advice_weighted (görüşleri tartar, **ölçüt**) | 86% | 58% | 26% |
-| advice_naive (ilk danışmana uyar) | 91% | 52% | 30% |
-| visible_wise (tavan) | 100% | 95% | 60% |
+| visible (görüşsüz, alametsiz) | 56% | 23% | 15% |
+| advice_weighted (**ölçüt**) | 80% | 48% | 27% |
+| advice_naive | 90% | 61% | 32% |
+| visible_wise (tavan) | 100% | 98% | 88% |
 
-Okunabilirlik sorunu büyük ölçüde çözüldü; zorluk artık hedefin biraz üstünde kolay (Kolay hedef 70–85, Normal 35–55). Kayıpların çoğu hâlâ askerî darbe, kazananlar çoğunlukla "… Kuklası". İkinci yılda olay yoğunluğu ~0,5/hafta.
+Üç seviye de hedef aralığında. Aynı hafta patlayan darbe %25 → ~%5–10. Kayıpların çoğu hâlâ askerî darbe (artık kriz kartından geçerek); ünvanlar çeşitlendi ama "… Kuklası" ağırlıklı. İkinci yılda olay yoğunluğu ~0,5/hafta.
 
 ## Yol haritası (analiz raporundan; kullanıcı henüz faz seçmedi)
 **Faz 0 — Güvence**
@@ -64,7 +72,7 @@ Okunabilirlik sorunu büyük ölçüde çözüldü; zorluk artık hedefin biraz 
 
 **Faz 1 — Okunabilirlik (en yüksek etki)**
 - ~~seçeneklerde yanılabilir danışman görüşleri~~ (yapıldı)
-- darbeyi aşamalı ve görünür yapmak (tohum → işaret → gerilim → kriz), kişi kartında "huzursuz/şüpheli" sinyali
+- ~~darbeyi aşamalı ve görünür yapmak, kişi kartında "huzursuz/şüpheli" sinyali~~ (yapıldı)
 - raporlarda geçen haftaya göre değişim
 - hafta sonu "neler değişti" özeti
 - eylem önizlemesi (maliyet / risk / iz)
@@ -82,12 +90,12 @@ Okunabilirlik sorunu büyük ölçüde çözüldü; zorluk artık hedefin biraz 
 
 **Faz 5 — Cila ve altyapı:** gerçek ses ve müzik, `main.gd`'yi bölmek, artırımlı arayüz güncellemesi, yerelleştirme.
 
-Önerilen sıradaki iş: Faz 1, **darbeyi aşamalı ve görünür yapmak** (meclis görüşündeki "hazır aktör kötü önerir" sinyaliyle doğal bağ). Önce `/design-system`.
-Ardından kısa bir `/balance-check` turuyla zorluk eğrisi (Normal'de advice_weighted ~%45 hedefi; `coup_share`/`ready_drive`) ayarlanmalı.
-Meclis görüşlerinin açık soruları (tasarım belgesi §13): üçüncü görüş satın alma, oyun içi doğruluk geri bildirimi, ÇIKARI VAR'ın açık mı sezdirme mi olacağı. Oyuncu testinden sonra karar verilmeli.
+Önerilen sıradaki iş: Faz 1'in kalanları. **Raporlarda geçen haftaya göre değişim** ve **hafta sonu "neler değişti" özeti** küçük ve yüksek etkili. Ardından **eylem önizlemesi** (maliyet / risk / iz). Arayüz işleri için `/team-ui`.
+Oyuncu testinden sonra karar verilecekler: meclis görüşlerinin açık soruları (danisman_gorusleri.md §13) ve darbe aşamalarınınkiler (darbe_asamalari.md §13). Bir de alamete tepki vermenin botta nötr çıkması: oyuncu "gördüm ama işe yaramadı" derse Huzura Çağır güçlendirilmeli.
+Faz 2 adayı: kayıp çeşitliliği (darbe dışı kayıplar hâlâ nadir).
 
 ## Bilinen küçük sorunlar
-- Sağ üstteki bildirimler masa ve haritanın üstünde kalıyor (menü açılınca temizleniyor).
+- Sağ üstteki bildirimler masa ve haritanın, mobilde haber şeridinin üstünde kalıyor (menü açılınca temizleniyor).
 - Masada soldaki günlük lambadan uzak olduğu için karanlık kalıyor; okunurluk için `desk_lit` `ambient` ya da günlüğün yeri ayarlanabilir.
 - Meclis görüşü metinleri genel kalıplardan kuruluyor (danışmana özgü ses yalnızca kılıf cümlelerinde). İçerik turunda danışman başına söyleyiş eklenebilir.
 - Kullanıcı henüz tam bir saltanat oynamadı; denge, metin ve ses geri bildirimi bekleniyor. Linux build gerçek makinede denenmedi. Android/iOS kasıtlı yapılmadı.
