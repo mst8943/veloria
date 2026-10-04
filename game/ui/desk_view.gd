@@ -18,12 +18,12 @@ const INK := Color("1b1610")
 ## alt kenar, nesnenin masaya değdiği çizgidir (arkadakiler yukarıda, öndekiler aşağıda).
 const LAYOUT := {
 	"harita": [Rect2(630, 175, 340, 290), "Başkent · Kurumlar"],
-	"hanedan": [Rect2(160, 150, 220, 250), "Hanedan"],
-	"kisiler": [Rect2(1330, 205, 250, 235), "Kişiler"],
-	"gunluk": [Rect2(150, 445, 240, 290), "Saltanat Günlüğü"],
+	"hanedan": [Rect2(150, 150, 200, 235), "Hanedan"],
+	"kisiler": [Rect2(1370, 300, 220, 200), "Kişiler"],
+	"gunluk": [Rect2(130, 440, 240, 290), "Saltanat Günlüğü"],
 	"gundem": [Rect2(470, 500, 300, 240), "Gündem"],
 	"dosyalar": [Rect2(845, 500, 230, 240), "Gizli Dosyalar"],
-	"medya": [Rect2(1150, 480, 330, 260), "Medya"],
+	"medya": [Rect2(1140, 560, 330, 220), "Medya"],
 }
 
 ## id -> [dönüş (derece), yükseklik (gölgenin boyu), dikey kısalma (masaya yatan kâğıt)]

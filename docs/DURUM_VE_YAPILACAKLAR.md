@@ -1,40 +1,87 @@
 # Veloria — Durum ve Yapılacaklar (yeni oturum için devir notu)
 
-Son güncelleme: 2026-10-04 (ikinci oturum). Dal: `veloria`. Çalışma ağacındaki `.mcp.json`, `BECKETT_SETUP.md`, `project.godot` değişiklikleri (Beckett token'ının kaldırılması) kullanıcınındır; commit'lere katılmadı, dokunma. Push YOK: `origin` Beckett'in kendi deposu; kullanıcı kendi deposuna yedeklemek isterse yeni repo açıp `veloria` dalını oraya göndermeli (öneri yapıldı, cevap gelmedi).
+Son güncelleme: 2026-10-04 (üçüncü oturumun sonu). Dal: `veloria`.
+
+## Yeni oturumda ilk iş
+1. Bu dosyayı oku.
+2. `CLAUDE.md` (kullanıcının çalışma kuralları: önce incele, tasarla, sonra kodla; kalite > hız).
+3. `.claude/skills/game-design/VELORIA.md`: mimari, olay şeması, komutlar, tuzaklar, ölçülmüş denge.
+4. Skill'ler: `docs/SKILL_KULLANIMI.md` (hangi iş için hangi skill).
+
+## Dokunulmayacaklar
+- Çalışma ağacındaki `.mcp.json`, `BECKETT_SETUP.md`, `project.godot` değişiklikleri (Beckett token'ının kaldırılması), `CLAUDE.md` ve `.cursor/` kullanıcınındır. Commit'e katma.
+- Godot `--import` ya da export `.mcp.json` portunu değiştirebiliyor (8772 gibi). İşlemden sonra `"url": "http://127.0.0.1:8770/mcp"` olarak geri al; token satırını geri ekleme.
+- Push YOK: `origin` Beckett'in deposu. Kullanıcıya kendi deposunu açması önerildi, henüz cevap yok. Kodun uzak yedeği yok.
 
 ## Proje
-Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyonu. Kullanıcı: Mesut Canturk. Görselleri kullanıcı ChatGPT/Imagen ile üretiyor; ben prompt veriyorum (`ART_PROMPTS.md`). Görselleri rastgele adla `art/` köküne ya da bir klasöre atıyor; ben içeriğe bakıp (kontakt sayfası) doğru ada taşıyorum, `.import` ayarlarına boyut sınırı + lossy + mipmap uyguluyorum.
+Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyonu. Kullanıcı: Mesut Canturk. Görselleri kullanıcı ChatGPT/Imagen ile üretiyor, prompt'ları ben veriyorum (`ART_PROMPTS.md`). Görselleri rastgele adla `art/` içine atıyor; yerleştirme süreci `/asset-spec` skill'inde tanımlı.
 
-## Çalıştırma ve test
+## Çalıştırma ve test (ayrıntı: VELORIA.md > Komutlar)
 - Godot console: `C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe`
-- Testler: `--headless --path . --script res://tests/sim_test.gd` (denge+sistemler), `pacing_test.gd`, `cause_probe.gd`
-- Arayüz otomatik oynatma: `-- --autoplay`, `--mobile`, `--full` (Kolay seviyede 104 haftayı arayüzden oynar)
-- Ekran görüntüsü: pencereli `--path . --script res://tests/ui_shots.gd -- --out=KLASÖR [--mobile]` (görüntüleri Read ile incele)
-- Build: `--export-release "Windows Desktop"|Linux|Web` → `dist/windows|linux|web`; zip'ler `dist/release/`. Export sonrası `.mcp.json` portu 8770'e geri alınmalı.
-- Beckett MCP (127.0.0.1:8770) editör açıkken çalışır; araçlar oturumda görünmezse HTTP JSON-RPC ile çağır. Dev bayrakları (`veloria/dev_*`) project.godot'ta KAPALI kalmalı.
-- Tuzaklar: `class_name` yerine `preload`; web'de ◆ ⏳ → gibi glifler kutu çıkar; görünmez Control'ler tıklama yutar (Beckett `ui_snapshot` → `occluded_by` ile tara); yapay `push_input` tıklama testi çalışmıyor; PowerShell'de çok satırlı commit mesajı için `-m` kullan; testler oyuncu kaydına dokunmaz (`save_path`, `record_chronicle`, `autosave`).
+- `sim_test.gd` (TEST: OK), `pacing_test.gd`, `-- --autoplay` (`--mobile`, `--full`), `ui_shots.gd` (pencereli ekran görüntüsü; `--only-desk`, `--only-world`, `--mobile`)
+- Denge sondajı: `.claude/skills/balance-check/probe_template.gd` (`-- --n=40 --all-diffs`)
+- İçe aktarma (editör kapalıyken): `--headless --path . --import`
 
 ## Yapılanlar (tamamı commit'li)
-Simülasyon: gizli durum+raporlar+yalan, ortak bilgi, eşik kaskadı/darbe, emir kanalları, operasyonlar, şantaj/araştır/kırmızı çizgi, söz defteri, zorluk (Kolay/Normal/Zor), 71 olay (zincirleme dahil), başarımlar (15), tarihçiler, hakikat dosyası+grafik, arşiv, otomatik kayıt, Türkçe ek uyumu (`Sim.ek`).
-Arayüz: tema, sinematikler (açılış/final/hafta geçişi/mühür), Çalışma Masası, Başkent Haritası, Medya Merkezi (2 gazete + TV), mobil yatay düzen, kısayollar, ayarlar, Hakkında, açılış ekranı, tüm görseller yerleşik (71 olayın hepsi görselli, art/desk, art/city_map.png).
-Son tur (274e6df): düğme hiyerarşisi (Ghost/Danger/Choice), gruplu eylem paneli, sır kartları, bildirim yığını, iki sütun rapor.
-Belgeler: `docs/OYUNCU_REHBERI.md`, `docs/GELISTIRICI_REHBERI.md`, `docs/ARAYUZ_PLANI.md`.
+- **Simülasyon:** gizli durum + yalan söyleyen raporlar, ortak bilgi ve eşik kaskadı/darbe, emir kanalları, operasyonlar, şantaj/araştır/kırmızı çizgi, söz defteri, 3 zorluk, 71 olay, 15 başarım, tarihçiler, Hakikat Dosyası + grafik, arşiv, otomatik kayıt.
+- **Arayüz turları 1–3:**
+  - akış şeridi
+  - sekmeli oyun sonu
+  - sayfalı menü (4 düğme, Yeni Oyun'da zorluk, Ayarlar ayrı sayfada)
+  - masada ışık ve gölge (`desk_lit` / `desk_shadow` gölgelendiricileri)
+  - masa etiketlerinin altında tek satır özet
+  - kişi paneli göstergeleri
+  - ortak görsel imza (`UIKit.band_style`, `ornament`, `divider`, `caps`, `_section`)
+  - tam dolu portre kartları
+- **Bu oturum:**
+  - Proje analizi raporu verildi (aşağıdaki "Yol haritası" ondan çıktı).
+  - 11 projeye özel skill eklendi (`.claude/skills/`, `docs/SKILL_KULLANIMI.md`).
+  - **Boş masa arka planı yerleşti:** yeni `art/bg_desk.png`, eskisi `art/_arsiv/bg_desk_esyali.png`; `desk_view.gd` `LAYOUT` yeni masaya göre ayarlandı.
 
-Arayüz turu 2 (2026-10-04, ikinci oturum): 1, 4, 5 yapıldı —
-- Akış şeridi (`_rebuild_flow`, `_flow_chip`, `_on_flow`): alt satırda Haftayı Bitir'in solunda; mesai, bekleyen/acil karar, okunmamış medya, vadesi gelen söz, yayılan sır. Parçalar tıklanınca Gündem/Medya/Dosyalar'a götürür.
-- Oyun sonu sekmeleri (`_end_tabs`, `_end_page`): Özet / Grafik / Tarihçiler / Hakikat Dosyası (n) / Kararlar; grafik sekme ilk açılınca çizilir. "Ana Menü" düğmesi eklendi.
-- Menü sayfaları (`_menu_page`, `_menu_show_page`): ana sayfa 4 düğme (Devam Et|Oyuna Dön, Yeni Oyun, Ayarlar, Çıkış — web'de Çıkış gizli) + bağlantılar (Nasıl Oynanır, Arşiv, Hakkında). Zorluk "Yeni Oyun" sayfasında, ayarlar ayrı sayfada. Esc alt sayfadan ana sayfaya döner.
-- Ekran görüntüsü aracı: `tests/ui_shots.gd` (pencereli; `-- --out=KLASÖR [--mobile]`), dev ayarlarını yalnızca bellekte açar.
+## Ölçülmüş denge (Normal, 40 kampanya, probe_template)
+| Bot | Kazanma | Ort. hafta | Not |
+|---|---|---|---|
+| idle | 0% | 25 | hep askerî darbe |
+| visible (kararlar rastgele) | 17% | 53 | gerçek oyuncuya en yakın |
+| visible_wise (kararlarda etkiyi tahmin eder) | 75% | 94 | |
+| omniscient | 12% | 85 | hedef değil |
 
-Arayüz turu 3 (görsel cila):
-- Masa: nesneler masanın lambasıyla aydınlatılıyor (`desk_lit.gdshader`, `LAMP_UV`) ve silüetlerinden gölge düşürüyor (`desk_shadow.gdshader`: geniş düşen gölge + dar temas gölgesi). Yerleşim/dönüş/yükseklik `LAYOUT` ve `FEEL`'de. Üzerine gelince nesne kalkar, gölgesi yumuşar. Rozetler nesneden kalktı; etiketin yanında küçük işaret + altında tek satır özet (`_summary`).
-- Kişi paneli: göstergeler (`_trait`): güç 3 kademe, düşman, karşılık bekliyor, zayıf nokta/kırmızı çizgi (bilinmiyorsa "?"), doğrulama karnesi, sözler. Bilgi miktarı eskisiyle aynı.
-- Ortak imza: `UIKit.band_style()` (ana ekran, harita, medya başlık bandı), `UIKit.ornament()` (köşebentler), `UIKit.divider()` (masa ve menü başlık ayracı), `UIKit.caps()` (aralıklı başlık fontu), `_section()` bölüm başlıkları. Portre kartları tam dolu, ad portrenin üstünde.
+Kararların kalitesi sonucu belirliyor ama oyuncu seçeneklerin etkisini göremiyor. Kayıpların çoğu askerî darbe. Kazananlar çoğunlukla "… Kuklası" ünvanı alıyor. İkinci yılda olay yoğunluğu ~0,5/hafta.
 
-## Yapılacaklar (öncelik sırası)
-1. Boş masa arka planı bekleniyor (prompt: `ART_PROMPTS.md` > "Boş masa arka planı"). Gelince `art/bg_desk.png` yerine koy (eskisini `art/_arsiv`), `LAYOUT`'u yeni görselde nesneler masaya otursun diye ince ayarla, `LAMP_UV`'yi lambaya göre düzelt.
-Not: menü açılınca sağ üstteki bildirimler temizleniyor (eskiden menünün üstünde kalıyordu).
-Diğer: kullanıcı henüz tam bir saltanat oynamadı; geri bildirimi (denge, metin, ses) bekleniyor. Sentezlenmiş sesleri kimse dinlemedi ("sesler iyi" dedi). Linux build gerçek makinede denenmedi. Android/iOS kasıtlı yapılmadı (kullanıcı: APK gerekmez).
+## Yol haritası (analiz raporundan; kullanıcı henüz faz seçmedi)
+**Faz 0 — Güvence**
+- kendi deposunu açması (kullanıcı)
+- kayıt dosyasına `version` alanı ve göç (`/tech-debt`)
+- `events.json` doğrulayıcı
+- ~~boş masa~~ (yapıldı)
+- ~~görünür bilgi botu~~ (probe_template'te var; `sim_test`'e de eklenebilir)
+
+**Faz 1 — Okunabilirlik (en yüksek etki)**
+- seçeneklerde yanılabilir danışman görüşleri
+- darbeyi aşamalı ve görünür yapmak (tohum → işaret → gerilim → kriz), kişi kartında "huzursuz/şüpheli" sinyali
+- raporlarda geçen haftaya göre değişim
+- hafta sonu "neler değişti" özeti
+- eylem önizlemesi (maliyet / risk / iz)
+
+**Faz 2 — Strateji derinliği ve denge**
+- kayıp çeşitliliği
+- rüşvete azalan getiri
+- hedefli "birbirine düşür"
+- aktörlerin kendi hamleleri
+- denge hedefleri `/balance-check`'te
+
+**Faz 3 — Kampanya ve içerik:** dönemler, ikinci yıl için 20–30 olay, karakter hikâye yayları, rejim tipi ve buna bağlı final tehdidi.
+
+**Faz 4 — Belgedeki büyük sistemler:** devlet bütçesi/kapasitesi, patronaj/oligark.
+
+**Faz 5 — Cila ve altyapı:** gerçek ses ve müzik, `main.gd`'yi bölmek, artırımlı arayüz güncellemesi, yerelleştirme.
+
+Önerilen başlangıç: Faz 1, "seçeneklerde danışman görüşü". Önce `/design-system` ile tasarlanmalı.
+
+## Bilinen küçük sorunlar
+- Sağ üstteki bildirimler masa ve haritanın üstünde kalıyor (menü açılınca temizleniyor).
+- Masada soldaki günlük lambadan uzak olduğu için karanlık kalıyor; okunurluk için `desk_lit` `ambient` ya da günlüğün yeri ayarlanabilir.
+- Kullanıcı henüz tam bir saltanat oynamadı; denge, metin ve ses geri bildirimi bekleniyor. Linux build gerçek makinede denenmedi. Android/iOS kasıtlı yapılmadı.
 
 ## Kullanıcı tercihleri
-Sormadan ilerle ("bana hiç sorma"); sonuçta kısa Türkçe özet; commit'e izin verdi; push etme.
+Sormadan ilerle; büyük özellikte önce tasarla (`CLAUDE.md`). Sonuçta kısa Türkçe özet. Commit'e izin var, push yok.
