@@ -18,6 +18,9 @@ const TIPS := {
 	"o_sor": "Soruşturma (1 mesai)\nİstihbarat gibi güçlü birine verilirse sorunlu isimleri ipucu olarak getirebilir.",
 	"investigate": "Araştır (1 mesai)\nSeçilen kişinin önce zayıf noktasını, sonra kırmızı çizgisini öğrenmeye çalışır. İstihbarat güçlüyse şans artar.",
 	"blackmail": "Şantaj (1 mesai)\nZayıf noktası bilinen birini korkuyla bağlar, borcunu siler. Ama iz bırakır, hırsını büyütür; dürüst biri ifşa edebilir.",
+	"p_0": "Söz: Başbakanlık (1 mesai)\nHemen sadakat getirir. Tutarsan çok güçlenir; senin gücünden de pay alır. Yalnızca bir kişiye verilebilir.",
+	"p_1": "Söz: Liman İhalesi (1 mesai)\nHemen sadakat getirir. Tutarsan zenginleşir, sana da komisyon düşer. Yalnızca bir kişiye verilebilir.",
+	"p_2": "Söz: Dokunulmazlık (1 mesai)\nHemen sadakat getirir. Tutarsan korkusu azalır. Aynı sözü iki kişiye vermek er geç duyulur.",
 	"op_dikkat": "Dikkat Dağıt (2 mesai)\nSahte bir kriz yaratıp huzursuzluğu azaltır. Çember büyüdükçe başarı da, sızıntı riski de artar.",
 	"op_bol": "Muhalefeti Böl (2 mesai)\nMuhalefet kanatlarını birbirine düşürür.",
 	"op_zayif": "Rakibi Zayıflat (2 mesai)\nEn güçlü kişinin itibarını kırar. Kim yaptığını tahmin eder.",
@@ -73,6 +76,7 @@ var _curtain: ColorRect
 var _curtain_title: Label
 var _curtain_sub: Label
 var _mobile := false
+var _promise_list: RichTextLabel
 var _multi_btn: Button
 var _hint_label: RichTextLabel
 const HINT_DEFAULT := "[color=#8f7a45]Bir eylemin üzerine gel ya da dokun: ne yaptığını ve bedelini burada görürsün.[/color]"
@@ -217,6 +221,11 @@ func _build_ui() -> void:
 	_add_btn(frow, "leak", "Sızdır", func() -> void: _fact_act("leak"))
 	_add_btn(frow, "hush", "Bastır", func() -> void: _fact_act("hush"))
 	_add_btn(frow, "destroy", "Kanıtı Yok Et", func() -> void: _fact_act("destroy"))
+	files.add_child(_caption("SÖZ DEFTERİ"))
+	_promise_list = RichTextLabel.new()
+	_promise_list.bbcode_enabled = true
+	_promise_list.custom_minimum_size.y = 130
+	files.add_child(_promise_list)
 	_journal = RichTextLabel.new()
 	_journal.name = "Günlük"
 	_journal.bbcode_enabled = true
@@ -272,12 +281,12 @@ func _build_ui() -> void:
 	irow.add_theme_constant_override("separation", 10)
 	detail.add_child(irow)
 	_portrait_box = Control.new()
-	_portrait_box.custom_minimum_size = Vector2(80, 80)
+	_portrait_box.custom_minimum_size = Vector2(72, 72)
 	irow.add_child(_portrait_box)
 	_info = RichTextLabel.new()
 	_info.bbcode_enabled = true
 	_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_info.custom_minimum_size.y = 80
+	_info.custom_minimum_size.y = 72
 	irow.add_child(_info)
 
 	right.add_child(_caption("EMİRLER VE EYLEMLER"))
@@ -303,8 +312,17 @@ func _build_ui() -> void:
 	_add_btn(ops, "op_dikkat", "Dikkat Dağıt", func() -> void: _op("dikkat"))
 	_add_btn(ops, "op_bol", "Muhalefeti Böl", func() -> void: _op("bol"))
 	_add_btn(ops, "op_zayif", "Rakibi Zayıflat", func() -> void: _op("zayiflat"))
+	right.add_child(_caption("SÖZ VER   ·   seçili kişiye, 1 mesai   ·   vadesi gelince karşılığını ister"))
+	var prow := HBoxContainer.new()
+	prow.add_theme_constant_override("separation", 6)
+	right.add_child(prow)
+	var pkeys := ["p_0", "p_1", "p_2"]
+	for i in Sim.PRIZES.size():
+		var prize: String = Sim.PRIZES[i]
+		_add_btn(prow, pkeys[i], prize, func() -> void: _act(func(id: String) -> String: return Sim.promise(id, prize)))
 	var hint_panel := PanelContainer.new()
 	hint_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	hint_panel.custom_minimum_size.y = 48
 	hint_panel.add_theme_stylebox_override("panel", UIKit.box(Color(0, 0, 0, 0.35), Color(UIKit.GOLD_DIM, 0.2), 6, 10))
 	right.add_child(hint_panel)
 	_hint_label = RichTextLabel.new()
@@ -531,7 +549,7 @@ func _build_menu() -> void:
 	how.bbcode_enabled = true
 	how.fit_content = true
 	how.scroll_active = false
-	how.text = "[b]Nasıl oynanır[/b]\n• 104 hafta tahtta kal. Haftada [b]4 mesain[/b] var; kararlar, emirler ve operasyonlar mesai harcar.\n• Sayıları göremezsin; yalnızca [b]raporlar[/b] vardır ve herkes yalan söyleyebilir. Korktukça insanlar sana gerçeği söylemez; hepsi aynı cümleyi kurmaya başlar.\n• Verdiğin güç sana dönebilir. Terfi, borç ve gizli ödemeler iz bırakır.\n• Herkesin bildiği bir sır, gizli bir sırdan çok daha tehlikelidir.\n• Ertelediğin kararlar iki hafta sonra kendi kendine çözülür.\n• Oyun bittiğinde [b]Hakikat Dosyası[/b] sana kimin ne zaman yalan söylediğini gösterir."
+	how.text = "[b]Nasıl oynanır[/b]\n• 104 hafta tahtta kal. Haftada [b]4 mesain[/b] var; kararlar, emirler ve operasyonlar mesai harcar.\n• Sayıları göremezsin; yalnızca [b]raporlar[/b] vardır ve herkes yalan söyleyebilir. Korktukça insanlar sana gerçeği söylemez; hepsi aynı cümleyi kurmaya başlar.\n• Verdiğin güç sana dönebilir. Terfi, borç ve gizli ödemeler iz bırakır.\n• Söz vermek kolaydır; vadesi gelince ya tutarsın ya da bedelini ödersin. Aynı makamı iki kişiye vaat etmek er geç duyulur.\n• Herkesin bildiği bir sır, gizli bir sırdan çok daha tehlikelidir.\n• Ertelediğin kararlar iki hafta sonra kendi kendine çözülür.\n• Oyun bittiğinde [b]Hakikat Dosyası[/b] sana kimin ne zaman yalan söylediğini gösterir."
 	box.add_child(how)
 	how.visible = not _mobile  # mobilde ekranı doldurmasın; düğmeyle açılır
 	var b_new := _menu_btn("Yeni Oyun", _start_new, true)
@@ -950,6 +968,23 @@ func _refresh() -> void:
 		_fact_ids.append(f["id"])
 		var state := "KAMUYA AÇIK" if f.get("public", false) else ("dedikodu" if f.get("rumor", false) else "gizli — %d kişi biliyor" % f["knowers"].size())
 		_fact_list.add_item("%s   [%s]" % [f["text"], state])
+	_promise_list.clear()
+	if Sim.promises.is_empty():
+		_promise_list.append_text("[color=gray]Henüz kimseye söz vermedin. Saray sekmesinde/sağda bir kişi seçip 'Söz Ver' kullanabilirsin.[/color]")
+	for p in Sim.promises:
+		var nm: String = Sim.actors[p["actor"]].display_name if Sim.actors.has(p["actor"]) else str(p["actor"])
+		var st := ""
+		match str(p["state"]):
+			"active":
+				st = "bekliyor (vade: hafta %d)" % p["due"]
+			"kept":
+				st = "[color=#7fae7a]tutuldu[/color]"
+			"broken":
+				st = "[color=#c0504a]bozuldu[/color]"
+			_:
+				st = "[color=gray]geçersiz[/color]"
+		var warn := "  [color=#c0504a]· çelişki duyuldu[/color]" if p["exposed"] and p["state"] == "active" else ""
+		_promise_list.append_text("• [b]%s[/b] — %s: %s%s\n" % [nm, p["prize"], st, warn])
 	_update_info()
 
 
@@ -1115,7 +1150,7 @@ func _rebuild_cards() -> void:
 
 func _make_card(a) -> PanelContainer:
 	var card := PanelContainer.new()
-	card.custom_minimum_size = Vector2(108, 146) if not _mobile else Vector2(150, 190)
+	card.custom_minimum_size = Vector2(108, 124) if not _mobile else Vector2(150, 190)
 	card.mouse_filter = Control.MOUSE_FILTER_STOP
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	card.tooltip_text = "%s\n%s" % [a.display_name, a.title]
@@ -1123,7 +1158,7 @@ func _make_card(a) -> PanelContainer:
 	v.add_theme_constant_override("separation", 3)
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.add_child(v)
-	var card_art := _initial_art(a.id, Vector2(92, 100) if not _mobile else Vector2(130, 128), 40)
+	var card_art := _initial_art(a.id, Vector2(92, 80) if not _mobile else Vector2(130, 128), 40)
 	card_art.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	v.add_child(card_art)
 	var n := Label.new()
@@ -1193,13 +1228,18 @@ func _update_info() -> void:
 		_info.append_text("[color=gray]Bir kişi seç. Sayıları göremezsin; yalnızca davranışlarından tahmin edebilirsin.[/color]")
 		return
 	var a = Sim.actors[id]
-	var art := _initial_art(a.id, Vector2(80, 80), 40)
+	var art := _initial_art(a.id, Vector2(72, 72), 36)
 	_portrait_box.add_child(art)
 	var weight := "ikinci planda" if a.power < 40.0 else ("etkili" if a.power < 65.0 else "vazgeçilmez ve tehlikeli")
 	var debt := "" if a.obligation < 8.0 else "\nSana verdiklerinin karşılığını bekliyor."
 	var k: Dictionary = Sim.karne.get(a.id, {"ok": 0, "bad": 0})
 	var notes := "" if k["ok"] + k["bad"] == 0 else "\n[color=gray]Doğrulama notu: %d kez örtüştü, %d kez çelişti.[/color]" % [k["ok"], k["bad"]]
 	var more := "" if _sel.size() < 2 else "\n[color=#d9b359]%d kişi seçili (operasyon çemberi).[/color]" % _sel.size()
+	var plist: Array[String] = []
+	for p in Sim.active_promises_of(a.id):
+		plist.append("%s (vade: hafta %d)" % [p["prize"], p["due"]])
+	if not plist.is_empty():
+		more += "\n[color=#d9b359]Ona verdiğin sözler:[/color] " + ", ".join(plist)
 	var weak: String = a.weak_point if a.known_weak else "[color=gray]bilinmiyor[/color]"
 	var red: String = a.red_line if a.known_red else "[color=gray]bilinmiyor[/color]"
 	var secrets := "\n[color=#c0504a]Zayıf noktası:[/color] %s   [color=#c0504a]Kırmızı çizgisi:[/color] %s" % [weak, red]
@@ -1234,7 +1274,7 @@ func _on_end(record: Dictionary) -> void:
 	_end_bg.texture = _art(bg_path)
 	_end_text.clear()
 	var verdict := "Tahtını korudun." if record["survived"] else "Tahtını kaybettin."
-	_end_text.append_text("[b][font_size=38]Kral %s[/font_size][/b]\n[font_size=22]%s[/font_size]\n\n[b]Ünvanın:[/b] [color=#d9b359]%s[/color]\n%s\n[b]En güçlü isim:[/b] %s\n\n" % [record["king"], verdict, record["title"], record["cause"], record["top_actor"]])
+	_end_text.append_text("[b][font_size=38]Kral %s[/font_size][/b]\n[font_size=22]%s[/font_size]\n\n[b]Ünvanın:[/b] [color=#d9b359]%s[/color]\n%s\n[b]En güçlü isim:[/b] %s\n[b]Söz sicili:[/b] %s\n\n" % [record["king"], verdict, record["title"], record["cause"], record["top_actor"], record.get("promises", "")])
 	_end_text.append_text("[b][color=#d9b359][font_size=22]HAKİKAT DOSYASI — sana söylenmeyenler[/font_size][/color][/b]\n")
 	if record["lies"].is_empty():
 		_end_text.append_text("Kimse sana belirgin biçimde yalan söylemedi. Ya da hepsini fark ettin.\n")

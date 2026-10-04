@@ -69,6 +69,37 @@ func _init() -> void:
 	sim.mesai = 4
 	print("  ", sim.order("arden", "bastir", "yazili"))
 
+	# Söz defteri: aynı ödülü iki kişiye ver, birini tut -> diğeri bozulur
+	sim.new_game(9, 1)
+	sim.mesai = 4
+	print("Söz: ", sim.promise("arden", "Başbakanlık"))
+	print("Söz: ", sim.promise("halden", "Başbakanlık"))
+	print("Söz (tekrar): ", sim.promise("arden", "Başbakanlık"))
+	var guard_w := 0
+	while sim.pending.filter(func(x: Dictionary) -> bool: return str(x["event"]["id"]).begins_with("soz_")).is_empty() and guard_w < 15:
+		sim.mesai = 4
+		sim.end_week()
+		guard_w += 1
+	var soz_idx := -1
+	for i in sim.pending.size():
+		if str(sim.pending[i]["event"]["id"]).begins_with("soz_"):
+			soz_idx = i
+			break
+	if soz_idx == -1:
+		push_error("söz kartı gelmedi")
+		ok = false
+	else:
+		sim.mesai = 4
+		print("  Kart: ", sim.pending[soz_idx]["event"]["title"], " -> ", sim.resolve_decision(soz_idx, 0))
+		var states: Array = sim.promises.map(func(p: Dictionary) -> String: return "%s:%s" % [p["actor"], p["state"]])
+		print("  Durumlar: ", states)
+		if not (states.has("arden:kept") or states.has("halden:kept")) or not (states.has("arden:broken") or states.has("halden:broken")):
+			push_error("söz tut/boz zinciri hatalı")
+			ok = false
+	sim.save_game()
+	sim.load_game()
+	print("  Kayıttan sonra söz sayısı: ", sim.promises.size())
+
 	# Hiç tetiklenmeyen olaylar
 	var never: Array = []
 	for e in sim._events:

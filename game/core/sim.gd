@@ -22,8 +22,13 @@ const DIFFICULTY := [
 	{"name": "Zor", "mesai": 4, "grace": 10, "coup_share": 0.57, "income": 0.65, "ready_drive": 31.0},
 ]
 
+## Vaat edilebilecek ödüller: her biri yalnızca bir kişiye gerçekten verilebilir.
+const PRIZES := ["Başbakanlık", "Liman İhalesi", "Dokunulmazlık"]
+
 var difficulty := 1
 var mesai_max := MESAI_PER_WEEK
+var promises: Array = []     # {id, actor, prize, made, due, delays, state, asked, exposed}
+var _extra_msgs: Array[String] = []  # bir kararın yan etkileri (oyuncuya hemen gösterilir)
 
 var rng := RandomNumberGenerator.new()
 var week := 1
@@ -76,8 +81,9 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 	truth_log.clear()
 	karne.clear()
 	weekly_news.clear()
+	promises.clear()
 	stats = {"ops": 0, "bribes": 0, "promotes": 0, "leaks": 0, "dismissals": 0, "written": 0, "hints": 0, "checks": 0,
-		"investigations": 0, "blackmails": 0}
+		"investigations": 0, "blackmails": 0, "promises": 0, "kept": 0, "broken": 0}
 	ended = false
 	record = {}
 	coup_leader = ""
@@ -124,7 +130,7 @@ func save_game() -> bool:
 	var data := {"week": week, "mesai": mesai, "king": king_strength, "unrest": unrest, "economy": economy,
 		"opp": opposition, "wealth": private_wealth, "actors": a_data, "facts": facts, "flags": flags,
 		"fired": fired_events, "history": history, "pending": pending, "truth": truth_log, "karne": karne,
-		"stats": stats, "rng": rng.state, "seed": rng.seed, "diff": difficulty}
+		"stats": stats, "rng": rng.state, "seed": rng.seed, "diff": difficulty, "promises": promises}
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -161,6 +167,7 @@ func load_game() -> bool:
 	truth_log = d["truth"]
 	karne = d["karne"]
 	stats = d["stats"]
+	promises = d.get("promises", [])
 	rng.state = d["rng"]
 	_generate_reports()
 	changed.emit()
@@ -456,6 +463,143 @@ func destroy_evidence(fact_id: String) -> String:
 	return "Girişim fark edildi; dosya hakkında dedikodu arttı."
 
 
+# ---------------------------------------------------------------- Söz defteri
+
+func prize_taken(prize: String) -> bool:
+	for p in promises:
+		if p["prize"] == prize and p["state"] == "kept":
+			return true
+	return false
+
+
+func active_promises_of(id: String) -> Array:
+	var out: Array = []
+	for p in promises:
+		if p["actor"] == id and p["state"] == "active":
+			out.append(p)
+	return out
+
+
+## Söz ver: hemen sadakat getirir; vadesi gelince karşılığı istenir.
+func promise(id: String, prize: String) -> String:
+	var a: Actor = actors[id]
+	if prize_taken(prize):
+		return "%s artık verilemez; zaten birine verildi." % prize
+	for p in active_promises_of(id):
+		if p["prize"] == prize:
+			return "%s'e bunu zaten vaat ettin." % a.display_name
+	if not spend_mesai():
+		return _no_mesai()
+	stats["promises"] = int(stats.get("promises", 0)) + 1
+	promises.append({"id": "%s_%d_%d" % [id, PRIZES.find(prize), week], "actor": id, "prize": prize,
+		"made": week, "due": week + 6 + rng.randi_range(0, 4), "delays": 0, "state": "active",
+		"asked": false, "exposed": false})
+	a.loyalty["career"] = float(a.loyalty["career"]) + 12.0
+	a.ambition += 2.0
+	changed.emit()
+	return "%s'e %s sözü verdin. Gözleri parladı; vadesi geldiğinde hatırlatacak." % [a.display_name, prize]
+
+
+func _find_promise(pid: String) -> Dictionary:
+	for p in promises:
+		if p["id"] == pid:
+			return p
+	return {}
+
+
+func _tick_promises() -> void:
+	# Aynı ödülü birden çok kişiye vaat etmek: er geç duyulur.
+	for prize in PRIZES:
+		var group: Array = []
+		for p in promises:
+			if p["prize"] == prize and p["state"] == "active" and actors.has(p["actor"]):
+				group.append(p)
+		if group.size() < 2:
+			continue
+		var all_exposed := true
+		for p in group:
+			if not p["exposed"]:
+				all_exposed = false
+		if all_exposed or rng.randf() > 0.12:
+			continue
+		var names: Array[String] = []
+		for p in group:
+			p["exposed"] = true
+			var a: Actor = actors[p["actor"]]
+			names.append(a.display_name)
+			a.loyalty["career"] = maxf(0.0, float(a.loyalty["career"]) - 8.0)
+			a.ambition += 5.0
+		_add_fact("celiski_%s_%d" % [PRIZES.find(prize), week], "Aynı makamın birden çok kişiye vaat edilmesi (%s)" % prize,
+			"king", 20, group.map(func(p: Dictionary) -> String: return p["actor"]), 1)
+		weekly_news.append("KULİS: %s aynı sözü aldıklarını öğrendi: %s." % [" ve ".join(names), prize])
+	# Vadesi gelen sözler karar kartına dönüşür.
+	for p in promises:
+		if p["state"] != "active" or p["asked"] or week < int(p["due"]):
+			continue
+		if not actors.has(p["actor"]) or actors[p["actor"]].moved:
+			p["state"] = "void"
+			continue
+		p["asked"] = true
+		var a: Actor = actors[p["actor"]]
+		var rival := ""
+		for q in promises:
+			if q != p and q["prize"] == p["prize"] and q["state"] == "active" and actors.has(q["actor"]):
+				rival = actors[q["actor"]].display_name
+		var text := "%s, %d. haftada verdiğin '%s' sözünü hatırlatıyor. Bekleyişi sabırlı, ama sonsuz değil." % [a.display_name, p["made"], p["prize"]]
+		if rival != "":
+			text += " Aynı sözü %s'e de vermiştin." % rival
+		pending.append({"age": 0, "event": {"id": "soz_" + str(p["id"]), "title": "%s sözünü hatırlatıyor" % a.display_name, "text": text,
+			"choices": [
+				{"label": "Sözü tut: %s" % p["prize"], "text": "%s sözünü aldı. Bunu unutmayacak." % a.display_name, "fx": {"promise_keep": p["id"]}},
+				{"label": "Biraz daha zaman iste", "text": "%s bekleyecek. Ama hevesi azaldı." % a.display_name, "fx": {"promise_delay": p["id"]}},
+				{"label": "Sözden dön", "text": "%s yüzüne bakmadan çıktı. Saray bunu konuşacak." % a.display_name, "fx": {"promise_break": p["id"]}}],
+			"ignore": {"text": "Söz cevapsız kaldı; bozulmuş sayıldı.", "fx": {"promise_break": p["id"]}}}})
+		weekly_news.append("SÖZ: %s karşılığını istiyor." % a.display_name)
+
+
+func _keep_promise(p: Dictionary) -> void:
+	if p.is_empty() or p["state"] != "active":
+		return
+	p["state"] = "kept"
+	stats["kept"] = int(stats.get("kept", 0)) + 1
+	var a: Actor = actors.get(p["actor"])
+	if a != null:
+		a.loyalty["career"] = float(a.loyalty["career"]) + 6.0
+		a.obligation = maxf(0.0, a.obligation - 10.0)
+		match p["prize"]:
+			"Başbakanlık":
+				a.power += 16.0
+				king_strength -= 2.0
+			"Liman İhalesi":
+				a.power += 8.0
+				a.loyalty["money"] = float(a.loyalty["money"]) + 8.0
+				private_wealth += 4.0
+			_:
+				a.power += 6.0
+				a.fear = maxf(0.0, a.fear - 15.0)
+	# Aynı ödülü bekleyen diğerleri ihanete uğramış sayılır.
+	for q in promises:
+		if q != p and q["prize"] == p["prize"] and q["state"] == "active":
+			_break_promise(q, true)
+
+
+func _break_promise(p: Dictionary, betrayed := false) -> void:
+	if p.is_empty() or p["state"] != "active":
+		return
+	p["state"] = "broken"
+	stats["broken"] = int(stats.get("broken", 0)) + 1
+	var a: Actor = actors.get(p["actor"])
+	if a != null:
+		a.loyalty["career"] = maxf(0.0, float(a.loyalty["career"]) - 15.0)
+		a.ambition += 12.0 if betrayed else 9.0
+		_add_fact("bozulan_soz_%s" % p["id"], "%s'e verilip tutulmayan söz (%s)" % [a.display_name, p["prize"]], "king", 15, [a.id], 1)
+		facts["bozulan_soz_%s" % p["id"]]["common"] = 0.2
+		if betrayed:
+			_extra_msgs.append("%s, kendisine vaat edilen %s başkasına verildiği için öfkeli." % [a.display_name, p["prize"]])
+	for o: Actor in actors.values():
+		o.perceived_king -= 2.0
+
+
 ## Görevden alma: kral hakkında çok şey bilen biri karşı atak yapar.
 func dismiss(id: String) -> String:
 	var a: Actor = actors[id]
@@ -489,10 +633,14 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 		return _no_mesai()
 	pending.remove_at(pending_index)
 	flags["%s_%d" % [e["id"], choice_index]] = week
+	_extra_msgs.clear()
 	_apply_effects(fx)
 	history.append("Hafta %d — %s → %s" % [week, e["title"], ch["label"]])
 	changed.emit()
-	return str(ch.get("text", ""))
+	var out := str(ch.get("text", ""))
+	if not _extra_msgs.is_empty():
+		out += " " + " ".join(_extra_msgs)
+	return out
 
 
 func _apply_effects(fx: Dictionary) -> void:
@@ -515,6 +663,23 @@ func _apply_effects(fx: Dictionary) -> void:
 	for fid in _as_array(fx.get("leak", [])):
 		if facts.has(fid):
 			facts[fid]["common"] = 1.0
+	# Söz defteri kararları
+	if fx.has("promise_keep"):
+		_keep_promise(_find_promise(str(fx["promise_keep"])))
+	if fx.has("promise_break"):
+		_break_promise(_find_promise(str(fx["promise_break"])))
+	if fx.has("promise_delay"):
+		var pd := _find_promise(str(fx["promise_delay"]))
+		if not pd.is_empty() and pd["state"] == "active":
+			pd["delays"] = int(pd["delays"]) + 1
+			if int(pd["delays"]) > 2:
+				_break_promise(pd)
+			else:
+				pd["due"] = week + 3
+				pd["asked"] = false
+				var ad: Actor = actors.get(pd["actor"])
+				if ad != null:
+					ad.loyalty["career"] = maxf(0.0, float(ad.loyalty["career"]) - 4.0)
 	# Bir aktörü oyundan çıkar (istifa, sürgün, emeklilik).
 	for aid in _as_array(fx.get("remove", [])):
 		if actors.has(aid):
@@ -558,6 +723,7 @@ func end_week() -> void:
 	_world_tick()
 	_decay_facts()
 	_fire_events()
+	_tick_promises()
 	_run_cascade()
 	_generate_reports()
 	_check_end()
@@ -802,7 +968,8 @@ func _end(survived: bool) -> void:
 		title = _survivor_title(top)
 	record = {"survived": survived, "title": title, "weeks": week - 1, "cause": cause,
 		"top_actor": top.display_name if top else "", "history": history.duplicate(),
-		"lies": _top_lies(), "king": KING_NAME}
+		"lies": _top_lies(), "king": KING_NAME,
+		"promises": "%d söz verdin: %d tutuldu, %d bozuldu." % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))]}
 	game_ended.emit(record)
 
 
@@ -819,6 +986,10 @@ func _survivor_title(top: Actor) -> String:
 		return "Altın Kral"
 	if economy < 25.0:
 		return "Devleti Tüketen"
+	if int(stats.get("broken", 0)) >= 3:
+		return "Vaatler Kralı"
+	if int(stats.get("kept", 0)) >= 2 and int(stats.get("broken", 0)) == 0:
+		return "Sözünün Eri"
 	if int(stats.get("blackmails", 0)) >= 3:
 		return "Sırların Efendisi"
 	if stats["ops"] >= 4:
