@@ -110,6 +110,7 @@ var _curtain: ColorRect
 var _curtain_title: Label
 var _curtain_sub: Label
 var _mobile := false
+var _queued_end := false
 var _mesai_box: HBoxContainer
 var _curtain_img: TextureRect
 var _curtain_skip := false
@@ -536,13 +537,19 @@ func _update_mesai_pips() -> void:
 		return
 	var want := Sim.mesai_max
 	while _mesai_box.get_child_count() < want:
-		var pip := Panel.new()
+		# Kapsayıcılar çocuklarının dönüşünü sıfırlar; elması kapsayıcı olmayan bir tutucuya koy.
 		var s := 13 if not _mobile else 16
-		pip.custom_minimum_size = Vector2(s, s)
+		var holder := Control.new()
+		holder.custom_minimum_size = Vector2(s + 4, s + 4)
+		holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var pip := Panel.new()
+		pip.size = Vector2(s, s)
+		pip.position = Vector2(2, 2)
 		pip.pivot_offset = Vector2(s, s) / 2.0
 		pip.rotation = deg_to_rad(45.0)
 		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_mesai_box.add_child(pip)
+		holder.add_child(pip)
+		_mesai_box.add_child(holder)
 	while _mesai_box.get_child_count() > want:
 		var last := _mesai_box.get_child(_mesai_box.get_child_count() - 1)
 		_mesai_box.remove_child(last)
@@ -553,7 +560,7 @@ func _update_mesai_pips() -> void:
 		sb.border_color = UIKit.GOLD
 		sb.set_border_width_all(2)
 		sb.anti_aliasing = true
-		(_mesai_box.get_child(i) as Panel).add_theme_stylebox_override("panel", sb)
+		(_mesai_box.get_child(i).get_child(0) as Panel).add_theme_stylebox_override("panel", sb)
 
 
 func _build_fx() -> void:
@@ -1162,6 +1169,7 @@ func _after_load(message: String) -> void:
 	_last_mesai = -1
 	_last_wealth = -1
 	_reveal = true
+	_queued_end = false
 	_log(message)
 	_refresh()
 	if not _fast():
@@ -1173,7 +1181,11 @@ func _on_save() -> void:
 
 
 func _end_week_pressed() -> void:
-	if _busy or Sim.ended:
+	if Sim.ended:
+		return
+	if _busy:
+		# Bir animasyon sürerken basıldı: yok sayma, animasyon bitince uygula.
+		_queued_end = true
 		return
 	if _instant:
 		Sim.end_week()
@@ -1330,6 +1342,9 @@ func _choose(pending_index: int, choice_index: int) -> void:
 	var text := Sim.resolve_decision(pending_index, choice_index)
 	if text != "":
 		_log(text)
+	if _queued_end:
+		_queued_end = false
+		_end_week_pressed()
 
 
 # ---------------------------------------------------------------- Görünüm
