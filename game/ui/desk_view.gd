@@ -408,9 +408,15 @@ func _summary(id: String) -> String:
 			for a in Sim.actors.values():
 				if a.moved:
 					enemies += 1
-			var t := "%d mesai kaldı" % Sim.mesai if Sim.mesai > 0 else "Mesai bitti"
+			var t := "%d mesai" % Sim.mesai if Sim.mesai > 0 else "Mesai bitti"
+			var sus := 0
+			for a in Sim.actors.values():
+				if not a.moved and Sim.suspicion_level(a.id) >= 2:
+					sus += 1
 			if enemies > 0:
 				t += " · %d düşman" % enemies
+			if sus > 0:
+				t += " · %d şüpheli" % sus
 			return t
 		"gunluk":
 			var due := _due_promises()

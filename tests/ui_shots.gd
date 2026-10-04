@@ -15,7 +15,8 @@ func _initialize() -> void:
 	DirAccess.make_dir_recursive_absolute(out)
 	# Yalnızca bellekte: project.godot'a yazılmaz.
 	ProjectSettings.set_setting("veloria/dev_autostart", true)
-	ProjectSettings.set_setting("veloria/dev_skip_weeks", 3)
+	# --guide: ilk hafta (yol gösterici görünür); varsayılan: 4. hafta
+	ProjectSettings.set_setting("veloria/dev_skip_weeks", 0 if "--guide" in OS.get_cmdline_user_args() else 3)
 	main = (load("res://game/ui/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
 	_run.call_deferred()
@@ -48,6 +49,12 @@ func _run() -> void:
 	main._refresh()
 	main._on_flow("gundem")
 	await _shot("1_karar")
+	# Mobilde kişiler ve eylemler ayrı "Saray" sekmesinde.
+	var saray: Control = main._tabs.get_node_or_null("Saray")
+	if saray != null:
+		main._select_tab(saray)
+		await _shot("1_saray")
+		main._on_flow("gundem")
 	if "--only-decision" in OS.get_cmdline_user_args():
 		# Darbe krizi kartı + şüphe göstergesi (yalnızca bu kipte: sonraki ekranların durumunu bozmasın).
 		sim0.week = maxi(sim0.week, 20)

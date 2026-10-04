@@ -18,7 +18,7 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
 
 ## Çalıştırma ve test (ayrıntı: VELORIA.md > Komutlar)
 - Godot console: `C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe`
-- `sim_test.gd` (TEST: OK), `pacing_test.gd`, `-- --autoplay` (`--mobile`, `--full`), `ui_shots.gd` (pencereli ekran görüntüsü; `--only-desk`, `--only-decision`, `--only-world`, `--mobile`)
+- `sim_test.gd` (TEST: OK), `pacing_test.gd`, `-- --autoplay` (`--mobile`, `--full`), `ui_shots.gd` (pencereli ekran görüntüsü; `--only-desk`, `--only-decision`, `--only-world`, `--mobile`, `--guide` = 1. hafta)
 - Denge sondajı: `.claude/skills/balance-check/probe_template.gd` (`-- --n=40 --all-diffs`, `--bots=advice_weighted,visible`)
 - İçe aktarma (editör kapalıyken): `--headless --path . --import`
 
@@ -51,6 +51,10 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
   - Oyun sonu: Komplo Defteri, Özet'te "ilk kıvılcım", kayıp metninde darbe gecesi.
   - Hatalar: İstihbarat raporu komployu ölçmüyordu; hafta ortası oyun sonunda mesai döngüleri sonsuza dönüyordu (`_end` mesaiyi sıfırlar).
   - Zorluk yeniden ayarlandı (tablo tasarım belgesi §14).
+- **Dördüncü oturum (devam): Ana ekran sadeleştirme (UX turu 4)**
+  - Kullanıcı: "ilk sayfa kalabalık; özellik silme, gerekirse taşı; ilk girince ne yapacağını anlasın". Ayrıntı: `docs/ux/ana_ekran_sadelestirme.md`.
+  - Eylemler kategori sekmelerinde; raporlar sağ sütunda kaynaklarının altında; ilk 3 haftada "Bu hafta ne yapmalı?" yol göstericisi; kompakt bildirim ve kâtip notu; mobil kartlar kısaldı.
+  - Analiz raporunun durumlu sürümü: `docs/YOL_HARITASI.md` (yapılan / kalan).
 
 ## Ölçülmüş denge (probe_template, 80 kampanya, darbe aşamalarından sonra)
 | Bot | Kolay | Normal | Zor |
@@ -62,7 +66,7 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
 
 Üç seviye de hedef aralığında. Aynı hafta patlayan darbe %25 → ~%5–10. Kayıpların çoğu hâlâ askerî darbe (artık kriz kartından geçerek); ünvanlar çeşitlendi ama "… Kuklası" ağırlıklı. İkinci yılda olay yoğunluğu ~0,5/hafta.
 
-## Yol haritası (analiz raporundan; kullanıcı henüz faz seçmedi)
+## Yol haritası (analiz raporundan; durumlu tam sürüm: `docs/YOL_HARITASI.md`)
 **Faz 0 — Güvence**
 - kendi deposunu açması (kullanıcı)
 - kayıt dosyasına `version` alanı ve göç (`/tech-debt`)

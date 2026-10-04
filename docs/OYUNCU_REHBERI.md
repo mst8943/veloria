@@ -80,7 +80,11 @@ Mobilde kişiler ve eylemler ayrı bir **Saray** sekmesindedir.
 | Gizli Operasyon | 1–3 kişiyle dikkat dağıt, muhalefeti böl, rakibi zayıflat | 2 mesai; çember büyüdükçe sızıntı riski artar |
 | Söz Ver | Başbakanlık, ihale ya da dokunulmazlık vaat eder | Vadesi gelince ya tutarsın ya bedelini ödersin |
 
-Bir eylemin üzerine gelince ya da dokununca ne yaptığı sağ alttaki bilgi çubuğunda görünür.
+Eylemler, Eylemler panelinde altı sekmede toplanır (KAZAN · SÖZ VER · ÖĞREN · EMRET · BASKI · OPERASYON); bir sekmeye tıklayınca o gruptaki eylemler açılır. Bir eylemin üzerine gelince ne yaptığı, eylemden sonra da sonucu panelin altında görünür. Operasyon için birden fazla kişi seçmek gerekirse OPERASYON sekmesindeki **Çoklu seçim**i aç (ya da Ctrl ile tıkla).
+
+**İlk haftalarda** gündemin üstünde "Bu hafta ne yapmalı?" yol göstericisi durur: 1 Kararını ver → 2 Raporları oku → 3 Bir kişiye eylem → 4 Haftayı bitir. Sıradaki adım altınla vurgulanır; bir adıma tıklamak seni ilgili yere götürür. İpuçları Ayarlar'dan kapatılabilir.
+
+**Raporlar** masaüstünde güç merkezlerinin altında listelenir; bir rapora tıklamak o kişiyi seçer. Sol kenarın rengi raporun ne *söylediğini* gösterir (yeşil iyi, amber tedirgin, kırmızı kötü); gerçeği değil.
 
 ## Sırlar ve ortak bilgi
 
