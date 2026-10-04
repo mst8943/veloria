@@ -22,6 +22,15 @@ config/features=PackedStringArray("4.6")
 
 BeckettRuntime="*res://addons/beckett/runtime/mcp_runtime.gd"
 
+[beckett]
+
+autostart=true
+auto_write_client_config=true
+token="beckett_secure_token_2026"
+readonly=false
+confirm_destructive=true
+effort=2
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/beckett/plugin.cfg")
