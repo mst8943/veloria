@@ -1,0 +1,72 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
+[application]
+
+config/name="Veloria"
+config/description="Veloria: reaktif bir siyaset ve iktidar simülasyonu."
+config/version="1.0.0"
+run/main_scene="res://game/ui/main.tscn"
+config/features=PackedStringArray("4.7")
+boot_splash/image="res://art/splash.png"
+config/icon="res://art/portraits/king.png"
+boot_splash/minimum_display_time=1200
+boot_splash/bg_color="#0e0d11"
+
+[autoload]
+
+BeckettRuntime="*uid://do68dqybesb7r"
+Sim="*res://game/core/sim.gd"
+Sfx="*res://game/core/sfx.gd"
+
+[beckett]
+
+autostart=true
+auto_write_client_config=true
+readonly=false
+confirm_destructive=true
+effort=4
+effort_schema=2
+dock_revealed=true
+
+[display]
+
+window/size/viewport_width=1600
+window/size/viewport_height=900
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=4
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/beckett/plugin.cfg")
+
+[veloria]
+
+dev_autostart=false
+dev_skip_weeks=0.0
+dev_press_end=false
+dev_end=false
+dev_mobile=false
+dev_tab=0.0
+dev_select=""
+dev_event=""
+dev_modal=""
+dev_intro=false
+dev_choose=false
+dev_media=""
+dev_desk=false
+dev_city=""

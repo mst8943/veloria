@@ -1,0 +1,27 @@
+# Godot
+.godot/
+*.import
+.import/
+
+# Veloria: görsel/font içe aktarma ayarları (boyut sınırı, sıkıştırma) saklanmalı
+!art/**/*.import
+!game/**/*.import
+# Kullanılmayan görseller (kolajlar, yedekler)
+art/_arsiv/
+
+# Editor / OS
+*.log
+.DS_Store
+.vscode/
+Thumbs.db
+
+# Pack output
+dist/
+
+# Junk / temp
+nul
+*.tmp
+.tmp_findings/
+
+# Registry publish tool (downloaded per-release, never ship it)
+mcp-publisher.exe
