@@ -35,6 +35,40 @@ func _init() -> void:
 		print("   olay sayısı/kampanya: %.1f" % (float(fired_total) / n))
 		fired_total = 0
 
+	# Zorluk seviyeleri (dikkatli ve rastgele bot)
+	for diff in [0, 2]:
+		for policy in ["random", "careful"]:
+			var w2 := 0
+			var wk2 := 0
+			for s in range(1, 41):
+				sim.new_game(s, diff)
+				rngb.seed = s * 7 + 3
+				while not sim.ended:
+					_play_week(policy)
+					sim.end_week()
+				w2 += 1 if sim.record["survived"] else 0
+				wk2 += sim.record["weeks"]
+			print("[%s / %s] kazanma %d/40, ort. hafta %.1f" % [sim.DIFFICULTY[diff]["name"], policy, w2, wk2 / 40.0])
+	sim.new_game(1, 1)
+
+	# Araştırma ve şantaj
+	sim.new_game(8, 1)
+	var tries := 0
+	while not sim.actors["halden"].known_weak and tries < 30:
+		sim.mesai = 4
+		sim.investigate("halden")
+		tries += 1
+	print("Araştırma: %d denemede zayıf nokta bulundu = %s" % [tries, sim.actors["halden"].known_weak])
+	var fear_before: float = sim.actors["halden"].fear
+	sim.mesai = 4
+	print("  ", sim.blackmail("halden"))
+	if not sim.actors["halden"].known_weak or sim.facts.is_empty():
+		push_error("şantaj/araştırma çalışmadı")
+		ok = false
+	print("  Halden korku: %.0f -> %.0f" % [fear_before, sim.actors["halden"].fear])
+	sim.mesai = 4
+	print("  ", sim.order("arden", "bastir", "yazili"))
+
 	# Hiç tetiklenmeyen olaylar
 	var never: Array = []
 	for e in sim._events:

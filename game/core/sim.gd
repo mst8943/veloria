@@ -15,6 +15,15 @@ const ACTORS_PATH := "res://game/data/actors.json"
 const EVENTS_PATH := "res://game/data/events.json"
 const SAVE_PATH := "user://veloria_save.txt"
 const GOOD_DOMAINS_HIGH := ["economy"]  # bu alanlarda yüksek değer iyidir
+## Zorluk: haftalık mesai, darbe koruma süresi, darbe için gereken güç payı, gelir, hazır olma eşiği.
+const DIFFICULTY := [
+	{"name": "Kolay", "mesai": 5, "grace": 26, "coup_share": 0.72, "income": 1.1, "ready_drive": 44.0},
+	{"name": "Normal", "mesai": 4, "grace": 12, "coup_share": 0.6, "income": 0.8, "ready_drive": 34.0},
+	{"name": "Zor", "mesai": 4, "grace": 10, "coup_share": 0.57, "income": 0.65, "ready_drive": 31.0},
+]
+
+var difficulty := 1
+var mesai_max := MESAI_PER_WEEK
 
 var rng := RandomNumberGenerator.new()
 var week := 1
@@ -42,13 +51,16 @@ var coup_leader := ""
 var _events: Array = []
 
 
-func new_game(seed_value: int = 0) -> void:
+func new_game(seed_value: int = 0, diff: int = -1) -> void:
 	if seed_value == 0:
 		rng.randomize()
 	else:
 		rng.seed = seed_value
+	if diff >= 0:
+		difficulty = clampi(diff, 0, DIFFICULTY.size() - 1)
+	mesai_max = int(_diff("mesai"))
 	week = 1
-	mesai = MESAI_PER_WEEK
+	mesai = mesai_max
 	king_strength = 60.0
 	unrest = 30.0
 	economy = 55.0
@@ -64,7 +76,8 @@ func new_game(seed_value: int = 0) -> void:
 	truth_log.clear()
 	karne.clear()
 	weekly_news.clear()
-	stats = {"ops": 0, "bribes": 0, "promotes": 0, "leaks": 0, "dismissals": 0, "written": 0, "hints": 0, "checks": 0}
+	stats = {"ops": 0, "bribes": 0, "promotes": 0, "leaks": 0, "dismissals": 0, "written": 0, "hints": 0, "checks": 0,
+		"investigations": 0, "blackmails": 0}
 	ended = false
 	record = {}
 	coup_leader = ""
@@ -81,6 +94,10 @@ func new_game(seed_value: int = 0) -> void:
 	_fire_events()
 	_generate_reports()
 	changed.emit()
+
+
+func _diff(key: String) -> float:
+	return float(DIFFICULTY[difficulty][key])
 
 
 func _load_json(path: String) -> Array:
@@ -107,7 +124,7 @@ func save_game() -> bool:
 	var data := {"week": week, "mesai": mesai, "king": king_strength, "unrest": unrest, "economy": economy,
 		"opp": opposition, "wealth": private_wealth, "actors": a_data, "facts": facts, "flags": flags,
 		"fired": fired_events, "history": history, "pending": pending, "truth": truth_log, "karne": karne,
-		"stats": stats, "rng": rng.state, "seed": rng.seed}
+		"stats": stats, "rng": rng.state, "seed": rng.seed, "diff": difficulty}
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -122,7 +139,7 @@ func load_game() -> bool:
 	var d: Variant = str_to_var(f.get_as_text())
 	if not d is Dictionary:
 		return false
-	new_game(int(d.get("seed", 1)))
+	new_game(int(d.get("seed", 1)), int(d.get("diff", 1)))
 	week = d["week"]
 	mesai = d["mesai"]
 	king_strength = d["king"]
@@ -213,6 +230,13 @@ func order(id: String, task: String, channel: String) -> String:
 			stats["hints"] += 1
 			# Hırslı biri imayı aşırı yorumlar, korkak biri hiç uygulamaz.
 			fidelity = clampf(0.3 + a.ambition / 100.0 + rng.randf_range(-0.2, 0.4) - a.red_line_penalty(task), 0.0, 1.5)
+	# Kırmızı çizgi: açık emirle çiğnenirse gönülsüz uygulanır ve küskünlük bırakır.
+	var crossed := a.crosses_red_line(task) and channel != "ima"
+	if crossed:
+		fidelity *= 0.5
+		a.ambition += 5.0
+		a.loyalty["ideology"] = maxf(0.0, float(a.loyalty["ideology"]) - 6.0)
+		a.known_red = true
 	var text := ""
 	match task:
 		"bastir":
@@ -233,8 +257,63 @@ func order(id: String, task: String, channel: String) -> String:
 			text = "%s soruşturmayı başlattı." % a.display_name
 		_:
 			text = "%s emri aldı." % a.display_name
+	if crossed:
+		text = "%s emri kırmızı çizgisini aştığı için gönülsüzce, yarım yamalak uyguladı. Bunu sana yazdı. (Kırmızı çizgisi: %s)" % [a.display_name, a.red_line]
 	changed.emit()
 	return text
+
+
+## Araştır: seçilen kişinin önce zayıf noktasını, sonra kırmızı çizgisini öğrenmeye çalışır.
+## İstihbarat (Voss) ne kadar güçlüyse şans o kadar yüksek; ama Voss da öğrendiğini saklar.
+func investigate(id: String) -> String:
+	var a: Actor = actors[id]
+	if a.known_weak and a.known_red:
+		return "%s hakkında öğrenilecek yeni bir şey kalmadı." % a.display_name
+	if not spend_mesai():
+		return _no_mesai()
+	stats["investigations"] = int(stats.get("investigations", 0)) + 1
+	var voss: Actor = actors.get("voss")
+	var chance := 0.35
+	if voss != null and not voss.moved and voss.id != id:
+		chance = 0.45 + voss.power / 200.0
+		voss.power += 1.5
+	if rng.randf() > chance:
+		changed.emit()
+		return "%s hakkındaki araştırma sonuç vermedi. İzler soğuk." % a.display_name
+	if not a.known_weak:
+		a.known_weak = true
+		changed.emit()
+		return "%s'in zayıf noktası bulundu: %s. Artık şantaj mümkün." % [a.display_name, a.weak_point]
+	a.known_red = true
+	changed.emit()
+	return "%s'in asla geçmeyeceği çizgi: %s." % [a.display_name, a.red_line]
+
+
+## Şantaj: zayıf noktası bilinen birini korkuyla bağlar. Borcunu siler ama hırsını büyütür ve iz bırakır.
+## Dürüst ve korkusuz biri ise şantajı ifşa edebilir.
+func blackmail(id: String) -> String:
+	var a: Actor = actors[id]
+	if not a.known_weak:
+		return "Önce %s'in zayıf noktasını bulmalısın (Araştır)." % a.display_name
+	if not spend_mesai():
+		return _no_mesai()
+	stats["blackmails"] = int(stats.get("blackmails", 0)) + 1
+	a.blackmailed += 1
+	var fid := "santaj_%s_%d" % [id, week]
+	_add_fact(fid, "%s'e yapılan şantaj" % a.display_name, "king", 30, [id], 1)
+	var backfire := a.honesty * 0.35 + (0.25 if a.fear < 20.0 else 0.0) + 0.1 * (a.blackmailed - 1)
+	if rng.randf() < backfire:
+		facts[fid]["common"] = 0.45
+		a.ambition += 10.0
+		a.fear = maxf(0.0, a.fear - 5.0)
+		changed.emit()
+		return "%s boyun eğmedi; şantajı ifşa etmekle tehdit ediyor. Konuşulmaya başlandı bile." % a.display_name
+	a.fear += 25.0
+	a.loyalty["fear"] = float(a.loyalty["fear"]) + 15.0
+	a.obligation = maxf(0.0, a.obligation - 10.0)
+	a.ambition += 6.0
+	changed.emit()
+	return "%s ne demek istediğini anladı. Artık senden korkuyor; korku ise sadakatin en kırılgan biçimi." % a.display_name
 
 
 func _reveal_hint(investigator: Actor, fidelity: float) -> void:
@@ -474,7 +553,7 @@ func end_week() -> void:
 			keep.append(p)
 	pending = keep
 	week += 1
-	mesai = MESAI_PER_WEEK
+	mesai = mesai_max
 	weekly_news.clear()
 	_world_tick()
 	_decay_facts()
@@ -507,7 +586,7 @@ func _world_tick() -> void:
 	unrest = clampf(unrest + rng.randf_range(-3.0, 3.0) + (50.0 - economy) * 0.05 + (opposition - 40.0) * 0.01 - (unrest - 30.0) * 0.06, 0.0, 100.0)
 	economy = clampf(economy + rng.randf_range(-2.5, 2.8) - unrest * 0.02 + (55.0 - economy) * 0.03, 0.0, 100.0)
 	king_strength = clampf(king_strength - unrest * 0.012 - opposition * 0.004 + (economy - 50.0) * 0.01 + 0.4, 0.0, 100.0)
-	private_wealth += 0.8  # sivil liste ödeneği
+	private_wealth += _diff("income")  # sivil liste ödeneği
 
 
 func _decay_facts() -> void:
@@ -633,7 +712,7 @@ func _fire_events() -> void:
 func _run_cascade() -> void:
 	var drop := _public_weakness()
 	for a: Actor in actors.values():
-		if a.insider and not a.ready and a.rebellion_drive() > 34.0:
+		if a.insider and not a.ready and a.rebellion_drive() > _diff("ready_drive"):
 			a.ready = true
 	var changed_any := true
 	while changed_any:
@@ -647,7 +726,7 @@ func _run_cascade() -> void:
 	for a: Actor in actors.values():
 		if a.ready and a.insider and (a.military or a.royal):
 			striker = true
-	if week >= 12 and _ready_power_share() >= 0.6 and striker:
+	if week >= int(_diff("grace")) and _ready_power_share() >= _diff("coup_share") and striker:
 		var lead: Actor = null
 		for a: Actor in actors.values():
 			if a.ready and a.insider:
@@ -740,6 +819,8 @@ func _survivor_title(top: Actor) -> String:
 		return "Altın Kral"
 	if economy < 25.0:
 		return "Devleti Tüketen"
+	if int(stats.get("blackmails", 0)) >= 3:
+		return "Sırların Efendisi"
 	if stats["ops"] >= 4:
 		return "Büyük Manipülatör"
 	if echo_level() > 0.85:

@@ -11,6 +11,8 @@ var music_volume := 0.5
 var sfx_volume := 0.8
 var fullscreen := false
 var short_fx := false      # kısa geçişler (animasyonları hızlandırır)
+var difficulty := 1        # 0 Kolay, 1 Normal, 2 Zor
+var tips := true           # ilk haftalarda danışman ipuçları
 
 var _streams: Dictionary = {}
 var _players: Array[AudioStreamPlayer] = []
@@ -71,6 +73,8 @@ func save_settings() -> void:
 	c.set_value("audio", "sfx", sfx_volume)
 	c.set_value("video", "fullscreen", fullscreen)
 	c.set_value("video", "short_fx", short_fx)
+	c.set_value("game", "difficulty", difficulty)
+	c.set_value("game", "tips", tips)
 	c.save(SETTINGS_PATH)
 
 
@@ -82,6 +86,8 @@ func _load_settings() -> void:
 	sfx_volume = c.get_value("audio", "sfx", sfx_volume)
 	fullscreen = c.get_value("video", "fullscreen", false)
 	short_fx = c.get_value("video", "short_fx", false)
+	difficulty = c.get_value("game", "difficulty", 1)
+	tips = c.get_value("game", "tips", true)
 
 
 func play(name: String, volume_db := 0.0, pitch := 1.0) -> void:

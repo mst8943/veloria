@@ -16,12 +16,25 @@ const TIPS := {
 	"o_soz": "Sözlü Emir: Bastır (1 mesai)\nYarı kesin uygulanır, iz bırakmaz.",
 	"o_ima": "İma: 'Halledilsin' (1 mesai)\nİnkâr edilebilir; ama hırslı biri aşırı yorumlar, korkak biri hiç uygulamaz.",
 	"o_sor": "Soruşturma (1 mesai)\nİstihbarat gibi güçlü birine verilirse sorunlu isimleri ipucu olarak getirebilir.",
+	"investigate": "Araştır (1 mesai)\nSeçilen kişinin önce zayıf noktasını, sonra kırmızı çizgisini öğrenmeye çalışır. İstihbarat güçlüyse şans artar.",
+	"blackmail": "Şantaj (1 mesai)\nZayıf noktası bilinen birini korkuyla bağlar, borcunu siler. Ama iz bırakır, hırsını büyütür; dürüst biri ifşa edebilir.",
 	"op_dikkat": "Dikkat Dağıt (2 mesai)\nSahte bir kriz yaratıp huzursuzluğu azaltır. Çember büyüdükçe başarı da, sızıntı riski de artar.",
 	"op_bol": "Muhalefeti Böl (2 mesai)\nMuhalefet kanatlarını birbirine düşürür.",
 	"op_zayif": "Rakibi Zayıflat (2 mesai)\nEn güçlü kişinin itibarını kırar. Kim yaptığını tahmin eder.",
 	"leak": "Sızdır (1 mesai)\nBir dosyayı basına verir; ortak bilgi artar. Herkesin bildiği şey en tehlikelisidir.",
 	"hush": "Bastır (1 mesai)\nDedikoduyu düşürür ama kanıtın kopyaları durur.",
 	"destroy": "Kanıtı Yok Et (1 mesai)\nKopyalar bitince gerçekten silinir; girişim fark edilebilir.",
+}
+
+## İlk haftalarda yeni oyuncuya kısa yol gösterme notları (hafta -> metin).
+const ADVICE := {
+	1: "Majesteleri, bu masada sayılar yoktur, insanlar vardır. Her hafta sınırlı mesainiz var; kararlar, emirler ve operasyonlar mesai harcar. Raporları okuyun, ama hepsine inanmayın.",
+	2: "Bir kişiyi seçip 'Doğrula' derseniz raporunu başka kaynaklarla karşılaştırırım. Kimin sizi süslediğini, kimin gerçeği söylediğini zamanla görürsünüz.",
+	3: "Kararları ertelemek de bir karardır: iki hafta sonra kendi kendine, çoğu zaman en kötü biçimde çözülür.",
+	4: "Terfi ve gizli ödeme sadakat getirir. Ama terfi ettirdiğiniz kişi güçlenir, para ise iz bırakır. İzler 'Dosyalar' sekmesinde birikir.",
+	6: "Birini gerçekten kontrol etmek istiyorsanız önce 'Araştır' ile zayıf noktasını öğrenin. Şantaj güçlüdür, ama geri tepebilir.",
+	8: "Bir güç merkezi fazla büyüyorsa rakibini güçlendirin. Kimse sizi tek başına deviremeyecek kadar zayıf kalmalı.",
+	12: "İlk haftaların sessizliği bitiyor. Artık bir koalisyon sizi devirebilir. Raporlar birbirine benzemeye başlarsa, kimsenin size gerçeği söylemediğini bilin.",
 }
 
 var _stage: Control
@@ -101,6 +114,11 @@ func _ready() -> void:
 		_instant = false
 		Sfx.start_music()
 		_tabs.current_tab = clampi(int(ProjectSettings.get_setting("veloria/dev_tab", 0)), 0, _tabs.get_tab_count() - 1)
+		var ds := str(ProjectSettings.get_setting("veloria/dev_select", ""))
+		if ds != "" and Sim.actors.has(ds):
+			_sel = [ds]
+			_style_cards()
+			_update_info()
 		if ProjectSettings.get_setting("veloria/dev_press_end", false):
 			await get_tree().create_timer(6.0).timeout
 			_end_week_pressed()
@@ -264,7 +282,7 @@ func _build_ui() -> void:
 
 	right.add_child(_caption("EMİRLER VE EYLEMLER"))
 	var grid := GridContainer.new()
-	grid.columns = 4
+	grid.columns = 5
 	grid.add_theme_constant_override("h_separation", 6)
 	grid.add_theme_constant_override("v_separation", 6)
 	right.add_child(grid)
@@ -272,10 +290,12 @@ func _build_ui() -> void:
 	_add_btn(grid, "bribe", "Gizli Ödeme", func() -> void: _act(func(id: String) -> String: return Sim.bribe(id)))
 	_add_btn(grid, "cross", "Doğrula", func() -> void: _act(func(id: String) -> String: return Sim.cross_check(id)))
 	_add_btn(grid, "dismiss", "Görevden Al", func() -> void: _act(func(id: String) -> String: return Sim.dismiss(id)))
+	_add_btn(grid, "investigate", "Araştır", func() -> void: _act(func(id: String) -> String: return Sim.investigate(id)))
 	_add_btn(grid, "o_yaz", "Yazılı Emir", func() -> void: _act(func(id: String) -> String: return Sim.order(id, "bastir", "yazili")))
 	_add_btn(grid, "o_soz", "Sözlü Emir", func() -> void: _act(func(id: String) -> String: return Sim.order(id, "bastir", "sozlu")))
 	_add_btn(grid, "o_ima", "İma", func() -> void: _act(func(id: String) -> String: return Sim.order(id, "bastir", "ima")))
 	_add_btn(grid, "o_sor", "Soruşturma", func() -> void: _act(func(id: String) -> String: return Sim.order(id, "sorustur", "sozlu")))
+	_add_btn(grid, "blackmail", "Şantaj", func() -> void: _act(func(id: String) -> String: return Sim.blackmail(id)))
 	right.add_child(_caption("GİZLİ OPERASYON   ·   2 mesai, seçili 1–3 kişiyle"))
 	var ops := HBoxContainer.new()
 	ops.add_theme_constant_override("separation", 6)
@@ -515,6 +535,15 @@ func _build_menu() -> void:
 	box.add_child(how)
 	how.visible = not _mobile  # mobilde ekranı doldurmasın; düğmeyle açılır
 	var b_new := _menu_btn("Yeni Oyun", _start_new, true)
+	var b_diff := _menu_btn("", func() -> void: pass)
+	var set_diff_text := func() -> void:
+		b_diff.text = "Zorluk: %s" % Sim.DIFFICULTY[Sfx.difficulty]["name"]
+	set_diff_text.call()
+	b_diff.tooltip_text = "Kolay: 5 mesai, daha uzun koruma süresi.  Normal: dengeli.  Zor: darbeler daha erken ve kolay."
+	b_diff.pressed.connect(func() -> void:
+		Sfx.difficulty = (Sfx.difficulty + 1) % Sim.DIFFICULTY.size()
+		Sfx.save_settings()
+		set_diff_text.call())
 	var b_cont := _menu_btn("Devam Et", _continue)
 	var b_back := _menu_btn("Oyuna Dön", func() -> void: _hide_menu())
 	if _mobile:
@@ -539,6 +568,13 @@ func _build_menu() -> void:
 		Sfx.short_fx = on
 		Sfx.save_settings())
 	row.add_child(cb_fx)
+	var cb_tips := CheckBox.new()
+	cb_tips.text = "Danışman ipuçları"
+	cb_tips.button_pressed = Sfx.tips
+	cb_tips.toggled.connect(func(on: bool) -> void:
+		Sfx.tips = on
+		Sfx.save_settings())
+	row.add_child(cb_tips)
 	var vrow := HBoxContainer.new()
 	vrow.add_theme_constant_override("separation", 10)
 	vrow.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -553,7 +589,7 @@ func _build_menu() -> void:
 		Sfx.play("click")
 		Sfx.save_settings()))
 	var b_quit := _menu_btn("Çıkış", func() -> void: get_tree().quit())
-	_menu_items = [title, sub, how, b_new, b_cont, b_back, row, vrow, b_quit]
+	_menu_items = [title, sub, how, b_new, b_diff, b_cont, b_back, row, vrow, b_quit]
 	_menu.set_meta("cont", b_cont)
 	_menu.set_meta("back", b_back)
 	_menu.hide()
@@ -775,7 +811,7 @@ func _hide_menu() -> void:
 
 
 func _start_new() -> void:
-	Sim.new_game()
+	Sim.new_game(0, Sfx.difficulty)
 	_after_load("Taç sana emanet edildi. Güç merkezleri seni test edecek.")
 
 
@@ -898,7 +934,7 @@ func _refresh() -> void:
 		return
 	_header_week.text = "HAFTA %d / %d" % [Sim.week, Sim.MAX_WEEKS]
 	_header_progress.value = Sim.week
-	_header_mesai.text = "◆".repeat(Sim.mesai) + "◇".repeat(maxi(Sim.MESAI_PER_WEEK - Sim.mesai, 0))
+	_header_mesai.text = "◆".repeat(Sim.mesai) + "◇".repeat(maxi(Sim.mesai_max - Sim.mesai, 0))
 	_header_wealth.text = str(int(Sim.private_wealth))
 	if _last_mesai != Sim.mesai and _last_mesai != -1 and not _fast():
 		UIKit.pulse(_header_mesai, 1.2)
@@ -924,6 +960,32 @@ func _rebuild_agenda() -> void:
 	_decision_buttons.clear()
 	_decision_cards.clear()
 	var animated: Array[Control] = []
+	if Sfx.tips and ADVICE.has(Sim.week):
+		var note := PanelContainer.new()
+		note.add_theme_stylebox_override("panel", UIKit.box(Color(0.11, 0.095, 0.06, 0.92), Color(UIKit.GOLD_DIM, 0.6), 8, 12))
+		_agenda.add_child(note)
+		animated.append(note)
+		var nh := HBoxContainer.new()
+		nh.add_theme_constant_override("separation", 12)
+		note.add_child(nh)
+		var ic_tex := _art("res://art/icons/rapor.png")
+		if ic_tex:
+			var ic := TextureRect.new()
+			ic.texture = ic_tex
+			ic.custom_minimum_size = Vector2(36, 36)
+			ic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			ic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			ic.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			nh.add_child(ic)
+		var nv := VBoxContainer.new()
+		nv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		nh.add_child(nv)
+		nv.add_child(_caption("SARAY KÂTİBİNİN NOTU   ·   menüden kapatılabilir"))
+		var nl := Label.new()
+		nl.text = ADVICE[Sim.week]
+		nl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		nl.add_theme_color_override("font_color", Color("e8dcc0"))
+		nv.add_child(nl)
 	if not Sim.pending.is_empty():
 		_agenda.add_child(_caption("KARAR BEKLEYENLER   ·   her karar 1 mesai   ·   ertelersen 2 hafta sonra kendi kendine çözülür"))
 	for pi in Sim.pending.size():
@@ -1138,7 +1200,10 @@ func _update_info() -> void:
 	var k: Dictionary = Sim.karne.get(a.id, {"ok": 0, "bad": 0})
 	var notes := "" if k["ok"] + k["bad"] == 0 else "\n[color=gray]Doğrulama notu: %d kez örtüştü, %d kez çelişti.[/color]" % [k["ok"], k["bad"]]
 	var more := "" if _sel.size() < 2 else "\n[color=#d9b359]%d kişi seçili (operasyon çemberi).[/color]" % _sel.size()
-	_info.append_text("[b][font_size=18]%s[/font_size][/b]  [color=gray]%s[/color]\nGüç merkezi olarak %s.%s%s%s" % [a.display_name, a.title, weight, debt, notes, more])
+	var weak: String = a.weak_point if a.known_weak else "[color=gray]bilinmiyor[/color]"
+	var red: String = a.red_line if a.known_red else "[color=gray]bilinmiyor[/color]"
+	var secrets := "\n[color=#c0504a]Zayıf noktası:[/color] %s   [color=#c0504a]Kırmızı çizgisi:[/color] %s" % [weak, red]
+	_info.append_text("[b][font_size=%d]%s[/font_size][/b]  [color=gray]%s[/color]\nGüç merkezi olarak %s.%s%s%s%s" % [_fs(18), a.display_name, a.title, weight, debt, secrets, notes, more])
 
 
 func _on_week(_w: int) -> void:

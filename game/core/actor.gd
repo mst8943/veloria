@@ -21,9 +21,12 @@ var perceived_king := 60.0     # kralın gücü hakkındaki (yanlış olabilen) 
 var ready := false             # kralı devirmeye hazır
 var moved := false             # fiilen harekete geçti / düşman oldu
 var secrets_on_king := 0       # kral hakkında bildiği sır sayısı
+var known_weak := false        # oyuncu zayıf noktasını keşfetti mi
+var known_red := false         # oyuncu kırmızı çizgisini keşfetti mi
+var blackmailed := 0           # kaç kez şantaj yapıldı
 
 const SAVE_PROPS := ["power", "ambition", "fear", "honesty", "threshold", "loyalty", "obligation",
-	"perceived_king", "ready", "moved", "secrets_on_king"]
+	"perceived_king", "ready", "moved", "secrets_on_king", "known_weak", "known_red", "blackmailed"]
 
 
 func setup(d: Dictionary) -> void:
@@ -71,9 +74,14 @@ func rebellion_drive() -> float:
 
 ## Emir kırmızı çizgiye dokunuyorsa, muğlak emir uygulanmaz.
 func red_line_penalty(task: String) -> float:
-	if task == "bastir" and red_line.contains("ateş"):
+	if crosses_red_line(task):
 		return 0.35
 	return 0.0
+
+
+## Bastırma emri, sivillere şiddet ya da taraftar tutuklamayı kırmızı çizgi sayan birine dokunur.
+func crosses_red_line(task: String) -> bool:
+	return task == "bastir" and (red_line.contains("ateş") or red_line.contains("tutuklan"))
 
 
 ## Korku ve dürüstlük raporun ne kadar süslendiğini belirler (0..1).
