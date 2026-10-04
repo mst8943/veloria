@@ -120,6 +120,26 @@ Godot_console.exe --path . --script res://tests/ui_shots.gd -- --out=C:/klasor
 Godot_console.exe --path . --script res://tests/ui_shots.gd -- --out=C:/klasor --mobile
 ```
 
+## Claude Code skill'leri
+
+Projeye özel skill'ler `.claude/skills/` altında (Claude Code'da `/ad` ile çağrılır). Ortak proje bilgisi: `.claude/skills/game-design/VELORIA.md`. Klasörde `.gdignore` var; Godot bunları içe aktarmaz.
+
+| Skill | Ne yapar |
+|---|---|
+| `/game-design` | Yeni özellik fikrini kodlamadan önce değerlendirir, kısa plan çıkarır |
+| `/design-system` | Tek bir sistemi GDD seviyesinde tasarlar (`docs/design/`) |
+| `/design-review` | Tasarım önerisini, GDD'yi ya da olay paketini eleştirel inceler |
+| `/balance-check` | Bot simülasyonlarıyla denge, baskın strateji, tempo ölçer (`probe_template.gd`) |
+| `/ux-design` | Ekran/HUD/akış spesifikasyonu (`docs/ux/`) |
+| `/ux-review` | Ekran görüntüsü alıp arayüzü kalite kontrolünden geçirir |
+| `/team-ui` | Arayüz işini uçtan uca yürütür: tasarım, uygulama, inceleme, test, belge |
+| `/art-bible` | Görsel kimlik kitabı (`docs/ART_BIBLE.md`) |
+| `/asset-spec` | Görsel spesifikasyonu + prompt; gelen görseli tanıyıp yerleştirir |
+| `/tech-debt` | Teknik borcu ölçer, önceliklendirir (`docs/TECH_DEBT.md`) |
+| `/project-stage-detect` | Projenin aşamasını ölçütlerle belirler |
+
+Kod incelemesi için Claude Code'un yerleşik `/code-review` komutu kullanılır.
+
 ## Geliştirici ayarları
 
 Proje ayarlarında `veloria/` altında; dağıtımdan önce hepsi kapalı olmalı:
