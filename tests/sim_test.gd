@@ -10,6 +10,8 @@ var fired_ids := {}
 
 func _init() -> void:
 	sim = load("res://game/core/sim.gd").new()
+	sim.save_path = "user://test_save.txt"   # oyuncunun kaydına dokunma
+	sim.record_chronicle = false
 	var ok := true
 	for policy in ["idle", "random", "careful"]:
 		var wins := 0

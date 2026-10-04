@@ -13,7 +13,9 @@ const MESAI_PER_WEEK := 4
 const KING_NAME := "Adrian IV"
 const ACTORS_PATH := "res://game/data/actors.json"
 const EVENTS_PATH := "res://game/data/events.json"
-const SAVE_PATH := "user://veloria_save.txt"
+const CHRONICLE_PATH := "user://veloria_chronicle.txt"
+var save_path := "user://veloria_save.txt"   # testler kendi dosyasını kullanır, oyuncunun kaydına dokunmaz
+var record_chronicle := true                 # testlerde ve otomatik oynatmada arşive yazılmaz
 const GOOD_DOMAINS_HIGH := ["economy"]  # bu alanlarda yüksek değer iyidir
 ## Zorluk: haftalık mesai, darbe koruma süresi, darbe için gereken güç payı, gelir, hazır olma eşiği.
 const DIFFICULTY := [
@@ -118,7 +120,7 @@ func _load_json(path: String) -> Array:
 # ---------------------------------------------------------------- Kayıt
 
 func has_save() -> bool:
-	return FileAccess.file_exists(SAVE_PATH)
+	return FileAccess.file_exists(save_path)
 
 
 func save_game() -> bool:
@@ -131,7 +133,7 @@ func save_game() -> bool:
 		"opp": opposition, "wealth": private_wealth, "actors": a_data, "facts": facts, "flags": flags,
 		"fired": fired_events, "history": history, "pending": pending, "truth": truth_log, "karne": karne,
 		"stats": stats, "rng": rng.state, "seed": rng.seed, "diff": difficulty, "promises": promises}
-	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
 	f.store_string(var_to_str(data))
@@ -141,7 +143,7 @@ func save_game() -> bool:
 func load_game() -> bool:
 	if not has_save():
 		return false
-	var f := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	var f := FileAccess.open(save_path, FileAccess.READ)
 	var d: Variant = str_to_var(f.get_as_text())
 	if not d is Dictionary:
 		return false
@@ -970,7 +972,27 @@ func _end(survived: bool) -> void:
 		"top_actor": top.display_name if top else "", "history": history.duplicate(),
 		"lies": _top_lies(), "king": KING_NAME,
 		"promises": "%d söz verdin: %d tutuldu, %d bozuldu." % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))]}
+	if record_chronicle:
+		_append_chronicle(record)
 	game_ended.emit(record)
+
+
+## Hükümdarlık arşivi: biten her saltanat kalıcı olarak kaydedilir.
+func load_chronicle() -> Array:
+	if not FileAccess.file_exists(CHRONICLE_PATH):
+		return []
+	var f := FileAccess.open(CHRONICLE_PATH, FileAccess.READ)
+	var d: Variant = str_to_var(f.get_as_text())
+	return d if d is Array else []
+
+
+func _append_chronicle(r: Dictionary) -> void:
+	var list := load_chronicle()
+	list.append({"date": Time.get_date_string_from_system(), "title": r["title"], "weeks": r["weeks"],
+		"survived": r["survived"], "cause": r["cause"], "difficulty": DIFFICULTY[difficulty]["name"]})
+	var f := FileAccess.open(CHRONICLE_PATH, FileAccess.WRITE)
+	if f:
+		f.store_string(var_to_str(list.slice(maxi(0, list.size() - 50))))
 
 
 func _survivor_title(top: Actor) -> String:

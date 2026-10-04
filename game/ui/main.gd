@@ -29,6 +29,37 @@ const TIPS := {
 	"destroy": "Kanıtı Yok Et (1 mesai)\nKopyalar bitince gerçekten silinir; girişim fark edilebilir.",
 }
 
+## Emeği geçenler ve lisans bildirimleri (Godot MIT ve EB Garamond OFL bildirimi dağıtımda zorunludur).
+const CREDITS := """[b][font_size=30][color=#d6b25e]VELORIA[/color][/font_size][/b]
+[color=gray]Reaktif bir siyaset ve iktidar simülasyonu[/color]
+
+[b]Yapım[/b]
+Mesut Canturk
+
+[b]Tasarım ve geliştirme desteği[/b]
+Claude (Anthropic)
+
+[b]Görseller[/b]
+Yapay zekâ ile üretilmiş özgün görseller. Tüm karakterler ve kurumlar kurgusaldır; gerçek kişi ve kurumlarla benzerlik tesadüftür.
+
+[b]Yazı tipi[/b]
+EB Garamond — Copyright 2017 The EB Garamond Project Authors (github.com/octaviopardo/EBGaramond12).
+SIL Open Font License 1.1 altında kullanılmıştır (lisans metni oyun dosyalarında: game/fonts/OFL.txt).
+
+[b]Oyun motoru[/b]
+Bu oyun Godot Engine ile yapılmıştır ve aşağıdaki lisans altında kullanılmaktadır:
+
+[color=gray][font_size=13]Copyright (c) 2014-present Godot Engine contributors.
+Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Portions of this software are copyright © The FreeType Project (www.freetype.org). All rights reserved.[/font_size][/color]"""
+
 ## İlk haftalarda yeni oyuncuya kısa yol gösterme notları (hafta -> metin).
 const ADVICE := {
 	1: "Majesteleri, bu masada sayılar yoktur, insanlar vardır. Her hafta sınırlı mesainiz var; kararlar, emirler ve operasyonlar mesai harcar. Raporları okuyun, ama hepsine inanmayın.",
@@ -76,6 +107,8 @@ var _curtain: ColorRect
 var _curtain_title: Label
 var _curtain_sub: Label
 var _mobile := false
+var _modal: Control
+var _modal_text: RichTextLabel
 var _promise_list: RichTextLabel
 var _multi_btn: Button
 var _hint_label: RichTextLabel
@@ -100,6 +133,9 @@ func _ready() -> void:
 	Sim.game_ended.connect(_on_end)
 	_build_ui()
 	_build_fx()
+	var dev_run: bool = "--autoplay" in OS.get_cmdline_user_args() or ProjectSettings.get_setting("veloria/dev_autostart", false)
+	if dev_run:
+		Sim.record_chronicle = false   # test/geliştirme oyunları arşive yazılmaz
 	if "--autoplay" in OS.get_cmdline_user_args():
 		_instant = true
 		_start_new()
@@ -134,6 +170,11 @@ func _ready() -> void:
 	else:
 		_show_menu()
 		Sfx.start_music()
+		match str(ProjectSettings.get_setting("veloria/dev_modal", "")):
+			"about":
+				_show_modal(CREDITS)
+			"chronicle":
+				_show_chronicle()
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -569,6 +610,23 @@ func _build_menu() -> void:
 		set_diff_text.call())
 	var b_cont := _menu_btn("Devam Et", _continue)
 	var b_back := _menu_btn("Oyuna Dön", func() -> void: _hide_menu())
+	var info_row := HBoxContainer.new()
+	info_row.add_theme_constant_override("separation", 10)
+	box.add_child(info_row)
+	var b_arch := Button.new()
+	b_arch.text = "Hükümdarlık Arşivi"
+	b_arch.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b_arch.custom_minimum_size.y = 42
+	_wire(b_arch)
+	b_arch.pressed.connect(_show_chronicle)
+	info_row.add_child(b_arch)
+	var b_about := Button.new()
+	b_about.text = "Hakkında"
+	b_about.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b_about.custom_minimum_size.y = 42
+	_wire(b_about)
+	b_about.pressed.connect(func() -> void: _show_modal(CREDITS))
+	info_row.add_child(b_about)
 	if _mobile:
 		var b_how := _menu_btn("Nasıl Oynanır", func() -> void: how.visible = not how.visible)
 		box.move_child(b_how, box.get_child_count() - 1)
@@ -612,7 +670,8 @@ func _build_menu() -> void:
 		Sfx.play("click")
 		Sfx.save_settings()))
 	var b_quit := _menu_btn("Çıkış", func() -> void: get_tree().quit())
-	_menu_items = [title, sub, how, b_new, b_diff, b_cont, b_back, row, vrow, b_quit]
+	_menu_items = [title, sub, how, b_new, b_diff, b_cont, b_back, info_row, row, vrow, b_quit]
+	_build_modal()
 	_menu.set_meta("cont", b_cont)
 	_menu.set_meta("back", b_back)
 	_menu.hide()
@@ -621,6 +680,71 @@ func _build_menu() -> void:
 	var kb := _menu_bg.create_tween().set_loops()
 	kb.tween_property(_menu_bg, "scale", Vector2(1.07, 1.07), 22.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	kb.tween_property(_menu_bg, "scale", Vector2(1.0, 1.0), 22.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+
+func _build_modal() -> void:
+	_modal = Control.new()
+	_modal.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_menu.add_child(_modal)
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.75)
+	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_modal.add_child(dim)
+	var m := MarginContainer.new()
+	m.set_anchors_preset(Control.PRESET_FULL_RECT)
+	var gap := 30 if _mobile else 120
+	for side in ["left", "right"]:
+		m.add_theme_constant_override("margin_" + side, gap)
+	for side in ["top", "bottom"]:
+		m.add_theme_constant_override("margin_" + side, 24 if _mobile else 60)
+	_modal.add_child(m)
+	var panel := PanelContainer.new()
+	panel.add_theme_stylebox_override("panel", UIKit.box(Color(0.05, 0.045, 0.06, 0.97), UIKit.GOLD, 10, 28))
+	m.add_child(panel)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 12)
+	panel.add_child(v)
+	_modal_text = RichTextLabel.new()
+	_modal_text.bbcode_enabled = true
+	_modal_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_modal_text.add_theme_font_override("bold_font", UIKit.serif())
+	_modal_text.add_theme_font_size_override("bold_font_size", _fs(20))
+	v.add_child(_modal_text)
+	var close := Button.new()
+	close.text = "Kapat"
+	close.custom_minimum_size.y = 44
+	_wire(close)
+	close.pressed.connect(func() -> void: _modal.hide())
+	v.add_child(close)
+	_modal.hide()
+
+
+func _show_modal(bbcode: String) -> void:
+	_modal_text.clear()
+	_modal_text.append_text(bbcode)
+	_modal_text.scroll_to_line(0)
+	_modal.show()
+	if not _fast():
+		UIKit.fade_in(_modal, 0.25)
+
+
+func _show_chronicle() -> void:
+	var list: Array = Sim.load_chronicle()
+	var t := "[b][font_size=%d][color=#d6b25e]HÜKÜMDARLIK ARŞİVİ[/color][/font_size][/b]\n[color=gray]Tarih, krallarını unutmaz.[/color]\n\n" % _fs(30)
+	if list.is_empty():
+		t += "Henüz tamamlanmış bir saltanat yok. İlk hükümdarlığın burada anılacak."
+	else:
+		var wins := 0
+		var best := 0
+		for r in list:
+			wins += 1 if r["survived"] else 0
+			best = maxi(best, int(r["weeks"]))
+		t += "Saltanat sayısı: %d   ·   Tahtta kalan: %d   ·   En uzun saltanat: %d hafta\n\n" % [list.size(), wins, best]
+		for i in range(list.size() - 1, -1, -1):
+			var r: Dictionary = list[i]
+			var mark := "[color=#7fae7a]◆[/color]" if r["survived"] else "[color=#c0504a]◆[/color]"
+			t += "%s  [b]%s[/b]   [color=gray]%s · %s · %d hafta[/color]\n     %s\n" % [mark, r["title"], r["date"], r["difficulty"], r["weeks"], r["cause"]]
+	_show_modal(t)
 
 
 func _menu_btn(text: String, cb: Callable, primary := false) -> Button:
