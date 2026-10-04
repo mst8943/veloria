@@ -62,7 +62,7 @@ Portions of this software are copyright © The FreeType Project (www.freetype.or
 
 ## İlk haftalarda yeni oyuncuya kısa yol gösterme notları (hafta -> metin).
 const ADVICE := {
-	1: "Majesteleri, bu masada sayılar yoktur, insanlar vardır. Her hafta sınırlı mesainiz var; kararlar, emirler ve operasyonlar mesai harcar. Raporları okuyun, ama hepsine inanmayın.",
+	1: "Majesteleri, bu masada sayılar yoktur, insanlar vardır. Aşağıdaki kartlar kararınızı bekliyor; her karar, emir ve operasyon sınırlı mesainizden harcar. Raporları da okuyun, ama hepsine inanmayın.",
 	2: "Bir kişiyi seçip 'Doğrula' derseniz raporunu başka kaynaklarla karşılaştırırım. Kimin sizi süslediğini, kimin gerçeği söylediğini zamanla görürsünüz.",
 	3: "Kararları ertelemek de bir karardır: iki hafta sonra kendi kendine, çoğu zaman en kötü biçimde çözülür.",
 	4: "Terfi ve gizli ödeme sadakat getirir. Ama terfi ettirdiğiniz kişi güçlenir, para ise iz bırakır. İzler 'Dosyalar' sekmesinde birikir.",
@@ -1163,7 +1163,7 @@ func _rebuild_agenda() -> void:
 		var hb := HBoxContainer.new()
 		hb.add_theme_constant_override("separation", 14)
 		card.add_child(hb)
-		var tex := _event_art(str(e["id"]))
+		var tex := _event_art(str(e.get("art", e["id"])))
 		if tex:
 			var img := TextureRect.new()
 			img.texture = tex

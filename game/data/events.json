@@ -1,5 +1,25 @@
 [
   {
+    "id": "tac_giyme", "min_week": 1, "max_week": 1, "art": "toren", "title": "Taç giyme töreninin ertesi sabahı",
+    "text": "Bütün güç merkezleri yeni kralın ilk hamlesini izliyor. Bekleme salonu dolu. İlk kimi huzuruna kabul edeceğin, kime öncelik verdiğini herkese söyleyecek.",
+    "choices": [
+      {"label": "Önce General Arden'ı kabul et", "text": "Arden selam verdi ve memnun ayrıldı. Voss bekleme salonunda saatine baktı.", "fx": {"actors": {"arden": {"l_career": 6}, "voss": {"ambition": 2}}}},
+      {"label": "Önce İstihbarat Başkanı Voss'u kabul et", "text": "Voss sana kalın bir dosya bıraktı: 'Kim kimdir, Majesteleri.' Arden ise bunu not etti.", "fx": {"actors": {"voss": {"l_career": 6}, "arden": {"ambition": 2}}}},
+      {"label": "Kimseyi kabul etme, halkın önüne çık", "text": "Balkondan el salladın. Kalabalık alkışladı; bekleme salonundakiler ise alkışlamadı.", "fx": {"king": 3, "opp": -2, "actors": {"arden": {"ambition": 1}, "voss": {"ambition": 1}, "halden": {"ambition": 1}}}}
+    ],
+    "ignore": {"text": "İlk günü bekleme salonunda geçirdin.", "fx": {"king": -1}}
+  },
+  {
+    "id": "ilk_butce", "min_week": 2, "max_week": 2, "art": "butce_acigi", "title": "İlk bütçe imzası",
+    "text": "Maliye Bakanı Kessler masana ilk bütçeyi koydu. Bir kalem boş bırakılmış: fazladan gelir kime gidecek?",
+    "choices": [
+      {"label": "Orduya", "text": "Kışlalarda kadeh kaldırıldı. Kessler sessizce not aldı.", "fx": {"economy": -2, "actors": {"arden": {"power": 4, "l_career": 4}}}},
+      {"label": "Halka", "text": "Ekmek fiyatı biraz düştü. Halk adını ilk kez sevgiyle andı.", "fx": {"unrest": -5, "economy": -2}},
+      {"label": "Sarayın kasasına", "text": "Kişisel kasan doldu. Kessler bu satırı unutmayacak.", "fx": {"wealth": 4, "fact": {"id": "saray_payi", "text": "İlk bütçeden sarayın kasasına aktarılan pay", "subject": "king", "severity": 15, "knowers": ["kessler"]}}}
+    ],
+    "ignore": {"text": "Bütçe Kessler'in önerisiyle geçti.", "fx": {}}
+  },
+  {
     "id": "gida_protestosu", "min_week": 3, "title": "Gıda fiyatları protestoya dönüşüyor",
     "text": "Başkentte fırın kuyrukları uzuyor. Polis raporları 'kontrol altında' diyor, ama bazı birliklerin isteksiz davrandığı söyleniyor.",
     "fx": {"unrest": 10, "flag": "PROTESTO_BASLADI"},
