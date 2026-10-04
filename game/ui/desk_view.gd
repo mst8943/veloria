@@ -8,21 +8,40 @@ signal request(target: String)
 const UIKit := preload("res://game/ui/ui_kit.gd")
 const Press := preload("res://game/core/press.gd")
 
+const LIT_SHADER := preload("res://game/ui/desk_lit.gdshader")
+const SHADOW_SHADER := preload("res://game/ui/desk_shadow.gdshader")
+
 const PARCH := Color("e6dcc2")
 const INK := Color("1b1610")
 
-## id -> [x, y, w, h] (1600x900 tabanında), etiket
+## id -> [x, y, w, h] (1600x900 tabanında), etiket. Nesne alanın dibine oturur:
+## alt kenar, nesnenin masaya değdiği çizgidir (arkadakiler yukarıda, öndekiler aşağıda).
 const LAYOUT := {
-	"harita": [Rect2(520, 150, 560, 330), "Başkent · Kurumlar"],
-	"hanedan": [Rect2(120, 140, 300, 230), "Hanedan"],
-	"kisiler": [Rect2(1180, 150, 300, 230), "Kişiler"],
-	"gunluk": [Rect2(110, 470, 280, 300), "Saltanat Günlüğü"],
-	"gundem": [Rect2(470, 520, 330, 250), "Gündem"],
-	"dosyalar": [Rect2(840, 540, 290, 220), "Gizli Dosyalar"],
-	"medya": [Rect2(1180, 470, 320, 300), "Medya"],
+	"harita": [Rect2(630, 175, 340, 290), "Başkent · Kurumlar"],
+	"hanedan": [Rect2(160, 150, 220, 250), "Hanedan"],
+	"kisiler": [Rect2(1330, 205, 250, 235), "Kişiler"],
+	"gunluk": [Rect2(150, 445, 240, 290), "Saltanat Günlüğü"],
+	"gundem": [Rect2(470, 500, 300, 240), "Gündem"],
+	"dosyalar": [Rect2(845, 500, 230, 240), "Gizli Dosyalar"],
+	"medya": [Rect2(1150, 480, 330, 260), "Medya"],
 }
 
+## id -> [dönüş (derece), yükseklik (gölgenin boyu), dikey kısalma (masaya yatan kâğıt)]
+const FEEL := {
+	"harita": [-3.0, 0.25, 0.82],
+	"hanedan": [0.0, 1.3, 1.0],
+	"kisiler": [0.0, 1.0, 1.0],
+	"gunluk": [4.0, 0.7, 1.0],
+	"gundem": [-6.0, 0.6, 1.0],
+	"dosyalar": [5.0, 0.5, 1.0],
+	"medya": [3.0, 0.45, 1.0],
+}
+
+## Masadaki lambanın ekrandaki yeri (arka plan görselinde sağ arka köşe).
+const LAMP_UV := Vector2(0.75, 0.35)
+
 var mobile := false
+var media_fresh_fn: Callable   # -> bool: bu haftanın gazetesi okunmadı mı
 var portrait_fn: Callable   # id -> Texture2D
 var _stage: Control
 var _objects: Dictionary = {}
@@ -118,6 +137,9 @@ func _build() -> void:
 	_title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
 	_title.add_theme_constant_override("shadow_outline_size", 8)
 	top.add_child(_title)
+	var div := UIKit.divider(420.0)
+	div.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	top.add_child(div)
 	_sub = Label.new()
 	var news := ""
 	if not Sim.weekly_news.is_empty():
@@ -134,8 +156,8 @@ func _build() -> void:
 	_open_btn.theme_type_variation = "PrimaryButton"
 	var n := Sim.pending.size()
 	_open_btn.text = ("%d KARAR BEKLİYOR   ·   GÜNDEMİ AÇ   »" % n) if n > 0 else "GÜNDEMİ AÇ   »"
-	_open_btn.position = Vector2(480, 805)
-	_open_btn.size = Vector2(640, 62)
+	_open_btn.position = Vector2(500, 818)
+	_open_btn.size = Vector2(600, 56)
 	_open_btn.focus_mode = Control.FOCUS_NONE
 	_open_btn.pressed.connect(func() -> void: _go("gundem"))
 	_stage.add_child(_open_btn)
@@ -149,6 +171,7 @@ func _go(target: String) -> void:
 func _make_object(id: String) -> void:
 	var spec: Array = LAYOUT[id]
 	var r: Rect2 = spec[0]
+	var feel: Array = FEEL.get(id, [0.0, 0.6])
 	var holder := Control.new()
 	holder.position = r.position
 	holder.size = r.size
@@ -158,69 +181,181 @@ func _make_object(id: String) -> void:
 	_stage.add_child(holder)
 	_objects[id] = holder
 	var tex := _art("res://art/desk/%s.png" % id)
-	var visual: Control
+	var lit: ShaderMaterial = null
+	var cast: ShaderMaterial = null
+	var body := Control.new()
 	if tex:
+		# Görselin oranını koruyarak alana yerleştir; nesne alanın dibine otursun (masaya basar).
+		var ts := tex.get_size()
+		var k := minf(r.size.x / ts.x, r.size.y / ts.y)
+		var dsz := ts * k
+		body.position = Vector2((r.size.x - dsz.x) / 2.0, r.size.y - dsz.y)
+		body.size = dsz
+		body.pivot_offset = Vector2(dsz.x / 2.0, dsz.y)
+		body.rotation = deg_to_rad(float(feel[0]))
+		body.scale.y = float(feel[2]) if feel.size() > 2 else 1.0
+		holder.add_child(body)
+		var h := float(feel[1])
+		# Gölgeler: önce geniş ve yumuşak düşen gölge (lamba sağ üstte, gölge sol alta),
+		# sonra nesnenin dibinde koyu, dar temas gölgesi.
+		cast = _shadow_layer(body, tex, dsz, Vector2(-20, 16) * h, 0.035 + 0.025 * h, 0.5)
+		_shadow_layer(body, tex, dsz, Vector2(-3, 5) * maxf(h, 0.4), 0.012, 0.8)
 		var t := TextureRect.new()
 		t.texture = tex
 		t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		visual = t
+		t.stretch_mode = TextureRect.STRETCH_SCALE
+		t.size = dsz
+		lit = ShaderMaterial.new()
+		lit.shader = LIT_SHADER
+		lit.set_shader_parameter("light_uv", LAMP_UV)
+		lit.set_shader_parameter("lift", 0.0)
+		t.material = lit
+		body.add_child(t)
 	else:
-		visual = _draw_object(id, r.size)
-	visual.set_anchors_preset(Control.PRESET_FULL_RECT)
-	holder.add_child(visual)
-	_ignore_mouse(visual)  # iç parçalar tıklamayı yutmasın; tıklama nesneye (holder) ulaşsın
-	# Etiket
-	var plate := Label.new()
-	plate.text = str(spec[1])
-	plate.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	plate.add_theme_font_override("font", UIKit.serif())
-	plate.add_theme_font_size_override("font_size", 22)
-	plate.add_theme_color_override("font_color", Color("f1e6c8"))
-	plate.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.95))
-	plate.add_theme_constant_override("shadow_outline_size", 8)
-	plate.position = Vector2(0, r.size.y + 4)
-	plate.size = Vector2(r.size.x, 30)
-	plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	holder.add_child(plate)
-	# Rozet
-	var badge_text := _badge_text(id)
-	if badge_text != "":
-		var b := PanelContainer.new()
-		var sb := StyleBoxFlat.new()
-		sb.bg_color = Color("a3251b")
-		sb.border_color = Color("f1d9a0")
-		sb.set_border_width_all(2)
-		sb.set_corner_radius_all(16)
-		sb.content_margin_left = 10
-		sb.content_margin_right = 10
-		sb.content_margin_top = 3
-		sb.content_margin_bottom = 3
-		b.add_theme_stylebox_override("panel", sb)
-		var bl := Label.new()
-		bl.text = badge_text
-		bl.add_theme_font_size_override("font_size", 15)
-		bl.add_theme_color_override("font_color", Color.WHITE)
-		b.add_child(bl)
-		b.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		holder.add_child(b)
-		b.position = Vector2(r.size.x - 70, 18)
-		var pulse := b.create_tween().set_loops()
-		pulse.tween_property(b, "modulate", Color(1.25, 1.25, 1.25), 0.8).set_trans(Tween.TRANS_SINE)
-		pulse.tween_property(b, "modulate", Color.WHITE, 0.8).set_trans(Tween.TRANS_SINE)
+		body.set_anchors_preset(Control.PRESET_FULL_RECT)
+		holder.add_child(body)
+		var drawn := _draw_object(id, r.size)
+		drawn.set_anchors_preset(Control.PRESET_FULL_RECT)
+		body.add_child(drawn)
+	_ignore_mouse(body)  # iç parçalar tıklamayı yutmasın; tıklama nesneye (holder) ulaşsın
+	holder.add_child(_plate(id, str(spec[1]), r.size))
+	var visual: Control = body.get_child(body.get_child_count() - 1)
 	holder.mouse_entered.connect(func() -> void:
 		Sfx.play("hover", -10.0)
-		var tw := holder.create_tween().set_parallel(true)
-		tw.tween_property(holder, "scale", Vector2(1.05, 1.05), 0.18).set_trans(Tween.TRANS_SINE)
-		tw.tween_property(holder, "modulate", Color(1.15, 1.1, 1.0), 0.18))
+		# Üzerine gelince nesne masadan hafifçe kalkar: gölgesi uzaklaşır ve yumuşar.
+		var tw := holder.create_tween().set_parallel(true).set_trans(Tween.TRANS_SINE)
+		tw.tween_property(visual, "position:y", -10.0, 0.18)
+		if lit:
+			tw.tween_property(lit, "shader_parameter/lift", 0.22, 0.18)
+		if cast:
+			tw.tween_property(cast, "shader_parameter/opacity", 0.32, 0.18)
+			tw.tween_property(cast, "shader_parameter/blur", 0.07, 0.18))
 	holder.mouse_exited.connect(func() -> void:
-		var tw := holder.create_tween().set_parallel(true)
-		tw.tween_property(holder, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_SINE)
-		tw.tween_property(holder, "modulate", Color.WHITE, 0.2))
+		var tw := holder.create_tween().set_parallel(true).set_trans(Tween.TRANS_SINE)
+		tw.tween_property(visual, "position:y", 0.0, 0.2)
+		if lit:
+			tw.tween_property(lit, "shader_parameter/lift", 0.0, 0.2)
+		if cast:
+			tw.tween_property(cast, "shader_parameter/opacity", 0.5, 0.2)
+			tw.tween_property(cast, "shader_parameter/blur", 0.035 + 0.025 * float(feel[1]), 0.2))
 	holder.gui_input.connect(func(ev: InputEvent) -> void:
 		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
 			Sfx.play("click")
 			_go(id))
+
+
+## Nesnenin silüetinden gölge katmanı (nesnenin altında, aynı dönüşle).
+func _shadow_layer(body: Control, tex: Texture2D, dsz: Vector2, offset: Vector2, blur: float, opacity: float) -> ShaderMaterial:
+	const PAD := 0.15
+	var s := TextureRect.new()
+	s.texture = tex
+	s.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	s.stretch_mode = TextureRect.STRETCH_SCALE
+	var grow := dsz * PAD / (1.0 - 2.0 * PAD)
+	s.position = offset - grow
+	s.size = dsz + grow * 2.0
+	var m := ShaderMaterial.new()
+	m.shader = SHADOW_SHADER
+	m.set_shader_parameter("pad", PAD)
+	m.set_shader_parameter("blur", blur)
+	m.set_shader_parameter("opacity", opacity)
+	s.material = m
+	body.add_child(s)
+	return m
+
+
+## Nesnenin altındaki etiket: ad, varsa küçük işaret, ve tek satırlık özet.
+func _plate(id: String, title: String, area: Vector2) -> Control:
+	var w := maxf(area.x + 60.0, 300.0)
+	var plate := Control.new()
+	plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	plate.position = Vector2((area.x - w) / 2.0, area.y + 2.0)
+	plate.size = Vector2(w, 70 if mobile else 52)
+	# Arkada yumuşak, kenarsız bir karanlık: kutu değil, okunurluk için gölge.
+	var shade := TextureRect.new()
+	shade.texture = _plate_shade()
+	shade.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	shade.stretch_mode = TextureRect.STRETCH_SCALE
+	shade.position = Vector2(-20, -16)
+	shade.size = Vector2(w + 40, 86)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	plate.add_child(shade)
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 0)
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.set_anchors_preset(Control.PRESET_FULL_RECT)
+	plate.add_child(box)
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 8)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(row)
+	var name_l := Label.new()
+	name_l.text = title
+	name_l.add_theme_font_override("font", UIKit.serif())
+	name_l.add_theme_font_size_override("font_size", 31 if mobile else 23)
+	name_l.add_theme_color_override("font_color", Color("f1e6c8"))
+	name_l.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
+	name_l.add_theme_constant_override("shadow_outline_size", 6)
+	name_l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(name_l)
+	var mark := _mark_text(id)
+	if mark != "":
+		var b := PanelContainer.new()
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color("8e231a")
+		sb.border_color = Color(0.95, 0.8, 0.55, 0.85)
+		sb.set_border_width_all(1)
+		sb.set_corner_radius_all(11)
+		sb.content_margin_left = 8
+		sb.content_margin_right = 8
+		sb.content_margin_top = 0
+		sb.content_margin_bottom = 1
+		sb.shadow_color = Color(0, 0, 0, 0.5)
+		sb.shadow_size = 4
+		sb.anti_aliasing = true
+		b.add_theme_stylebox_override("panel", sb)
+		b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		b.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var bl := Label.new()
+		bl.text = mark
+		bl.add_theme_font_size_override("font_size", 14)
+		bl.add_theme_color_override("font_color", Color("fff1dc"))
+		b.add_child(bl)
+		row.add_child(b)
+		_badges[id] = b
+	var sum := Label.new()
+	sum.text = _summary(id)
+	sum.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	sum.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	sum.clip_text = true
+	sum.custom_minimum_size.x = w
+	sum.add_theme_font_size_override("font_size", 21 if mobile else 15)
+	sum.add_theme_color_override("font_color", Color(0.86, 0.8, 0.68, 0.92))
+	sum.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.95))
+	sum.add_theme_constant_override("shadow_outline_size", 5)
+	sum.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(sum)
+	return plate
+
+
+static var _shade_tex: Texture2D
+
+
+static func _plate_shade() -> Texture2D:
+	if _shade_tex == null:
+		var g := Gradient.new()
+		g.set_color(0, Color(0, 0, 0, 0.62))
+		g.set_color(1, Color(0, 0, 0, 0.0))
+		var gt := GradientTexture2D.new()
+		gt.gradient = g
+		gt.fill = GradientTexture2D.FILL_RADIAL
+		gt.fill_from = Vector2(0.5, 0.5)
+		gt.fill_to = Vector2(1.0, 0.5)
+		gt.width = 256
+		gt.height = 64
+		_shade_tex = gt
+	return _shade_tex
 
 
 func _ignore_mouse(n: Node) -> void:
@@ -230,26 +365,82 @@ func _ignore_mouse(n: Node) -> void:
 		_ignore_mouse(c)
 
 
-func _badge_text(id: String) -> String:
+## Etiketin yanındaki küçük kırmızı işaret: yalnızca dikkat isteyen şeyler.
+func _mark_text(id: String) -> String:
 	match id:
 		"gundem":
 			return str(Sim.pending.size()) if not Sim.pending.is_empty() else ""
 		"medya":
-			return "YENİ"
-		"kisiler":
-			return "%d mesai" % Sim.mesai
+			return "YENİ" if (not media_fresh_fn.is_valid() or media_fresh_fn.call()) else ""
 		"gunluk":
-			var due := 0
-			for p in Sim.promises:
-				if p["state"] == "active" and int(p["due"]) - Sim.week <= 2:
-					due += 1
+			var due := _due_promises()
 			return ("%d söz" % due) if due > 0 else ""
+	return ""
+
+
+func _due_promises() -> int:
+	var due := 0
+	for p in Sim.promises:
+		if p["state"] == "active" and int(p["due"]) - Sim.week <= 2:
+			due += 1
+	return due
+
+
+## Etiketin altındaki tek satır: nesneye tıklamadan neyin beklediğini söyler.
+func _summary(id: String) -> String:
+	match id:
+		"gundem":
+			if Sim.pending.is_empty():
+				return "Bekleyen karar yok"
+			var urgent: Dictionary = Sim.pending[0]
+			for p in Sim.pending:
+				if int(p["age"]) > int(urgent["age"]):
+					urgent = p
+			var head := "%d karar" % Sim.pending.size()
+			var lead := "en acil" if int(urgent["age"]) > 0 else "ilki"
+			return "%s · %s: %s" % [head, lead, urgent["event"]["title"]]
+		"medya":
+			var ed: Dictionary = Press.edition(Sim, "state")
+			var h := str(ed.get("headline", ""))
+			return h if h != "" else "Bu haftanın gazeteleri"
+		"kisiler":
+			var enemies := 0
+			for a in Sim.actors.values():
+				if a.moved:
+					enemies += 1
+			var t := "%d mesai kaldı" % Sim.mesai if Sim.mesai > 0 else "Mesai bitti"
+			if enemies > 0:
+				t += " · %d düşman" % enemies
+			return t
+		"gunluk":
+			var due := _due_promises()
+			if due > 0:
+				return "%d sözün vadesi yaklaşıyor" % due
+			return "Hafta %d · saltanatın kaydı" % Sim.week
 		"dosyalar":
+			if Sim.facts.is_empty():
+				return "Dosya şimdilik boş"
 			var rumors := 0
+			var mine := 0
 			for f: Dictionary in Sim.facts.values():
-				if f.get("rumor", false) and not f.get("public", false):
+				if f.get("public", false):
+					continue
+				if f.get("rumor", false):
 					rumors += 1
-			return ("%d dedikodu" % rumors) if rumors > 0 else ""
+				if f["subject"] == "king":
+					mine += 1
+			var t := "%d kayıt" % Sim.facts.size()
+			if mine > 0:
+				t += " · %d tanesi sana dair" % mine
+			if rumors > 0:
+				t += " · %d dedikodu" % rumors
+			return t
+		"harita":
+			return "Kurumlar ve sokaklar"
+		"hanedan":
+			var n: int = Sim.load_chronicle().size()
+			var ach: int = Sim.load_achievements().size()
+			return "%d saltanat · %d / %d başarım" % [n, ach, Sim.ACHIEVEMENTS.size()]
 	return ""
 
 

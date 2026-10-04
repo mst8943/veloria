@@ -30,7 +30,32 @@ func _shot(file_name: String) -> void:
 
 
 func _run() -> void:
+	# Kişi paneli dolu görünsün: en güçlü kişiyi seç.
+	var sim0: Node = root.get_node("Sim")
+	var top_id := ""
+	for a in sim0.actors.values():
+		if top_id == "" or a.power > sim0.actors[top_id].power:
+			top_id = a.id
+	main._sel.clear()
+	main._sel.append(top_id)
+	main._style_cards()
+	main._update_info()
 	await _shot("1_oyun")
+	main._desk.open()
+	await _shot("1_masa")
+	main._desk.close_view()
+	if "--only-desk" in OS.get_cmdline_user_args():
+		quit(0)
+		return
+	main._city.open()
+	await _shot("1_harita")
+	main._city.close_view()
+	main._open_media()
+	await _shot("1_medya")
+	main._media.close_view()
+	if "--only-world" in OS.get_cmdline_user_args():
+		quit(0)
+		return
 	main._show_menu()
 	await _shot("2_menu")
 	main._menu_show_page("new")

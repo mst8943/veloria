@@ -26,9 +26,13 @@ Arayüz turu 2 (2026-10-04, ikinci oturum): 1, 4, 5 yapıldı —
 - Menü sayfaları (`_menu_page`, `_menu_show_page`): ana sayfa 4 düğme (Devam Et|Oyuna Dön, Yeni Oyun, Ayarlar, Çıkış — web'de Çıkış gizli) + bağlantılar (Nasıl Oynanır, Arşiv, Hakkında). Zorluk "Yeni Oyun" sayfasında, ayarlar ayrı sayfada. Esc alt sayfadan ana sayfaya döner.
 - Ekran görüntüsü aracı: `tests/ui_shots.gd` (pencereli; `-- --out=KLASÖR [--mobile]`), dev ayarlarını yalnızca bellekte açar.
 
+Arayüz turu 3 (görsel cila):
+- Masa: nesneler masanın lambasıyla aydınlatılıyor (`desk_lit.gdshader`, `LAMP_UV`) ve silüetlerinden gölge düşürüyor (`desk_shadow.gdshader`: geniş düşen gölge + dar temas gölgesi). Yerleşim/dönüş/yükseklik `LAYOUT` ve `FEEL`'de. Üzerine gelince nesne kalkar, gölgesi yumuşar. Rozetler nesneden kalktı; etiketin yanında küçük işaret + altında tek satır özet (`_summary`).
+- Kişi paneli: göstergeler (`_trait`): güç 3 kademe, düşman, karşılık bekliyor, zayıf nokta/kırmızı çizgi (bilinmiyorsa "?"), doğrulama karnesi, sözler. Bilgi miktarı eskisiyle aynı.
+- Ortak imza: `UIKit.band_style()` (ana ekran, harita, medya başlık bandı), `UIKit.ornament()` (köşebentler), `UIKit.divider()` (masa ve menü başlık ayracı), `UIKit.caps()` (aralıklı başlık fontu), `_section()` bölüm başlıkları. Portre kartları tam dolu, ad portrenin üstünde.
+
 ## Yapılacaklar (öncelik sırası)
-1. Masa nesnelerinin altına tek satırlık özet ("2 karar · en acil: Kâhya").
-2. Kişi paneli: düz metin yerine sayısız küçük göstergeler (renkli noktalar/simgeler).
+1. Boş masa arka planı bekleniyor (prompt: `ART_PROMPTS.md` > "Boş masa arka planı"). Gelince `art/bg_desk.png` yerine koy (eskisini `art/_arsiv`), `LAYOUT`'u yeni görselde nesneler masaya otursun diye ince ayarla, `LAMP_UV`'yi lambaya göre düzelt.
 Not: menü açılınca sağ üstteki bildirimler temizleniyor (eskiden menünün üstünde kalıyordu).
 Diğer: kullanıcı henüz tam bir saltanat oynamadı; geri bildirimi (denge, metin, ses) bekleniyor. Sentezlenmiş sesleri kimse dinlemedi ("sesler iyi" dedi). Linux build gerçek makinede denenmedi. Android/iOS kasıtlı yapılmadı (kullanıcı: APK gerekmez).
 

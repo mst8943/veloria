@@ -102,14 +102,17 @@ func _build() -> void:
 	vig.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(vig)
 	# Üst başlık ve geri
+	var band := PanelContainer.new()
+	band.add_theme_stylebox_override("panel", UIKit.band_style())
+	band.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE, Control.PRESET_MODE_MINSIZE, 18)
+	add_child(band)
 	var top := HBoxContainer.new()
-	top.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE, Control.PRESET_MODE_MINSIZE, 20)
 	top.add_theme_constant_override("separation", 16)
-	add_child(top)
+	band.add_child(top)
 	var title := Label.new()
 	title.text = "BAŞKENT"
-	title.add_theme_font_override("font", UIKit.serif())
-	title.add_theme_font_size_override("font_size", 34)
+	title.add_theme_font_override("font", UIKit.caps())
+	title.add_theme_font_size_override("font_size", 30)
 	title.add_theme_color_override("font_color", UIKit.GOLD)
 	title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
 	title.add_theme_constant_override("shadow_outline_size", 8)
@@ -126,6 +129,7 @@ func _build() -> void:
 	back.text = "Masaya dön  (Esc)" if not mobile else "Masaya dön"
 	back.focus_mode = Control.FOCUS_NONE
 	back.custom_minimum_size = Vector2(170, 42)
+	back.theme_type_variation = "GhostButton"
 	back.pressed.connect(close_view)
 	top.add_child(back)
 	for id in _sites:

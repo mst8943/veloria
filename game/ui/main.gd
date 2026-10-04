@@ -146,6 +146,7 @@ var _promise_list: RichTextLabel
 var _multi_btn: Button
 var _hint_label: RichTextLabel
 var _flow: HBoxContainer
+var _traits: HFlowContainer
 var _flow_sig := ""
 const HINT_DEFAULT := "[color=#8f7a45]Bir eylemin üzerine gel ya da dokun: ne yaptığını ve bedelini burada görürsün.[/color]"
 var _busy := false
@@ -347,7 +348,7 @@ func _build_ui() -> void:
 	_tabs.add_child(files)
 	_files_tab = files
 	files.add_theme_constant_override("separation", 8)
-	files.add_child(_caption("SIRLAR VE KANITLAR   ·   çubuk: sırrın ne kadar yayıldığı (yarısında manşete çıkar)"))
+	files.add_child(_section("SIRLAR VE KANITLAR", "çubuk: sırrın ne kadar yayıldığı · yarısında manşete çıkar"))
 	var fscroll := ScrollContainer.new()
 	fscroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	fscroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -356,7 +357,7 @@ func _build_ui() -> void:
 	_fact_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_fact_box.add_theme_constant_override("separation", 6)
 	fscroll.add_child(_fact_box)
-	files.add_child(_caption("SÖZ DEFTERİ"))
+	files.add_child(_section("SÖZ DEFTERİ"))
 	var ppanel := PanelContainer.new()
 	ppanel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL_HI, 0.5), Color(UIKit.GOLD_DIM, 0.2), 6, 10))
 	files.add_child(ppanel)
@@ -393,7 +394,7 @@ func _build_ui() -> void:
 		cols.add_child(right)
 	var cap_row := HBoxContainer.new()
 	right.add_child(cap_row)
-	var cap := _caption("GÜÇ MERKEZLERİ")
+	var cap := _section("GÜÇ MERKEZLERİ")
 	cap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cap.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	cap_row.add_child(cap)
@@ -415,25 +416,36 @@ func _build_ui() -> void:
 	var detail := PanelContainer.new()
 	detail.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.85), Color(UIKit.GOLD_DIM, 0.3), 6, 8))
 	right.add_child(detail)
+	UIKit.ornament(detail)
 	var irow := HBoxContainer.new()
 	irow.add_theme_constant_override("separation", 10)
 	detail.add_child(irow)
 	_portrait_box = Control.new()
 	_portrait_box.custom_minimum_size = Vector2(62, 62)
 	irow.add_child(_portrait_box)
+	var icol := VBoxContainer.new()
+	icol.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	icol.add_theme_constant_override("separation", 5)
+	icol.custom_minimum_size.y = 62
+	irow.add_child(icol)
 	_info = RichTextLabel.new()
 	_info.bbcode_enabled = true
 	_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_info.custom_minimum_size.y = 62
 	_info.fit_content = true
 	_info.scroll_active = false
 	_info.add_theme_font_size_override("normal_font_size", _fs(13))
-	irow.add_child(_info)
+	icol.add_child(_info)
+	# Kişinin özellikleri: küçük göstergeler (sayı yok; yalnızca oyuncunun bildiği kadar).
+	_traits = HFlowContainer.new()
+	_traits.add_theme_constant_override("h_separation", 6)
+	_traits.add_theme_constant_override("v_separation", 5)
+	icol.add_child(_traits)
 
 	# Eylem paneli: tek çerçeve, başlıkta seçili kişi, eylemler amaca göre gruplu.
 	var act_panel := PanelContainer.new()
 	act_panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.8), Color(UIKit.GOLD_DIM, 0.28), 8, 10))
 	right.add_child(act_panel)
+	UIKit.ornament(act_panel)
 	var av := VBoxContainer.new()
 	av.add_theme_constant_override("separation", 5)
 	act_panel.add_child(av)
@@ -488,7 +500,7 @@ func _build_ui() -> void:
 				btn.theme_type_variation = "DangerButton"
 	var hint_panel := PanelContainer.new()
 	hint_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	hint_panel.custom_minimum_size.y = 34
+	hint_panel.custom_minimum_size.y = 52
 	hint_panel.add_theme_stylebox_override("panel", UIKit.box(Color(0, 0, 0, 0.35), Color(UIKit.GOLD_DIM, 0.2), 6, 10))
 	right.add_child(hint_panel)
 	_hint_label = RichTextLabel.new()
@@ -543,6 +555,7 @@ func _build_ui() -> void:
 	_desk = DESK_VIEW.new()
 	_desk.mobile = _mobile
 	_desk.portrait_fn = func(id: String) -> Texture2D: return _art("res://art/portraits/%s.png" % id)
+	_desk.media_fresh_fn = func() -> bool: return _media_seen_week != Sim.week
 	_desk.request.connect(_on_desk_request)
 	add_child(_desk)
 	_city = CITY_VIEW.new()
@@ -563,9 +576,13 @@ func _build_ui() -> void:
 
 
 func _build_header(parent: Control) -> void:
+	# Başlık bandı: koyu, alt kenarında ince altın çizgi.
+	var band := PanelContainer.new()
+	band.add_theme_stylebox_override("panel", UIKit.band_style())
+	parent.add_child(band)
 	var top := HBoxContainer.new()
 	top.add_theme_constant_override("separation", 26)
-	parent.add_child(top)
+	band.add_child(top)
 	var frame := PanelContainer.new()
 	frame.add_theme_stylebox_override("panel", UIKit.box(Color(0, 0, 0, 0.4), UIKit.GOLD, 4, 2, 2))
 	frame.add_child(_initial_art("king", Vector2(46, 46), 24))
@@ -814,6 +831,7 @@ func _build_menu() -> void:
 	var plate := PanelContainer.new()
 	plate.add_theme_stylebox_override("panel", UIKit.box(Color(0.03, 0.025, 0.04, 0.72), Color(UIKit.GOLD_DIM, 0.35), 10, 34))
 	center.add_child(plate)
+	UIKit.ornament(plate, Color(UIKit.GOLD, 0.8), 24, 9)
 	var box := VBoxContainer.new()
 	box.custom_minimum_size.x = 560
 	box.add_theme_constant_override("separation", 12)
@@ -837,6 +855,9 @@ func _build_menu() -> void:
 	sub.add_theme_font_size_override("font_size", _fs(20))
 	sub.add_theme_color_override("font_color", Color(UIKit.TEXT, 0.85))
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var mdiv := UIKit.divider(380.0)
+	mdiv.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	box.add_child(mdiv)
 	box.add_child(sub)
 	var sp := Control.new()
 	sp.custom_minimum_size.y = 10 if _mobile else 18
@@ -951,7 +972,7 @@ func _build_menu() -> void:
 	var b_back2 := _menu_btn(set_page, "Geri", func() -> void: _menu_show_page("main"))
 	b_back2.theme_type_variation = "GhostButton"
 
-	_menu_items = [title, sub, b_first, b_new, b_set, b_quit, links]
+	_menu_items = [title, mdiv, sub, b_first, b_new, b_set, b_quit, links]
 	_menu.set_meta("first", b_first)
 	_menu.set_meta("new", b_new)
 	var ver := Label.new()
@@ -992,6 +1013,7 @@ func _build_modal() -> void:
 	var panel := PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", UIKit.box(Color(0.05, 0.045, 0.06, 0.97), UIKit.GOLD, 10, 28))
 	m.add_child(panel)
+	UIKit.ornament(panel, UIKit.GOLD, 24, 9)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 12)
 	panel.add_child(v)
@@ -1253,6 +1275,54 @@ func _caption(t: String) -> Label:
 	l.add_theme_color_override("font_color", UIKit.GOLD)
 	l.add_theme_font_size_override("font_size", _fs(13))
 	return l
+
+
+## Bölüm başlığı: küçük altın elmas, aralıklı büyük harf, ince çizgi ve isteğe bağlı açıklama.
+func _section(title: String, helper := "") -> Control:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	var holder := Control.new()
+	holder.custom_minimum_size = Vector2(10, 10)
+	holder.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var gem := Panel.new()
+	var gs := StyleBoxFlat.new()
+	gs.bg_color = UIKit.GOLD
+	gem.add_theme_stylebox_override("panel", gs)
+	gem.size = Vector2(6, 6)
+	gem.position = Vector2(2, 2)
+	gem.pivot_offset = Vector2(3, 3)
+	gem.rotation = deg_to_rad(45.0)
+	gem.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	holder.add_child(gem)
+	row.add_child(holder)
+	var l := Label.new()
+	l.text = title
+	l.add_theme_font_override("font", UIKit.caps())
+	l.add_theme_font_size_override("font_size", _fs(15))
+	l.add_theme_color_override("font_color", UIKit.GOLD)
+	l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(l)
+	var line := ColorRect.new()
+	line.color = Color(UIKit.GOLD_DIM, 0.35)
+	line.custom_minimum_size = Vector2(28, 1)
+	# Açıklama yoksa çizgi satırı doldurur; varsa kısa bir ayraç olur, açıklama yanından akar.
+	line.size_flags_horizontal = Control.SIZE_EXPAND_FILL if helper == "" else Control.SIZE_SHRINK_BEGIN
+	line.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(line)
+	if helper != "":
+		var h := Label.new()
+		h.text = helper
+		h.add_theme_font_size_override("font_size", _fs(12))
+		h.add_theme_color_override("font_color", Color(UIKit.TEXT_DIM, 0.85))
+		h.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		# Dar ekranda açıklama kısalır, başlık kaymaz.
+		h.clip_text = true
+		h.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		h.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(h)
+	return row
 
 
 func _add_btn(parent: Node, key: String, text: String, cb: Callable) -> void:
@@ -1963,7 +2033,7 @@ func _rebuild_agenda() -> void:
 		nl.add_theme_color_override("font_color", Color("e8dcc0"))
 		nv.add_child(nl)
 	if not Sim.pending.is_empty():
-		_agenda.add_child(_caption("KARAR BEKLEYENLER   ·   her karar 1 mesai   ·   ertelersen 2 hafta sonra kendi kendine çözülür"))
+		_agenda.add_child(_section("KARAR BEKLEYENLER", "her karar 1 mesai · ertelenen karar 2 hafta sonra kendiliğinden çözülür"))
 	for pi in Sim.pending.size():
 		var p: Dictionary = Sim.pending[pi]
 		var e: Dictionary = p["event"]
@@ -1975,6 +2045,8 @@ func _rebuild_agenda() -> void:
 		card_box.shadow_size = 8 if lead else 3
 		card.add_theme_stylebox_override("panel", card_box)
 		_agenda.add_child(card)
+		if lead:
+			UIKit.ornament(card, UIKit.GOLD, 18, 5)
 		_decision_cards.append(card)
 		animated.append(card)
 		if p["age"] > 0 and not _fast():
@@ -2035,7 +2107,7 @@ func _rebuild_agenda() -> void:
 			b.pressed.connect(_choose.bind(pi, ci))
 			vb.add_child(b)
 			_decision_buttons.append(b)
-	_agenda.add_child(_caption("BU HAFTANIN RAPORLARI"))
+	_agenda.add_child(_section("BU HAFTANIN RAPORLARI", "masana ulaşan: %d" % Sim.reports.size()))
 	var texts: Array[RichTextLabel] = []
 	var rgrid := GridContainer.new()
 	rgrid.columns = 1 if _mobile else 2
@@ -2060,10 +2132,6 @@ func _rebuild_agenda() -> void:
 		l.text = "[b]%s[/b]  [color=gray]%s[/color]\n%s" % [r["name"], r["title"], r["text"]]
 		row.add_child(l)
 		texts.append(l)
-	var count := Label.new()
-	count.text = "Masana ulaşan rapor sayısı: %d" % Sim.reports.size()
-	count.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-	_agenda.add_child(count)
 	_restore_scroll.call_deferred(keep_scroll)
 	if _reveal and not _fast():
 		_reveal = false
@@ -2117,30 +2185,67 @@ func _rebuild_cards() -> void:
 	_style_cards()
 
 
+var _card_fade_tex: Texture2D
+
+
+func _card_fade() -> Texture2D:
+	if _card_fade_tex == null:
+		var g := Gradient.new()
+		g.set_color(0, Color(0.02, 0.015, 0.02, 0.0))
+		g.set_color(1, Color(0.02, 0.015, 0.02, 0.92))
+		var gt := GradientTexture2D.new()
+		gt.gradient = g
+		gt.fill_from = Vector2(0, 0)
+		gt.fill_to = Vector2(0, 1)
+		gt.width = 4
+		gt.height = 64
+		_card_fade_tex = gt
+	return _card_fade_tex
+
+
 func _make_card(a) -> PanelContainer:
 	var card := PanelContainer.new()
-	card.custom_minimum_size = Vector2(108, 108) if not _mobile else Vector2(150, 190)
+	card.custom_minimum_size = Vector2(108, 96) if not _mobile else Vector2(150, 190)
 	card.mouse_filter = Control.MOUSE_FILTER_STOP
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	card.tooltip_text = "%s\n%s" % [a.display_name, a.title]
+	# Portre kartı tam doldurur; ad ve rol, portrenin altındaki karartmanın üstünde.
+	var card_art := _initial_art(a.id, Vector2(92, 88) if not _mobile else Vector2(130, 176), 36)
+	card.add_child(card_art)
+	var fade := TextureRect.new()
+	fade.texture = _card_fade()
+	fade.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	fade.stretch_mode = TextureRect.STRETCH_SCALE
+	fade.anchor_top = 0.42
+	fade.anchor_right = 1.0
+	fade.anchor_bottom = 1.0
+	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	card_art.add_child(fade)
 	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 3)
+	v.add_theme_constant_override("separation", -2)
+	v.anchor_top = 1.0
+	v.anchor_right = 1.0
+	v.anchor_bottom = 1.0
+	v.offset_top = -40 if not _mobile else -52
+	v.offset_bottom = -3
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	card.add_child(v)
-	var card_art := _initial_art(a.id, Vector2(92, 66) if not _mobile else Vector2(130, 128), 36)
-	card_art.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	v.add_child(card_art)
+	card_art.add_child(v)
 	var n := Label.new()
 	n.text = _short_name(a.display_name)
 	n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	n.add_theme_font_size_override("font_size", _fs(14))
+	n.add_theme_font_override("font", UIKit.serif())
+	n.add_theme_font_size_override("font_size", _fs(17))
+	n.add_theme_color_override("font_color", Color("f3ead2"))
+	n.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.8))
+	n.add_theme_constant_override("shadow_outline_size", 4)
 	n.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(n)
 	var r := Label.new()
-	r.text = "DÜŞMAN" if a.moved else str(ROLE.get(a.domain, ""))
+	r.text = UIKit.tr_upper("Düşman" if a.moved else str(ROLE.get(a.domain, "")))
 	r.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	r.add_theme_font_size_override("font_size", _fs(11))
-	r.add_theme_color_override("font_color", UIKit.DANGER if a.moved else UIKit.TEXT_DIM)
+	r.add_theme_font_override("font", UIKit.caps())
+	r.add_theme_font_size_override("font_size", _fs(10))
+	r.add_theme_color_override("font_color", Color("ff8a7a") if a.moved else Color(UIKit.GOLD, 0.85))
 	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(r)
 	card.set_meta("id", a.id)
@@ -2190,7 +2295,7 @@ func _style_cards(hover_id := "") -> void:
 		if selected:
 			border = Color("ffe08a") if primary else UIKit.GOLD
 			bg = Color("2d2616")
-		card.add_theme_stylebox_override("panel", UIKit.box(bg, border, 6, 6, 2 if selected else 1))
+		card.add_theme_stylebox_override("panel", UIKit.box(bg, border, 6, 3, 2 if selected else 1))
 
 
 const PERSON_ACTIONS := ["promote", "bribe", "p_0", "p_1", "p_2", "cross", "investigate", "o_sor", "o_yaz", "o_soz", "o_ima", "blackmail", "dismiss"]
@@ -2231,6 +2336,9 @@ func _update_info() -> void:
 	_info.clear()
 	for c in _portrait_box.get_children():
 		c.queue_free()
+	for c in _traits.get_children():
+		_traits.remove_child(c)
+		c.queue_free()
 	var id := _selected_primary()
 	_portrait_box.visible = id != ""
 	if id == "":
@@ -2239,20 +2347,64 @@ func _update_info() -> void:
 	var a = Sim.actors[id]
 	var art := _initial_art(a.id, Vector2(62, 62), 32)
 	_portrait_box.add_child(art)
-	var weight := "ikinci planda" if a.power < 40.0 else ("etkili" if a.power < 65.0 else "vazgeçilmez ve tehlikeli")
-	var debt := "" if a.obligation < 8.0 else "\nSana verdiklerinin karşılığını bekliyor."
+	_info.append_text("[b][font_size=%d]%s[/font_size][/b]  [color=gray]%s[/color]" % [_fs(18), a.display_name, a.title])
+	# Güç: üç kademe (eskiden metinle verilen bilgi; fazlası değil).
+	var level := 1 if a.power < 40.0 else (2 if a.power < 65.0 else 3)
+	var lvl_name: String = ["", "ikinci planda", "etkili", "vazgeçilmez"][level]
+	_traits.add_child(_trait("Güç · " + lvl_name, UIKit.DANGER if level == 3 else UIKit.GOLD, level, 3,
+		"Güç merkezi olarak ne kadar ağırlığı var. Vazgeçilmez olanlar tehlikelidir."))
+	if a.moved:
+		_traits.add_child(_trait("Düşman", UIKit.DANGER, -1, 0, "Sana karşı fiilen harekete geçti."))
+	if a.obligation >= 8.0:
+		_traits.add_child(_trait("Karşılık bekliyor", Color("d9963e"), -1, 0, "Ona verdiklerinin karşılığını bekliyor."))
+	var dim := Color(UIKit.TEXT_DIM, 0.8)
+	_traits.add_child(_trait("Zayıf nokta: " + (a.weak_point if a.known_weak else "?"), UIKit.DANGER if a.known_weak else dim, -1, 0,
+		"Biliniyorsa şantaj mümkün. 'Araştır' ile öğrenilebilir." if not a.known_weak else "Şantaj için kullanılabilir."))
+	_traits.add_child(_trait("Kırmızı çizgi: " + (a.red_line if a.known_red else "?"), Color("d9963e") if a.known_red else dim, -1, 0,
+		"Bu çizgiyi aşarsan affetmez."))
 	var k: Dictionary = Sim.karne.get(a.id, {"ok": 0, "bad": 0})
-	var notes := "" if k["ok"] + k["bad"] == 0 else "\n[color=gray]Doğrulama notu: %d kez örtüştü, %d kez çelişti.[/color]" % [k["ok"], k["bad"]]
-	var more := "" if _sel.size() < 2 else "\n[color=#d9b359]%d kişi seçili (operasyon çemberi).[/color]" % _sel.size()
-	var plist: Array[String] = []
+	if int(k["ok"]) + int(k["bad"]) > 0:
+		var trust_col := UIKit.OK if int(k["ok"]) >= int(k["bad"]) else UIKit.DANGER
+		_traits.add_child(_trait("Doğrulama: %d örtüştü · %d çelişti" % [k["ok"], k["bad"]], trust_col, -1, 0,
+			"Raporlarının başka kaynaklarla karşılaştırılması."))
 	for p in Sim.active_promises_of(a.id):
-		plist.append("%s (vade: hafta %d)" % [p["prize"], p["due"]])
-	if not plist.is_empty():
-		more += "\n[color=#d9b359]Ona verdiğin sözler:[/color] " + ", ".join(plist)
-	var weak: String = a.weak_point if a.known_weak else "[color=gray]bilinmiyor[/color]"
-	var red: String = a.red_line if a.known_red else "[color=gray]bilinmiyor[/color]"
-	var secrets := "\n[color=#c0504a]Zayıf noktası:[/color] %s   [color=#c0504a]Kırmızı çizgisi:[/color] %s" % [weak, red]
-	_info.append_text("[b][font_size=%d]%s[/font_size][/b]  [color=gray]%s[/color]\nGüç merkezi olarak %s.%s%s%s%s" % [_fs(18), a.display_name, a.title, weight, debt, secrets, notes, more])
+		_traits.add_child(_trait("Söz: %s · hafta %d" % [p["prize"], p["due"]], Color("d9b359"), -1, 0, "Ona verdiğin söz ve vadesi."))
+	if _sel.size() > 1:
+		_traits.add_child(_trait("%d kişi seçili · operasyon çemberi" % _sel.size(), UIKit.GOLD, -1, 0, ""))
+
+
+## Kişi göstergesi: renkli nokta ya da kademe noktaları + kısa metin.
+func _trait(text: String, col: Color, filled := -1, total := 0, tip := "") -> Control:
+	var chip := PanelContainer.new()
+	var sb := UIKit.box(Color(col, 0.1), Color(col, 0.38), 10, 8)
+	sb.content_margin_top = 2
+	sb.content_margin_bottom = 2
+	chip.add_theme_stylebox_override("panel", sb)
+	chip.tooltip_text = tip
+	chip.mouse_filter = Control.MOUSE_FILTER_PASS if tip != "" else Control.MOUSE_FILTER_IGNORE
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	chip.add_child(row)
+	var n := total if filled >= 0 else 1
+	for i in n:
+		var dot := Panel.new()
+		var ds := StyleBoxFlat.new()
+		ds.set_corner_radius_all(4)
+		ds.anti_aliasing = true
+		ds.bg_color = col if (filled < 0 or i < filled) else Color(col, 0.18)
+		dot.add_theme_stylebox_override("panel", ds)
+		dot.custom_minimum_size = Vector2(7, 7)
+		dot.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(dot)
+	var l := Label.new()
+	l.text = text
+	l.add_theme_font_size_override("font_size", _fs(12))
+	l.add_theme_color_override("font_color", col.lightened(0.25) if col.s > 0.1 else col)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(l)
+	return chip
 
 
 func _on_week(_w: int) -> void:
