@@ -1,6 +1,6 @@
 # Veloria — Durum ve Yapılacaklar (yeni oturum için devir notu)
 
-Son güncelleme: 2026-10-04. Dal: `veloria` (son commit `274e6df`). Push YOK: `origin` Beckett'in kendi deposu; kullanıcı kendi deposuna yedeklemek isterse yeni repo açıp `veloria` dalını oraya göndermeli (öneri yapıldı, cevap gelmedi).
+Son güncelleme: 2026-10-04 (ikinci oturum). Dal: `veloria`. Çalışma ağacındaki `.mcp.json`, `BECKETT_SETUP.md`, `project.godot` değişiklikleri (Beckett token'ının kaldırılması) kullanıcınındır; commit'lere katılmadı, dokunma. Push YOK: `origin` Beckett'in kendi deposu; kullanıcı kendi deposuna yedeklemek isterse yeni repo açıp `veloria` dalını oraya göndermeli (öneri yapıldı, cevap gelmedi).
 
 ## Proje
 Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyonu. Kullanıcı: Mesut Canturk. Görselleri kullanıcı ChatGPT/Imagen ile üretiyor; ben prompt veriyorum (`ART_PROMPTS.md`). Görselleri rastgele adla `art/` köküne ya da bir klasöre atıyor; ben içeriğe bakıp (kontakt sayfası) doğru ada taşıyorum, `.import` ayarlarına boyut sınırı + lossy + mipmap uyguluyorum.
@@ -9,6 +9,7 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
 - Godot console: `C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe`
 - Testler: `--headless --path . --script res://tests/sim_test.gd` (denge+sistemler), `pacing_test.gd`, `cause_probe.gd`
 - Arayüz otomatik oynatma: `-- --autoplay`, `--mobile`, `--full` (Kolay seviyede 104 haftayı arayüzden oynar)
+- Ekran görüntüsü: pencereli `--path . --script res://tests/ui_shots.gd -- --out=KLASÖR [--mobile]` (görüntüleri Read ile incele)
 - Build: `--export-release "Windows Desktop"|Linux|Web` → `dist/windows|linux|web`; zip'ler `dist/release/`. Export sonrası `.mcp.json` portu 8770'e geri alınmalı.
 - Beckett MCP (127.0.0.1:8770) editör açıkken çalışır; araçlar oturumda görünmezse HTTP JSON-RPC ile çağır. Dev bayrakları (`veloria/dev_*`) project.godot'ta KAPALI kalmalı.
 - Tuzaklar: `class_name` yerine `preload`; web'de ◆ ⏳ → gibi glifler kutu çıkar; görünmez Control'ler tıklama yutar (Beckett `ui_snapshot` → `occluded_by` ile tara); yapay `push_input` tıklama testi çalışmıyor; PowerShell'de çok satırlı commit mesajı için `-m` kullan; testler oyuncu kaydına dokunmaz (`save_path`, `record_chronicle`, `autosave`).
@@ -19,12 +20,16 @@ Arayüz: tema, sinematikler (açılış/final/hafta geçişi/mühür), Çalışm
 Son tur (274e6df): düğme hiyerarşisi (Ghost/Danger/Choice), gruplu eylem paneli, sır kartları, bildirim yığını, iki sütun rapor.
 Belgeler: `docs/OYUNCU_REHBERI.md`, `docs/GELISTIRICI_REHBERI.md`, `docs/ARAYUZ_PLANI.md`.
 
-## Yapılacaklar (öncelik sırası; kullanıcıya önerildi, onay/yanıt bekleniyor — söylemezse 1,4,5)
-1. Akış şeridi: ekranın altında "2/4 mesai · 1 karar bekliyor · medya okunmadı" gibi hafta ilerleme göstergesi.
-2. Masa nesnelerinin altına tek satırlık özet ("2 karar · en acil: Kâhya").
-3. Kişi paneli: düz metin yerine sayısız küçük göstergeler (renkli noktalar/simgeler).
-4. Oyun sonu ekranını sekmelere böl (Özet / Grafik / Tarihçiler / Hakikat Dosyası / Kararlar).
-5. Menü: ayarları ayrı sayfaya taşı; ana menü 4 büyük düğme.
+Arayüz turu 2 (2026-10-04, ikinci oturum): 1, 4, 5 yapıldı —
+- Akış şeridi (`_rebuild_flow`, `_flow_chip`, `_on_flow`): alt satırda Haftayı Bitir'in solunda; mesai, bekleyen/acil karar, okunmamış medya, vadesi gelen söz, yayılan sır. Parçalar tıklanınca Gündem/Medya/Dosyalar'a götürür.
+- Oyun sonu sekmeleri (`_end_tabs`, `_end_page`): Özet / Grafik / Tarihçiler / Hakikat Dosyası (n) / Kararlar; grafik sekme ilk açılınca çizilir. "Ana Menü" düğmesi eklendi.
+- Menü sayfaları (`_menu_page`, `_menu_show_page`): ana sayfa 4 düğme (Devam Et|Oyuna Dön, Yeni Oyun, Ayarlar, Çıkış — web'de Çıkış gizli) + bağlantılar (Nasıl Oynanır, Arşiv, Hakkında). Zorluk "Yeni Oyun" sayfasında, ayarlar ayrı sayfada. Esc alt sayfadan ana sayfaya döner.
+- Ekran görüntüsü aracı: `tests/ui_shots.gd` (pencereli; `-- --out=KLASÖR [--mobile]`), dev ayarlarını yalnızca bellekte açar.
+
+## Yapılacaklar (öncelik sırası)
+1. Masa nesnelerinin altına tek satırlık özet ("2 karar · en acil: Kâhya").
+2. Kişi paneli: düz metin yerine sayısız küçük göstergeler (renkli noktalar/simgeler).
+Not: menü açılınca sağ üstteki bildirimler temizleniyor (eskiden menünün üstünde kalıyordu).
 Diğer: kullanıcı henüz tam bir saltanat oynamadı; geri bildirimi (denge, metin, ses) bekleniyor. Sentezlenmiş sesleri kimse dinlemedi ("sesler iyi" dedi). Linux build gerçek makinede denenmedi. Android/iOS kasıtlı yapılmadı (kullanıcı: APK gerekmez).
 
 ## Kullanıcı tercihleri

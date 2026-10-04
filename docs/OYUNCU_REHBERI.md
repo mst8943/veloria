@@ -26,7 +26,9 @@ Her hafta masanın başında açılır. Masadaki nesnelere tıkla:
 | Hanedan fotoğrafı | Hükümdarlık Arşivi ve başarımlar |
 | Başkent haritası | Kurumlar |
 
-Kırmızı rozetler dikkat isteyen şeyleri gösterir. Masaya üst çubuktaki **Masa** düğmesiyle dönebilirsin. İstemezsen menüden "Haftaya masadan başla" seçeneğini kapat.
+Kırmızı rozetler dikkat isteyen şeyleri gösterir. Masaya üst çubuktaki **Masa** düğmesiyle dönebilirsin. İstemezsen Ayarlar'dan "Haftaya masadan başla" seçeneğini kapat.
+
+**Akış şeridi:** Ekranın altında, Haftayı Bitir düğmesinin solunda haftanın durumu tek satırda görünür: kalan mesai, bekleyen kararlar (bu hafta düşecek olanlar kırmızı), okunmamış medya, vadesi gelen sözler ve yayılan sırların. Bir parçaya tıklarsan seni ilgili yere götürür.
 
 ## Başkent
 
@@ -90,11 +92,12 @@ Yaptığın gizli işler **Dosyalar** sekmesinde iz olarak birikir. Bir sırrı 
 
 ## Oyun sonu
 
-Saltanat bittiğinde (104 hafta ya da düşüş):
-- Sana bir **ünvan** verilir (Demir Taç, Altın Kral, Generallerin Kuklası, Sözünün Eri, Sırların Efendisi…).
-- **Gerçekte ne oldu** grafiği, oyun boyunca gizli kalan gidişatı gösterir.
-- **Tarih ne yazacak?** Saray tarihçisi ve sürgündeki tarihçi saltanatını iki farklı biçimde anlatır.
+Saltanat bittiğinde (104 hafta ya da düşüş) sana bir **ünvan** verilir (Demir Taç, Altın Kral, Generallerin Kuklası, Sözünün Eri, Sırların Efendisi…) ve sonuç ekranı sekmelere ayrılır:
+- **Özet:** Nasıl bittiği, saltanat süresi, söz sicili, yeni başarımlar ve son kararların.
+- **Grafik:** "Gerçekte ne oldu" grafiği, oyun boyunca gizli kalan gidişatı gösterir.
+- **Tarihçiler:** Saray tarihçisi ve sürgündeki tarihçi saltanatını iki farklı biçimde anlatır.
 - **Hakikat Dosyası:** Kim, ne zaman, sana ne yalan söyledi.
+- **Kararlar:** Verdiğin ve ertelediğin tüm kararlar, en yenisi üstte.
 - Saltanatın **Hükümdarlık Arşivi**'ne kaydedilir.
 - Kazandığın yeni **başarımlar** duyurulur. 15 başarımın tamamı Arşiv'de listelenir.
 
@@ -111,7 +114,9 @@ Oyun her hafta sonunda **otomatik kaydedilir**. Saltanat bittiğinde kayıt sili
 
 ## Ayarlar
 
-Menüde: zorluk (Kolay / Normal / Zor), müzik ve efekt sesi, tam ekran, kısa geçişler, danışman ipuçları, açılış sineması ve haftaya masadan başlama.
+Ana menüde dört düğme var: **Devam Et** (oyun sürüyorsa **Oyuna Dön**), **Yeni Oyun**, **Ayarlar**, **Çıkış**. Altındaki bağlantılar: Nasıl Oynanır, Hükümdarlık Arşivi, Hakkında.
+
+Zorluk (Kolay / Normal / Zor) **Yeni Oyun** sayfasında seçilir. **Ayarlar** sayfasında: müzik ve efekt sesi, tam ekran, kısa geçişler, danışman ipuçları, açılış sineması ve haftaya masadan başlama. Esc alt sayfadan ana menüye döner.
 
 ## İpuçları
 

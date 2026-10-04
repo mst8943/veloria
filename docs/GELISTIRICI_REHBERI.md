@@ -32,6 +32,7 @@ art/
   *.png           Masa, menü ve dört final sahnesi
   _arsiv/         Kullanılmayan görseller (.gdignore ile Godot dışı)
 tests/sim_test.gd Headless simülasyon, denge ve sistem testleri
+tests/ui_shots.gd Arayüz ekran görüntüleri (oyun, menü sayfaları, oyun sonu sekmeleri)
 ART_PROMPTS.md    Tüm görsellerin üretim prompt'ları
 export_presets.cfg Windows, Linux, Web
 ```
@@ -109,6 +110,14 @@ Arayüzü baştan sona otomatik oynatmak için (masa, harita ve medya ekranları
 ```bash
 Godot_console.exe --headless --path . -- --autoplay
 Godot_console.exe --headless --path . -- --autoplay --mobile
+Godot_console.exe --headless --path . -- --autoplay --full
+```
+
+Ekran görüntüleri (pencereli çalışır; headless çizim yapmaz; kayda ve arşive dokunmaz):
+
+```bash
+Godot_console.exe --path . --script res://tests/ui_shots.gd -- --out=C:/klasor
+Godot_console.exe --path . --script res://tests/ui_shots.gd -- --out=C:/klasor --mobile
 ```
 
 ## Geliştirici ayarları

@@ -66,6 +66,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 Portions of this software are copyright © The FreeType Project (www.freetype.org). All rights reserved.[/font_size][/color]"""
 
+## Nasıl oynanır penceresi (ana menüdeki bağlantı).
+const HOW_TO := "[b][font_size=26][color=#d6b25e]Nasıl oynanır[/color][/font_size][/b]\n\n• 104 hafta tahtta kal. Haftada [b]4 mesain[/b] var; kararlar, emirler ve operasyonlar mesai harcar.\n• Sayıları göremezsin; yalnızca [b]raporlar[/b] vardır ve herkes yalan söyleyebilir. Korktukça insanlar sana gerçeği söylemez; hepsi aynı cümleyi kurmaya başlar.\n• Verdiğin güç sana dönebilir. Terfi, borç ve gizli ödemeler iz bırakır.\n• Söz vermek kolaydır; vadesi gelince ya tutarsın ya da bedelini ödersin. Aynı makamı iki kişiye vaat etmek er geç duyulur.\n• Herkesin bildiği bir sır, gizli bir sırdan çok daha tehlikelidir.\n• Ertelediğin kararlar iki hafta sonra kendi kendine çözülür.\n• Oyun bittiğinde [b]Hakikat Dosyası[/b] sana kimin ne zaman yalan söylediğini gösterir."
+
 ## İlk haftalarda yeni oyuncuya kısa yol gösterme notları (hafta -> metin).
 const ADVICE := {
 	1: "Majesteleri, bu masada sayılar yoktur, insanlar vardır. Aşağıdaki kartlar kararınızı bekliyor; her karar, emir ve operasyon sınırlı mesainizden harcar. Raporları da okuyun, ama hepsine inanmayın.",
@@ -103,6 +106,8 @@ var _icons: Dictionary = {}
 var _menu: Control
 var _menu_bg: Control
 var _menu_items: Array[Control] = []
+var _menu_pages: Dictionary = {}
+var _menu_page_now := "main"
 var _end_overlay: Control
 var _end_text: RichTextLabel
 var _end_bg: TextureRect
@@ -125,6 +130,13 @@ var _curtain_img: TextureRect
 var _curtain_skip := false
 var _cinema: Control
 var _end_chart: Control
+var _end_head: RichTextLabel
+var _end_tabs: TabContainer
+var _end_hist: RichTextLabel
+var _end_lies: RichTextLabel
+var _end_log: RichTextLabel
+var _end_timeline: Array = []
+var _end_chart_drawn := false
 var _modal: Control
 var _modal_text: RichTextLabel
 var _modal_yes: Button
@@ -133,6 +145,8 @@ var _modal_cb := Callable()
 var _promise_list: RichTextLabel
 var _multi_btn: Button
 var _hint_label: RichTextLabel
+var _flow: HBoxContainer
+var _flow_sig := ""
 const HINT_DEFAULT := "[color=#8f7a45]Bir eylemin üzerine gel ya da dokun: ne yaptığını ve bedelini burada görürsün.[/color]"
 var _busy := false
 var _instant := false
@@ -232,6 +246,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		KEY_ESCAPE:
 			if _modal.visible:
 				_modal.hide()
+			elif _menu.visible and _menu_page_now != "main":
+				_menu_show_page("main")
 			elif _desk.visible and not _menu.visible:
 				_desk.close_view()
 			elif _menu.visible and in_game:
@@ -485,13 +501,26 @@ func _build_ui() -> void:
 	_hint_label.text = HINT_DEFAULT
 	hint_panel.add_child(_hint_label)
 
+	# Alt satır: haftanın akış şeridi (ne kaldı, ne bekliyor) ve Haftayı Bitir.
+	var bottom := HBoxContainer.new()
+	bottom.add_theme_constant_override("separation", 12)
+	root.add_child(bottom)
+	var flow_panel := PanelContainer.new()
+	flow_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	flow_panel.add_theme_stylebox_override("panel", UIKit.box(Color(0, 0, 0, 0.4), Color(UIKit.GOLD_DIM, 0.25), 8, 10))
+	flow_panel.clip_contents = true
+	bottom.add_child(flow_panel)
+	_flow = HBoxContainer.new()
+	_flow.add_theme_constant_override("separation", 6)
+	_flow.alignment = BoxContainer.ALIGNMENT_BEGIN
+	flow_panel.add_child(_flow)
 	_end_btn = Button.new()
 	_end_btn.text = "HAFTAYI BİTİR   »"
 	_end_btn.theme_type_variation = "PrimaryButton"
-	_end_btn.custom_minimum_size.y = 52
+	_end_btn.custom_minimum_size = Vector2(300 if _mobile else 360, 52)
 	_wire(_end_btn)
 	_end_btn.pressed.connect(_end_week_pressed)
-	root.add_child(_end_btn)
+	bottom.add_child(_end_btn)
 
 	# Bildirimler: sağ üstte, üst üste birikir (içeriğin üstüne binmez).
 	_toasts = VBoxContainer.new()
@@ -786,7 +815,7 @@ func _build_menu() -> void:
 	plate.add_theme_stylebox_override("panel", UIKit.box(Color(0.03, 0.025, 0.04, 0.72), Color(UIKit.GOLD_DIM, 0.35), 10, 34))
 	center.add_child(plate)
 	var box := VBoxContainer.new()
-	box.custom_minimum_size.x = 680
+	box.custom_minimum_size.x = 560
 	box.add_theme_constant_override("separation", 12)
 	plate.add_child(box)
 	var title := Label.new()
@@ -810,103 +839,121 @@ func _build_menu() -> void:
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(sub)
 	var sp := Control.new()
-	sp.custom_minimum_size.y = 18
+	sp.custom_minimum_size.y = 10 if _mobile else 18
 	box.add_child(sp)
-	var how := RichTextLabel.new()
-	how.bbcode_enabled = true
-	how.fit_content = true
-	how.scroll_active = false
-	how.text = "[b]Nasıl oynanır[/b]\n• 104 hafta tahtta kal. Haftada [b]4 mesain[/b] var; kararlar, emirler ve operasyonlar mesai harcar.\n• Sayıları göremezsin; yalnızca [b]raporlar[/b] vardır ve herkes yalan söyleyebilir. Korktukça insanlar sana gerçeği söylemez; hepsi aynı cümleyi kurmaya başlar.\n• Verdiğin güç sana dönebilir. Terfi, borç ve gizli ödemeler iz bırakır.\n• Söz vermek kolaydır; vadesi gelince ya tutarsın ya da bedelini ödersin. Aynı makamı iki kişiye vaat etmek er geç duyulur.\n• Herkesin bildiği bir sır, gizli bir sırdan çok daha tehlikelidir.\n• Ertelediğin kararlar iki hafta sonra kendi kendine çözülür.\n• Oyun bittiğinde [b]Hakikat Dosyası[/b] sana kimin ne zaman yalan söylediğini gösterir."
-	box.add_child(how)
-	how.visible = not _mobile  # mobilde ekranı doldurmasın; düğmeyle açılır
-	var b_new := _menu_btn("Yeni Oyun", _request_new_game, true)
-	var b_diff := _menu_btn("", func() -> void: pass)
-	var set_diff_text := func() -> void:
-		b_diff.text = "Zorluk: %s" % Sim.DIFFICULTY[Sfx.difficulty]["name"]
-	set_diff_text.call()
-	b_diff.tooltip_text = "Kolay: 5 mesai, daha uzun koruma süresi.  Normal: dengeli.  Zor: darbeler daha erken ve kolay."
-	b_diff.pressed.connect(func() -> void:
-		Sfx.difficulty = (Sfx.difficulty + 1) % Sim.DIFFICULTY.size()
-		Sfx.save_settings()
-		set_diff_text.call())
-	var b_cont := _menu_btn("Devam Et", _continue)
-	var b_back := _menu_btn("Oyuna Dön", func() -> void: _hide_menu())
-	var info_row := HBoxContainer.new()
-	info_row.add_theme_constant_override("separation", 10)
-	box.add_child(info_row)
-	var b_arch := Button.new()
-	b_arch.text = "Hükümdarlık Arşivi"
-	b_arch.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b_arch.custom_minimum_size.y = 42
-	_wire(b_arch)
-	b_arch.pressed.connect(_show_chronicle)
-	info_row.add_child(b_arch)
-	var b_about := Button.new()
-	b_about.text = "Hakkında"
-	b_about.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b_about.custom_minimum_size.y = 42
-	_wire(b_about)
-	b_about.pressed.connect(func() -> void: _show_modal(CREDITS))
-	info_row.add_child(b_about)
-	if _mobile:
-		var b_how := _menu_btn("Nasıl Oynanır", func() -> void: how.visible = not how.visible)
-		box.move_child(b_how, box.get_child_count() - 1)
-	var row := HFlowContainer.new()   # sığmayan seçenek alt satıra geçer
-	row.add_theme_constant_override("h_separation", 16)
-	row.add_theme_constant_override("v_separation", 6)
-	row.alignment = FlowContainer.ALIGNMENT_CENTER
-	box.add_child(row)
-	var cb_fs := CheckBox.new()
-	cb_fs.text = "Tam ekran (F11)"
-	cb_fs.button_pressed = Sfx.fullscreen
-	cb_fs.visible = not _mobile
-	cb_fs.toggled.connect(func(on: bool) -> void:
-		Sfx.set_fullscreen(on)
-		Sfx.save_settings())
-	row.add_child(cb_fs)
-	var cb_fx := CheckBox.new()
-	cb_fx.text = "Kısa geçişler"
-	cb_fx.button_pressed = Sfx.short_fx
-	cb_fx.toggled.connect(func(on: bool) -> void:
-		Sfx.short_fx = on
-		Sfx.save_settings())
-	row.add_child(cb_fx)
-	var cb_tips := CheckBox.new()
-	cb_tips.text = "Danışman ipuçları"
-	cb_tips.button_pressed = Sfx.tips
-	cb_tips.toggled.connect(func(on: bool) -> void:
-		Sfx.tips = on
-		Sfx.save_settings())
-	row.add_child(cb_tips)
-	var cb_intro := CheckBox.new()
-	cb_intro.text = "Açılış sineması"
-	cb_intro.button_pressed = Sfx.intro
-	cb_intro.toggled.connect(func(on: bool) -> void:
-		Sfx.intro = on
-		Sfx.save_settings())
-	row.add_child(cb_intro)
-	var cb_desk := CheckBox.new()
-	cb_desk.text = "Haftaya masadan başla"
-	cb_desk.button_pressed = Sfx.desk_start
-	cb_desk.toggled.connect(func(on: bool) -> void:
-		Sfx.desk_start = on
-		Sfx.save_settings())
-	row.add_child(cb_desk)
-	var vrow := HBoxContainer.new()
-	vrow.add_theme_constant_override("separation", 10)
-	vrow.alignment = BoxContainer.ALIGNMENT_CENTER
-	box.add_child(vrow)
-	vrow.add_child(_label_dim("Müzik"))
-	vrow.add_child(_slider(Sfx.music_volume, func(v: float) -> void:
+
+	# --- Ana sayfa: dört büyük düğme, altında küçük bağlantılar
+	var main_page := _menu_page("main", box)
+	var b_first := _menu_btn(main_page, "Devam Et", func() -> void:
+		if not Sim.actors.is_empty() and not Sim.ended:
+			_hide_menu()
+		else:
+			_continue())
+	var b_new := _menu_btn(main_page, "Yeni Oyun", func() -> void: _menu_show_page("new"))
+	var b_set := _menu_btn(main_page, "Ayarlar", func() -> void: _menu_show_page("settings"))
+	var b_quit := _menu_btn(main_page, "Çıkış", func() -> void: get_tree().quit())
+	b_quit.visible = not OS.has_feature("web")   # tarayıcıda çıkış anlamsız
+	for b in [b_first, b_new, b_set, b_quit]:
+		b.custom_minimum_size.y = 50 if _mobile else 58
+		b.add_theme_font_override("font", UIKit.serif())
+		b.add_theme_font_size_override("font_size", _fs(21))
+	var links := HBoxContainer.new()
+	links.alignment = BoxContainer.ALIGNMENT_CENTER
+	links.add_theme_constant_override("separation", 6)
+	main_page.add_child(links)
+	for l in [["Nasıl Oynanır", func() -> void: _show_modal(HOW_TO)], ["Hükümdarlık Arşivi", _show_chronicle], ["Hakkında", func() -> void: _show_modal(CREDITS)]]:
+		var lb := Button.new()
+		lb.text = l[0]
+		lb.theme_type_variation = "GhostButton"
+		lb.custom_minimum_size.y = 40
+		_wire(lb)
+		lb.pressed.connect(l[1])
+		links.add_child(lb)
+
+	# --- Yeni oyun: zorluk seçimi
+	var new_page := _menu_page("new", box)
+	new_page.add_child(_menu_heading("YENİ SALTANAT"))
+	var dgroup := ButtonGroup.new()
+	var ddesc := [
+		"5 mesai, daha uzun koruma süresi ve bol gelir. İlk saltanat için.",
+		"4 mesai. Dengeli: hatalarını affeder ama unutmaz.",
+		"4 mesai, kısa koruma, az gelir. Darbeler daha erken ve kolay gelir.",
+	]
+	for i in Sim.DIFFICULTY.size():
+		var db := Button.new()
+		db.text = "  %s\n  %s" % [Sim.DIFFICULTY[i]["name"], ddesc[i]]
+		db.theme_type_variation = "ChoiceButton"
+		db.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		db.toggle_mode = true
+		db.button_group = dgroup
+		db.button_pressed = i == Sfx.difficulty
+		db.custom_minimum_size.y = 58
+		db.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_wire(db)
+		db.pressed.connect(func() -> void:
+			Sfx.difficulty = i
+			Sfx.save_settings())
+		new_page.add_child(db)
+	var nrow := HBoxContainer.new()
+	nrow.add_theme_constant_override("separation", 10)
+	new_page.add_child(nrow)
+	var b_back1 := _menu_btn(nrow, "Geri", func() -> void: _menu_show_page("main"))
+	b_back1.theme_type_variation = "GhostButton"
+	b_back1.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var b_go := _menu_btn(nrow, "Tahta Çık", _request_new_game, true)
+	b_go.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b_go.size_flags_stretch_ratio = 2.0
+
+	# --- Ayarlar
+	var set_page := _menu_page("settings", box)
+	set_page.add_child(_menu_heading("AYARLAR"))
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 24)
+	grid.add_theme_constant_override("v_separation", 6)
+	set_page.add_child(grid)
+	var checks := [
+		["Tam ekran (F11)", Sfx.fullscreen, func(on: bool) -> void: Sfx.set_fullscreen(on), not _mobile],
+		["Kısa geçişler", Sfx.short_fx, func(on: bool) -> void: Sfx.short_fx = on, true],
+		["Danışman ipuçları", Sfx.tips, func(on: bool) -> void: Sfx.tips = on, true],
+		["Açılış sineması", Sfx.intro, func(on: bool) -> void: Sfx.intro = on, true],
+		["Haftaya masadan başla", Sfx.desk_start, func(on: bool) -> void: Sfx.desk_start = on, true],
+	]
+	for c in checks:
+		if not c[3]:
+			continue
+		var cb := CheckBox.new()
+		cb.text = c[0]
+		cb.button_pressed = c[1]
+		var apply: Callable = c[2]
+		cb.toggled.connect(func(on: bool) -> void:
+			apply.call(on)
+			Sfx.save_settings())
+		grid.add_child(cb)
+	var vgrid := GridContainer.new()
+	vgrid.columns = 2
+	vgrid.add_theme_constant_override("h_separation", 16)
+	vgrid.add_theme_constant_override("v_separation", 10)
+	set_page.add_child(vgrid)
+	vgrid.add_child(_label_dim("Müzik"))
+	var s_music := _slider(Sfx.music_volume, func(v: float) -> void:
 		Sfx.set_music(v)
-		Sfx.save_settings()))
-	vrow.add_child(_label_dim("Ses efekti"))
-	vrow.add_child(_slider(Sfx.sfx_volume, func(v: float) -> void:
+		Sfx.save_settings())
+	s_music.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vgrid.add_child(s_music)
+	vgrid.add_child(_label_dim("Ses efekti"))
+	var s_sfx := _slider(Sfx.sfx_volume, func(v: float) -> void:
 		Sfx.set_sfx(v)
 		Sfx.play("click")
-		Sfx.save_settings()))
-	var b_quit := _menu_btn("Çıkış", func() -> void: get_tree().quit())
-	_menu_items = [title, sub, how, b_new, b_diff, b_cont, b_back, info_row, row, vrow, b_quit]
+		Sfx.save_settings())
+	s_sfx.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vgrid.add_child(s_sfx)
+	var b_back2 := _menu_btn(set_page, "Geri", func() -> void: _menu_show_page("main"))
+	b_back2.theme_type_variation = "GhostButton"
+
+	_menu_items = [title, sub, b_first, b_new, b_set, b_quit, links]
+	_menu.set_meta("first", b_first)
+	_menu.set_meta("new", b_new)
 	var ver := Label.new()
 	ver.text = "v%s   ·   Esc: menü   Boşluk: haftayı bitir   Ctrl+S: kaydet   F11: tam ekran" % str(ProjectSettings.get_setting("application/config/version", "1.0.0"))
 	if _mobile:
@@ -918,8 +965,6 @@ func _build_menu() -> void:
 	ver.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	_menu.add_child(ver)
 	_build_modal()
-	_menu.set_meta("cont", b_cont)
-	_menu.set_meta("back", b_back)
 	_menu.hide()
 	# Yavaş "Ken Burns" kaydırma
 	_menu_bg.pivot_offset = Vector2(800, 450)
@@ -1020,7 +1065,7 @@ func _show_chronicle() -> void:
 	_show_modal(t)
 
 
-func _menu_btn(text: String, cb: Callable, primary := false) -> Button:
+func _menu_btn(parent: Control, text: String, cb: Callable, primary := false) -> Button:
 	var b := Button.new()
 	b.text = text
 	b.custom_minimum_size.y = 46
@@ -1028,8 +1073,36 @@ func _menu_btn(text: String, cb: Callable, primary := false) -> Button:
 		b.theme_type_variation = "PrimaryButton"
 	_wire(b)
 	b.pressed.connect(cb)
-	_menu.find_children("*", "VBoxContainer", true, false)[0].add_child(b)
+	parent.add_child(b)
 	return b
+
+
+## Menü sayfası: aynı anda yalnızca biri görünür (ana sayfa, yeni oyun, ayarlar).
+func _menu_page(page_name: String, parent: Control) -> VBoxContainer:
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 10)
+	v.visible = page_name == "main"
+	parent.add_child(v)
+	_menu_pages[page_name] = v
+	return v
+
+
+func _menu_heading(t: String) -> Label:
+	var l := Label.new()
+	l.text = t
+	l.add_theme_font_override("font", UIKit.serif())
+	l.add_theme_font_size_override("font_size", _fs(24))
+	l.add_theme_color_override("font_color", UIKit.GOLD)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	return l
+
+
+func _menu_show_page(page_name: String) -> void:
+	_menu_page_now = page_name
+	for k in _menu_pages:
+		(_menu_pages[k] as Control).visible = k == page_name
+	if not _fast():
+		UIKit.fade_in(_menu_pages[page_name], 0.25)
 
 
 func _label_dim(t: String) -> Label:
@@ -1071,32 +1144,84 @@ func _build_end() -> void:
 	var m := MarginContainer.new()
 	m.set_anchors_preset(Control.PRESET_FULL_RECT)
 	for side in ["left", "right", "top", "bottom"]:
-		m.add_theme_constant_override("margin_" + side, 50)
+		m.add_theme_constant_override("margin_" + side, 20 if _mobile else 50)
 	_end_overlay.add_child(m)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 12)
 	m.add_child(v)
-	_end_chart = TRUTH_CHART.new()
-	_end_chart.custom_minimum_size = Vector2(0, 150 if _mobile else 200)
-	v.add_child(_end_chart)
-	_end_text = RichTextLabel.new()
-	_end_text.bbcode_enabled = true
-	_end_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_end_text.add_theme_font_size_override("normal_font_size", _fs(17))
-	_end_text.add_theme_font_override("bold_font", UIKit.serif())
-	_end_text.add_theme_font_size_override("bold_font_size", _fs(20))
+	_end_head = RichTextLabel.new()
+	_end_head.bbcode_enabled = true
+	_end_head.fit_content = true
+	_end_head.scroll_active = false
+	_end_head.add_theme_font_override("bold_font", UIKit.serif())
+	_end_head.add_theme_font_override("normal_font", UIKit.serif())
+	v.add_child(_end_head)
+	# Sekmeler: Özet / Grafik / Tarihçiler / Hakikat Dosyası / Kararlar
+	_end_tabs = TabContainer.new()
+	_end_tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	v.add_child(_end_tabs)
+	_end_text = _end_page("Özet")
 	_end_text.gui_input.connect(func(ev: InputEvent) -> void:
 		if ev is InputEventMouseButton and ev.pressed:
 			_end_text.visible_ratio = 1.0)
-	v.add_child(_end_text)
+	var gbox := VBoxContainer.new()
+	gbox.name = "Grafik"
+	gbox.add_theme_constant_override("separation", 10)
+	_end_tabs.add_child(gbox)
+	_end_chart = TRUTH_CHART.new()
+	_end_chart.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_end_chart.custom_minimum_size = Vector2(0, 150 if _mobile else 200)
+	gbox.add_child(_end_chart)
+	var gnote := Label.new()
+	gnote.text = "Bu çizgileri oyun boyunca hiç görmedin. Gördüğün yalnızca raporlardı; aradaki fark, sana söylenmeyenlerdir."
+	gnote.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	gnote.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+	gnote.add_theme_font_size_override("font_size", _fs(14))
+	gbox.add_child(gnote)
+	_end_hist = _end_page("Tarihçiler")
+	_end_lies = _end_page("Hakikat Dosyası")
+	_end_log = _end_page("Kararlar")
+	_end_tabs.tab_changed.connect(func(i: int) -> void:
+		Sfx.play("paper", -10.0)
+		# Grafik ilk açıldığında çizilir (görünmezken boşa oynamasın).
+		if _end_tabs.get_tab_control(i) == gbox and not _end_chart_drawn:
+			_end_chart_drawn = true
+			_end_chart.set_data(_end_timeline, not _fast()))
+	var brow := HBoxContainer.new()
+	brow.add_theme_constant_override("separation", 12)
+	v.add_child(brow)
 	var again := Button.new()
 	again.text = "YENİDEN OYNA"
 	again.theme_type_variation = "PrimaryButton"
 	again.custom_minimum_size.y = 50
+	again.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_wire(again)
 	again.pressed.connect(_start_new)
-	v.add_child(again)
+	brow.add_child(again)
+	var to_menu := Button.new()
+	to_menu.text = "Ana Menü"
+	to_menu.theme_type_variation = "GhostButton"
+	to_menu.custom_minimum_size = Vector2(220, 50)
+	_wire(to_menu)
+	to_menu.pressed.connect(func() -> void:
+		_end_overlay.hide()
+		_show_menu())
+	brow.add_child(to_menu)
 	_end_overlay.hide()
+
+
+## Oyun sonu sekmesi: kaydırılabilir zengin metin sayfası.
+func _end_page(title: String) -> RichTextLabel:
+	var l := RichTextLabel.new()
+	l.name = title
+	l.bbcode_enabled = true
+	l.add_theme_font_size_override("normal_font_size", _fs(17))
+	l.add_theme_font_override("bold_font", UIKit.serif())
+	l.add_theme_font_size_override("bold_font_size", _fs(20))
+	var pad := UIKit.box(Color(0, 0, 0, 0.25), Color(0, 0, 0, 0), 6, 16)
+	l.add_theme_stylebox_override("normal", pad)
+	_end_tabs.add_child(l)
+	return l
 
 
 # ---------------------------------------------------------------- Yardımcılar
@@ -1234,10 +1359,22 @@ func _initial_art(id: String, size: Vector2, letter_size := 40) -> Control:
 
 func _show_menu() -> void:
 	_menu.show()
-	var b_cont := _menu.get_meta("cont") as Button
-	b_cont.disabled = not Sim.has_save()
-	b_cont.text = "Devam Et" if not Sim.has_save() else "Devam Et  ·  %s" % Sim.save_summary()
-	(_menu.get_meta("back") as Button).visible = not Sim.ended and not Sim.actors.is_empty()
+	_menu_show_page("main")
+	for t in _toasts.get_children():   # bildirimler menünün üstünde kalmasın
+		t.queue_free()
+	# İlk düğme duruma göre: oyun sürüyorsa "Oyuna Dön", yoksa kayıttan "Devam Et".
+	var b_first := _menu.get_meta("first") as Button
+	var b_new := _menu.get_meta("new") as Button
+	var in_game := not Sim.ended and not Sim.actors.is_empty()
+	if in_game:
+		b_first.text = "Oyuna Dön"
+		b_first.disabled = false
+	else:
+		b_first.disabled = not Sim.has_save()
+		b_first.text = "Devam Et" if not Sim.has_save() else "Devam Et  ·  %s" % Sim.save_summary()
+	var first_primary := in_game or Sim.has_save()
+	b_first.theme_type_variation = "PrimaryButton" if first_primary else ""
+	b_new.theme_type_variation = "" if first_primary else "PrimaryButton"
 	if not _instant:
 		var i := 0
 		for it in _menu_items:
@@ -1594,6 +1731,105 @@ func _refresh() -> void:
 		var warn := "  [color=#c0504a]· çelişki duyuldu[/color]" if p["exposed"] and p["state"] == "active" else ""
 		_promise_list.append_text("• [b]%s[/b] — %s: %s%s\n" % [nm, p["prize"], st, warn])
 	_update_info()
+	_rebuild_flow()
+
+
+## Akış şeridi: haftanın durumu tek bakışta. Her parça tıklanınca ilgili yere götürür.
+func _rebuild_flow() -> void:
+	if _flow == null:
+		return
+	var items: Array = []   # [metin, renk, hedef]
+	if Sim.mesai > 0:
+		items.append(["Mesai %d / %d" % [Sim.mesai, Sim.mesai_max], UIKit.GOLD, ""])
+	else:
+		items.append(["Mesai bitti", UIKit.TEXT_DIM, ""])
+	var late := 0
+	for p in Sim.pending:
+		if int(p["age"]) > 0:
+			late += 1
+	if not Sim.pending.is_empty():
+		var t := "%d karar bekliyor" % Sim.pending.size()
+		if late > 0:
+			t += (" · %d acil" if _mobile else "  ·  %d tanesi bu hafta düşer") % late
+		items.append([t, UIKit.DANGER if late > 0 else UIKit.GOLD, "gundem"])
+	if _media_seen_week != Sim.week:
+		items.append(["Medya okunmadı" if not _mobile else "Medya", Color("d9963e"), "medya"])
+	var due := 0
+	for p in Sim.promises:
+		if str(p["state"]) == "active" and int(p["due"]) <= Sim.week + 1:
+			due += 1
+	if due > 0:
+		items.append(["%d sözün vadesi geldi" % due if not _mobile else "Söz vadesi", Color("d9b359"), "dosyalar"])
+	var spreading := 0
+	for f: Dictionary in Sim.facts.values():
+		if f["subject"] == "king" and not f.get("public", false) and float(f["common"]) >= 0.3:
+			spreading += 1
+	if spreading > 0:
+		items.append(["Sırrın yayılıyor" if spreading == 1 else "%d sırrın yayılıyor" % spreading, UIKit.DANGER, "dosyalar"])
+	if Sim.mesai == 0 and Sim.pending.is_empty():
+		items.append(["Hazırsın: haftayı bitir" if not _mobile else "Hazır", UIKit.OK, ""])
+	var sig := str(items)
+	if sig == _flow_sig:
+		return
+	_flow_sig = sig
+	for c in _flow.get_children():
+		_flow.remove_child(c)
+		c.queue_free()
+	for i in items.size():
+		var it: Array = items[i]
+		if i > 0:
+			var dot := ColorRect.new()
+			dot.color = Color(UIKit.GOLD_DIM, 0.5)
+			dot.custom_minimum_size = Vector2(4, 4)
+			dot.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			_flow.add_child(dot)
+		_flow.add_child(_flow_chip(it[0], it[1], it[2]))
+
+
+func _flow_chip(text: String, col: Color, target: String) -> Control:
+	var b := Button.new()
+	b.text = text
+	b.flat = true
+	b.add_theme_font_size_override("font_size", _fs(14))
+	for st in ["font_color", "font_disabled_color"]:
+		b.add_theme_color_override(st, col)
+	b.add_theme_color_override("font_hover_color", col.lightened(0.3))
+	b.add_theme_color_override("font_pressed_color", col.lightened(0.3))
+	var normal := UIKit.box(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 6, 8)
+	normal.content_margin_top = 4
+	normal.content_margin_bottom = 4
+	var hover := UIKit.box(Color(col, 0.12), Color(col, 0.5), 6, 8)
+	hover.content_margin_top = 4
+	hover.content_margin_bottom = 4
+	b.add_theme_stylebox_override("normal", normal)
+	b.add_theme_stylebox_override("disabled", normal)
+	b.add_theme_stylebox_override("hover", hover if target != "" else normal)
+	b.add_theme_stylebox_override("pressed", hover if target != "" else normal)
+	b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	if target == "":
+		b.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		return b
+	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	b.tooltip_text = {"gundem": "Gündeme git", "medya": "Medya Merkezi'ni aç", "dosyalar": "Dosyalar sekmesine git"}.get(target, "")
+	_wire(b)
+	b.pressed.connect(_on_flow.bind(target))
+	return b
+
+
+func _on_flow(target: String) -> void:
+	if target == "medya":
+		_open_media()
+		return
+	_desk.close_view()
+	_city.close_view()
+	if target == "gundem":
+		_select_tab(_scroll)
+		_scroll.scroll_vertical = 0
+		if not _decision_cards.is_empty():
+			UIKit.pulse(_decision_cards[0], 1.02)
+	else:
+		_select_tab(_files_tab)
 
 
 func _pill(text: String, col: Color) -> PanelContainer:
@@ -2045,32 +2281,66 @@ func _on_end(record: Dictionary) -> void:
 		elif c.contains("yetkisiz"):
 			bg_path = "res://art/end_scandal.png"
 	_end_bg.texture = _art(bg_path)
-	_end_text.clear()
 	var verdict := "Tahtını korudun." if record["survived"] else "Tahtını kaybettin."
-	_end_text.append_text("[b][font_size=38]Kral %s[/font_size][/b]\n[font_size=22]%s[/font_size]\n\n[b]Ünvanın:[/b] [color=#d9b359]%s[/color]\n%s\n[b]En güçlü isim:[/b] %s\n[b]Söz sicili:[/b] %s\n\n" % [record["king"], verdict, record["title"], record["cause"], record["top_actor"], record.get("promises", "")])
+	_end_head.clear()
+	_end_head.append_text("[b][font_size=%d]Kral %s[/font_size][/b]   [font_size=%d][color=%s]%s[/color][/font_size]\n[font_size=%d][color=gray]Ünvanın:[/color] [color=#d9b359]%s[/color][/font_size]" % [
+		_fs(34), record["king"], _fs(22), "#7fae7a" if record["survived"] else "#c0504a", verdict, _fs(19), record["title"]])
+	var lies: Array = record["lies"]
+	var hist_log: Array = record["history"]
+	# Özet
+	_end_text.clear()
+	_end_text.append_text("%s\n\n" % record["cause"])
+	_end_text.append_text("[b]Saltanat:[/b] %d hafta  ·  [b]En güçlü isim:[/b] %s\n[b]Söz sicili:[/b] %s\n[b]Karar defteri:[/b] %d kayıt\n" % [
+		int(record["weeks"]), record["top_actor"], record.get("promises", ""), hist_log.size()])
+	if lies.is_empty():
+		_end_text.append_text("[b]Hakikat Dosyası:[/b] kimse sana belirgin biçimde yalan söylemedi.\n")
+	else:
+		var liars: Dictionary = {}
+		for l: Dictionary in lies:
+			liars[l["name"]] = true
+		_end_text.append_text("[b]Hakikat Dosyası:[/b] [color=#c0504a]%d kişi sana yalan söyledi.[/color] Kim olduklarını Hakikat Dosyası sekmesinde gör.\n" % liars.size())
 	var fresh: Array = record.get("new_achievements", [])
 	if not fresh.is_empty():
-		_end_text.append_text("[b][color=#d9b359][font_size=22]YENİ BAŞARIM[/font_size][/color][/b]\n")
+		_end_text.append_text("\n[b][color=#d9b359][font_size=22]YENİ BAŞARIM[/font_size][/color][/b]\n")
 		for id in fresh:
 			var info: Array = Sim.ACHIEVEMENTS.get(id, [id, ""])
 			_end_text.append_text("[color=#d6b25e]»[/color]  [b]%s[/b] — %s\n" % [info[0], info[1]])
-		_end_text.append_text("\n")
+	if not hist_log.is_empty():
+		_end_text.append_text("\n[b][color=#d9b359][font_size=22]Son kararların[/font_size][/color][/b]   [color=gray]tamamı Kararlar sekmesinde[/color]\n")
+		for h in hist_log.slice(maxi(0, hist_log.size() - 6)):
+			_end_text.append_text("• %s\n" % h)
+	# Tarihçiler
+	_end_hist.clear()
+	_end_hist.append_text("[b][color=#d9b359][font_size=22]TARİH NE YAZACAK?[/font_size][/color][/b]\n[color=gray]Aynı saltanat, iki ayrı kalemden.[/color]\n\n")
 	var hist: Array = record.get("historians", [])
 	if hist.size() == 2:
-		_end_text.append_text("[b][color=#d9b359][font_size=22]TARİH NE YAZACAK?[/font_size][/color][/b]\n")
-		_end_text.append_text("[color=#d6b25e]Saray tarihçisi:[/color] [i]\"%s\"[/i]\n" % hist[0])
-		_end_text.append_text("[color=#c0504a]Sürgündeki tarihçi:[/color] [i]\"%s\"[/i]\n\n" % hist[1])
-	_end_text.append_text("[b][color=#d9b359][font_size=22]HAKİKAT DOSYASI — sana söylenmeyenler[/font_size][/color][/b]\n")
-	if record["lies"].is_empty():
-		_end_text.append_text("Kimse sana belirgin biçimde yalan söylemedi. Ya da hepsini fark ettin.\n")
-	for l: Dictionary in record["lies"]:
-		_end_text.append_text("• Hafta %d — [b]%s[/b] sana şunu söyledi: \"%s\"\n   [color=gray]Gerçekte:[/color] %s\n" % [l["week"], l["name"], l["said"], l["truth"]])
-	_end_text.append_text("\n[b][color=#d9b359][font_size=22]Son kararların[/font_size][/color][/b]\n")
-	for h in record["history"].slice(maxi(0, record["history"].size() - 14)):
-		_end_text.append_text("• %s\n" % h)
+		_end_hist.append_text("[color=#d6b25e][b]Saray tarihçisi[/b][/color]\n[i]\"%s\"[/i]\n\n" % hist[0])
+		_end_hist.append_text("[color=#c0504a][b]Sürgündeki tarihçi[/b][/color]\n[i]\"%s\"[/i]\n" % hist[1])
+	else:
+		_end_hist.append_text("Tarihçiler bu saltanat hakkında sessiz kaldı.")
+	# Hakikat Dosyası
+	_end_lies.clear()
+	_end_lies.append_text("[b][color=#d9b359][font_size=22]HAKİKAT DOSYASI — sana söylenmeyenler[/font_size][/color][/b]\n\n")
+	if lies.is_empty():
+		_end_lies.append_text("Kimse sana belirgin biçimde yalan söylemedi. Ya da hepsini fark ettin.\n")
+	for l: Dictionary in lies:
+		_end_lies.append_text("• Hafta %d — [b]%s[/b] sana şunu söyledi: \"%s\"\n   [color=gray]Gerçekte:[/color] %s\n\n" % [l["week"], l["name"], l["said"], l["truth"]])
+	# Kararlar: hepsi, sondan başa
+	_end_log.clear()
+	_end_log.append_text("[b][color=#d9b359][font_size=22]KARARLARIN[/font_size][/color][/b]   [color=gray]%d kayıt · en yenisi üstte[/color]\n\n" % hist_log.size())
+	if hist_log.is_empty():
+		_end_log.append_text("Hiç karar vermedin. Tarih bunu da yazar.")
+	for i in range(hist_log.size() - 1, -1, -1):
+		_end_log.append_text("• %s\n" % hist_log[i])
+	_end_tabs.set_tab_title(3, "Hakikat Dosyası (%d)" % lies.size() if not lies.is_empty() else "Hakikat Dosyası")
+	_end_tabs.current_tab = 0
+	for page in [_end_text, _end_hist, _end_lies, _end_log]:
+		page.scroll_to_line(0)
+	_end_timeline = record.get("timeline", [])
+	_end_chart_drawn = false
+	_end_chart.set_data([], false)
 	_menu.hide()
 	if _fast():
-		_end_chart.set_data(record.get("timeline", []), false)
 		_end_overlay.show()
 		return
 	# Final sineması: sonuç görseli tam ekran, bantlı; ardından hakikat paneli.
@@ -2079,10 +2349,9 @@ func _on_end(record: Dictionary) -> void:
 	await _cinema.play([{"tex": _art(bg_path), "line": big, "sub": "Ünvanın: %s" % record["title"], "hold": 4.2, "zoom_from": 1.0, "zoom_to": 1.14}])
 	_end_overlay.show()
 	UIKit.fade_in(_end_overlay, 1.0)
-	_end_chart.set_data(record.get("timeline", []), true)
 	if not record["survived"]:
 		UIKit.shake(_stage, 10.0, 0.6)
-	var dur := clampf(float(_end_text.get_total_character_count()) * 0.012, 4.0, 14.0)
+	var dur := clampf(float(_end_text.get_total_character_count()) * 0.012, 2.5, 6.0)
 	UIKit.typewrite(_end_text, dur, 0.8)
 
 
