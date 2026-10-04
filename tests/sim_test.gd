@@ -12,6 +12,7 @@ func _init() -> void:
 	sim = load("res://game/core/sim.gd").new()
 	sim.save_path = "user://test_save.txt"   # oyuncunun kaydına dokunma
 	sim.record_chronicle = false
+	sim.autosave = false
 	var ok := true
 	for policy in ["idle", "random", "careful"]:
 		var wins := 0
@@ -122,6 +123,16 @@ func _init() -> void:
 		print("   ulaşılabilir mi %s: %s" % [e["id"], ok_e])
 		if not ok_e:
 			ok = false
+
+	# Tarihçiler ve zaman çizelgesi
+	sim.new_game(4, 1)
+	while not sim.ended:
+		sim.end_week()
+	var hist: Array = sim.record.get("historians", [])
+	print("Tarihçiler: ", hist.size(), " | zaman çizelgesi: ", sim.record.get("timeline", []).size(), " hafta")
+	if hist.size() != 2 or sim.record.get("timeline", []).size() < 2:
+		push_error("tarihçi/zaman çizelgesi eksik")
+		ok = false
 
 	# Kayıt/yükleme turu
 	sim.new_game(5)

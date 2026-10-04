@@ -3,6 +3,8 @@ extends Control
 
 const UIKit := preload("res://game/ui/ui_kit.gd")
 const ATMOS_SHADER := preload("res://game/ui/atmosphere.gdshader")
+const CINEMA := preload("res://game/ui/cinema.gd")
+const TRUTH_CHART := preload("res://game/ui/truth_chart.gd")
 
 const ROLE := {"army": "Ordu", "intel": "İstihbarat", "economy": "Maliye", "media": "Medya", "press": "Basın",
 	"gate": "Saray", "royal": "Hanedan", "opposition": "Muhalefet", "court": "Yargı"}
@@ -107,8 +109,15 @@ var _curtain: ColorRect
 var _curtain_title: Label
 var _curtain_sub: Label
 var _mobile := false
+var _curtain_img: TextureRect
+var _curtain_skip := false
+var _cinema: Control
+var _end_chart: Control
 var _modal: Control
 var _modal_text: RichTextLabel
+var _modal_yes: Button
+var _modal_close: Button
+var _modal_cb := Callable()
 var _promise_list: RichTextLabel
 var _multi_btn: Button
 var _hint_label: RichTextLabel
@@ -136,6 +145,7 @@ func _ready() -> void:
 	var dev_run: bool = "--autoplay" in OS.get_cmdline_user_args() or ProjectSettings.get_setting("veloria/dev_autostart", false)
 	if dev_run:
 		Sim.record_chronicle = false   # test/geliştirme oyunları arşive yazılmaz
+		Sim.autosave = false           # ve oyuncunun kaydına dokunmaz
 	if "--autoplay" in OS.get_cmdline_user_args():
 		_instant = true
 		_start_new()
@@ -167,9 +177,16 @@ func _ready() -> void:
 		if ProjectSettings.get_setting("veloria/dev_press_end", false):
 			await get_tree().create_timer(6.0).timeout
 			_end_week_pressed()
+		if ProjectSettings.get_setting("veloria/dev_choose", false) and not _decision_cards.is_empty():
+			await get_tree().create_timer(6.0).timeout
+			_choose(0, 0)
 	else:
 		_show_menu()
 		Sfx.start_music()
+		if ProjectSettings.get_setting("veloria/dev_intro", false):
+			Sim.record_chronicle = false
+			Sim.autosave = false
+			_start_new()
 		match str(ProjectSettings.get_setting("veloria/dev_modal", "")):
 			"about":
 				_show_modal(CREDITS)
@@ -177,11 +194,32 @@ func _ready() -> void:
 				_show_chronicle()
 
 
+## Kısayollar: F11 tam ekran, Esc menü/pencere kapat, Boşluk haftayı bitir, Ctrl+S kaydet.
 func _unhandled_key_input(event: InputEvent) -> void:
 	var k := event as InputEventKey
-	if k and k.pressed and not k.echo and k.keycode == KEY_F11:
-		Sfx.set_fullscreen(not Sfx.fullscreen)
-		Sfx.save_settings()
+	if k == null or not k.pressed or k.echo:
+		return
+	var in_game := not Sim.actors.is_empty() and not Sim.ended
+	match k.keycode:
+		KEY_F11:
+			Sfx.set_fullscreen(not Sfx.fullscreen)
+			Sfx.save_settings()
+		KEY_ESCAPE:
+			if _modal.visible:
+				_modal.hide()
+			elif _menu.visible and in_game:
+				_hide_menu()
+			elif not _menu.visible and not _end_overlay.visible:
+				_show_menu()
+		KEY_SPACE:
+			if in_game and not _menu.visible and not _end_overlay.visible:
+				_end_week_pressed()
+		KEY_S:
+			if k.ctrl_pressed and in_game:
+				_on_save()
+		_:
+			return
+	get_viewport().set_input_as_handled()
 
 
 func _fast() -> bool:
@@ -493,6 +531,25 @@ func _build_fx() -> void:
 	_curtain.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_curtain.modulate.a = 0.0
 	_fx.add_child(_curtain)
+	# Haftanın olay görseli: perdenin arkasında yavaşça yakınlaşır (sinematik geçiş).
+	_curtain_img = TextureRect.new()
+	_curtain_img.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_curtain_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_curtain_img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_curtain_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_curtain_img.modulate.a = 0.0
+	_curtain.add_child(_curtain_img)
+	for top in [true, false]:
+		var bar := ColorRect.new()
+		bar.color = Color.BLACK
+		bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		bar.anchor_right = 1.0
+		bar.anchor_top = 0.0 if top else 0.9
+		bar.anchor_bottom = 0.1 if top else 1.0
+		_curtain.add_child(bar)
+	_curtain.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton and ev.pressed:
+			_curtain_skip = true)
 	var cc := CenterContainer.new()
 	cc.set_anchors_preset(Control.PRESET_FULL_RECT)
 	cc.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -505,14 +562,25 @@ func _build_fx() -> void:
 	_curtain_title.add_theme_font_override("font", UIKit.serif())
 	_curtain_title.add_theme_font_size_override("font_size", _fs(72))
 	_curtain_title.add_theme_color_override("font_color", UIKit.GOLD)
+	_curtain_title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
+	_curtain_title.add_theme_constant_override("shadow_outline_size", 10)
 	_curtain_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(_curtain_title)
 	_curtain_sub = Label.new()
 	_curtain_sub.add_theme_font_size_override("font_size", _fs(20))
 	_curtain_sub.add_theme_color_override("font_color", UIKit.TEXT)
+	_curtain_sub.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
+	_curtain_sub.add_theme_constant_override("shadow_outline_size", 6)
 	_curtain_sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_curtain_sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	box.add_child(_curtain_sub)
+	# Sinema katmanı (açılış ve final): atmosfer katmanının altında ki gren ve vinyet üstünde kalsın.
+	var cl := CanvasLayer.new()
+	cl.layer = 45
+	add_child(cl)
+	_cinema = CINEMA.new()
+	_cinema.theme = theme
+	cl.add_child(_cinema)
 
 
 func _build_menu() -> void:
@@ -598,7 +666,7 @@ func _build_menu() -> void:
 	how.text = "[b]Nasıl oynanır[/b]\n• 104 hafta tahtta kal. Haftada [b]4 mesain[/b] var; kararlar, emirler ve operasyonlar mesai harcar.\n• Sayıları göremezsin; yalnızca [b]raporlar[/b] vardır ve herkes yalan söyleyebilir. Korktukça insanlar sana gerçeği söylemez; hepsi aynı cümleyi kurmaya başlar.\n• Verdiğin güç sana dönebilir. Terfi, borç ve gizli ödemeler iz bırakır.\n• Söz vermek kolaydır; vadesi gelince ya tutarsın ya da bedelini ödersin. Aynı makamı iki kişiye vaat etmek er geç duyulur.\n• Herkesin bildiği bir sır, gizli bir sırdan çok daha tehlikelidir.\n• Ertelediğin kararlar iki hafta sonra kendi kendine çözülür.\n• Oyun bittiğinde [b]Hakikat Dosyası[/b] sana kimin ne zaman yalan söylediğini gösterir."
 	box.add_child(how)
 	how.visible = not _mobile  # mobilde ekranı doldurmasın; düğmeyle açılır
-	var b_new := _menu_btn("Yeni Oyun", _start_new, true)
+	var b_new := _menu_btn("Yeni Oyun", _request_new_game, true)
 	var b_diff := _menu_btn("", func() -> void: pass)
 	var set_diff_text := func() -> void:
 		b_diff.text = "Zorluk: %s" % Sim.DIFFICULTY[Sfx.difficulty]["name"]
@@ -656,6 +724,13 @@ func _build_menu() -> void:
 		Sfx.tips = on
 		Sfx.save_settings())
 	row.add_child(cb_tips)
+	var cb_intro := CheckBox.new()
+	cb_intro.text = "Açılış sineması"
+	cb_intro.button_pressed = Sfx.intro
+	cb_intro.toggled.connect(func(on: bool) -> void:
+		Sfx.intro = on
+		Sfx.save_settings())
+	row.add_child(cb_intro)
 	var vrow := HBoxContainer.new()
 	vrow.add_theme_constant_override("separation", 10)
 	vrow.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -671,6 +746,16 @@ func _build_menu() -> void:
 		Sfx.save_settings()))
 	var b_quit := _menu_btn("Çıkış", func() -> void: get_tree().quit())
 	_menu_items = [title, sub, how, b_new, b_diff, b_cont, b_back, info_row, row, vrow, b_quit]
+	var ver := Label.new()
+	ver.text = "v%s   ·   Esc: menü   Boşluk: haftayı bitir   Ctrl+S: kaydet   F11: tam ekran" % str(ProjectSettings.get_setting("application/config/version", "1.0.0"))
+	if _mobile:
+		ver.text = "v%s" % str(ProjectSettings.get_setting("application/config/version", "1.0.0"))
+	ver.add_theme_color_override("font_color", Color(UIKit.TEXT_DIM, 0.7))
+	ver.add_theme_font_size_override("font_size", _fs(12))
+	ver.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_MINSIZE, 12)
+	ver.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	ver.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	_menu.add_child(ver)
 	_build_modal()
 	_menu.set_meta("cont", b_cont)
 	_menu.set_meta("back", b_back)
@@ -710,19 +795,38 @@ func _build_modal() -> void:
 	_modal_text.add_theme_font_override("bold_font", UIKit.serif())
 	_modal_text.add_theme_font_size_override("bold_font_size", _fs(20))
 	v.add_child(_modal_text)
-	var close := Button.new()
-	close.text = "Kapat"
-	close.custom_minimum_size.y = 44
-	_wire(close)
-	close.pressed.connect(func() -> void: _modal.hide())
-	v.add_child(close)
+	var brow := HBoxContainer.new()
+	brow.add_theme_constant_override("separation", 10)
+	v.add_child(brow)
+	_modal_yes = Button.new()
+	_modal_yes.theme_type_variation = "PrimaryButton"
+	_modal_yes.custom_minimum_size.y = 44
+	_modal_yes.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_wire(_modal_yes)
+	_modal_yes.pressed.connect(func() -> void:
+		_modal.hide()
+		if _modal_cb.is_valid():
+			_modal_cb.call())
+	brow.add_child(_modal_yes)
+	_modal_close = Button.new()
+	_modal_close.text = "Kapat"
+	_modal_close.custom_minimum_size.y = 44
+	_modal_close.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_wire(_modal_close)
+	_modal_close.pressed.connect(func() -> void: _modal.hide())
+	brow.add_child(_modal_close)
 	_modal.hide()
 
 
-func _show_modal(bbcode: String) -> void:
+## Bilgi penceresi; yes_label verilirse onay penceresi olur (Evet -> yes_cb).
+func _show_modal(bbcode: String, yes_label := "", yes_cb := Callable()) -> void:
 	_modal_text.clear()
 	_modal_text.append_text(bbcode)
 	_modal_text.scroll_to_line(0)
+	_modal_yes.visible = yes_label != ""
+	_modal_yes.text = yes_label
+	_modal_cb = yes_cb
+	_modal_close.text = "Vazgeç" if yes_label != "" else "Kapat"
 	_modal.show()
 	if not _fast():
 		UIKit.fade_in(_modal, 0.25)
@@ -801,7 +905,11 @@ func _build_end() -> void:
 		m.add_theme_constant_override("margin_" + side, 50)
 	_end_overlay.add_child(m)
 	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 12)
 	m.add_child(v)
+	_end_chart = TRUTH_CHART.new()
+	_end_chart.custom_minimum_size = Vector2(0, 150 if _mobile else 200)
+	v.add_child(_end_chart)
 	_end_text = RichTextLabel.new()
 	_end_text.bbcode_enabled = true
 	_end_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -933,7 +1041,9 @@ func _initial_art(id: String, size: Vector2, letter_size := 40) -> Control:
 
 func _show_menu() -> void:
 	_menu.show()
-	(_menu.get_meta("cont") as Button).disabled = not Sim.has_save()
+	var b_cont := _menu.get_meta("cont") as Button
+	b_cont.disabled = not Sim.has_save()
+	b_cont.text = "Devam Et" if not Sim.has_save() else "Devam Et  ·  %s" % Sim.save_summary()
 	(_menu.get_meta("back") as Button).visible = not Sim.ended and not Sim.actors.is_empty()
 	if not _instant:
 		var i := 0
@@ -957,9 +1067,37 @@ func _hide_menu() -> void:
 		_menu.modulate.a = 1.0)
 
 
+func _request_new_game() -> void:
+	var in_progress := not Sim.actors.is_empty() and not Sim.ended and Sim.week > 1
+	if in_progress or (Sim.actors.is_empty() and Sim.has_save()):
+		_show_modal("[b][font_size=%d][color=#d6b25e]Yeni saltanat[/color][/font_size][/b]\n\nSüren ya da kayıtlı bir saltanat var. Yeni bir oyuna başlarsan otomatik kayıt da üzerine yazılacak.\n\nDevam etmek istiyor musun?" % _fs(26),
+			"Yeni oyuna başla", _start_new)
+	else:
+		_start_new()
+
+
 func _start_new() -> void:
 	Sim.new_game(0, Sfx.difficulty)
+	if not _fast() and Sfx.intro:
+		_menu.hide()
+		_end_overlay.hide()
+		await _cinema.play(_intro_shots())
 	_after_load("Taç sana emanet edildi. Güç merkezleri seni test edecek.")
+
+
+## Açılış sineması: krallık, taç, güç merkezleri ve oyunun sorusu.
+func _intro_shots() -> Array:
+	var p := func(id: String) -> Texture2D: return _art("res://art/portraits/%s.png" % id)
+	return [
+		{"tex": _art("res://art/menu_bg.png"), "line": "Veloria Krallığı.", "sub": "Modern kurumlar. Eski bir taç.", "hold": 2.8, "zoom_from": 1.0, "zoom_to": 1.12},
+		{"tex": _art("res://art/end_victory.png"), "line": "Babanın cenazesinin üçüncü günü.", "sub": "Taç artık senin başında: Kral Adrian IV.", "hold": 2.8, "zoom_from": 1.1, "zoom_to": 1.0},
+		{"tex": p.call("arden"), "fit": "center", "line": "Generaller sana selam veriyor.", "hold": 1.7, "zoom_from": 1.0, "zoom_to": 1.08},
+		{"tex": p.call("voss"), "fit": "center", "line": "Casuslar senin için dinliyor.", "hold": 1.7, "zoom_from": 1.0, "zoom_to": 1.08},
+		{"tex": p.call("halden"), "fit": "center", "line": "Patronlar sana ekranlarını açıyor.", "hold": 1.7, "zoom_from": 1.0, "zoom_to": 1.08},
+		{"tex": p.call("prens"), "fit": "center", "line": "Ve kendi kanından olanlar, sırasını bekliyor.", "hold": 2.1, "zoom_from": 1.0, "zoom_to": 1.08},
+		{"tex": _art("res://art/bg_desk.png"), "line": "Hepsi sana sadık olduğunu söylüyor.", "sub": "Bazıları yalan söylüyor.", "hold": 3.0, "zoom_from": 1.15, "zoom_to": 1.0},
+		{"tex": null, "line": "104 hafta.", "sub": "Tahtta kal.", "hold": 2.2},
+	]
 
 
 func _continue() -> void:
@@ -994,9 +1132,11 @@ func _end_week_pressed() -> void:
 		Sim.end_week()
 		return
 	_busy = true
+	_curtain_skip = false
 	Sfx.play("bell", -4.0)
 	var short := Sfx.short_fx
 	_curtain.mouse_filter = Control.MOUSE_FILTER_STOP
+	_curtain_img.modulate.a = 0.0
 	await create_tween().tween_property(_curtain, "modulate:a", 1.0, 0.2 if short else 0.4).finished
 	var old_week := Sim.week
 	Sim.end_week()
@@ -1006,13 +1146,33 @@ func _end_week_pressed() -> void:
 		if not Sim.weekly_news.is_empty():
 			headline = str(Sim.weekly_news[0])
 		_curtain_sub.text = headline if headline != "" else "Hafta %d sessiz geçti." % old_week
+		# Haftanın yeni olayının görseli arkada belirip yavaşça yakınlaşır.
+		var tex: Texture2D = null
+		for p in Sim.pending:
+			if int(p["age"]) == 0:
+				tex = _event_art(str(p["event"].get("art", p["event"]["id"])))
+				if tex:
+					break
+		# Sessiz haftada da sahne boş kalmasın: saray görsellerinden biri soluk biçimde akar.
+		var img_alpha := 0.5
+		var shown := tex
+		if shown == null:
+			shown = _art(["res://art/bg_desk.png", "res://art/menu_bg.png"][Sim.week % 2])
+			img_alpha = 0.25
+		_curtain_img.texture = shown
+		if shown and not short:
+			_curtain_img.pivot_offset = _curtain_img.size / 2.0
+			_curtain_img.scale = Vector2.ONE
+			var kb := create_tween().set_parallel(true)
+			kb.tween_property(_curtain_img, "modulate:a", img_alpha, 0.7)
+			kb.tween_property(_curtain_img, "scale", Vector2(1.1, 1.1), 3.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 		_curtain_title.modulate.a = 0.0
 		_curtain_sub.modulate.a = 0.0
 		var tw := create_tween().set_parallel(true)
 		tw.tween_property(_curtain_title, "modulate:a", 1.0, 0.35)
 		tw.tween_property(_curtain_sub, "modulate:a", 1.0, 0.5).set_delay(0.25)
 		await tw.finished
-		await get_tree().create_timer(0.25 if short else 0.9).timeout
+		await _wait_skip(0.25 if short else (1.6 if tex else 1.0))
 	else:
 		_curtain_title.text = ""
 		_curtain_sub.text = ""
@@ -1021,6 +1181,56 @@ func _end_week_pressed() -> void:
 	await create_tween().tween_property(_curtain, "modulate:a", 0.0, 0.25 if short else 0.5).finished
 	_curtain.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_busy = false
+
+
+## Perdeye tıklanınca kısalan bekleme.
+func _wait_skip(t: float) -> void:
+	var left := t
+	while left > 0.0 and not _curtain_skip:
+		await get_tree().process_frame
+		left -= get_process_delta_time()
+
+
+## Karar mühürü: kartın üstüne kırmızı balmumu mühür basılır.
+func _stamp_seal(card: Control) -> void:
+	var sz := 96.0 if not _mobile else 110.0
+	var seal := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color("7a1f1a")
+	sb.set_corner_radius_all(int(sz / 2.0))
+	sb.border_color = Color("c9a24f")
+	sb.set_border_width_all(3)
+	sb.shadow_color = Color(0, 0, 0, 0.55)
+	sb.shadow_size = 10
+	sb.anti_aliasing = true
+	seal.add_theme_stylebox_override("panel", sb)
+	seal.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var l := Label.new()
+	l.text = "V"
+	l.add_theme_font_override("font", UIKit.serif())
+	l.add_theme_font_size_override("font_size", int(sz * 0.55))
+	l.add_theme_color_override("font_color", Color("f1d9a0"))
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	seal.add_child(l)
+	_stage.add_child(seal)
+	seal.size = Vector2(sz, sz)
+	var rect := card.get_global_rect()
+	seal.global_position = rect.position + Vector2(rect.size.x - sz - 40.0, rect.size.y / 2.0 - sz / 2.0)
+	seal.pivot_offset = Vector2(sz, sz) / 2.0
+	seal.rotation = deg_to_rad(-14.0)
+	seal.scale = Vector2(2.6, 2.6)
+	seal.modulate.a = 0.0
+	var tw := seal.create_tween()
+	tw.set_parallel(true)
+	tw.tween_property(seal, "scale", Vector2.ONE, 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tw.tween_property(seal, "modulate:a", 1.0, 0.1)
+	tw.chain().tween_callback(func() -> void:
+		Sfx.play("seal")
+		UIKit.shake(card, 4.0, 0.18))
+	tw.chain().tween_interval(0.55)
+	tw.chain().tween_property(seal, "modulate:a", 0.0, 0.3)
+	tw.chain().tween_callback(seal.queue_free)
 
 
 func _selected_primary() -> String:
@@ -1065,9 +1275,10 @@ func _choose(pending_index: int, choice_index: int) -> void:
 		return
 	if not _fast() and pending_index < _decision_cards.size():
 		_busy = true
-		Sfx.play("seal")
 		var card := _decision_cards[pending_index]
-		await create_tween().tween_property(card, "modulate:a", 0.0, 0.2).finished
+		_stamp_seal(card)
+		await get_tree().create_timer(0.55).timeout
+		await create_tween().tween_property(card, "modulate:a", 0.0, 0.22).finished
 		_busy = false
 	var text := Sim.resolve_decision(pending_index, choice_index)
 	if text != "":
@@ -1305,10 +1516,16 @@ func _make_card(a) -> PanelContainer:
 	v.add_child(r)
 	card.set_meta("id", a.id)
 	card.gui_input.connect(_on_card_input.bind(a.id))
+	# Üzerine gelince portre çerçevesinin içinde hafifçe yakınlaşır.
+	var portrait_img: Control = card_art.get_child(0)
 	card.mouse_entered.connect(func() -> void:
 		Sfx.play("hover", -14.0)
-		_style_cards(a.id))
-	card.mouse_exited.connect(func() -> void: _style_cards())
+		_style_cards(a.id)
+		portrait_img.pivot_offset = portrait_img.size / 2.0
+		portrait_img.create_tween().tween_property(portrait_img, "scale", Vector2(1.1, 1.1), 0.35).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT))
+	card.mouse_exited.connect(func() -> void:
+		_style_cards()
+		portrait_img.create_tween().tween_property(portrait_img, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_SINE))
 	return card
 
 
@@ -1404,6 +1621,11 @@ func _on_end(record: Dictionary) -> void:
 	_end_text.clear()
 	var verdict := "Tahtını korudun." if record["survived"] else "Tahtını kaybettin."
 	_end_text.append_text("[b][font_size=38]Kral %s[/font_size][/b]\n[font_size=22]%s[/font_size]\n\n[b]Ünvanın:[/b] [color=#d9b359]%s[/color]\n%s\n[b]En güçlü isim:[/b] %s\n[b]Söz sicili:[/b] %s\n\n" % [record["king"], verdict, record["title"], record["cause"], record["top_actor"], record.get("promises", "")])
+	var hist: Array = record.get("historians", [])
+	if hist.size() == 2:
+		_end_text.append_text("[b][color=#d9b359][font_size=22]TARİH NE YAZACAK?[/font_size][/color][/b]\n")
+		_end_text.append_text("[color=#d6b25e]Saray tarihçisi:[/color] [i]\"%s\"[/i]\n" % hist[0])
+		_end_text.append_text("[color=#c0504a]Sürgündeki tarihçi:[/color] [i]\"%s\"[/i]\n\n" % hist[1])
 	_end_text.append_text("[b][color=#d9b359][font_size=22]HAKİKAT DOSYASI — sana söylenmeyenler[/font_size][/color][/b]\n")
 	if record["lies"].is_empty():
 		_end_text.append_text("Kimse sana belirgin biçimde yalan söylemedi. Ya da hepsini fark ettin.\n")
@@ -1412,16 +1634,22 @@ func _on_end(record: Dictionary) -> void:
 	_end_text.append_text("\n[b][color=#d9b359][font_size=22]Son kararların[/font_size][/color][/b]\n")
 	for h in record["history"].slice(maxi(0, record["history"].size() - 14)):
 		_end_text.append_text("• %s\n" % h)
-	_end_overlay.show()
 	_menu.hide()
 	if _fast():
+		_end_chart.set_data(record.get("timeline", []), false)
+		_end_overlay.show()
 		return
+	# Final sineması: sonuç görseli tam ekran, bantlı; ardından hakikat paneli.
 	Sfx.play("stinger_win" if record["survived"] else "stinger_loss", -2.0)
-	UIKit.fade_in(_end_overlay, 1.4)
+	var big := "TAHTINI KORUDUN" if record["survived"] else "TAHTINI KAYBETTİN"
+	await _cinema.play([{"tex": _art(bg_path), "line": big, "sub": "Ünvanın: %s" % record["title"], "hold": 4.2, "zoom_from": 1.0, "zoom_to": 1.14}])
+	_end_overlay.show()
+	UIKit.fade_in(_end_overlay, 1.0)
+	_end_chart.set_data(record.get("timeline", []), true)
 	if not record["survived"]:
-		UIKit.shake(_stage, 12.0, 0.7)
+		UIKit.shake(_stage, 10.0, 0.6)
 	var dur := clampf(float(_end_text.get_total_character_count()) * 0.012, 4.0, 14.0)
-	UIKit.typewrite(_end_text, dur, 1.0)
+	UIKit.typewrite(_end_text, dur, 0.8)
 
 
 # ---------------------------------------------------------------- Otomatik oynatma (test)

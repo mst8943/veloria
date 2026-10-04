@@ -16,6 +16,8 @@ const EVENTS_PATH := "res://game/data/events.json"
 const CHRONICLE_PATH := "user://veloria_chronicle.txt"
 var save_path := "user://veloria_save.txt"   # testler kendi dosyasını kullanır, oyuncunun kaydına dokunmaz
 var record_chronicle := true                 # testlerde ve otomatik oynatmada arşive yazılmaz
+var autosave := true                         # her hafta sonunda otomatik kayıt
+var timeline: Array = []                     # haftalık gerçek durum (oyun sonunda gösterilir)
 const GOOD_DOMAINS_HIGH := ["economy"]  # bu alanlarda yüksek değer iyidir
 ## Zorluk: haftalık mesai, darbe koruma süresi, darbe için gereken güç payı, gelir, hazır olma eşiği.
 const DIFFICULTY := [
@@ -84,6 +86,7 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 	karne.clear()
 	weekly_news.clear()
 	promises.clear()
+	timeline.clear()
 	stats = {"ops": 0, "bribes": 0, "promotes": 0, "leaks": 0, "dismissals": 0, "written": 0, "hints": 0, "checks": 0,
 		"investigations": 0, "blackmails": 0, "promises": 0, "kept": 0, "broken": 0}
 	ended = false
@@ -101,6 +104,7 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 	_events = _load_json(EVENTS_PATH)
 	_fire_events()
 	_generate_reports()
+	_record_timeline()
 	changed.emit()
 
 
@@ -123,6 +127,18 @@ func has_save() -> bool:
 	return FileAccess.file_exists(save_path)
 
 
+## Menüde "Devam Et" yanında gösterilecek kısa özet: "Hafta 23 · Normal".
+func save_summary() -> String:
+	if not has_save():
+		return ""
+	var f := FileAccess.open(save_path, FileAccess.READ)
+	var d: Variant = str_to_var(f.get_as_text())
+	if not d is Dictionary:
+		return ""
+	var diff_i := clampi(int(d.get("diff", 1)), 0, DIFFICULTY.size() - 1)
+	return "Hafta %d · %s" % [int(d.get("week", 1)), DIFFICULTY[diff_i]["name"]]
+
+
 func save_game() -> bool:
 	if ended:
 		return false
@@ -132,7 +148,8 @@ func save_game() -> bool:
 	var data := {"week": week, "mesai": mesai, "king": king_strength, "unrest": unrest, "economy": economy,
 		"opp": opposition, "wealth": private_wealth, "actors": a_data, "facts": facts, "flags": flags,
 		"fired": fired_events, "history": history, "pending": pending, "truth": truth_log, "karne": karne,
-		"stats": stats, "rng": rng.state, "seed": rng.seed, "diff": difficulty, "promises": promises}
+		"stats": stats, "rng": rng.state, "seed": rng.seed, "diff": difficulty, "promises": promises,
+		"timeline": timeline}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -170,6 +187,7 @@ func load_game() -> bool:
 	karne = d["karne"]
 	stats = d["stats"]
 	promises = d.get("promises", [])
+	timeline = d.get("timeline", [])
 	rng.state = d["rng"]
 	_generate_reports()
 	changed.emit()
@@ -728,11 +746,20 @@ func end_week() -> void:
 	_tick_promises()
 	_run_cascade()
 	_generate_reports()
+	_record_timeline()
 	_check_end()
+	if autosave and not ended:
+		save_game()
 	for n in weekly_news:
 		news.emit(n)
 	week_advanced.emit(week)
 	changed.emit()
+
+
+## Hakikat Dosyası grafiği için gerçek (gizli) durumun haftalık kaydı.
+func _record_timeline() -> void:
+	timeline.append({"w": week, "king": snappedf(king_strength, 0.1), "unrest": snappedf(unrest, 0.1),
+		"economy": snappedf(economy, 0.1), "opp": snappedf(opposition, 0.1), "plot": snappedf(_ready_power_share() * 100.0, 0.1)})
 
 
 func _world_tick() -> void:
@@ -971,10 +998,60 @@ func _end(survived: bool) -> void:
 	record = {"survived": survived, "title": title, "weeks": week - 1, "cause": cause,
 		"top_actor": top.display_name if top else "", "history": history.duplicate(),
 		"lies": _top_lies(), "king": KING_NAME,
-		"promises": "%d söz verdin: %d tutuldu, %d bozuldu." % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))]}
+		"promises": "%d söz verdin: %d tutuldu, %d bozuldu." % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
+		"historians": historians(survived), "timeline": timeline.duplicate()}
 	if record_chronicle:
 		_append_chronicle(record)
+	# Biten saltanata kayıttan geri dönülmez: tarih tek yönlüdür.
+	if autosave and FileAccess.file_exists(save_path):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(save_path))
 	game_ended.emit(record)
+
+
+## İki taraflı tarih: aynı saltanatı saray tarihçisi ve sürgündeki tarihçi farklı yazar.
+func historians(survived: bool) -> Array:
+	var weeks := week - 1
+	var pro: Array[String] = []
+	var con: Array[String] = []
+	if survived:
+		pro.append("Kral %s, iki yıl boyunca sayısız fırtınaya rağmen tahtını korudu." % KING_NAME)
+	else:
+		pro.append("Kral %s, %d hafta boyunca imkânsız bir krallığı ayakta tutmaya çalıştı; düşüşü, ihanetin eseriydi." % [KING_NAME, weeks])
+	if economy >= 55.0:
+		pro.append("Saltanatında hazine doldu, pazarlar canlandı.")
+	if flags.has("kessler_reform_0"):
+		pro.append("Vergi reformu, ondan sonra gelenlerin de övündüğü bir miras oldu.")
+	if unrest < 35.0:
+		pro.append("Sokaklarda huzur vardı.")
+	if int(stats.get("kept", 0)) > 0:
+		pro.append("Verdiği sözlerin %d tanesini tuttu." % int(stats.get("kept", 0)))
+	if flags.has("tac_giyme_2") or flags.has("yildonumu_0"):
+		pro.append("Halkın karşısına çıkmaktan çekinmeyen bir hükümdardı.")
+	if pro.size() == 1:
+		pro.append("Zor zamanlarda, zor kararlar vermek zorunda kaldı.")
+	var public_secrets := 0
+	for f: Dictionary in facts.values():
+		if f["subject"] == "king" and f.get("public", false):
+			public_secrets += 1
+	if public_secrets > 0:
+		con.append("Saltanatı, ortaya saçılan %d sırla hatırlanır." % public_secrets)
+	if int(stats.get("bribes", 0)) >= 2:
+		con.append("Sadakati parayla satın aldı; %d gizli ödeme kayıtlara geçti." % int(stats.get("bribes", 0)))
+	if int(stats.get("blackmails", 0)) > 0:
+		con.append("Yakın çevresini şantajla yönetti.")
+	if int(stats.get("broken", 0)) > 0:
+		con.append("%d sözünü tutmadı." % int(stats.get("broken", 0)))
+	if flags.has("GAZETECI_SUSTURULDU") or flags.has("gazeteci_ihale_1"):
+		con.append("Basını susturdu.")
+	if flags.has("muhalefet_birlesme_2"):
+		con.append("Muhalefet liderini hapse attı.")
+	if economy < 35.0:
+		con.append("Ekonomiyi harabeye çevirdi.")
+	if echo_level() > 0.7:
+		con.append("Son aylarında artık kimse ona gerçeği söylemiyordu.")
+	if con.is_empty():
+		con.append("Sürgündeki tarihçiler bile bu saltanata ağır bir suçlama bulmakta zorlandı.")
+	return [" ".join(pro), " ".join(con)]
 
 
 ## Hükümdarlık arşivi: biten her saltanat kalıcı olarak kaydedilir.
