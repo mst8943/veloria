@@ -99,6 +99,25 @@ Her birini **ayrı istekte** gönderin ve başına şunu ekleyin: *"Tek bir gör
 | `events/erken_secim.png` | `A packed parliament chamber in uproar, members standing and shouting, papers in the air, the speaker's gavel raised.` |
 | `events/yildonumu.png` | `Fireworks over a palace on its anniversary night, crowds on the square, golden light reflecting on wet cobblestones.` |
 
+### 3c. Yeni olaylar (1280x720, `art/events/<event_id>.png`)
+
+Her birini **ayrı istekte** gönderin, başına *"Tek bir görsel üret, kolaj veya grid değil, 16:9 yatay, gerçek dünya bayrakları olmasın."* ekleyin. Sonuna STİL BLOĞU.
+
+| Dosya | Prompt |
+|---|---|
+| `events/voss_arden_catisma.png` | `A thin intelligence chief in rimless glasses and a grey-haired general in dress uniform glaring at each other across a long table in a palace antechamber, reel-to-reel tape recorder between them.` |
+| `events/lena_roportaj.png` | `A young journalist with messy dark hair and a notebook sitting opposite an empty throne-like chair in a palace study, a microphone on the table, warm lamp light.` |
+| `events/brandt_koalisyon.png` | `A bearded opposition leader in rolled-up shirtsleeves extending his hand across a polished palace table, ministers watching warily, a coalition document between them.` |
+| `events/anayasa_degisikligi.png` | `An old leather-bound constitution open on a desk, a fountain pen and a royal seal beside it, a hand about to sign, judges' silhouettes in the background.` |
+| `events/halden_kanal.png` | `A silver-haired tycoon standing in an empty television studio, lights being switched off one by one, a single camera pointed at him.` |
+| `events/kessler_reform.png` | `A woman finance minister in her late 40s with a tidy bun presenting thick reform documents with charts (no numbers) to a skeptical cabinet around a long table.` |
+| `events/reform_meyve.png` | `A busy capital street at dawn with new shops opening, cranes building, workers and merchants, golden optimistic light, a ministry building in the background.` |
+| `events/genel_grev.png` | `A completely stopped industrial harbor and empty factory gates, strikers sitting on crates with blank placards, idle cranes against a grey sky.` |
+| `events/suikast.png` | `A royal motorcade on a boulevard at night, a shattered car window, guards shielding a figure, chaos and flashing lights, no gore.` |
+| `events/dorn_sir.png` | `A round-faced chamberlain with a thin mustache pouring wine into a glass in a candlelit private study, leaning close as if whispering, the king's hand on the armrest in shadow.` |
+| `events/prens_suikast.png` | `An elegant prince standing shaken beside a damaged carriage-like black car in a palace courtyard, guards running, broken glass on wet cobblestones.` |
+| `events/dis_borc.png` | `Foreign bankers in dark suits sliding a thick loan contract across a marble table toward a royal official, a briefcase open, cold grey light.` |
+
 ## 4. Küçük ikonlar (isteğe bağlı, 256x256, saydam arka plan)
 
 Ortak prompt: `flat minimal icon, gold line-art on transparent background, single object centered, thick clean strokes, art-deco style, no text`

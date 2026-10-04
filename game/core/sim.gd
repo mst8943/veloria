@@ -18,8 +18,8 @@ const GOOD_DOMAINS_HIGH := ["economy"]  # bu alanlarda yüksek değer iyidir
 ## Zorluk: haftalık mesai, darbe koruma süresi, darbe için gereken güç payı, gelir, hazır olma eşiği.
 const DIFFICULTY := [
 	{"name": "Kolay", "mesai": 5, "grace": 26, "coup_share": 0.72, "income": 1.1, "ready_drive": 44.0},
-	{"name": "Normal", "mesai": 4, "grace": 12, "coup_share": 0.6, "income": 0.8, "ready_drive": 34.0},
-	{"name": "Zor", "mesai": 4, "grace": 10, "coup_share": 0.57, "income": 0.65, "ready_drive": 31.0},
+	{"name": "Normal", "mesai": 4, "grace": 12, "coup_share": 0.62, "income": 0.85, "ready_drive": 36.0},
+	{"name": "Zor", "mesai": 4, "grace": 10, "coup_share": 0.58, "income": 0.7, "ready_drive": 32.5},
 ]
 
 ## Vaat edilebilecek ödüller: her biri yalnızca bir kişiye gerçekten verilebilir.
@@ -1097,30 +1097,57 @@ func _generate_reports() -> void:
 				"truth": "%s: %s" % [dropped["name"], dropped["text"]], "diff": 2})
 
 
+## Alan -> [iyi, orta, kötü] durum -> aynı anlamın farklı söylenişleri.
+## Her kişinin kendi sesi var; hangi söylenişin çıkacağı haftaya ve kişiye göre seçilir.
+const PHRASES := {
+	"army": [
+		["Birlikler emirlere hazır, moral yüksek.", "Kışlalarda düzen tam; subaylar size bağlılıklarını iletiyor.", "Ordu sağlam. Endişe edecek bir şey görmüyorum."],
+		["Subaylar arasında huzursuz mırıltılar var, ama disiplin sürüyor.", "Bazı alaylarda maaş ve terfi şikâyetleri duyuluyor.", "Ordu emir bekliyor; ama neden beklediğini soranlar çoğalıyor."],
+		["Bazı birlikler emirleri geciktiriyor. Gençler konuşuyor.", "Bazı komutanlar telefonlarıma artık geç dönüyor.", "Kışlalarda siyaset konuşuluyor. Bu iyiye işaret değil."]],
+	"intel": [
+		["Dosyalarda olağanüstü bir şey yok.", "Takip ettiğimiz isimler sessiz. Sessizlik de bilgidir, ama şimdilik iyi.", "Rutin hafta. Raporlarım masanızda."],
+		["Sokakta ve muhalefette hareketlenme izliyoruz.", "Birkaç ismin telefon trafiği arttı. İzliyoruz.", "Muhalefetin toplantıları sıklaştı; içlerinde kulağımız var."],
+		["Gizli görüşmeler artıyor. Tehdit gerçek olabilir.", "Sarayın çevresinde, sizi değil birbirlerini arayan insanlar var.", "Bazı dosyalar artık bana bile kapalı. Bu beni endişelendiriyor."]],
+	"economy": [
+		["Büyüme sağlıklı, enflasyon kontrolde.", "Hazine dengede; piyasalar sakin.", "Vergi gelirleri beklentinin üstünde, Majesteleri."],
+		["Fiyatlar yükseliyor; bazı sektörler zorlanıyor.", "Kasadaki rakamlar tutuyor, ama pazardaki fiyatlar tutmuyor.", "Bazı fabrikalar vardiya azaltıyor. Henüz alarm değil."],
+		["Bütçe açığı büyüyor. Müdahale gerekebilir.", "Maaşları gelecek ay nasıl ödeyeceğimizi hesaplıyorum.", "Rakamları güzelleştirebilirim. Ama gerçeği bilmeniz gerekiyor."]],
+	"media": [
+		["Halk sizden memnun, manşetler olumlu.", "Kanallarım sizi seviyor; halk da kanallarımı.", "Bu hafta manşetler sizin. Rica ederim."],
+		["Kamuoyu kararsız; doğru haber akışı gerekir.", "Halk kimin hikâyesine inanacağına henüz karar vermedi.", "Biraz yardımla bu haftayı kurtarabiliriz."],
+		["Anlatıyı kaybediyoruz. Bana güvenmeniz gerek.", "Kanallarım bile artık haberleri tutamıyor.", "Sokağın sesi ekranlarımızdan daha yüksek çıkıyor."]],
+	"press": [
+		["Sokakta sakin bir hava var.", "Kahvehanelerde siyaset değil, futbol konuşuluyor.", "İnsanlar günlerine bakıyor; öfke görmüyorum."],
+		["İnsanlar daha çok soru soruyor.", "Okurlarımın mektupları sertleşiyor.", "Fırın kuyruklarında sesler yükseliyor."],
+		["Halk öfkeli ve artık korkmuyor.", "Duvarlara yazılanları okumalısınız, Majesteleri.", "İnsanlar artık isimlerini saklamadan konuşuyor."]],
+	"gate": [
+		["Saray sakin; kimse sizi rahatsız etmek istemiyor.", "Randevu defteriniz düzenli; her şey yolunda.", "Koridorlarda huzur var, Majesteleri."],
+		["Bazı heyetler randevu istiyor, ben ertelemeyi tercih ettim.", "Birkaç ziyaretçiyi sizi yormasın diye bekleme odasında tuttum.", "Sarayda fısıltılar var; önemsiz şeyler, eminim."],
+		["Bazı haberleri size ulaştırmamayı doğru buldum.", "Ziyaretçi defterini ben düzenliyorum; endişelenmeyin.", "Sarayda kimin kimle görüştüğünü artık ben de tam bilmiyorum."]],
+	"royal": [
+		["Prens törenlerde sessiz ve uyumlu.", "Kardeşiniz bu hafta av ve resimle meşguldü.", "Prens size selamlarını gönderiyor."],
+		["Prens soylularla sık yemek yiyor; sebebini bilmiyoruz.", "Prens son günlerde yabancı elçilerle fotoğraf veriyor.", "Kardeşiniz eski hanedan mektuplarını okuyormuş."],
+		["Prensin çevresinde hazırlık var. Taht konuşuluyor.", "Soylu aileler prense 'Majesteleri' diye hitap etmeye başladı.", "Prensin muhafızları çoğaldı. Kimden korunduğunu sormak lazım."]],
+	"opposition": [
+		["Muhalefet dağınık, sesi cılız.", "Muhalefet kendi içinde kavgalı; size vakit ayıramıyorlar.", "Brandt'ın mitingleri yarı boş."],
+		["Muhalefet kanatları arasında gizli görüşmeler sürüyor.", "Brandt'ın konuşmaları sertleşiyor ve dinleyeni artıyor.", "Muhalefet üniversitelerde örgütleniyor."],
+		["Muhalefet birleşiyor; sokakla koordinasyon başladı.", "Muhalefetin çağrısıyla meydanlar dolabilir.", "Brandt artık 'geçiş hükümeti'nden söz ediyor."]],
+	"court": [
+		["Mahkemeler olağan işleyişinde.", "Yargının gündeminde saraya dair bir şey yok.", "Davalar takvimine uygun ilerliyor."],
+		["Bazı dosyalar yargıda beklenenden hızlı ilerliyor.", "Savcılar bazı eski dosyaları yeniden açıyor.", "Mahkemede adınız henüz geçmiyor. Henüz."],
+		["Yargı saraya yaklaşıyor; savcılar sabırsız.", "Bazı hâkimler anayasanın kraldan üstün olduğunu yazmaya başladı.", "Bir soruşturma dosyasının kapağında sarayın adresi var."]],
+}
+
+
 func _phrase(a: Actor, value: float, echo: float) -> String:
 	if echo > 0.75:
+		# Yankı odası: korku herkesin aynı cümleyi kurmasına yol açar. Bu tekdüzelik bir ipucudur.
 		return "Majesteleri, her şey kontrol altında ve sizin liderliğinizde yolunda gidiyor."
 	var band := _band(a, value)
-	match a.domain:
-		"army":
-			return ["Birlikler emirlere hazır, moral yüksek.", "Subaylar arasında huzursuz mırıltılar var, ama disiplin sürüyor.", "Bazı birlikler emirleri geciktiriyor. Gençler konuşuyor."][band]
-		"intel":
-			return ["Dosyalarda olağanüstü bir şey yok.", "Sokakta ve muhalefette hareketlenme izliyoruz.", "Gizli görüşmeler artıyor. Tehdit gerçek olabilir."][band]
-		"economy":
-			return ["Büyüme sağlıklı, enflasyon kontrolde.", "Fiyatlar yükseliyor; bazı sektörler zorlanıyor.", "Bütçe açığı büyüyor. Müdahale gerekebilir."][band]
-		"media":
-			return ["Halk sizden memnun, manşetler olumlu.", "Kamuoyu kararsız; doğru haber akışı gerekir.", "Anlatıyı kaybediyoruz. Bana güvenmeniz gerek."][band]
-		"press":
-			return ["Sokakta sakin bir hava var.", "İnsanlar daha çok soru soruyor.", "Halk öfkeli ve artık korkmuyor."][band]
-		"gate":
-			return ["Saray sakin; kimse sizi rahatsız etmek istemiyor.", "Bazı heyetler randevu istiyor, ben ertelemeyi tercih ettim.", "Bazı haberleri size ulaştırmamayı doğru buldum."][band]
-		"royal":
-			return ["Prens törenlerde sessiz ve uyumlu.", "Prens soylularla sık yemek yiyor; sebebini bilmiyoruz.", "Prensin çevresinde hazırlık var. Taht konuşuluyor."][band]
-		"opposition":
-			return ["Muhalefet dağınık, sesi cılız.", "Muhalefet kanatları arasında gizli görüşmeler sürüyor.", "Muhalefet birleşiyor; sokakla koordinasyon başladı."][band]
-		"court":
-			return ["Mahkemeler olağan işleyişinde.", "Bazı dosyalar yargıda beklenenden hızlı ilerliyor.", "Yargı saraya yaklaşıyor; savcılar sabırsız."][band]
-	return "…"
+	if not PHRASES.has(a.domain):
+		return "…"
+	var variants: Array = PHRASES[a.domain][band]
+	return variants[absi(("%s%d" % [a.id, week]).hash()) % variants.size()]
 
 
 func _add_fact(id: String, text: String, subject: String, severity: float, knowers: Array, copies: int, leakiness: float = 0.5) -> void:

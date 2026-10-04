@@ -444,5 +444,125 @@
       {"label": "Sessizce geçiştir", "text": "Kimse kutlamadı. Kimse de unutmadı.", "fx": {"king": -1}}
     ],
     "ignore": {"text": "Yıldönümü kutlanmadı.", "fx": {"king": -2}}
+  },
+
+  {
+    "id": "voss_arden_catisma", "min_week": 18, "actor_min": {"voss": {"power": 55}, "arden": {"power": 55}}, "title": "İstihbarat orduyu dinliyor",
+    "text": "Arden, Voss'un genelkurmayın telefonlarını dinlettiğini öğrenmiş. İkisi de aynı gün huzuruna çıkmak istiyor.",
+    "choices": [
+      {"label": "Voss'un yanında dur", "text": "Voss memnun. Arden kapıyı biraz sert kapattı.", "fx": {"actors": {"voss": {"power": 6}, "arden": {"ambition": 8, "l_career": -6}}}},
+      {"label": "Arden'in yanında dur", "text": "Dinlemeler durdu. Voss ise kayıtları saklamayı ihmal etmedi.", "fx": {"actors": {"arden": {"power": 6}, "voss": {"ambition": 8, "secrets_on_king": 1}}}},
+      {"label": "İkisini de azarla", "text": "İkisi de geri çekildi. Birbirlerine olan güvensizlikleri ise sana yaradı.", "fx": {"actors": {"voss": {"fear": 10, "ambition": 3}, "arden": {"fear": 10, "ambition": 3}}}}
+    ],
+    "ignore": {"text": "Çatışma kendi kendine büyüdü.", "fx": {"actors": {"voss": {"ambition": 4}, "arden": {"ambition": 4}}}}
+  },
+  {
+    "id": "lena_roportaj", "min_week": 15, "alive": ["lena"], "blocks_flag": ["gazeteci_ihale_1"], "title": "Gazeteci röportaj istiyor",
+    "text": "Lena Ostrow, sansürsüz bir röportaj için randevu istiyor. 'Halk sizi sizden dinlemek istiyor.'",
+    "choices": [
+      {"label": "Dürüst bir röportaj ver", "text": "Röportaj çok konuşuldu. Bazıları ilk kez sana inandı.", "fx": {"king": 3, "opp": -2, "actors": {"lena": {"l_ideology": 10}}}},
+      {"label": "Soruları önceden iste", "text": "Lena soruları gönderdi ve röportaja bunu da yazdı.", "fx": {"king": 1, "actors": {"lena": {"fear": 5, "ambition": 3}}}},
+      {"label": "Reddet", "text": "Ertesi gün gazetede boş bir sayfa vardı: 'Kral konuşmadı.'", "fx": {"king": -1, "actors": {"lena": {"ambition": 4}}}}
+    ],
+    "ignore": {"text": "Talep cevapsız kaldı.", "fx": {"king": -1}}
+  },
+  {
+    "id": "brandt_koalisyon", "min_week": 30, "min_opposition": 45, "alive": ["brandt"], "title": "Brandt koalisyon öneriyor",
+    "text": "Muhalefet güçlü. Brandt sokakları sakinleştirmek karşılığında hükümete ortak olmayı teklif ediyor.",
+    "choices": [
+      {"label": "Kabul et", "text": "Muhalefet hükümete girdi. Sokaklar sakinleşti; Brandt'ın gücü saraya taşındı.", "fx": {"opp": -12, "king": -2, "actors": {"brandt": {"power": 12, "obligation": 8, "l_career": 10}}}},
+      {"label": "Reddet", "text": "Brandt mitinglere geri döndü.", "fx": {"opp": 4}},
+      {"label": "Kabul et, içeriden çökert", "text": "Koalisyon kuruldu. Voss ilk günden muhalefetin bakanlarını izliyor.", "fx": {"opp": -8, "actors": {"brandt": {"power": 6}}, "fact": {"id": "koalisyon_tuzagi", "text": "Koalisyonun içeriden çökertilme planı", "subject": "king", "severity": 30, "knowers": ["voss"]}}}
+    ],
+    "ignore": {"text": "Teklif masada bekliyor; muhalefet sabırsız.", "fx": {"opp": 5}}
+  },
+  {
+    "id": "anayasa_degisikligi", "min_week": 40, "alive": ["falk"], "title": "Yetkilerini genişletecek anayasa değişikliği",
+    "text": "Danışmanların, krala olağanüstü hâl yetkisi veren bir anayasa değişikliği hazırladı.",
+    "choices": [
+      {"label": "Referanduma götür", "text": "Halk sandığa gitti. Sonuç ne olursa olsun, meşruiyetin arttı.", "fx": {"king": 4, "unrest": 3, "opp": 5}},
+      {"label": "Kararnameyle geçir", "text": "Yetkiler senin. Yüksek Mahkeme'nin sessizliği ise çok gürültülü.", "fx": {"king": 6, "actors": {"falk": {"l_ideology": -15, "ambition": 6}}, "fact": {"id": "anayasa_kararnamesi", "text": "Anayasayı kararnameyle değiştirme", "subject": "king", "severity": 40, "knowers": ["falk", "brandt"]}}},
+      {"label": "Vazgeç", "text": "Taslak çekmecede kaldı.", "fx": {"king": -1}}
+    ],
+    "ignore": {"text": "Taslak sızdı.", "fx": {"king": -2, "opp": 3}}
+  },
+  {
+    "id": "halden_kanal", "min_week": 24, "actor_min": {"halden": {"power": 65}}, "title": "Halden son bağımsız kanalı satın alıyor",
+    "text": "Halden, ülkedeki son bağımsız televizyon kanalına teklif verdi. Satılırsa haberlerin tamamı tek elden çıkacak.",
+    "choices": [
+      {"label": "İzin ver", "text": "Artık bütün ekranlar Halden'in. Ve dolayısıyla, bir ölçüde senin.", "fx": {"actors": {"halden": {"power": 8, "obligation": 4}, "lena": {"fear": 5}}}},
+      {"label": "Rekabet kuruluyla engelle", "text": "Satış durdu. Halden bunu kişisel algıladı.", "fx": {"actors": {"halden": {"ambition": 8, "l_money": -5}}}},
+      {"label": "Kanalı devlet satın alsın", "text": "Kanal artık devletin. Halk devlet kanalına ne kadar inanır, göreceğiz.", "fx": {"economy": -4, "king": 2, "actors": {"halden": {"ambition": 4}}}}
+    ],
+    "ignore": {"text": "Satış tamamlandı.", "fx": {"actors": {"halden": {"power": 8}}}}
+  },
+  {
+    "id": "kessler_reform", "min_week": 20, "alive": ["kessler"], "actor_max": {"kessler": {"fear": 40}}, "title": "Kessler cesur bir reform öneriyor",
+    "text": "Maliye Bakanı vergi sistemini baştan yazmak istiyor. 'Bugün acıtır, bir yıl sonra kurtarır.'",
+    "choices": [
+      {"label": "Reformu uygula", "text": "Reform başladı. İlk aylar zor geçecek.", "fx": {"economy": -4, "unrest": 5, "actors": {"kessler": {"power": 6, "l_ideology": 8}}}},
+      {"label": "Sulandırarak uygula", "text": "Reformun yarısı kaldı; etkisinin de.", "fx": {"economy": 1}},
+      {"label": "Reddet", "text": "Kessler raporu çekmecesine koydu. Gözlerindeki ışık biraz söndü.", "fx": {"actors": {"kessler": {"l_ideology": -8, "fear": 5}}}}
+    ],
+    "ignore": {"text": "Reform taslağı unutuldu.", "fx": {"actors": {"kessler": {"l_ideology": -5}}}}
+  },
+  {
+    "id": "reform_meyve", "flag_age": {"kessler_reform_0": 12}, "title": "Reformun meyveleri",
+    "text": "Kessler'in vergi reformu bir yılın sonunda sonuç verdi: hazine doluyor, yatırımcılar geri dönüyor.",
+    "choices": [
+      {"label": "Başarıyı sahiplen", "text": "Manşetler 'Kralın reformu'ndan söz ediyor. Kessler sessiz.", "fx": {"king": 5, "economy": 8, "actors": {"kessler": {"l_career": -5}}}},
+      {"label": "Kessler'e teşekkür et", "text": "Kessler alkışlandı. Sadakati derinleşti.", "fx": {"king": 2, "economy": 8, "actors": {"kessler": {"l_career": 10, "power": 4}}}}
+    ],
+    "ignore": {"text": "Reform sessizce işini yaptı.", "fx": {"economy": 6}}
+  },
+  {
+    "id": "genel_grev", "min_week": 16, "min_unrest": 50, "once": false, "cooldown": 20, "chance": 0.35, "title": "Genel grev",
+    "text": "Sendikalar ülke çapında genel grev ilan etti. Limanlar, fabrikalar ve otobüsler durdu.",
+    "choices": [
+      {"label": "Sendikalarla uzlaş", "text": "Zam verildi, grev bitti. Hazine bunu hissetti.", "fx": {"economy": -4, "unrest": -10}},
+      {"label": "Grevi yasakla", "text": "Grev yasaklandı. Öfke yasaklanamadı.", "fx": {"unrest": 5, "opp": 4, "actors": {"arden": {"power": 3}}}},
+      {"label": "Bekle, yorulsunlar", "text": "Grev haftalarca sürdü.", "fx": {"economy": -6}}
+    ],
+    "ignore": {"text": "Grev uzadı.", "fx": {"economy": -7, "unrest": 3}}
+  },
+  {
+    "id": "suikast", "min_week": 30, "needs_ready": true, "chance": 0.5, "title": "Kortejine suikast girişimi",
+    "text": "Bir tören dönüşü kortejine ateş açıldı. Kurtuldun. Kimin tetiği çektiğini değil, kimin izin verdiğini merak ediyorsun.",
+    "choices": [
+      {"label": "Güvenlik tasfiyesi başlat", "text": "Muhafızlar değişti. Voss soruşturmayı yürütüyor; her şeyi o biliyor.", "fx": {"king": 3, "actors": {"voss": {"power": 8}, "arden": {"fear": 10}}}},
+      {"label": "Sıkıyönetim ilan et", "text": "Sokaklarda tanklar var. Düzen geldi; ordunun gücüyle birlikte.", "fx": {"king": 2, "unrest": -8, "opp": 6, "actors": {"arden": {"power": 10}}}},
+      {"label": "Halkın karşısına çık", "text": "Yaralı kolunla balkona çıktın. Kalabalık seni alkışladı.", "fx": {"king": 6, "unrest": -3}}
+    ],
+    "ignore": {"text": "Suikast soruşturması sürüncemede.", "fx": {"king": -3}}
+  },
+  {
+    "id": "dorn_sir", "min_week": 22, "alive": ["dorn"], "actor_min": {"dorn": {"power": 35}}, "title": "Kâhya özel hayatını biliyor",
+    "text": "Dorn, bir akşam kadehini doldururken mırıldandı: 'Geçen ayki gece ziyaretlerinizi kimseye söylemedim, Majesteleri.'",
+    "choices": [
+      {"label": "Ona terfi ver", "text": "Dorn yeni unvanından memnun. Sırrın da onunla birlikte terfi etti.", "fx": {"actors": {"dorn": {"power": 8, "obligation": 6, "l_career": 8, "secrets_on_king": 1}}}},
+      {"label": "Sessizliğini satın al", "text": "Dorn zarfı aldı ve teşekkür etti. İlk zarf olmayacak.", "fx": {"wealth": -5, "actors": {"dorn": {"l_money": 10, "secrets_on_king": 1}}}},
+      {"label": "Onu tehdit et", "text": "Dorn sarardı ve sustu. Ama bir şeyler yazmaya başladı.", "fx": {"actors": {"dorn": {"fear": 20, "ambition": 6}}, "fact": {"id": "kahya_gunlugu", "text": "Kâhyanın tuttuğu gizli günlük", "subject": "king", "severity": 30, "knowers": ["dorn"]}}}
+    ],
+    "ignore": {"text": "Dorn bir şey söylemedi; söylemeyeceği de belli değil.", "fx": {"actors": {"dorn": {"secrets_on_king": 1}}}}
+  },
+  {
+    "id": "prens_suikast", "min_week": 26, "alive": ["prens"], "chance": 0.5, "title": "Prense suikast girişimi",
+    "text": "Prens Cassian bir suikastten kıl payı kurtuldu. Saraydaki herkes, sessizce, sana bakıyor.",
+    "choices": [
+      {"label": "Açık soruşturma başlat", "text": "Voss bir fail buldu. Herkes ikna olmadı.", "fx": {"king": 1, "actors": {"voss": {"power": 4}, "prens": {"fear": 5}}}},
+      {"label": "Prense özel koruma ver", "text": "Prens korumayı kabul etti. Koruyucularını kimin seçtiğini sordu.", "fx": {"actors": {"prens": {"l_career": 8, "power": 4}}}},
+      {"label": "Sessiz kal", "text": "Sessizliğin bir itiraf gibi okundu.", "fx": {"king": -4, "actors": {"prens": {"ambition": 10}}, "fact": {"id": "prens_suikast_soylentisi", "text": "Prens suikastının arkasında sarayın olduğu söylentisi", "subject": "king", "severity": 30, "knowers": ["prens", "voss"]}}}
+    ],
+    "ignore": {"text": "Söylentiler yayıldı.", "fx": {"king": -3, "actors": {"prens": {"ambition": 6}}}}
+  },
+  {
+    "id": "dis_borc", "min_week": 30, "max_economy": 40, "title": "Ağır şartlı uluslararası kredi",
+    "text": "Uluslararası bir kuruluş kredi teklif ediyor. Karşılığında kemer sıkma ve 'yönetim şeffaflığı' istiyor.",
+    "choices": [
+      {"label": "Krediyi kabul et", "text": "Hazine nefes aldı. Kemer sıkma sokağı öfkelendirdi.", "fx": {"economy": 12, "unrest": 6, "opp": 3}},
+      {"label": "Reddet", "text": "Egemenlik korundu; kasa boş kaldı.", "fx": {"economy": -3, "king": 1}},
+      {"label": "Halden'in bankasından borçlan", "text": "Para yurt içinden geldi. Borç ise Halden'e.", "fx": {"economy": 6, "actors": {"halden": {"obligation": 10, "power": 4}}}}
+    ],
+    "ignore": {"text": "Teklif geri çekildi.", "fx": {"economy": -4}}
   }
 ]
