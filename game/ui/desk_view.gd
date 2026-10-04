@@ -66,6 +66,12 @@ func close_view() -> void:
 	hide()
 
 
+## Test için: bir nesnenin ekran üzerindeki merkezi.
+func object_center(id: String) -> Vector2:
+	var o: Control = _objects.get(id)
+	return o.get_global_rect().get_center() if o else Vector2.ZERO
+
+
 func _art(path: String) -> Texture2D:
 	return load(path) if ResourceLoader.exists(path) else null
 
@@ -162,8 +168,8 @@ func _make_object(id: String) -> void:
 	else:
 		visual = _draw_object(id, r.size)
 	visual.set_anchors_preset(Control.PRESET_FULL_RECT)
-	visual.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	holder.add_child(visual)
+	_ignore_mouse(visual)  # iç parçalar tıklamayı yutmasın; tıklama nesneye (holder) ulaşsın
 	# Etiket
 	var plate := Label.new()
 	plate.text = str(spec[1])
@@ -198,7 +204,7 @@ func _make_object(id: String) -> void:
 		b.add_child(bl)
 		b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		holder.add_child(b)
-		b.position = Vector2(r.size.x - 40, -14)
+		b.position = Vector2(r.size.x - 70, 18)
 		var pulse := b.create_tween().set_loops()
 		pulse.tween_property(b, "modulate", Color(1.25, 1.25, 1.25), 0.8).set_trans(Tween.TRANS_SINE)
 		pulse.tween_property(b, "modulate", Color.WHITE, 0.8).set_trans(Tween.TRANS_SINE)
@@ -215,6 +221,13 @@ func _make_object(id: String) -> void:
 		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
 			Sfx.play("click")
 			_go(id))
+
+
+func _ignore_mouse(n: Node) -> void:
+	if n is Control:
+		(n as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for c in n.get_children():
+		_ignore_mouse(c)
 
 
 func _badge_text(id: String) -> String:

@@ -12,6 +12,34 @@ Veloria'da modern kurumlara sahip hayali bir krallığın yeni kralısın: **Adr
 | Linux | `Veloria.x86_64` dosyasına çalıştırma izni ver (`chmod +x`) ve çalıştır. |
 | Web | `web` klasörünü bir web sunucusunda yayınla ve `index.html`'i aç. Telefon tarayıcısında otomatik olarak mobil düzene geçer. |
 
+## Çalışma Masası
+
+Her hafta masanın başında açılır. Masadaki nesnelere tıkla:
+
+| Nesne | Açtığı yer |
+|---|---|
+| Mühürlü mektuplar | Gündem: kararlar ve raporlar |
+| Gazete | Medya Merkezi |
+| Telefon | Kişiler ve eylemler |
+| Saltanat Günlüğü | Olup bitenlerin kaydı |
+| Gizli Dosyalar | Sırlar ve Söz Defteri |
+| Hanedan fotoğrafı | Hükümdarlık Arşivi ve başarımlar |
+| Başkent haritası | Kurumlar |
+
+Kırmızı rozetler dikkat isteyen şeyleri gösterir. Masaya üst çubuktaki **Masa** düğmesiyle dönebilirsin. İstemezsen menüden "Haftaya masadan başla" seçeneğini kapat.
+
+## Başkent
+
+Haritada yedi kurum var. Birine tıklayınca başındaki kişiyi, onun bu haftaki raporunu ve kuruma özgü bilgiyi görürsün: Adliye'de saraya uzanan dosyalar, Parlamento'da tutulmamış sözlerin.
+
+## Medya Merkezi
+
+- **Veloria Haber:** Halden'in gazetesi. Her şeyi güzel gösterir, saray skandallarını yalanlar.
+- **Serbest Kalem:** Lena'nın bağımsız gazetesi. Gerçeğe daha yakın yazar ve kulis söylentilerini basar. Lena'yı susturursan kapanır.
+- **Halden TV:** Canlı yayın ve kayan haber şeridi.
+
+İki gazete aynı haftayı farklı anlatıyorsa, aradaki fark sana söylenmeyenleri gösterir.
+
 ## Ekran
 
 - **Gündem:** Bekleyen kararlar (görselli kartlar) ve haftanın raporları.
@@ -68,6 +96,7 @@ Saltanat bittiğinde (104 hafta ya da düşüş):
 - **Tarih ne yazacak?** Saray tarihçisi ve sürgündeki tarihçi saltanatını iki farklı biçimde anlatır.
 - **Hakikat Dosyası:** Kim, ne zaman, sana ne yalan söyledi.
 - Saltanatın **Hükümdarlık Arşivi**'ne kaydedilir.
+- Kazandığın yeni **başarımlar** duyurulur. 15 başarımın tamamı Arşiv'de listelenir.
 
 ## Kısayollar
 
@@ -82,7 +111,7 @@ Oyun her hafta sonunda **otomatik kaydedilir**. Saltanat bittiğinde kayıt sili
 
 ## Ayarlar
 
-Menüde: zorluk (Kolay / Normal / Zor), müzik ve efekt sesi, tam ekran, kısa geçişler, danışman ipuçları ve açılış sineması.
+Menüde: zorluk (Kolay / Normal / Zor), müzik ve efekt sesi, tam ekran, kısa geçişler, danışman ipuçları, açılış sineması ve haftaya masadan başlama.
 
 ## İpuçları
 

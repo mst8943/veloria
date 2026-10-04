@@ -24,6 +24,7 @@ var _drawer_body: VBoxContainer
 var _canvas: Control
 var _lights: Array = []
 var _sites: Dictionary = {}
+var plates: Dictionary = {}   # kurum id -> etiket (test ve konumlandırma için)
 
 
 func _ready() -> void:
@@ -139,6 +140,7 @@ func _make_site(id: String) -> void:
 	plate.add_theme_stylebox_override("panel", sb)
 	plate.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	add_child(plate)
+	plates[id] = plate
 	var v := VBoxContainer.new()
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_theme_constant_override("separation", 0)
@@ -169,6 +171,8 @@ func _make_site(id: String) -> void:
 	sub.add_theme_font_size_override("font_size", 13 if not mobile else 16)
 	sub.add_theme_color_override("font_color", Color("b9b1a0"))
 	v.add_child(sub)
+	for c in plate.find_children("*", "Control", true, false):
+		(c as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
 	# Konum: yüzdelik nokta etiketin merkezi olur
 	var place := func() -> void:
 		var p: Vector2 = s["pos"]
