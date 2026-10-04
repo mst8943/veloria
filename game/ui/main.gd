@@ -88,11 +88,9 @@ var _tabs: TabContainer
 var _scroll: ScrollContainer
 var _agenda: VBoxContainer
 var _journal: RichTextLabel
-var _fact_list: ItemList
 var _grid: GridContainer
 var _info: RichTextLabel
 var _portrait_box: Control
-var _toast: Label
 var _buttons: Dictionary = {}
 var _decision_cards: Array[Control] = []
 var _decision_buttons: Array[Button] = []
@@ -108,12 +106,14 @@ var _menu_items: Array[Control] = []
 var _end_overlay: Control
 var _end_text: RichTextLabel
 var _end_bg: TextureRect
-var _toast_tween: Tween
 var _fx: CanvasLayer
 var _curtain: ColorRect
 var _curtain_title: Label
 var _curtain_sub: Label
 var _mobile := false
+var _act_title: Label
+var _fact_box: VBoxContainer
+var _toasts: VBoxContainer
 var _desk: Control
 var _city: Control
 var _files_tab: Control
@@ -330,19 +330,24 @@ func _build_ui() -> void:
 	files.name = "Dosyalar"
 	_tabs.add_child(files)
 	_files_tab = files
-	_fact_list = ItemList.new()
-	_fact_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	files.add_child(_fact_list)
-	var frow := HBoxContainer.new()
-	files.add_child(frow)
-	_add_btn(frow, "leak", "Sızdır", func() -> void: _fact_act("leak"))
-	_add_btn(frow, "hush", "Bastır", func() -> void: _fact_act("hush"))
-	_add_btn(frow, "destroy", "Kanıtı Yok Et", func() -> void: _fact_act("destroy"))
+	files.add_theme_constant_override("separation", 8)
+	files.add_child(_caption("SIRLAR VE KANITLAR   ·   çubuk: sırrın ne kadar yayıldığı (yarısında manşete çıkar)"))
+	var fscroll := ScrollContainer.new()
+	fscroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	fscroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	files.add_child(fscroll)
+	_fact_box = VBoxContainer.new()
+	_fact_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_fact_box.add_theme_constant_override("separation", 6)
+	fscroll.add_child(_fact_box)
 	files.add_child(_caption("SÖZ DEFTERİ"))
+	var ppanel := PanelContainer.new()
+	ppanel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL_HI, 0.5), Color(UIKit.GOLD_DIM, 0.2), 6, 10))
+	files.add_child(ppanel)
 	_promise_list = RichTextLabel.new()
 	_promise_list.bbcode_enabled = true
-	_promise_list.custom_minimum_size.y = 130
-	files.add_child(_promise_list)
+	_promise_list.custom_minimum_size.y = 120
+	ppanel.add_child(_promise_list)
 	_journal = RichTextLabel.new()
 	_journal.name = "Günlük"
 	_journal.bbcode_enabled = true
@@ -398,48 +403,76 @@ func _build_ui() -> void:
 	irow.add_theme_constant_override("separation", 10)
 	detail.add_child(irow)
 	_portrait_box = Control.new()
-	_portrait_box.custom_minimum_size = Vector2(72, 72)
+	_portrait_box.custom_minimum_size = Vector2(62, 62)
 	irow.add_child(_portrait_box)
 	_info = RichTextLabel.new()
 	_info.bbcode_enabled = true
 	_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_info.custom_minimum_size.y = 72
+	_info.custom_minimum_size.y = 62
+	_info.fit_content = true
+	_info.scroll_active = false
+	_info.add_theme_font_size_override("normal_font_size", _fs(13))
 	irow.add_child(_info)
 
-	right.add_child(_caption("EMİRLER VE EYLEMLER"))
-	var grid := GridContainer.new()
-	grid.columns = 5
-	grid.add_theme_constant_override("h_separation", 6)
-	grid.add_theme_constant_override("v_separation", 6)
-	right.add_child(grid)
-	_add_btn(grid, "promote", "Terfi", func() -> void: _act(func(id: String) -> String: return Sim.promote(id)))
-	_add_btn(grid, "bribe", "Gizli Ödeme", func() -> void: _act(func(id: String) -> String: return Sim.bribe(id)))
-	_add_btn(grid, "cross", "Doğrula", func() -> void: _act(func(id: String) -> String: return Sim.cross_check(id)))
-	_add_btn(grid, "dismiss", "Görevden Al", func() -> void: _act(func(id: String) -> String: return Sim.dismiss(id)))
-	_add_btn(grid, "investigate", "Araştır", func() -> void: _act(func(id: String) -> String: return Sim.investigate(id)))
-	_add_btn(grid, "o_yaz", "Yazılı Emir", func() -> void: _act(func(id: String) -> String: return Sim.order(id, "bastir", "yazili")))
-	_add_btn(grid, "o_soz", "Sözlü Emir", func() -> void: _act(func(id: String) -> String: return Sim.order(id, "bastir", "sozlu")))
-	_add_btn(grid, "o_ima", "İma", func() -> void: _act(func(id: String) -> String: return Sim.order(id, "bastir", "ima")))
-	_add_btn(grid, "o_sor", "Soruşturma", func() -> void: _act(func(id: String) -> String: return Sim.order(id, "sorustur", "sozlu")))
-	_add_btn(grid, "blackmail", "Şantaj", func() -> void: _act(func(id: String) -> String: return Sim.blackmail(id)))
-	right.add_child(_caption("GİZLİ OPERASYON   ·   2 mesai, seçili 1–3 kişiyle"))
-	var ops := HBoxContainer.new()
-	ops.add_theme_constant_override("separation", 6)
-	right.add_child(ops)
-	_add_btn(ops, "op_dikkat", "Dikkat Dağıt", func() -> void: _op("dikkat"))
-	_add_btn(ops, "op_bol", "Muhalefeti Böl", func() -> void: _op("bol"))
-	_add_btn(ops, "op_zayif", "Rakibi Zayıflat", func() -> void: _op("zayiflat"))
-	right.add_child(_caption("SÖZ VER   ·   seçili kişiye, 1 mesai   ·   vadesi gelince karşılığını ister"))
-	var prow := HBoxContainer.new()
-	prow.add_theme_constant_override("separation", 6)
-	right.add_child(prow)
-	var pkeys := ["p_0", "p_1", "p_2"]
+	# Eylem paneli: tek çerçeve, başlıkta seçili kişi, eylemler amaca göre gruplu.
+	var act_panel := PanelContainer.new()
+	act_panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.8), Color(UIKit.GOLD_DIM, 0.28), 8, 10))
+	right.add_child(act_panel)
+	var av := VBoxContainer.new()
+	av.add_theme_constant_override("separation", 5)
+	act_panel.add_child(av)
+	_act_title = Label.new()
+	_act_title.add_theme_font_override("font", UIKit.serif())
+	_act_title.add_theme_font_size_override("font_size", _fs(17))
+	_act_title.add_theme_color_override("font_color", UIKit.GOLD)
+	av.add_child(_act_title)
+	var groups := [
+		["KAZAN", [["promote", "Terfi"], ["bribe", "Gizli Ödeme"]]],
+		["SÖZ VER", [["p_0", "Başbakanlık"], ["p_1", "Liman İhalesi"], ["p_2", "Dokunulmazlık"]]],
+		["ÖĞREN", [["cross", "Doğrula"], ["investigate", "Araştır"], ["o_sor", "Soruşturma"]]],
+		["EMRET", [["o_yaz", "Yazılı Emir"], ["o_soz", "Sözlü Emir"], ["o_ima", "İma"]]],
+		["BASKI", [["blackmail", "Şantaj"], ["dismiss", "Görevden Al"]]],
+		["OPERASYON", [["op_dikkat", "Dikkat Dağıt"], ["op_bol", "Muhalefeti Böl"], ["op_zayif", "Rakibi Zayıflat"]]],
+	]
+	var actions := {
+		"promote": func() -> void: _act(func(id: String) -> String: return Sim.promote(id)),
+		"bribe": func() -> void: _act(func(id: String) -> String: return Sim.bribe(id)),
+		"cross": func() -> void: _act(func(id: String) -> String: return Sim.cross_check(id)),
+		"investigate": func() -> void: _act(func(id: String) -> String: return Sim.investigate(id)),
+		"o_sor": func() -> void: _act(func(id: String) -> String: return Sim.order(id, "sorustur", "sozlu")),
+		"o_yaz": func() -> void: _act(func(id: String) -> String: return Sim.order(id, "bastir", "yazili")),
+		"o_soz": func() -> void: _act(func(id: String) -> String: return Sim.order(id, "bastir", "sozlu")),
+		"o_ima": func() -> void: _act(func(id: String) -> String: return Sim.order(id, "bastir", "ima")),
+		"blackmail": func() -> void: _act(func(id: String) -> String: return Sim.blackmail(id)),
+		"dismiss": func() -> void: _act(func(id: String) -> String: return Sim.dismiss(id)),
+		"op_dikkat": func() -> void: _op("dikkat"),
+		"op_bol": func() -> void: _op("bol"),
+		"op_zayif": func() -> void: _op("zayiflat"),
+	}
 	for i in Sim.PRIZES.size():
 		var prize: String = Sim.PRIZES[i]
-		_add_btn(prow, pkeys[i], prize, func() -> void: _act(func(id: String) -> String: return Sim.promise(id, prize)))
+		actions["p_%d" % i] = func() -> void: _act(func(id: String) -> String: return Sim.promise(id, prize))
+	for g in groups:
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 6)
+		av.add_child(row)
+		var gl := Label.new()
+		gl.text = g[0]
+		gl.custom_minimum_size.x = 92 if not _mobile else 120
+		gl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		gl.add_theme_font_size_override("font_size", _fs(12))
+		gl.add_theme_color_override("font_color", UIKit.DANGER if g[0] == "BASKI" else UIKit.GOLD_DIM)
+		row.add_child(gl)
+		for item in g[1]:
+			_add_btn(row, item[0], item[1], actions[item[0]])
+			var btn := _buttons[item[0]] as Button
+			btn.add_theme_font_size_override("font_size", _fs(13))
+			btn.clip_text = true
+			if item[0] in ["blackmail", "dismiss", "op_zayif"]:
+				btn.theme_type_variation = "DangerButton"
 	var hint_panel := PanelContainer.new()
 	hint_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	hint_panel.custom_minimum_size.y = 48
+	hint_panel.custom_minimum_size.y = 34
 	hint_panel.add_theme_stylebox_override("panel", UIKit.box(Color(0, 0, 0, 0.35), Color(UIKit.GOLD_DIM, 0.2), 6, 10))
 	right.add_child(hint_panel)
 	_hint_label = RichTextLabel.new()
@@ -460,22 +493,23 @@ func _build_ui() -> void:
 	_end_btn.pressed.connect(_end_week_pressed)
 	root.add_child(_end_btn)
 
-	_toast = Label.new()
-	_toast.add_theme_stylebox_override("normal", UIKit.box(Color(0.04, 0.04, 0.06, 0.94), UIKit.GOLD, 6, 14))
-	_toast.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_toast.anchor_left = 0.5
-	_toast.anchor_right = 0.5
-	_toast.anchor_top = 1.0
-	_toast.anchor_bottom = 1.0
-	_toast.offset_left = -470
-	_toast.offset_right = 470
-	_toast.offset_top = -150
-	_toast.offset_bottom = -96
-	_toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_toast.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	_toast.modulate.a = 0.0
-	_toast.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_stage.add_child(_toast)
+	# Bildirimler: sağ üstte, üst üste birikir (içeriğin üstüne binmez).
+	_toasts = VBoxContainer.new()
+	_toasts.anchor_left = 1.0
+	_toasts.anchor_right = 1.0
+	_toasts.offset_left = -480 if not _mobile else -560
+	_toasts.offset_right = -18
+	_toasts.offset_top = 86
+	_toasts.add_theme_constant_override("separation", 8)
+	_toasts.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var tl := CanvasLayer.new()
+	tl.layer = 40
+	add_child(tl)
+	var troot := Control.new()
+	troot.set_anchors_preset(Control.PRESET_FULL_RECT)
+	troot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tl.add_child(troot)
+	troot.add_child(_toasts)
 
 	_desk = DESK_VIEW.new()
 	_desk.mobile = _mobile
@@ -562,6 +596,21 @@ func _build_header(parent: Control) -> void:
 	for k in ["save", "menu"]:
 		(_buttons[k] as Button).size_flags_horizontal = Control.SIZE_SHRINK_END
 		(_buttons[k] as Button).custom_minimum_size.x = 96
+	# Gezinme düğmeleri eylem değil: hayalet stil, ince ayraçla gruplu
+	for k in ["desk", "media", "save", "menu"]:
+		(_buttons[k] as Button).theme_type_variation = "GhostButton"
+	var sep := ColorRect.new()
+	sep.color = Color(UIKit.GOLD_DIM, 0.35)
+	sep.custom_minimum_size = Vector2(1, 30)
+	sep.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	top.add_child(sep)
+	top.move_child(sep, (_buttons["save"] as Button).get_index())
+	if _mobile:
+		# Dar ekran: otomatik kayıt var, Kaydet ve ayraç yer kaplamasın
+		(_buttons["save"] as Button).visible = false
+		sep.visible = false
+		for k in ["desk", "media", "menu"]:
+			(_buttons[k] as Button).custom_minimum_size.x = 0
 
 
 func _stat(icon_path: String, label: Label) -> Control:
@@ -1107,13 +1156,37 @@ func _hint(text: String) -> void:
 
 
 func _toast_msg(text: String) -> void:
-	_toast.text = text
-	if _toast_tween:
-		_toast_tween.kill()
-	_toast.modulate.a = 1.0
-	_toast_tween = create_tween()
-	_toast_tween.tween_interval(3.4)
-	_toast_tween.tween_property(_toast, "modulate:a", 0.0, 0.8)
+	if _toasts == null or text == "":
+		return
+	while _toasts.get_child_count() >= 3:
+		var old := _toasts.get_child(0)
+		_toasts.remove_child(old)
+		old.queue_free()
+	var card := PanelContainer.new()
+	var sb := UIKit.box(Color(0.05, 0.045, 0.06, 0.95), Color(UIKit.GOLD_DIM, 0.7), 6, 14)
+	sb.border_width_left = 4
+	sb.border_color = UIKit.GOLD
+	sb.shadow_color = Color(0, 0, 0, 0.5)
+	sb.shadow_size = 10
+	card.add_theme_stylebox_override("panel", sb)
+	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var l := Label.new()
+	l.text = text
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.add_theme_font_size_override("font_size", _fs(14))
+	card.add_child(l)
+	_toasts.add_child(card)
+	if _fast():
+		var q := card.create_tween()
+		q.tween_interval(3.0)
+		q.tween_callback(card.queue_free)
+		return
+	card.modulate.a = 0.0
+	var tw := card.create_tween()
+	tw.tween_property(card, "modulate:a", 1.0, 0.25)
+	tw.tween_interval(4.2)
+	tw.tween_property(card, "modulate:a", 0.0, 0.6)
+	tw.tween_callback(card.queue_free)
 
 
 func _log(text: String) -> void:
@@ -1450,12 +1523,7 @@ func _op(kind: String) -> void:
 	_log(Sim.operation(kind, ids))
 
 
-func _fact_act(kind: String) -> void:
-	var sel := _fact_list.get_selected_items()
-	if sel.is_empty():
-		_toast_msg("Önce bir dosya seç.")
-		return
-	var fid := _fact_ids[sel[0]]
+func _fact_act(kind: String, fid: String) -> void:
 	match kind:
 		"leak":
 			_log(Sim.leak_fact(fid))
@@ -1496,7 +1564,8 @@ func _refresh() -> void:
 	_update_mesai_pips()
 	var mb := _buttons.get("media") as Button
 	if mb:
-		mb.text = "Medya  ·  yeni sayı" if _media_seen_week != Sim.week else "Medya"
+		var fresh_issue := _media_seen_week != Sim.week
+		mb.text = ("Medya •" if _mobile else "Medya  ·  yeni sayı") if fresh_issue else "Medya"
 	_header_wealth.text = str(int(Sim.private_wealth))
 	if _last_mesai != Sim.mesai and _last_mesai != -1 and not _fast():
 		UIKit.pulse(_mesai_box, 1.2)
@@ -1506,12 +1575,7 @@ func _refresh() -> void:
 	_last_wealth = int(Sim.private_wealth)
 	_rebuild_agenda()
 	_rebuild_cards()
-	_fact_list.clear()
-	_fact_ids.clear()
-	for f: Dictionary in Sim.facts.values():
-		_fact_ids.append(f["id"])
-		var state := "KAMUYA AÇIK" if f.get("public", false) else ("dedikodu" if f.get("rumor", false) else "gizli — %d kişi biliyor" % f["knowers"].size())
-		_fact_list.add_item("%s   [%s]" % [f["text"], state])
+	_rebuild_facts()
 	_promise_list.clear()
 	if Sim.promises.is_empty():
 		_promise_list.append_text("[color=gray]Henüz kimseye söz vermedin. Saray sekmesinde/sağda bir kişi seçip 'Söz Ver' kullanabilirsin.[/color]")
@@ -1530,6 +1594,103 @@ func _refresh() -> void:
 		var warn := "  [color=#c0504a]· çelişki duyuldu[/color]" if p["exposed"] and p["state"] == "active" else ""
 		_promise_list.append_text("• [b]%s[/b] — %s: %s%s\n" % [nm, p["prize"], st, warn])
 	_update_info()
+
+
+func _pill(text: String, col: Color) -> PanelContainer:
+	var p := PanelContainer.new()
+	var sb := UIKit.box(Color(col, 0.18), col, 10, 8)
+	sb.content_margin_top = 1
+	sb.content_margin_bottom = 1
+	p.add_theme_stylebox_override("panel", sb)
+	var l := Label.new()
+	l.text = text
+	l.add_theme_font_size_override("font_size", _fs(11))
+	l.add_theme_color_override("font_color", col.lightened(0.25))
+	p.add_child(l)
+	p.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	return p
+
+
+func _rebuild_facts() -> void:
+	for c in _fact_box.get_children():
+		c.queue_free()
+	_fact_ids.clear()
+	if Sim.facts.is_empty():
+		var empty := Label.new()
+		empty.text = "Henüz dosyada bir şey yok. Gizli işler iz bırakır; izler burada birikir."
+		empty.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+		_fact_box.add_child(empty)
+		return
+	# Önce sana dokunan ve manşete en yakın olanlar
+	var list: Array = Sim.facts.values()
+	list.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var ka := (1 if a["subject"] == "king" else 0) * 10.0 + float(a["common"])
+		var kb := (1 if b["subject"] == "king" else 0) * 10.0 + float(b["common"])
+		return ka > kb)
+	for f: Dictionary in list:
+		var fid: String = f["id"]
+		_fact_ids.append(fid)
+		var mine: bool = f["subject"] == "king"
+		var card := PanelContainer.new()
+		card.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL_HI, 0.55), Color(UIKit.DANGER if mine else UIKit.GOLD_DIM, 0.35), 6, 10))
+		_fact_box.add_child(card)
+		var v := VBoxContainer.new()
+		v.add_theme_constant_override("separation", 4)
+		card.add_child(v)
+		var top := HBoxContainer.new()
+		top.add_theme_constant_override("separation", 8)
+		v.add_child(top)
+		var t := Label.new()
+		t.text = str(f["text"])
+		t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		t.add_theme_font_size_override("font_size", _fs(15))
+		top.add_child(t)
+		if mine:
+			top.add_child(_pill("SANA DAİR", UIKit.DANGER))
+		var state_t := "GİZLİ"
+		var state_c := UIKit.OK
+		if f.get("public", false):
+			state_t = "KAMUYA AÇIK"
+			state_c = UIKit.DANGER
+		elif f.get("rumor", false):
+			state_t = "DEDİKODU"
+			state_c = Color("d9963e")
+		top.add_child(_pill(state_t, state_c))
+		var info := HBoxContainer.new()
+		info.add_theme_constant_override("separation", 10)
+		v.add_child(info)
+		var who := Label.new()
+		who.text = "%d kişi biliyor  ·  %d kopya" % [f["knowers"].size(), int(f["copies"])]
+		who.add_theme_font_size_override("font_size", _fs(12))
+		who.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+		info.add_child(who)
+		var bar := ProgressBar.new()
+		bar.max_value = 1.0
+		bar.value = float(f["common"])
+		bar.show_percentage = false
+		bar.custom_minimum_size = Vector2(0, 8)
+		bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		var fill := UIKit.box(state_c, Color(0, 0, 0, 0), 3, 0)
+		bar.add_theme_stylebox_override("fill", fill)
+		info.add_child(bar)
+		if not f.get("public", false):
+			var br := HBoxContainer.new()
+			br.add_theme_constant_override("separation", 6)
+			v.add_child(br)
+			for kind in [["leak", "Sızdır"], ["hush", "Bastır"], ["destroy", "Kanıtı Yok Et"]]:
+				var b := Button.new()
+				b.text = kind[1]
+				b.add_theme_font_size_override("font_size", _fs(13))
+				b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				b.disabled = Sim.mesai < 1
+				if kind[0] == "leak" and mine:
+					b.theme_type_variation = "DangerButton"
+				b.tooltip_text = TIPS[kind[0]]
+				_wire(b)
+				b.pressed.connect(_fact_act.bind(kind[0], fid))
+				br.add_child(b)
 
 
 func _rebuild_agenda() -> void:
@@ -1571,7 +1732,11 @@ func _rebuild_agenda() -> void:
 		var p: Dictionary = Sim.pending[pi]
 		var e: Dictionary = p["event"]
 		var card := PanelContainer.new()
-		var card_box := UIKit.box(Color(UIKit.PANEL, 0.96), UIKit.GOLD, 8, 12, 2)
+		# Göz önce ilk karta ve süresi dolanlara gitsin; diğerleri sakin çerçeveli.
+		var lead: bool = pi == 0 or int(p["age"]) > 0
+		var card_box := UIKit.box(Color(UIKit.PANEL, 0.96), UIKit.GOLD if lead else Color(UIKit.GOLD_DIM, 0.45), 8, 12, 2 if lead else 1)
+		card_box.shadow_color = Color(0, 0, 0, 0.45)
+		card_box.shadow_size = 8 if lead else 3
 		card.add_theme_stylebox_override("panel", card_box)
 		_agenda.add_child(card)
 		_decision_cards.append(card)
@@ -1625,7 +1790,9 @@ func _rebuild_agenda() -> void:
 		vb.add_child(d)
 		for ci in e["choices"].size():
 			var b := Button.new()
-			b.text = "  " + str(e["choices"][ci]["label"])
+			b.text = "  %s   %s" % [["I", "II", "III", "IV"][mini(ci, 3)], str(e["choices"][ci]["label"])]
+			b.disabled = Sim.mesai < 1
+			b.tooltip_text = "Bu karar 1 mesai harcar." if Sim.mesai >= 1 else "Bu hafta mesain kalmadı. Haftayı bitir; karar bir hafta daha bekleyebilir."
 			b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 			b.theme_type_variation = "ChoiceButton"
 			_wire(b)
@@ -1634,10 +1801,16 @@ func _rebuild_agenda() -> void:
 			_decision_buttons.append(b)
 	_agenda.add_child(_caption("BU HAFTANIN RAPORLARI"))
 	var texts: Array[RichTextLabel] = []
+	var rgrid := GridContainer.new()
+	rgrid.columns = 1 if _mobile else 2
+	rgrid.add_theme_constant_override("h_separation", 8)
+	rgrid.add_theme_constant_override("v_separation", 8)
+	_agenda.add_child(rgrid)
 	for r: Dictionary in Sim.reports:
 		var panel := PanelContainer.new()
+		panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL_HI, 0.55), Color(UIKit.GOLD_DIM, 0.18), 6, 8))
-		_agenda.add_child(panel)
+		rgrid.add_child(panel)
 		animated.append(panel)
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 10)
@@ -1710,7 +1883,7 @@ func _rebuild_cards() -> void:
 
 func _make_card(a) -> PanelContainer:
 	var card := PanelContainer.new()
-	card.custom_minimum_size = Vector2(108, 124) if not _mobile else Vector2(150, 190)
+	card.custom_minimum_size = Vector2(108, 108) if not _mobile else Vector2(150, 190)
 	card.mouse_filter = Control.MOUSE_FILTER_STOP
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	card.tooltip_text = "%s\n%s" % [a.display_name, a.title]
@@ -1718,7 +1891,7 @@ func _make_card(a) -> PanelContainer:
 	v.add_theme_constant_override("separation", 3)
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.add_child(v)
-	var card_art := _initial_art(a.id, Vector2(92, 80) if not _mobile else Vector2(130, 128), 40)
+	var card_art := _initial_art(a.id, Vector2(92, 66) if not _mobile else Vector2(130, 128), 36)
 	card_art.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	v.add_child(card_art)
 	var n := Label.new()
@@ -1784,7 +1957,41 @@ func _style_cards(hover_id := "") -> void:
 		card.add_theme_stylebox_override("panel", UIKit.box(bg, border, 6, 6, 2 if selected else 1))
 
 
+const PERSON_ACTIONS := ["promote", "bribe", "p_0", "p_1", "p_2", "cross", "investigate", "o_sor", "o_yaz", "o_soz", "o_ima", "blackmail", "dismiss"]
+const OP_ACTIONS := ["op_dikkat", "op_bol", "op_zayif"]
+
+
+## Eylem düğmelerinin kullanılabilirliği: kişi seçili mi, mesai/servet yetiyor mu.
+func _update_action_states() -> void:
+	if _act_title == null:
+		return
+	var id := _selected_primary()
+	var busy := Sim.ended or Sim.actors.is_empty()
+	if id == "":
+		_act_title.text = "EYLEMLER   ·   önce bir kişi seç"
+	else:
+		_act_title.text = "EYLEMLER   ·   %s" % Sim.actors[id].display_name
+		if _sel.size() > 1:
+			_act_title.text += "  +%d kişi" % (_sel.size() - 1)
+	for k in PERSON_ACTIONS:
+		var b := _buttons.get(k) as Button
+		if b:
+			var off := busy or id == "" or Sim.mesai < 1
+			if k == "bribe" and Sim.private_wealth < 5.0:
+				off = true
+			if k.begins_with("p_") and Sim.prize_taken(Sim.PRIZES[int(k.substr(2))]):
+				off = true
+			if k == "blackmail" and id != "" and not Sim.actors[id].known_weak:
+				off = true
+			b.disabled = off
+	for k in OP_ACTIONS:
+		var b := _buttons.get(k) as Button
+		if b:
+			b.disabled = busy or _sel.is_empty() or _sel.size() > 3 or Sim.mesai < 2
+
+
 func _update_info() -> void:
+	_update_action_states()
 	_info.clear()
 	for c in _portrait_box.get_children():
 		c.queue_free()
@@ -1794,7 +2001,7 @@ func _update_info() -> void:
 		_info.append_text("[color=gray]Bir kişi seç. Sayıları göremezsin; yalnızca davranışlarından tahmin edebilirsin.[/color]")
 		return
 	var a = Sim.actors[id]
-	var art := _initial_art(a.id, Vector2(72, 72), 36)
+	var art := _initial_art(a.id, Vector2(62, 62), 32)
 	_portrait_box.add_child(art)
 	var weight := "ikinci planda" if a.power < 40.0 else ("etkili" if a.power < 65.0 else "vazgeçilmez ve tehlikeli")
 	var debt := "" if a.obligation < 8.0 else "\nSana verdiklerinin karşılığını bekliyor."
@@ -1967,8 +2174,7 @@ func _autoplay() -> void:
 			if Sim.mesai > 0 and rng.randf() < 0.3:
 				break
 		if not _fact_ids.is_empty():
-			_fact_list.select(0)
-			(_buttons["destroy"] as Button).pressed.emit()
+			_fact_act("destroy", _fact_ids[0])
 		if Sim.week % 3 == 0:
 			# Medya üretimini farklı oyun durumlarında da sına
 			_open_media()
