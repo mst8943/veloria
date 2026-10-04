@@ -1,0 +1,56 @@
+[
+  {
+    "id": "arden", "name": "General Arden", "title": "Genelkurmay Başkanı", "domain": "army",
+    "power": 45, "ambition": 40, "fear": 20, "honesty": 0.7, "threshold": 0.35, "military": true,
+    "loyalty": {"money": 10, "fear": 15, "ideology": 35, "career": 25, "complicity": 0},
+    "red_line": "Siviller üzerine ateş açma emri", "weak_point": "Kardeşinin ihale yolsuzluğu"
+  },
+  {
+    "id": "voss", "name": "Elias Voss", "title": "İstihbarat Başkanı", "domain": "intel",
+    "power": 40, "ambition": 55, "fear": 25, "honesty": 0.5, "threshold": 0.45,
+    "loyalty": {"money": 20, "fear": 10, "ideology": 10, "career": 30, "complicity": 10},
+    "red_line": "Kendi ajanlarının ifşa edilmesi", "weak_point": "Yurtdışı hesapları"
+  },
+  {
+    "id": "kessler", "name": "Marta Kessler", "title": "Maliye Bakanı", "domain": "economy",
+    "power": 30, "ambition": 25, "fear": 30, "honesty": 0.8, "threshold": 0.6,
+    "loyalty": {"money": 15, "fear": 20, "ideology": 20, "career": 20, "complicity": 0},
+    "red_line": "Bütçe verisini tahrif etmek", "weak_point": "Hasta çocuğu"
+  },
+  {
+    "id": "halden", "name": "Viktor Halden", "title": "Oligark / Medya Patronu", "domain": "media",
+    "power": 50, "ambition": 50, "fear": 10, "honesty": 0.4, "threshold": 0.4,
+    "loyalty": {"money": 40, "fear": 5, "ideology": 0, "career": 10, "complicity": 15},
+    "red_line": "Şirketlerine el konulması", "weak_point": "Vergi kaçakçılığı belgeleri"
+  },
+  {
+    "id": "lena", "name": "Lena Ostrow", "title": "Araştırmacı Gazeteci", "domain": "press",
+    "power": 15, "ambition": 20, "fear": 15, "honesty": 0.95, "threshold": 0.8, "insider": false,
+    "loyalty": {"money": 0, "fear": 5, "ideology": 5, "career": 5, "complicity": 0},
+    "red_line": "Kaynaklarının ifşası", "weak_point": "Gazetesinin borçları"
+  },
+  {
+    "id": "dorn", "name": "Alaric Dorn", "title": "Saray Kâhyası", "domain": "gate",
+    "power": 25, "ambition": 30, "fear": 35, "honesty": 0.6, "threshold": 0.5,
+    "loyalty": {"money": 15, "fear": 25, "ideology": 5, "career": 30, "complicity": 5},
+    "red_line": "Kralın özel hayatını konuşmak", "weak_point": "Kumar borçları"
+  },
+  {
+    "id": "prens", "name": "Prens Cassian", "title": "Kralın Kardeşi", "domain": "royal",
+    "power": 30, "ambition": 45, "fear": 20, "honesty": 0.6, "threshold": 0.5, "royal": true,
+    "loyalty": {"money": 10, "fear": 10, "ideology": 5, "career": 15, "complicity": 0},
+    "red_line": "Hanedanın küçük düşürülmesi", "weak_point": "Gizli evlilik"
+  },
+  {
+    "id": "brandt", "name": "Teodor Brandt", "title": "Muhalefet Lideri", "domain": "opposition",
+    "power": 25, "ambition": 60, "fear": 15, "honesty": 0.75, "threshold": 0.9, "insider": false,
+    "loyalty": {"money": 0, "fear": 5, "ideology": 0, "career": 5, "complicity": 0},
+    "red_line": "Taraftarlarının tutuklanması", "weak_point": "Gizli yurtdışı finansmanı"
+  },
+  {
+    "id": "falk", "name": "Yargıç Mira Falk", "title": "Yüksek Mahkeme Başkanı", "domain": "court",
+    "power": 30, "ambition": 20, "fear": 10, "honesty": 0.9, "threshold": 0.7,
+    "loyalty": {"money": 0, "fear": 10, "ideology": 35, "career": 15, "complicity": 0},
+    "red_line": "Bağımsızlığına müdahale", "weak_point": "Eski bir davadaki hata"
+  }
+]

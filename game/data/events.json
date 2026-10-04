@@ -1,0 +1,448 @@
+[
+  {
+    "id": "gida_protestosu", "min_week": 3, "title": "Gıda fiyatları protestoya dönüşüyor",
+    "text": "Başkentte fırın kuyrukları uzuyor. Polis raporları 'kontrol altında' diyor, ama bazı birliklerin isteksiz davrandığı söyleniyor.",
+    "fx": {"unrest": 10, "flag": "PROTESTO_BASLADI"},
+    "choices": [
+      {"label": "Ordu ve polisle dağıt", "text": "Meydanlar boşaltıldı. General Arden bunu unutmayacak.",
+       "fx": {"unrest": -14, "actors": {"arden": {"power": 7, "obligation": 6}}, "flag": "PROTESTO_BASTIRILDI",
+              "fact": {"id": "polis_siddeti", "text": "Protestoculara yönelik sert müdahale", "subject": "king", "severity": 30, "knowers": ["arden", "voss"]}}},
+      {"label": "Fiyat dondurma kararnamesi", "text": "Fırınlar önünde kuyruk eridi; ama bütçe ve piyasa nefes alamıyor.",
+       "fx": {"unrest": -10, "economy": -6, "actors": {"kessler": {"fear": 6}, "halden": {"ambition": 4}}}},
+      {"label": "Görmezden gel", "text": "Protestolar bir hafta daha büyüdü.", "fx": {"unrest": 6, "opp": 6}}
+    ],
+    "ignore": {"text": "Protestolar kendi hâline bırakıldı ve büyüdü.", "fx": {"unrest": 10, "opp": 6}}
+  },
+  {
+    "id": "gazeteci_ihale", "min_week": 6, "title": "Gazeteci gizli ihaleyi araştırıyor",
+    "text": "Lena Ostrow, devlet ihalelerinde hep aynı şirketin adını buluyor: Halden Holding.",
+    "fx": {"fact": {"id": "ihale_dosyasi", "text": "Halden'e verilen gizli ihale dosyası", "subject": "halden", "severity": 40, "knowers": ["lena", "halden"]}},
+    "choices": [
+      {"label": "Halden'i uyar", "text": "Halden minnettar kaldı. Artık sana bir iyilik borçlu değil; sen ona bir iyilik borçlusun.",
+       "fx": {"actors": {"halden": {"obligation": 10, "l_complicity": 10}, "lena": {"fear": 8}}}},
+      {"label": "Gazeteciyi sustur", "text": "Lena artık yazmıyor. Ama korkmuş bir gazeteci unutmaz.",
+       "fx": {"actors": {"lena": {"fear": 35, "honesty": -0.1}, "voss": {"power": 4}}, "flag": "GAZETECI_SUSTURULDU",
+              "fact": {"id": "gazeteci_baskisi", "text": "Gazeteciye uygulanan baskı", "subject": "king", "severity": 40, "knowers": ["lena", "voss"]}}},
+      {"label": "Yayınlansın", "text": "Dosya basına çıktı. Halden zayıfladı, sen de dürüst görünüyorsun.",
+       "fx": {"king": 2, "opp": 3, "actors": {"halden": {"power": -10, "ambition": 6}}, "flag": "IHALE_YAYINLANDI"}}
+    ],
+    "ignore": {"text": "Gazeteci araştırmaya devam ediyor.", "fx": {"unrest": 2}}
+  },
+  {
+    "id": "general_atamalari", "min_week": 8, "min_power": {"arden": 55}, "title": "General kendi subaylarını kritik görevlere getiriyor",
+    "text": "Genelkurmay'da üç önemli komutanlık değişti. Hepsi Arden'ın eski öğrencileri.",
+    "choices": [
+      {"label": "Atamaları engelle", "text": "Arden geri adım attı, ama bakışları değişti.",
+       "fx": {"actors": {"arden": {"ambition": 6, "l_career": -10, "fear": 10}}}},
+      {"label": "Onayla", "text": "Ordu artık Arden'in. Sana sadakat ise onun iyi niyetine bağlı.",
+       "fx": {"actors": {"arden": {"power": 8, "obligation": 6, "ambition": 3}}}},
+      {"label": "Karşı denge: Voss'u güçlendir", "text": "İstihbarat ile ordu birbirini kolluyor.",
+       "fx": {"actors": {"voss": {"power": 10, "ambition": 4}, "arden": {"ambition": 3}}}}
+    ],
+    "ignore": {"text": "Atamalar sessizce yapıldı.", "fx": {"actors": {"arden": {"power": 8, "ambition": 5}}}}
+  },
+  {
+    "id": "kis_krizi", "min_week": 14, "title": "Sert kış, enerji fiyatları",
+    "text": "Doğalgaz fiyatı iki katına çıktı. Halden enerji şirketlerinden büyük kâr ediyor.",
+    "choices": [
+      {"label": "Halka sübvansiyon", "text": "Faturalar düştü, bütçe zorlandı.",
+       "fx": {"unrest": -8, "economy": -6, "actors": {"halden": {"power": 4}}}},
+      {"label": "Enerji şirketlerine ek vergi", "text": "Halden öfkeli ama hazine doldu.",
+       "fx": {"economy": 4, "actors": {"halden": {"ambition": 8, "power": -6, "l_money": -8}}}},
+      {"label": "Piyasaya bırak", "text": "Fiyatlar uçtu.", "fx": {"unrest": 6, "economy": -5, "actors": {"halden": {"power": 8}}}}
+    ],
+    "ignore": {"text": "Kış sertleşti, kimse müdahale etmedi.", "fx": {"unrest": 10, "economy": -8, "actors": {"halden": {"power": 8}}}}
+  },
+  {
+    "id": "kral_hasta", "min_week": 20, "min_unrest": 35, "title": "'Kral hasta mı?' söylentisi",
+    "text": "Sarayın dışında kralın iki gündür görünmediği konuşuluyor. Kimse resmî açıklama yapmıyor.",
+    "choices": [
+      {"label": "Halka açık bir törenle görün", "text": "Kalabalığın karşısında dimdik durdun.", "fx": {"king": 6, "wealth": -3}},
+      {"label": "Halden'in medyasıyla yalanla", "text": "Söylenti sustu. Ama Halden ne yaptığını biliyor.",
+       "fx": {"king": 2, "actors": {"halden": {"obligation": 8}},
+              "fact": {"id": "saglik_yalani", "text": "Kralın sağlık söylentisinin yalanlanma operasyonu", "subject": "king", "severity": 30, "knowers": ["halden"]}}},
+      {"label": "Yok say", "text": "Söylenti büyüdü.", "fx": {"king": -4}}
+    ],
+    "ignore": {"text": "Söylenti sarayın koridorlarına yayıldı.", "fx": {"king": -6, "actors": {"prens": {"ambition": 6}}}}
+  },
+  {
+    "id": "prens_hirs", "min_week": 8, "title": "Prens soylularla gizli görüşüyor",
+    "text": "Kardeşin Prens Cassian'ın son iki haftada bütün soylu ailelerle akşam yemeği yediği bildiriliyor.",
+    "choices": [
+      {"label": "Saray gözetimi altına al", "text": "Prens evde kaldı. Gözlerinde bir şey değişti.",
+       "fx": {"actors": {"prens": {"fear": 20, "ambition": 6, "l_fear": 10}}}},
+      {"label": "Ona önemli bir görev ver", "text": "Prens görevi sevinçle kabul etti. Hırsı da büyüdü.",
+       "fx": {"actors": {"prens": {"power": 10, "obligation": 8, "ambition": 4}}}},
+      {"label": "Voss'a izlettir", "text": "Voss notlar tutuyor.",
+       "fx": {"actors": {"voss": {"power": 5}},
+              "fact": {"id": "prens_izleniyor", "text": "Prensin gizlice izlenmesi", "subject": "king", "severity": 25, "knowers": ["voss", "dorn"]}}}
+    ],
+    "ignore": {"text": "Prens görüşmelerine devam etti.", "fx": {"actors": {"prens": {"power": 6, "ambition": 6}}}}
+  },
+  {
+    "id": "muhalefet_birlesme", "min_week": 10, "min_opposition": 28, "title": "Muhalefet iki kanadı birleştiriyor",
+    "text": "Teodor Brandt, bölünmüş muhalefeti tek listede toplamaya çalışıyor.",
+    "choices": [
+      {"label": "Muhalefeti böl (gizli para)", "text": "İki kanat birbirine girdi. Ama para izi kaldı.",
+       "fx": {"opp": -14, "wealth": -5, "fact": {"id": "muhalefet_finansmani", "text": "Muhalefeti bölmek için verilen gizli para", "subject": "king", "severity": 30, "knowers": ["voss"]}}},
+      {"label": "Brandt'la müzakere et", "text": "Brandt bir koltuk kazandı; sen zaman kazandın.",
+       "fx": {"opp": -6, "actors": {"brandt": {"power": 6, "obligation": 6}}}},
+      {"label": "Brandt'ı tutuklat", "text": "Muhalefet susturuldu, sokak öfkelendi.",
+       "fx": {"opp": -14, "unrest": 8, "king": -3, "actors": {"brandt": {"fear": 20, "ambition": 10}, "arden": {"power": 3}}}}
+    ],
+    "ignore": {"text": "Muhalefet birleşti.", "fx": {"opp": 10}}
+  },
+  {
+    "id": "yargic_dosya", "min_week": 12, "title": "Yüksek Mahkeme bakan ihalelerini soruşturuyor",
+    "text": "Yargıç Falk, iki bakanın ihale dosyasını açtı. Dosyanın uzantısı saraya uzanabilir.",
+    "choices": [
+      {"label": "Baskı kur", "text": "Falk geri çekildi ama bu baskı yazıldı.",
+       "fx": {"actors": {"falk": {"fear": 25, "l_ideology": -8}}, "fact": {"id": "yargi_baskisi", "text": "Yargıca yapılan baskı", "subject": "king", "severity": 35, "knowers": ["falk", "dorn"]}}},
+      {"label": "Bağımsız bırak", "text": "Dosya ilerliyor. Seni korumayabilir, ama itibarını da düşürmez.",
+       "fx": {"king": -2, "actors": {"falk": {"l_ideology": 5, "power": 5}},
+              "fact": {"id": "bakan_ihalesi", "text": "Bakan ihale dosyası", "subject": "king", "severity": 20, "knowers": ["falk"]}}},
+      {"label": "Sorumlu bakanı kurban et", "text": "Bir bakan düştü; dosya kapandı. Bakanın bildikleri ise kapanmadı.",
+       "fx": {"king": 2, "actors": {"kessler": {"fear": 15, "l_career": -8}, "falk": {"power": 2}}}}
+    ],
+    "ignore": {"text": "Dosya yargıda ilerledi.", "fx": {"actors": {"falk": {"power": 5}}, "fact": {"id": "bakan_ihalesi_2", "text": "Bakan ihale dosyasının saraya uzanan kolu", "subject": "king", "severity": 25, "knowers": ["falk"]}}}
+  },
+  {
+    "id": "voss_dosyalar", "min_week": 16, "min_power": {"voss": 50}, "title": "İstihbarat başkanı siyasetçiler hakkında dosya topluyor",
+    "text": "Voss'un arşivleri her gün büyüyor. Dosyaların bir kısmı senin sarayından kişilere ait.",
+    "choices": [
+      {"label": "Dosyaları iste", "text": "Voss dosyaları verdi. Ama kopyası kalmış olabilir.",
+       "fx": {"actors": {"voss": {"fear": 15, "ambition": 5}}, "wealth": 3}},
+      {"label": "Yetkisini genişlet", "text": "Voss artık herkes hakkında bir şey biliyor. Senin hakkında da.",
+       "fx": {"actors": {"voss": {"power": 10, "ambition": 6, "secrets_on_king": 1}}}},
+      {"label": "Ordu ile rekabete sok", "text": "Arden ile Voss birbirine bakıyor.",
+       "fx": {"actors": {"arden": {"ambition": 3}, "voss": {"ambition": 3, "fear": -5}}}}
+    ],
+    "ignore": {"text": "Voss çalışmaya devam etti.", "fx": {"actors": {"voss": {"power": 6, "secrets_on_king": 1}}}}
+  },
+  {
+    "id": "sinir_krizi", "min_week": 22, "title": "Komşu devletle sınır gerilimi",
+    "text": "Sınır köyünde silahlı bir olay yaşandı. Komşu devletin basını savaş tellalı yapıyor.",
+    "choices": [
+      {"label": "Seferberlik ilan et", "text": "Halk gündemi değiştirdi. Ordunun ağırlığı arttı.",
+       "fx": {"unrest": -10, "economy": -7, "actors": {"arden": {"power": 10}}}},
+      {"label": "Diplomasi", "text": "Gerilim soğudu, ordu hoşnutsuz.", "fx": {"king": 2, "actors": {"arden": {"ambition": 2}, "kessler": {"power": 3}}}},
+      {"label": "Gerilimi kullan (medyaya servis et)", "text": "Halden manşetleri doldurdu. Hesabı sonra ödenir.",
+       "fx": {"unrest": -6, "actors": {"halden": {"power": 6, "obligation": 4}}}}
+    ],
+    "ignore": {"text": "Sınırda gerilim tırmandı.", "fx": {"unrest": 5, "actors": {"arden": {"power": 6}}}}
+  },
+  {
+    "id": "butce_acigi", "max_economy": 45, "min_week": 12, "title": "Bütçe açığı büyüyor",
+    "text": "Maliye Bakanı Kessler kesintiler olmadan maaşların ödenemeyeceğini söylüyor.",
+    "choices": [
+      {"label": "Kesintilere onay ver", "text": "Kemer sıkma başladı. Halk bunu sana yazacak.", "fx": {"economy": 6, "unrest": 8, "actors": {"kessler": {"power": 4}}}},
+      {"label": "Halden'den borç al", "text": "Kasa doldu. Borç ise sana yazıldı.", "fx": {"economy": 5, "actors": {"halden": {"obligation": 10, "power": 5}}}},
+      {"label": "Rakamları gizle", "text": "Dürüst Kessler bu talebi sevmedi.",
+       "fx": {"actors": {"kessler": {"fear": 15, "honesty": -0.15}},
+              "fact": {"id": "butce_gizleme", "text": "Bütçe açığının gizlenmesi", "subject": "king", "severity": 30, "knowers": ["kessler"]}}}
+    ],
+    "ignore": {"text": "Açık kendiliğinden büyüdü.", "fx": {"economy": -5, "unrest": 4}}
+  },
+  {
+    "id": "halden_ihale", "min_week": 18, "min_power": {"halden": 55}, "title": "Halden yeni bir mega ihale istiyor",
+    "text": "Halden, limanın yenilenmesi ihalesini istiyor. Tonu artık rica değil.",
+    "choices": [
+      {"label": "İhaleyi ver", "text": "Halden daha da büyüdü; sana komisyon düştü.",
+       "fx": {"wealth": 6, "actors": {"halden": {"power": 10, "obligation": -4}},
+              "fact": {"id": "liman_komisyonu", "text": "Liman ihalesindeki komisyon", "subject": "king", "severity": 35, "knowers": ["halden"]}}},
+      {"label": "Reddet", "text": "Halden geri çekildi. Dosyalar hâlâ onda.", "fx": {"actors": {"halden": {"ambition": 8, "l_money": -10}}}},
+      {"label": "Rakip bir oligarkı yarıştır", "text": "İki oligark birbirine düştü.", "fx": {"economy": -2, "actors": {"halden": {"fear": 10, "ambition": 3}}}}
+    ],
+    "ignore": {"text": "İhale rakip bir şirkete gitti.", "fx": {"actors": {"halden": {"ambition": 10, "l_money": -10}}}}
+  },
+  {
+    "id": "deepfake", "min_week": 28, "title": "Kralın sahte videosu dolaşıyor",
+    "text": "Sosyal medyada kralın aşağılayıcı sözler sarf ettiği bir video yayılıyor. Kimse ne gerçek olduğunu bilmiyor.",
+    "choices": [
+      {"label": "'Sahte' ilan et", "text": "Ortalık sakinleşti. Bir sonraki iddiada inandırıcılığın azalacak.", "fx": {"king": 1, "unrest": -2, "flag": "SAHTE_ILAN_EDILDI"}},
+      {"label": "Özür dile", "text": "Dürüst göründün, ama zayıf da.", "fx": {"king": -3, "unrest": -4}},
+      {"label": "Voss'a kaynağı buldur", "text": "Voss bir kaynak buldu. Gerçek olup olmadığı belirsiz.", "fx": {"actors": {"voss": {"power": 5}}}}
+    ],
+    "ignore": {"text": "Video milyonlarca kez izlendi.", "fx": {"king": -5, "unrest": 4}}
+  },
+  {
+    "id": "gizli_toplanti", "min_week": 14, "needs_ready": true, "title": "Gizli toplantı söylentileri",
+    "text": "Başkentte birkaç güçlü ismin bir villada gizlice buluştuğu konuşuluyor.",
+    "choices": [
+      {"label": "Voss'a izlettir", "text": "Voss toplantıları doğruladı, ama kimin olduğunu söylemedi.", "fx": {"actors": {"voss": {"power": 6}}}},
+      {"label": "Şüphelileri tek tek ara", "text": "Çağırdıkların sana yalan söyledi.", "fx": {"king": -1}},
+      {"label": "Tüm elitlere ziyafet ver", "text": "Güç bir gösteriye döndü.", "fx": {"wealth": -4, "king": 4}}
+    ],
+    "ignore": {"text": "Söylentiler yayıldı.", "fx": {"king": -3}}
+  },
+  {
+    "id": "ogrenci_eylem", "min_week": 18, "min_unrest": 35, "title": "Öğrenci eylemleri üniversitelere yayılıyor",
+    "text": "Üniversite meydanları doldu. Öğrenci temsilcileri şehir meydanına yürümek istiyor.",
+    "choices": [
+      {"label": "Rektörlerle pazarlık yap", "text": "Gençlerin bir kısmı geri döndü.", "fx": {"unrest": -6, "economy": -2}},
+      {"label": "Polis çevirsin", "text": "Kampüsler kapatıldı. Hafıza kaldı.", "fx": {"unrest": -8, "opp": 4, "actors": {"arden": {"power": 3}}}},
+      {"label": "Halden'in medyası karalasın", "text": "Öğrenciler 'yabancı ajan' ilan edildi.", "fx": {"unrest": -4, "actors": {"halden": {"obligation": 5, "power": 3}}, "opp": 3}}
+    ],
+    "ignore": {"text": "Eylemler büyüdü.", "fx": {"unrest": 8, "opp": 4}}
+  },
+  {
+    "id": "milletvekili_satin", "min_week": 26, "title": "Meclis bütçe oylaması",
+    "text": "Kritik bütçe yasası Meclis'ten ancak birkaç oy farkla geçecek gibi.",
+    "choices": [
+      {"label": "Milletvekillerini satın al", "text": "Yasa geçti. Mali iz kaldı.", "fx": {"wealth": -6, "king": 3, "fact": {"id": "vekil_satin_alma", "text": "Milletvekillerinin satın alınması", "subject": "king", "severity": 35, "knowers": ["dorn", "voss"]}}},
+      {"label": "Muhalefete taviz ver", "text": "Yasa yumuşatıldı.", "fx": {"opp": -4, "economy": -3, "actors": {"brandt": {"power": 4}}}},
+      {"label": "Yasa geçmesin", "text": "Bütçe krizi büyüyor.", "fx": {"economy": -6, "king": -2}}
+    ],
+    "ignore": {"text": "Yasa tasarısı geçmedi.", "fx": {"economy": -6, "king": -2}}
+  },
+  {
+    "id": "cenaze", "min_week": 36, "title": "Eski bir generalin cenazesi",
+    "text": "Ülkenin en sevilen emekli generali öldü. Bütün elitler cenazede toplanacak; aynı odada herkes herkesi görecek.",
+    "choices": [
+      {"label": "Cenazeye katıl ve herkesle konuş", "text": "Bir günde bir yıllık görüşme yaptın.", "fx": {"king": 4, "actors": {"arden": {"fear": -5}, "halden": {"fear": -3}, "prens": {"fear": -3}}}},
+      {"label": "Devlet töreni düzenle", "text": "Ordunun ağırlığı sembolik olarak arttı.", "fx": {"unrest": -4, "actors": {"arden": {"power": 6}}}},
+      {"label": "Katılma", "text": "Herkes yokluğunu konuştu.", "fx": {"king": -4}}
+    ],
+    "ignore": {"text": "Cenazede senin yokluğun konuşuldu.", "fx": {"king": -6}}
+  },
+  {
+    "id": "dorn_filtre", "min_week": 14, "min_power": {"dorn": 35}, "title": "Kâhya randevu listesini daraltıyor",
+    "text": "Kâhya Dorn artık kimin seni göreceğine karar veriyor. Raporların bir kısmı artık gelmiyor olabilir.",
+    "choices": [
+      {"label": "Dorn'a güven", "text": "Kâhya memnun; yalnızca onun gözünden bakıyorsun.", "fx": {"actors": {"dorn": {"power": 8, "obligation": 5}}}},
+      {"label": "Dorn'u uyar", "text": "Dorn şaşırdı ve biraz korktu.", "fx": {"actors": {"dorn": {"fear": 15, "ambition": 3}}}},
+      {"label": "Gizli ikinci bir kanal kur", "text": "Kimse bilmeden bilgi akıyor; ama bu da yazıldı.", "fx": {"wealth": -3, "actors": {"voss": {"power": 3}}}}
+    ],
+    "ignore": {"text": "Kâhya listeyi daralttı.", "fx": {"actors": {"dorn": {"power": 8, "ambition": 4}}}}
+  },
+  {
+    "id": "toren", "min_week": 5, "once": false, "cooldown": 18, "chance": 0.25, "title": "Kraliyet töreni önerisi",
+    "text": "Saray protokolü büyük bir hanedan töreni önerdi. Pahalı ama halkın gözünü kamaştırır.",
+    "choices": [
+      {"label": "Görkemli tören", "text": "Başkent alkışladı.", "fx": {"wealth": -4, "unrest": -6, "king": 4}},
+      {"label": "Sade tören", "text": "Kimse bir şey dememiş gibi geçti.", "fx": {"king": 1}}
+    ],
+    "ignore": {"text": "Tören ertelendi.", "fx": {}}
+  },
+  {
+    "id": "enflasyon", "min_week": 8, "max_economy": 42, "once": false, "cooldown": 14, "chance": 0.4, "title": "Enflasyon sokağa taşıyor",
+    "text": "Pazarlarda fiyatlar her hafta yükseliyor. Maliye 'geçici' diyor.",
+    "choices": [
+      {"label": "Merkez bankasına baskı", "text": "Faizler indi; piyasa kuşkulu.", "fx": {"economy": 3, "unrest": -3, "actors": {"kessler": {"fear": 6}}}},
+      {"label": "Sert kemer sıkma", "text": "Acı reçete başladı.", "fx": {"economy": 6, "unrest": 6}},
+      {"label": "Suçu medyada yabancılara at", "text": "Gündem değişti, enflasyon kalmadı.", "fx": {"unrest": -4, "actors": {"halden": {"obligation": 3}}}}
+    ],
+    "ignore": {"text": "Enflasyon ilerledi.", "fx": {"economy": -3, "unrest": 4}}
+  },
+  {
+    "id": "skandal_bakan", "min_week": 10, "once": false, "cooldown": 20, "chance": 0.25, "title": "Bir bakanın yolsuzluk skandalı",
+    "text": "Basın, bakanlardan birinin yurtdışına para çıkardığını yazıyor. Gazeteciler saraydan açıklama bekliyor.",
+    "choices": [
+      {"label": "Bakanı tasfiye et", "text": "Bakan düştü, kamuoyu tatmin oldu.", "fx": {"king": 3, "unrest": -4, "actors": {"kessler": {"fear": 8}}}},
+      {"label": "Skandalı gündemden düşür", "text": "Halden'in medyası başka bir konuya geçti.", "fx": {"actors": {"halden": {"obligation": 5}}, "king": -1}},
+      {"label": "Bakanı koru", "text": "Bakan sana borçlandı. Basın saldırıyor.", "fx": {"king": -3, "actors": {"kessler": {"obligation": 6, "l_complicity": 6}}}}
+    ],
+    "ignore": {"text": "Skandal büyüdü.", "fx": {"king": -4, "unrest": 3}}
+  },
+
+  {
+    "id": "arden_bakanlik", "flag_age": {"gida_protestosu_0": 8}, "alive": ["arden"], "title": "Arden faturayı getiriyor",
+    "text": "Protestoları dağıtan General Arden, artık Savunma Bakanlığı'nın da kendisine bağlanmasını istiyor. 'Meydanları kim boşalttı, hatırlıyorsunuz.'",
+    "choices": [
+      {"label": "Bakanlığı ver", "text": "Arden memnun. Ordunun hem komutası hem bütçesi artık onda.", "fx": {"actors": {"arden": {"power": 12, "obligation": -10, "l_career": 10}}}},
+      {"label": "Reddet", "text": "Arden selam verip çıktı. Selamı her zamankinden kısaydı.", "fx": {"actors": {"arden": {"ambition": 10, "l_career": -10}}}},
+      {"label": "Sadık ama silik birini ata", "text": "Bakanlığa senin adamın geçti. Ordu bunu bir hakaret olarak okudu.", "fx": {"king": 1, "economy": -2, "actors": {"arden": {"ambition": 5, "fear": 5}}}}
+    ],
+    "ignore": {"text": "Arden'in talebi cevapsız kaldı.", "fx": {"actors": {"arden": {"ambition": 8}}}}
+  },
+  {
+    "id": "lena_kitap", "flag_age": {"gazeteci_ihale_1": 12}, "title": "Susturulan gazeteci yurtdışında kitap yayınladı",
+    "text": "Lena Ostrow yurtdışına çıkmış. 'Veloria'nın Sessiz Sarayı' adlı kitabı komşu ülkelerde çok satanlar listesinde; içinde senin adın da geçiyor.",
+    "choices": [
+      {"label": "Kitabı yasakla", "text": "Yasak kitabı daha da merak edilir yaptı.", "fx": {"opp": 5, "unrest": 3, "leak": "gazeteci_baskisi"}},
+      {"label": "Görmezden gel", "text": "Saray sustu; kitap ise konuşmaya devam ediyor.", "fx": {"king": -3}},
+      {"label": "Halden'in medyasıyla karşı kampanya", "text": "Lena 'yabancı ajan' ilan edildi. Halden ne istediğini biliyor.", "fx": {"actors": {"halden": {"obligation": 6, "power": 3}}}}
+    ],
+    "ignore": {"text": "Kitap yurt içinde de elden ele dolaşıyor.", "fx": {"king": -4, "opp": 3}}
+  },
+  {
+    "id": "halden_intikam", "flag_age": {"gazeteci_ihale_2": 6}, "alive": ["halden"], "title": "Halden'in kanalları saraya saldırıyor",
+    "text": "İhale dosyası yayınlandıktan sonra Halden'in bütün kanalları her akşam sarayın israfını anlatıyor.",
+    "choices": [
+      {"label": "Barış teklif et", "text": "Halden saldırıları durdurdu. Bedeli cebinden çıktı.", "fx": {"wealth": -5, "actors": {"halden": {"l_money": 10, "ambition": -4}}}},
+      {"label": "Vergi denetimi başlat", "text": "Halden'in şirketlerinde denetim var; kendisi ise öfkeden köpürüyor.", "fx": {"actors": {"halden": {"power": -8, "ambition": 8, "fear": 12}}}},
+      {"label": "Devlet medyasıyla karşılık ver", "text": "İki tarafın kanalları birbirini yiyor. Halk kimseye inanmıyor.", "fx": {"king": -1, "unrest": 2}}
+    ],
+    "ignore": {"text": "Saldırılar sürdü.", "fx": {"king": -4}}
+  },
+  {
+    "id": "halden_fatura", "min_week": 20, "actor_min": {"halden": {"obligation": 16}}, "title": "Halden faturayı kesiyor",
+    "text": "Halden saraya geldi. Yeni kanal lisansları ve geçmiş vergiler için af istiyor. 'Bunca yıl sizi kim korudu, Majesteleri?'",
+    "choices": [
+      {"label": "İstediğini ver", "text": "Halden memnun ayrıldı. Artık ona daha da bağımlısın.", "fx": {"economy": -3, "actors": {"halden": {"power": 10, "obligation": -15}}}},
+      {"label": "Reddet", "text": "Halden gülümsedi. Ertesi gün kanallarında eski bir haber dönmeye başladı.", "fx": {"leak": ["saglik_yalani", "liman_komisyonu"], "actors": {"halden": {"ambition": 12}}}},
+      {"label": "Voss'a onun dosyasını açtır", "text": "Halden'in vergi kaçakçılığı belgeleri artık senin elinde.", "fx": {"actors": {"halden": {"fear": 18, "ambition": 4}, "voss": {"power": 5, "secrets_on_king": 1}}}}
+    ],
+    "ignore": {"text": "Halden cevap alamadı ve sabrı tükeniyor.", "fx": {"actors": {"halden": {"ambition": 8}}}}
+  },
+  {
+    "id": "voss_hakkinda", "min_week": 24, "actor_min": {"voss": {"secrets_on_king": 3, "power": 55}}, "title": "Voss'un senin hakkında da bir dosyası var",
+    "text": "Kâhya fısıldıyor: Voss'un arşivinde 'Majesteleri' etiketli kalın bir klasör görülmüş.",
+    "choices": [
+      {"label": "Voss'a daha fazla yetki ver", "text": "Voss memnun. Dosya da yerinde duruyor.", "fx": {"actors": {"voss": {"power": 10, "obligation": 8}}}},
+      {"label": "Arşivi gizlice yaktır", "text": "Bir gece arşivde yangın çıktı. Voss kimin yaptığını biliyor.", "fx": {"wealth": -4, "actors": {"voss": {"secrets_on_king": -2, "ambition": 10, "fear": 10}}}},
+      {"label": "Voss'la yüz yüze konuş", "text": "İkiniz de birbirinizi tehdit etmeden tehdit ettiniz.", "fx": {"actors": {"voss": {"fear": 6, "l_complicity": 8}}}}
+    ],
+    "ignore": {"text": "Dosya kalınlaşmaya devam ediyor.", "fx": {"actors": {"voss": {"secrets_on_king": 1}}}}
+  },
+  {
+    "id": "prens_kacis", "flag_age": {"prens_hirs_0": 10}, "alive": ["prens"], "title": "Prens gözetimden kaçtı",
+    "text": "Prens Cassian bir gece saraydan kaybolmuş. Komşu bir başkentte, kameraların önünde 'meşru hanedandan' söz ediyor.",
+    "choices": [
+      {"label": "İadesini iste", "text": "Komşu devlet oyalıyor. Prens her gün biraz daha ünlü.", "fx": {"king": -2, "actors": {"prens": {"ambition": 10, "power": 4}}}},
+      {"label": "Af ilan et ve geri çağır", "text": "Prens döndü. Minnettar mı, yoksa sadece sabırlı mı?", "fx": {"actors": {"prens": {"fear": -10, "l_career": 12, "ambition": -4}}}},
+      {"label": "Sürgünde bırak", "text": "Prens sürgünde kaldı. Saraydaki gücü eridi, ama sesi yurtdışında yükseliyor.", "fx": {"opp": 4, "actors": {"prens": {"power": -18}}}}
+    ],
+    "ignore": {"text": "Prens yurtdışında taraftar topluyor.", "fx": {"actors": {"prens": {"power": 6, "ambition": 6}}, "opp": 3}}
+  },
+  {
+    "id": "prens_veliaht", "flag_age": {"prens_hirs_1": 10}, "actor_min": {"prens": {"power": 42}}, "title": "Prens veliahtlık istiyor",
+    "text": "Verdiğin görevde başarılı olan Prens Cassian, resmen veliaht ilan edilmek istiyor.",
+    "choices": [
+      {"label": "Veliaht ilan et", "text": "Prens artık sıradaki kral. Beklemek zorunda olduğu tek şey sensin.", "fx": {"actors": {"prens": {"power": 10, "l_career": 15, "ambition": -8}}}},
+      {"label": "Reddet", "text": "Prens başını eğdi. Soyluların akşam yemekleri yeniden başladı.", "fx": {"actors": {"prens": {"ambition": 12, "l_career": -8}}}},
+      {"label": "Evlilik ittifakı öner", "text": "Prens, Halden'in kızıyla nişanlandı. İki güç merkezi birleşti.", "fx": {"actors": {"prens": {"l_career": 8, "power": 5}, "halden": {"power": 4}}}}
+    ],
+    "ignore": {"text": "Prens cevap bekliyor.", "fx": {"actors": {"prens": {"ambition": 6}}}}
+  },
+  {
+    "id": "brandt_hapis", "flag_age": {"muhalefet_birlesme_2": 8}, "title": "Brandt hapisten mektup yazıyor",
+    "text": "Tutuklanan muhalefet lideri Teodor Brandt'ın hücreden yazdığı mektuplar her hafta duvarlara yapıştırılıyor.",
+    "choices": [
+      {"label": "Serbest bırak", "text": "Brandt çıktı, kalabalık onu karşıladı. Öfke biraz dindi, efsane büyüdü.", "fx": {"unrest": -6, "opp": 4, "actors": {"brandt": {"ambition": 5, "power": 5}}}},
+      {"label": "Şartlı tahliye anlaşması", "text": "Brandt siyasetten çekilmeyi kabul etti. Şimdilik.", "fx": {"opp": -5, "actors": {"brandt": {"power": -8, "obligation": 6}}}},
+      {"label": "Tecrite al", "text": "Mektuplar durdu. Sokak durmadı.", "fx": {"unrest": 7, "opp": 6, "actors": {"brandt": {"fear": 20}}}}
+    ],
+    "ignore": {"text": "Mektuplar çoğalıyor.", "fx": {"unrest": 5, "opp": 5}}
+  },
+  {
+    "id": "muhalefet_para", "flag_age": {"muhalefet_birlesme_0": 10}, "needs_fact": "muhalefet_finansmani", "title": "Muhalefeti bölen para soruluyor",
+    "text": "Muhalefetin bölünmesinden kazançlı çıkan vekillerin banka hesapları bir sivil toplum raporunda.",
+    "choices": [
+      {"label": "Suçu istihbarata at", "text": "Voss'un adı geçti. Voss bunu unutmayacak.", "fx": {"actors": {"voss": {"ambition": 10, "fear": 8}}}},
+      {"label": "Raporu bastır", "text": "Rapor kayboldu; dedikodu kaybolmadı.", "fx": {"wealth": -4, "unrest": 2}},
+      {"label": "Her şeyi inkâr et", "text": "İnkâr manşetlere çıktı; belgeler de.", "fx": {"leak": "muhalefet_finansmani", "king": -1}}
+    ],
+    "ignore": {"text": "Rapor elden ele dolaşıyor.", "fx": {"leak": "muhalefet_finansmani"}}
+  },
+  {
+    "id": "falk_istifa", "flag_age": {"yargic_dosya_0": 8}, "alive": ["falk"], "title": "Yargıç Falk istifayı düşünüyor",
+    "text": "Baskıdan bıkan Yargıç Falk masana bir mektup bıraktı: 'Ya bağımsızım ya da yokum.'",
+    "choices": [
+      {"label": "İstifasını kabul et, sadık birini ata", "text": "Mahkeme artık senin. Ama mahkemenin artık kimseyi ikna etmediği de bir gerçek.", "fx": {"remove": "falk", "king": 2, "opp": 5}},
+      {"label": "Onu ikna et", "text": "Falk kaldı. Bağımsızlığı ise eskisinden daha keskin.", "fx": {"actors": {"falk": {"l_ideology": 10, "power": 4, "fear": -10}}}},
+      {"label": "Baskıyı artır", "text": "Falk sustu. Mektubun bir kopyası ise kayıp.", "fx": {"actors": {"falk": {"fear": 20}}, "fact": {"id": "falk_mektubu", "text": "Yargıcın istifa mektubu", "subject": "king", "severity": 35, "knowers": ["falk", "dorn", "lena"]}}}
+    ],
+    "ignore": {"text": "Falk kararını basına açıkladı.", "fx": {"king": -4, "remove": "falk", "opp": 4}}
+  },
+  {
+    "id": "kessler_istifa", "min_week": 16, "actor_min": {"kessler": {"fear": 50}}, "alive": ["kessler"], "title": "Maliye Bakanı istifa mektubunu bıraktı",
+    "text": "Marta Kessler korkudan yorulmuş. Mektubunda 'artık size doğru rakamı söyleyemiyorum' yazıyor.",
+    "choices": [
+      {"label": "İstifayı kabul et", "text": "Kessler gitti. Yerine gelen kişi sana hep iyi haber getiriyor.", "fx": {"remove": "kessler", "economy": -6}},
+      {"label": "Güven ve maaş artışı ver", "text": "Kessler kaldı; biraz rahatladı.", "fx": {"wealth": -4, "actors": {"kessler": {"fear": -20, "l_money": 8}}}},
+      {"label": "Tehdit et", "text": "Kessler kaldı. Raporları ise eskisinden güzel.", "fx": {"actors": {"kessler": {"fear": 12, "honesty": -0.15}}}}
+    ],
+    "ignore": {"text": "Kessler artık toplantılara gelmiyor.", "fx": {"remove": "kessler", "economy": -8}}
+  },
+  {
+    "id": "gercek_kayit", "flag_age": {"deepfake_0": 8}, "title": "Bu sefer kayıt gerçek",
+    "text": "Bir ses kaydı yayıldı: gerçekten senin sesin. Ama halk 'sahte' sözcüğünü senden daha önce de duydu.",
+    "choices": [
+      {"label": "Yine 'sahte' de", "text": "Bu sefer kimse inanmadı.", "fx": {"king": -7, "unrest": 4}},
+      {"label": "Kabul et ve özür dile", "text": "Dürüstlük biraz itibar kurtardı.", "fx": {"king": -3}},
+      {"label": "Halden'le gündemi değiştir", "text": "Kanallar başka bir krize geçti. Faturası sonra gelecek.", "fx": {"actors": {"halden": {"obligation": 8}}, "king": -1}}
+    ],
+    "ignore": {"text": "Kayıt herkesin telefonunda.", "fx": {"king": -6}}
+  },
+  {
+    "id": "terhis", "flag_age": {"sinir_krizi_0": 10}, "alive": ["arden"], "title": "Seferberlik bitti; ordu terhis istemiyor",
+    "text": "Sınır sakinleşti. Ama seferber edilen birlikler başkentin çevresinde kalmaya devam ediyor.",
+    "choices": [
+      {"label": "Terhis emri ver", "text": "Birlikler dağıldı. Subayların bir kısmı memnun değil.", "fx": {"actors": {"arden": {"ambition": 6, "power": -6}}}},
+      {"label": "Kalıcı garnizon kur", "text": "Başkentin çevresinde artık kalıcı bir ordu var.", "fx": {"economy": -4, "actors": {"arden": {"power": 8}}}},
+      {"label": "Subaylara ikramiye dağıt", "text": "Ordu memnun. Kasan biraz hafifledi.", "fx": {"wealth": -5, "actors": {"arden": {"l_money": 10}}}}
+    ],
+    "ignore": {"text": "Birlikler yerinde duruyor.", "fx": {"actors": {"arden": {"power": 6, "ambition": 4}}}}
+  },
+  {
+    "id": "liman_skandali", "flag_age": {"halden_ihale_0": 12}, "needs_fact": "liman_komisyonu", "title": "Liman ihalesi gazetelerde",
+    "text": "Bir liman işçisi, ihalenin komisyon belgelerini bir gazeteye vermiş.",
+    "choices": [
+      {"label": "Halden'i feda et", "text": "Halden tutuklandı. Ama elindeki her şeyi anlatmaya hazır.", "fx": {"actors": {"halden": {"power": -14, "ambition": 12, "fear": 10}}, "king": 1}},
+      {"label": "Gazeteyi kapattır", "text": "Gazete kapandı. Haber başka on yerde çıktı.", "fx": {"leak": "liman_komisyonu", "opp": 4}},
+      {"label": "Suçu bakanlığa at", "text": "Bir bakan suçlandı. Kessler bu oyunu seyretti.", "fx": {"actors": {"kessler": {"fear": 12}}}}
+    ],
+    "ignore": {"text": "Belgeler yayıldı.", "fx": {"leak": "liman_komisyonu"}}
+  },
+  {
+    "id": "dorn_rusvet", "flag_age": {"dorn_filtre_0": 10}, "alive": ["dorn"], "title": "Kâhya randevuları satıyor",
+    "text": "Sana ulaşmak isteyenlerin Dorn'a para ödediği ortaya çıktı. Kimi göreceğine bu yüzden o karar veriyormuş.",
+    "choices": [
+      {"label": "Dorn'u görevden al", "text": "Kâhya gitti. Sarayın bütün sırlarını da yanında götürdü.", "fx": {"remove": "dorn", "king": 1}},
+      {"label": "Göz yum", "text": "Dorn minnettar. Kapın artık tamamen onda.", "fx": {"actors": {"dorn": {"power": 6, "obligation": 5}}}},
+      {"label": "Dorn'u kullan: rakipleri bekletsin", "text": "Rakiplerin artık seni göremiyor. Ama senin de onları göremediğini unutma.", "fx": {"opp": -3, "actors": {"dorn": {"l_complicity": 10, "power": 4}}}}
+    ],
+    "ignore": {"text": "Kapındaki pazar büyüyor.", "fx": {"actors": {"dorn": {"power": 6}}}}
+  },
+  {
+    "id": "butce_ifsa", "flag_age": {"butce_acigi_2": 8}, "needs_fact": "butce_gizleme", "title": "Gizlenen bütçe açığı ortaya çıktı",
+    "text": "Uluslararası bir kredi kuruluşu, Veloria'nın açıkladığı rakamlarla gerçekleri yan yana yayınladı.",
+    "choices": [
+      {"label": "Kessler'i suçla", "text": "Kessler günah keçisi oldu. Bunu asla unutmayacak.", "fx": {"king": 1, "actors": {"kessler": {"fear": 20, "l_career": -10}}}},
+      {"label": "Gerçeği açıkla", "text": "Piyasalar sarsıldı ama sana inananlar arttı.", "fx": {"king": -2, "economy": 3}},
+      {"label": "Raporu 'yabancı müdahale' ilan et", "text": "Gündem değişti; faizler yükseldi.", "fx": {"economy": -5, "unrest": -2}}
+    ],
+    "ignore": {"text": "Rapor manşetlerde.", "fx": {"leak": "butce_gizleme", "economy": -4}}
+  },
+  {
+    "id": "arden_posterleri", "min_week": 30, "actor_min": {"arden": {"power": 70}}, "title": "Halk Arden'in posterlerini asıyor",
+    "text": "Başkentin duvarlarında General Arden'in posterleri. Altında tek bir kelime: 'Düzen.'",
+    "choices": [
+      {"label": "Arden'i törenle onurlandır", "text": "Arden'in ışığı sana da vurdu. Ya da tersi.", "fx": {"king": 2, "actors": {"arden": {"obligation": 6, "power": 4}}}},
+      {"label": "Emekliliğe sevk etmeye çalış", "text": "Arden emekliliği reddetti; birlikleri onu destekliyor.", "fx": {"actors": {"arden": {"ambition": 15, "power": -12}}}},
+      {"label": "Posterleri sessizce söktür", "text": "Posterler gitti. Duvarlarda izleri kaldı.", "fx": {"actors": {"arden": {"ambition": 6}}, "unrest": 2}}
+    ],
+    "ignore": {"text": "Posterler çoğalıyor.", "fx": {"actors": {"arden": {"power": 6, "ambition": 5}}}}
+  },
+  {
+    "id": "yabanci_elci", "min_week": 34, "title": "Yabancı büyükelçi gizli görüşme istiyor",
+    "text": "Güçlü bir komşunun büyükelçisi, 'istikrar' karşılığında cömert bir destek teklif ediyor. Kayıt dışı.",
+    "choices": [
+      {"label": "Desteği kabul et", "text": "Kasan doldu. Artık bir yabancıya da borçlusun.", "fx": {"wealth": 8, "fact": {"id": "yabanci_para", "text": "Yabancı bir devletten alınan gizli destek", "subject": "king", "severity": 45, "knowers": ["voss", "dorn"]}}},
+      {"label": "Reddet", "text": "Büyükelçi kibarca gülümsedi ve muhalefetle görüşmeye gitti.", "fx": {"opp": 4, "actors": {"brandt": {"power": 4}}}},
+      {"label": "Voss'a devret", "text": "Voss iki tarafla da konuşuyor.", "fx": {"actors": {"voss": {"power": 6, "ambition": 4}}}}
+    ],
+    "ignore": {"text": "Büyükelçi başka kapılar çalıyor.", "fx": {"opp": 3}}
+  },
+  {
+    "id": "erken_secim", "min_week": 50, "min_opposition": 30, "title": "Meclis erken seçim tartışıyor",
+    "text": "Muhalefet ve bazı iktidar vekilleri erken seçim için imza topluyor.",
+    "choices": [
+      {"label": "Meclisi feshet", "text": "Meclis kapandı. Sokaklar dolmaya başladı.", "fx": {"king": -4, "opp": -8, "unrest": 9, "actors": {"falk": {"l_ideology": -10}}}},
+      {"label": "Seçime izin ver", "text": "Seçim takvimi açıklandı. Meşruiyetin arttı, gücün sınandı.", "fx": {"king": 3, "opp": 6}},
+      {"label": "Muhalefete bakanlık teklif et", "text": "Brandt'ın partisi hükümete girdi. Muhalefet bölündü.", "fx": {"opp": -8, "actors": {"brandt": {"power": 8, "obligation": 6}}}}
+    ],
+    "ignore": {"text": "İmzalar çoğalıyor.", "fx": {"opp": 6, "king": -2}}
+  },
+  {
+    "id": "yildonumu", "min_week": 52, "max_week": 56, "title": "Tahta çıkışının birinci yıldönümü",
+    "text": "Saray protokolü yıldönümü için üç seçenek sunuyor. Bütün güç merkezleri nasıl kutlayacağını izliyor.",
+    "choices": [
+      {"label": "Görkemli kutlama", "text": "Başkent ışıklarla doldu. Hazine biraz karardı.", "fx": {"wealth": -5, "king": 5, "unrest": -4}},
+      {"label": "Genel af ilan et", "text": "Mahkumlar serbest kaldı. Muhalefet bile alkışladı.", "fx": {"unrest": -6, "opp": -4, "actors": {"arden": {"ambition": 3}}}},
+      {"label": "Sessizce geçiştir", "text": "Kimse kutlamadı. Kimse de unutmadı.", "fx": {"king": -1}}
+    ],
+    "ignore": {"text": "Yıldönümü kutlanmadı.", "fx": {"king": -2}}
+  }
+]

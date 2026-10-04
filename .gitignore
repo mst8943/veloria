@@ -4,6 +4,12 @@
 export_presets.cfg
 .import/
 
+# Veloria: görsel/font içe aktarma ayarları (boyut sınırı, sıkıştırma) saklanmalı
+!art/**/*.import
+!game/**/*.import
+# Kullanılmayan görseller (kolajlar, yedekler)
+art/_arsiv/
+
 # Editor / OS
 *.log
 .DS_Store
