@@ -4,6 +4,7 @@ extends Control
 const UIKit := preload("res://game/ui/ui_kit.gd")
 const ATMOS_SHADER := preload("res://game/ui/atmosphere.gdshader")
 const CINEMA := preload("res://game/ui/cinema.gd")
+const SHIMMER_SHADER := preload("res://game/ui/shimmer.gdshader")
 const TRUTH_CHART := preload("res://game/ui/truth_chart.gd")
 
 const ROLE := {"army": "Ordu", "intel": "İstihbarat", "economy": "Maliye", "media": "Medya", "press": "Basın",
@@ -247,6 +248,11 @@ func _build_ui() -> void:
 		bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 		_stage.add_child(bg)
+		# Masa nefes alır gibi çok yavaş yakınlaşıp uzaklaşır.
+		bg.resized.connect(func() -> void: bg.pivot_offset = bg.size / 2.0)
+		var breathe := bg.create_tween().set_loops()
+		breathe.tween_property(bg, "scale", Vector2(1.05, 1.05), 28.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		breathe.tween_property(bg, "scale", Vector2.ONE, 28.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		var dim := ColorRect.new()
 		dim.color = Color(0.03, 0.02, 0.04, 0.7)
 		dim.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -642,6 +648,10 @@ func _build_menu() -> void:
 	plate.add_child(box)
 	var title := Label.new()
 	title.text = "V E L O R İ A"
+	var shine := ShaderMaterial.new()
+	shine.shader = SHIMMER_SHADER
+	shine.set_shader_parameter("screen_w", 1067.0 if _mobile else 1600.0)
+	title.material = shine
 	title.add_theme_font_override("font", UIKit.serif())
 	title.add_theme_font_size_override("font_size", 60 if _mobile else 84)
 	title.add_theme_color_override("font_color", UIKit.GOLD)
@@ -1291,7 +1301,10 @@ func _refresh() -> void:
 	if _header_week == null or Sim.actors.is_empty():
 		return
 	_header_week.text = "HAFTA %d / %d" % [Sim.week, Sim.MAX_WEEKS]
-	_header_progress.value = Sim.week
+	if _fast() or _header_progress.value > Sim.week:
+		_header_progress.value = Sim.week
+	elif _header_progress.value < Sim.week:
+		create_tween().tween_property(_header_progress, "value", float(Sim.week), 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_header_mesai.text = "◆".repeat(Sim.mesai) + "◇".repeat(maxi(Sim.mesai_max - Sim.mesai, 0))
 	_header_wealth.text = str(int(Sim.private_wealth))
 	if _last_mesai != Sim.mesai and _last_mesai != -1 and not _fast():
@@ -1367,21 +1380,37 @@ func _rebuild_agenda() -> void:
 		var p: Dictionary = Sim.pending[pi]
 		var e: Dictionary = p["event"]
 		var card := PanelContainer.new()
-		card.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.96), UIKit.GOLD, 8, 12, 2))
+		var card_box := UIKit.box(Color(UIKit.PANEL, 0.96), UIKit.GOLD, 8, 12, 2)
+		card.add_theme_stylebox_override("panel", card_box)
 		_agenda.add_child(card)
 		_decision_cards.append(card)
 		animated.append(card)
+		if p["age"] > 0 and not _fast():
+			# Süresi dolmak üzere: çerçeve altınla kırmızı arasında nabız gibi atar.
+			var pulse := card.create_tween().set_loops()
+			pulse.tween_property(card_box, "border_color", UIKit.DANGER, 0.9).set_trans(Tween.TRANS_SINE)
+			pulse.tween_property(card_box, "border_color", UIKit.GOLD, 0.9).set_trans(Tween.TRANS_SINE)
 		var hb := HBoxContainer.new()
 		hb.add_theme_constant_override("separation", 14)
 		card.add_child(hb)
 		var tex := _event_art(str(e.get("art", e["id"])))
 		if tex:
+			# Görsel kendi çerçevesinde yavaşça hareket eder (yaşayan kart).
+			var frame := Control.new()
+			frame.custom_minimum_size = Vector2(240, 135)
+			frame.clip_contents = true
+			hb.add_child(frame)
 			var img := TextureRect.new()
 			img.texture = tex
-			img.custom_minimum_size = Vector2(240, 135)
+			img.set_anchors_preset(Control.PRESET_FULL_RECT)
 			img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-			hb.add_child(img)
+			frame.add_child(img)
+			if not _fast():
+				img.pivot_offset = Vector2(120, 67)
+				var drift := img.create_tween().set_loops()
+				drift.tween_property(img, "scale", Vector2(1.08, 1.08), 9.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+				drift.tween_property(img, "scale", Vector2.ONE, 9.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		var vb := VBoxContainer.new()
 		vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		vb.add_theme_constant_override("separation", 6)
