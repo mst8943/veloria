@@ -902,6 +902,14 @@ func _show_chronicle() -> void:
 			var r: Dictionary = list[i]
 			var mark := "[color=#7fae7a]TAHTTA[/color]" if r["survived"] else "[color=#c0504a]DÜŞTÜ[/color]"
 			t += "%s  [b]%s[/b]   [color=gray]%s · %s · %d hafta[/color]\n     %s\n" % [mark, r["title"], r["date"], r["difficulty"], r["weeks"], r["cause"]]
+	var have: Dictionary = Sim.load_achievements()
+	t += "\n[b][font_size=%d][color=#d6b25e]BAŞARIMLAR  ·  %d / %d[/color][/font_size][/b]\n" % [_fs(24), have.size(), Sim.ACHIEVEMENTS.size()]
+	for id in Sim.ACHIEVEMENTS:
+		var info: Array = Sim.ACHIEVEMENTS[id]
+		if have.has(id):
+			t += "[color=#d6b25e]»[/color]  [b]%s[/b]  [color=gray]%s · %s[/color]\n" % [info[0], info[1], have[id]]
+		else:
+			t += "[color=#55524c]·  %s  ·  %s[/color]\n" % [info[0], info[1]]
 	_show_modal(t)
 
 
@@ -1702,6 +1710,13 @@ func _on_end(record: Dictionary) -> void:
 	_end_text.clear()
 	var verdict := "Tahtını korudun." if record["survived"] else "Tahtını kaybettin."
 	_end_text.append_text("[b][font_size=38]Kral %s[/font_size][/b]\n[font_size=22]%s[/font_size]\n\n[b]Ünvanın:[/b] [color=#d9b359]%s[/color]\n%s\n[b]En güçlü isim:[/b] %s\n[b]Söz sicili:[/b] %s\n\n" % [record["king"], verdict, record["title"], record["cause"], record["top_actor"], record.get("promises", "")])
+	var fresh: Array = record.get("new_achievements", [])
+	if not fresh.is_empty():
+		_end_text.append_text("[b][color=#d9b359][font_size=22]YENİ BAŞARIM[/font_size][/color][/b]\n")
+		for id in fresh:
+			var info: Array = Sim.ACHIEVEMENTS.get(id, [id, ""])
+			_end_text.append_text("[color=#d6b25e]»[/color]  [b]%s[/b] — %s\n" % [info[0], info[1]])
+		_end_text.append_text("\n")
 	var hist: Array = record.get("historians", [])
 	if hist.size() == 2:
 		_end_text.append_text("[b][color=#d9b359][font_size=22]TARİH NE YAZACAK?[/font_size][/color][/b]\n")

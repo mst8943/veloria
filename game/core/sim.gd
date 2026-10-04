@@ -21,9 +21,9 @@ var timeline: Array = []                     # haftalık gerçek durum (oyun son
 const GOOD_DOMAINS_HIGH := ["economy"]  # bu alanlarda yüksek değer iyidir
 ## Zorluk: haftalık mesai, darbe koruma süresi, darbe için gereken güç payı, gelir, hazır olma eşiği.
 const DIFFICULTY := [
-	{"name": "Kolay", "mesai": 5, "grace": 26, "coup_share": 0.72, "income": 1.1, "ready_drive": 44.0},
-	{"name": "Normal", "mesai": 4, "grace": 12, "coup_share": 0.62, "income": 0.85, "ready_drive": 36.0},
-	{"name": "Zor", "mesai": 4, "grace": 10, "coup_share": 0.58, "income": 0.7, "ready_drive": 32.5},
+	{"name": "Kolay", "mesai": 5, "grace": 26, "coup_share": 0.74, "income": 1.2, "ready_drive": 48.0},
+	{"name": "Normal", "mesai": 4, "grace": 12, "coup_share": 0.68, "income": 1.0, "ready_drive": 43.0},
+	{"name": "Zor", "mesai": 4, "grace": 10, "coup_share": 0.63, "income": 0.8, "ready_drive": 38.0},
 ]
 
 ## Vaat edilebilecek ödüller: her biri yalnızca bir kişiye gerçekten verilebilir.
@@ -1000,6 +1000,7 @@ func _end(survived: bool) -> void:
 		"lies": _top_lies(), "king": KING_NAME,
 		"promises": "%d söz verdin: %d tutuldu, %d bozuldu." % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
 		"historians": historians(survived), "timeline": timeline.duplicate()}
+	record["new_achievements"] = _award_achievements(survived, title, cause) if record_chronicle else []
 	if record_chronicle:
 		_append_chronicle(record)
 	# Biten saltanata kayıttan geri dönülmez: tarih tek yönlüdür.
@@ -1027,6 +1028,10 @@ func historians(survived: bool) -> Array:
 		pro.append("Verdiği sözlerin %d tanesini tuttu." % int(stats.get("kept", 0)))
 	if flags.has("tac_giyme_2") or flags.has("yildonumu_0"):
 		pro.append("Halkın karşısına çıkmaktan çekinmeyen bir hükümdardı.")
+	if flags.has("halef_karari_0"):
+		pro.append("Saltanatının sonunda Meclise gerçek yetki vererek anayasal monarşinin kurucusu oldu.")
+	elif flags.has("halef_karari_1"):
+		pro.append("Hanedanın devamını güvence altına aldı.")
 	if pro.size() == 1:
 		pro.append("Zor zamanlarda, zor kararlar vermek zorunda kaldı.")
 	var public_secrets := 0
@@ -1049,9 +1054,84 @@ func historians(survived: bool) -> Array:
 		con.append("Ekonomiyi harabeye çevirdi.")
 	if echo_level() > 0.7:
 		con.append("Son aylarında artık kimse ona gerçeği söylemiyordu.")
+	if flags.has("halef_karari_2"):
+		con.append("Ve gitmeden önce yetkiyi kimseyle paylaşmayacak biçimde kilitledi.")
 	if con.is_empty():
 		con.append("Sürgündeki tarihçiler bile bu saltanata ağır bir suçlama bulmakta zorlandı.")
 	return [" ".join(pro), " ".join(con)]
+
+
+## Başarımlar: id -> [ad, açıklama]. Kalıcıdır, saltanatlar arası birikir.
+const ACHIEVEMENTS_PATH := "user://veloria_achievements.txt"
+const ACHIEVEMENTS := {
+	"ilk_saltanat": ["İlk Saltanat", "Bir saltanatı sonuna kadar götür (ya da düş)."],
+	"tahtta_kal": ["İki Yıl", "104 haftayı tahtta tamamla."],
+	"zor_zafer": ["Demir İrade", "Zor seviyede tahtta kal."],
+	"temiz_eller": ["Temiz Eller", "Hiç gizli ödeme, şantaj ya da yazılı emir kullanmadan tahtta kal."],
+	"sozunun_eri": ["Sözünün Eri", "En az 2 söz tut, hiçbirini bozma ve tahtta kal."],
+	"sirlar": ["Sırların Efendisi", "Bir saltanatta 3 kez şantaj yap."],
+	"operator": ["Gölgelerin Kralı", "Bir saltanatta 5 gizli operasyon yürüt."],
+	"gercegi_goren": ["Gerçeği Gören", "Bir saltanatta 10 raporu doğrula."],
+	"reformcu": ["Reformcu", "Kessler'in reformunun meyvelerini gör."],
+	"anayasal": ["Anayasal Kral", "Anayasal monarşiye geçişi ilan et ve tahtta kal."],
+	"hanedan": ["Hanedanın Bekçisi", "Prensi halef ilan et ve tahtta kal."],
+	"kukla": ["İpler Başkasında", "Tahtta kal, ama birinin kuklası olarak."],
+	"darbe": ["Tanklar Kapıda", "Bir darbeyle devril."],
+	"ayaklanma": ["Meydanların Öfkesi", "Halk ayaklanmasıyla devril."],
+	"yetkisiz": ["Skandal", "Biriken skandallar yüzünden yetkisiz bırakıl."],
+}
+
+
+func load_achievements() -> Dictionary:
+	if not FileAccess.file_exists(ACHIEVEMENTS_PATH):
+		return {}
+	var d: Variant = str_to_var(FileAccess.open(ACHIEVEMENTS_PATH, FileAccess.READ).get_as_text())
+	return d if d is Dictionary else {}
+
+
+## Saltanat sonunda kazanılan yeni başarımları kaydeder ve döndürür.
+func _award_achievements(survived: bool, title: String, cause: String) -> Array:
+	var earned: Array = ["ilk_saltanat"]
+	if survived:
+		earned.append("tahtta_kal")
+		if difficulty == 2:
+			earned.append("zor_zafer")
+		if int(stats.get("bribes", 0)) == 0 and int(stats.get("blackmails", 0)) == 0 and int(stats.get("written", 0)) == 0:
+			earned.append("temiz_eller")
+		if int(stats.get("kept", 0)) >= 2 and int(stats.get("broken", 0)) == 0:
+			earned.append("sozunun_eri")
+		if flags.has("halef_karari_0"):
+			earned.append("anayasal")
+		if flags.has("halef_karari_1"):
+			earned.append("hanedan")
+		if title.contains("Kukla") or title.contains("Tutsağı"):
+			earned.append("kukla")
+	else:
+		if cause.contains("darbe"):
+			earned.append("darbe")
+		elif cause.contains("ayaklanma"):
+			earned.append("ayaklanma")
+		elif cause.contains("yetkisiz"):
+			earned.append("yetkisiz")
+	if int(stats.get("blackmails", 0)) >= 3:
+		earned.append("sirlar")
+	if int(stats.get("ops", 0)) >= 5:
+		earned.append("operator")
+	if int(stats.get("checks", 0)) >= 10:
+		earned.append("gercegi_goren")
+	if fired_events.has("reform_meyve"):
+		earned.append("reformcu")
+	var have := load_achievements()
+	var fresh: Array = []
+	for id in earned:
+		if not have.has(id):
+			have[id] = Time.get_date_string_from_system()
+			fresh.append(id)
+	if record_chronicle and not fresh.is_empty():
+		var f := FileAccess.open(ACHIEVEMENTS_PATH, FileAccess.WRITE)
+		if f:
+			f.store_string(var_to_str(have))
+	return fresh
 
 
 ## Hükümdarlık arşivi: biten her saltanat kalıcı olarak kaydedilir.
