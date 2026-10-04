@@ -32,6 +32,11 @@ static func serif() -> Font:
 	return _serif
 
 
+## Türkçe büyük harf: i -> İ, ı -> I (Godot'un to_upper'ı bu kuralı bilmez).
+static func tr_upper(s: String) -> String:
+	return s.replace("i", "İ").replace("ı", "I").to_upper()
+
+
 static func box(bg: Color, border: Color = Color(0, 0, 0, 0), radius := 6, margin := 10, border_w := 1) -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
 	s.bg_color = bg

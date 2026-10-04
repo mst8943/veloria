@@ -68,3 +68,6 @@ dev_event=""
 dev_modal=""
 dev_intro=false
 dev_choose=false
+dev_media=""
+dev_desk=false
+dev_city=""

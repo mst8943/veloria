@@ -150,6 +150,32 @@ Oyun şu an bu sesleri kodla sentezliyor; aynı adla gerçek bir dosya koyarsan�
 | `audio/stinger_loss.wav` | 4 sn | `Ominous low brass and string swell, tragic ending stinger` |
 | `audio/stinger_win.wav` | 3.5 sn | `Restrained regal brass chord, bittersweet victory stinger` |
 
+## 7. Diegetik arayüz: başkent haritası ve masa nesneleri
+
+Oyun bunlar olmadan da çalışır (kodla çizilmiş hâlleri var); görseller gelince otomatik olarak onları kullanır.
+
+### Başkent haritası (`art/city_map.png`, 1920x1080)
+
+Tek görsel, **yazı ve etiket olmadan** (etiketleri oyun koyar):
+
+`Night aerial bird's-eye view of a fictional Central European capital city, a grand illuminated royal palace at top center, a domed parliament building on the right, a neoclassical courthouse on the left, a futuristic circular glass media center with satellite dishes in the lower center, a fortress-like army headquarters lower left, a brutalist intelligence building lower right, a glass corporate tower near the bottom, a dark river winding horizontally across the middle, boulevards radiating from the palace, warm golden street lights, cinematic, no text, no labels, no real-world flags.` + STİL BLOĞU
+
+Binalar farklı yerlere düşerse sorun değil: `game/data/city_map.json` dosyasına konumları yüzde olarak yazarım, örneğin `{"adliye": [0.2, 0.4]}`.
+
+### Masa nesneleri (`art/desk/<id>.png`, saydam arka plan, 1024x1024)
+
+Her biri tek nesne, **saydam arka plan**, üstten hafif açılı, aynı ışık (sağ üstten sıcak lamba):
+
+| Dosya | Prompt |
+|---|---|
+| `desk/gundem.png` | `A stack of aged parchment letters tied with brown string and a red wax seal with a gold crest, top-down three-quarter view, isolated, transparent background.` |
+| `desk/medya.png` | `A folded vintage broadsheet newspaper with a fountain pen lying on it, masthead area blank, top-down view, isolated, transparent background.` |
+| `desk/kisiler.png` | `A black antique rotary telephone with brass details, top-down three-quarter view, isolated, transparent background.` |
+| `desk/gunluk.png` | `A thick brown leather-bound royal diary with a gold embossed crest and brass clasp, top-down view, isolated, transparent background.` |
+| `desk/dosyalar.png` | `A manila folder stamped with a red diagonal stamp and a red thread, a few documents peeking out, top-down view, isolated, transparent background.` |
+| `desk/hanedan.png` | `An ornate gold picture frame holding a formal royal family portrait painting, standing on a desk, three-quarter view, isolated, transparent background.` |
+| `desk/harita.png` | `An old unfolded parchment city map with a river and districts drawn in sepia ink, slightly curled edges, top-down view, isolated, transparent background.` |
+
 ## Üretim sırası önerisi
 
 1. `bg_desk.png`

@@ -793,6 +793,7 @@ func _decay_facts() -> void:
 			weekly_news.append("KULİS: '%s' konuşulmaya başladı." % f["text"])
 		if f["common"] >= 0.5 and not f.get("public", false):
 			f["public"] = true
+			f["public_week"] = week
 			if f["subject"] == "king":
 				king_strength = maxf(0.0, king_strength - f["severity"] * 0.15)
 				for a: Actor in actors.values():

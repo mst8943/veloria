@@ -5,6 +5,9 @@ const UIKit := preload("res://game/ui/ui_kit.gd")
 const ATMOS_SHADER := preload("res://game/ui/atmosphere.gdshader")
 const CINEMA := preload("res://game/ui/cinema.gd")
 const SHIMMER_SHADER := preload("res://game/ui/shimmer.gdshader")
+const MEDIA_VIEW := preload("res://game/ui/media_view.gd")
+const DESK_VIEW := preload("res://game/ui/desk_view.gd")
+const CITY_VIEW := preload("res://game/ui/city_view.gd")
 const TRUTH_CHART := preload("res://game/ui/truth_chart.gd")
 
 const ROLE := {"army": "Ordu", "intel": "İstihbarat", "economy": "Maliye", "media": "Medya", "press": "Basın",
@@ -110,6 +113,11 @@ var _curtain: ColorRect
 var _curtain_title: Label
 var _curtain_sub: Label
 var _mobile := false
+var _desk: Control
+var _city: Control
+var _files_tab: Control
+var _media: Control
+var _media_seen_week := 0
 var _queued_end := false
 var _mesai_box: HBoxContainer
 var _curtain_img: TextureRect
@@ -168,6 +176,18 @@ func _ready() -> void:
 		_instant = false
 		Sfx.start_music()
 		_tabs.current_tab = clampi(int(ProjectSettings.get_setting("veloria/dev_tab", 0)), 0, _tabs.get_tab_count() - 1)
+		if ProjectSettings.get_setting("veloria/dev_desk", false):
+			_desk.open()
+		var dev_city := str(ProjectSettings.get_setting("veloria/dev_city", ""))
+		if dev_city != "":
+			_city.open()
+			if dev_city != "map":
+				await get_tree().process_frame
+				_city.show_site(dev_city)
+		var dev_media := str(ProjectSettings.get_setting("veloria/dev_media", ""))
+		if dev_media != "":
+			_open_media()
+			_media.show_tab(dev_media)
 		var dev_ev := str(ProjectSettings.get_setting("veloria/dev_event", ""))
 		for e in Sim._events:
 			if e["id"] == dev_ev:
@@ -211,12 +231,14 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		KEY_ESCAPE:
 			if _modal.visible:
 				_modal.hide()
+			elif _desk.visible and not _menu.visible:
+				_desk.close_view()
 			elif _menu.visible and in_game:
 				_hide_menu()
 			elif not _menu.visible and not _end_overlay.visible:
 				_show_menu()
 		KEY_SPACE:
-			if in_game and not _menu.visible and not _end_overlay.visible:
+			if in_game and not _menu.visible and not _end_overlay.visible and not _media.visible and not _desk.visible and not _city.visible:
 				_end_week_pressed()
 		KEY_S:
 			if k.ctrl_pressed and in_game:
@@ -306,6 +328,7 @@ func _build_ui() -> void:
 	var files := VBoxContainer.new()
 	files.name = "Dosyalar"
 	_tabs.add_child(files)
+	_files_tab = files
 	_fact_list = ItemList.new()
 	_fact_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	files.add_child(_fact_list)
@@ -453,6 +476,24 @@ func _build_ui() -> void:
 	_toast.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(_toast)
 
+	_desk = DESK_VIEW.new()
+	_desk.mobile = _mobile
+	_desk.portrait_fn = func(id: String) -> Texture2D: return _art("res://art/portraits/%s.png" % id)
+	_desk.request.connect(_on_desk_request)
+	add_child(_desk)
+	_city = CITY_VIEW.new()
+	_city.mobile = _mobile
+	_city.art_fn = func(id: String) -> Texture2D: return _event_art(id) if id != "" else null
+	_city.portrait_fn = func(id: String) -> Texture2D: return _art("res://art/portraits/%s.png" % id)
+	_city.request.connect(_on_city_request)
+	add_child(_city)
+
+	_media = MEDIA_VIEW.new()
+	_media.mobile = _mobile
+	_media.art_fn = func(id: String) -> Texture2D: return _event_art(id) if id != "" else null
+	_media.closed.connect(func() -> void: _refresh())
+	add_child(_media)
+
 	_build_menu()
 	_build_end()
 
@@ -507,8 +548,16 @@ func _build_header(parent: Control) -> void:
 	var sp := Control.new()
 	sp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(sp)
+	_add_btn(top, "desk", "Masa", _show_desk)
+	(_buttons["desk"] as Button).tooltip_text = "Çalışma masası: gündem, gazete, kişiler, günlük, dosyalar, hanedan ve başkent haritası."
+	(_buttons["desk"] as Button).size_flags_horizontal = Control.SIZE_SHRINK_END
+	(_buttons["desk"] as Button).custom_minimum_size.x = 96
+	_add_btn(top, "media", "Medya", _open_media)
+	(_buttons["media"] as Button).tooltip_text = "Medya Merkezi: Halden'in gazetesi, Lena'nın bağımsız gazetesi ve Halden TV. İkisini karşılaştır; biri yalan söylüyor olabilir."
 	_add_btn(top, "save", "Kaydet", _on_save)
 	_add_btn(top, "menu", "Menü", _show_menu)
+	(_buttons["media"] as Button).size_flags_horizontal = Control.SIZE_SHRINK_END
+	(_buttons["media"] as Button).custom_minimum_size.x = 150
 	for k in ["save", "menu"]:
 		(_buttons[k] as Button).size_flags_horizontal = Control.SIZE_SHRINK_END
 		(_buttons[k] as Button).custom_minimum_size.x = 96
@@ -752,9 +801,10 @@ func _build_menu() -> void:
 	if _mobile:
 		var b_how := _menu_btn("Nasıl Oynanır", func() -> void: how.visible = not how.visible)
 		box.move_child(b_how, box.get_child_count() - 1)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 14)
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	var row := HFlowContainer.new()   # sığmayan seçenek alt satıra geçer
+	row.add_theme_constant_override("h_separation", 16)
+	row.add_theme_constant_override("v_separation", 6)
+	row.alignment = FlowContainer.ALIGNMENT_CENTER
 	box.add_child(row)
 	var cb_fs := CheckBox.new()
 	cb_fs.text = "Tam ekran (F11)"
@@ -785,6 +835,13 @@ func _build_menu() -> void:
 		Sfx.intro = on
 		Sfx.save_settings())
 	row.add_child(cb_intro)
+	var cb_desk := CheckBox.new()
+	cb_desk.text = "Haftaya masadan başla"
+	cb_desk.button_pressed = Sfx.desk_start
+	cb_desk.toggled.connect(func(on: bool) -> void:
+		Sfx.desk_start = on
+		Sfx.save_settings())
+	row.add_child(cb_desk)
 	var vrow := HBoxContainer.new()
 	vrow.add_theme_constant_override("separation", 10)
 	vrow.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -824,7 +881,7 @@ func _build_menu() -> void:
 func _build_modal() -> void:
 	_modal = Control.new()
 	_modal.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_menu.add_child(_modal)
+	add_child(_modal)  # menüden bağımsız: masadan (hanedan fotoğrafı) da açılabilir
 	var dim := ColorRect.new()
 	dim.color = Color(0, 0, 0, 0.75)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -1145,6 +1202,8 @@ func _start_new() -> void:
 		_end_overlay.hide()
 		await _cinema.play(_intro_shots())
 	_after_load("Taç sana emanet edildi. Güç merkezleri seni test edecek.")
+	if Sfx.desk_start:
+		_show_desk()
 
 
 ## Açılış sineması: krallık, taç, güç merkezleri ve oyunun sorusu.
@@ -1178,10 +1237,76 @@ func _after_load(message: String) -> void:
 	_last_wealth = -1
 	_reveal = true
 	_queued_end = false
+	_media_seen_week = 0
 	_log(message)
 	_refresh()
 	if not _fast():
 		UIKit.fade_in(_stage, 0.8)
+
+
+func _show_desk() -> void:
+	if Sim.actors.is_empty() or Sim.ended or _instant:
+		return
+	_desk.open()
+
+
+func _select_tab(ctrl: Control) -> void:
+	var idx := _tabs.get_tab_idx_from_control(ctrl)
+	if idx >= 0:
+		_tabs.current_tab = idx
+
+
+func _on_desk_request(target: String) -> void:
+	match target:
+		"medya":
+			_open_media()
+			return
+		"harita":
+			_city.open()
+			return
+		"hanedan":
+			_show_chronicle()
+			return
+	_desk.close_view()
+	match target:
+		"gundem":
+			_select_tab(_scroll)
+		"kisiler":
+			if _mobile:
+				_tabs.current_tab = 1
+			else:
+				_hint("[color=#d6b25e][b]Kişiler[/b][/color]\nSağdaki portrelerden birini seç; eylemler ve sözler altta.")
+				UIKit.pulse(_grid, 1.03)
+		"gunluk":
+			_select_tab(_journal)
+		"dosyalar":
+			_select_tab(_files_tab)
+
+
+func _on_city_request(target: String, arg: String) -> void:
+	match target:
+		"media":
+			_open_media()
+		"files":
+			_city.close_view()
+			_desk.close_view()
+			_select_tab(_files_tab)
+		"actor":
+			_city.close_view()
+			_desk.close_view()
+			if Sim.actors.has(arg):
+				_sel = [arg]
+				_style_cards()
+				_update_info()
+			if _mobile:
+				_tabs.current_tab = 1
+
+
+func _open_media() -> void:
+	if Sim.actors.is_empty() or Sim.ended:
+		return
+	_media_seen_week = Sim.week
+	_media.open("state")
 
 
 func _on_save() -> void:
@@ -1245,6 +1370,8 @@ func _end_week_pressed() -> void:
 		_curtain_sub.text = ""
 	_reveal = true
 	_refresh()
+	if not Sim.ended and Sfx.desk_start:
+		_desk.open()   # perde açılınca masa görünür
 	await create_tween().tween_property(_curtain, "modulate:a", 0.0, 0.25 if short else 0.5).finished
 	_curtain.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_busy = false
@@ -1366,6 +1493,9 @@ func _refresh() -> void:
 	elif _header_progress.value < Sim.week:
 		create_tween().tween_property(_header_progress, "value", float(Sim.week), 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_update_mesai_pips()
+	var mb := _buttons.get("media") as Button
+	if mb:
+		mb.text = "Medya  ·  yeni sayı" if _media_seen_week != Sim.week else "Medya"
 	_header_wealth.text = str(int(Sim.private_wealth))
 	if _last_mesai != Sim.mesai and _last_mesai != -1 and not _fast():
 		UIKit.pulse(_mesai_box, 1.2)
@@ -1780,6 +1910,24 @@ func _autoplay() -> void:
 		if not _fact_ids.is_empty():
 			_fact_list.select(0)
 			(_buttons["destroy"] as Button).pressed.emit()
+		if Sim.week % 3 == 0:
+			# Medya üretimini farklı oyun durumlarında da sına
+			_open_media()
+			_media.show_tab("free")
+			_media.show_tab("tv")
+			_media.close_view()
+		if Sim.week % 4 == 0:
+			# Masa ve harita: her kapıyı ve her kurum panelini aç
+			_desk.open()
+			for t in ["gundem", "kisiler", "gunluk", "dosyalar"]:
+				_desk.open()
+				_on_desk_request(t)
+			_city.open()
+			for site in _city._sites:
+				if site != "saray":
+					_city.show_site(site)
+			_on_city_request("actor", "arden")
+			_modal.hide()
 		_end_btn.pressed.emit()
 	print("AUTOPLAY DONE: hafta=%d basılan=%d sonuç=%s" % [Sim.week, pressed, Sim.record.get("title", "?")])
 	get_tree().quit(0)

@@ -14,6 +14,7 @@ var short_fx := false      # kısa geçişler (animasyonları hızlandırır)
 var difficulty := 1        # 0 Kolay, 1 Normal, 2 Zor
 var tips := true           # ilk haftalarda danışman ipuçları
 var intro := true          # yeni oyunda açılış sineması
+var desk_start := true     # her haftaya çalışma masasından başla
 
 var _streams: Dictionary = {}
 var _players: Array[AudioStreamPlayer] = []
@@ -77,6 +78,7 @@ func save_settings() -> void:
 	c.set_value("game", "difficulty", difficulty)
 	c.set_value("game", "tips", tips)
 	c.set_value("game", "intro", intro)
+	c.set_value("game", "desk_start", desk_start)
 	c.save(SETTINGS_PATH)
 
 
@@ -91,6 +93,7 @@ func _load_settings() -> void:
 	difficulty = c.get_value("game", "difficulty", 1)
 	tips = c.get_value("game", "tips", true)
 	intro = c.get_value("game", "intro", true)
+	desk_start = c.get_value("game", "desk_start", true)
 
 
 func play(name: String, volume_db := 0.0, pitch := 1.0) -> void:
