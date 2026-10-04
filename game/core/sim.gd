@@ -251,7 +251,7 @@ func bribe(id: String) -> String:
 	a.loyalty["money"] += 8.0
 	a.secrets_on_king += 1
 	stats["bribes"] += 1
-	_add_fact("transfer_%s_%d" % [id, week], "%s yapılan gizli ödeme" % ek(a.display_name, "e"), "king", 25, [id, "dorn"], 2)
+	_add_fact("transfer_%s_%d" % [id, week], "%s yapılan gizli ödeme" % ek(a.display_name, "e"), "king", 18, [id, "dorn"], 2)
 	changed.emit()
 	return "%s gizli ödeme yapıldı. Sadakati arttı; ama bir iz kaldı." % ek(a.display_name, "e")
 
@@ -805,7 +805,7 @@ func _world_tick() -> void:
 func _decay_facts() -> void:
 	for f: Dictionary in facts.values():
 		# Dosyalar sızar: bilen sayısı arttıkça ortak bilgi yavaş yavaş yükselir.
-		f["common"] = minf(1.0, f["common"] + 0.01 * f["knowers"].size() * f.get("leakiness", 0.5))
+		f["common"] = minf(1.0, f["common"] + 0.0065 * f["knowers"].size() * f.get("leakiness", 0.5))
 		if f["common"] >= 0.25 and f["common"] < 0.5 and not f.get("rumor", false):
 			f["rumor"] = true
 			weekly_news.append("KULİS: '%s' konuşulmaya başladı." % f["text"])
@@ -971,12 +971,18 @@ func _ready_power_share() -> float:
 	return ready_p / maxf(total, 1.0)
 
 
+## Yargının saraya yaklaşması. Kamuya açılan skandal en çok o hafta acıtır; halk zamanla unutur
+## (30 haftada ağırlığın %40'ına iner). Gizli kanıtlar az da olsa baskı yaratır.
 func legal_pressure() -> float:
 	var s := 0.0
 	for f: Dictionary in facts.values():
-		if f["subject"] == "king":
-			s += float(f["severity"]) * (1.0 if f.get("public", false) else 0.25)
-	return clampf(s / 2.0, 0.0, 100.0)
+		if f["subject"] != "king":
+			continue
+		var w := 0.15
+		if f.get("public", false):
+			w = maxf(0.4, 1.0 - float(week - int(f.get("public_week", week))) / 50.0)
+		s += float(f["severity"]) * w
+	return clampf(s / 2.4, 0.0, 100.0)
 
 
 func _check_end() -> void:

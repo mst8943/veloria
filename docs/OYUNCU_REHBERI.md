@@ -79,7 +79,7 @@ Bir eylemin üzerine gelince ya da dokununca ne yaptığı sağ alttaki bilgi ç
 
 ## Sırlar ve ortak bilgi
 
-Yaptığın gizli işler **Dosyalar** sekmesinde iz olarak birikir. Bir sırrı ne kadar çok kişi bilirse o kadar hızlı yayılır: önce **dedikodu**, sonra **kamuya açık**. Herkesin bildiği bir zayıflık, sana karşı olanların birleşmesini kolaylaştırır. Kanıtları **bastırabilir**, **yok edebilir** ya da rakiplerin hakkındakileri **sızdırabilirsin**.
+Yaptığın gizli işler **Dosyalar** sekmesinde iz olarak birikir. Bir sırrı ne kadar çok kişi bilirse o kadar hızlı yayılır: önce **dedikodu**, sonra **kamuya açık**. Herkesin bildiği bir zayıflık, sana karşı olanların birleşmesini kolaylaştırır ve yargıyı saraya yaklaştırır. Halk eski skandalları zamanla unutur, ama aynı anda patlayan birkaç skandal tahtı sallayabilir. Kanıtları **bastırabilir**, **yok edebilir** ya da rakiplerin hakkındakileri **sızdırabilirsin**.
 
 ## Nasıl kaybedilir
 

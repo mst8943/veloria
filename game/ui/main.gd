@@ -74,6 +74,7 @@ const ADVICE := {
 	4: "Terfi ve gizli ödeme sadakat getirir. Ama terfi ettirdiğiniz kişi güçlenir, para ise iz bırakır. İzler 'Dosyalar' sekmesinde birikir.",
 	6: "Birini gerçekten kontrol etmek istiyorsanız önce 'Araştır' ile zayıf noktasını öğrenin. Şantaj güçlüdür, ama geri tepebilir.",
 	8: "Bir güç merkezi fazla büyüyorsa rakibini güçlendirin. Kimse sizi tek başına deviremeyecek kadar zayıf kalmalı.",
+	18: "Bıraktığınız izler unutulmaz, sadece bekler. Dosyalar sekmesinde 'dedikodu' olanları bastırın ya da kanıtı yok edin; manşete çıkan her sır hem yargıyı hem de size karşı birleşmek isteyenleri cesaretlendirir.",
 	12: "İlk haftaların sessizliği bitiyor. Artık bir koalisyon sizi devirebilir. Raporlar birbirine benzemeye başlarsa, kimsenin size gerçeği söylemediğini bilin.",
 }
 
