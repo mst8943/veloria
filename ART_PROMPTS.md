@@ -88,7 +88,7 @@ Her birini **ayrı istekte** gönderin ve başına şunu ekleyin: *"Tek bir gör
 | `events/brandt_hapis.png` | `A prison cell with a small barred window, a bearded man writing a letter by dim light, the same letters plastered on a city wall outside.` |
 | `events/muhalefet_para.png` | `Bank statements and photographs spread on a table under a harsh lamp, a red pen circling transfers (no readable numbers).` |
 | `events/falk_istifa.png` | `A silver-haired judge's robe hung on an empty chair in a vast courtroom, a sealed letter on the bench, cold morning light.` |
-| `events/kessler_istifa.png` | `A tired finance minister leaving an office at night with a cardboard box, a resignation letter left on the desk under a lamp.` |
+| `events/kessler_istifa.png` | `A tired woman in her late 40s, the finance minister, dark blazer, hair in a tidy bun, leaving an office at night with a cardboard box, a resignation letter left on the desk under a lamp.` (Kadın olmalı: Marta Kessler.) |
 | `events/gercek_kayit.png` | `A smartphone in a hand showing an audio waveform, many people in a dark street listening to their phones, a palace in the distance.` |
 | `events/terhis.png` | `Armored columns parked in a ring around a capital city at dusk, soldiers idling by their vehicles, city lights beyond.` |
 | `events/liman_skandali.png` | `A harbor at night with cranes and container ships, a dock worker handing a folder to a journalist in the shadows.` |

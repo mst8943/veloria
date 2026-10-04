@@ -118,6 +118,11 @@ func _ready() -> void:
 		_instant = false
 		Sfx.start_music()
 		_tabs.current_tab = clampi(int(ProjectSettings.get_setting("veloria/dev_tab", 0)), 0, _tabs.get_tab_count() - 1)
+		var dev_ev := str(ProjectSettings.get_setting("veloria/dev_event", ""))
+		for e in Sim._events:
+			if e["id"] == dev_ev:
+				Sim.pending.insert(0, {"event": e, "age": 0})
+				_refresh()
 		var ds := str(ProjectSettings.get_setting("veloria/dev_select", ""))
 		if ds != "" and Sim.actors.has(ds):
 			_sel = [ds]
