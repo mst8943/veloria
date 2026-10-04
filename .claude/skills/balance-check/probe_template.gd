@@ -12,9 +12,13 @@ extends SceneTree
 ##   visible_wise  visible + kararlarda etkileri tahmin eden dikkatli bir insan gibi seçer
 ##               (fx okur; insanın metinden çıkarım yapabildiğini varsayar — üst sınır gibi düşün)
 ##   omniscient  gizli değerleri (rebellion_drive) okur — yalnızca karşılaştırma için, hedef DEĞİL
+##   advice_naive     visible + kartta ilk danışmanın önerisine uyar
+##   advice_weighted  visible + meclis oylarını toplar (öneri +1, uyarı −1, ÇIKARI VAR yarım), kaçamakta rastgele
+##   advice_kessler   visible + Kessler konuşuyorsa ona, yoksa advice_weighted gibi (baskın strateji kontrolü)
 
 var sim: Node
 var rng := RandomNumberGenerator.new()
+const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "visible_wise", "omniscient"]
 
 
 func _initialize() -> void:
@@ -24,6 +28,7 @@ func _initialize() -> void:
 	sim.save_path = "user://probe_save.txt"
 	var n := 40
 	var diffs := [1]
+	var bots: Array = BOTS
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--n="):
 			n = int(a.substr(4))
@@ -31,9 +36,11 @@ func _initialize() -> void:
 			diffs = [int(a.substr(7))]
 		elif a == "--all-diffs":
 			diffs = [0, 1, 2]
+		elif a.begins_with("--bots="):
+			bots = Array(a.substr(7).split(","))
 	for d in diffs:
 		print("=== Zorluk: %s ===" % sim.DIFFICULTY[d]["name"])
-		for bot in ["idle", "random", "visible", "visible_wise", "omniscient"]:
+		for bot in bots:
 			_run(bot, d, n)
 	quit(0)
 
@@ -98,26 +105,41 @@ func _decide(bot: String) -> void:
 		var ci: int = rng.randi() % ev["choices"].size()
 		if bot in ["visible_wise", "omniscient"]:
 			ci = _wise_choice(ev)
+		elif bot.begins_with("advice_"):
+			ci = _advice_choice(bot, sim.advice_for(0), ci)
 		sim.resolve_decision(0, ci)
+
+
+## Ekranda görünen meclis görüşüyle seçim (yalnızca rec/warn/stake/kind görünür bilgidir).
+func _advice_choice(bot: String, adv: Array, fallback: int) -> int:
+	if adv.is_empty():
+		return fallback
+	if bot == "advice_naive":
+		return int(adv[0]["rec"]) if int(adv[0]["rec"]) >= 0 else fallback
+	if bot == "advice_kessler":
+		for it: Dictionary in adv:
+			if it["actor"] == "kessler" and int(it["rec"]) >= 0:
+				return int(it["rec"])
+	var votes := {}
+	for it: Dictionary in adv:
+		var wgt := 0.5 if it["stake"] else 1.0
+		if int(it["rec"]) >= 0:
+			votes[int(it["rec"])] = float(votes.get(int(it["rec"]), 0.0)) + wgt
+		if int(it["warn"]) >= 0:
+			votes[int(it["warn"])] = float(votes.get(int(it["warn"]), 0.0)) - wgt
+	var best := fallback
+	var best_v := float(votes.get(fallback, 0.0))
+	for k in votes:
+		if float(votes[k]) > best_v:
+			best_v = float(votes[k])
+			best = int(k)
+	return best
 
 
 func _wise_choice(ev: Dictionary) -> int:
 	var best := 0
-	var best_score := -1e9
 	for i in ev["choices"].size():
-		var fx: Dictionary = ev["choices"][i].get("fx", {})
-		var sc := float(fx.get("king", 0)) * 2.0 - float(fx.get("unrest", 0)) + float(fx.get("economy", 0)) * 0.7 \
-			- float(fx.get("opp", 0)) * 0.5 + float(fx.get("wealth", 0)) * 0.3
-		var af: Dictionary = fx.get("actors", {})
-		for aid in af:
-			var d: Dictionary = af[aid]
-			sc -= float(d.get("power", 0)) * 0.3 + float(d.get("ambition", 0)) * 0.4
-		if fx.has("fact"):
-			sc -= 3.0
-		if fx.has("promise_break"):
-			sc -= 5.0
-		if sc > best_score:
-			best_score = sc
+		if sim.choice_value(ev["choices"][i].get("fx", {})) > sim.choice_value(ev["choices"][best].get("fx", {})):
 			best = i
 	return best
 

@@ -37,6 +37,7 @@ Kaynak: `VELORIA — Oyun Tasarım Özeti.md` (958 satır, 30 bölüm) ve `CLAUD
 Hafta = `mesai_max` mesai (Normal 4, Kolay 5). Eylemler: karar (1), kişi eylemleri (1; terfi, gizli ödeme, söz, doğrula, araştır, emir ×3 kanal, şantaj, görevden al), operasyon (2), dosya (sızdır/bastır/yok et, 1).
 `Sim.end_week()`: bekleyen kararlar yaşlanır (2 haftada `ignore` uygulanır) → `_world_tick` → `_decay_facts` (ortak bilgi; 0.25 dedikodu, 0.5 manşet) → `_fire_events` (haftada en çok 2 yeni karar, bekleyen en çok 3) → `_tick_promises` → `_run_cascade` (hazır olanların güç payı ≥ `coup_share` ve askerî/kraliyet "vurucu" varsa darbe) → `_generate_reports` (yalan, yankı odası, Kâhya haber saklar) → `_check_end` → otomatik kayıt.
 Kayıp: king_strength ≤ 0 (darbe ya da elit koalisyonu), unrest ≥ 100 (ayaklanma), `legal_pressure()` ≥ 100 (yetkisiz bırakılma).
+**Meclis görüşleri** (`docs/design/danisman_gorusleri.md`): `Sim.advice_for(pending_index)` her karta iki danışman görüşü üretir (taraf olan + uzman), tembel ve `pending[i]["advice"]` içinde saklı; ana `rng`'yi tüketmez. Kralın çıkarı tek yerde: `Sim.choice_value(fx)` (botlar da bunu kullanır). Karar verilince `advice_log`'a işlenir; oyun sonunda `record["council"]` = `council_record()`. Ayarlar `ADVICE_*` sabitleri ve `DIFFICULTY[*].advice_noise`.
 
 ## Olay şeması (`events.json`)
 Zorunlu: `id, title, text, choices[{label, text, fx}], ignore{text, fx}`.
@@ -65,14 +66,15 @@ Godot (console): `C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4
 - Git Bash heredoc içindeki python'da ters eğik çizgiler bozulabilir; kaçışlı metinleri Edit aracıyla düzenle.
 - Commit'te kullanıcının kendi değişikliklerini (`.mcp.json`, `BECKETT_SETUP.md`, `project.godot` token satırı, `CLAUDE.md`) katma. Push yok (origin Beckett'in deposu).
 
-## Ölçülmüş durum (2026-10-04, `balance-check/probe_template.gd`, Normal, 40 kampanya)
-| Bot | Kazanma | Ort. hafta | Not |
-|---|---|---|---|
-| idle | 0% | 25 | hep askerî darbe |
-| random | 0% | 26 | |
-| visible (kararlar rastgele) | 17% | 53 | oyuncunun gerçekte yaşadığına en yakın |
-| visible_wise (kararlarda etkiyi tahmin eder) | 75% | 94 | |
-| omniscient (gizli drive'a rüşvet, dosya/rapor tepkisi yok) | 12% | 85 | |
-**Sonuç:** Sonucu en çok kararların kalitesi belirliyor; oyuncu seçenek etkilerini göremediği için fiilen rastgele seçiyor. Seçeneklerde okunabilir ipucu en büyük kaldıraç.
+## Ölçülmüş durum (2026-10-04, meclis görüşlerinden sonra, `balance-check/probe_template.gd`, 80 kampanya)
+| Bot | Kolay | Normal | Zor | Not |
+|---|---|---|---|---|
+| idle | 0% | 0% | 0% | hep askerî darbe |
+| visible (görüşsüz, kararlar rastgele) | 55% | 16% | 10% | görüşlere bakmayan oyuncu |
+| advice_naive (ilk danışmana uyar) | 91% | 52% | 30% | |
+| advice_weighted (meclis oylarını tartar) | 86% | 58% | 26% | **gerçek oyuncuya en yakın** |
+| visible_wise (`choice_value` okur) | 100% | 95% | 60% | tavan, hedef değil |
+| omniscient (gizli drive'a rüşvet) | — | ~15% | — | hedef değil |
+**Sonuç:** Seçenek okunabilirliği sorunu meclis görüşleriyle büyük ölçüde çözüldü (Normal %16 → ~%55). Zorluk eğrisi artık genel olarak kolay tarafta; Faz 2'de yeniden ayarlanmalı.
 - Kayıpların çoğu askerî darbe; kazananların çoğu "… Kuklası" ünvanı alıyor (ünvan çeşitliliği düşük).
 - Olay/hafta: ilk yıl ~1.2, ikinci yıl ~0.5; 71 olayın 6'sı 52.+ hafta.

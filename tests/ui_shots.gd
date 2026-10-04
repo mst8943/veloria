@@ -41,6 +41,16 @@ func _run() -> void:
 	main._style_cards()
 	main._update_info()
 	await _shot("1_oyun")
+	# Karar kartı + meclis görüşü: taraf olan danışmanı olan bir olayı başa koy.
+	for e in sim0._events:
+		if e["id"] == "gida_protestosu":
+			sim0.pending.insert(0, {"event": e, "age": 0})
+	main._refresh()
+	main._on_flow("gundem")
+	await _shot("1_karar")
+	if "--only-decision" in OS.get_cmdline_user_args():
+		quit(0)
+		return
 	main._desk.open()
 	await _shot("1_masa")
 	main._desk.close_view()
@@ -66,10 +76,16 @@ func _run() -> void:
 	main._instant = true
 	var sim: Node = root.get_node("Sim")
 	while not sim.ended:
+		while not sim.pending.is_empty() and sim.mesai > 0:
+			sim.resolve_decision(0, 0)   # meclis sicili dolsun
 		sim.end_week()
 	await process_frame
 	var tabs: TabContainer = main._end_tabs
 	for i in tabs.get_tab_count():
 		tabs.current_tab = i
 		await _shot("5_son_%d" % i)
+	# Hakikat Dosyası'nın sonu: meclis sicili
+	tabs.current_tab = 3
+	main._end_lies.scroll_to_line(main._end_lies.get_line_count() - 1)
+	await _shot("5_son_3_meclis")
 	quit(0)

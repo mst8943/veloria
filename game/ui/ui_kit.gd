@@ -10,6 +10,7 @@ const TEXT := Color("e9e4d6")
 const TEXT_DIM := Color("9a958a")
 const DANGER := Color("c0504a")
 const OK := Color("7fae7a")
+const AMBER := Color("d08a3d")   # uyarı değil, dikkat: "çıkarı var" gibi
 
 const SERIF_PATH := "res://game/fonts/EBGaramond.ttf"
 static var _serif: Font
@@ -30,6 +31,19 @@ static func serif() -> Font:
 			sf.antialiasing = TextServer.FONT_ANTIALIASING_GRAY
 			_serif = sf
 	return _serif
+
+
+static var _italic: Font
+
+
+## Alıntılar için eğik serif (fontun italik kesimi gömülü değil; eğme dönüşümüyle).
+static func serif_italic() -> Font:
+	if _italic == null:
+		var fv := FontVariation.new()
+		fv.base_font = serif()
+		fv.variation_transform = Transform2D(Vector2(1, 0), Vector2(0.2, 1), Vector2.ZERO)
+		_italic = fv
+	return _italic
 
 
 static var _caps: Font

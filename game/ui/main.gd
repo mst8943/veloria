@@ -67,7 +67,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 Portions of this software are copyright © The FreeType Project (www.freetype.org). All rights reserved.[/font_size][/color]"""
 
 ## Nasıl oynanır penceresi (ana menüdeki bağlantı).
-const HOW_TO := "[b][font_size=26][color=#d6b25e]Nasıl oynanır[/color][/font_size][/b]\n\n• 104 hafta tahtta kal. Haftada [b]4 mesain[/b] var; kararlar, emirler ve operasyonlar mesai harcar.\n• Sayıları göremezsin; yalnızca [b]raporlar[/b] vardır ve herkes yalan söyleyebilir. Korktukça insanlar sana gerçeği söylemez; hepsi aynı cümleyi kurmaya başlar.\n• Verdiğin güç sana dönebilir. Terfi, borç ve gizli ödemeler iz bırakır.\n• Söz vermek kolaydır; vadesi gelince ya tutarsın ya da bedelini ödersin. Aynı makamı iki kişiye vaat etmek er geç duyulur.\n• Herkesin bildiği bir sır, gizli bir sırdan çok daha tehlikelidir.\n• Ertelediğin kararlar iki hafta sonra kendi kendine çözülür.\n• Oyun bittiğinde [b]Hakikat Dosyası[/b] sana kimin ne zaman yalan söylediğini gösterir."
+const HOW_TO := "[b][font_size=26][color=#d6b25e]Nasıl oynanır[/color][/font_size][/b]\n\n• 104 hafta tahtta kal. Haftada [b]4 mesain[/b] var; kararlar, emirler ve operasyonlar mesai harcar.\n• Sayıları göremezsin; yalnızca [b]raporlar[/b] vardır ve herkes yalan söyleyebilir. Korktukça insanlar sana gerçeği söylemez; hepsi aynı cümleyi kurmaya başlar.\n• Verdiğin güç sana dönebilir. Terfi, borç ve gizli ödemeler iz bırakır.\n• Söz vermek kolaydır; vadesi gelince ya tutarsın ya da bedelini ödersin. Aynı makamı iki kişiye vaat etmek er geç duyulur.\n• Herkesin bildiği bir sır, gizli bir sırdan çok daha tehlikelidir.\n• Her kararda [b]meclisten iki kişi[/b] görüş bildirir. Gerekçeleri doğrudur ama seçicidir; [color=#d08a3d]ÇIKARI VAR[/color] olanın önerisi tarafsız olmayabilir.\n• Ertelediğin kararlar iki hafta sonra kendi kendine çözülür.\n• Oyun bittiğinde [b]Hakikat Dosyası[/b] sana kimin ne zaman yalan söylediğini gösterir."
 
 ## İlk haftalarda yeni oyuncuya kısa yol gösterme notları (hafta -> metin).
 const ADVICE := {
@@ -2096,11 +2096,14 @@ func _rebuild_agenda() -> void:
 		d.text = str(e["text"])
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		vb.add_child(d)
+		var council := _add_council(vb, pi)
 		for ci in e["choices"].size():
 			var b := Button.new()
 			b.text = "  %s   %s" % [["I", "II", "III", "IV"][mini(ci, 3)], str(e["choices"][ci]["label"])]
 			b.disabled = Sim.mesai < 1
 			b.tooltip_text = "Bu karar 1 mesai harcar." if Sim.mesai >= 1 else "Bu hafta mesain kalmadı. Haftayı bitir; karar bir hafta daha bekleyebilir."
+			if council.has(ci):
+				b.tooltip_text += "\n\n" + "\n".join(council[ci])
 			b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 			b.theme_type_variation = "ChoiceButton"
 			_wire(b)
@@ -2138,6 +2141,105 @@ func _rebuild_agenda() -> void:
 		_play_reveal.call_deferred(animated, texts)
 	else:
 		_reveal = false
+
+
+## Meclisin görüşü: iki danışmanın kısa önerisi (docs/design/danisman_gorusleri.md).
+## Döndürür: seçenek -> düğme ipucuna eklenecek satırlar ("Kessler: öneriyor").
+func _add_council(parent: VBoxContainer, pending_index: int) -> Dictionary:
+	var notes := {}
+	var items: Array = []
+	for it: Dictionary in Sim.advice_for(pending_index):
+		if Sim.actors.has(it["actor"]) and not Sim.actors[it["actor"]].moved:
+			items.append(it)
+	if items.is_empty():
+		return notes
+	var panel := PanelContainer.new()
+	var sb := UIKit.box(Color(0, 0, 0, 0.22), Color(UIKit.GOLD_DIM, 0.22), 6, 8)
+	sb.content_margin_top = 6
+	sb.content_margin_bottom = 6
+	panel.add_theme_stylebox_override("panel", sb)
+	parent.add_child(panel)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 6)
+	panel.add_child(col)
+	var head := Label.new()
+	head.text = "MECLİSİN GÖRÜŞÜ"
+	head.add_theme_font_override("font", UIKit.caps())
+	head.add_theme_font_size_override("font_size", _fs(11))
+	head.add_theme_color_override("font_color", UIKit.GOLD_DIM)
+	head.mouse_filter = Control.MOUSE_FILTER_PASS
+	head.tooltip_text = "Danışmanların kararlara dair görüşü. Gerekçeleri doğrudur ama seçicidir:\nherkes işine gelen tarafı anlatır. Kime güveneceğin senin kararın."
+	col.add_child(head)
+	for it: Dictionary in items:
+		var a = Sim.actors[it["actor"]]
+		var nm: String = Sim.short_name(a)
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 8)
+		row.mouse_filter = Control.MOUSE_FILTER_PASS
+		row.tooltip_text = "%s · %s" % [a.display_name, a.title]
+		if it["stake"]:
+			row.tooltip_text += "\nSeçeneklerden en az biri onu doğrudan etkiliyor. Önerisi tarafsız olmayabilir."
+		match str(it["kind"]):
+			"evasive":
+				row.tooltip_text += "\nKaçamak konuşuyor. Korkan bir meclis kralına gerçeği söylemez."
+			"flat":
+				row.tooltip_text += "\nSeçenekler arasında belirgin bir fark görmüyor."
+		var por := _initial_art(a.id, Vector2(30, 30), 15)
+		por.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		row.add_child(por)
+		var txt := VBoxContainer.new()
+		txt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		txt.add_theme_constant_override("separation", 1)
+		txt.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(txt)
+		var top := HBoxContainer.new()
+		top.add_theme_constant_override("separation", 8)
+		top.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		txt.add_child(top)
+		var nl := Label.new()
+		nl.text = UIKit.tr_upper(nm)
+		nl.add_theme_font_override("font", UIKit.caps())
+		nl.add_theme_font_size_override("font_size", _fs(12))
+		nl.add_theme_color_override("font_color", UIKit.GOLD)
+		nl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		top.add_child(nl)
+		if it["stake"]:
+			var pill := _pill("ÇIKARI VAR", UIKit.AMBER)
+			pill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			top.add_child(pill)
+		var q := Label.new()
+		q.text = "“%s”" % it["text"]
+		q.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		q.add_theme_font_override("font", UIKit.serif_italic())
+		q.add_theme_font_size_override("font_size", _fs(15))
+		q.add_theme_color_override("font_color", UIKit.TEXT if it["kind"] == "rec" else UIKit.TEXT_DIM)
+		q.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		txt.add_child(q)
+		col.add_child(row)
+		if int(it["rec"]) >= 0:
+			notes[int(it["rec"])] = notes.get(int(it["rec"]), []) + ["%s: öneriyor" % nm]
+		if int(it["warn"]) >= 0:
+			notes[int(it["warn"])] = notes.get(int(it["warn"]), []) + ["%s: karşı" % nm]
+	return notes
+
+
+## Hakikat Dosyası'nın ikinci yarısı: danışmanların önerileri gerçekte ne kadar iyiydi?
+func _append_council(council: Array) -> void:
+	_end_lies.append_text("\n[b][color=#d9b359][font_size=22]MECLİS SİCİLİ — kim seni nereye yönlendirdi[/font_size][/color][/b]\n")
+	_end_lies.append_text("[color=gray]Öneri · dinlediğin · seni yanılttığı (önerisi en iyi seçenekten belirgin biçimde kötüydü)[/color]\n\n")
+	if council.is_empty():
+		_end_lies.append_text("Meclis bu saltanatta hiç öneride bulunmadı.\n")
+		return
+	for c: Dictionary in council:
+		var misled := int(c["misled"])
+		var col := "#c0504a" if misled * 3 >= int(c["given"]) and misled > 0 else ("#d08a3d" if misled > 0 else "#7fae7a")
+		_end_lies.append_text("[b]%s[/b]   %d öneri · %d kez dinledin · [color=%s]%s[/color]\n" % [
+			c["name"], int(c["given"]), int(c["followed"]), col, "%d kez yanılttı" % misled if misled > 0 else "hiç yanıltmadı"])
+		var w: Dictionary = c["worst"]
+		if not w.is_empty():
+			_end_lies.append_text("   [color=gray]En pahalısı, hafta %d — %s:[/color] \"%s\" dedi; en iyisi \"%s\" idi.%s\n" % [
+				int(w["w"]), w["event"], w["rec"], w["best"], "  [color=#c0504a](dinledin)[/color]" if w["followed"] else ""])
+		_end_lies.append_text("\n")
 
 
 func _restore_scroll(v: int) -> void:
@@ -2451,6 +2553,10 @@ func _on_end(record: Dictionary) -> void:
 		for l: Dictionary in lies:
 			liars[l["name"]] = true
 		_end_text.append_text("[b]Hakikat Dosyası:[/b] [color=#c0504a]%d kişi sana yalan söyledi.[/color] Kim olduklarını Hakikat Dosyası sekmesinde gör.\n" % liars.size())
+	var council: Array = record.get("council", [])
+	if not council.is_empty() and int(council[0]["misled"]) > 0:
+		_end_text.append_text("[b]Meclis:[/b] seni en çok [color=#d08a3d]%s[/color] yanılttı (%d kez). Ayrıntısı Hakikat Dosyası'nda.\n" % [
+			council[0]["name"], int(council[0]["misled"])])
 	var fresh: Array = record.get("new_achievements", [])
 	if not fresh.is_empty():
 		_end_text.append_text("\n[b][color=#d9b359][font_size=22]YENİ BAŞARIM[/font_size][/color][/b]\n")
@@ -2477,6 +2583,7 @@ func _on_end(record: Dictionary) -> void:
 		_end_lies.append_text("Kimse sana belirgin biçimde yalan söylemedi. Ya da hepsini fark ettin.\n")
 	for l: Dictionary in lies:
 		_end_lies.append_text("• Hafta %d — [b]%s[/b] sana şunu söyledi: \"%s\"\n   [color=gray]Gerçekte:[/color] %s\n\n" % [l["week"], l["name"], l["said"], l["truth"]])
+	_append_council(record.get("council", []))
 	# Kararlar: hepsi, sondan başa
 	_end_log.clear()
 	_end_log.append_text("[b][color=#d9b359][font_size=22]KARARLARIN[/font_size][/color][/b]   [color=gray]%d kayıt · en yenisi üstte[/color]\n\n" % hist_log.size())
@@ -2524,17 +2631,8 @@ func _autoplay_full() -> void:
 				guard += 1
 				var e: Dictionary = Sim.pending[0]["event"]
 				var best := 0
-				var best_score := -1e9
 				for i in e["choices"].size():
-					var fx: Dictionary = e["choices"][i].get("fx", {})
-					var sc := float(fx.get("king", 0)) * 2.0 - float(fx.get("unrest", 0)) + float(fx.get("economy", 0)) * 0.7 - float(fx.get("opp", 0)) * 0.5
-					for aid in fx.get("actors", {}):
-						var d: Dictionary = fx["actors"][aid]
-						sc -= float(d.get("power", 0)) * 0.3 + float(d.get("ambition", 0)) * 0.4 + float(d.get("obligation", 0)) * 0.3
-					if fx.has("promise_break"):
-						sc -= 5.0
-					if sc > best_score:
-						best_score = sc
+					if Sim.choice_value(e["choices"][i].get("fx", {})) > Sim.choice_value(e["choices"][best].get("fx", {})):
 						best = i
 				# Kart düğmeleri seçenek sırasıyla dizili: ilk kartın düğmesine bas
 				_decision_buttons[best].pressed.emit()

@@ -59,7 +59,8 @@ Mobilde kişiler ve eylemler ayrı bir **Saray** sekmesindedir.
 2. **Sayı yok:** Kimsenin sadakatini, ordunun gücünü ya da halkın öfkesini sayıyla göremezsin. Sadece **raporlar** var ve herkes yalan söyleyebilir.
 3. **Korku gerçeği öldürür:** İnsanlar senden korktukça sana kötü haber vermez. Raporlar birbirine benzemeye başlarsa kimse sana gerçeği söylemiyor demektir.
 4. **Ertelemek de karardır:** Bir karar kartını iki hafta cevapsız bırakırsan kendi kendine, çoğu zaman en kötü biçimde çözülür. Süresi dolmak üzere olan kartların çerçevesi kırmızı yanıp söner.
-5. **Eski kararlar geri döner:** Bugün verdiğin bir karar haftalar sonra yeni bir olay olarak karşına çıkabilir.
+5. **Meclis fısıldar:** Her karar kartında iki danışman görüş bildirir ("II'yi öneririm: hazineyi rahatlatır."). Gerekçeleri doğrudur ama seçicidir; işlerine gelmeyen bedeli anmazlar. Adının yanında **ÇIKARI VAR** yazan kişiyi seçeneklerden biri doğrudan etkiliyor. Uzman olduğu konuda daha isabetlidir. Bir danışmanın önerileri sürekli ötekilerle çelişiyorsa ona dikkat et. Korkan bir meclis "Takdir sizindir" demeye başlar.
+6. **Eski kararlar geri döner:** Bugün verdiğin bir karar haftalar sonra yeni bir olay olarak karşına çıkabilir.
 
 ## Eylemler
 
@@ -96,7 +97,7 @@ Saltanat bittiğinde (104 hafta ya da düşüş) sana bir **ünvan** verilir (De
 - **Özet:** Nasıl bittiği, saltanat süresi, söz sicili, yeni başarımlar ve son kararların.
 - **Grafik:** "Gerçekte ne oldu" grafiği, oyun boyunca gizli kalan gidişatı gösterir.
 - **Tarihçiler:** Saray tarihçisi ve sürgündeki tarihçi saltanatını iki farklı biçimde anlatır.
-- **Hakikat Dosyası:** Kim, ne zaman, sana ne yalan söyledi.
+- **Hakikat Dosyası:** Kim, ne zaman, sana ne yalan söyledi. Altında **Meclis Sicili**: her danışmanın kaç öneri verdiği, kaçını dinlediğin, kaçında seni yanılttığı ve en pahalı yanıltması.
 - **Kararlar:** Verdiğin ve ertelediğin tüm kararlar, en yenisi üstte.
 - Saltanatın **Hükümdarlık Arşivi**'ne kaydedilir.
 - Kazandığın yeni **başarımlar** duyurulur. 15 başarımın tamamı Arşiv'de listelenir.

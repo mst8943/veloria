@@ -1,6 +1,6 @@
 # Veloria — Durum ve Yapılacaklar (yeni oturum için devir notu)
 
-Son güncelleme: 2026-10-04 (üçüncü oturumun sonu). Dal: `veloria`.
+Son güncelleme: 2026-10-04 (dördüncü oturum: meclis görüşleri). Dal: `veloria`.
 
 ## Yeni oturumda ilk iş
 1. Bu dosyayı oku.
@@ -18,8 +18,8 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
 
 ## Çalıştırma ve test (ayrıntı: VELORIA.md > Komutlar)
 - Godot console: `C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe`
-- `sim_test.gd` (TEST: OK), `pacing_test.gd`, `-- --autoplay` (`--mobile`, `--full`), `ui_shots.gd` (pencereli ekran görüntüsü; `--only-desk`, `--only-world`, `--mobile`)
-- Denge sondajı: `.claude/skills/balance-check/probe_template.gd` (`-- --n=40 --all-diffs`)
+- `sim_test.gd` (TEST: OK), `pacing_test.gd`, `-- --autoplay` (`--mobile`, `--full`), `ui_shots.gd` (pencereli ekran görüntüsü; `--only-desk`, `--only-decision`, `--only-world`, `--mobile`)
+- Denge sondajı: `.claude/skills/balance-check/probe_template.gd` (`-- --n=40 --all-diffs`, `--bots=advice_weighted,visible`)
 - İçe aktarma (editör kapalıyken): `--headless --path . --import`
 
 ## Yapılanlar (tamamı commit'li)
@@ -33,20 +33,26 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
   - kişi paneli göstergeleri
   - ortak görsel imza (`UIKit.band_style`, `ornament`, `divider`, `caps`, `_section`)
   - tam dolu portre kartları
-- **Bu oturum:**
+- **Üçüncü oturum:**
   - Proje analizi raporu verildi (aşağıdaki "Yol haritası" ondan çıktı).
   - 11 projeye özel skill eklendi (`.claude/skills/`, `docs/SKILL_KULLANIMI.md`).
   - **Boş masa arka planı yerleşti:** yeni `art/bg_desk.png`, eskisi `art/_arsiv/bg_desk_esyali.png`; `desk_view.gd` `LAYOUT` yeni masaya göre ayarlandı.
+- **Dördüncü oturum: Meclis görüşleri (Faz 1'in ilk maddesi) — tamamlandı**
+  - Tasarım: `docs/design/danisman_gorusleri.md` (GDD, ölçümler, uygulamada değişenler §14).
+  - Her karar kartında iki danışman (taraf olan + uzman) bir seçenek önerir, gerekçesi doğru ama seçicidir; ÇIKARI VAR etiketi; darbeye hazır olan kötü önerir; korkan meclis kaçamak konuşur.
+  - Oyun sonu Hakikat Dosyası'nda Meclis Sicili, Özet'te "seni en çok X yanılttı".
+  - `Sim.choice_value(fx)` tek doğruluk kaynağı; **sadakat terimi eklendi** (eski formül sadakati saymıyordu; tavan bot %80 → %95).
+  - `probe_template`: `advice_naive`, `advice_weighted`, `advice_kessler` botları, `--bots=` süzgeci. `sim_test`: meclis testleri. `ui_shots`: `1_karar`, `5_son_3_meclis`, `--only-decision`.
 
-## Ölçülmüş denge (Normal, 40 kampanya, probe_template)
-| Bot | Kazanma | Ort. hafta | Not |
+## Ölçülmüş denge (probe_template, 80 kampanya)
+| Bot | Kolay | Normal | Zor |
 |---|---|---|---|
-| idle | 0% | 25 | hep askerî darbe |
-| visible (kararlar rastgele) | 17% | 53 | gerçek oyuncuya en yakın |
-| visible_wise (kararlarda etkiyi tahmin eder) | 75% | 94 | |
-| omniscient | 12% | 85 | hedef değil |
+| visible (görüşsüz) | 55% | 16% | 10% |
+| advice_weighted (görüşleri tartar, **ölçüt**) | 86% | 58% | 26% |
+| advice_naive (ilk danışmana uyar) | 91% | 52% | 30% |
+| visible_wise (tavan) | 100% | 95% | 60% |
 
-Kararların kalitesi sonucu belirliyor ama oyuncu seçeneklerin etkisini göremiyor. Kayıpların çoğu askerî darbe. Kazananlar çoğunlukla "… Kuklası" ünvanı alıyor. İkinci yılda olay yoğunluğu ~0,5/hafta.
+Okunabilirlik sorunu büyük ölçüde çözüldü; zorluk artık hedefin biraz üstünde kolay (Kolay hedef 70–85, Normal 35–55). Kayıpların çoğu hâlâ askerî darbe, kazananlar çoğunlukla "… Kuklası". İkinci yılda olay yoğunluğu ~0,5/hafta.
 
 ## Yol haritası (analiz raporundan; kullanıcı henüz faz seçmedi)
 **Faz 0 — Güvence**
@@ -57,7 +63,7 @@ Kararların kalitesi sonucu belirliyor ama oyuncu seçeneklerin etkisini göremi
 - ~~görünür bilgi botu~~ (probe_template'te var; `sim_test`'e de eklenebilir)
 
 **Faz 1 — Okunabilirlik (en yüksek etki)**
-- seçeneklerde yanılabilir danışman görüşleri
+- ~~seçeneklerde yanılabilir danışman görüşleri~~ (yapıldı)
 - darbeyi aşamalı ve görünür yapmak (tohum → işaret → gerilim → kriz), kişi kartında "huzursuz/şüpheli" sinyali
 - raporlarda geçen haftaya göre değişim
 - hafta sonu "neler değişti" özeti
@@ -76,11 +82,14 @@ Kararların kalitesi sonucu belirliyor ama oyuncu seçeneklerin etkisini göremi
 
 **Faz 5 — Cila ve altyapı:** gerçek ses ve müzik, `main.gd`'yi bölmek, artırımlı arayüz güncellemesi, yerelleştirme.
 
-Önerilen başlangıç: Faz 1, "seçeneklerde danışman görüşü". Önce `/design-system` ile tasarlanmalı.
+Önerilen sıradaki iş: Faz 1, **darbeyi aşamalı ve görünür yapmak** (meclis görüşündeki "hazır aktör kötü önerir" sinyaliyle doğal bağ). Önce `/design-system`.
+Ardından kısa bir `/balance-check` turuyla zorluk eğrisi (Normal'de advice_weighted ~%45 hedefi; `coup_share`/`ready_drive`) ayarlanmalı.
+Meclis görüşlerinin açık soruları (tasarım belgesi §13): üçüncü görüş satın alma, oyun içi doğruluk geri bildirimi, ÇIKARI VAR'ın açık mı sezdirme mi olacağı. Oyuncu testinden sonra karar verilmeli.
 
 ## Bilinen küçük sorunlar
 - Sağ üstteki bildirimler masa ve haritanın üstünde kalıyor (menü açılınca temizleniyor).
 - Masada soldaki günlük lambadan uzak olduğu için karanlık kalıyor; okunurluk için `desk_lit` `ambient` ya da günlüğün yeri ayarlanabilir.
+- Meclis görüşü metinleri genel kalıplardan kuruluyor (danışmana özgü ses yalnızca kılıf cümlelerinde). İçerik turunda danışman başına söyleyiş eklenebilir.
 - Kullanıcı henüz tam bir saltanat oynamadı; denge, metin ve ses geri bildirimi bekleniyor. Linux build gerçek makinede denenmedi. Android/iOS kasıtlı yapılmadı.
 
 ## Kullanıcı tercihleri

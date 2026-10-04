@@ -161,6 +161,9 @@ func _init() -> void:
 		ok = false
 	print("Kayıt/yükleme: ", "OK" if ok else "HATA", " (hafta %d)" % sim.week)
 
+	# Meclis görüşleri: deterministik, kayıtta korunur, ana rng'ye dokunmaz, hazır aktör kötü önerir.
+	ok = _test_advice() and ok
+
 	# Hakikat dosyası örneği
 	sim.new_game(3)
 	while not sim.ended:
@@ -226,6 +229,75 @@ func _play_week(policy: String) -> void:
 				sim.order("arden" if sim.actors.has("arden") else target.id, "bastir", "sozlu")
 			else:
 				sim.cross_check(target.id)
+
+
+func _test_advice() -> bool:
+	var ok := true
+	var acc := {"Arden": "Arden'i", "Voss": "Voss'u", "Lena": "Lena'yı", "Falk": "Falk'ı", "Prens": "Prens'i"}
+	for n in acc:
+		if sim.ek(n, "i") != acc[n]:
+			push_error("ek hatası: %s -> %s" % [n, sim.ek(n, "i")])
+			ok = false
+	# Aynı tohum -> aynı görüş; görüşe bakmak simülasyonu değiştirmez.
+	sim.new_game(11, 1)
+	var a1: Array = sim.advice_for(0).duplicate(true)
+	var state_before: int = sim.rng.state
+	sim.new_game(11, 1)
+	var a2: Array = sim.advice_for(0)
+	if a1 != a2 or a1.is_empty() or sim.rng.state != state_before:
+		push_error("görüş deterministik değil ya da ana rng'yi tüketiyor")
+		ok = false
+	if not sim.save_game():
+		ok = false
+	sim.new_game(12, 1)
+	sim.load_game()
+	if sim.pending[0].get("advice", []) != a2:
+		push_error("görüş kayıt/yüklemede korunmadı")
+		ok = false
+	# Bütün kartlarda: danışman uygun, metin dolu, öneri geçerli; hazır aktörlerin önerisi daha kötü.
+	var honest_gap := 0.0
+	var honest_n := 0
+	var ready_gap := 0.0
+	var ready_n := 0
+	var kinds := {}
+	for s in range(1, 21):
+		sim.new_game(s, 1)
+		while not sim.ended:
+			while not sim.pending.is_empty() and sim.mesai > 0:
+				var ev: Dictionary = sim.pending[0]["event"]
+				var adv: Array = sim.advice_for(0)
+				if adv.size() > 2:
+					push_error("ikiden fazla danışman")
+					ok = false
+				var best := -1e9
+				for ch in ev["choices"]:
+					best = maxf(best, sim.choice_value(ch.get("fx", {})))
+				for it: Dictionary in adv:
+					kinds[it["kind"]] = int(kinds.get(it["kind"], 0)) + 1
+					if str(it["text"]) == "" or not sim.actors.has(it["actor"]) or not sim.actors[it["actor"]].insider:
+						push_error("geçersiz görüş: %s" % it)
+						ok = false
+					if int(it["rec"]) >= 0:
+						var g: float = best - sim.choice_value(ev["choices"][int(it["rec"])].get("fx", {}))
+						if sim.actors[it["actor"]].ready:
+							ready_gap += g
+							ready_n += 1
+						else:
+							honest_gap += g
+							honest_n += 1
+				sim.resolve_decision(0, 0)
+			sim.end_week()
+	var hg := honest_gap / maxf(honest_n, 1)
+	var rg := ready_gap / maxf(ready_n, 1)
+	print("Meclis: görüş türleri %s | ort. kayıp (V) sadık %.2f (n=%d), hazır %.2f (n=%d)" % [kinds, hg, honest_n, rg, ready_n])
+	if ready_n >= 10 and rg <= hg:
+		push_error("hazır aktörler daha kötü önermiyor")
+		ok = false
+	if sim.council_record().is_empty():
+		push_error("meclis sicili boş")
+		ok = false
+	print("Meclis görüşleri: ", "OK" if ok else "HATA")
+	return ok
 
 
 func _careful_choice(ev: Dictionary) -> int:
