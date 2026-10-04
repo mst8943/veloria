@@ -3,7 +3,7 @@
     "id": "tac_giyme", "min_week": 1, "max_week": 1, "art": "toren", "title": "Taç giyme töreninin ertesi sabahı",
     "text": "Bütün güç merkezleri yeni kralın ilk hamlesini izliyor. Bekleme salonu dolu. İlk kimi huzuruna kabul edeceğin, kime öncelik verdiğini herkese söyleyecek.",
     "choices": [
-      {"label": "Önce General Arden'ı kabul et", "text": "Arden selam verdi ve memnun ayrıldı. Voss bekleme salonunda saatine baktı.", "fx": {"actors": {"arden": {"l_career": 6}, "voss": {"ambition": 2}}}},
+      {"label": "Önce General Arden'i kabul et", "text": "Arden selam verdi ve memnun ayrıldı. Voss bekleme salonunda saatine baktı.", "fx": {"actors": {"arden": {"l_career": 6}, "voss": {"ambition": 2}}}},
       {"label": "Önce İstihbarat Başkanı Voss'u kabul et", "text": "Voss sana kalın bir dosya bıraktı: 'Kim kimdir, Majesteleri.' Arden ise bunu not etti.", "fx": {"actors": {"voss": {"l_career": 6}, "arden": {"ambition": 2}}}},
       {"label": "Kimseyi kabul etme, halkın önüne çık", "text": "Balkondan el salladın. Kalabalık alkışladı; bekleme salonundakiler ise alkışlamadı.", "fx": {"king": 3, "opp": -2, "actors": {"arden": {"ambition": 1}, "voss": {"ambition": 1}, "halden": {"ambition": 1}}}}
     ],
@@ -50,7 +50,7 @@
   },
   {
     "id": "general_atamalari", "min_week": 8, "min_power": {"arden": 55}, "title": "General kendi subaylarını kritik görevlere getiriyor",
-    "text": "Genelkurmay'da üç önemli komutanlık değişti. Hepsi Arden'ın eski öğrencileri.",
+    "text": "Genelkurmay'da üç önemli komutanlık değişti. Hepsi Arden'in eski öğrencileri.",
     "choices": [
       {"label": "Atamaları engelle", "text": "Arden geri adım attı, ama bakışları değişti.",
        "fx": {"actors": {"arden": {"ambition": 6, "l_career": -10, "fear": 10}}}},

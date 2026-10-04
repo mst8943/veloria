@@ -1880,7 +1880,65 @@ func _on_end(record: Dictionary) -> void:
 
 # ---------------------------------------------------------------- Otomatik oynatma (test)
 
+## Tam saltanat: Kolay seviyede dikkatli oynayarak 104 haftayı arayüz üzerinden tamamlamaya çalışır.
+## Geç oyun olaylarını, miras kararını, zafer finalini ve oyun sonu ekranını sınar.
+func _autoplay_full() -> void:
+	var seeds_tried := 0
+	while seeds_tried < 6:
+		seeds_tried += 1
+		Sim.new_game(100 + seeds_tried, 0)
+		_after_load("tam saltanat testi")
+		while not Sim.ended:
+			await get_tree().process_frame
+			var guard := 0
+			while not _decision_buttons.is_empty() and Sim.mesai > 0 and guard < 4:
+				guard += 1
+				var e: Dictionary = Sim.pending[0]["event"]
+				var best := 0
+				var best_score := -1e9
+				for i in e["choices"].size():
+					var fx: Dictionary = e["choices"][i].get("fx", {})
+					var sc := float(fx.get("king", 0)) * 2.0 - float(fx.get("unrest", 0)) + float(fx.get("economy", 0)) * 0.7 - float(fx.get("opp", 0)) * 0.5
+					for aid in fx.get("actors", {}):
+						var d: Dictionary = fx["actors"][aid]
+						sc -= float(d.get("power", 0)) * 0.3 + float(d.get("ambition", 0)) * 0.4 + float(d.get("obligation", 0)) * 0.3
+					if fx.has("promise_break"):
+						sc -= 5.0
+					if sc > best_score:
+						best_score = sc
+						best = i
+				# Kart düğmeleri seçenek sırasıyla dizili: ilk kartın düğmesine bas
+				_decision_buttons[best].pressed.emit()
+				await get_tree().process_frame
+			while Sim.mesai > 0 and not Sim.ended:
+				var target = null
+				for a in Sim.actors.values():
+					if not a.moved and a.insider and (target == null or a.rebellion_drive() > target.rebellion_drive()):
+						target = a
+				if target == null:
+					break
+				_sel = [target.id]
+				if target.rebellion_drive() > 0.0 and Sim.private_wealth >= 5.0:
+					(_buttons["bribe"] as Button).pressed.emit()
+				else:
+					(_buttons["cross"] as Button).pressed.emit()
+			_end_btn.pressed.emit()
+		var hist: Array = Sim.record.get("history", [])
+		var halef := false
+		for h in hist:
+			if str(h).contains("Saltanatın mirası"):
+				halef = true
+		print("FULLRUN tohum=%d hafta=%d sonuç=%s ünvan=%s miras_kararı=%s olay=%d son_ekran=%s" % [100 + seeds_tried, Sim.record["weeks"],
+			"TAHTTA" if Sim.record["survived"] else "DÜŞTÜ", Sim.record["title"], halef, Sim.fired_events.size(), _end_overlay.visible])
+		if Sim.record["survived"]:
+			break
+	get_tree().quit(0)
+
+
 func _autoplay() -> void:
+	if "--full" in OS.get_cmdline_user_args():
+		await _autoplay_full()
+		return
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 11
 	var pressed := 0

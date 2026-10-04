@@ -108,6 +108,24 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 	changed.emit()
 
 
+## Türkçe ek uyumu: özel isme kesme işaretiyle doğru eki ekler.
+## kind: "e" (yönelme: Voss'a, Arden'e), "in" (ilgi: Voss'un, Brandt'ın, Arden'in)
+static func ek(name: String, kind: String) -> String:
+	var word := name.split(" ")[-1].to_lower()
+	var last_vowel := "e"
+	for i in range(word.length() - 1, -1, -1):
+		var ch := word[i]
+		if ch in "aıoueiöü":
+			last_vowel = ch
+			break
+	var ends_vowel := word.length() > 0 and word[-1] in "aıoueiöü"
+	var back := last_vowel in "aıou"
+	if kind == "e":
+		return "%s'%s%s" % [name, "y" if ends_vowel else "", "a" if back else "e"]
+	var v: String = {"a": "ı", "ı": "ı", "o": "u", "u": "u", "e": "i", "i": "i", "ö": "ü", "ü": "ü"}[last_vowel]
+	return "%s'%s%sn" % [name, "n" if ends_vowel else "", v]
+
+
 func _diff(key: String) -> float:
 	return float(DIFFICULTY[difficulty][key])
 
@@ -233,9 +251,9 @@ func bribe(id: String) -> String:
 	a.loyalty["money"] += 8.0
 	a.secrets_on_king += 1
 	stats["bribes"] += 1
-	_add_fact("transfer_%s_%d" % [id, week], "%s'e yapılan gizli ödeme" % a.display_name, "king", 25, [id, "dorn"], 2)
+	_add_fact("transfer_%s_%d" % [id, week], "%s yapılan gizli ödeme" % ek(a.display_name, "e"), "king", 25, [id, "dorn"], 2)
 	changed.emit()
-	return "%s'e gizli ödeme yapıldı. Sadakati arttı; ama bir iz kaldı." % a.display_name
+	return "%s gizli ödeme yapıldı. Sadakati arttı; ama bir iz kaldı." % ek(a.display_name, "e")
 
 
 ## Emir: kanal seçimi sonucu ve inkâr edilebilirliği belirler.
@@ -250,7 +268,7 @@ func order(id: String, task: String, channel: String) -> String:
 			fidelity = 1.0
 			stats["written"] += 1
 			a.secrets_on_king += 1
-			_add_fact("emir_%s_%d" % [id, week], "%s'e verilen yazılı emir" % a.display_name, "king", 35, [id], 1)
+			_add_fact("emir_%s_%d" % [id, week], "%s verilen yazılı emir" % ek(a.display_name, "e"), "king", 35, [id], 1)
 		"sozlu":
 			fidelity = 0.75
 		"ima":
@@ -310,10 +328,10 @@ func investigate(id: String) -> String:
 	if not a.known_weak:
 		a.known_weak = true
 		changed.emit()
-		return "%s'in zayıf noktası bulundu: %s. Artık şantaj mümkün." % [a.display_name, a.weak_point]
+		return "%s zayıf noktası bulundu: %s. Artık şantaj mümkün." % [ek(a.display_name, "in"), a.weak_point]
 	a.known_red = true
 	changed.emit()
-	return "%s'in asla geçmeyeceği çizgi: %s." % [a.display_name, a.red_line]
+	return "%s asla geçmeyeceği çizgi: %s." % [ek(a.display_name, "in"), a.red_line]
 
 
 ## Şantaj: zayıf noktası bilinen birini korkuyla bağlar. Borcunu siler ama hırsını büyütür ve iz bırakır.
@@ -321,13 +339,13 @@ func investigate(id: String) -> String:
 func blackmail(id: String) -> String:
 	var a: Actor = actors[id]
 	if not a.known_weak:
-		return "Önce %s'in zayıf noktasını bulmalısın (Araştır)." % a.display_name
+		return "Önce %s zayıf noktasını bulmalısın (Araştır)." % ek(a.display_name, "in")
 	if not spend_mesai():
 		return _no_mesai()
 	stats["blackmails"] = int(stats.get("blackmails", 0)) + 1
 	a.blackmailed += 1
 	var fid := "santaj_%s_%d" % [id, week]
-	_add_fact(fid, "%s'e yapılan şantaj" % a.display_name, "king", 30, [id], 1)
+	_add_fact(fid, "%s yapılan şantaj" % ek(a.display_name, "e"), "king", 30, [id], 1)
 	var backfire := a.honesty * 0.35 + (0.25 if a.fear < 20.0 else 0.0) + 0.1 * (a.blackmailed - 1)
 	if rng.randf() < backfire:
 		facts[fid]["common"] = 0.45
@@ -374,12 +392,12 @@ func cross_check(id: String) -> String:
 	changed.emit()
 	if absf(noisy) < 6.0:
 		karne[id]["ok"] += 1
-		return "%s'in raporu diğer kaynaklarla büyük ölçüde örtüşüyor." % a.display_name
+		return "%s raporu diğer kaynaklarla büyük ölçüde örtüşüyor." % ek(a.display_name, "in")
 	if worse:
 		karne[id]["bad"] += 1
-		return "Başka kaynaklar durumun %s'in anlattığından DAHA KÖTÜ olduğunu söylüyor." % a.display_name
+		return "Başka kaynaklar durumun %s anlattığından DAHA KÖTÜ olduğunu söylüyor." % ek(a.display_name, "in")
 	karne[id]["ok"] += 1
-	return "Başka kaynaklar durumu %s'in anlattığından biraz daha iyi görüyor." % a.display_name
+	return "Başka kaynaklar durumu %s anlattığından biraz daha iyi görüyor." % ek(a.display_name, "in")
 
 
 ## Gizli operasyon: katılan her kişi sırrı bilir; çember büyüdükçe başarı ve sızıntı riski artar.
@@ -429,7 +447,7 @@ func operation(kind: String, ids: Array) -> String:
 			elif ok:
 				target.power = maxf(5.0, target.power - 12.0)
 				target.ambition += 5.0
-				text = "%s'in itibarı sarsıldı. Kim yaptığını tahmin etmesi zor değil." % target.display_name
+				text = "%s itibarı sarsıldı. Kim yaptığını tahmin etmesi zor değil." % ek(target.display_name, "in")
 			else:
 				text = "Operasyon boşa gitti; %s şüphelendi." % target.display_name
 				target.ambition += 5.0
@@ -507,7 +525,7 @@ func promise(id: String, prize: String) -> String:
 		return "%s artık verilemez; zaten birine verildi." % prize
 	for p in active_promises_of(id):
 		if p["prize"] == prize:
-			return "%s'e bunu zaten vaat ettin." % a.display_name
+			return "%s bunu zaten vaat ettin." % ek(a.display_name, "e")
 	if not spend_mesai():
 		return _no_mesai()
 	stats["promises"] = int(stats.get("promises", 0)) + 1
@@ -517,7 +535,7 @@ func promise(id: String, prize: String) -> String:
 	a.loyalty["career"] = float(a.loyalty["career"]) + 12.0
 	a.ambition += 2.0
 	changed.emit()
-	return "%s'e %s sözü verdin. Gözleri parladı; vadesi geldiğinde hatırlatacak." % [a.display_name, prize]
+	return "%s %s sözü verdin. Gözleri parladı; vadesi geldiğinde hatırlatacak." % [ek(a.display_name, "e"), prize]
 
 
 func _find_promise(pid: String) -> Dictionary:
@@ -567,7 +585,7 @@ func _tick_promises() -> void:
 				rival = actors[q["actor"]].display_name
 		var text := "%s, %d. haftada verdiğin '%s' sözünü hatırlatıyor. Bekleyişi sabırlı, ama sonsuz değil." % [a.display_name, p["made"], p["prize"]]
 		if rival != "":
-			text += " Aynı sözü %s'e de vermiştin." % rival
+			text += " Aynı sözü %s de vermiştin." % ek(rival, "e")
 		pending.append({"age": 0, "event": {"id": "soz_" + str(p["id"]), "title": "%s sözünü hatırlatıyor" % a.display_name, "text": text,
 			"choices": [
 				{"label": "Sözü tut: %s" % p["prize"], "text": "%s sözünü aldı. Bunu unutmayacak." % a.display_name, "fx": {"promise_keep": p["id"]}},
@@ -612,7 +630,7 @@ func _break_promise(p: Dictionary, betrayed := false) -> void:
 	if a != null:
 		a.loyalty["career"] = maxf(0.0, float(a.loyalty["career"]) - 15.0)
 		a.ambition += 12.0 if betrayed else 9.0
-		_add_fact("bozulan_soz_%s" % p["id"], "%s'e verilip tutulmayan söz (%s)" % [a.display_name, p["prize"]], "king", 15, [a.id], 1)
+		_add_fact("bozulan_soz_%s" % p["id"], "%s verilip tutulmayan söz (%s)" % [ek(a.display_name, "e"), p["prize"]], "king", 15, [a.id], 1)
 		facts["bozulan_soz_%s" % p["id"]]["common"] = 0.2
 		if betrayed:
 			_extra_msgs.append("%s, kendisine vaat edilen %s başkasına verildiği için öfkeli." % [a.display_name, p["prize"]])
@@ -1161,7 +1179,7 @@ func _survivor_title(top: Actor) -> String:
 			return "Medya İmparatorunun Kuklası"
 		if top.domain == "intel":
 			return "Gölge Devletin Tutsağı"
-		return "%s'in Kuklası" % top.display_name
+		return "%s Kuklası" % ek(top.display_name, "in")
 	if private_wealth >= 50.0:
 		return "Altın Kral"
 	if economy < 25.0:

@@ -134,6 +134,18 @@ func _init() -> void:
 		push_error("tarihçi/zaman çizelgesi eksik")
 		ok = false
 
+	# Türkçe ek uyumu
+	var ek_cases := {"Elias Voss|e": "Elias Voss'a", "General Arden|e": "General Arden'e", "Teodor Brandt|in": "Teodor Brandt'ın",
+		"Alaric Dorn|in": "Alaric Dorn'un", "Lena Ostrow|e": "Lena Ostrow'a", "Viktor Halden|in": "Viktor Halden'in",
+		"Prens Cassian|e": "Prens Cassian'a", "Lena|in": "Lena'nın", "Marta Kessler|e": "Marta Kessler'e"}
+	for k in ek_cases:
+		var parts: PackedStringArray = k.split("|")
+		var got: String = sim.ek(parts[0], parts[1])
+		if got != ek_cases[k]:
+			push_error("ek hatası: %s -> %s (beklenen %s)" % [k, got, ek_cases[k]])
+			ok = false
+	print("Ek uyumu: ", "OK" if ok else "HATA")
+
 	# Kayıt/yükleme turu
 	sim.new_game(5)
 	for i in 10:
