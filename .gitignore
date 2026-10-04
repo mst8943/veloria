@@ -1,7 +1,6 @@
 # Godot
 .godot/
 *.import
-export_presets.cfg
 .import/
 
 # Veloria: görsel/font içe aktarma ayarları (boyut sınırı, sıkıştırma) saklanmalı

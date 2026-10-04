@@ -110,6 +110,7 @@ var _curtain: ColorRect
 var _curtain_title: Label
 var _curtain_sub: Label
 var _mobile := false
+var _mesai_box: HBoxContainer
 var _curtain_img: TextureRect
 var _curtain_skip := false
 var _cinema: Control
@@ -131,8 +132,9 @@ var _last_wealth := -1
 
 
 func _ready() -> void:
-	_mobile = OS.has_feature("mobile") or ProjectSettings.get_setting("veloria/dev_mobile", false) \
-		or "--mobile" in OS.get_cmdline_user_args()
+	# Telefon: yerel mobil, telefon tarayıcısındaki web sürümü, ya da masaüstünde test bayrağı.
+	_mobile = OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios") \
+		or ProjectSettings.get_setting("veloria/dev_mobile", false) or "--mobile" in OS.get_cmdline_user_args()
 	if _mobile:
 		get_tree().root.content_scale_size = Vector2i(1067, 600)
 	theme = UIKit.build_theme(_mobile)
@@ -426,7 +428,7 @@ func _build_ui() -> void:
 	hint_panel.add_child(_hint_label)
 
 	_end_btn = Button.new()
-	_end_btn.text = "HAFTAYI BİTİR   ▶"
+	_end_btn.text = "HAFTAYI BİTİR   »"
 	_end_btn.theme_type_variation = "PrimaryButton"
 	_end_btn.custom_minimum_size.y = 52
 	_wire(_end_btn)
@@ -486,7 +488,16 @@ func _build_header(parent: Control) -> void:
 	_header_mesai.add_theme_color_override("font_color", UIKit.GOLD)
 	_header_mesai.tooltip_text = "Mesai: bu hafta kalan eylem hakkın."
 	_header_mesai.mouse_filter = Control.MOUSE_FILTER_STOP
-	top.add_child(_stat("res://art/icons/mesai.png", _header_mesai))
+	var mesai_row := _stat("res://art/icons/mesai.png", _header_mesai)
+	_header_mesai.visible = false
+	# Mesai elmasları çizilir: her fontta ve platformda aynı görünür.
+	_mesai_box = HBoxContainer.new()
+	_mesai_box.add_theme_constant_override("separation", 9)
+	_mesai_box.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_mesai_box.tooltip_text = _header_mesai.tooltip_text
+	_mesai_box.mouse_filter = Control.MOUSE_FILTER_STOP
+	mesai_row.add_child(_mesai_box)
+	top.add_child(mesai_row)
 	_header_wealth = Label.new()
 	_header_wealth.add_theme_font_size_override("font_size", _fs(19))
 	_header_wealth.tooltip_text = "Kişisel servet: devlet bütçesinden ayrı, gizli işlerin için."
@@ -518,6 +529,31 @@ func _stat(icon_path: String, label: Label) -> Control:
 	label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(label)
 	return row
+
+
+func _update_mesai_pips() -> void:
+	if _mesai_box == null:
+		return
+	var want := Sim.mesai_max
+	while _mesai_box.get_child_count() < want:
+		var pip := Panel.new()
+		var s := 13 if not _mobile else 16
+		pip.custom_minimum_size = Vector2(s, s)
+		pip.pivot_offset = Vector2(s, s) / 2.0
+		pip.rotation = deg_to_rad(45.0)
+		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_mesai_box.add_child(pip)
+	while _mesai_box.get_child_count() > want:
+		var last := _mesai_box.get_child(_mesai_box.get_child_count() - 1)
+		_mesai_box.remove_child(last)
+		last.queue_free()
+	for i in want:
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = UIKit.GOLD if i < Sim.mesai else Color(0, 0, 0, 0.35)
+		sb.border_color = UIKit.GOLD
+		sb.set_border_width_all(2)
+		sb.anti_aliasing = true
+		(_mesai_box.get_child(i) as Panel).add_theme_stylebox_override("panel", sb)
 
 
 func _build_fx() -> void:
@@ -563,6 +599,7 @@ func _build_fx() -> void:
 	var box := VBoxContainer.new()
 	box.custom_minimum_size = Vector2(1000, 0)
 	box.add_theme_constant_override("separation", 14)
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE  # görünmezken alttaki düğmeleri örtmesin
 	cc.add_child(box)
 	_curtain_title = Label.new()
 	_curtain_title.add_theme_font_override("font", UIKit.serif())
@@ -856,7 +893,7 @@ func _show_chronicle() -> void:
 		t += "Saltanat sayısı: %d   ·   Tahtta kalan: %d   ·   En uzun saltanat: %d hafta\n\n" % [list.size(), wins, best]
 		for i in range(list.size() - 1, -1, -1):
 			var r: Dictionary = list[i]
-			var mark := "[color=#7fae7a]◆[/color]" if r["survived"] else "[color=#c0504a]◆[/color]"
+			var mark := "[color=#7fae7a]TAHTTA[/color]" if r["survived"] else "[color=#c0504a]DÜŞTÜ[/color]"
 			t += "%s  [b]%s[/b]   [color=gray]%s · %s · %d hafta[/color]\n     %s\n" % [mark, r["title"], r["date"], r["difficulty"], r["weeks"], r["cause"]]
 	_show_modal(t)
 
@@ -1305,10 +1342,10 @@ func _refresh() -> void:
 		_header_progress.value = Sim.week
 	elif _header_progress.value < Sim.week:
 		create_tween().tween_property(_header_progress, "value", float(Sim.week), 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	_header_mesai.text = "◆".repeat(Sim.mesai) + "◇".repeat(maxi(Sim.mesai_max - Sim.mesai, 0))
+	_update_mesai_pips()
 	_header_wealth.text = str(int(Sim.private_wealth))
 	if _last_mesai != Sim.mesai and _last_mesai != -1 and not _fast():
-		UIKit.pulse(_header_mesai, 1.2)
+		UIKit.pulse(_mesai_box, 1.2)
 	if _last_wealth != int(Sim.private_wealth) and _last_wealth != -1 and not _fast():
 		UIKit.pulse(_header_wealth, 1.18)
 	_last_mesai = Sim.mesai
@@ -1424,7 +1461,7 @@ func _rebuild_agenda() -> void:
 		vb.add_child(t)
 		if p["age"] > 0:
 			var late := Label.new()
-			late.text = "⏳ Karar bekliyor — bu hafta çözülmezse kendi kendine çözülecek."
+			late.text = "Karar bekliyor — bu hafta çözülmezse kendi kendine çözülecek."
 			late.add_theme_color_override("font_color", UIKit.DANGER)
 			late.add_theme_font_size_override("font_size", _fs(13))
 			vb.add_child(late)

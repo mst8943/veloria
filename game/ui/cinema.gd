@@ -67,7 +67,7 @@ func _ready() -> void:
 	_sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(_sub)
 	_skip_btn = Button.new()
-	_skip_btn.text = "Geç  ▸▸"
+	_skip_btn.text = "Geç  »"
 	_skip_btn.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_MINSIZE, 24)
 	_skip_btn.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	_skip_btn.grow_vertical = Control.GROW_DIRECTION_BEGIN

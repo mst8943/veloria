@@ -655,7 +655,7 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 	flags["%s_%d" % [e["id"], choice_index]] = week
 	_extra_msgs.clear()
 	_apply_effects(fx)
-	history.append("Hafta %d — %s → %s" % [week, e["title"], ch["label"]])
+	history.append("Hafta %d — %s » %s" % [week, e["title"], ch["label"]])
 	changed.emit()
 	var out := str(ch.get("text", ""))
 	if not _extra_msgs.is_empty():
@@ -732,7 +732,7 @@ func end_week() -> void:
 			flags[str(e["id"]) + "_ertelendi"] = week
 			_apply_effects(ig.get("fx", {}))
 			var line := "ERTELENDİ — %s: %s" % [e["title"], ig.get("text", "")]
-			history.append("Hafta %d — %s → (ertelendi)" % [week, e["title"]])
+			history.append("Hafta %d — %s » (ertelendi)" % [week, e["title"]])
 			weekly_news.append(line)
 		else:
 			keep.append(p)
