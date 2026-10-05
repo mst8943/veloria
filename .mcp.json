@@ -2,10 +2,7 @@
   "mcpServers": {
     "beckett": {
       "type": "http",
-      "url": "http://127.0.0.1:8770/mcp",
-      "env": {
-        "BECKETT_TOKEN": "beckett_secure_token_2026"
-      }
+      "url": "http://127.0.0.1:8770/mcp"
     }
   }
 }

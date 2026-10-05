@@ -2,23 +2,20 @@
 
 ## Kurulum Özeti
 
-Beckett Godot MCP sunucusu başarıyla kuruldu ve token koruması etkinleştirildi.
+Beckett Godot MCP sunucusu kuruldu. Token koruması yerel ortamda etkinleştirilmelidir.
 
 ### 📁 Kurulu Bileşenler
 
 - ✅ **Beckett Addon**: `addons/beckett/` klasöründe
 - ✅ **Project Ayarları**: `project.godot` güncellendi
 - ✅ **Claude Code Yapılandırması**: `.mcp.json` hazırlandı
-- ✅ **Token Koruması**: Etkinleştirildi
+- **Token Koruması**: Yerel ortamda yapılandırılmalı
 
 ---
 
 ## 🔐 Token Koruması Ayarları
 
-### Sağlanan Token
-```
-beckett_secure_token_2026
-```
+Token'ı Beckett panelinden yerel olarak oluşturun. Erişim anahtarını Git'e eklemeyin.
 
 ### Yapılandırılmış Güvenlik Seçenekleri
 
@@ -27,7 +24,6 @@ beckett_secure_token_2026
 [beckett]
 autostart=true                      # Otomatik başlat
 auto_write_client_config=true       # Config otomatik yaz
-token="beckett_secure_token_2026"   # Bearer token
 readonly=false                      # Yazma izinleri etkin
 confirm_destructive=true            # Yıkıcı komutlar onay gerektirir
 effort=2                            # AI çabalandırma seviyesi (1-4)
@@ -35,7 +31,7 @@ effort=2                            # AI çabalandırma seviyesi (1-4)
 
 ### .mcp.json dosyasında:
 - HTTP endpoint: `http://127.0.0.1:8770/mcp`
-- Token ortam değişkeni yapılandırması
+- Token koruması yerel ortamda yapılandırılmalı
 
 ---
 
@@ -60,7 +56,7 @@ Claude Code otomatik olarak `.mcp.json` okuyacak ve Beckett'e bağlanacak.
 
 | Özellik | Durum |
 |---------|-------|
-| Bearer Token Koruması | ✅ Aktif |
+| Bearer Token Koruması | Yerel ortamda etkinleştirilmeli |
 | Localhost-only | ✅ Aktif (127.0.0.1) |
 | Yıkıcı Komutlar Onayı | ✅ Aktif |
 | SSL/TLS | Localhost için gerekli değil |
