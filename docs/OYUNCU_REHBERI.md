@@ -44,7 +44,7 @@ Haritada yedi kurum var. Birine tıklayınca başındaki kişiyi, onun bu haftak
 
 ## Ekran
 
-- **Gündem:** Bekleyen kararlar (görselli kartlar) ve haftanın raporları.
+- **Gündem:** Bekleyen kararlar (görselli kartlar) ve haftanın raporları. Masaüstünde kararların altındaki **BU HAFTA** defteri, o hafta yaptığın eylemleri ve sonuçlarını sırayla tutar (bildirim kaybolsa da).
 - **Güç Merkezleri:** 9 karakterin portreleri. Birini seçince hakkında bildiklerin görünür.
 - **Emirler ve eylemler:** Seçili kişi üzerinde yapabileceklerin.
 - **Dosyalar:** Sırlar, kanıtlar ve **Söz Defteri**.

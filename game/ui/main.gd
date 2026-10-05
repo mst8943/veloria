@@ -113,6 +113,8 @@ var _end_btn: Button
 var _fact_ids: Array[String] = []
 var _cards: Dictionary = {}
 var _cards_sig := ""
+var _week_log: Array[String] = []   # bu haftanın eylem sonuçları (Gündem > BU HAFTA)
+var _week_log_week := -1
 var _sel: Array[String] = []
 var _icons: Dictionary = {}
 var _menu: Control
@@ -1468,6 +1470,11 @@ func _log(text: String) -> void:
 	_journal.append_text("• %s\n" % text)
 	_toast_msg(text)
 	_hint("Son eylem\n" + text)  # sonuç bildirim kaybolsa da burada kalır
+	if _week_log_week != Sim.week:
+		_week_log.clear()
+		_week_log_week = Sim.week
+	if text != "":
+		_week_log.append(text)
 
 
 func _initial_art(id: String, size: Vector2, letter_size := 40) -> Control:
@@ -1602,6 +1609,7 @@ func _after_load(message: String) -> void:
 	_queued_end = false
 	_media_seen_week = 0
 	_log(message)
+	_week_log.clear()   # açılış/yükleme mesajı eylem değil; haftanın defterine girmesin
 	_refresh()
 	if not _fast():
 		UIKit.fade_in(_stage, 0.8)
@@ -2295,6 +2303,8 @@ func _rebuild_agenda() -> void:
 			b.pressed.connect(_choose.bind(pi, ci))
 			vb.add_child(b)
 			_decision_buttons.append(b)
+	if _report_box != null:
+		_add_week_ledger(animated)
 	var texts: Array[RichTextLabel] = []
 	if _report_box != null:
 		_fill_reports_compact(animated, texts)
@@ -2328,6 +2338,45 @@ func _rebuild_agenda() -> void:
 		_play_reveal.call_deferred(animated, texts)
 	else:
 		_reveal = false
+
+
+## Masaüstü: karar kartlarının altında haftanın defteri. Eylem sonuçları bildirimde kaybolur, ipucu satırı
+## yalnızca sonuncuyu tutar; burada hafta boyunca durur. Boşken sıradaki adımı söyler. Yeni bilgi açmaz.
+func _add_week_ledger(animated: Array[Control]) -> void:
+	if _week_log_week != Sim.week:
+		_week_log.clear()
+		_week_log_week = Sim.week
+	_agenda.add_child(_section("BU HAFTA", "yaptıkların ve sonuçları"))
+	if _week_log.is_empty():
+		var empty := Label.new()
+		empty.text = ("Henüz bir şey yapmadın. Bir güç merkezine tıkla, Eylemler panelinden mesai harca." if Sim.mesai > 0
+			else "Mesain bitti. Raporlara göz at ve haftayı bitir.")
+		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		empty.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+		empty.add_theme_font_size_override("font_size", _fs(13))
+		_agenda.add_child(empty)
+		return
+	for i in _week_log.size():
+		var row := PanelContainer.new()
+		var sb := UIKit.box(Color(UIKit.PANEL_HI, 0.35), Color(0, 0, 0, 0), 2, 8)
+		sb.content_margin_top = 4
+		sb.content_margin_bottom = 4
+		sb.border_color = Color(UIKit.GOLD_DIM, 0.7)
+		sb.border_width_left = 2
+		row.add_theme_stylebox_override("panel", sb)
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_agenda.add_child(row)
+		var l := RichTextLabel.new()
+		l.bbcode_enabled = true
+		l.fit_content = true
+		l.scroll_active = false
+		l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		l.add_theme_font_size_override("normal_font_size", _fs(13))
+		l.add_theme_font_size_override("bold_font_size", _fs(13))
+		l.text = "[color=#d6b25e]%d[/color]   %s" % [i + 1, _week_log[i]]
+		row.add_child(l)
+	# Yalnızca en son satır canlanır (her eylemde bütün liste yeniden belirmesin).
+	animated.append(_agenda.get_child(_agenda.get_child_count() - 1))
 
 
 ## Masaüstü: raporlar sağ sütunda, kaynağının altında kompakt bir liste. Satıra tıklamak o kişiyi seçer.

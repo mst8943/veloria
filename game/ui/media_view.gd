@@ -488,7 +488,7 @@ func _build_tv() -> void:
 	# Ekran eldeki alana sığar (mobilde yükseklik dar). Alan görünümün kendi boyutundan hesaplanır:
 	# gizliyken kurulan _content'in boyutu henüz güncel değil.
 	var mg := 16.0 if mobile else 26.0
-	var avail := size - Vector2(2.0 * mg, 2.0 * mg + 84.0)
+	var avail := size - Vector2(2.0 * mg, 2.0 * mg + (110.0 if mobile else 84.0))   # mobilde kasa gölgesi kırpılmasın
 	var w := minf(960.0, minf((avail.y - 2.0 * TV_L) * 16.0 / 9.0, avail.x - TV_L - TV_R))
 	var h := w * 9.0 / 16.0
 	var tv := Control.new()
