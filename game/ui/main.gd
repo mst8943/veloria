@@ -3010,8 +3010,24 @@ func _trait(text: String, col: Color, filled := -1, total := 0, tip := "") -> Co
 	return chip
 
 
+## Haber şeridi önceliği: kriz ve alametler önce, aktör hamleleri en sonda (özet bölümünde zaten görünür).
+func _headline_items() -> Array:
+	var order := ["KRİZ", "ALAMET", "SOKAK", "MAHKEME", "MANŞET", "ERTELENDİ", "KULİS", "OLAY", "SÖZ", "HAMLE"]
+	var items: Array = Sim.weekly_news.duplicate()
+	items.sort_custom(func(x, y) -> bool:
+		var ix := order.size()
+		var iy := order.size()
+		for i in order.size():
+			if str(x).begins_with(order[i]) and ix == order.size():
+				ix = i
+			if str(y).begins_with(order[i]) and iy == order.size():
+				iy = i
+		return ix < iy)
+	return items
+
+
 func _on_week(_w: int) -> void:
-	_headline.text = "  ·  ".join(Sim.weekly_news.slice(0, 3)) if not Sim.weekly_news.is_empty() else ""
+	_headline.text = "  ·  ".join(_headline_items().slice(0, 3))
 	_headline.get_parent().visible = _headline.text != ""
 	if not Sim.weekly_news.is_empty():
 		_journal.append_text("[color=orange]Hafta %d: %s[/color]\n" % [Sim.week, "; ".join(Sim.weekly_news)])
@@ -3141,9 +3157,14 @@ func _autoplay_full() -> void:
 				for i in e["choices"].size():
 					if Sim.choice_value(e["choices"][i].get("fx", {})) > Sim.choice_value(e["choices"][best].get("fx", {})):
 						best = i
+				if e.get("crisis", false):
+					best = 1   # kriz kartı: taviz / uzlaşma (etkisi boş seçenekleri choice_value ayırt edemez)
 				# Kart düğmeleri seçenek sırasıyla dizili: ilk kartın düğmesine bas
 				_decision_buttons[best].pressed.emit()
 				await get_tree().process_frame
+			# Dikkatli oyuncu: haftada en fazla bir gizli ödeme (her ödeme iz bırakır, izler mahkemeye gider);
+			# kalan mesai huzura çağırma ya da doğrulama.
+			var bribed := false
 			while Sim.mesai > 0 and not Sim.ended:
 				var target = null
 				for a in Sim.actors.values():
@@ -3151,9 +3172,13 @@ func _autoplay_full() -> void:
 						target = a
 				if target == null:
 					break
-				_sel = [target.id]
-				if target.rebellion_drive() > 0.0 and Sim.private_wealth >= 5.0:
+				_sel.clear()
+				_sel.append(target.id)
+				if target.rebellion_drive() > 0.0 and Sim.private_wealth >= 5.0 and not bribed:
+					bribed = true
 					(_buttons["bribe"] as Button).pressed.emit()
+				elif Sim.summon_wait(target.id) == 0:
+					(_buttons["summon"] as Button).pressed.emit()
 				else:
 					(_buttons["cross"] as Button).pressed.emit()
 			_end_btn.pressed.emit()

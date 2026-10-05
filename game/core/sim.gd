@@ -57,6 +57,7 @@ var stats: Dictionary = {}
 var weekly_news: Array = []
 var report_prev: Dictionary = {}   # kaynak -> geçen haftaki raporun SÖYLEDİĞİ band (gerçek değil)
 var week_changes: Array = []       # {tone, text, actor}: görünür göstergelerin geçen haftaya göre farkı
+var weekly_moves: Array = []       # bu haftanın aktör hamleleri {tone, text, actor} (docs/design/aktor_hamleleri.md)
 var ended := false
 var record: Dictionary = {}
 var coup_leader := ""
@@ -1215,6 +1216,7 @@ func end_week() -> void:
 	# Haftanın haberleri burada sıfırlanır: ertelenen kararların haberi de oyuncuya ulaşsın
 	# (eskiden aşağıda ekleniyor, hemen ardından siliniyordu).
 	weekly_news.clear()
+	weekly_moves.clear()
 	# Ertelenen kararlar kendi kendine çözülür (olgunlaşır).
 	var keep: Array = []
 	for p in pending:
@@ -1292,6 +1294,8 @@ func _diff_visible(b: Dictionary, n: Dictionary) -> Array:
 			out.append({"tone": 0, "actor": "", "text": s.substr(7)})
 		elif s.begins_with("SOKAK: ") or s.begins_with("MAHKEME: "):
 			out.append({"tone": -1, "actor": "", "text": s.substr(s.find(" ") + 1)})
+	for mv: Dictionary in weekly_moves:
+		out.append(mv.duplicate())
 	for id in b["people"]:
 		var p0: Dictionary = b["people"][id]
 		var name: String = p0["name"]
@@ -1493,7 +1497,12 @@ func _fire_events() -> void:
 		_apply_effects(e.get("fx", {}))
 		if not e.has("choices"):
 			history.append("Hafta %d — %s" % [week, e["title"]])
-		weekly_news.append("OLAY: %s" % e["title"])
+		if e.has("news"):
+			# Aktör hamlesi: seçeneksiz, kendiliğinden; haberde ve "Geçen haftadan beri" özetinde görünür.
+			weekly_news.append("HAMLE: " + str(e["news"]))
+			weekly_moves.append({"tone": int(e.get("tone", 0)), "actor": str(e.get("actor", "")), "text": str(e["news"])})
+		else:
+			weekly_news.append("OLAY: %s" % e["title"])
 
 
 # ---------------------------------------------------------------- Darbe aşamaları (docs/design/darbe_asamalari.md)

@@ -27,7 +27,8 @@ func _init() -> void:
 			sim.end_week()
 			var new_this_week := 0
 			for k in sim.fired_events:
-				if int(sim.fired_events[k]) == sim.week:
+				# Aktör hamleleri (hamle_*) karar olayı değil; tempo yalnızca kararları sayar.
+				if int(sim.fired_events[k]) == sim.week and not str(k).begins_with("hamle_"):
 					new_this_week += 1
 			var b := int((sim.week - 1) / BUCKET)
 			buckets[b] = int(buckets.get(b, 0)) + new_this_week

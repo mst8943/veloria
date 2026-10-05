@@ -123,6 +123,14 @@ func _init() -> void:
 		var saved_stats: Dictionary = sim.stats.duplicate()
 		for st in e.get("min_stat", {}):   # oyuncu geçmişi koşulu (botlar bu eylemleri az kullanır)
 			sim.stats[st] = int(e["min_stat"][st])
+		# Aktör koşulları (güç, hırs, borç...) zorla sağlanır.
+		for aid in e.get("min_power", {}):
+			if sim.actors.has(aid):
+				sim.actors[aid].power = maxf(sim.actors[aid].power, float(e["min_power"][aid]))
+		for aid in e.get("actor_min", {}):
+			if sim.actors.has(aid):
+				for prop in e["actor_min"][aid]:
+					sim.actors[aid].set(prop, maxf(float(sim.actors[aid].get(prop)), float(e["actor_min"][aid][prop])))
 		# Dünya değeri koşulları (huzursuzluk, muhalefet, ekonomi) da zorla sağlanır.
 		sim.unrest = clampf(30.0, float(e.get("min_unrest", 0)), float(e.get("max_unrest", 100)))
 		sim.opposition = maxf(20.0, float(e.get("min_opposition", 0)))

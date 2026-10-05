@@ -83,6 +83,10 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
   - Sokak öfkesi (bastırma borçtur), ayaklanma krizi (huzursuzluk ≥ 54), yetki krizi (yargı baskısı ≥ 40); darbe kartı kalıbında, o hafta çözülmezse düşüş. SOKAK/MAHKEME uyarı satırları, Bastır önizlemesinde öfke uyarısı. Kayıt sürümü 3.
   - Sonuç: kayıp oyun tarzına bağlı (kirli %16, yumuşak %11, bastıran %4 darbe dışı). Ölçüt bot Kolay 81, Normal 40, Zor 18 (bantta). Sondaja `advice_soft` / `advice_dirty` botları eklendi.
   - Açık: darbe hâlâ baskın; daha fazla çeşitlilik için darbe sıklığının kendisi düşürülmeli.
+- **Beşinci oturum (devam): Rüşvet ölçümü ve aktör hamleleri**
+  - Rüşvete azalan getiri: istismar botuyla ölçüldü, gerek yok (rüşvet botu Kolay %51 / Normal %40 / Zor %20; mahkeme yolu bedeli yaratıyor).
+  - Aktör hamleleri (`docs/design/aktor_hamleleri.md`): 16 seçeneksiz `hamle_*` olayı; "HAMLE: ..." haberi, özet bölümünde portreyle; haber şeridi önceliği (kriz/alamet önce, hamle sonda). Prens hamleleri darbe hesabını bozduğu için işarete çevrildi. Ölçüt bot Kolay 80, Normal 41, Zor 27.
+  - Testler: `event_check` seçeneksiz olayı ayrı denetler; `pacing_test` hamleleri saymaz; sim_test ulaşılabilirlik kontrolü aktör koşullarını da sağlar; `--full` UI testi dikkatli oynar (haftada en çok bir ödeme, krizde uzlaşma).
 
 ## Ölçülmüş denge (probe_template, 80 kampanya, darbe aşamalarından sonra)
 | Bot | Kolay | Normal | Zor |

@@ -12,7 +12,7 @@ const ACTOR := preload("res://game/core/actor.gd")
 const TOP_KEYS := ["id", "title", "text", "choices", "ignore", "fx", "art", "crisis", "advisors",
 	"min_week", "max_week", "chance", "once", "cooldown", "min_unrest", "max_unrest", "min_economy", "max_economy",
 	"min_opposition", "min_power", "needs_flag", "blocks_flag", "any_flag", "flag_age", "actor_min", "actor_max",
-	"alive", "needs_fact", "needs_ready", "min_stat", "max_stat"]
+	"alive", "needs_fact", "needs_ready", "min_stat", "max_stat", "news", "actor", "tone"]
 ## Sim.stats anahtarları (min_stat / max_stat koşulları)
 const STAT_KEYS := ["ops", "bribes", "promotes", "leaks", "dismissals", "written", "hints", "checks",
 	"investigations", "blackmails", "promises", "kept", "broken", "summons", "concessions", "street_concessions", "legal_concessions"]
@@ -104,9 +104,23 @@ func _check_event(e: Dictionary) -> void:
 	for k in e:
 		if not k in TOP_KEYS:
 			errors.append("%s: bilinmeyen anahtar '%s' (motor yok sayar)" % [id, k])
-	for k in ["title", "text"]:
+	for k in (["title", "text"] if e.has("choices") else ["title"]):
 		if str(e.get(k, "")).strip_edges() == "":
 			errors.append("%s: '%s' boş" % [id, k])
+	if not e.has("choices"):
+		# Seçeneksiz olay = aktör hamlesi: haber metni ve etki gerekir; seçenek/ignore/görsel yok.
+		if str(e.get("news", "")).strip_edges() == "":
+			errors.append("%s: seçeneksiz olayın 'news' metni yok (oyuncu hiç görmez)" % id)
+		if not e.get("fx") is Dictionary:
+			errors.append("%s: seçeneksiz olayın 'fx' etkisi yok" % id)
+		else:
+			_check_fx(id, e["fx"])
+		if e.has("actor"):
+			_check_actor(id, "actor", str(e["actor"]))
+		if bool(e.get("once", true)) == false and not e.has("cooldown"):
+			warnings.append("%s: tekrarlanan hamlenin cooldown'u yok (varsayılan 12)" % id)
+		_check_conditions(e)
+		return
 	var choices: Array = e.get("choices", [])
 	if choices.size() < 2:
 		errors.append("%s: en az iki seçenek olmalı (%d var)" % [id, choices.size()])
@@ -126,7 +140,14 @@ func _check_event(e: Dictionary) -> void:
 		errors.append("%s: 'ignore' {text, fx} olmalı" % id)
 	for fx in _all_fx(e):
 		_check_fx(id, fx)
-	# Koşullar
+	_check_conditions(e)
+	var art := "res://art/events/%s.png" % str(e.get("art", id))
+	if not ResourceLoader.exists(art) and not FileAccess.file_exists(art):
+		warnings.append("%s: görsel yok (%s), yer tutucu gösterilir" % [id, art.get_file()])
+
+
+func _check_conditions(e: Dictionary) -> void:
+	var id := str(e.get("id", "?"))
 	if e.has("min_week") and e.has("max_week") and int(e["min_week"]) > int(e["max_week"]):
 		errors.append("%s: min_week (%d) > max_week (%d), hiç tetiklenmez" % [id, int(e["min_week"]), int(e["max_week"])])
 	if e.has("chance") and (float(e["chance"]) <= 0.0 or float(e["chance"]) > 1.0):
@@ -153,9 +174,6 @@ func _check_event(e: Dictionary) -> void:
 	for f in refs:
 		if not _flag_known(str(f)):
 			errors.append("%s: '%s' bayrağını hiçbir şey koymuyor (yazım hatası?)" % [id, f])
-	var art := "res://art/events/%s.png" % str(e.get("art", id))
-	if not ResourceLoader.exists(art) and not FileAccess.file_exists(art):
-		warnings.append("%s: görsel yok (%s), yer tutucu gösterilir" % [id, art.get_file()])
 
 
 func _check_fx(id: String, fx: Dictionary) -> void:
