@@ -203,6 +203,7 @@ Serbest Kalem kapatıldığında gazete sayfasına basılan resmî mühür. Oyun
 
 Saydam arka plan çıkmazsa düz beyaz arka planla üretin; oyun beyazı çarpma karışımıyla yok sayar.
 Kabul: harf/yazı yok, tek renk koyu kırmızı, aşınmış mürekkep dokusu, tam daire, kenarda kesilme yok.
+Durum (2026-10-06): yerleşik. Orijinal `art/_arsiv/yayin_muhru_orijinal.png`; oyundaki sürüm mürekkep rengine (`a3251b`) çevrilip **beyaz zemine yassılaştırıldı** (Godot'nun çarpma karışımı saydamlığı yok sayar, saydam alan siyah basılır), 512 px.
 
 ## Üretim sırası önerisi
 
