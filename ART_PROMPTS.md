@@ -195,6 +195,15 @@ Her biri tek nesne, **saydam arka plan**, üstten hafif açılı, aynı ışık 
 | `desk/hanedan.png` | `An ornate gold picture frame holding a formal royal family portrait painting, standing on a desk, three-quarter view, isolated, transparent background.` |
 | `desk/harita.png` | `An old unfolded parchment city map with a river and districts drawn in sepia ink, slightly curled edges, top-down view, isolated, transparent background.` |
 
+### Medya: yayın durdurma mührü (`art/media/yayin_muhru.png`, saydam, 1024x1024)
+
+Serbest Kalem kapatıldığında gazete sayfasına basılan resmî mühür. Oyun "YAYIN DURDURULDU" yazısını kendisi yazar; mühür bu yazı kaşesinin köşesine, çarpma (multiply) karışımıyla basılır. Bu görsel **STİL BLOĞU kullanmaz** (yağlı boya değil, düz mürekkep izi).
+
+`A single round official court seal impression stamped in deep red ink on transparent background, a heraldic lion crest in the center surrounded by two concentric rings with a band of small decorative dots and laurel leaves between them (no letters, no text, no numbers), worn rubber-stamp texture: uneven ink coverage, a few gaps and speckles, slightly heavier ink on the lower left edge, flat top-down view, perfectly round, isolated, nothing else in the image.`
+
+Saydam arka plan çıkmazsa düz beyaz arka planla üretin; oyun beyazı çarpma karışımıyla yok sayar.
+Kabul: harf/yazı yok, tek renk koyu kırmızı, aşınmış mürekkep dokusu, tam daire, kenarda kesilme yok.
+
 ## Üretim sırası önerisi
 
 1. `bg_desk.png`

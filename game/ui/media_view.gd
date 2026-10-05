@@ -13,6 +13,7 @@ const INK := Color("16120d")
 const INK_SOFT := Color("3b3328")
 const PAPER := Color("e9e0c9")
 const PAPER_FREE := Color("d9d3c2")   # bağımsız gazetenin ucuz, gri kâğıdı
+const SEAL_PATH := "res://art/media/yayin_muhru.png"
 const RUBRIC := Color("7a2a1e")
 
 var mobile := false
@@ -423,6 +424,30 @@ func _build_closed(v: VBoxContainer, ed: Dictionary) -> void:
 	tw.tween_interval(0.35)
 	tw.tween_property(stamp, "modulate:a", 0.92, 0.12)
 	tw.tween_callback(func() -> void: Sfx.play("seal"))
+	# Mahkeme mührü (art/media/yayin_muhru.png, ART_PROMPTS.md): kaşenin köşesine çarpma karışımıyla basılır,
+	# mürekkep kâğıda işlemiş gibi durur; beyaz arka planlı görsel de çalışır. Görsel yoksa yalnızca kaşe.
+	if ResourceLoader.exists(SEAL_PATH):
+		var seal := TextureRect.new()
+		seal.texture = load(SEAL_PATH)
+		seal.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		seal.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		seal.size = Vector2(190, 190)
+		seal.pivot_offset = seal.size / 2.0
+		seal.position = Vector2(735, 80)
+		seal.rotation = deg_to_rad(14.0)
+		seal.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var cm := CanvasItemMaterial.new()
+		cm.blend_mode = CanvasItemMaterial.BLEND_MODE_MUL
+		seal.material = cm
+		seal.visible = false
+		holder.add_child(seal)
+		# Çarpma karışımında saydamlık solmaz: mühür bir anda, hafif büyükten oturarak basılır.
+		tw.tween_interval(0.25)
+		tw.tween_callback(func() -> void:
+			seal.visible = true
+			seal.scale = Vector2(1.25, 1.25)
+			seal.create_tween().tween_property(seal, "scale", Vector2.ONE, 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+			Sfx.play("seal"))
 
 
 func _animate_paper(paper: Control) -> void:
