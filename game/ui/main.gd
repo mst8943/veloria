@@ -9,6 +9,7 @@ const MEDIA_VIEW := preload("res://game/ui/media_view.gd")
 const DESK_VIEW := preload("res://game/ui/desk_view.gd")
 const CITY_VIEW := preload("res://game/ui/city_view.gd")
 const TRUTH_CHART := preload("res://game/ui/truth_chart.gd")
+const AUTOPLAY := preload("res://game/ui/autoplay.gd")
 
 const ROLE := {"army": "Ordu", "intel": "İstihbarat", "economy": "Maliye", "media": "Medya", "press": "Basın",
 	"gate": "Saray", "royal": "Hanedan", "opposition": "Muhalefet", "court": "Yargı"}
@@ -172,6 +173,7 @@ var _busy := false
 var _instant := false
 var _reveal := true
 var _last_mesai := -1
+var _autoplayer: RefCounted   # otomatik oynatma testi (autoplay.gd); await sırasında canlı kalsın
 var _last_wealth := -1
 
 
@@ -196,7 +198,8 @@ func _ready() -> void:
 	if "--autoplay" in OS.get_cmdline_user_args():
 		_instant = true
 		_start_new()
-		_autoplay()
+		_autoplayer = AUTOPLAY.new(self)
+		_autoplayer.run()
 	elif ProjectSettings.get_setting("veloria/dev_autostart", false):
 		_instant = true
 		_start_new()
@@ -3135,115 +3138,3 @@ func _on_end(record: Dictionary) -> void:
 		UIKit.shake(_stage, 10.0, 0.6)
 	var dur := clampf(float(_end_text.get_total_character_count()) * 0.012, 2.5, 6.0)
 	UIKit.typewrite(_end_text, dur, 0.8)
-
-
-# ---------------------------------------------------------------- Otomatik oynatma (test)
-
-## Tam saltanat: Kolay seviyede dikkatli oynayarak 104 haftayı arayüz üzerinden tamamlamaya çalışır.
-## Geç oyun olaylarını, miras kararını, zafer finalini ve oyun sonu ekranını sınar.
-func _autoplay_full() -> void:
-	var seeds_tried := 0
-	while seeds_tried < 6:
-		seeds_tried += 1
-		Sim.new_game(100 + seeds_tried, 0)
-		_after_load("tam saltanat testi")
-		while not Sim.ended:
-			await get_tree().process_frame
-			var guard := 0
-			while not _decision_buttons.is_empty() and Sim.mesai > 0 and guard < 4:
-				guard += 1
-				var e: Dictionary = Sim.pending[0]["event"]
-				var best := 0
-				for i in e["choices"].size():
-					if Sim.choice_value(e["choices"][i].get("fx", {})) > Sim.choice_value(e["choices"][best].get("fx", {})):
-						best = i
-				if e.get("crisis", false):
-					best = 1   # kriz kartı: taviz / uzlaşma (etkisi boş seçenekleri choice_value ayırt edemez)
-				# Kart düğmeleri seçenek sırasıyla dizili: ilk kartın düğmesine bas
-				_decision_buttons[best].pressed.emit()
-				await get_tree().process_frame
-			# Dikkatli oyuncu: haftada en fazla bir gizli ödeme (her ödeme iz bırakır, izler mahkemeye gider);
-			# kalan mesai huzura çağırma ya da doğrulama.
-			var bribed := false
-			while Sim.mesai > 0 and not Sim.ended:
-				var target = null
-				for a in Sim.actors.values():
-					if not a.moved and a.insider and (target == null or a.rebellion_drive() > target.rebellion_drive()):
-						target = a
-				if target == null:
-					break
-				_sel.clear()
-				_sel.append(target.id)
-				if target.rebellion_drive() > 0.0 and Sim.private_wealth >= 5.0 and not bribed:
-					bribed = true
-					(_buttons["bribe"] as Button).pressed.emit()
-				elif Sim.summon_wait(target.id) == 0:
-					(_buttons["summon"] as Button).pressed.emit()
-				else:
-					(_buttons["cross"] as Button).pressed.emit()
-			_end_btn.pressed.emit()
-		var hist: Array = Sim.record.get("history", [])
-		var halef := false
-		for h in hist:
-			if str(h).contains("Saltanatın mirası"):
-				halef = true
-		print("FULLRUN tohum=%d hafta=%d sonuç=%s ünvan=%s miras_kararı=%s olay=%d son_ekran=%s" % [100 + seeds_tried, Sim.record["weeks"],
-			"TAHTTA" if Sim.record["survived"] else "DÜŞTÜ", Sim.record["title"], halef, Sim.fired_events.size(), _end_overlay.visible])
-		if Sim.record["survived"]:
-			break
-	get_tree().quit(0)
-
-
-func _autoplay() -> void:
-	if "--full" in OS.get_cmdline_user_args():
-		await _autoplay_full()
-		return
-	var rng := RandomNumberGenerator.new()
-	rng.seed = 11
-	var pressed := 0
-	while not Sim.ended:
-		await get_tree().process_frame
-		var guard := 0
-		while not _decision_buttons.is_empty() and Sim.mesai > 0 and guard < 3:
-			guard += 1
-			var b: Button = _decision_buttons[rng.randi() % _decision_buttons.size()]
-			b.pressed.emit()
-			pressed += 1
-			await get_tree().process_frame
-		if not _cards.is_empty():
-			var ids: Array = _cards.keys()
-			var pick: String = ids[rng.randi() % ids.size()]
-			_sel = [pick]
-			if rng.randf() < 0.3:
-				_sel.append(ids[rng.randi() % ids.size()])
-			_update_info()
-		var keys := ["promote", "bribe", "cross", "o_soz", "o_ima", "o_sor", "op_dikkat", "op_bol"]
-		while Sim.mesai > 0 and not Sim.ended:
-			var k: String = keys[rng.randi() % keys.size()]
-			(_buttons[k] as Button).pressed.emit()
-			pressed += 1
-			if Sim.mesai > 0 and rng.randf() < 0.3:
-				break
-		if not _fact_ids.is_empty():
-			_fact_act("destroy", _fact_ids[0])
-		if Sim.week % 3 == 0:
-			# Medya üretimini farklı oyun durumlarında da sına
-			_open_media()
-			_media.show_tab("free")
-			_media.show_tab("tv")
-			_media.close_view()
-		if Sim.week % 4 == 0:
-			# Masa ve harita: her kapıyı ve her kurum panelini aç
-			_desk.open()
-			for t in ["gundem", "kisiler", "gunluk", "dosyalar"]:
-				_desk.open()
-				_on_desk_request(t)
-			_city.open()
-			for site in _city._sites:
-				if site != "saray":
-					_city.show_site(site)
-			_on_city_request("actor", "arden")
-			_modal.hide()
-		_end_btn.pressed.emit()
-	print("AUTOPLAY DONE: hafta=%d basılan=%d sonuç=%s" % [Sim.week, pressed, Sim.record.get("title", "?")])
-	get_tree().quit(0)
