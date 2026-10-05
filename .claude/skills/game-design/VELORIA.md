@@ -23,7 +23,8 @@ Kaynak: `VELORIA — Oyun Tasarım Özeti.md` (958 satır, 30 bölüm) ve `CLAUD
 | `game/core/actor.gd` | Aktör verisi: power, ambition, fear, honesty, threshold, loyalty{money,fear,ideology,career,complicity}, obligation, perceived_king, ready, moved, secrets_on_king, known_weak/red. `rebellion_drive()` |
 | `game/core/press.gd` | Gazeteler/TV: gizli durumdan, yayın sahibinin süslemesiyle üretilir |
 | `game/core/sfx.gd` (autoload `Sfx`) | Ses (şu an sentez), müzik, ayarlar (`user://veloria_settings.cfg`) |
-| `game/ui/main.gd` | Ana ekran + menü + oyun sonu + akış; ~2600 satır (bilinen teknik borç) |
+| `game/ui/main.gd` | Ana ekran: kurulum, gündem, kartlar, eylem paneli, akış; ~2550 satır (bölme süreci: `docs/TECH_DEBT.md`) |
+| `game/ui/menu.gd`, `modal.gd`, `end_screen.gd`, `autoplay.gd` | main.gd'den ayrılan bileşenler (`_init(main)`, `host`); main.gd onları `_menu`, `_modal`, `_end_overlay` olarak tutar |
 | `game/ui/ui_kit.gd` | Tema, palet, `box()`, `band_style()`, `ornament()`, `divider()`, `caps()`, `serif()`, `tr_upper()`, animasyon yardımcıları |
 | `game/ui/desk_view.gd` | Çalışma Masası (diegetik merkez); `LAYOUT`, `FEEL`, `LAMP_UV`; `desk_lit/desk_shadow.gdshader` |
 | `game/ui/city_view.gd`, `media_view.gd`, `cinema.gd`, `truth_chart.gd` | Başkent haritası, Medya Merkezi, sinematikler, hakikat grafiği |

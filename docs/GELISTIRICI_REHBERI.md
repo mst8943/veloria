@@ -16,7 +16,11 @@ game/
     events.json   Karar olayları (71)
     city_map.json (isteğe bağlı) harita bina konumları, yüzde olarak
   ui/
-    main.gd       Arayüz: menü, oyun ekranı, kartlar, sinematikler, oyun sonu
+    main.gd       Arayüz: oyun ekranı, gündem, kartlar, eylem paneli, akış
+    menu.gd       Ana menü (sayfalar, ayarlar, Hakkında/Nasıl Oynanır metinleri)
+    modal.gd      Bilgi/onay penceresi
+    end_screen.gd Oyun sonu ekranı (sekmeler, Hakikat Dosyası)
+    autoplay.gd   Otomatik oynatma testi (-- --autoplay)
     desk_view.gd  Çalışma Masası (art/desk/<id>.png varsa kullanır, yoksa kodla çizer)
     city_view.gd  Başkent Haritası (art/city_map.png varsa kullanır, yoksa kodla çizer)
     media_view.gd Medya Merkezi: iki gazete ve TV

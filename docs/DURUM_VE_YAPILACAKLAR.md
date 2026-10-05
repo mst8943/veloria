@@ -87,6 +87,8 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
   - Rüşvete azalan getiri: istismar botuyla ölçüldü, gerek yok (rüşvet botu Kolay %51 / Normal %40 / Zor %20; mahkeme yolu bedeli yaratıyor).
   - Aktör hamleleri (`docs/design/aktor_hamleleri.md`): 16 seçeneksiz `hamle_*` olayı; "HAMLE: ..." haberi, özet bölümünde portreyle; haber şeridi önceliği (kriz/alamet önce, hamle sonda). Prens hamleleri darbe hesabını bozduğu için işarete çevrildi. Ölçüt bot Kolay 80, Normal 41, Zor 27.
   - Testler: `event_check` seçeneksiz olayı ayrı denetler; `pacing_test` hamleleri saymaz; sim_test ulaşılabilirlik kontrolü aktör koşullarını da sağlar; `--full` UI testi dikkatli oynar (haftada en çok bir ödeme, krizde uzlaşma).
+- **Beşinci oturum (devam): main.gd bölme** — `docs/TECH_DEBT.md`.
+  - 3249 -> 2548 satır: `autoplay.gd`, `end_screen.gd`, `menu.gd`, `modal.gd`. Her adım ayrı commit, davranış aynı (`--full` aynı tohum/sonuç, görüntüler aynı). Desen ve sıradaki adımlar (gündem -> `agenda_view.gd`, kişi paneli -> `person_panel.gd`) belgede.
 
 ## Ölçülmüş denge (probe_template, 80 kampanya, darbe aşamalarından sonra)
 | Bot | Kolay | Normal | Zor |
