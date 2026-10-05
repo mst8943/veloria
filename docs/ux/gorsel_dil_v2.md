@@ -29,6 +29,7 @@ Referans: Crusader Kings III, Suzerain, Frostpunk. Ortak noktaları:
 | Alamet satırı | turuncu düz metin | koyu şerit, solda 3 px amber çizgi, sıcak açık amber metin; boşken gizli |
 | Rapor satırı | 4 kenar renkli | yalnızca sol 3 px renk çizgisi, zemin daha hafif |
 | Oyun sonu | başlık çıplak | başlık bandı (`band_style`) |
+| Gövde fontu | Godot'nun yedek fontu (Open Sans SemiBold, "motor varsayılanı" görünümü) | IBM Plex Sans Medium, kalın 680 (`UIKit.sans()`). Source Sans 3 denendi: küçük harf yüksekliği %10 düşük, 13 px metinler okunmaz oldu. Plex'in metrikleri yedek fonta yakın, boyutlara dokunulmadı |
 
 ## Kabul ölçütleri (ux-review)
 - Ekranlarda mor/mavi nötr kalmadı; menü düğmeleri sıcak kömür.

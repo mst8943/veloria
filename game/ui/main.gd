@@ -61,7 +61,8 @@ Yapay zekâ ile üretilmiş özgün görseller. Tüm karakterler ve kurumlar kur
 
 [b]Yazı tipi[/b]
 EB Garamond — Copyright 2017 The EB Garamond Project Authors (github.com/octaviopardo/EBGaramond12).
-SIL Open Font License 1.1 altında kullanılmıştır (lisans metni oyun dosyalarında: game/fonts/OFL.txt).
+IBM Plex Sans — Copyright 2017 IBM Corp. (github.com/IBM/plex).
+İkisi de SIL Open Font License 1.1 altında kullanılmıştır (lisans metinleri oyun dosyalarında: game/fonts/OFL.txt, game/fonts/OFL_IBMPlexSans.txt).
 
 [b]Oyun motoru[/b]
 Bu oyun Godot Engine ile yapılmıştır ve aşağıdaki lisans altında kullanılmaktadır:
@@ -614,6 +615,7 @@ func _build_ui() -> void:
 	var troot := Control.new()
 	troot.set_anchors_preset(Control.PRESET_FULL_RECT)
 	troot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	troot.theme = theme   # CanvasLayer temayı devretmez: bildirimler de aynı fontu kullansın
 	tl.add_child(troot)
 	troot.add_child(_toasts)
 
@@ -789,6 +791,7 @@ func _build_fx() -> void:
 	_curtain.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_curtain.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_curtain.modulate.a = 0.0
+	_curtain.theme = theme   # CanvasLayer temayı devretmez
 	_fx.add_child(_curtain)
 	# Haftanın olay görseli: perdenin arkasında yavaşça yakınlaşır (sinematik geçiş).
 	_curtain_img = TextureRect.new()

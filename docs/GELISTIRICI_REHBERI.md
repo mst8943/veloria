@@ -24,7 +24,7 @@ game/
     cinema.gd     Sinematik katman (bantlar, Ken Burns, altyazı)
     truth_chart.gd Oyun sonu grafiği
     *.gdshader    Atmosfer, başlık parıltısı, gazete baskısı, TV tarama çizgileri
-  fonts/          EB Garamond (OFL)
+  fonts/          EB Garamond (başlık) + IBM Plex Sans (gövde), ikisi de OFL
 art/
   portraits/      <karakter_id>.png
   events/         <olay_id>.png  (isteğe bağlı ikinci versiyon: <olay_id>_b.png)
@@ -167,4 +167,5 @@ Web sürümünü yerelde denemek için: `python -m http.server 8060 --directory 
 
 - Godot Engine: MIT (bildirim oyunun Hakkında ekranında)
 - EB Garamond: SIL OFL 1.1 (`game/fonts/OFL.txt`, build'e dahil)
+- IBM Plex Sans: SIL OFL 1.1 (`game/fonts/OFL_IBMPlexSans.txt`, build'e dahil: export `include_filter` `game/fonts/*.txt`)
 - Görseller: yapay zekâ ile üretilmiş özgün görseller

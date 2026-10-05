@@ -18,7 +18,27 @@ const OK := Color("7fae7a")
 const AMBER := Color("d08a3d")   # uyarı değil, dikkat: "çıkarı var" gibi
 
 const SERIF_PATH := "res://game/fonts/EBGaramond.ttf"
+const SANS_PATH := "res://game/fonts/IBMPlexSans.ttf"
 static var _serif: Font
+static var _sans := {}
+
+
+## Gövde fontu: gömülü IBM Plex Sans (değişken ağırlık). Metrikleri Godot'nun eski yedek fontuna
+## yakın, bu yüzden yazı boyutları değişmeden kalır. Koyu zeminde ince görünmesin diye varsayılan
+## ağırlık Medium. Dosya yoksa Godot'nun yedek fontu.
+static func sans(weight := 500, slant := false) -> Font:
+	var key := "%d%s" % [weight, "i" if slant else ""]
+	if not _sans.has(key):
+		if not ResourceLoader.exists(SANS_PATH):
+			return ThemeDB.fallback_font
+		var fv := FontVariation.new()
+		fv.base_font = load(SANS_PATH)
+		var ts := TextServerManager.get_primary_interface()
+		fv.variation_opentype = {ts.name_to_tag("wght"): weight}
+		if slant:
+			fv.variation_transform = Transform2D(Vector2(1, 0), Vector2(0.2, 1), Vector2.ZERO)
+		_sans[key] = fv
+	return _sans[key]
 
 
 ## Başlık fontu: oyuna gömülü EB Garamond (her platformda aynı görünüm); yoksa sistem serif fontu.
@@ -175,7 +195,11 @@ static func _check_tex(checked: bool) -> Texture2D:
 
 static func build_theme(mobile := false) -> Theme:
 	var t := Theme.new()
+	t.default_font = sans()
 	t.default_font_size = 18 if mobile else 15
+	t.set_font("bold_font", "RichTextLabel", sans(680))
+	t.set_font("italics_font", "RichTextLabel", sans(500, true))
+	t.set_font("bold_italics_font", "RichTextLabel", sans(680, true))
 	var bm := 15 if mobile else 12  # düğme iç boşluğu: mobilde daha büyük dokunma alanı
 	# Etiketler ve metin
 	t.set_color("font_color", "Label", TEXT)
