@@ -1425,6 +1425,15 @@ func _eligible(e: Dictionary) -> bool:
 	for fid in _as_array(e.get("needs_fact", [])):
 		if not facts.has(fid):
 			return false
+	# Oyuncunun geçmişi (Bedellerin Dönüşü): kaç rüşvet, yazılı emir, şantaj... (stats)
+	var smin: Dictionary = e.get("min_stat", {})
+	for k in smin:
+		if int(stats.get(k, 0)) < int(smin[k]):
+			return false
+	var smax: Dictionary = e.get("max_stat", {})
+	for k in smax:
+		if int(stats.get(k, 0)) > int(smax[k]):
+			return false
 	if e.get("needs_ready", false):
 		var any_ready := false
 		for a: Actor in actors.values():

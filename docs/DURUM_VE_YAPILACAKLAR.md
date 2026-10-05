@@ -74,6 +74,10 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
 - **Beşinci oturum (devam): Faz 0 güvence**
   - Kayıt sürümü: `Sim.SAVE_VERSION` (=2), `_migrate_save` (1 -> 2), `SAVE_REQUIRED` denetimi `new_game`'den önce; yeni sürüm/eksik alan/bozuk dosya çökmeden reddedilir, menüde nedeni pencerede gösterilir (`Sim.load_error`). Test: `tests/save_test.gd`.
   - Olay doğrulayıcısı: `tests/event_check.gd` (71 olay temiz). Kendisi de sınandı: bilerek bozulmuş kopyada 8 hatanın 8'i yakalandı (`-- --file=`).
+- **Beşinci oturum (devam): İkinci yıl paketi** — `docs/design/ikinci_yil.md`.
+  - 30 yeni olay (71 -> 101): Bedellerin Dönüşü (oyuncu geçmişine bağlı; yeni koşul `min_stat`/`max_stat`), Hesaplaşma (ordu muhtırası, Halden'in meclisi, çadır kent, soylular meclisi, Saray dosyası, gölge kabine), ortam olayları, iki zincir devamı. Hepsi mevcut görsellere bağlı.
+  - Tempo: 57–96 dilimleri 0,6 -> 0,8–1,1 olay/hafta. Denge (advice_weighted): Kolay 85, Normal 48, Zor 21 (bantta).
+  - Açık: kayıp çeşitliliği değişmedi (~%95 darbe). sim_test ulaşılabilirlik kontrolü `min_stat` ve `min_week`'i artık hesaba katıyor.
 
 ## Ölçülmüş denge (probe_template, 80 kampanya, darbe aşamalarından sonra)
 | Bot | Kolay | Normal | Zor |

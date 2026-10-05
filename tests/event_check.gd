@@ -12,7 +12,10 @@ const ACTOR := preload("res://game/core/actor.gd")
 const TOP_KEYS := ["id", "title", "text", "choices", "ignore", "fx", "art", "crisis", "advisors",
 	"min_week", "max_week", "chance", "once", "cooldown", "min_unrest", "max_unrest", "min_economy", "max_economy",
 	"min_opposition", "min_power", "needs_flag", "blocks_flag", "any_flag", "flag_age", "actor_min", "actor_max",
-	"alive", "needs_fact", "needs_ready"]
+	"alive", "needs_fact", "needs_ready", "min_stat", "max_stat"]
+## Sim.stats anahtarları (min_stat / max_stat koşulları)
+const STAT_KEYS := ["ops", "bribes", "promotes", "leaks", "dismissals", "written", "hints", "checks",
+	"investigations", "blackmails", "promises", "kept", "broken", "summons", "concessions"]
 const FX_KEYS := ["king", "unrest", "economy", "opp", "wealth", "actors", "fact", "flag", "leak", "remove",
 	"promise_keep", "promise_break", "promise_delay"]
 const FX_NUMBERS := ["king", "unrest", "economy", "opp", "wealth"]
@@ -136,6 +139,10 @@ func _check_event(e: Dictionary) -> void:
 					_check_prop(id, k, str(prop))
 	for aid in _arr(e.get("alive", [])):
 		_check_actor(id, "alive", str(aid))
+	for k in ["min_stat", "max_stat"]:
+		for st in e.get(k, {}):
+			if not st in STAT_KEYS:
+				errors.append("%s: %s bilinmeyen istatistik '%s'" % [id, k, st])
 	for fid in _arr(e.get("needs_fact", [])):
 		if not fact_ids.has(str(fid)):
 			errors.append("%s: needs_fact '%s' hiçbir olayda üretilmiyor, olay tetiklenmez" % [id, fid])

@@ -119,7 +119,12 @@ func _init() -> void:
 			sim.flags[fl] = 1
 		for fid in sim._as_array(e.get("needs_fact", [])):
 			sim._add_fact(fid, fid, "king", 10, ["voss"], 1)
+		sim.week = maxi(40, int(e.get("min_week", 0)))   # ikinci yıl olayları 40'tan sonra başlar
+		var saved_stats: Dictionary = sim.stats.duplicate()
+		for st in e.get("min_stat", {}):   # oyuncu geçmişi koşulu (botlar bu eylemleri az kullanır)
+			sim.stats[st] = int(e["min_stat"][st])
 		var ok_e: bool = sim._eligible(e)
+		sim.stats = saved_stats
 		print("   ulaşılabilir mi %s: %s" % [e["id"], ok_e])
 		if not ok_e:
 			ok = false

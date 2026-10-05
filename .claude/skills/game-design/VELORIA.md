@@ -28,7 +28,7 @@ Kaynak: `VELORIA — Oyun Tasarım Özeti.md` (958 satır, 30 bölüm) ve `CLAUD
 | `game/ui/desk_view.gd` | Çalışma Masası (diegetik merkez); `LAYOUT`, `FEEL`, `LAMP_UV`; `desk_lit/desk_shadow.gdshader` |
 | `game/ui/city_view.gd`, `media_view.gd`, `cinema.gd`, `truth_chart.gd` | Başkent haritası, Medya Merkezi, sinematikler, hakikat grafiği |
 | `game/data/actors.json` | 9 aktör: arden(ordu, military) voss(istihbarat) kessler(maliye) halden(medya) lena(basın, insider=false) dorn(kâhya) prens(royal) brandt(muhalefet, insider=false) falk(yargı) |
-| `game/data/events.json` | 71 olay (veri odaklı) |
+| `game/data/events.json` | 101 olay (veri odaklı; ikinci yıl paketi: `docs/design/ikinci_yil.md`) |
 | `art/` | Görseller; `ART_PROMPTS.md` üretim promptları + STİL BLOĞU |
 | `tests/` | `sim_test.gd`, `pacing_test.gd`, `cause_probe.gd`, `ui_shots.gd` (`unit_tests.gd` ve `ci-smoke.ps1` Beckett eklentisine ait, dokunma) |
 | `docs/` | `DURUM_VE_YAPILACAKLAR.md` (devir notu — her oturum sonunda güncelle), `OYUNCU_REHBERI.md`, `GELISTIRICI_REHBERI.md`, `ARAYUZ_PLANI.md` |
@@ -42,7 +42,7 @@ Kayıp: king_strength ≤ 0 (darbe ya da elit koalisyonu), unrest ≥ 100 (ayakl
 
 ## Olay şeması (`events.json`)
 Zorunlu: `id, title, text, choices[{label, text, fx}], ignore{text, fx}`.
-Koşullar: `min_week, max_week, chance, once, cooldown, min_unrest, max_unrest, min_economy, max_economy, min_opposition, min_power{aktör:değer}, needs_flag, blocks_flag, any_flag, flag_age{flag:hafta}, actor_min/actor_max{aktör:{özellik:değer}}, alive[], needs_fact[], needs_ready`.
+Koşullar: `min_week, max_week, chance, once, cooldown, min_unrest, max_unrest, min_economy, max_economy, min_opposition, min_power{aktör:değer}, needs_flag, blocks_flag, any_flag, flag_age{flag:hafta}, actor_min/actor_max{aktör:{özellik:değer}}, alive[], needs_fact[], needs_ready, min_stat/max_stat{istatistik:sayı}` (istatistikler `Sim.stats`: bribes, written, blackmails, promotes, broken, ops...; oyuncu geçmişine bağlı "Bedellerin Dönüşü" olayları için). Olay ekledikten sonra `event_check.gd`.
 Etkiler (`fx`): `king, unrest, economy, opp, wealth, actors{aktör:{özellik|l_<sadakat>: delta}}, fact{id,text,subject,severity,knowers}, flag, leak[], remove[], promise_keep/break/delay`.
 Seçim yapılınca bayrak `<olay_id>_<seçenek_index>` = hafta olarak yazılır (zincir olaylar bunu kullanır). Görsel: `art/events/<art|id>.png` (+ isteğe bağlı `_b`).
 
@@ -73,7 +73,15 @@ Godot (console): `C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4
 - Hafta ortasında oyun bitebilir (kriz). Test/bot döngülerinde `while mesai > 0` güvenli; çünkü `_end` mesaiyi sıfırlar.
 - Commit'te kullanıcının kendi değişikliklerini (`.mcp.json`, `BECKETT_SETUP.md`, `project.godot` token satırı, `CLAUDE.md`) katma. Push yok (origin Beckett'in deposu).
 
-## Ölçülmüş durum (2026-10-04, darbe aşamalarından sonra, `balance-check/probe_template.gd`, 80 kampanya)
+## Ölçülmüş durum (2026-10-06, ikinci yıl paketinden sonra, 101 olay, 80 kampanya)
+| Bot | Kolay | Normal | Zor |
+|---|---|---|---|
+| visible | 41% | 17% | 12% |
+| advice_weighted (ölçüt) | 85% | 48% | 21% |
+| visible_wise | 100% | 85% | 81% |
+Tempo: 57–96 arası her dilim ≥0,8 olay/hafta. Kayıplar hâlâ ~%95 darbe (açık konu: Faz 2 kayıp çeşitliliği).
+
+## Eski ölçüm (2026-10-04, darbe aşamalarından sonra, `balance-check/probe_template.gd`, 80 kampanya)
 | Bot | Kolay | Normal | Zor | Not |
 |---|---|---|---|---|
 | visible (görüşsüz, kararlar rastgele) | 56% | 23% | 15% | görüş ve alametlere bakmayan oyuncu |

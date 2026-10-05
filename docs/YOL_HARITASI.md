@@ -80,7 +80,7 @@ Baştan sona oynanabilir, sağlam bir dikey dilim (erken alfa): 104 hafta, 9 gü
 - ⬜ Kayıp çeşitliliği · ⬜ Rüşvete azalan getiri · ⬜ Hedefli "birbirine düşür" · ⬜ Aktörlerin kendi hamleleri
 - ✅ Denge hedefleri görünür bilgiye dayalı botla (hedefler güncellendi: ölçüt botu Kolay %70–85, Normal ~%45, Zor %15–30)
 
-**Faz 3 — Kampanya ve içerik:** ⬜ dönemler · ⬜ ikinci yıl için 20–30 olay · ⬜ hikâye yayları · ⬜ rejim tipi ve final tehdidi
+**Faz 3 — Kampanya ve içerik:** ✅ dönemler (Bedellerin Dönüşü / Hesaplaşma) · ✅ ikinci yıl için 30 olay (`docs/design/ikinci_yil.md`) · ⬜ hikâye yayları · ⬜ rejim tipi ve final tehdidi
 **Faz 4 — Büyük sistemler:** ⬜ devlet bütçesi/kapasitesi · ⬜ patronaj/oligark
 **Faz 5 — Cila ve altyapı:** ⬜ gerçek ses/müzik · ⬜ `main.gd`'yi bölmek (dokunulan yerlerde) · ⬜ artırımlı arayüz güncellemesi · ⬜ yerelleştirme
 
