@@ -170,6 +170,23 @@ func save_summary() -> String:
 	return "Hafta %d · %s" % [int(d.get("week", 1)), DIFFICULTY[diff_i]["name"]]
 
 
+## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
+## 1: sürüm alanı yokken (2026-10-06 öncesi) · 2: report_prev, week_changes
+const SAVE_VERSION := 2
+const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
+	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff"]
+var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
+
+
+## Eski bir kaydı bugünkü şemaya taşır (adım adım: 1 -> 2 -> ...).
+func _migrate_save(d: Dictionary, from: int) -> Dictionary:
+	if from < 2:
+		d["report_prev"] = d.get("report_prev", {})
+		d["week_changes"] = d.get("week_changes", [])
+	d["version"] = SAVE_VERSION
+	return d
+
+
 func save_game() -> bool:
 	if ended:
 		return false
@@ -181,7 +198,7 @@ func save_game() -> bool:
 		"fired": fired_events, "history": history, "pending": pending, "truth": truth_log, "karne": karne, "advice_log": advice_log,
 		"plot_log": plot_log, "coup_crisis": coup_crisis, "crisis_cooldown": crisis_cooldown,
 		"stats": stats, "rng": rng.state, "seed": rng.seed, "diff": difficulty, "promises": promises,
-		"timeline": timeline, "report_prev": report_prev, "week_changes": week_changes}
+		"timeline": timeline, "report_prev": report_prev, "week_changes": week_changes, "version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -190,12 +207,25 @@ func save_game() -> bool:
 
 
 func load_game() -> bool:
+	load_error = ""
 	if not has_save():
+		load_error = "Kayıtlı oyun bulunamadı."
 		return false
 	var f := FileAccess.open(save_path, FileAccess.READ)
-	var d: Variant = str_to_var(f.get_as_text())
+	var d: Variant = str_to_var(f.get_as_text()) if f else null
 	if not d is Dictionary:
+		load_error = "Kayıt dosyası okunamadı; bozulmuş olabilir."
 		return false
+	var version := int(d.get("version", 1))
+	if version > SAVE_VERSION:
+		load_error = "Bu kayıt oyunun daha yeni bir sürümüyle yapılmış. Oyunu güncelleyin."
+		return false
+	d = _migrate_save(d, version)
+	# Eksik alanlı bir kayıt, oyun yarıya kadar kurulduktan sonra hata vermesin: önce denetle.
+	for k in SAVE_REQUIRED:
+		if not d.has(k):
+			load_error = "Kayıt dosyası eksik ya da bozuk ('%s' yok)." % k
+			return false
 	new_game(int(d.get("seed", 1)), int(d.get("diff", 1)))
 	week = d["week"]
 	mesai = d["mesai"]

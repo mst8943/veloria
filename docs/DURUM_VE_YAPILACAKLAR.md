@@ -71,6 +71,9 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
   - Hatalar: ertelenen kararların "ERTELENDİ" haberi eklendiği anda siliniyordu (`weekly_news.clear()` sırası) — artık oyuncuya ulaşıyor. TV şeridi yalnızca OLAY satırlarını yayınlar (önceden söz ve soruşturma notları da sızıyordu). Kategori sekmesi koddan değişince iki sekme basılı kalıyordu.
   - Mekanik değişmedi: `--full` sonucu birebir aynı (tohum 101, aynı ünvan, 54 olay).
   - Yayın durdurma mührü yerleşti (`art/media/yayin_muhru.png`).
+- **Beşinci oturum (devam): Faz 0 güvence**
+  - Kayıt sürümü: `Sim.SAVE_VERSION` (=2), `_migrate_save` (1 -> 2), `SAVE_REQUIRED` denetimi `new_game`'den önce; yeni sürüm/eksik alan/bozuk dosya çökmeden reddedilir, menüde nedeni pencerede gösterilir (`Sim.load_error`). Test: `tests/save_test.gd`.
+  - Olay doğrulayıcısı: `tests/event_check.gd` (71 olay temiz). Kendisi de sınandı: bilerek bozulmuş kopyada 8 hatanın 8'i yakalandı (`-- --file=`).
 
 ## Ölçülmüş denge (probe_template, 80 kampanya, darbe aşamalarından sonra)
 | Bot | Kolay | Normal | Zor |

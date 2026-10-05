@@ -32,6 +32,8 @@ art/
   *.png           Masa, menü ve dört final sahnesi
   _arsiv/         Kullanılmayan görseller (.gdignore ile Godot dışı)
 tests/sim_test.gd Headless simülasyon, denge ve sistem testleri
+tests/event_check.gd  events.json doğrulayıcısı (şema, aktör/özellik adları, bayrak başvuruları)
+tests/save_test.gd    Kayıt sürümü ve göç testi
 tests/ui_shots.gd Arayüz ekran görüntüleri (oyun, menü sayfaları, oyun sonu sekmeleri)
 ART_PROMPTS.md    Tüm görsellerin üretim prompt'ları
 export_presets.cfg Windows, Linux, Web
@@ -95,6 +97,8 @@ Godot console exe ile:
 
 ```bash
 Godot_console.exe --headless --path . --script res://tests/sim_test.gd
+Godot_console.exe --headless --path . --script res://tests/event_check.gd   # olay ekleyince: EVENTS: OK
+Godot_console.exe --headless --path . --script res://tests/save_test.gd     # SAVE: OK
 ```
 
 Bu test 40'ar kampanyalık bot oyunlarıyla dengeyi ölçer (pasif, rastgele, dikkatli botlar), zorluk seviyelerini, kayıt/yükleme, şantaj, söz defteri, tarihçiler ve zincir olayların ulaşılabilirliğini kontrol eder. Testler oyuncunun kaydına ve arşivine dokunmaz.

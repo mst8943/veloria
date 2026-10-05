@@ -1681,6 +1681,8 @@ func _intro_shots() -> Array:
 func _continue() -> void:
 	if Sim.load_game():
 		_after_load("Kayıtlı oyun yüklendi (hafta %d)." % Sim.week)
+	else:
+		_show_modal("[b]Kayıt yüklenemedi[/b]\n\n%s\n\nYeni bir saltanat başlatabilirsin." % Sim.load_error)
 
 
 func _after_load(message: String) -> void:

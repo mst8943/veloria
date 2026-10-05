@@ -49,6 +49,8 @@ Seçim yapılınca bayrak `<olay_id>_<seçenek_index>` = hafta olarak yazılır 
 ## Komutlar
 Godot (console): `C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe` (aşağıda `$G`)
 - Simülasyon/denge: `"$G" --headless --path . --script res://tests/sim_test.gd` → sonda `TEST: OK`
+- Olay verisi doğrulayıcısı: `"$G" --headless --path . --script res://tests/event_check.gd` → `EVENTS: OK` (bilinmeyen anahtar/aktör/özellik, çözülemeyen bayrak, tutarsız hafta; **olay ekleyince/değiştirince çalıştır**). Başka dosya: `-- --file=<yol>`
+- Kayıt sürümü/göç: `"$G" --headless --path . --script res://tests/save_test.gd` → `SAVE: OK`
 - Tempo: `"$G" --headless --path . --script res://tests/pacing_test.gd`
 - Arayüz otomatik oynatma: `"$G" --headless --path . -- --autoplay` (`--mobile`, `--full` = Kolay'da 104 hafta)
 - Ekran görüntüsü (pencereli, headless çizmez): `"$G" --path . --script res://tests/ui_shots.gd -- --out=<klasör> [--mobile] [--only-desk|--only-world]` → PNG'leri Read ile incele
@@ -58,6 +60,8 @@ Godot (console): `C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4
 
 ## Tuzaklar (bilinenler)
 - `class_name` yerine `preload` kullan (editör önbelleği).
+- Kayıt şemasını değiştirince (`save_game` sözlüğüne alan ekleyince) `Sim.SAVE_VERSION`'ı artır, `_migrate_save`'e adım, `save_test.gd`'ye eski sürümü taklit eden adım ekle.
+- Olay motoru (`_apply_effects`, `_bump`) bilinmeyen anahtarı ve yanlış yazılmış aktör özelliğini hata vermeden yok sayar: `event_check.gd` bunun için var.
 - Web'de sistem font yedeği yok: ◆ ⏳ → ✓ ✗ gibi glifler kutu çıkar. Şekil gerekiyorsa çiz (Panel/draw_*).
 - Görünmez (modulate.a=0) Control'ler tıklama yutar; Beckett `ui_snapshot` → `occluded_by` ile tara.
 - Yapay `push_input` tıklama testi çalışmıyor; düğmeyi `pressed.emit()` ile tetikle.

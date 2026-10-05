@@ -67,7 +67,7 @@ Baştan sona oynanabilir, sağlam bir dikey dilim (erken alfa): 104 hafta, 9 gü
 **Faz 0 — Güvence**
 1. 👤 Kendi deponu aç (bağlamayı ben yaparım)
 2. ✅ Boş masa görseli
-3. ⬜ Kayıt sürüm alanı + göç; ⬜ `events.json` doğrulayıcısı
+3. ✅ Kayıt sürüm alanı + göç (`Sim.SAVE_VERSION`, `tests/save_test.gd`); ✅ `events.json` doğrulayıcısı (`tests/event_check.gd`)
 4. ✅ Görünür bilgiyle oynayan bot (+ danışman botları, `--bots=` süzgeci)
 
 **Faz 1 — Okunabilirlik ve geri bildirim**
@@ -87,4 +87,4 @@ Baştan sona oynanabilir, sağlam bir dikey dilim (erken alfa): 104 hafta, 9 gü
 ## 5. Sıradaki
 1. ✅ Arayüz sadeleştirme turu (ilk ekran kalabalık) — `docs/ux/ana_ekran_sadelestirme.md`
 2. ✅ Faz 1'in kalanı: değişim okları + hafta özeti, eylem önizlemesi
-3. Faz 0: kayıt sürümü, olay doğrulayıcısı; 👤 depo
+3. ✅ Faz 0: kayıt sürümü, olay doğrulayıcısı; 👤 depo (kullanıcıda)
