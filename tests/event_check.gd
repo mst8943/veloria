@@ -15,7 +15,7 @@ const TOP_KEYS := ["id", "title", "text", "choices", "ignore", "fx", "art", "cri
 	"alive", "needs_fact", "needs_ready", "min_stat", "max_stat"]
 ## Sim.stats anahtarları (min_stat / max_stat koşulları)
 const STAT_KEYS := ["ops", "bribes", "promotes", "leaks", "dismissals", "written", "hints", "checks",
-	"investigations", "blackmails", "promises", "kept", "broken", "summons", "concessions"]
+	"investigations", "blackmails", "promises", "kept", "broken", "summons", "concessions", "street_concessions", "legal_concessions"]
 const FX_KEYS := ["king", "unrest", "economy", "opp", "wealth", "actors", "fact", "flag", "leak", "remove",
 	"promise_keep", "promise_break", "promise_delay"]
 const FX_NUMBERS := ["king", "unrest", "economy", "opp", "wealth"]

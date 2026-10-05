@@ -16,10 +16,13 @@ extends SceneTree
 ##   advice_weighted  visible + meclis oylarını toplar (öneri +1, uyarı −1, ÇIKARI VAR yarım), kaçamakta rastgele
 ##   advice_quiet     advice_weighted ama alametlere (şüphe göstergesine) tepki vermez (teşhis için)
 ##   advice_kessler   visible + Kessler konuşuyorsa ona, yoksa advice_weighted gibi (baskın strateji kontrolü)
+##   advice_soft      advice_weighted ama sokağı hiç bastırmaz (huzura çağırır/doğrular): sokak yolunu ölçer
+##   advice_dirty     advice_weighted ama yazılı emir, araştırma ve şantaj kullanır: mahkeme yolunu ölçer
 
 var sim: Node
 var rng := RandomNumberGenerator.new()
-const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "visible_wise", "omniscient"]
+const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "visible_wise", "omniscient"]
+var style := ""   # advice_soft / advice_dirty oyun tarzı
 
 
 func _initialize() -> void:
@@ -93,6 +96,7 @@ func _play(bot: String) -> void:
 		"omniscient":
 			_act_omniscient()
 		_:
+			style = "soft" if bot == "advice_soft" else ("dirty" if bot == "advice_dirty" else "")
 			_act_visible(bot.begins_with("advice_") and bot != "advice_quiet")
 
 
@@ -109,7 +113,7 @@ func _decide(bot: String) -> void:
 		elif bot in ["visible_wise", "omniscient"]:
 			ci = _wise_choice(ev)
 		elif bot.begins_with("advice_"):
-			ci = _advice_choice(bot, sim.advice_for(0), ci)
+			ci = _advice_choice("advice_weighted" if bot in ["advice_soft", "advice_dirty"] else bot, sim.advice_for(0), ci)
 		sim.resolve_decision(0, ci)
 
 
@@ -141,16 +145,17 @@ func _advice_choice(bot: String, adv: Array, fallback: int) -> int:
 	return best
 
 
-## Darbe krizi: görüşsüz bot rastgele; danışman botları kart metnindeki ipuçlarına (muhafız/sokak) bakar;
-## bilge bot gerçek olasılıklara bakar. Seçenekler: 0 topla, 1 taviz, 2 halka seslen.
+## Kriz kartı: görüşsüz bot rastgele; danışman botları kart metnindeki ipuçlarına (muhafız/sokak) bakar;
+## bilge bot gerçek olasılıklara bakar. Seçenekler: 0 güç kullan, 1 taviz/uzlaş, 2 halka/meclise git.
+## (Sokak ve mahkeme krizlerinde bilge bot da ipuçlarını kullanır.)
 func _crisis_choice(bot: String, ev: Dictionary, fallback: int) -> int:
-	if bot in ["visible_wise", "omniscient"]:
+	if bot in ["visible_wise", "omniscient"] and str(ev.get("crisis_kind", "coup")) == "coup":
 		var r: float = sim.crisis_chance("rally")
 		var a: float = sim.crisis_chance("appeal")
 		if maxf(r, a) < 0.4:
 			return 1
 		return 0 if r >= a else 2
-	if not bot.begins_with("advice_"):
+	if not bot.begins_with("advice_") and not bot in ["visible_wise", "omniscient"]:
 		return fallback
 	var cues: Dictionary = ev.get("cues", {})
 	if int(cues.get("guard", 0)) >= 2:
@@ -212,8 +217,17 @@ func _act_visible(alert := false) -> void:
 				worst = r
 		var src: String = worst.get("source", "")
 		if src != "" and sim.actors.has(src) and int(worst.get("band", 0)) >= 1:
-			if src in ["press", "lena"] and sim.actors.has("arden"):
-				sim.order("arden", "bastir", "sozlu")
+			if src in ["press", "lena"] and sim.actors.has("arden") and style == "soft":
+				if sim.summon_wait(src) == 0:
+					sim.summon(src)
+				else:
+					sim.cross_check(src)
+			elif src in ["press", "lena"] and sim.actors.has("arden"):
+				sim.order("arden", "bastir", "yazili" if style == "dirty" else "sozlu")
+			elif style == "dirty" and sim.actors[src].known_weak and sim.actors[src].blackmailed == 0:
+				sim.blackmail(src)
+			elif style == "dirty" and not sim.actors[src].known_weak:
+				sim.investigate(src)
 			elif sim.private_wealth >= 5.0:
 				sim.bribe(src)
 			else:

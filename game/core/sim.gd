@@ -96,6 +96,10 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 	weekly_news.clear()
 	report_prev.clear()
 	week_changes.clear()
+	street_anger = 0.0
+	legal_relief = 0.0
+	other_crisis = {}
+	warned = {}
 	promises.clear()
 	timeline.clear()
 	stats = {"ops": 0, "bribes": 0, "promotes": 0, "leaks": 0, "dismissals": 0, "written": 0, "hints": 0, "checks": 0,
@@ -171,8 +175,8 @@ func save_summary() -> String:
 
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
-## 1: sürüm alanı yokken (2026-10-06 öncesi) · 2: report_prev, week_changes
-const SAVE_VERSION := 2
+## 1: sürüm alanı yokken (2026-10-06 öncesi) · 2: report_prev, week_changes · 3: sokak öfkesi, sokak/mahkeme krizi
+const SAVE_VERSION := 3
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
@@ -183,6 +187,11 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 	if from < 2:
 		d["report_prev"] = d.get("report_prev", {})
 		d["week_changes"] = d.get("week_changes", [])
+	if from < 3:
+		d["street_anger"] = d.get("street_anger", 0.0)
+		d["legal_relief"] = d.get("legal_relief", 0.0)
+		d["other_crisis"] = d.get("other_crisis", {})
+		d["warned"] = d.get("warned", {})
 	d["version"] = SAVE_VERSION
 	return d
 
@@ -198,7 +207,9 @@ func save_game() -> bool:
 		"fired": fired_events, "history": history, "pending": pending, "truth": truth_log, "karne": karne, "advice_log": advice_log,
 		"plot_log": plot_log, "coup_crisis": coup_crisis, "crisis_cooldown": crisis_cooldown,
 		"stats": stats, "rng": rng.state, "seed": rng.seed, "diff": difficulty, "promises": promises,
-		"timeline": timeline, "report_prev": report_prev, "week_changes": week_changes, "version": SAVE_VERSION}
+		"timeline": timeline, "report_prev": report_prev, "week_changes": week_changes,
+		"street_anger": street_anger, "legal_relief": legal_relief, "other_crisis": other_crisis, "warned": warned,
+		"version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -258,6 +269,10 @@ func load_game() -> bool:
 	_generate_reports()
 	report_prev = d.get("report_prev", {})   # _generate_reports'un üzerine yazdığı geçen hafta
 	week_changes = d.get("week_changes", [])
+	street_anger = float(d.get("street_anger", 0.0))
+	legal_relief = float(d.get("legal_relief", 0.0))
+	other_crisis = d.get("other_crisis", {})
+	warned = d.get("warned", {})
 	changed.emit()
 	return true
 
@@ -391,7 +406,9 @@ func order(id: String, task: String, channel: String) -> String:
 	var text := ""
 	match task:
 		"bastir":
-			unrest = maxf(0.0, unrest - 14.0 * fidelity)
+			# Bastırmak borçtur: öfke biriktirir, öfke arttıkça bastırma daha az işe yarar (kayip_cesitliligi.md).
+			unrest = maxf(0.0, unrest - 14.0 * fidelity * (1.0 - street_anger / 150.0))
+			street_anger = minf(100.0, street_anger + STREET_ANGER_GAIN * fidelity)
 			a.power += 6.0 * fidelity
 			a.obligation += 5.0 * fidelity
 			if fidelity > 1.1:
@@ -784,9 +801,10 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 	if e.get("crisis", false):
 		pending.remove_at(pending_index)
 		history.append("Hafta %d — %s » %s" % [week, e["title"], ch["label"]])
-		var crisis_text := _resolve_crisis(str(ch.get("crisis", "")))
-		if coup_crisis.get("failed", false):
-			end_week()  # kapılar açıldı: darbe bu gece olur
+		var kind := str(e.get("crisis_kind", "coup"))
+		var crisis_text := _resolve_crisis(str(ch.get("crisis", ""))) if kind == "coup" else _resolve_other(str(ch.get("crisis", "")))
+		if coup_crisis.get("failed", false) or other_crisis.get("failed", false):
+			end_week()  # kapılar açıldı: kriz bu gece sonuçlanır
 		changed.emit()
 		return crisis_text
 	_log_advice(e, advice_for(pending_index), choice_index)
@@ -1219,6 +1237,7 @@ func end_week() -> void:
 	_fire_events()
 	_tick_promises()
 	_run_cascade()
+	_check_crises()
 	_plot_signs()
 	_generate_reports()
 	_record_timeline()
@@ -1271,6 +1290,8 @@ func _diff_visible(b: Dictionary, n: Dictionary) -> Array:
 			out.append({"tone": -1, "actor": "", "text": s.substr(8)})
 		elif s.begins_with("KULİS: "):
 			out.append({"tone": 0, "actor": "", "text": s.substr(7)})
+		elif s.begins_with("SOKAK: ") or s.begins_with("MAHKEME: "):
+			out.append({"tone": -1, "actor": "", "text": s.substr(s.find(" ") + 1)})
 	for id in b["people"]:
 		var p0: Dictionary = b["people"][id]
 		var name: String = p0["name"]
@@ -1340,6 +1361,8 @@ func _world_tick() -> void:
 	var opp_push := (unrest - 40.0) * 0.05 + (brandt.power * 0.01 if brandt else 0.0) - 0.15
 	opposition = clampf(opposition + opp_push, 0.0, 100.0)
 	unrest = clampf(unrest + rng.randf_range(-3.0, 3.0) + (50.0 - economy) * 0.05 + (opposition - 40.0) * 0.01 - (unrest - 30.0) * 0.06, 0.0, 100.0)
+	street_anger *= STREET_ANGER_DECAY
+	unrest = clampf(unrest + street_anger * STREET_FEED, 0.0, 100.0)
 	economy = clampf(economy + rng.randf_range(-2.5, 2.8) - unrest * 0.02 + (55.0 - economy) * 0.03, 0.0, 100.0)
 	king_strength = clampf(king_strength - unrest * 0.012 - opposition * 0.004 + (economy - 50.0) * 0.01 + 0.4, 0.0, 100.0)
 	private_wealth += _diff("income")  # sivil liste ödeneği
@@ -1718,6 +1741,7 @@ func _crisis_event(lead: Actor) -> Dictionary:
 	var guard_t: String = ["Muhafız komutanı çağrılarına cevap vermiyor.", "Muhafızların bir kısmı tereddütte.", "Saray muhafızları sana bağlı görünüyor."][guard_b]
 	var street_t: String = ["Sokak öfkeli; meydanlar senin için dolmayabilir.", "Sokak tedirgin; kimse kimin kazanacağını bilmiyor.", "Sokaklar sakin; halk sana hâlâ kulak verir."][street_b]
 	return {"id": "darbe_krizi", "art": "general_atamalari" if lead.military else "gizli_toplanti", "crisis": true, "advisors": [],
+		"crisis_kind": "coup", "banner": "DARBE GİRİŞİMİ — bu hafta karar vermezsen saray düşer.",
 		"title": "Darbe kapıda",
 		"text": "%s\n%s %s%s" % [opening, guard_t, street_t,
 			"" if int(stats.get("concessions", 0)) == 0 else " Bir kez boyun eğdin; bu kez sözüne inanmayabilirler."],
@@ -1732,7 +1756,7 @@ func _crisis_event(lead: Actor) -> Dictionary:
 func _close_crisis() -> void:
 	coup_crisis = {}
 	for i in range(pending.size() - 1, -1, -1):
-		if pending[i]["event"].get("crisis", false):
+		if pending[i]["event"].get("crisis", false) and str(pending[i]["event"].get("crisis_kind", "coup")) == "coup":
 			pending.remove_at(i)
 
 
@@ -1808,6 +1832,220 @@ func _resolve_crisis(action: String) -> String:
 			return "Balkona çıktığında meydan yarı boştu. Gelenler de senin için değil, ne olacağını görmek için gelmişti."
 
 
+# ---------------------------------------------------------------- Sokak ve mahkeme krizleri (docs/design/kayip_cesitliligi.md)
+
+const STREET_ANGER_GAIN := 8.0     # bastırma emri başına öfke (× uygulama)
+const STREET_ANGER_DECAY := 0.93   # haftalık sönme
+const STREET_FEED := 0.03          # öfkenin huzursuzluğu haftalık beslemesi
+const UPRISING_AT := 54.0          # ayaklanma krizi eşiği (huzursuzluk); ölçüt botta en yüksek huzursuzluk medyan 38, en kötü 61
+const LEGAL_CRISIS_AT := 40.0      # yetki krizi eşiği (yargı baskısı); ölçüt botta en yüksek medyan 28, en kötü 47
+const STREET_WARN_AT := 46.0
+const LEGAL_WARN_AT := 32.0
+const OTHER_CONCEDE := [0.85, 0.5, 0.25]   # kabul/uzlaşma: ilki büyük olasılıkla tutar, sonrakilere daha az inanılır
+
+var street_anger := 0.0            # bastırmanın biriktirdiği öfke (gizli)
+var legal_relief := 0.0            # uzlaşma/tasfiye/pazarlıkla düşülen yargı baskısı
+var other_crisis: Dictionary = {}  # {kind: "street"|"legal", week, failed?}
+var warned: Dictionary = {}        # işaret satırları bir kez: {"street": true, "legal": true}
+
+
+func _check_crises() -> void:
+	if ended:
+		return
+	# Açık kriz bir hafta içinde çözülmediyse ya da seçilen yol başarısız olduysa sonuçlanır.
+	if not other_crisis.is_empty() and (other_crisis.get("failed", false) or week > int(other_crisis["week"])):
+		var kind := str(other_crisis["kind"])
+		_close_other()
+		if crisis_note == "":
+			crisis_note = "Kriz kapına dayandığında karar veremedin."
+		if kind == "street":
+			unrest = 100.0
+		else:
+			flags["YETKI_KAYBI"] = week
+		return
+	# İşaretler (tohum -> işaret): eşiğe yaklaşınca bir kez haber; geri çekilince yeniden kurulur.
+	var lp := legal_pressure()
+	if unrest >= STREET_WARN_AT and not warned.get("street", false):
+		warned["street"] = true
+		weekly_news.append("SOKAK: Meydanlardaki kalabalık her gün büyüyor; artık dağılmıyorlar.")
+	elif unrest < STREET_WARN_AT - 10.0:
+		warned.erase("street")
+	if lp >= LEGAL_WARN_AT and not warned.get("legal", false):
+		warned["legal"] = true
+		weekly_news.append("MAHKEME: Savcılar saraya dair dosyaları tek bir soruşturmada topluyor.")
+	elif lp < LEGAL_WARN_AT - 10.0:
+		warned.erase("legal")
+	if not other_crisis.is_empty() or not coup_crisis.is_empty():
+		return
+	if week < int(_diff("grace")) or week < crisis_cooldown:
+		return
+	if unrest >= UPRISING_AT:
+		_open_other("street")
+	elif lp >= LEGAL_CRISIS_AT:
+		_open_other("legal")
+
+
+func other_chance(action: String) -> float:
+	var odds := _diff("crisis_odds")
+	match action:
+		"force":
+			return clampf((0.25 + _army_loyalty() / 200.0 - street_anger / 200.0 + (king_strength - 50.0) / 200.0) * odds, 0.05, 0.85)
+		"appeal":
+			return clampf((0.5 + (king_strength - 50.0) / 100.0 - street_anger / 150.0 - opposition / 300.0) * odds, 0.05, 0.8)
+		"purge":
+			return clampf((0.55 - opposition / 200.0 - _public_weakness()) * odds, 0.05, 0.8)
+		"bargain":
+			return clampf((0.6 - opposition / 100.0) * odds, 0.05, 0.75)
+	# concede / testify
+	var key := "street_concessions" if action == "concede" else "legal_concessions"
+	return float(OTHER_CONCEDE[mini(int(stats.get(key, 0)), OTHER_CONCEDE.size() - 1)])
+
+
+func _open_other(kind: String) -> void:
+	other_crisis = {"kind": kind, "week": week}
+	var e := _street_event() if kind == "street" else _legal_event()
+	pending.insert(0, {"event": e, "age": 0})
+	weekly_news.append("KRİZ: Meydanlar ayakta; sokak sarayın kapısında." if kind == "street"
+		else "KRİZ: Mahkeme kralın yetkilerini askıya almayı görüşüyor.")
+
+
+func _band3(p: float, hi: float, mid: float) -> int:
+	return 2 if p >= hi else (1 if p >= mid else 0)
+
+
+func _street_event() -> Dictionary:
+	var force_b := _band3(other_chance("force"), 0.5, 0.3)
+	var appeal_b := _band3(other_chance("appeal"), 0.45, 0.25)
+	var army_t: String = ["Komutanlar halka ateş açma emrini tartışıyor; kimse ilk adımı atmak istemiyor.", "Ordu emir bekliyor, ama emri kimin vereceğini merak ediyor.", "Birlikler hazır; sana bağlı görünüyorlar."][force_b]
+	var street_t: String = ["Kalabalık artık senin adını değil, sloganlarını haykırıyor.", "Kalabalık öfkeli ama dinlemeye hazır görünenler var.", "Kalabalığın çoğu hâlâ senden bir söz bekliyor."][appeal_b]
+	return {"id": "ayaklanma_krizi", "art": "genel_grev", "crisis": true, "crisis_kind": "street", "advisors": [],
+		"banner": "AYAKLANMA — bu hafta karar vermezsen saray düşer.",
+		"title": "Sokaklar ayakta",
+		"text": "Başkentin bütün meydanları dolu. Barikatlar sarayın üç sokak ötesinde. Lena'nın gazetesi tek kelimelik bir manşet attı: 'Yeter.'\n%s %s%s" % [army_t, street_t,
+			"" if int(stats.get("street_concessions", 0)) == 0 else " Daha önce taleplerini kabul ettiğini söylemiştin; bu kez sözüne inanmayabilirler."],
+		"cues": {"guard": force_b, "street": appeal_b},
+		"choices": [
+			{"label": "Orduyu sokağa sür", "crisis": "force", "fx": {}},
+			{"label": "Taleplerini kabul et", "crisis": "concede", "fx": {}},
+			{"label": "Meydana in, halkla konuş", "crisis": "appeal", "fx": {}}],
+		"ignore": {"text": "Karar verilmedi. Barikatlar sarayın kapısına ulaştı.", "fx": {}}}
+
+
+func _legal_event() -> Dictionary:
+	var purge_b := _band3(other_chance("purge"), 0.45, 0.25)
+	var bargain_b := _band3(other_chance("bargain"), 0.45, 0.25)
+	var judge := "Yargıç Falk" if actors.has("falk") else "Yüksek Mahkeme Başkanı"
+	var court_t: String = ["Mahkemenin arkasında meclis ve sokak var; tasfiyeye kimse seyirci kalmaz.", "Mahkeme bölünmüş; bazı yargıçlar senden bir işaret bekliyor.", "Mahkeme yalnız; arkasında duran pek kimse yok."][purge_b]
+	var house_t: String = ["Muhalefet meclisi elinde tutuyor; pazarlığa ihtiyacı yok.", "Mecliste kararsız sıralar var.", "Meclis bölünmüş; bir dokunulmazlık yasası geçebilir."][bargain_b]
+	return {"id": "yetki_krizi", "art": "yargic_dosya", "crisis": true, "crisis_kind": "legal", "advisors": [],
+		"banner": "YETKİ KRİZİ — bu hafta karar vermezsen yetkilerin elinden alınır.",
+		"title": "Mahkeme yetkilerini askıya almayı görüşüyor",
+		"text": "%s biriken dosyaları tek bir kararla birleştirdi: kralın yetkileri, soruşturma bitene kadar meclise devredilecek. Karar yarın okunacak.\n%s %s%s" % [judge, court_t, house_t,
+			"" if int(stats.get("legal_concessions", 0)) == 0 else " Daha önce mahkemeyle uzlaştın; bu kez yalnızca sözünle yetinmeyebilirler."],
+		"cues": {"guard": purge_b, "street": bargain_b},
+		"choices": [
+			{"label": "Mahkemeyi tasfiye et", "crisis": "purge", "fx": {}},
+			{"label": "İfade ver, mahkemeyle uzlaş", "crisis": "testify", "fx": {}},
+			{"label": "Meclisle dokunulmazlık pazarlığı yap", "crisis": "bargain", "fx": {}}],
+		"ignore": {"text": "Karar verilmedi. Mahkeme kararını okudu.", "fx": {}}}
+
+
+func _close_other() -> void:
+	other_crisis = {}
+	for i in range(pending.size() - 1, -1, -1):
+		var k := str(pending[i]["event"].get("crisis_kind", ""))
+		if pending[i]["event"].get("crisis", false) and k != "coup" and k != "":
+			pending.remove_at(i)
+
+
+func _fail_other(note: String) -> void:
+	other_crisis["failed"] = true
+	crisis_note = note
+
+
+func _resolve_other(action: String) -> String:
+	crisis_cooldown = week + CRISIS_COOLDOWN
+	var kind := str(other_crisis.get("kind", ""))
+	var ok := rng.randf() < other_chance(action)
+	match action:
+		"force":
+			if not ok:
+				_fail_other("Ayaklanma gecesi orduyu sokağa sürdün; askerler kalabalığa katıldı.")
+				return "Askerler barikata vardı ve durdu. Biri miğferini çıkardı; sonra hepsi."
+			_close_other()
+			unrest = clampf(unrest - 30.0, 0.0, 100.0)
+			street_anger = minf(100.0, street_anger + 20.0)
+			if actors.has("arden"):
+				actors["arden"].power += 8.0
+			_add_fact("kanli_gece_%d" % week, "Ayaklanmanın ordu eliyle kanlı bastırılması", "king", 45, ["arden", "lena", "brandt"], 1)
+			return "Meydanlar sabaha temizlendi. Kimse sayıyı söylemiyor; herkes biliyor."
+		"concede":
+			if not ok:
+				_fail_other("Ayaklanma gecesi yine söz verdin; kimse inanmadı.")
+				return "Talepleri kabul ettiğini duyurdun. Meydandan gelen cevap bir kahkahaydı."
+			_close_other()
+			stats["street_concessions"] = int(stats.get("street_concessions", 0)) + 1
+			unrest = clampf(unrest - 25.0, 0.0, 100.0)
+			street_anger = maxf(0.0, street_anger - 30.0)
+			economy = clampf(economy - 10.0, 0.0, 100.0)
+			king_strength = clampf(king_strength - 6.0, 0.0, 100.0)
+			opposition = clampf(opposition + 6.0, 0.0, 100.0)
+			return "Fiyatlar donduruldu, iki bakan istifa etti. Barikatlar söküldü; muhalefet bu geceyi zafer sayıyor."
+		"appeal":
+			if not ok:
+				_fail_other("Ayaklanma gecesi meydana indin; kalabalık seni dinlemedi.")
+				return "Meydana indiğinde sesin uğultuda kayboldu. Muhafızların seni geri çekmesi gerekti."
+			_close_other()
+			unrest = clampf(unrest - 18.0, 0.0, 100.0)
+			street_anger = maxf(0.0, street_anger - 10.0)
+			king_strength = clampf(king_strength + 3.0, 0.0, 100.0)
+			return "Meydanda konuştun. Kalabalık önce sustu, sonra dağıldı. Bu gece kimse kazanmadı; kimse de kaybetmedi."
+		"purge":
+			if not ok:
+				_fail_other("Yetki krizinde mahkemeyi tasfiye etmeye kalktın; meclis ve sokak mahkemenin arkasında durdu.")
+				return "Tasfiye kararnamesini meclis bir saat içinde iptal etti. Yargıçlar kürsüde, sen saraydasın; ama ne kadar?"
+			_close_other()
+			legal_relief += 45.0
+			if actors.has("falk"):
+				flags["FALK_GITTI"] = week
+				actors.erase("falk")
+			opposition = clampf(opposition + 8.0, 0.0, 100.0)
+			unrest = clampf(unrest + 6.0, 0.0, 100.0)
+			_add_fact("yargi_tasfiyesi_%d" % week, "Yüksek Mahkemenin tasfiye edilmesi", "king", 40, ["brandt", "lena"], 1)
+			return "Yeni yargıçlar yemin etti. Dosyalar rafa kalktı; ama rafın nerede olduğunu herkes biliyor."
+		"testify":
+			if not ok:
+				_fail_other("Yetki krizinde mahkemeyle yeniden uzlaşmaya çalıştın; bu kez sözüne itibar edilmedi.")
+				return "İfade verdin. Yargıçlar dinledi, not aldı ve kararı yine de okudu."
+			_close_other()
+			stats["legal_concessions"] = int(stats.get("legal_concessions", 0)) + 1
+			legal_relief += 30.0
+			king_strength = clampf(king_strength - 12.0, 0.0, 100.0)
+			return "Mahkemede saatlerce ifade verdin. Karar ertelendi; tacın ağırlığı bir parça hafifledi, bir parça da azaldı."
+		_:  # bargain
+			if not ok:
+				_fail_other("Yetki krizinde meclisle dokunulmazlık pazarlığına girdin; meclis pazarlığı reddetti.")
+				return "Dokunulmazlık yasası oylamada düştü. Muhalefet sıralarında alkış vardı."
+			_close_other()
+			legal_relief += 35.0
+			private_wealth = maxf(0.0, private_wealth - 5.0)
+			opposition = clampf(opposition + 5.0, 0.0, 100.0)
+			return "Dokunulmazlık yasası birkaç oy farkla geçti. Bazı vekiller bu hafta yeni arabalarla geldi."
+	return ""
+
+
+## Ekranda gösterilecek açık kriz şeridi ("" yoksa).
+func active_crisis_label() -> String:
+	if not coup_crisis.is_empty():
+		return "DARBE GİRİŞİMİ"
+	match str(other_crisis.get("kind", "")):
+		"street":
+			return "AYAKLANMA"
+		"legal":
+			return "YETKİ KRİZİ"
+	return ""
+
+
 func _public_weakness() -> float:
 	var s := 0.0
 	for f: Dictionary in facts.values():
@@ -1839,11 +2077,11 @@ func legal_pressure() -> float:
 		if f.get("public", false):
 			w = maxf(0.4, 1.0 - float(week - int(f.get("public_week", week))) / 50.0)
 		s += float(f["severity"]) * w
-	return clampf(s / 2.4, 0.0, 100.0)
+	return clampf(s / 2.4 - legal_relief, 0.0, 100.0)
 
 
 func _check_end() -> void:
-	if king_strength <= 0.0 or unrest >= 100.0 or legal_pressure() >= 100.0:
+	if king_strength <= 0.0 or unrest >= 100.0 or legal_pressure() >= 100.0 or flags.has("YETKI_KAYBI"):
 		_end(false)
 	elif week > MAX_WEEKS:
 		_end(true)
@@ -1873,8 +2111,12 @@ func _end(survived: bool) -> void:
 				cause += " " + crisis_note
 		elif unrest >= 100.0:
 			cause = "Saltanatının %d. haftasında halk ayaklanması sarayı kuşattı." % (week - 1)
-		elif legal_pressure() >= 100.0:
+			if crisis_note != "":
+				cause += " " + crisis_note
+		elif legal_pressure() >= 100.0 or flags.has("YETKI_KAYBI"):
 			cause = "Saltanatının %d. haftasında Meclis ve yüksek mahkeme, biriken skandallar nedeniyle seni yetkisiz bıraktı." % (week - 1)
+			if crisis_note != "":
+				cause += " " + crisis_note
 		else:
 			cause = "Saltanatının %d. haftasında elit koalisyonu desteğini çekti; tahtta kimse seni savunmadı." % (week - 1)
 	else:

@@ -78,6 +78,11 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
   - 30 yeni olay (71 -> 101): Bedellerin Dönüşü (oyuncu geçmişine bağlı; yeni koşul `min_stat`/`max_stat`), Hesaplaşma (ordu muhtırası, Halden'in meclisi, çadır kent, soylular meclisi, Saray dosyası, gölge kabine), ortam olayları, iki zincir devamı. Hepsi mevcut görsellere bağlı.
   - Tempo: 57–96 dilimleri 0,6 -> 0,8–1,1 olay/hafta. Denge (advice_weighted): Kolay 85, Normal 48, Zor 21 (bantta).
   - Açık: kayıp çeşitliliği değişmedi (~%95 darbe). sim_test ulaşılabilirlik kontrolü `min_stat` ve `min_week`'i artık hesaba katıyor.
+- **Beşinci oturum (devam): Kayıp çeşitliliği** — `docs/design/kayip_cesitliligi.md`.
+  - Teşhis: ayaklanma ve yetkisizlik yolları ölüydü (eşik 100, aktif oyuncuda en yüksek huzursuzluk ~40, yargı baskısı ~30). Bastırma bedelsizdi, her yol Arden'in darbesine çıkıyordu.
+  - Sokak öfkesi (bastırma borçtur), ayaklanma krizi (huzursuzluk ≥ 54), yetki krizi (yargı baskısı ≥ 40); darbe kartı kalıbında, o hafta çözülmezse düşüş. SOKAK/MAHKEME uyarı satırları, Bastır önizlemesinde öfke uyarısı. Kayıt sürümü 3.
+  - Sonuç: kayıp oyun tarzına bağlı (kirli %16, yumuşak %11, bastıran %4 darbe dışı). Ölçüt bot Kolay 81, Normal 40, Zor 18 (bantta). Sondaja `advice_soft` / `advice_dirty` botları eklendi.
+  - Açık: darbe hâlâ baskın; daha fazla çeşitlilik için darbe sıklığının kendisi düşürülmeli.
 
 ## Ölçülmüş denge (probe_template, 80 kampanya, darbe aşamalarından sonra)
 | Bot | Kolay | Normal | Zor |

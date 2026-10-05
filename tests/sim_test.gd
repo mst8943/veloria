@@ -123,6 +123,10 @@ func _init() -> void:
 		var saved_stats: Dictionary = sim.stats.duplicate()
 		for st in e.get("min_stat", {}):   # oyuncu geçmişi koşulu (botlar bu eylemleri az kullanır)
 			sim.stats[st] = int(e["min_stat"][st])
+		# Dünya değeri koşulları (huzursuzluk, muhalefet, ekonomi) da zorla sağlanır.
+		sim.unrest = clampf(30.0, float(e.get("min_unrest", 0)), float(e.get("max_unrest", 100)))
+		sim.opposition = maxf(20.0, float(e.get("min_opposition", 0)))
+		sim.economy = clampf(55.0, float(e.get("min_economy", 0)), float(e.get("max_economy", 100)))
 		var ok_e: bool = sim._eligible(e)
 		sim.stats = saved_stats
 		print("   ulaşılabilir mi %s: %s" % [e["id"], ok_e])

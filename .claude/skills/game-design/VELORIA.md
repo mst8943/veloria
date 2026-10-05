@@ -37,6 +37,7 @@ Kaynak: `VELORIA — Oyun Tasarım Özeti.md` (958 satır, 30 bölüm) ve `CLAUD
 Hafta = `mesai_max` mesai (Normal 4, Kolay 5). Eylemler: karar (1), kişi eylemleri (1; terfi, gizli ödeme, söz, doğrula, araştır, emir ×3 kanal, şantaj, görevden al), operasyon (2), dosya (sızdır/bastır/yok et, 1).
 `Sim.end_week()`: bekleyen kararlar yaşlanır (2 haftada `ignore` uygulanır) → `_world_tick` → `_decay_facts` (ortak bilgi; 0.25 dedikodu, 0.5 manşet) → `_fire_events` (haftada en çok 2 yeni karar, bekleyen en çok 3) → `_tick_promises` → `_run_cascade` (komplo aşamaları, çekilme; koşul oluşunca **kriz kartı**, çözülmezse ertesi hafta darbe) → `_plot_signs` (alametler) → `_generate_reports` (yalan, yankı odası, Kâhya haber saklar) → `_check_end` → otomatik kayıt.
 Kayıp: king_strength ≤ 0 (darbe ya da elit koalisyonu), unrest ≥ 100 (ayaklanma), `legal_pressure()` ≥ 100 (yetkisiz bırakılma).
+**Sokak ve mahkeme krizleri** (`docs/design/kayip_cesitliligi.md`): bastırma emri gizli `street_anger` biriktirir (etkisi azalır, huzursuzluğu besler, haftada %7 söner). Huzursuzluk ≥ `UPRISING_AT` -> "Sokaklar ayakta" kriz kartı (force/concede/appeal); yargı baskısı ≥ `LEGAL_CRISIS_AT` -> yetki krizi (purge/testify/bargain, `legal_relief`). Çözülmezse ya da yol başarısızsa ayaklanma / yetkisiz bırakılma. `Sim.other_crisis`, `_check_crises()`, `active_crisis_label()`; kartlarda `crisis_kind` ve `banner`.
 **Meclis görüşleri** (`docs/design/danisman_gorusleri.md`): `Sim.advice_for(pending_index)` her karta iki danışman görüşü üretir (taraf olan + uzman), tembel ve `pending[i]["advice"]` içinde saklı; ana `rng`'yi tüketmez. Kralın çıkarı tek yerde: `Sim.choice_value(fx)` (botlar da bunu kullanır). Karar verilince `advice_log`'a işlenir; oyun sonunda `record["council"]` = `council_record()`. Ayarlar `ADVICE_*` sabitleri ve `DIFFICULTY[*].advice_noise`.
 **Darbe aşamaları** (`docs/design/darbe_asamalari.md`): `Actor.plot_stage` 0 sakin · 1 huzursuz · 2 komplocu (`ready`) · 3 hazırlıkta; `plot_calm` ile çekilme (ready artık geri dönebilir). Alametler `Actor.signs` ({w,text,weight,real}); oyuncu göstergesi `Sim.suspicion_level(id)` (yalnızca görülen alametlerden). Kriz: `Sim.coup_crisis`, kart `event.crisis = true` (meclis susar), `_resolve_crisis(rally|concede|appeal)`, `crisis_chance()`. Yeni eylem `Sim.summon(id)` (Huzura Çağır). Oyun sonu `record["plot"]`, `record["signs"]`. Zorluk: `crisis_odds`, `leave_gap`.
 
@@ -73,7 +74,15 @@ Godot (console): `C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4
 - Hafta ortasında oyun bitebilir (kriz). Test/bot döngülerinde `while mesai > 0` güvenli; çünkü `_end` mesaiyi sıfırlar.
 - Commit'te kullanıcının kendi değişikliklerini (`.mcp.json`, `BECKETT_SETUP.md`, `project.godot` token satırı, `CLAUDE.md`) katma. Push yok (origin Beckett'in deposu).
 
-## Ölçülmüş durum (2026-10-06, ikinci yıl paketinden sonra, 101 olay, 80 kampanya)
+## Ölçülmüş durum (2026-10-06, sokak/mahkeme krizlerinden sonra, 80 kampanya)
+| Bot | Kolay | Normal | Zor |
+|---|---|---|---|
+| visible | 26% | 13% | 8% |
+| advice_weighted (ölçüt) | 81% | 40% | 18% |
+| visible_wise | 100% | 91% | 77% |
+Normal'de tarz botları: advice_soft 43% (darbe dışı kayıp %11), advice_dirty 36% (%16). Kayıp oyun tarzına bağlı.
+
+## Eski ölçüm (2026-10-06, ikinci yıl paketinden sonra, 101 olay, 80 kampanya)
 | Bot | Kolay | Normal | Zor |
 |---|---|---|---|
 | visible | 41% | 17% | 12% |

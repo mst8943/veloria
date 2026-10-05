@@ -1485,6 +1485,10 @@ func _preview(key: String) -> void:
 			"blackmail":
 				if not a.known_weak:
 					note = "Önce zayıf noktasını öğren (Araştır)."
+			"o_yaz", "o_soz", "o_ima":
+				if Sim.street_anger >= 40.0:
+					risk = maxi(risk, 2)
+					note = "Sokak bastırmaya alışıyor: her emir daha az işe yarıyor, öfke birikiyor."
 			"dismiss":
 				risk = tier - 1
 				note = ["", "Sessizce gidebilir.", "Gücü var; karşılık verebilir.", "Vazgeçilmez birini düşürmek ağır bir karşı saldırı getirebilir."][tier]
@@ -2076,8 +2080,9 @@ func _rebuild_flow() -> void:
 		items.append(["Mesai %d / %d" % [Sim.mesai, Sim.mesai_max], UIKit.GOLD, ""])
 	else:
 		items.append(["Mesai bitti", UIKit.TEXT_DIM, ""])
-	if not Sim.coup_crisis.is_empty():
-		items.append(["DARBE GİRİŞİMİ" if not _mobile else "DARBE", UIKit.DANGER, "gundem"])
+	var crisis_label := Sim.active_crisis_label()
+	if crisis_label != "":
+		items.append([crisis_label if not _mobile else crisis_label.split(" ")[0], UIKit.DANGER, "gundem"])
 	var late := 0
 	for p in Sim.pending:
 		if int(p["age"]) > 0:
@@ -2364,7 +2369,7 @@ func _rebuild_agenda() -> void:
 		vb.add_child(t)
 		if p["age"] > 0 or crisis:
 			var late := Label.new()
-			late.text = "DARBE GİRİŞİMİ — bu hafta karar vermezsen saray düşer." if crisis else "Karar bekliyor — bu hafta çözülmezse kendi kendine çözülecek."
+			late.text = str(e.get("banner", "Bu hafta karar vermezsen saray düşer.")) if crisis else "Karar bekliyor — bu hafta çözülmezse kendi kendine çözülecek."
 			late.add_theme_color_override("font_color", UIKit.DANGER)
 			late.add_theme_font_size_override("font_size", _fs(13))
 			vb.add_child(late)
