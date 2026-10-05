@@ -25,9 +25,26 @@ func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	var dim := ColorRect.new()
-	dim.color = Color(0.02, 0.015, 0.025, 0.9)
+	dim.color = Color(0.02, 0.015, 0.025, 0.97)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(dim)
+	var shade := TextureRect.new()   # gazeteyi masa lambası aydınlatıyormuş gibi: ortası açık, kenarlar karanlık
+	var g := Gradient.new()
+	g.set_color(0, Color(0.16, 0.12, 0.07, 0.55))
+	g.set_color(1, Color(0, 0, 0, 0))
+	var gt := GradientTexture2D.new()
+	gt.gradient = g
+	gt.fill = GradientTexture2D.FILL_RADIAL
+	gt.fill_from = Vector2(0.5, 0.5)
+	gt.fill_to = Vector2(1.0, 0.5)
+	gt.width = 256
+	gt.height = 256
+	shade.texture = gt
+	shade.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	shade.stretch_mode = TextureRect.STRETCH_SCALE
+	shade.set_anchors_preset(Control.PRESET_FULL_RECT)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(shade)
 	var m := MarginContainer.new()
 	m.set_anchors_preset(Control.PRESET_FULL_RECT)
 	for side in ["left", "right", "top", "bottom"]:
@@ -36,12 +53,15 @@ func _ready() -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 12)
 	m.add_child(v)
+	var band := PanelContainer.new()
+	band.add_theme_stylebox_override("panel", UIKit.band_style())
+	v.add_child(band)
 	var bar := HBoxContainer.new()
 	bar.add_theme_constant_override("separation", 10)
-	v.add_child(bar)
+	band.add_child(bar)
 	var title := Label.new()
 	title.text = "MEDYA MERKEZİ"
-	title.add_theme_font_override("font", UIKit.serif())
+	title.add_theme_font_override("font", UIKit.caps())
 	title.add_theme_font_size_override("font_size", 30 if mobile else 26)
 	title.add_theme_color_override("font_color", UIKit.GOLD)
 	bar.add_child(title)
@@ -64,6 +84,7 @@ func _ready() -> void:
 	close.text = "Masaya dön  (Esc)" if not mobile else "Kapat"
 	close.focus_mode = Control.FOCUS_NONE
 	close.custom_minimum_size.y = 40
+	close.theme_type_variation = "GhostButton"
 	close.pressed.connect(close_view)
 	bar.add_child(close)
 	_content = Control.new()

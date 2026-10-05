@@ -161,6 +161,11 @@ func _init() -> void:
 		ok = false
 	print("Kayıt/yükleme: ", "OK" if ok else "HATA", " (hafta %d)" % sim.week)
 
+	# Meclis görüşleri: deterministik, kayıtta korunur, ana rng'ye dokunmaz, hazır aktör kötü önerir.
+	ok = _test_advice() and ok
+	# Darbe aşamaları: çekilme, kriz kartı, kriz sonuçları, kayıt, huzura çağırma.
+	ok = _test_plot() and ok
+
 	# Hakikat dosyası örneği
 	sim.new_game(3)
 	while not sim.ended:
@@ -226,6 +231,172 @@ func _play_week(policy: String) -> void:
 				sim.order("arden" if sim.actors.has("arden") else target.id, "bastir", "sozlu")
 			else:
 				sim.cross_check(target.id)
+
+
+func _test_advice() -> bool:
+	var ok := true
+	var acc := {"Arden": "Arden'i", "Voss": "Voss'u", "Lena": "Lena'yı", "Falk": "Falk'ı", "Prens": "Prens'i"}
+	for n in acc:
+		if sim.ek(n, "i") != acc[n]:
+			push_error("ek hatası: %s -> %s" % [n, sim.ek(n, "i")])
+			ok = false
+	# Aynı tohum -> aynı görüş; görüşe bakmak simülasyonu değiştirmez.
+	sim.new_game(11, 1)
+	var a1: Array = sim.advice_for(0).duplicate(true)
+	var state_before: int = sim.rng.state
+	sim.new_game(11, 1)
+	var a2: Array = sim.advice_for(0)
+	if a1 != a2 or a1.is_empty() or sim.rng.state != state_before:
+		push_error("görüş deterministik değil ya da ana rng'yi tüketiyor")
+		ok = false
+	if not sim.save_game():
+		ok = false
+	sim.new_game(12, 1)
+	sim.load_game()
+	if sim.pending[0].get("advice", []) != a2:
+		push_error("görüş kayıt/yüklemede korunmadı")
+		ok = false
+	# Bütün kartlarda: danışman uygun, metin dolu, öneri geçerli; hazır aktörlerin önerisi daha kötü.
+	var honest_gap := 0.0
+	var honest_n := 0
+	var ready_gap := 0.0
+	var ready_n := 0
+	var kinds := {}
+	for s in range(1, 21):
+		sim.new_game(s, 1)
+		while not sim.ended:
+			while not sim.pending.is_empty() and sim.mesai > 0:
+				var ev: Dictionary = sim.pending[0]["event"]
+				var adv: Array = sim.advice_for(0)
+				if adv.size() > 2:
+					push_error("ikiden fazla danışman")
+					ok = false
+				var best := -1e9
+				for ch in ev["choices"]:
+					best = maxf(best, sim.choice_value(ch.get("fx", {})))
+				for it: Dictionary in adv:
+					kinds[it["kind"]] = int(kinds.get(it["kind"], 0)) + 1
+					if str(it["text"]) == "" or not sim.actors.has(it["actor"]) or not sim.actors[it["actor"]].insider:
+						push_error("geçersiz görüş: %s" % it)
+						ok = false
+					if int(it["rec"]) >= 0:
+						var g: float = best - sim.choice_value(ev["choices"][int(it["rec"])].get("fx", {}))
+						if sim.actors[it["actor"]].ready:
+							ready_gap += g
+							ready_n += 1
+						else:
+							honest_gap += g
+							honest_n += 1
+				sim.resolve_decision(0, 0)
+			sim.end_week()
+	var hg := honest_gap / maxf(honest_n, 1)
+	var rg := ready_gap / maxf(ready_n, 1)
+	print("Meclis: görüş türleri %s | ort. kayıp (V) sadık %.2f (n=%d), hazır %.2f (n=%d)" % [kinds, hg, honest_n, rg, ready_n])
+	if ready_n >= 10 and rg <= hg:
+		push_error("hazır aktörler daha kötü önermiyor")
+		ok = false
+	if sim.council_record().is_empty():
+		push_error("meclis sicili boş")
+		ok = false
+	print("Meclis görüşleri: ", "OK" if ok else "HATA")
+	return ok
+
+
+func _all_plotting() -> void:
+	for a in sim.actors.values():
+		if a.insider:
+			a.ambition = 200.0
+
+
+func _test_plot() -> bool:
+	var ok := true
+	# 1) Çekilme: öfkesi sönen ve kaskadın tutmadığı komplocu birkaç haftada geri çekilir.
+	sim.new_game(3, 1)
+	var arden = sim.actors["arden"]
+	arden.ready = true
+	arden.loyalty["career"] = 300.0
+	for i in sim.PLOT_LEAVE_WEEKS:
+		sim._run_cascade()
+	if arden.ready:
+		push_error("komplocu çekilmedi")
+		ok = false
+	# 2) Kriz: koşul oluşunca darbe hemen olmaz, kriz kartı gelir; çözülmezse hafta sonunda darbe.
+	sim.new_game(4, 1)
+	sim.week = 20
+	_all_plotting()
+	sim._run_cascade()
+	if sim.coup_crisis.is_empty() or sim.pending.is_empty() or not sim.pending[0]["event"].get("crisis", false) or sim.king_strength <= 0.0:
+		push_error("kriz kartı açılmadı ya da darbe hemen oldu")
+		ok = false
+	if not sim.save_game():
+		ok = false
+	sim.new_game(5, 1)
+	sim.load_game()
+	if sim.coup_crisis.is_empty() or not sim.pending[0]["event"].get("crisis", false):
+		push_error("kriz kayıt/yüklemede kayboldu")
+		ok = false
+	sim.end_week()
+	if not sim.ended or sim.record["survived"]:
+		push_error("çözülmeyen kriz darbeyle bitmedi")
+		ok = false
+	# 3) Taviz: ilki kesin işe yarar, komplo dağılır, lider güçlenir.
+	sim.new_game(6, 1)
+	sim.week = 20
+	_all_plotting()
+	sim._run_cascade()
+	var lead_id: String = sim.coup_crisis.get("leader", "")
+	var p0: float = sim.actors[lead_id].power if lead_id != "" else 0.0
+	sim.resolve_decision(0, 1)
+	if not sim.coup_crisis.is_empty() or sim.ended or sim.actors[lead_id].power <= p0 or sim.actors[lead_id].ready:
+		push_error("taviz beklendiği gibi çalışmadı")
+		ok = false
+	# 4) Krizde meclis susar.
+	sim.new_game(7, 1)
+	sim.week = 20
+	_all_plotting()
+	sim._run_cascade()
+	if not sim.advice_for(0).is_empty():
+		push_error("krizde meclis konuştu")
+		ok = false
+	# 5) Huzura çağırma: sakin biri temiz çıkınca dedikodular silinir; bekleme süresi işler.
+	sim.new_game(8, 1)
+	var k = sim.actors["kessler"]
+	k.plot_stage = 0
+	k.signs = [{"w": sim.week, "text": "dedikodu", "weight": 1, "real": false}]
+	var cleared := false
+	for i in 20:
+		sim.flags.erase("HUZUR_KESSLER")
+		sim.mesai = 4
+		k.signs = [{"w": sim.week, "text": "dedikodu", "weight": 1, "real": false}]
+		sim.summon("kessler")
+		if k.signs.is_empty():
+			cleared = true
+	sim.mesai = 4
+	var msg: String = sim.summon("kessler")
+	if not cleared or sim.mesai != 4 or not msg.contains("yakın zamanda"):
+		push_error("huzura çağırma beklendiği gibi çalışmadı")
+		ok = false
+	# 6) Gerçek oyunlarda: alametlerin çoğu gerçek ama hepsi değil; aynı hafta darbe nadir.
+	var real := 0
+	var rumor := 0
+	var crises := 0
+	for s in range(1, 21):
+		sim.new_game(s, 1)
+		rngb.seed = s
+		while not sim.ended:
+			_play_week("random")
+			sim.end_week()
+		real += int(sim.record["signs"]["real"])
+		rumor += int(sim.record["signs"]["rumor"])
+		for l in sim.record["plot"]:
+			if l["text"] == "darbe girişimini başlattı":
+				crises += 1
+	print("Komplo: alamet gerçek %d / dedikodu %d, 20 oyunda %d kriz" % [real, rumor, crises])
+	if real <= rumor or rumor == 0 or crises == 0:
+		push_error("alamet/kriz dağılımı beklenmedik")
+		ok = false
+	print("Darbe aşamaları: ", "OK" if ok else "HATA")
+	return ok
 
 
 func _careful_choice(ev: Dictionary) -> int:

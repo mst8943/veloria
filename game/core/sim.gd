@@ -19,11 +19,12 @@ var record_chronicle := true                 # testlerde ve otomatik oynatmada a
 var autosave := true                         # her hafta sonunda otomatik kayıt
 var timeline: Array = []                     # haftalık gerçek durum (oyun sonunda gösterilir)
 const GOOD_DOMAINS_HIGH := ["economy"]  # bu alanlarda yüksek değer iyidir
-## Zorluk: haftalık mesai, darbe koruma süresi, darbe için gereken güç payı, gelir, hazır olma eşiği.
+## Zorluk: haftalık mesai, darbe koruma süresi, darbe için gereken güç payı, gelir, hazır olma eşiği,
+## danışman gürültüsü, krizden kurtulma çarpanı, komplodan çekilme payı.
 const DIFFICULTY := [
-	{"name": "Kolay", "mesai": 5, "grace": 26, "coup_share": 0.74, "income": 1.2, "ready_drive": 48.0},
-	{"name": "Normal", "mesai": 4, "grace": 12, "coup_share": 0.68, "income": 1.0, "ready_drive": 43.0},
-	{"name": "Zor", "mesai": 4, "grace": 10, "coup_share": 0.63, "income": 0.8, "ready_drive": 38.0},
+	{"name": "Kolay", "mesai": 5, "grace": 26, "coup_share": 0.74, "income": 1.2, "ready_drive": 44.0, "advice_noise": 0.9, "crisis_odds": 0.95, "leave_gap": 22.0},
+	{"name": "Normal", "mesai": 4, "grace": 12, "coup_share": 0.66, "income": 1.0, "ready_drive": 39.0, "advice_noise": 1.2, "crisis_odds": 0.65, "leave_gap": 14.0},
+	{"name": "Zor", "mesai": 4, "grace": 10, "coup_share": 0.63, "income": 0.8, "ready_drive": 36.0, "advice_noise": 1.25, "crisis_odds": 0.55, "leave_gap": 12.0},
 ]
 
 ## Vaat edilebilecek ödüller: her biri yalnızca bir kişiye gerçekten verilebilir.
@@ -51,6 +52,7 @@ var reports: Array = []
 var pending: Array = []      # {event, age}
 var truth_log: Array = []
 var karne: Dictionary = {}   # kaynak -> {ok, bad}
+var advice_log: Array = []   # meclis görüşlerinin sicili (oyun sonunda açılır)
 var stats: Dictionary = {}
 var weekly_news: Array = []
 var ended := false
@@ -84,6 +86,11 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 	pending.clear()
 	truth_log.clear()
 	karne.clear()
+	advice_log.clear()
+	plot_log.clear()
+	crisis_note = ""
+	coup_crisis = {}
+	crisis_cooldown = 0
 	weekly_news.clear()
 	promises.clear()
 	timeline.clear()
@@ -109,7 +116,7 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 
 
 ## Türkçe ek uyumu: özel isme kesme işaretiyle doğru eki ekler.
-## kind: "e" (yönelme: Voss'a, Arden'e), "in" (ilgi: Voss'un, Brandt'ın, Arden'in)
+## kind: "e" (yönelme: Voss'a, Arden'e), "in" (ilgi: Voss'un, Brandt'ın, Arden'in), "i" (belirtme: Voss'u, Arden'i)
 static func ek(name: String, kind: String) -> String:
 	var word := name.split(" ")[-1].to_lower()
 	var last_vowel := "e"
@@ -123,6 +130,8 @@ static func ek(name: String, kind: String) -> String:
 	if kind == "e":
 		return "%s'%s%s" % [name, "y" if ends_vowel else "", "a" if back else "e"]
 	var v: String = {"a": "ı", "ı": "ı", "o": "u", "u": "u", "e": "i", "i": "i", "ö": "ü", "ü": "ü"}[last_vowel]
+	if kind == "i":  # belirtme: Arden'i, Voss'u, Lena'yı
+		return "%s'%s%s" % [name, "y" if ends_vowel else "", v]
 	return "%s'%s%sn" % [name, "n" if ends_vowel else "", v]
 
 
@@ -165,7 +174,8 @@ func save_game() -> bool:
 		a_data[id] = actors[id].to_save()
 	var data := {"week": week, "mesai": mesai, "king": king_strength, "unrest": unrest, "economy": economy,
 		"opp": opposition, "wealth": private_wealth, "actors": a_data, "facts": facts, "flags": flags,
-		"fired": fired_events, "history": history, "pending": pending, "truth": truth_log, "karne": karne,
+		"fired": fired_events, "history": history, "pending": pending, "truth": truth_log, "karne": karne, "advice_log": advice_log,
+		"plot_log": plot_log, "coup_crisis": coup_crisis, "crisis_cooldown": crisis_cooldown,
 		"stats": stats, "rng": rng.state, "seed": rng.seed, "diff": difficulty, "promises": promises,
 		"timeline": timeline}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
@@ -203,6 +213,10 @@ func load_game() -> bool:
 	pending = d["pending"]
 	truth_log = d["truth"]
 	karne = d["karne"]
+	advice_log = d.get("advice_log", [])
+	plot_log = d.get("plot_log", [])
+	coup_crisis = d.get("coup_crisis", {})
+	crisis_cooldown = int(d.get("crisis_cooldown", 0))
 	stats = d["stats"]
 	promises = d.get("promises", [])
 	timeline = d.get("timeline", [])
@@ -240,6 +254,54 @@ func promote(id: String) -> String:
 	return "%s terfi etti. Sana minnettar, ama artık daha güçlü." % a.display_name
 
 
+## Huzura çağır: izsiz, parasız bir yoklama. Kişiyi biraz yatıştırır ve gürültülü bir okuma verir:
+## komplocu çoğu zaman kaçamak konuşur; sakin biri temiz çıkarsa hakkındaki dedikodular dağılır.
+const SUMMON_COOLDOWN := 4     # aynı kişiyi yeniden çağırmak için hafta
+const SUMMON_TELL := 0.6       # komplocunun kendini ele verme olasılığı
+const SUMMON_FALSE := 0.1      # sakin birinin yine de tedirgin görünme olasılığı
+const SUMMON_CALM := 6.0       # kral dikkatli görünür: perceived_king artışı
+const SUMMON_CAREER := 4.0
+const SUMMON_CAUGHT_FEAR := 6.0   # ele veren komplocu fark edildiğini anlar: korku sadakati
+
+
+func summon_wait(id: String) -> int:
+	var last := int(flags.get("HUZUR_" + id.to_upper(), -100))
+	return maxi(0, last + SUMMON_COOLDOWN - week)
+
+
+func summon(id: String) -> String:
+	var a: Actor = actors[id]
+	if a.moved:
+		return "%s artık çağrına gelmiyor." % a.display_name
+	if summon_wait(id) > 0:
+		return "%s yakın zamanda huzura çağırdın; tekrar çağırmak telaş gibi görünür." % ek(a.display_name, "i")
+	if not spend_mesai():
+		return _no_mesai()
+	stats["summons"] = int(stats.get("summons", 0)) + 1
+	flags["HUZUR_" + id.to_upper()] = week
+	a.perceived_king += SUMMON_CALM
+	a.loyalty["career"] = float(a.loyalty["career"]) + SUMMON_CAREER
+	changed.emit()
+	if a.plot_stage >= 2:
+		if rng.randf() < SUMMON_TELL:
+			a.loyalty["fear"] = float(a.loyalty["fear"]) + SUMMON_CAUGHT_FEAR
+			_add_sign(a, "%s huzurda kaçamak cevaplar verdi; gözlerini kaçırdı." % short_name(a), 2, true)
+			return "%s huzurunda gergindi. Sorularına kaçamak cevaplar verdi ve erken ayrılmak için izin istedi." % a.display_name
+		return "%s sakin ve saygılıydı. Hiçbir şey sezmedin." % a.display_name
+	if rng.randf() < SUMMON_FALSE:
+		_add_sign(a, "%s huzurda tedirgin görünüyordu." % short_name(a), 1, false)
+		return "%s tedirgindi; neden olduğunu söylemedi." % a.display_name
+	var before := a.signs.size()
+	a.signs = a.signs.filter(func(g: Dictionary) -> bool: return g["real"])
+	var cleared := before - a.signs.size()
+	var out := "%s içtenlikle konuştu." % a.display_name
+	if cleared > 0:
+		out += " Hakkındaki fısıltıların dedikodu olduğuna kanaat getirdin."
+	if a.plot_stage == 1:
+		out += " Yine de saraydan bazı şikâyetleri olduğu belli."
+	return out
+
+
 ## Rüşvet: sadakat satın alır ve kanıt üretir.
 func bribe(id: String) -> String:
 	var a: Actor = actors[id]
@@ -275,6 +337,11 @@ func order(id: String, task: String, channel: String) -> String:
 			stats["hints"] += 1
 			# Hırslı biri imayı aşırı yorumlar, korkak biri hiç uygulamaz.
 			fidelity = clampf(0.3 + a.ambition / 100.0 + rng.randf_range(-0.2, 0.4) - a.red_line_penalty(task), 0.0, 1.5)
+	# Komplocu emri geciktirir (görünür alamet).
+	var delayed := a.plot_stage >= 2
+	if delayed:
+		fidelity *= PLOT_ORDER_DELAY
+		_add_sign(a, "%s emri geciktirdi; uygulamak için 'koşulların olgunlaşmasını' bekliyor." % short_name(a), 2, true)
 	# Kırmızı çizgi: açık emirle çiğnenirse gönülsüz uygulanır ve küskünlük bırakır.
 	var crossed := a.crosses_red_line(task) and channel != "ima"
 	if crossed:
@@ -304,6 +371,8 @@ func order(id: String, task: String, channel: String) -> String:
 			text = "%s emri aldı." % a.display_name
 	if crossed:
 		text = "%s emri kırmızı çizgisini aştığı için gönülsüzce, yarım yamalak uyguladı. Bunu sana yazdı. (Kırmızı çizgisi: %s)" % [a.display_name, a.red_line]
+	if delayed:
+		text += " Ama acele etmedi; emri günlerce bekletti."
 	changed.emit()
 	return text
 
@@ -647,11 +716,15 @@ func dismiss(id: String) -> String:
 	if a.secrets_on_king >= 2 or a.power >= 60.0:
 		a.moved = true
 		a.ready = true
+		a.plot_stage = 3
 		king_strength -= 12.0
 		_add_fact("sizinti_%s" % id, "%s kralın sırlarını sızdırıyor" % a.display_name, "king", 60, [id], 1, 0.9)
 		changed.emit()
 		return "%s görevden alındı ama kralın sırlarını biliyordu ve konuşmaya başladı!" % a.display_name
 	actors.erase(id)
+	if coup_crisis.get("leader", "") == id:
+		_close_crisis()
+		plot_log.append({"w": week, "name": a.display_name, "text": "darbe gecesi görevden alındı; komplo başsız kaldı"})
 	king_strength += 2.0
 	changed.emit()
 	return "%s görevden alındı. Sessizce gitti." % a.display_name
@@ -669,6 +742,15 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 		return "Kişisel servetin yetersiz."
 	if not spend_mesai():
 		return _no_mesai()
+	if e.get("crisis", false):
+		pending.remove_at(pending_index)
+		history.append("Hafta %d — %s » %s" % [week, e["title"], ch["label"]])
+		var crisis_text := _resolve_crisis(str(ch.get("crisis", "")))
+		if coup_crisis.get("failed", false):
+			end_week()  # kapılar açıldı: darbe bu gece olur
+		changed.emit()
+		return crisis_text
+	_log_advice(e, advice_for(pending_index), choice_index)
 	pending.remove_at(pending_index)
 	flags["%s_%d" % [e["id"], choice_index]] = week
 	_extra_msgs.clear()
@@ -735,6 +817,338 @@ func _bump(a: Actor, prop: String, d: float) -> void:
 		a.set(prop, float(a.get(prop)) + d)
 
 
+# ---------------------------------------------------------------- Meclis görüşleri
+## Tasarım: docs/design/danisman_gorusleri.md
+## Her karar kartında iki danışman bir seçenek önerir. Görüş gerçek etkiden türetilir; ama danışmanın
+## çıkarı, uzmanlığı, korkusu ve gizli niyeti onu büker. Gerekçe hep doğrudur, yalnızca seçicidir.
+
+const ADVICE_SIGMA := 10.0           # yanılma payı: σ = SIGMA·(1−yetkinlik); seçenek değerlerinin sd'si ~5
+const ADVICE_SKILL_EXPERT := 0.5
+const ADVICE_SKILL_SECOND := 0.35
+const ADVICE_SKILL_GENERAL := 0.15
+const ADVICE_W0 := 0.4               # kişisel çıkar ağırlığı: W0 + hırs·(1−dürüstlük)·W1
+const ADVICE_W1 := 6.0
+const ADVICE_W_MAX := 2.0
+const ADVICE_K_READY := -0.4         # darbeye hazır olan kralın zararına önerir
+const ADVICE_FEAR_EVASIVE := 60.0    # bu korkunun üstünde kaçamak konuşur
+const ADVICE_WARN_GAP := 6.0
+const ADVICE_FLAT_GAP := 1.5
+const ADVICE_MISLEAD_GAP := 4.0
+const ADVICE_STAKE_MIN := 1.0        # "ÇIKARI VAR" için en küçük doğrudan pay
+const ADVICE_LOYALTY_VALUE := 0.3    # sadakat isyan eğilimini düşürür: kral için değerlidir
+const ROMAN := ["I", "II", "III", "IV"]
+const ROMAN_ACC := ["I'i", "II'yi", "III'ü", "IV'ü"]
+## Olayın baskın boyutu -> [birincil uzman, ikincil uzman]
+const ADVICE_EXPERTS := {
+	"economy": ["kessler", "halden"], "wealth": ["kessler", "halden"], "unrest": ["arden", "halden"],
+	"opp": ["voss", "halden"], "fact": ["falk", "voss"], "king": ["dorn", "prens"], "actors": ["voss", "dorn"],
+}
+## Gerekçe parçaları: boyut -> [kral için olumlu söyleyişler, olumsuz söyleyişler]. "%s" = kişi adı (eki eklenmiş).
+const ADVICE_REASONS := {
+	"king": [["tahtınızı güçlendirir", "otoritenizi pekiştirir"], ["otoritenizi zedeler", "sizi zayıf gösterir"]],
+	"unrest": [["sokağı yatıştırır", "meydanları sakinleştirir"], ["sokağı kızdırır", "halkı öfkelendirir"]],
+	"economy": [["hazineyi rahatlatır", "piyasaya nefes aldırır"], ["hazineyi zorlar", "bütçeyi deler"]],
+	"opp": [["muhalefeti susturur", "Brandt'ın elini zayıflatır"], ["muhalefete koz verir", "Brandt'a malzeme olur"]],
+	"wealth": [["kişisel kasanızı doldurur", "kasanıza para koyar"], ["kasanızı boşaltır", "cebinizden çıkar"]],
+	"fact": [["iz bırakmaz"], ["iz bırakır", "bir gün önünüze dosya olarak gelir"]],
+	"promise": [["sözünüzü korur"], ["verdiğiniz sözü bozar", "sözünüzü çiğner"]],
+}
+## Önerdiği seçeneğin kral için hiçbir iyi yanı yoksa danışman kendi kılıfını kurar (dikkatli oyuncu için ele veriş).
+const ADVICE_COVER := {
+	"arden": "Ordu güçlüyse taht da güçlüdür.", "voss": "Bazı şeyleri size anlatamam; bana güvenin.",
+	"kessler": "Hesabı ben tutarım; en az zararlısı bu.", "halden": "Kamuoyunu ben hallederim.",
+	"dorn": "Sarayın huzuru için en iyisi bu.", "prens": "Hanedanın onuru bunu gerektirir.",
+	"falk": "Hukuka en uygun yol bu.",
+}
+const ADVICE_EVASIVE := ["Takdir sizindir, Majesteleri.", "Hangisini seçerseniz doğru olan odur, Majesteleri.",
+	"Sizin bileceğiniz iş, Majesteleri."]
+const ADVICE_FLAT := ["Bence hepsi aynı kapıya çıkar.", "Aralarında büyük bir fark görmüyorum, Majesteleri."]
+
+
+## Kralın çıkarı açısından bir seçeneğin değeri (tek doğruluk kaynağı; botlar da bunu kullanır).
+func choice_value(fx: Dictionary) -> float:
+	var s := 0.0
+	for v in _value_terms(fx).values():
+		s += float(v)
+	return s
+
+
+## choice_value'nun terimleri: boyut -> katkı. Kişi terimleri "actor:<id>" anahtarıyla.
+func _value_terms(fx: Dictionary) -> Dictionary:
+	var t := {}
+	if fx.has("king"):
+		t["king"] = 2.0 * float(fx["king"])
+	if fx.has("unrest"):
+		t["unrest"] = -float(fx["unrest"])
+	if fx.has("economy"):
+		t["economy"] = 0.7 * float(fx["economy"])
+	if fx.has("opp"):
+		t["opp"] = -0.5 * float(fx["opp"])
+	if fx.has("wealth"):
+		t["wealth"] = 0.3 * float(fx["wealth"])
+	var af: Dictionary = fx.get("actors", {})
+	for aid in af:
+		var d: Dictionary = af[aid]
+		var c := -(float(d.get("power", 0)) * 0.3 + float(d.get("ambition", 0)) * 0.4 + float(d.get("obligation", 0)) * 0.3)
+		for prop in d:
+			if str(prop).begins_with("l_"):
+				c += float(d[prop]) * ADVICE_LOYALTY_VALUE
+		if c != 0.0:
+			t["actor:" + str(aid)] = c
+	if fx.has("fact"):
+		t["fact"] = -3.0
+	if fx.has("promise_break"):
+		t["promise"] = -5.0
+	return t
+
+
+## Danışmanın bu seçenekteki doğrudan payı (rakiplerin güçlenmesi hariç).
+func _direct_stake(a: Actor, fx: Dictionary) -> float:
+	var s := 0.0
+	var mine: Dictionary = fx.get("actors", {}).get(a.id, {})
+	for prop in mine:
+		var d := float(mine[prop])
+		if prop == "power":
+			s += d
+		elif str(prop).begins_with("l_"):
+			s += d * 0.6
+		elif prop == "obligation":
+			s += d * 0.5
+		elif prop == "fear":
+			s -= d * 0.6
+	if fx.has("fact") and a.id in _as_array(fx["fact"].get("knowers", [])):
+		s += 3.0 * a.ambition / 50.0
+	if a.id in _as_array(fx.get("remove", [])):
+		s -= 40.0
+	for key in ["promise_keep", "promise_break"]:
+		if fx.has(key):
+			var p := _find_promise(str(fx[key]))
+			if not p.is_empty() and p["actor"] == a.id:
+				s += 12.0 if key == "promise_keep" else -15.0
+	return s
+
+
+func _self_interest(a: Actor, fx: Dictionary) -> float:
+	var s := _direct_stake(a, fx)
+	var af: Dictionary = fx.get("actors", {})
+	for aid in af:
+		if aid != a.id and actors.has(aid) and actors[aid].insider:
+			s -= maxf(0.0, float(af[aid].get("power", 0))) * 0.25
+	return s
+
+
+## Olayın baskın boyutları, ağırlığa göre azalan sırada.
+func _event_dims(e: Dictionary) -> Array:
+	var w := {}
+	for ch: Dictionary in e["choices"]:
+		var t := _value_terms(ch.get("fx", {}))
+		for k: String in t:
+			var dim := "actors" if k.begins_with("actor:") else k
+			w[dim] = float(w.get(dim, 0.0)) + absf(float(t[k]))
+	var dims: Array = w.keys().filter(func(k: String) -> bool: return ADVICE_EXPERTS.has(k))
+	dims.sort_custom(func(x: String, y: String) -> bool: return w[x] > w[y])
+	return dims
+
+
+func _can_advise(aid: String) -> bool:
+	return actors.has(aid) and actors[aid].insider and not actors[aid].moved
+
+
+## İki danışman: biri kararda taraf olan, diğeri olayın baskın alanının uzmanı.
+func _pick_advisors(e: Dictionary) -> Array:
+	var out: Array = []
+	if e.get("crisis", false):
+		return out  # krizde meclis susar
+	for aid in _as_array(e.get("advisors", [])):
+		if _can_advise(aid) and not aid in out:
+			out.append(aid)
+	var party := ""
+	var party_s := 0.0
+	for aid: String in actors:
+		if not _can_advise(aid) or aid in out:
+			continue
+		var m := 0.0
+		for ch: Dictionary in e["choices"]:
+			m = maxf(m, absf(_direct_stake(actors[aid], ch.get("fx", {}))))
+		if m >= ADVICE_STAKE_MIN and (party == "" or m > party_s or (m == party_s and actors[aid].power > actors[party].power)):
+			party = aid
+			party_s = m
+	if party != "" and out.size() < 2:
+		out.append(party)
+	for dim in _event_dims(e):
+		for aid in ADVICE_EXPERTS[dim]:
+			if out.size() < 2 and _can_advise(aid) and not aid in out:
+				out.append(aid)
+	if out.size() < 2:
+		for aid in ["dorn", "kessler", "voss", "falk", "arden", "prens", "halden"]:
+			if out.size() < 2 and _can_advise(aid) and not aid in out:
+				out.append(aid)
+	return out
+
+
+func _advisor_skill(aid: String, e: Dictionary) -> float:
+	var dims := _event_dims(e)
+	if dims.is_empty():
+		return ADVICE_SKILL_GENERAL
+	var ex: Array = ADVICE_EXPERTS[dims[0]]
+	if aid == ex[0]:
+		return ADVICE_SKILL_EXPERT
+	if aid == ex[1]:
+		return ADVICE_SKILL_SECOND
+	return ADVICE_SKILL_GENERAL
+
+
+## Kısa hitap adı: "General Arden" -> "Arden", "Prens Cassian" -> "Prens".
+func short_name(a: Actor) -> String:
+	return "Prens" if a.royal else a.display_name.split(" ")[-1]
+
+
+## Bir kart için meclis görüşleri (tembel üretilir, pending içinde saklanır: kayıtta ve yüklemede değişmez).
+## Öğe: {actor, kind: rec|flat|evasive, rec, warn, text, stake}
+func advice_for(pending_index: int) -> Array:
+	if pending_index < 0 or pending_index >= pending.size():
+		return []
+	var p: Dictionary = pending[pending_index]
+	if p.has("advice"):
+		return p["advice"]
+	var e: Dictionary = p["event"]
+	var out: Array = []
+	var born := week - int(p.get("age", 0))
+	for aid: String in _pick_advisors(e):
+		var a: Actor = actors[aid]
+		# Ana rng'ye dokunmaz: görüşe bakmayan oyunun simülasyonu birebir aynı kalır.
+		var r := RandomNumberGenerator.new()
+		r.seed = hash("%d|%s|%d|%s" % [rng.seed, e["id"], born, aid])
+		out.append(_advise(a, e, r))
+	p["advice"] = out
+	return out
+
+
+func _advise(a: Actor, e: Dictionary, r: RandomNumberGenerator) -> Dictionary:
+	var choices: Array = e["choices"]
+	var item := {"actor": a.id, "kind": "rec", "rec": -1, "warn": -1, "text": "", "stake": false}
+	for ch: Dictionary in choices:
+		if absf(_direct_stake(a, ch.get("fx", {}))) >= ADVICE_STAKE_MIN:
+			item["stake"] = true
+	if a.fear >= ADVICE_FEAR_EVASIVE or echo_level() > 0.75:
+		item["kind"] = "evasive"
+		item["text"] = ADVICE_EVASIVE[r.randi() % ADVICE_EVASIVE.size()]
+		return item
+	var sigma := ADVICE_SIGMA * (1.0 - _advisor_skill(a.id, e)) * _diff("advice_noise")
+	var w := clampf(ADVICE_W0 + a.ambition / 100.0 * (1.0 - a.honesty) * ADVICE_W1, 0.0, ADVICE_W_MAX)
+	var k := ADVICE_K_READY if a.ready else 1.0
+	var scores: Array[float] = []
+	for ch: Dictionary in choices:
+		var fx: Dictionary = ch.get("fx", {})
+		scores.append(k * (choice_value(fx) + r.randfn(0.0, sigma)) + w * _self_interest(a, fx))
+	var best := 0
+	var worst := 0
+	for i in scores.size():
+		if scores[i] > scores[best]:
+			best = i
+		if scores[i] < scores[worst]:
+			worst = i
+	if scores[best] - scores[worst] < ADVICE_FLAT_GAP:
+		item["kind"] = "flat"
+		item["text"] = ADVICE_FLAT[r.randi() % ADVICE_FLAT.size()]
+		return item
+	item["rec"] = best
+	var reason := _advice_reason(choices[best].get("fx", {}), true, r, a.id)
+	var text := ""
+	match r.randi() % 3:
+		0:
+			text = "%s öneririm" % ROMAN_ACC[mini(best, 3)]
+		1:
+			text = "Bence %s, Majesteleri" % ROMAN[mini(best, 3)]
+		_:
+			text = "%s seçin" % ROMAN_ACC[mini(best, 3)]
+	text = "%s: %s." % [text, reason] if reason != "" else "%s. %s" % [text, ADVICE_COVER.get(a.id, "Bana güvenin.")]
+	if scores[best] - scores[worst] >= ADVICE_WARN_GAP:
+		var bad := _advice_reason(choices[worst].get("fx", {}), false, r, a.id)
+		if bad != "":
+			item["warn"] = worst
+			text += " %s ise %s." % [ROMAN[mini(worst, 3)], bad]
+	item["text"] = text
+	return item
+
+
+## Seçeneğin kral için en olumlu (good=true) ya da en olumsuz gerçek etkisini anlatan parça. Yoksa "".
+## Danışman kendinden söz etmez (self).
+func _advice_reason(fx: Dictionary, good: bool, r: RandomNumberGenerator, self_id: String) -> String:
+	var t := _value_terms(fx)
+	t.erase("actor:" + self_id)
+	var key := ""
+	var val := 0.0
+	for k: String in t:
+		var v := float(t[k])
+		if (good and v > val) or (not good and v < val):
+			key = k
+			val = v
+	if key == "":
+		return ""
+	if key.begins_with("actor:"):
+		var aid := key.substr(6)
+		var nm: String = short_name(actors[aid]) if actors.has(aid) else aid.capitalize()
+		if good:
+			return [ek(nm, "in") + " gücünü kırpar", ek(nm, "i") + " dizginler"][r.randi() % 2]
+		return [ek(nm, "i") + " fazla güçlendirir", ek(nm, "in") + " elini güçlendirir"][r.randi() % 2]
+	var opts: Array = ADVICE_REASONS[key][0 if good else 1]
+	return opts[r.randi() % opts.size()]
+
+
+func _log_advice(e: Dictionary, advice: Array, chosen: int) -> void:
+	var choices: Array = e["choices"]
+	var best := 0
+	for i in choices.size():
+		if choice_value(choices[i].get("fx", {})) > choice_value(choices[best].get("fx", {})):
+			best = i
+	for it: Dictionary in advice:
+		var rec := int(it["rec"])
+		if rec < 0:
+			continue
+		var a: Actor = actors.get(it["actor"])
+		advice_log.append({"w": week, "event": e["title"], "actor": it["actor"],
+			"name": a.display_name if a else str(it["actor"]), "followed": rec == chosen,
+			"rec": str(choices[rec]["label"]), "best": str(choices[best]["label"]),
+			"gap": snappedf(choice_value(choices[best].get("fx", {})) - choice_value(choices[rec].get("fx", {})), 0.1)})
+
+
+## Oyun sonu: gördüğün alametlerin kaçı gerçekti?
+func sign_record() -> Dictionary:
+	var real := 0
+	var rumor := 0
+	for a: Actor in actors.values():
+		for g: Dictionary in a.signs:
+			if g["real"]:
+				real += 1
+			else:
+				rumor += 1
+	return {"real": real, "rumor": rumor}
+
+
+## Oyun sonu: her danışmanın sicili, en çok yanıltandan başlayarak.
+func council_record() -> Array:
+	var per := {}
+	for l: Dictionary in advice_log:
+		var c: Dictionary = per.get(l["actor"], {"name": l["name"], "given": 0, "followed": 0, "misled": 0, "cost": 0.0, "worst": {}})
+		c["given"] += 1
+		if l["followed"]:
+			c["followed"] += 1
+		if float(l["gap"]) >= ADVICE_MISLEAD_GAP:
+			c["misled"] += 1
+			if l["followed"]:
+				c["cost"] += float(l["gap"])
+			if c["worst"].is_empty() or float(l["gap"]) > float(c["worst"]["gap"]):
+				c["worst"] = l
+		per[l["actor"]] = c
+	var out: Array = per.values()
+	out.sort_custom(func(x: Dictionary, y: Dictionary) -> bool:
+		if x["misled"] != y["misled"]:
+			return x["misled"] > y["misled"]
+		return x["given"] > y["given"])
+	return out
+
+
 # ---------------------------------------------------------------- Haftalık tick
 
 func end_week() -> void:
@@ -763,6 +1177,7 @@ func end_week() -> void:
 	_fire_events()
 	_tick_promises()
 	_run_cascade()
+	_plot_signs()
 	_generate_reports()
 	_record_timeline()
 	_check_end()
@@ -921,12 +1336,65 @@ func _fire_events() -> void:
 		weekly_news.append("OLAY: %s" % e["title"])
 
 
+# ---------------------------------------------------------------- Darbe aşamaları (docs/design/darbe_asamalari.md)
+
+const PLOT_UNEASY_GAP := 15.0        # huzursuzluk: drive ≥ ready_drive − bu
+const PLOT_CASCADE_MIN := 8.0        # kaskadın tutabilmesi için en düşük öfke (giriş 12)
+const PLOT_LEAVE_WEEKS := 2          # çekilme için üst üste hafta
+const PLOT_PREP_MARGIN := 0.15       # hazırlık: komplo payı ≥ coup_share − bu
+const PLOT_PREP_POWER := 1.0         # hazırlıktaki vurucunun haftalık güç artışı
+const PLOT_SIGN_P := [0.04, 0.15, 0.35, 0.6]   # aşama 0..3 için haftalık alamet olasılığı (0 = dedikodu)
+const PLOT_SIGN_W := [1, 1, 2, 3]
+const PLOT_SUS_WINDOW := 8           # şüphe: son kaç haftanın alametleri sayılır
+const PLOT_SUS_BANDS := [2, 4, 7]    # Huzursuz / Şüpheli / Tehlikeli eşikleri
+const PLOT_ORDER_DELAY := 0.6        # komplocu emri gönülsüz uygular
+const PLOT_SPIN := 0.35              # komplocu kendi alanının raporunu güzeller
+const CRISIS_RALLY_BASE := 0.05
+const CRISIS_CONCEDE := [1.0, 0.5, 0.2]   # taviz: ilki kesin, sonrakilere inanılmaz
+const CRISIS_APPEAL_BASE := 0.6
+const CRISIS_COOLDOWN := 6           # çözülen krizden sonra yeni kriz için en az hafta
+const SUSPICION_NAMES := ["Sakin", "Huzursuz", "Şüpheli", "Tehlikeli"]
+## Alamet söyleyişleri: aşama -> alan -> cümleler ("_" genel). {n} ad, {n_in} ad+ilgi, {p_e} başka bir komplocuya.
+const SIGN_TEXTS := {
+	0: {"_": ["Koridorlarda {n} hakkında fısıltılar var; kaynağı belirsiz.", "Bir hizmetkâr {n_i} gece geç saatte sarayın arka kapısında gördüğünü anlatıyor.",
+		"Masana {n_in} sadakatini sorgulayan imzasız bir not bırakılmış.", "{n_in} yakın çevresinden biri fazla konuşuyormuş; ne dediği belli değil."]},
+	1: {"_": ["{n} toplantılarda sık sık iç çekiyor.", "{n} yakın çevresine sarayın gidişatından yakınmış.", "{n} son ödüllendirmelerden hoşnut görünmüyor.",
+		"{n_in} sana selamı eskisinden soğuk."]},
+	2: {"_": ["{n}, {p_e} kapalı kapılar ardında uzun bir ziyaret yaptı.", "{n_in} konağında geç saatlere kadar ışık yanıyor.", "{n} bazı bakanlara 'geçiş dönemi'nden söz etmiş."],
+		"army": ["{n_in} subayları geç saatlere kadar karargâhta toplanıyor.", "{n} bazı alay komutanlarıyla baş başa yemek yedi."],
+		"intel": ["{n} bazı dosyaları sarayın arşivinden kendi ofisine taşıttı.", "{n_in} adamları senin bakanlarını izliyor."],
+		"media": ["{n_in} kanallarında adın giderek daha az geçiyor.", "{n} yabancı bankacılarla gizlice görüştü."],
+		"royal": ["Prens'in konağına gece yarısı arabalar yanaşıyor.", "Prens soylu ailelerle mühürlü mektuplar yazışıyor."]},
+	3: {"_": ["{n} artık çağrılarına geç dönüyor; yanındakiler senin değil onun emrini bekliyor.", "{n} ile görüşen bakanların listesi her gün uzuyor."],
+		"army": ["{n} kendi adamlarını başkentteki kritik birliklere atadı.", "Başkentin girişlerindeki birliklerin komutanları değişti; hepsi {n_in} adamı."],
+		"royal": ["Prens'in muhafızları iki katına çıktı.", "Soylu aileler Prens'e 'Majesteleri' diye hitap etmeye başladı."],
+		"intel": ["{n} saray telefonlarının dinlenme kayıtlarını kendi kasasına kilitledi."],
+		"media": ["{n_in} kanalları 'olağanüstü bir gece' için canlı yayın ekipleri hazırlıyor."]},
+}
+
+var coup_crisis: Dictionary = {}   # {leader, week, failed?}: kriz kartı bekliyor
+var crisis_cooldown := 0           # bu haftadan önce yeni kriz açılmaz
+var plot_log: Array = []           # gerçek komplo kronolojisi {w, name, text} (oyun sonunda açılır)
+var crisis_note := ""              # darbe gecesinin özeti (kayıp metnine eklenir)
+
+
 ## Eşik kaskadı: her aktörün "kaç kişi kıpırdarsa ben de kıpırdarım" eşiği vardır.
 ## Herkesin bildiği bir zayıflık (ortak bilgi) eşikleri düşürür ve koordinasyonu açar.
+## Komplo aşamalıdır ve çözülebilir; darbe koşulu oluşunca önce bir kriz kartı gelir (docs/design/darbe_asamalari.md).
 func _run_cascade() -> void:
+	# Bir hafta önce açılan kriz çözülmediyse darbe olur.
+	if not coup_crisis.is_empty() and (coup_crisis.get("failed", false) or week > int(coup_crisis["week"])):
+		var lead: Actor = actors.get(coup_crisis["leader"])
+		_close_crisis()
+		if lead != null:
+			if crisis_note == "":
+				crisis_note = "Darbe kapına dayandığında karar veremedin."
+			_coup_now(lead)
+			return
 	var drop := _public_weakness()
+	var rd := _diff("ready_drive")
 	for a: Actor in actors.values():
-		if a.insider and not a.ready and a.rebellion_drive() > _diff("ready_drive"):
+		if a.insider and not a.ready and a.rebellion_drive() > rd:
 			a.ready = true
 	var changed_any := true
 	while changed_any:
@@ -936,19 +1404,271 @@ func _run_cascade() -> void:
 			if a.insider and not a.ready and share >= maxf(0.05, a.threshold - drop) and a.rebellion_drive() > 12.0:
 				a.ready = true
 				changed_any = true
+	# Çekilme: ne kendi öfkesi ne de kaskadın çekimi tutuyorsa komplocu birkaç hafta içinde geri çekilir.
+	for a: Actor in actors.values():
+		if not a.ready or a.moved or not a.insider:
+			continue
+		var d := a.rebellion_drive()
+		var held := d > rd - _diff("leave_gap") or (_ready_share_without(a) >= maxf(0.05, a.threshold - drop) and d > PLOT_CASCADE_MIN)
+		if held:
+			a.plot_calm = 0
+		else:
+			a.plot_calm += 1
+			if a.plot_calm >= PLOT_LEAVE_WEEKS:
+				a.ready = false
+				a.plot_calm = 0
+	# Aşamalar: sakin -> huzursuz -> komplocu -> hazırlıkta
+	var share_now := _ready_power_share()
+	for a: Actor in actors.values():
+		if a.moved or not a.insider:
+			continue
+		var st := 0
+		if a.ready:
+			st = 3 if share_now >= _diff("coup_share") - PLOT_PREP_MARGIN else 2
+		elif a.rebellion_drive() >= rd - PLOT_UNEASY_GAP:
+			st = 1
+		if st != a.plot_stage:
+			_log_plot(a, a.plot_stage, st)
+			a.plot_stage = st
+		if st == 3 and (a.military or a.royal):
+			a.power += PLOT_PREP_POWER  # kendi adamlarını kritik görevlere getirir
 	var striker := false
 	for a: Actor in actors.values():
 		if a.ready and a.insider and (a.military or a.royal):
 			striker = true
-	if week >= int(_diff("grace")) and _ready_power_share() >= _diff("coup_share") and striker:
-		var lead: Actor = null
-		for a: Actor in actors.values():
-			if a.ready and a.insider:
-				a.moved = true
-				if (a.military or a.royal) and (lead == null or a.power > lead.power):
-					lead = a
-		coup_leader = lead.id if lead else ""
-		king_strength = 0.0
+	if coup_crisis.is_empty() and week >= int(_diff("grace")) and week >= crisis_cooldown and share_now >= _diff("coup_share") and striker:
+		_open_crisis()
+
+
+func _ready_share_without(x: Actor) -> float:
+	var total := 0.0
+	var ready_p := 0.0
+	for a: Actor in actors.values():
+		if not a.insider:
+			continue
+		total += a.power
+		if a.ready and a != x:
+			ready_p += a.power
+	return ready_p / maxf(total, 1.0)
+
+
+func _coup_now(lead: Actor) -> void:
+	for a: Actor in actors.values():
+		if a.ready and a.insider:
+			a.moved = true
+	coup_leader = lead.id
+	king_strength = 0.0
+
+
+func _log_plot(a: Actor, from: int, to: int) -> void:
+	var text := ""
+	if to >= 2 and from < 2:
+		text = "komploya katıldı"
+	elif to == 3 and from == 2:
+		text = "darbe hazırlığına geçti"
+	elif from >= 2 and to < 2:
+		text = "komplodan çekildi"
+	elif to == 1 and from == 0 and not _plot_seen(a, "huzursuzlanmaya başladı"):
+		text = "huzursuzlanmaya başladı"
+	if text != "":
+		plot_log.append({"w": week, "name": a.display_name, "text": text})
+
+
+func _plot_seen(a: Actor, text: String) -> bool:
+	for l: Dictionary in plot_log:
+		if l["name"] == a.display_name and l["text"] == text:
+			return true
+	return false
+
+
+# ---------------------------------------------------------------- Alametler
+
+## Komplo görünür izler bırakır; sakin aktörler hakkında da dedikodu çıkar (alametlerin bir kısmı yanlıştır).
+func _plot_signs() -> void:
+	for a: Actor in actors.values():
+		if a.moved or not a.insider:
+			continue
+		var st := clampi(a.plot_stage, 0, 3)
+		if rng.randf() < float(PLOT_SIGN_P[st]):
+			_add_sign(a, _sign_text(a, st), int(PLOT_SIGN_W[st]), st > 0)
+
+
+func _add_sign(a: Actor, text: String, weight: int, real: bool) -> void:
+	a.signs.append({"w": week, "text": text, "weight": weight, "real": real})
+	if a.signs.size() > 12:
+		a.signs.pop_front()
+	weekly_news.append("ALAMET: " + text)
+
+
+func _sign_text(a: Actor, st: int) -> String:
+	var by: Dictionary = SIGN_TEXTS[st]
+	var pool: Array = by.get(a.domain, [])
+	if pool.is_empty() or rng.randf() < 0.35:
+		pool = by["_"]
+	var t: String = pool[rng.randi() % pool.size()]
+	var nm := short_name(a)
+	var partner := ""
+	for o: Actor in actors.values():
+		if o != a and o.ready and o.insider and not o.moved:
+			partner = short_name(o)
+	var p_e := ek(partner, "e") if partner != "" else "tanınmayan bir heyete"
+	return t.replace("{n_in}", ek(nm, "in")).replace("{n_e}", ek(nm, "e")).replace("{n_i}", ek(nm, "i")).replace("{p_e}", p_e).replace("{n}", nm)
+
+
+## Oyuncunun gördüğü alametlerin son haftalardaki ağırlığı (sayı olarak gösterilmez).
+func suspicion(id: String) -> int:
+	var a: Actor = actors.get(id)
+	if a == null:
+		return 0
+	var s := 0
+	for g: Dictionary in a.signs:
+		if int(g["w"]) > week - PLOT_SUS_WINDOW:
+			s += int(g["weight"])
+	return s
+
+
+## 0 Sakin, 1 Huzursuz, 2 Şüpheli, 3 Tehlikeli
+func suspicion_level(id: String) -> int:
+	var s := suspicion(id)
+	var lvl := 0
+	for b in PLOT_SUS_BANDS:
+		if s >= int(b):
+			lvl += 1
+	return lvl
+
+
+# ---------------------------------------------------------------- Darbe krizi
+
+func _crisis_guard() -> float:
+	var g := 0.0
+	for a: Actor in actors.values():
+		if a.insider and (a.military or a.royal) and not a.ready:
+			g += a.power
+	return g / 100.0
+
+
+func crisis_chance(action: String) -> float:
+	var share := _ready_power_share()
+	if action == "rally":
+		return clampf((CRISIS_RALLY_BASE + (king_strength - 50.0) / 100.0 + _crisis_guard() * 0.3 + (1.0 - share) * 0.5) * _diff("crisis_odds"), 0.05, 0.85)
+	if action == "appeal":
+		return clampf((CRISIS_APPEAL_BASE - unrest / 100.0 - opposition / 200.0 + (king_strength - 50.0) / 200.0) * _diff("crisis_odds"), 0.05, 0.8)
+	return float(CRISIS_CONCEDE[mini(int(stats.get("concessions", 0)), CRISIS_CONCEDE.size() - 1)])
+
+
+func _open_crisis() -> void:
+	var lead: Actor = null
+	for a: Actor in actors.values():
+		if a.ready and a.insider and (a.military or a.royal) and (lead == null or a.power > lead.power):
+			lead = a
+	if lead == null:
+		return
+	coup_crisis = {"leader": lead.id, "week": week}
+	plot_log.append({"w": week, "name": lead.display_name, "text": "darbe girişimini başlattı"})
+	pending.insert(0, {"event": _crisis_event(lead), "age": 0})
+	weekly_news.append("KRİZ: %s harekete geçti. Saray kuşatılmak üzere." % lead.display_name)
+
+
+func _crisis_event(lead: Actor) -> Dictionary:
+	var nm := short_name(lead)
+	var opening := "Prens'in muhafızları sarayın doğu kanadını tuttu. Soylular taht salonunda toplanıyor; kimse seni çağırmadı."
+	if lead.military:
+		opening = "%s birlikleri başkentin girişlerini tuttu. Saraya mühürlü bir mektup geldi: 'Majestelerinin istirahati için.'" % ek(nm, "in")
+	var rally := crisis_chance("rally")
+	var appeal := crisis_chance("appeal")
+	var guard_b := 2 if rally >= 0.5 else (1 if rally >= 0.3 else 0)
+	var street_b := 2 if appeal >= 0.45 else (1 if appeal >= 0.25 else 0)
+	var guard_t: String = ["Muhafız komutanı çağrılarına cevap vermiyor.", "Muhafızların bir kısmı tereddütte.", "Saray muhafızları sana bağlı görünüyor."][guard_b]
+	var street_t: String = ["Sokak öfkeli; meydanlar senin için dolmayabilir.", "Sokak tedirgin; kimse kimin kazanacağını bilmiyor.", "Sokaklar sakin; halk sana hâlâ kulak verir."][street_b]
+	return {"id": "darbe_krizi", "art": "general_atamalari" if lead.military else "gizli_toplanti", "crisis": true, "advisors": [],
+		"title": "Darbe kapıda",
+		"text": "%s\n%s %s%s" % [opening, guard_t, street_t,
+			"" if int(stats.get("concessions", 0)) == 0 else " Bir kez boyun eğdin; bu kez sözüne inanmayabilirler."],
+		"cues": {"guard": guard_b, "street": street_b},
+		"choices": [
+			{"label": "Sadık birlikleri topla, liderleri tutuklat", "crisis": "rally", "fx": {}},
+			{"label": "%s istediğini ver" % ek(nm, "e"), "crisis": "concede", "fx": {}},
+			{"label": "Balkona çık, halka seslen", "crisis": "appeal", "fx": {}}],
+		"ignore": {"text": "Karar verilmedi. Kapılar açıldı.", "fx": {}}}
+
+
+func _close_crisis() -> void:
+	coup_crisis = {}
+	for i in range(pending.size() - 1, -1, -1):
+		if pending[i]["event"].get("crisis", false):
+			pending.remove_at(i)
+
+
+func _resolve_crisis(action: String) -> String:
+	var lead: Actor = actors.get(coup_crisis.get("leader", ""))
+	var conspirators: Array = []
+	for a: Actor in actors.values():
+		if a.ready and a.insider and a != lead:
+			conspirators.append(a)
+	crisis_cooldown = week + CRISIS_COOLDOWN
+	if lead == null:
+		_close_crisis()
+		return "Darbenin lideri ortada yok; komplo dağıldı."
+	var nm := short_name(lead)
+	match action:
+		"rally":
+			if rng.randf() < crisis_chance("rally"):
+				_close_crisis()
+				flags["DARBE_BASTIRILDI"] = week
+				flags[lead.id.to_upper() + "_GITTI"] = week
+				var knowers: Array = [lead.id]
+				for a: Actor in conspirators:
+					a.fear += 20.0
+					a.ambition = maxf(0.0, a.ambition - 10.0)
+					a.ready = false
+					a.plot_calm = 0
+					knowers.append(a.id)
+				plot_log.append({"w": week, "name": lead.display_name, "text": "tutuklandı (darbe bastırıldı)"})
+				actors.erase(lead.id)
+				king_strength = clampf(king_strength + 5.0, 0.0, 100.0)
+				unrest = clampf(unrest + 8.0, 0.0, 100.0)
+				_add_fact("darbe_bastirma_%d" % week, "Darbe girişiminin gece yarısı sert biçimde bastırılması", "king", 25, knowers, 1)
+				return "Sadık birlikler gece yarısı karargâhı bastı. %s tutuklandı. Komplocular sindi; ama bu gecenin izi kalacak." % nm
+			coup_crisis["failed"] = true
+			crisis_note = "Darbe gecesi sadık birlikleri toplamaya çalıştın; muhafızlar silahlarını indirdi."
+			return "Muhafızlar silahlarını indirdi. %s kapıdan girdiğinde salonda senden başka kimse yoktu." % nm
+		"concede":
+			if rng.randf() >= crisis_chance("concede"):
+				coup_crisis["failed"] = true
+				crisis_note = "Darbe gecesi bir kez daha taviz vermeyi denedin; bu kez kimse sözüne inanmadı."
+				return "%s teklifini dinledi, sonra güldü: 'Bunu geçen sefer de söylemiştiniz, Majesteleri.'" % nm
+			stats["concessions"] = int(stats.get("concessions", 0)) + 1
+			_close_crisis()
+			flags["DARBE_TAVIZ"] = week
+			lead.power += 15.0
+			lead.loyalty["career"] = float(lead.loyalty["career"]) + 30.0
+			lead.obligation += 10.0
+			lead.ambition += 3.0
+			lead.ready = false
+			for a: Actor in conspirators:
+				a.ready = false
+				a.plot_calm = 0
+			for a: Actor in actors.values():
+				a.perceived_king -= 5.0
+			king_strength = clampf(king_strength - 15.0, 0.0, 100.0)
+			plot_log.append({"w": week, "name": lead.display_name, "text": "taviz koparıp geri çekildi"})
+			return "%s istediğini aldı. Tanklar kışlaya döndü; ama artık herkes bu ülkeyi gerçekte kimin yönettiğini biliyor." % nm
+		_:
+			if rng.randf() < crisis_chance("appeal"):
+				_close_crisis()
+				flags["DARBE_HALK"] = week
+				for a: Actor in conspirators:
+					a.ready = false
+					a.plot_calm = 0
+					a.fear += 10.0
+				king_strength = clampf(king_strength + 3.0, 0.0, 100.0)
+				unrest = clampf(unrest - 5.0, 0.0, 100.0)
+				plot_log.append({"w": week, "name": lead.display_name, "text": "halk sarayın önüne dolunca yalnız kaldı"})
+				return "Meydan doldu. Kalabalık adını haykırırken %s yanındakilerin birer birer telefonu kapattığını gördü." % nm
+			unrest = clampf(unrest + 15.0, 0.0, 100.0)
+			coup_crisis["failed"] = true
+			crisis_note = "Darbe gecesi halka seslendin; meydan boş kaldı."
+			return "Balkona çıktığında meydan yarı boştu. Gelenler de senin için değil, ne olacağını görmek için gelmişti."
 
 
 func _public_weakness() -> float:
@@ -994,6 +1714,7 @@ func _check_end() -> void:
 
 func _end(survived: bool) -> void:
 	ended = true
+	mesai = 0  # biten oyunda harcanacak mesai kalmaz (kriz hafta ortasında bitirebilir)
 	var top: Actor = null
 	for a: Actor in actors.values():
 		if top == null or a.power > top.power:
@@ -1011,6 +1732,8 @@ func _end(survived: bool) -> void:
 				cause += ", yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti." % (week - promo_week)
 			else:
 				cause += ". Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı."
+			if crisis_note != "":
+				cause += " " + crisis_note
 		elif unrest >= 100.0:
 			cause = "Saltanatının %d. haftasında halk ayaklanması sarayı kuşattı." % (week - 1)
 		elif legal_pressure() >= 100.0:
@@ -1024,7 +1747,8 @@ func _end(survived: bool) -> void:
 		"top_actor": top.display_name if top else "", "history": history.duplicate(),
 		"lies": _top_lies(), "king": KING_NAME,
 		"promises": "%d söz verdin: %d tutuldu, %d bozuldu." % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
-		"historians": historians(survived), "timeline": timeline.duplicate()}
+		"historians": historians(survived), "timeline": timeline.duplicate(), "council": council_record(),
+		"plot": plot_log.duplicate(), "signs": sign_record()}
 	record["new_achievements"] = _award_achievements(survived, title, cause) if record_chronicle else []
 	if record_chronicle:
 		_append_chronicle(record)
@@ -1247,6 +1971,9 @@ func _domain_truth(domain: String) -> float:
 			return 100.0 - king_strength
 		"opposition":
 			return opposition
+		"intel":
+			# İstihbarat hem sokağı hem saraydaki komployu izler.
+			return clampf(maxf(unrest * 0.6, _ready_power_share() * 120.0), 0.0, 100.0)
 		"court":
 			return legal_pressure()
 		"royal":
@@ -1264,7 +1991,8 @@ func _army_loyalty() -> float:
 func _domain_reported(a: Actor) -> float:
 	var t := _domain_truth(a.domain)
 	var good := 100.0 if a.domain in GOOD_DOMAINS_HIGH else 0.0
-	return lerpf(t, good, a.flattery() * 0.6)
+	# Komplocu kendi alanını olduğundan iyi gösterir.
+	return lerpf(t, good, minf(1.0, a.flattery() * 0.6 + (PLOT_SPIN if a.ready else 0.0)))
 
 
 func _band(a: Actor, value: float) -> int:

@@ -162,6 +162,25 @@ Tek görsel, **yazı ve etiket olmadan** (etiketleri oyun koyar):
 
 Binalar farklı yerlere düşerse sorun değil: `game/data/city_map.json` dosyasına konumları yüzde olarak yazarım, örneğin `{"adliye": [0.2, 0.4]}`.
 
+### Boş masa arka planı (`art/bg_desk.png` yerine, 1920x1080)
+
+Masa nesneleri artık oyun tarafından konuyor; arka plandaki masa **boş** olmalı, yoksa nesneler eşyaların üstüne binmiş gibi görünür.
+
+**En iyi yol (düzenleme):** Mevcut `art/bg_desk.png` dosyasını ChatGPT'ye yükle ve şunu yaz:
+
+```
+Edit this image. Keep the exact same camera angle, framing, lighting, colors and painterly style. Remove every loose object from the desk surface: the green books and folders on the left, the maps and photographs, the brass inkwell and small boxes, the horse statuette, the rotary telephone, the sealed envelopes, the photo stack on the right, the pen and the armillary sphere. Keep ONLY the brass banker's lamp (right back corner), the pen holder next to it, and the green leather blotter in the center. Fill the removed areas with the same dark polished walnut wood, continuing its grain and the warm reflections of the lamp. Keep the window, city view, curtains, bust, coat of arms and the chair back exactly as they are. No text.
+```
+
+**Sıfırdan üretmek gerekirse:**
+
+```
+High-angle view from the king's chair looking across a massive dark polished walnut royal desk in a palace study at night. The desk surface fills the lower two thirds of the image and is completely clear: no papers, no books, no telephone, no objects. Only a large green leather blotter with thin gold tooling in the center, and a brass banker's lamp with a green glass shade on the right back corner casting a warm pool of light across the right half of the desk. Behind the desk a tall window with a balustrade balcony and a night view of a river city with a lit palace dome, heavy olive velvet curtains with gold tassels, a marble bust on a pedestal at the far left, a royal lion coat of arms banner at the far right. The top edge of a leather chair back at the bottom center. Deep shadows at the edges, the center calm and low-detail.
+```
+\+ STİL BLOĞU
+
+Not: Kamera açısı ve lambanın yeri (sağ arka köşe) korunursa oyundaki gölgeler ve ışık hesabı kendiliğinden uyar.
+
 ### Masa nesneleri (`art/desk/<id>.png`, saydam arka plan, 1024x1024)
 
 Her biri tek nesne, **saydam arka plan**, üstten hafif açılı, aynı ışık (sağ üstten sıcak lamba):

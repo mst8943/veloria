@@ -24,9 +24,13 @@ var secrets_on_king := 0       # kral hakkında bildiği sır sayısı
 var known_weak := false        # oyuncu zayıf noktasını keşfetti mi
 var known_red := false         # oyuncu kırmızı çizgisini keşfetti mi
 var blackmailed := 0           # kaç kez şantaj yapıldı
+var plot_stage := 0            # komplo aşaması: 0 sakin, 1 huzursuz, 2 komplocu (ready), 3 hazırlıkta
+var plot_calm := 0             # komplodan çekilme koşulunun üst üste sağlandığı hafta sayısı
+var signs: Array = []          # oyuncunun gördüğü alametler: {w, text, weight, real}
 
 const SAVE_PROPS := ["power", "ambition", "fear", "honesty", "threshold", "loyalty", "obligation",
-	"perceived_king", "ready", "moved", "secrets_on_king", "known_weak", "known_red", "blackmailed"]
+	"perceived_king", "ready", "moved", "secrets_on_king", "known_weak", "known_red", "blackmailed",
+	"plot_stage", "plot_calm", "signs"]
 
 
 func setup(d: Dictionary) -> void:

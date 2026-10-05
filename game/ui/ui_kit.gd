@@ -10,6 +10,7 @@ const TEXT := Color("e9e4d6")
 const TEXT_DIM := Color("9a958a")
 const DANGER := Color("c0504a")
 const OK := Color("7fae7a")
+const AMBER := Color("d08a3d")   # uyarı değil, dikkat: "çıkarı var" gibi
 
 const SERIF_PATH := "res://game/fonts/EBGaramond.ttf"
 static var _serif: Font
@@ -30,6 +31,85 @@ static func serif() -> Font:
 			sf.antialiasing = TextServer.FONT_ANTIALIASING_GRAY
 			_serif = sf
 	return _serif
+
+
+static var _italic: Font
+
+
+## Alıntılar için eğik serif (fontun italik kesimi gömülü değil; eğme dönüşümüyle).
+static func serif_italic() -> Font:
+	if _italic == null:
+		var fv := FontVariation.new()
+		fv.base_font = serif()
+		fv.variation_transform = Transform2D(Vector2(1, 0), Vector2(0.2, 1), Vector2.ZERO)
+		_italic = fv
+	return _italic
+
+
+static var _caps: Font
+
+
+## Bölüm başlıkları için harf aralığı açık serif (aynı font, daha resmi görünüm).
+static func caps() -> Font:
+	if _caps == null:
+		var fv := FontVariation.new()
+		fv.base_font = serif()
+		fv.spacing_glyph = 2
+		_caps = fv
+	return _caps
+
+
+## Çerçevenin köşelerine ince altın köşebentler çizer (paneli "hazırlanmış" gösterir).
+## Panelin kendi çiziminde, çocukların altında kalır; tıklamayı etkilemez.
+static func ornament(c: CanvasItem, col: Color = Color(GOLD, 0.75), length := 14.0, inset := 4.0) -> void:
+	c.draw.connect(func() -> void:
+		var s: Vector2 = (c as Control).size
+		var w := 1.5
+		for corner in [Vector2(0, 0), Vector2(1, 0), Vector2(0, 1), Vector2(1, 1)]:
+			var p := Vector2(inset + corner.x * (s.x - 2.0 * inset), inset + corner.y * (s.y - 2.0 * inset))
+			var dx := length * (1.0 if corner.x == 0.0 else -1.0)
+			var dy := length * (1.0 if corner.y == 0.0 else -1.0)
+			c.draw_line(p, p + Vector2(dx, 0), col, w, true)
+			c.draw_line(p, p + Vector2(0, dy), col, w, true)
+			c.draw_rect(Rect2(p - Vector2(1.5, 1.5), Vector2(3, 3)), col))
+	c.queue_redraw()
+
+
+## Ekran başlık bandı: koyu, alt kenarında ince altın çizgi. Ana ekran, harita ve medyada aynı.
+static func band_style() -> StyleBoxFlat:
+	var s := box(Color(0.025, 0.02, 0.03, 0.72), Color(0, 0, 0, 0), 8, 14)
+	s.content_margin_top = 6
+	s.content_margin_bottom = 6
+	s.border_color = Color(GOLD_DIM, 0.55)
+	s.border_width_bottom = 1
+	s.shadow_color = Color(0, 0, 0, 0.35)
+	s.shadow_size = 8
+	return s
+
+
+## Başlık ayracı: ortada küçük altın elmas, iki yana incelerek uzanan çizgiler.
+## Masa, menü ve oyun sonu başlıklarında aynı imza.
+static func divider(width := 360.0, col: Color = GOLD) -> Control:
+	var c := Control.new()
+	c.custom_minimum_size = Vector2(width, 12)
+	c.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	c.draw.connect(_draw_divider.bind(c, width, col))
+	return c
+
+
+static func _draw_divider(c: Control, width: float, col: Color) -> void:
+	var mid := c.size / 2.0
+	var half := minf(width, c.size.x) / 2.0
+	var steps := 24
+	for side in [-1.0, 1.0]:
+		for i in steps:
+			var a := float(i) / steps
+			var b := float(i + 1) / steps
+			var p0 := mid + Vector2(side * (10.0 + (half - 10.0) * a), 0)
+			var p1 := mid + Vector2(side * (10.0 + (half - 10.0) * b), 0)
+			c.draw_line(p0, p1, Color(col, 0.8 * (1.0 - a)), 1.2, true)
+	var d := PackedVector2Array([mid + Vector2(0, -4.5), mid + Vector2(4.5, 0), mid + Vector2(0, 4.5), mid + Vector2(-4.5, 0)])
+	c.draw_colored_polygon(d, col)
 
 
 ## Türkçe büyük harf: i -> İ, ı -> I (Godot'un to_upper'ı bu kuralı bilmez).

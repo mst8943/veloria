@@ -26,7 +26,9 @@ Her hafta masanın başında açılır. Masadaki nesnelere tıkla:
 | Hanedan fotoğrafı | Hükümdarlık Arşivi ve başarımlar |
 | Başkent haritası | Kurumlar |
 
-Kırmızı rozetler dikkat isteyen şeyleri gösterir. Masaya üst çubuktaki **Masa** düğmesiyle dönebilirsin. İstemezsen menüden "Haftaya masadan başla" seçeneğini kapat.
+Kırmızı rozetler dikkat isteyen şeyleri gösterir. Masaya üst çubuktaki **Masa** düğmesiyle dönebilirsin. İstemezsen Ayarlar'dan "Haftaya masadan başla" seçeneğini kapat.
+
+**Akış şeridi:** Ekranın altında, Haftayı Bitir düğmesinin solunda haftanın durumu tek satırda görünür: kalan mesai, bekleyen kararlar (bu hafta düşecek olanlar kırmızı), okunmamış medya, vadesi gelen sözler ve yayılan sırların. Bir parçaya tıklarsan seni ilgili yere götürür.
 
 ## Başkent
 
@@ -57,12 +59,15 @@ Mobilde kişiler ve eylemler ayrı bir **Saray** sekmesindedir.
 2. **Sayı yok:** Kimsenin sadakatini, ordunun gücünü ya da halkın öfkesini sayıyla göremezsin. Sadece **raporlar** var ve herkes yalan söyleyebilir.
 3. **Korku gerçeği öldürür:** İnsanlar senden korktukça sana kötü haber vermez. Raporlar birbirine benzemeye başlarsa kimse sana gerçeği söylemiyor demektir.
 4. **Ertelemek de karardır:** Bir karar kartını iki hafta cevapsız bırakırsan kendi kendine, çoğu zaman en kötü biçimde çözülür. Süresi dolmak üzere olan kartların çerçevesi kırmızı yanıp söner.
-5. **Eski kararlar geri döner:** Bugün verdiğin bir karar haftalar sonra yeni bir olay olarak karşına çıkabilir.
+5. **Meclis fısıldar:** Her karar kartında iki danışman görüş bildirir ("II'yi öneririm: hazineyi rahatlatır."). Gerekçeleri doğrudur ama seçicidir; işlerine gelmeyen bedeli anmazlar. Adının yanında **ÇIKARI VAR** yazan kişiyi seçeneklerden biri doğrudan etkiliyor. Uzman olduğu konuda daha isabetlidir. Bir danışmanın önerileri sürekli ötekilerle çelişiyorsa ona dikkat et. Korkan bir meclis "Takdir sizindir" demeye başlar.
+6. **Darbe bir sabah gelmez:** Komplo önce **alametler** bırakır (haber şeridinde "ALAMET: …"). Kişi kartında rolün yanında **ŞÜPHELİ** ya da **TEHLİKELİ** yazar; panelde "Tavır" göstergesinin ipucu son alametleri listeler. Alametlerin bir kısmı dedikodudur. Gönlü alınan komplocu geri çekilebilir. Darbe kapına dayandığında son bir **kriz kartı** gelir: sadık birlikleri toplamak, taviz vermek ya da halka seslenmek. Kartın metni muhafızların ve sokağın durumunu anlatır; o hafta karar vermezsen saray düşer. Bir kez taviz verdiysen ikincisine inanılmayabilir.
+7. **Eski kararlar geri döner:** Bugün verdiğin bir karar haftalar sonra yeni bir olay olarak karşına çıkabilir.
 
 ## Eylemler
 
 | Eylem | Ne işe yarar | Bedeli |
 |---|---|---|
+| Huzura Çağır | Kişiyi biraz yatıştırır; komplo kuran çoğu zaman kaçamak konuşur, temiz çıkanın hakkındaki dedikodular dağılır | İz bırakmaz; aynı kişi 4 haftada bir |
 | Terfi | Güç ve minnet verir | Kişi güçlenir, hırslanır, sana borçlanırsın |
 | Gizli Ödeme | Sadakat satın alır | 5 servet; zamanla aşınır, iz bırakır |
 | Doğrula | Bir raporu başka kaynaklarla kıyaslar | Sonuç gürültülüdür |
@@ -75,7 +80,11 @@ Mobilde kişiler ve eylemler ayrı bir **Saray** sekmesindedir.
 | Gizli Operasyon | 1–3 kişiyle dikkat dağıt, muhalefeti böl, rakibi zayıflat | 2 mesai; çember büyüdükçe sızıntı riski artar |
 | Söz Ver | Başbakanlık, ihale ya da dokunulmazlık vaat eder | Vadesi gelince ya tutarsın ya bedelini ödersin |
 
-Bir eylemin üzerine gelince ya da dokununca ne yaptığı sağ alttaki bilgi çubuğunda görünür.
+Eylemler, Eylemler panelinde altı sekmede toplanır (KAZAN · SÖZ VER · ÖĞREN · EMRET · BASKI · OPERASYON); bir sekmeye tıklayınca o gruptaki eylemler açılır. Bir eylemin üzerine gelince ne yaptığı, eylemden sonra da sonucu panelin altında görünür. Operasyon için birden fazla kişi seçmek gerekirse OPERASYON sekmesindeki **Çoklu seçim**i aç (ya da Ctrl ile tıkla).
+
+**İlk haftalarda** gündemin üstünde "Bu hafta ne yapmalı?" yol göstericisi durur: 1 Kararını ver → 2 Raporları oku → 3 Bir kişiye eylem → 4 Haftayı bitir. Sıradaki adım altınla vurgulanır; bir adıma tıklamak seni ilgili yere götürür. İpuçları Ayarlar'dan kapatılabilir.
+
+**Raporlar** masaüstünde güç merkezlerinin altında listelenir; bir rapora tıklamak o kişiyi seçer. Sol kenarın rengi raporun ne *söylediğini* gösterir (yeşil iyi, amber tedirgin, kırmızı kötü); gerçeği değil.
 
 ## Sırlar ve ortak bilgi
 
@@ -90,11 +99,12 @@ Yaptığın gizli işler **Dosyalar** sekmesinde iz olarak birikir. Bir sırrı 
 
 ## Oyun sonu
 
-Saltanat bittiğinde (104 hafta ya da düşüş):
-- Sana bir **ünvan** verilir (Demir Taç, Altın Kral, Generallerin Kuklası, Sözünün Eri, Sırların Efendisi…).
-- **Gerçekte ne oldu** grafiği, oyun boyunca gizli kalan gidişatı gösterir.
-- **Tarih ne yazacak?** Saray tarihçisi ve sürgündeki tarihçi saltanatını iki farklı biçimde anlatır.
-- **Hakikat Dosyası:** Kim, ne zaman, sana ne yalan söyledi.
+Saltanat bittiğinde (104 hafta ya da düşüş) sana bir **ünvan** verilir (Demir Taç, Altın Kral, Generallerin Kuklası, Sözünün Eri, Sırların Efendisi…) ve sonuç ekranı sekmelere ayrılır:
+- **Özet:** Nasıl bittiği, saltanat süresi, söz sicili, yeni başarımlar ve son kararların.
+- **Grafik:** "Gerçekte ne oldu" grafiği, oyun boyunca gizli kalan gidişatı gösterir.
+- **Tarihçiler:** Saray tarihçisi ve sürgündeki tarihçi saltanatını iki farklı biçimde anlatır.
+- **Hakikat Dosyası:** Kim, ne zaman, sana ne yalan söyledi. Altında **Meclis Sicili** (her danışmanın kaç öneri verdiği, kaçını dinlediğin, kaçında seni yanılttığı) ve **Komplo Defteri** (kim ne zaman huzursuzlandı, komploya katıldı, çekildi; alametlerin kaçı gerçekti).
+- **Kararlar:** Verdiğin ve ertelediğin tüm kararlar, en yenisi üstte.
 - Saltanatın **Hükümdarlık Arşivi**'ne kaydedilir.
 - Kazandığın yeni **başarımlar** duyurulur. 15 başarımın tamamı Arşiv'de listelenir.
 
@@ -111,7 +121,9 @@ Oyun her hafta sonunda **otomatik kaydedilir**. Saltanat bittiğinde kayıt sili
 
 ## Ayarlar
 
-Menüde: zorluk (Kolay / Normal / Zor), müzik ve efekt sesi, tam ekran, kısa geçişler, danışman ipuçları, açılış sineması ve haftaya masadan başlama.
+Ana menüde dört düğme var: **Devam Et** (oyun sürüyorsa **Oyuna Dön**), **Yeni Oyun**, **Ayarlar**, **Çıkış**. Altındaki bağlantılar: Nasıl Oynanır, Hükümdarlık Arşivi, Hakkında.
+
+Zorluk (Kolay / Normal / Zor) **Yeni Oyun** sayfasında seçilir. **Ayarlar** sayfasında: müzik ve efekt sesi, tam ekran, kısa geçişler, danışman ipuçları, açılış sineması ve haftaya masadan başlama. Esc alt sayfadan ana menüye döner.
 
 ## İpuçları
 
