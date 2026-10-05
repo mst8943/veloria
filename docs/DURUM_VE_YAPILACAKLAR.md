@@ -62,8 +62,15 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
   - Gazeteler: kâğıt shader'ı (lif, sararma, katlanma izi), yarım ton fotoğraf baskısı + fotoğraf yazısı, künye kulakçıkları ve çift çizgi, iki yana yaslı serif gövde ("BAŞKENT —"), "Devamı sayfa N'de", çift çerçeveli ilan. Serbest Kalem kendi kimliğinde: gri ucuz kâğıt, kırmızı blok, kalın sans logo.
   - Halden TV: çizilmiş ceviz kasalı tüplü televizyon (VELTRON, düğmeler, hoparlör, güç ışığı); `crt.gdshader` ekran dokusunu okuyup görüntüyü ve kanal grafiklerini birlikte eğer (tarama, fosfor maskesi, parazit). Alt üçlü bant ve "HABERLER" bloklu şerit. Ekran boyutu eldeki alana göre (mobil sığar).
   - Hata: TV şeridi `ALAMET:` satırlarını yayınlıyordu (kralın gizli gözlemleri); `press.gd::broadcast` filtreler. `scanlines.gdshader` kaldırıldı. `ui_shots.gd` artık Serbest Kalem ve TV görüntüsünü de alır (`1_medya_serbest`, `1_medya_tv`).
-  - Yayın durdurma mührü: prompt `ART_PROMPTS.md` (`art/media/yayin_muhru.png`, saydam ya da beyaz zemin). Kod hazır (`media_view.gd::_build_closed`, çarpma karışımı); **görsel kullanıcıdan bekleniyor**, yokken yalnızca kaşe.
+  - Yayın durdurma mührü: prompt `ART_PROMPTS.md` (`art/media/yayin_muhru.png`, saydam ya da beyaz zemin). Kod hazır (`media_view.gd::_build_closed`, çarpma karışımı); görsel yerleşti (beyaz zemine yassılaştırılmış; çarpma karışımı saydamlığı yok sayar).
 - **Beşinci oturum (devam): Gündemde "BU HAFTA" defteri** (masaüstü): karar kartlarının altında haftanın eylem sonuçları (`main.gd::_add_week_ledger`, `_week_log`); boşken sıradaki adımı söyler. Açılış/yükleme mesajı deftere girmez. Mobil TV kasası alt kenara taşmıyor.
+- **Beşinci oturum (devam): Faz 1 tamamlandı** — `docs/design/faz1_okunabilirlik.md`.
+  - `Sim.week_changes` (`_visible_snapshot` / `_diff_visible`, `end_week` içinde): yalnızca görünür göstergelerin farkı (rapor tonu, güç kademesi, tavır, düşmanlık, sözler, KULİS/MANŞET, kendiliğinden çözülen kararlar), en çok 6 satır, rng tüketmez. Gündemde "GEÇEN HAFTADAN BERİ" (masaüstü + mobil).
+  - `Sim.report_prev`: rapor satırında çizilmiş yön oku (raporun söylediği bandın değişimi). İkisi de kayda yazılır.
+  - Eylem önizlemesi: `main.gd::ACTION_META` + `_preview()` (mesai, servet, iz, tahmini risk; seçili kişiye göre bağlam). `Sim.power_tier()`, `Sim.BRIBE_COST` tek kaynak.
+  - Hatalar: ertelenen kararların "ERTELENDİ" haberi eklendiği anda siliniyordu (`weekly_news.clear()` sırası) — artık oyuncuya ulaşıyor. TV şeridi yalnızca OLAY satırlarını yayınlar (önceden söz ve soruşturma notları da sızıyordu). Kategori sekmesi koddan değişince iki sekme basılı kalıyordu.
+  - Mekanik değişmedi: `--full` sonucu birebir aynı (tohum 101, aynı ünvan, 54 olay).
+  - Yayın durdurma mührü yerleşti (`art/media/yayin_muhru.png`).
 
 ## Ölçülmüş denge (probe_template, 80 kampanya, darbe aşamalarından sonra)
 | Bot | Kolay | Normal | Zor |

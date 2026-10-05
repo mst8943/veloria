@@ -55,6 +55,8 @@ var karne: Dictionary = {}   # kaynak -> {ok, bad}
 var advice_log: Array = []   # meclis görüşlerinin sicili (oyun sonunda açılır)
 var stats: Dictionary = {}
 var weekly_news: Array = []
+var report_prev: Dictionary = {}   # kaynak -> geçen haftaki raporun SÖYLEDİĞİ band (gerçek değil)
+var week_changes: Array = []       # {tone, text, actor}: görünür göstergelerin geçen haftaya göre farkı
 var ended := false
 var record: Dictionary = {}
 var coup_leader := ""
@@ -92,6 +94,8 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 	coup_crisis = {}
 	crisis_cooldown = 0
 	weekly_news.clear()
+	report_prev.clear()
+	week_changes.clear()
 	promises.clear()
 	timeline.clear()
 	stats = {"ops": 0, "bribes": 0, "promotes": 0, "leaks": 0, "dismissals": 0, "written": 0, "hints": 0, "checks": 0,
@@ -177,7 +181,7 @@ func save_game() -> bool:
 		"fired": fired_events, "history": history, "pending": pending, "truth": truth_log, "karne": karne, "advice_log": advice_log,
 		"plot_log": plot_log, "coup_crisis": coup_crisis, "crisis_cooldown": crisis_cooldown,
 		"stats": stats, "rng": rng.state, "seed": rng.seed, "diff": difficulty, "promises": promises,
-		"timeline": timeline}
+		"timeline": timeline, "report_prev": report_prev, "week_changes": week_changes}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -222,6 +226,8 @@ func load_game() -> bool:
 	timeline = d.get("timeline", [])
 	rng.state = d["rng"]
 	_generate_reports()
+	report_prev = d.get("report_prev", {})   # _generate_reports'un üzerine yazdığı geçen hafta
+	week_changes = d.get("week_changes", [])
 	changed.emit()
 	return true
 
@@ -303,13 +309,16 @@ func summon(id: String) -> String:
 
 
 ## Rüşvet: sadakat satın alır ve kanıt üretir.
+const BRIBE_COST := 5.0
+
+
 func bribe(id: String) -> String:
 	var a: Actor = actors[id]
-	if private_wealth < 5.0:
+	if private_wealth < BRIBE_COST:
 		return "Kişisel servetin yetersiz."
 	if not spend_mesai():
 		return _no_mesai()
-	private_wealth -= 5.0
+	private_wealth -= BRIBE_COST
 	a.loyalty["money"] += 8.0
 	a.secrets_on_king += 1
 	stats["bribes"] += 1
@@ -1154,6 +1163,10 @@ func council_record() -> Array:
 func end_week() -> void:
 	if ended:
 		return
+	var before := _visible_snapshot()
+	# Haftanın haberleri burada sıfırlanır: ertelenen kararların haberi de oyuncuya ulaşsın
+	# (eskiden aşağıda ekleniyor, hemen ardından siliniyordu).
+	weekly_news.clear()
 	# Ertelenen kararlar kendi kendine çözülür (olgunlaşır).
 	var keep: Array = []
 	for p in pending:
@@ -1171,7 +1184,6 @@ func end_week() -> void:
 	pending = keep
 	week += 1
 	mesai = mesai_max
-	weekly_news.clear()
 	_world_tick()
 	_decay_facts()
 	_fire_events()
@@ -1180,6 +1192,7 @@ func end_week() -> void:
 	_plot_signs()
 	_generate_reports()
 	_record_timeline()
+	week_changes = _diff_visible(before, _visible_snapshot())
 	_check_end()
 	if autosave and not ended:
 		save_game()
@@ -1187,6 +1200,91 @@ func end_week() -> void:
 		news.emit(n)
 	week_advanced.emit(week)
 	changed.emit()
+
+
+## Güç kademesi (kişi kartında görünen): 1 ikinci planda, 2 etkili, 3 vazgeçilmez.
+static func power_tier(power: float) -> int:
+	return 1 if power < 40.0 else (2 if power < 65.0 else 3)
+
+
+const POWER_TIER_NAMES := ["", "ikinci planda", "etkili", "vazgeçilmez"]
+const REPORT_TONES := ["iyimser", "tedirgin", "karamsar"]   # raporun söylediği band
+const CHANGES_MAX := 6
+
+
+## "Neler değişti?" için oyuncunun zaten görebildiği göstergelerin fotoğrafı. Gizli değer yok:
+## rapor tonu, güç kademesi, tavır (görülen alametler), düşmanlık, sözler. rng tüketmez.
+func _visible_snapshot() -> Dictionary:
+	var bands := {}
+	for r: Dictionary in reports:
+		bands[str(r["source"])] = int(r["band"])
+	var people := {}
+	for a: Actor in actors.values():
+		people[a.id] = {"name": a.display_name, "power": power_tier(a.power),
+			"susp": suspicion_level(a.id) if a.insider else -1, "moved": a.moved}
+	var prom := {}
+	for p: Dictionary in promises:
+		var nm: String = actors[p["actor"]].display_name if actors.has(p["actor"]) else str(p["actor"])
+		prom[str(p["id"])] = {"state": str(p["state"]), "asked": bool(p.get("asked", false)), "name": nm, "prize": str(p["prize"])}
+	return {"bands": bands, "people": people, "promises": prom}
+
+
+## İki fotoğrafın farkı + bu haftanın kulis/manşet ve kendiliğinden çözülen kararları.
+## tone: -1 kötü, 0 dikkat, +1 iyi. Önce kötüler; en çok CHANGES_MAX satır.
+func _diff_visible(b: Dictionary, n: Dictionary) -> Array:
+	var out: Array = []
+	for line in weekly_news:
+		var s := str(line)
+		if s.begins_with("ERTELENDİ — "):
+			out.append({"tone": 0, "actor": "", "text": "Kendiliğinden çözüldü: " + s.substr(12).split(":")[0] + "."})
+		elif s.begins_with("MANŞET: "):
+			out.append({"tone": -1, "actor": "", "text": s.substr(8)})
+		elif s.begins_with("KULİS: "):
+			out.append({"tone": 0, "actor": "", "text": s.substr(7)})
+	for id in b["people"]:
+		var p0: Dictionary = b["people"][id]
+		var name: String = p0["name"]
+		if not n["people"].has(id):
+			out.append({"tone": 0, "actor": "", "text": "%s artık sarayda değil." % name})
+			continue
+		var p1: Dictionary = n["people"][id]
+		if p1["moved"] and not p0["moved"]:
+			out.append({"tone": -1, "actor": id, "text": "%s sana karşı açıkça harekete geçti." % name})
+			continue
+		var s0 := int(p0["susp"])
+		var s1 := int(p1["susp"])
+		if s0 >= 0 and s1 != s0:
+			out.append({"tone": -1 if s1 > s0 else 1, "actor": id,
+				"text": "%s tavrı %s: artık %s." % [ek(name, "in"), "sertleşti" if s1 > s0 else "yumuşadı", str(SUSPICION_NAMES[s1]).to_lower()]})
+		var t0 := int(p0["power"])
+		var t1 := int(p1["power"])
+		if t1 != t0:
+			out.append({"tone": 0, "actor": id,
+				"text": "%s %s: artık %s." % [name, "güçlendi" if t1 > t0 else "güç kaybetti", POWER_TIER_NAMES[t1]]})
+	for src in n["bands"]:
+		if b["bands"].has(src) and n["people"].has(src):
+			var d := int(n["bands"][src]) - int(b["bands"][src])
+			if d != 0:
+				out.append({"tone": -1 if d > 0 else 1, "actor": src,
+					"text": "%s raporu %s: artık %s." % [ek(str(n["people"][src]["name"]), "in"), "kötüleşti" if d > 0 else "iyileşti", REPORT_TONES[int(n["bands"][src])]]})
+	for pid in n["promises"]:
+		if not b["promises"].has(pid):
+			continue  # bu hafta verilen sözü oyuncu zaten biliyor
+		var q0: Dictionary = b["promises"][pid]
+		var q1: Dictionary = n["promises"][pid]
+		var who := ek(str(q1["name"]), "e")
+		if q1["state"] != q0["state"]:
+			match str(q1["state"]):
+				"kept":
+					out.append({"tone": 1, "actor": "", "text": "%s verdiğin %s sözü tutuldu." % [who, q1["prize"]]})
+				"broken":
+					out.append({"tone": -1, "actor": "", "text": "%s verdiğin %s sözü bozuldu." % [who, q1["prize"]]})
+				_:
+					out.append({"tone": 0, "actor": "", "text": "%s verdiğin %s sözü geçersiz kaldı." % [who, q1["prize"]]})
+		elif q1["asked"] and not q0["asked"]:
+			out.append({"tone": 0, "actor": "", "text": "%s %s sözünün karşılığını istiyor." % [q1["name"], q1["prize"]]})
+	out.sort_custom(func(x: Dictionary, y: Dictionary) -> bool: return int(x["tone"]) < int(y["tone"]))
+	return out.slice(0, CHANGES_MAX)
 
 
 ## Hakikat Dosyası grafiği için gerçek (gizli) durumun haftalık kaydı.
@@ -2002,6 +2100,9 @@ func _band(a: Actor, value: float) -> int:
 
 
 func _generate_reports() -> void:
+	report_prev.clear()
+	for r: Dictionary in reports:
+		report_prev[str(r["source"])] = int(r["band"])
 	reports.clear()
 	var echo := echo_level()
 	var dorn: Actor = actors.get("dorn")

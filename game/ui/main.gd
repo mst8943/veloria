@@ -1403,8 +1403,8 @@ func _show_act_cat(cat: String) -> void:
 	_act_cat = cat
 	for k in _cat_rows:
 		(_cat_rows[k] as Control).visible = k == cat
-	if _cat_btns.has(cat):
-		(_cat_btns[cat] as Button).set_pressed_no_signal(true)
+	for k in _cat_btns:
+		(_cat_btns[k] as Button).set_pressed_no_signal(k == cat)   # koddan değişince ButtonGroup diğerini bırakmıyor
 
 
 func _add_btn(parent: Node, key: String, text: String, cb: Callable) -> void:
@@ -1415,11 +1415,99 @@ func _add_btn(parent: Node, key: String, text: String, cb: Callable) -> void:
 	if TIPS.has(key):
 		var tip: String = TIPS[key]
 		b.tooltip_text = tip
-		b.mouse_entered.connect(func() -> void: _hint(tip))
-		b.button_down.connect(func() -> void: _hint(tip))
+		if ACTION_META.has(key):
+			b.mouse_entered.connect(_preview.bind(key))
+			b.button_down.connect(_preview.bind(key))
+		else:
+			b.mouse_entered.connect(func() -> void: _hint(tip))
+			b.button_down.connect(func() -> void: _hint(tip))
 	_wire(b)
 	parent.add_child(b)
 	_buttons[key] = b
+
+
+## Eylem önizlemesi (docs/design/faz1_okunabilirlik.md): [ad, mesai, servet (-1: Sim'den), iz, temel risk].
+## iz: 0 yok, 1 inkâr edilebilir, 2 iz bırakır, 3 kanıt bırakır. Risk yalnızca görünür bilgiden düzeltilir.
+const ACTION_META := {
+	"summon": ["Huzura Çağır", 1, 0.0, 0, 0],
+	"promote": ["Terfi", 1, 0.0, 0, 1],
+	"bribe": ["Gizli Ödeme", 1, -1.0, 2, 0],   # -1: servet bedeli Sim.BRIBE_COST
+	"cross": ["Raporu Doğrula", 1, 0.0, 0, 0],
+	"investigate": ["Araştır", 1, 0.0, 0, 0],
+	"o_sor": ["Soruşturma", 1, 0.0, 0, 0],
+	"o_yaz": ["Yazılı Emir", 1, 0.0, 3, 1],
+	"o_soz": ["Sözlü Emir", 1, 0.0, 0, 1],
+	"o_ima": ["İma", 1, 0.0, 1, 2],
+	"blackmail": ["Şantaj", 1, 0.0, 2, 2],
+	"dismiss": ["Görevden Al", 1, 0.0, 0, 1],
+	"p_0": ["Söz: Başbakanlık", 1, 0.0, 0, 1],
+	"p_1": ["Söz: Liman İhalesi", 1, 0.0, 0, 1],
+	"p_2": ["Söz: Dokunulmazlık", 1, 0.0, 0, 1],
+	"op_dikkat": ["Dikkat Dağıt", 2, 0.0, 1, 1],
+	"op_bol": ["Muhalefeti Böl", 2, 0.0, 1, 1],
+	"op_zayif": ["Rakibi Zayıflat", 2, 0.0, 1, 2],
+}
+const TRACE_NAMES := ["iz yok", "inkâr edilebilir", "iz bırakır", "kanıt bırakır"]
+const RISK_NAMES := ["düşük", "orta", "yüksek"]
+
+
+func _preview(key: String) -> void:
+	if _hint_label == null:
+		return
+	var m: Array = ACTION_META[key]
+	var risk := int(m[4])
+	var note := ""
+	var id := _selected_primary()
+	if key.begins_with("op_"):
+		var n := _sel.size()
+		risk = clampi(risk + maxi(0, n - 2), 0, 2)
+		note = "Önce çemberi kur: 1–3 kişi seç." if n == 0 else "Çember büyüdükçe başarı da, sızıntı riski de artar."
+	elif id == "":
+		note = "Önce bir kişi seç."
+	else:
+		var a = Sim.actors[id]
+		var tier := Sim.power_tier(a.power)
+		match key:
+			"summon":
+				var wait := Sim.summon_wait(id)
+				if wait > 0:
+					note = "%s yeniden çağırmak için %d hafta beklemelisin." % [Sim.ek(a.display_name, "i"), wait]
+			"promote":
+				if tier == 3:
+					risk = 2
+					note = "%s zaten vazgeçilmez; terfi onu daha da tehlikeli yapar." % a.display_name
+			"bribe":
+				if Sim.private_wealth < Sim.BRIBE_COST:
+					note = "Servetin yetmiyor."
+			"investigate":
+				if a.known_weak and a.known_red:
+					note = "Onun hakkında öğrenilecek bir şey kalmadı."
+			"blackmail":
+				if not a.known_weak:
+					note = "Önce zayıf noktasını öğren (Araştır)."
+			"dismiss":
+				risk = tier - 1
+				note = ["", "Sessizce gidebilir.", "Gücü var; karşılık verebilir.", "Vazgeçilmez birini düşürmek ağır bir karşı saldırı getirebilir."][tier]
+			"p_0", "p_1", "p_2":
+				if Sim.prize_taken(Sim.PRIZES[int(key.substr(2))]):
+					note = "Bu ödül zaten birine verildi."
+		if a.moved:
+			note = "%s artık sana karşı; eylemlerin işe yaramayabilir." % a.display_name
+	if Sim.mesai < int(m[1]):
+		note = "Mesain yetmiyor."
+	if note == "":
+		# Bağlam yoksa uzun açıklamanın ilk cümlesi (tamamı ipucu balonunda).
+		var desc: String = str(TIPS[key]).split("\n")[1]
+		note = desc.split(". ")[0].trim_suffix(".") + "."
+	var cost := "%d mesai" % int(m[1])
+	var wealth: float = Sim.BRIBE_COST if float(m[2]) < 0.0 else float(m[2])
+	if wealth > 0.0:
+		cost += " · %d servet" % int(wealth)
+	var trace := int(m[3])
+	var tc: String = [UIKit.OK, UIKit.GOLD, UIKit.AMBER, UIKit.DANGER][trace].to_html(false)
+	var rc: String = [UIKit.OK, UIKit.AMBER, UIKit.DANGER][risk].to_html(false)
+	_hint_label.text = "[color=#d6b25e][b]%s[/b][/color]   [color=#9a958a]%s  ·  [/color][color=#%s]%s[/color][color=#9a958a]  ·  tahmini risk [/color][color=#%s]%s[/color]\n%s" % [
+		m[0], cost, tc, TRACE_NAMES[trace], rc, RISK_NAMES[risk], note]
 
 
 func _hint(text: String) -> void:
@@ -2303,6 +2391,7 @@ func _rebuild_agenda() -> void:
 			b.pressed.connect(_choose.bind(pi, ci))
 			vb.add_child(b)
 			_decision_buttons.append(b)
+	_add_changes(animated)
 	if _report_box != null:
 		_add_week_ledger(animated)
 	var texts: Array[RichTextLabel] = []
@@ -2324,6 +2413,8 @@ func _rebuild_agenda() -> void:
 			row.add_theme_constant_override("separation", 10)
 			panel.add_child(row)
 			row.add_child(_initial_art(str(r["source"]), Vector2(46, 46), 22))
+			row.add_child(_trend_mark(r))
+			panel.tooltip_text = "%s · %s%s" % [r["name"], r["title"], _trend_tip(r)]
 			var l := RichTextLabel.new()
 			l.bbcode_enabled = true
 			l.fit_content = true
@@ -2338,6 +2429,76 @@ func _rebuild_agenda() -> void:
 		_play_reveal.call_deferred(animated, texts)
 	else:
 		_reveal = false
+
+
+## Raporun geçen haftaya göre yönü: söylenen bandın farkı (gerçek değil). -1 iyimserleşti, +1 karamsarlaştı, 0 aynı/yok.
+func _trend(r: Dictionary) -> int:
+	var src := str(r["source"])
+	if not Sim.report_prev.has(src):
+		return 0
+	return signi(int(r["band"]) - int(Sim.report_prev[src]))
+
+
+func _trend_tip(r: Dictionary) -> String:
+	match _trend(r):
+		1:
+			return "\nGeçen haftaya göre daha karamsar konuşuyor."
+		-1:
+			return "\nGeçen haftaya göre daha iyimser konuşuyor."
+	return ""
+
+
+## Küçük çizilmiş ok: yukarı yeşil (daha iyimser), aşağı kırmızı (daha karamsar); değişim yoksa boş yer tutucu.
+func _trend_mark(r: Dictionary) -> Control:
+	var t := _trend(r)
+	var c := Control.new()
+	c.custom_minimum_size = Vector2(10, 10)
+	c.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	c.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if t != 0:
+		c.draw.connect(_draw_trend.bind(c, t))
+	return c
+
+
+func _draw_trend(c: Control, t: int) -> void:
+	var m := c.size / 2.0
+	var pts := PackedVector2Array([m + Vector2(-5, 3), m + Vector2(5, 3), m + Vector2(0, -4)])
+	if t > 0:
+		pts = PackedVector2Array([m + Vector2(-5, -3), m + Vector2(5, -3), m + Vector2(0, 4)])
+	c.draw_colored_polygon(pts, UIKit.OK if t < 0 else UIKit.DANGER)
+
+
+## Gündem: geçen haftadan bu yana görünür göstergelerde ne değişti (Sim.week_changes). Boşsa bölüm yok.
+func _add_changes(animated: Array[Control]) -> void:
+	if Sim.week_changes.is_empty():
+		return
+	_agenda.add_child(_section("GEÇEN HAFTADAN BERİ", "görebildiklerinde ne değişti"))
+	for ch: Dictionary in Sim.week_changes:
+		var row := PanelContainer.new()
+		var sb := UIKit.box(Color(UIKit.PANEL_HI, 0.35), Color(0, 0, 0, 0), 2, 8)
+		sb.content_margin_top = 4
+		sb.content_margin_bottom = 4
+		sb.border_color = [UIKit.DANGER, UIKit.AMBER, UIKit.OK][int(ch["tone"]) + 1]
+		sb.border_width_left = 3
+		row.add_theme_stylebox_override("panel", sb)
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_agenda.add_child(row)
+		animated.append(row)
+		var h := HBoxContainer.new()
+		h.add_theme_constant_override("separation", 8)
+		h.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(h)
+		var who := str(ch.get("actor", ""))
+		if who != "" and Sim.actors.has(who):
+			var por := _initial_art(who, Vector2(22, 22), 11)
+			por.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			h.add_child(por)
+		var l := Label.new()
+		l.text = str(ch["text"])
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		l.add_theme_font_size_override("font_size", _fs(13))
+		h.add_child(l)
 
 
 ## Masaüstü: karar kartlarının altında haftanın defteri. Eylem sonuçları bildirimde kaybolur, ipucu satırı
@@ -2397,7 +2558,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		sb.border_color = [Color(UIKit.OK, 0.8), Color(UIKit.AMBER, 0.8), Color(UIKit.DANGER, 0.9)][band]
 		panel.add_theme_stylebox_override("panel", sb)
 		panel.mouse_filter = Control.MOUSE_FILTER_STOP
-		panel.tooltip_text = "%s · %s\nTıkla: kişiyi seç. Kenar rengi raporun söylediğidir, gerçek olmayabilir." % [r["name"], r["title"]]
+		panel.tooltip_text = "%s · %s\nTıkla: kişiyi seç. Kenar rengi raporun söylediğidir, gerçek olmayabilir.%s" % [r["name"], r["title"], _trend_tip(r)]
 		var sid := str(r["source"])
 		panel.gui_input.connect(func(ev: InputEvent) -> void:
 			var mb := ev as InputEventMouseButton
@@ -2415,6 +2576,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		var por := _initial_art(sid, Vector2(28, 28), 14)
 		por.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		row.add_child(por)
+		row.add_child(_trend_mark(r))
 		var l := RichTextLabel.new()
 		l.bbcode_enabled = true
 		l.fit_content = true
@@ -2768,8 +2930,8 @@ func _update_info() -> void:
 	_portrait_box.add_child(art)
 	_info.append_text("[b][font_size=%d]%s[/font_size][/b]  [color=gray]%s[/color]" % [_fs(18), a.display_name, a.title])
 	# Güç: üç kademe (eskiden metinle verilen bilgi; fazlası değil).
-	var level := 1 if a.power < 40.0 else (2 if a.power < 65.0 else 3)
-	var lvl_name: String = ["", "ikinci planda", "etkili", "vazgeçilmez"][level]
+	var level := Sim.power_tier(a.power)
+	var lvl_name: String = Sim.POWER_TIER_NAMES[level]
 	_traits.add_child(_trait("Güç · " + lvl_name, UIKit.DANGER if level == 3 else UIKit.GOLD, level, 3,
 		"Güç merkezi olarak ne kadar ağırlığı var. Vazgeçilmez olanlar tehlikelidir."))
 	if a.moved:

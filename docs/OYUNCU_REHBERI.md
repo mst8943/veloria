@@ -44,7 +44,8 @@ Haritada yedi kurum var. Birine tıklayınca başındaki kişiyi, onun bu haftak
 
 ## Ekran
 
-- **Gündem:** Bekleyen kararlar (görselli kartlar) ve haftanın raporları. Masaüstünde kararların altındaki **BU HAFTA** defteri, o hafta yaptığın eylemleri ve sonuçlarını sırayla tutar (bildirim kaybolsa da).
+- **Gündem:** Bekleyen kararlar (görselli kartlar) ve haftanın raporları. Masaüstünde kararların altındaki **BU HAFTA** defteri, o hafta yaptığın eylemleri ve sonuçlarını sırayla tutar (bildirim kaybolsa da). Üstündeki **GEÇEN HAFTADAN BERİ** bölümü, görebildiğin göstergelerde neyin değiştiğini toplar: kimin raporu kötüleşti, kim güçlendi, kimin tavrı sertleşti, hangi sır yayıldı, hangi söz tutuldu ya da karşılığı istendi, hangi karar kendiliğinden çözüldü. Rapor satırlarındaki küçük ok, kaynağın geçen haftaya göre daha iyimser (yeşil) ya da daha karamsar (kırmızı) konuştuğunu gösterir; bu raporun söylediğidir, gerçek olmayabilir.
+- **Eylem önizlemesi:** Bir eylem düğmesinin üstüne gelince Eylemler panelinin altında bedeli (mesai, servet), bıraktığı iz ve tahmini riski görürsün; seçili kişiye göre uyarı da çıkar (ör. zayıf noktası bilinmeyene şantaj olmaz).
 - **Güç Merkezleri:** 9 karakterin portreleri. Birini seçince hakkında bildiklerin görünür.
 - **Emirler ve eylemler:** Seçili kişi üzerinde yapabileceklerin.
 - **Dosyalar:** Sırlar, kanıtlar ve **Söz Defteri**.

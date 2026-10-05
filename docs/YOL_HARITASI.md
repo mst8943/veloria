@@ -73,8 +73,8 @@ Baştan sona oynanabilir, sağlam bir dikey dilim (erken alfa): 104 hafta, 9 gü
 **Faz 1 — Okunabilirlik ve geri bildirim**
 - ✅ Darbe aşamalı ve görünür; kişi kartında yanılabilir şüphe sinyali
 - ✅ Karar seçeneklerinde yanılabilir danışman görüşleri
-- ⬜ Raporlarda değişim + hafta sonu "neler değişti" özeti
-- ⬜ Eylem önizlemesi (maliyet / risk / iz)
+- ✅ Raporlarda değişim + hafta sonu "neler değişti" özeti (`docs/design/faz1_okunabilirlik.md`)
+- ✅ Eylem önizlemesi (maliyet / risk / iz)
 
 **Faz 2 — Strateji derinliği ve denge**
 - ⬜ Kayıp çeşitliliği · ⬜ Rüşvete azalan getiri · ⬜ Hedefli "birbirine düşür" · ⬜ Aktörlerin kendi hamleleri
@@ -86,5 +86,5 @@ Baştan sona oynanabilir, sağlam bir dikey dilim (erken alfa): 104 hafta, 9 gü
 
 ## 5. Sıradaki
 1. ✅ Arayüz sadeleştirme turu (ilk ekran kalabalık) — `docs/ux/ana_ekran_sadelestirme.md`
-2. Faz 1'in kalanı: değişim okları + hafta özeti, eylem önizlemesi
+2. ✅ Faz 1'in kalanı: değişim okları + hafta özeti, eylem önizlemesi
 3. Faz 0: kayıt sürümü, olay doğrulayıcısı; 👤 depo
