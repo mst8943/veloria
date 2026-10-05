@@ -109,12 +109,12 @@ func _run() -> void:
 			sim.resolve_decision(0, 0)   # meclis sicili dolsun
 		sim.end_week()
 	await process_frame
-	var tabs: TabContainer = main._end_tabs
+	var tabs: TabContainer = main._end_overlay.tabs
 	for i in tabs.get_tab_count():
 		tabs.current_tab = i
 		await _shot("5_son_%d" % i)
 	# Hakikat Dosyası'nın sonu: meclis sicili
 	tabs.current_tab = 3
-	main._end_lies.scroll_to_line(main._end_lies.get_line_count() - 1)
+	main._end_overlay.lies_page.scroll_to_line(main._end_overlay.lies_page.get_line_count() - 1)
 	await _shot("5_son_3_meclis")
 	quit(0)

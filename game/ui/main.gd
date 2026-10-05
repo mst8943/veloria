@@ -10,6 +10,7 @@ const DESK_VIEW := preload("res://game/ui/desk_view.gd")
 const CITY_VIEW := preload("res://game/ui/city_view.gd")
 const TRUTH_CHART := preload("res://game/ui/truth_chart.gd")
 const AUTOPLAY := preload("res://game/ui/autoplay.gd")
+const END_SCREEN := preload("res://game/ui/end_screen.gd")
 
 const ROLE := {"army": "Ordu", "intel": "İstihbarat", "economy": "Maliye", "media": "Medya", "press": "Basın",
 	"gate": "Saray", "royal": "Hanedan", "opposition": "Muhalefet", "court": "Yargı"}
@@ -123,9 +124,7 @@ var _menu_bg: Control
 var _menu_items: Array[Control] = []
 var _menu_pages: Dictionary = {}
 var _menu_page_now := "main"
-var _end_overlay: Control
-var _end_text: RichTextLabel
-var _end_bg: TextureRect
+var _end_overlay: Control   # oyun sonu ekranı (end_screen.gd)
 var _fx: CanvasLayer
 var _curtain: ColorRect
 var _curtain_title: Label
@@ -145,14 +144,6 @@ var _mesai_box: HBoxContainer
 var _curtain_img: TextureRect
 var _curtain_skip := false
 var _cinema: Control
-var _end_chart: Control
-var _end_head: RichTextLabel
-var _end_tabs: TabContainer
-var _end_hist: RichTextLabel
-var _end_lies: RichTextLabel
-var _end_log: RichTextLabel
-var _end_timeline: Array = []
-var _end_chart_drawn := false
 var _modal: Control
 var _modal_text: RichTextLabel
 var _modal_yes: Button
@@ -644,7 +635,8 @@ func _build_ui() -> void:
 	add_child(_media)
 
 	_build_menu()
-	_build_end()
+	_end_overlay = END_SCREEN.new(self)
+	add_child(_end_overlay)
 
 
 func _build_header(parent: Control) -> void:
@@ -1216,110 +1208,6 @@ func _slider(value: float, cb: Callable) -> HSlider:
 	s.custom_minimum_size = Vector2(120, 22)
 	s.value_changed.connect(cb)
 	return s
-
-
-func _build_end() -> void:
-	_end_overlay = Control.new()
-	_end_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(_end_overlay)
-	_end_bg = TextureRect.new()
-	_end_bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_end_bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	_end_bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_end_overlay.add_child(_end_bg)
-	var shade := ColorRect.new()
-	shade.color = Color(UIKit.SHADE, 0.82)
-	shade.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_end_overlay.add_child(shade)
-	var under := ColorRect.new()
-	under.color = Color(UIKit.SHADE, 1.0)
-	under.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_end_overlay.add_child(under)
-	_end_overlay.move_child(under, 0)
-	var m := MarginContainer.new()
-	m.set_anchors_preset(Control.PRESET_FULL_RECT)
-	for side in ["left", "right", "top", "bottom"]:
-		m.add_theme_constant_override("margin_" + side, 20 if _mobile else 50)
-	_end_overlay.add_child(m)
-	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 12)
-	m.add_child(v)
-	_end_head = RichTextLabel.new()
-	_end_head.bbcode_enabled = true
-	_end_head.fit_content = true
-	_end_head.scroll_active = false
-	_end_head.add_theme_font_override("bold_font", UIKit.serif())
-	_end_head.add_theme_font_override("normal_font", UIKit.serif())
-	var head_band := PanelContainer.new()
-	head_band.add_theme_stylebox_override("panel", UIKit.band_style())
-	head_band.add_child(_end_head)
-	v.add_child(head_band)
-	# Sekmeler: Özet / Grafik / Tarihçiler / Hakikat Dosyası / Kararlar
-	_end_tabs = TabContainer.new()
-	_end_tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	v.add_child(_end_tabs)
-	_end_text = _end_page("Özet")
-	_end_text.gui_input.connect(func(ev: InputEvent) -> void:
-		if ev is InputEventMouseButton and ev.pressed:
-			_end_text.visible_ratio = 1.0)
-	var gbox := VBoxContainer.new()
-	gbox.name = "Grafik"
-	gbox.add_theme_constant_override("separation", 10)
-	_end_tabs.add_child(gbox)
-	_end_chart = TRUTH_CHART.new()
-	_end_chart.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_end_chart.custom_minimum_size = Vector2(0, 150 if _mobile else 200)
-	gbox.add_child(_end_chart)
-	var gnote := Label.new()
-	gnote.text = "Bu çizgileri oyun boyunca hiç görmedin. Gördüğün yalnızca raporlardı; aradaki fark, sana söylenmeyenlerdir."
-	gnote.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	gnote.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-	gnote.add_theme_font_size_override("font_size", _fs(14))
-	gbox.add_child(gnote)
-	_end_hist = _end_page("Tarihçiler")
-	_end_lies = _end_page("Hakikat Dosyası")
-	_end_log = _end_page("Kararlar")
-	_end_tabs.tab_changed.connect(func(i: int) -> void:
-		Sfx.play("paper", -10.0)
-		# Grafik ilk açıldığında çizilir (görünmezken boşa oynamasın).
-		if _end_tabs.get_tab_control(i) == gbox and not _end_chart_drawn:
-			_end_chart_drawn = true
-			_end_chart.set_data(_end_timeline, not _fast()))
-	var brow := HBoxContainer.new()
-	brow.add_theme_constant_override("separation", 12)
-	v.add_child(brow)
-	var again := Button.new()
-	again.text = "YENİDEN OYNA"
-	again.theme_type_variation = "PrimaryButton"
-	again.custom_minimum_size.y = 50
-	again.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_wire(again)
-	again.pressed.connect(_start_new)
-	brow.add_child(again)
-	var to_menu := Button.new()
-	to_menu.text = "Ana Menü"
-	to_menu.theme_type_variation = "GhostButton"
-	to_menu.custom_minimum_size = Vector2(220, 50)
-	_wire(to_menu)
-	to_menu.pressed.connect(func() -> void:
-		_end_overlay.hide()
-		_show_menu())
-	brow.add_child(to_menu)
-	_end_overlay.hide()
-
-
-## Oyun sonu sekmesi: kaydırılabilir zengin metin sayfası.
-func _end_page(title: String) -> RichTextLabel:
-	var l := RichTextLabel.new()
-	l.name = title
-	l.bbcode_enabled = true
-	l.add_theme_font_size_override("normal_font_size", _fs(17))
-	l.add_theme_font_override("bold_font", UIKit.serif())
-	l.add_theme_font_size_override("bold_font_size", _fs(20))
-	var pad := UIKit.box(Color(0, 0, 0, 0.25), Color(0, 0, 0, 0), 6, 16)
-	l.add_theme_stylebox_override("normal", pad)
-	_end_tabs.add_child(l)
-	return l
 
 
 # ---------------------------------------------------------------- Yardımcılar
@@ -2683,41 +2571,6 @@ func _add_council(parent: VBoxContainer, pending_index: int) -> Dictionary:
 	return notes
 
 
-## Hakikat Dosyası'nın sonu: komplonun gerçek kronolojisi ve alametlerin kaçının doğru olduğu.
-func _append_plot(plot: Array, signs: Dictionary) -> void:
-	_end_lies.append_text("\n[b][color=#d9b359][font_size=22]KOMPLO DEFTERİ — perde arkasında ne oldu[/font_size][/color][/b]\n")
-	var real := int(signs.get("real", 0))
-	var rumor := int(signs.get("rumor", 0))
-	if real + rumor > 0:
-		_end_lies.append_text("[color=gray]Son gördüğün alametlerin %d'i gerçekti, %d'i dedikoduydu.[/color]\n\n" % [real, rumor])
-	if plot.is_empty():
-		_end_lies.append_text("Sarayda kimse sana karşı örgütlenmedi.\n")
-		return
-	for l: Dictionary in plot:
-		var t: String = l["text"]
-		var col := "#c0504a" if t.contains("komploya") or t.contains("hazırlığına") or t.contains("darbe girişimini") else ("#7fae7a" if t.contains("çekildi") or t.contains("tutuklandı") or t.contains("halk") else "#d08a3d")
-		_end_lies.append_text("• Hafta %d — [b]%s[/b] [color=%s]%s[/color]\n" % [int(l["w"]), l["name"], col, t])
-
-
-## Hakikat Dosyası'nın ikinci yarısı: danışmanların önerileri gerçekte ne kadar iyiydi?
-func _append_council(council: Array) -> void:
-	_end_lies.append_text("\n[b][color=#d9b359][font_size=22]MECLİS SİCİLİ — kim seni nereye yönlendirdi[/font_size][/color][/b]\n")
-	_end_lies.append_text("[color=gray]Öneri · dinlediğin · seni yanılttığı (önerisi en iyi seçenekten belirgin biçimde kötüydü)[/color]\n\n")
-	if council.is_empty():
-		_end_lies.append_text("Meclis bu saltanatta hiç öneride bulunmadı.\n")
-		return
-	for c: Dictionary in council:
-		var misled := int(c["misled"])
-		var col := "#c0504a" if misled * 3 >= int(c["given"]) and misled > 0 else ("#d08a3d" if misled > 0 else "#7fae7a")
-		_end_lies.append_text("[b]%s[/b]   %d öneri · %d kez dinledin · [color=%s]%s[/color]\n" % [
-			c["name"], int(c["given"]), int(c["followed"]), col, "%d kez yanılttı" % misled if misled > 0 else "hiç yanıltmadı"])
-		var w: Dictionary = c["worst"]
-		if not w.is_empty():
-			_end_lies.append_text("   [color=gray]En pahalısı, hafta %d — %s:[/color] \"%s\" dedi; en iyisi \"%s\" idi.%s\n" % [
-				int(w["w"]), w["event"], w["rec"], w["best"], "  [color=#c0504a](dinledin)[/color]" if w["followed"] else ""])
-		_end_lies.append_text("\n")
-
-
 func _restore_scroll(v: int) -> void:
 	_scroll.scroll_vertical = v
 
@@ -3047,83 +2900,7 @@ func _on_news(_text: String) -> void:
 
 
 func _on_end(record: Dictionary) -> void:
-	var bg_path := "res://art/end_victory.png"
-	if not record["survived"]:
-		var c: String = record["cause"]
-		bg_path = "res://art/end_coup.png"
-		if c.contains("ayaklanma"):
-			bg_path = "res://art/end_uprising.png"
-		elif c.contains("yetkisiz"):
-			bg_path = "res://art/end_scandal.png"
-	_end_bg.texture = _art(bg_path)
-	var verdict := "Tahtını korudun." if record["survived"] else "Tahtını kaybettin."
-	_end_head.clear()
-	_end_head.append_text("[b][font_size=%d]Kral %s[/font_size][/b]   [font_size=%d][color=%s]%s[/color][/font_size]\n[font_size=%d][color=gray]Ünvanın:[/color] [color=#d9b359]%s[/color][/font_size]" % [
-		_fs(34), record["king"], _fs(22), "#7fae7a" if record["survived"] else "#c0504a", verdict, _fs(19), record["title"]])
-	var lies: Array = record["lies"]
-	var hist_log: Array = record["history"]
-	# Özet
-	_end_text.clear()
-	_end_text.append_text("%s\n\n" % record["cause"])
-	_end_text.append_text("[b]Saltanat:[/b] %d hafta  ·  [b]En güçlü isim:[/b] %s\n[b]Söz sicili:[/b] %s\n[b]Karar defteri:[/b] %d kayıt\n" % [
-		int(record["weeks"]), record["top_actor"], record.get("promises", ""), hist_log.size()])
-	if lies.is_empty():
-		_end_text.append_text("[b]Hakikat Dosyası:[/b] kimse sana belirgin biçimde yalan söylemedi.\n")
-	else:
-		var liars: Dictionary = {}
-		for l: Dictionary in lies:
-			liars[l["name"]] = true
-		_end_text.append_text("[b]Hakikat Dosyası:[/b] [color=#c0504a]%d kişi sana yalan söyledi.[/color] Kim olduklarını Hakikat Dosyası sekmesinde gör.\n" % liars.size())
-	var council: Array = record.get("council", [])
-	if not council.is_empty() and int(council[0]["misled"]) > 0:
-		_end_text.append_text("[b]Meclis:[/b] seni en çok [color=#d08a3d]%s[/color] yanılttı (%d kez). Ayrıntısı Hakikat Dosyası'nda.\n" % [
-			council[0]["name"], int(council[0]["misled"])])
-	for l: Dictionary in record.get("plot", []):
-		if l["text"] == "komploya katıldı":
-			_end_text.append_text("[b]Komplo:[/b] ilk kıvılcım %d. haftada, [color=#c0504a]%s[/color]. Kronolojisi Hakikat Dosyası'nda.\n" % [int(l["w"]), l["name"]])
-			break
-	var fresh: Array = record.get("new_achievements", [])
-	if not fresh.is_empty():
-		_end_text.append_text("\n[b][color=#d9b359][font_size=22]YENİ BAŞARIM[/font_size][/color][/b]\n")
-		for id in fresh:
-			var info: Array = Sim.ACHIEVEMENTS.get(id, [id, ""])
-			_end_text.append_text("[color=#d6b25e]»[/color]  [b]%s[/b] — %s\n" % [info[0], info[1]])
-	if not hist_log.is_empty():
-		_end_text.append_text("\n[b][color=#d9b359][font_size=22]Son kararların[/font_size][/color][/b]   [color=gray]tamamı Kararlar sekmesinde[/color]\n")
-		for h in hist_log.slice(maxi(0, hist_log.size() - 6)):
-			_end_text.append_text("• %s\n" % h)
-	# Tarihçiler
-	_end_hist.clear()
-	_end_hist.append_text("[b][color=#d9b359][font_size=22]TARİH NE YAZACAK?[/font_size][/color][/b]\n[color=gray]Aynı saltanat, iki ayrı kalemden.[/color]\n\n")
-	var hist: Array = record.get("historians", [])
-	if hist.size() == 2:
-		_end_hist.append_text("[color=#d6b25e][b]Saray tarihçisi[/b][/color]\n[i]\"%s\"[/i]\n\n" % hist[0])
-		_end_hist.append_text("[color=#c0504a][b]Sürgündeki tarihçi[/b][/color]\n[i]\"%s\"[/i]\n" % hist[1])
-	else:
-		_end_hist.append_text("Tarihçiler bu saltanat hakkında sessiz kaldı.")
-	# Hakikat Dosyası
-	_end_lies.clear()
-	_end_lies.append_text("[b][color=#d9b359][font_size=22]HAKİKAT DOSYASI — sana söylenmeyenler[/font_size][/color][/b]\n\n")
-	if lies.is_empty():
-		_end_lies.append_text("Kimse sana belirgin biçimde yalan söylemedi. Ya da hepsini fark ettin.\n")
-	for l: Dictionary in lies:
-		_end_lies.append_text("• Hafta %d — [b]%s[/b] sana şunu söyledi: \"%s\"\n   [color=gray]Gerçekte:[/color] %s\n\n" % [l["week"], l["name"], l["said"], l["truth"]])
-	_append_council(record.get("council", []))
-	_append_plot(record.get("plot", []), record.get("signs", {}))
-	# Kararlar: hepsi, sondan başa
-	_end_log.clear()
-	_end_log.append_text("[b][color=#d9b359][font_size=22]KARARLARIN[/font_size][/color][/b]   [color=gray]%d kayıt · en yenisi üstte[/color]\n\n" % hist_log.size())
-	if hist_log.is_empty():
-		_end_log.append_text("Hiç karar vermedin. Tarih bunu da yazar.")
-	for i in range(hist_log.size() - 1, -1, -1):
-		_end_log.append_text("• %s\n" % hist_log[i])
-	_end_tabs.set_tab_title(3, "Hakikat Dosyası (%d)" % lies.size() if not lies.is_empty() else "Hakikat Dosyası")
-	_end_tabs.current_tab = 0
-	for page in [_end_text, _end_hist, _end_lies, _end_log]:
-		page.scroll_to_line(0)
-	_end_timeline = record.get("timeline", [])
-	_end_chart_drawn = false
-	_end_chart.set_data([], false)
+	var bg_path: String = _end_overlay.show_record(record)
 	_menu.hide()
 	if _fast():
 		_end_overlay.show()
@@ -3136,5 +2913,5 @@ func _on_end(record: Dictionary) -> void:
 	UIKit.fade_in(_end_overlay, 1.0)
 	if not record["survived"]:
 		UIKit.shake(_stage, 10.0, 0.6)
-	var dur := clampf(float(_end_text.get_total_character_count()) * 0.012, 2.5, 6.0)
-	UIKit.typewrite(_end_text, dur, 0.8)
+	var dur := clampf(float(_end_overlay.summary.get_total_character_count()) * 0.012, 2.5, 6.0)
+	UIKit.typewrite(_end_overlay.summary, dur, 0.8)
