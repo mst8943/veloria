@@ -87,6 +87,10 @@ func _run() -> void:
 	main._city.close_view()
 	main._open_media()
 	await _shot("1_medya")
+	main._media.show_tab("free")
+	await _shot("1_medya_serbest")
+	main._media.show_tab("tv")
+	await _shot("1_medya_tv")
 	main._media.close_view()
 	if "--only-world" in OS.get_cmdline_user_args():
 		quit(0)

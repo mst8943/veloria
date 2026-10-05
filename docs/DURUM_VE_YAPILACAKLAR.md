@@ -58,6 +58,10 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
 - **Beşinci oturum: Görsel dil v2 ("devlet arşivi" cilası)**
   - Kullanıcı: "renk/tasarım fena değil ama daha profesyonel olsun". Ayrıntı ve kabul ölçütleri: `docs/ux/gorsel_dil_v2.md`.
   - Nötrler sıcak kömüre çekildi (mor kayma gitti; `UIKit.HOVER/SHADE/PLATE`), gövde fontu IBM Plex Sans (`UIKit.sans()`, metrikleri eski yedek fonta yakın, boyutlar korundu; CanvasLayer altındaki bildirim/perdeye tema ayrıca verildi), tüm kutular en fazla 3 px köşe (`UIKit.RADIUS`), köşebentli paneller çift çerçeve (iç kıl çizgisi), düğmeler 1 px kalkık, sekmeler üst çizgiyle seçili, alamet şeridi, rapor satırında yalnızca sol renk çizgisi, oyun sonu başlık bandı.
+- **Beşinci oturum (devam): Medya Merkezi v2** — ayrıntı `docs/ux/medya_merkezi_v2.md`.
+  - Gazeteler: kâğıt shader'ı (lif, sararma, katlanma izi), yarım ton fotoğraf baskısı + fotoğraf yazısı, künye kulakçıkları ve çift çizgi, iki yana yaslı serif gövde ("BAŞKENT —"), "Devamı sayfa N'de", çift çerçeveli ilan. Serbest Kalem kendi kimliğinde: gri ucuz kâğıt, kırmızı blok, kalın sans logo.
+  - Halden TV: çizilmiş ceviz kasalı tüplü televizyon (VELTRON, düğmeler, hoparlör, güç ışığı); `crt.gdshader` ekran dokusunu okuyup görüntüyü ve kanal grafiklerini birlikte eğer (tarama, fosfor maskesi, parazit). Alt üçlü bant ve "HABERLER" bloklu şerit. Ekran boyutu eldeki alana göre (mobil sığar).
+  - Hata: TV şeridi `ALAMET:` satırlarını yayınlıyordu (kralın gizli gözlemleri); `press.gd::broadcast` filtreler. `scanlines.gdshader` kaldırıldı. `ui_shots.gd` artık Serbest Kalem ve TV görüntüsünü de alır (`1_medya_serbest`, `1_medya_tv`).
 
 ## Ölçülmüş denge (probe_template, 80 kampanya, darbe aşamalarından sonra)
 | Bot | Kolay | Normal | Zor |

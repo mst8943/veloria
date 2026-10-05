@@ -157,8 +157,8 @@ static func broadcast(sim: Node) -> Dictionary:
 	var ticker: Array[String] = []
 	for n in sim.weekly_news:
 		var s := str(n)
-		if s.begins_with("MANŞET") or s.begins_with("KULİS"):
-			continue  # kanal skandalları ve dedikoduları yayınlamaz
+		if s.begins_with("MANŞET") or s.begins_with("KULİS") or s.begins_with("ALAMET"):
+			continue  # kanal skandalları ve dedikoduları yayınlamaz; alametler kralın gizli gözlemleri
 		ticker.append(s.replace("OLAY: ", ""))
 	for c in ed["columns"]:
 		ticker.append("%s: %s" % [c["title"], c["head"]])
