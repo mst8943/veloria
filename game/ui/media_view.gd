@@ -25,7 +25,7 @@ func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	var dim := ColorRect.new()
-	dim.color = Color(0.02, 0.015, 0.025, 0.97)
+	dim.color = Color(UIKit.SHADE.darkened(0.3), 0.97)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(dim)
 	var shade := TextureRect.new()   # gazeteyi masa lambası aydınlatıyormuş gibi: ortası açık, kenarlar karanlık
@@ -301,7 +301,7 @@ func _build_tv() -> void:
 	var bezel := PanelContainer.new()
 	var bsb := StyleBoxFlat.new()
 	bsb.bg_color = Color("0b0b0d")
-	bsb.border_color = Color("2b2a31")
+	bsb.border_color = Color("2c2822")
 	bsb.set_border_width_all(3)
 	bsb.set_corner_radius_all(22)
 	bsb.set_content_margin_all(18)
@@ -367,7 +367,7 @@ func _build_tv() -> void:
 	# Alt bant: manşet
 	var lower := PanelContainer.new()
 	var lowsb := StyleBoxFlat.new()
-	lowsb.bg_color = Color(0.04, 0.04, 0.06, 0.88)
+	lowsb.bg_color = Color(UIKit.PLATE, 0.88)
 	lowsb.border_color = UIKit.GOLD
 	lowsb.border_width_top = 3
 	lowsb.content_margin_left = 18

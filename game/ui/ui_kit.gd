@@ -1,9 +1,14 @@
 extends RefCounted
 ## Tema ve animasyon yardımcıları (tüm arayüz buradaki palete ve hareket diline bağlı).
 
-const BG := Color("0e0d11")
-const PANEL := Color("17161b")
-const PANEL_HI := Color("201e27")
+# Nötrler sıcak kömür tonunda (kırmızı >= yeşil >= mavi): altın ve parşömenle çatışmaz (docs/ux/gorsel_dil_v2.md).
+const BG := Color("0e0c0a")
+const PANEL := Color("171511")
+const PANEL_HI := Color("221e18")
+const HOVER := Color("2c271e")
+const SHADE := Color(0.035, 0.028, 0.022)   # perde, örtü ve kaplamaların koyu is rengi
+const PLATE := Color("0c0b09")              # pencere/bildirim zemini
+const RADIUS := 3                           # keskin geometri: hiçbir kutu bundan yuvarlak olmaz
 const GOLD := Color("d6b25e")
 const GOLD_DIM := Color("8f7a45")
 const TEXT := Color("e9e4d6")
@@ -64,6 +69,9 @@ static func caps() -> Font:
 static func ornament(c: CanvasItem, col: Color = Color(GOLD, 0.75), length := 14.0, inset := 4.0) -> void:
 	c.draw.connect(func() -> void:
 		var s: Vector2 = (c as Control).size
+		# Çift çerçeve: içte ince altın kıl çizgisi ve üst kenarda hafif ışık (hazırlanmış yüzey hissi).
+		c.draw_rect(Rect2(Vector2(inset, inset), s - Vector2(2.0 * inset, 2.0 * inset)), Color(col, col.a * 0.2), false, 1.0)
+		c.draw_line(Vector2(2, 1), Vector2(s.x - 2, 1), Color(1.0, 0.94, 0.8, 0.07), 1.0)
 		var w := 1.5
 		for corner in [Vector2(0, 0), Vector2(1, 0), Vector2(0, 1), Vector2(1, 1)]:
 			var p := Vector2(inset + corner.x * (s.x - 2.0 * inset), inset + corner.y * (s.y - 2.0 * inset))
@@ -122,12 +130,30 @@ static func box(bg: Color, border: Color = Color(0, 0, 0, 0), radius := 6, margi
 	s.bg_color = bg
 	s.border_color = border
 	s.set_border_width_all(border_w if border.a > 0.0 else 0)
-	s.set_corner_radius_all(radius)
+	s.set_corner_radius_all(mini(radius, RADIUS))
 	s.content_margin_left = margin
 	s.content_margin_right = margin
 	s.content_margin_top = maxi(margin - 2, 4)
 	s.content_margin_bottom = maxi(margin - 2, 4)
 	s.anti_aliasing = true
+	return s
+
+
+## Düğmeyi zeminden 1 px kaldırır (altta keskin gölge): düz kutu yerine basılabilir yüzey.
+static func _lift(s: StyleBoxFlat) -> StyleBoxFlat:
+	s.shadow_color = Color(0, 0, 0, 0.45)
+	s.shadow_size = 1
+	s.shadow_offset = Vector2(0, 2)
+	return s
+
+
+## Sekme kutusu: yalnızca üst kenarda çizgi; seçili olan altın, panelle birleşik.
+static func _tab(bg: Color, line: Color, w: int) -> StyleBoxFlat:
+	var s := box(bg, Color(0, 0, 0, 0), 2, 14)
+	s.border_color = line
+	s.border_width_top = w
+	s.corner_radius_bottom_left = 0
+	s.corner_radius_bottom_right = 0
 	return s
 
 
@@ -155,9 +181,9 @@ static func build_theme(mobile := false) -> Theme:
 	t.set_color("font_color", "Label", TEXT)
 	t.set_color("default_color", "RichTextLabel", TEXT)
 	# Düğmeler
-	var n := box(PANEL_HI, Color(GOLD_DIM, 0.45), 5, bm)
-	var h := box(Color("2a2733"), GOLD, 5, bm)
-	var p := box(Color("14131a"), GOLD, 5, bm)
+	var n := _lift(box(PANEL_HI, Color(GOLD_DIM, 0.45), 5, bm))
+	var h := _lift(box(HOVER, GOLD, 5, bm))
+	var p := box(Color("13110d"), GOLD, 5, bm)
 	var d := box(Color(PANEL_HI, 0.5), Color(GOLD_DIM, 0.15), 5, bm)
 	t.set_stylebox("normal", "Button", n)
 	t.set_stylebox("hover", "Button", h)
@@ -173,7 +199,7 @@ static func build_theme(mobile := false) -> Theme:
 	t.set_type_variation("ChoiceButton", "Button")
 	t.set_stylebox("pressed", "ChoiceButton", box(Color("3a331f"), GOLD, 4, bm))
 	# Seçenek: sol kenarda altın vurgu çizgisi
-	var ch_n := box(Color("1b1a21"), Color(GOLD_DIM, 0.25), 4, bm)
+	var ch_n := box(Color("1c1915"), Color(GOLD_DIM, 0.25), 4, bm)
 	ch_n.border_width_left = 3
 	ch_n.border_color = Color(GOLD_DIM, 0.45)
 	var ch_h := box(Color("2d2a1f"), GOLD, 4, bm)
@@ -202,17 +228,17 @@ static func build_theme(mobile := false) -> Theme:
 	# Birincil düğme
 	t.add_type("PrimaryButton")
 	t.set_type_variation("PrimaryButton", "Button")
-	t.set_stylebox("normal", "PrimaryButton", box(Color("3a301a"), GOLD, 6, 14, 2))
-	t.set_stylebox("hover", "PrimaryButton", box(Color("5a4a22"), Color("ffe08a"), 6, 14, 2))
+	t.set_stylebox("normal", "PrimaryButton", _lift(box(Color("3a301a"), GOLD, 6, 14, 2)))
+	t.set_stylebox("hover", "PrimaryButton", _lift(box(Color("5a4a22"), Color("ffe08a"), 6, 14, 2)))
 	t.set_stylebox("pressed", "PrimaryButton", box(Color("2a2212"), GOLD, 6, 14, 2))
 	t.set_color("font_color", "PrimaryButton", Color("fff3d0"))
-	t.set_font("font", "PrimaryButton", serif())
+	t.set_font("font", "PrimaryButton", caps())
 	t.set_font_size("font_size", "PrimaryButton", 20)
-	# Sekmeler
+	# Sekmeler: seçili sekme panelle birleşir, üstünde altın çizgi taşır; diğerleri zeminsiz.
 	t.set_stylebox("panel", "TabContainer", box(Color(PANEL, 0.88), Color(GOLD_DIM, 0.3), 6, 8))
-	t.set_stylebox("tab_selected", "TabContainer", box(Color(PANEL_HI, 0.95), GOLD, 4, 14))
-	t.set_stylebox("tab_unselected", "TabContainer", box(Color(PANEL, 0.7), Color(GOLD_DIM, 0.2), 4, 14))
-	t.set_stylebox("tab_hovered", "TabContainer", box(Color("2a2733"), GOLD_DIM, 4, 14))
+	t.set_stylebox("tab_selected", "TabContainer", _tab(Color(PANEL_HI, 0.95), GOLD, 2))
+	t.set_stylebox("tab_unselected", "TabContainer", _tab(Color(0, 0, 0, 0.25), Color(GOLD_DIM, 0.25), 1))
+	t.set_stylebox("tab_hovered", "TabContainer", _tab(Color(HOVER, 0.8), GOLD_DIM, 1))
 	t.set_color("font_selected_color", "TabContainer", GOLD)
 	t.set_color("font_unselected_color", "TabContainer", TEXT_DIM)
 	t.set_color("font_hovered_color", "TabContainer", TEXT)
@@ -243,7 +269,7 @@ static func build_theme(mobile := false) -> Theme:
 	for st in ["normal", "hover", "pressed", "focus", "hover_pressed"]:
 		t.set_stylebox(st, "CheckBox", StyleBoxEmpty.new())
 	# İpucu balonu
-	t.set_stylebox("panel", "TooltipPanel", box(Color("0a090c", 0.97), GOLD, 5, 10))
+	t.set_stylebox("panel", "TooltipPanel", box(Color(PLATE, 0.97), GOLD, 5, 10))
 	t.set_color("font_color", "TooltipLabel", TEXT)
 	t.set_font_size("font_size", "TooltipLabel", 14)
 	return t

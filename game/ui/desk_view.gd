@@ -108,7 +108,7 @@ func _build() -> void:
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bg)
 	var dim := ColorRect.new()
-	dim.color = Color(0.02, 0.015, 0.025, 0.35)
+	dim.color = Color(UIKit.SHADE.darkened(0.3), 0.35)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(dim)
@@ -511,7 +511,7 @@ func _draw_object(id: String, sz: Vector2) -> Control:
 			v.add_child(b)
 		"kisiler":
 			var phone := PanelContainer.new()
-			phone.add_theme_stylebox_override("panel", _panel(Color("15131a"), UIKit.GOLD_DIM, 10, 2))
+			phone.add_theme_stylebox_override("panel", _panel(Color("16130f"), UIKit.GOLD_DIM, 10, 2))
 			phone.set_anchors_preset(Control.PRESET_FULL_RECT)
 			root.add_child(phone)
 			var grid := GridContainer.new()

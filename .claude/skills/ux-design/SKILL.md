@@ -14,7 +14,7 @@ Profesyonel PC strateji oyunları seviyesinde düşün (Crusader Kings, Suzerain
 - Mevcut hali gör: `tests/ui_shots.gd` ile ekran görüntüsü al ve oku (VELORIA.md > Komutlar).
 
 ## Veloria UI dili (uyulacak sistem)
-- **Palet** (`UIKit`): BG `0e0d11`, PANEL `17161b`, PANEL_HI `201e27`, GOLD `d6b25e`, GOLD_DIM `8f7a45`, TEXT `e9e4d6`, TEXT_DIM `9a958a`, DANGER `c0504a`, OK `7fae7a`. Yeni renk ekleme; gerekiyorsa UIKit'e sabit olarak ekle.
+- **Palet** (`UIKit`): BG `0e0c0a`, PANEL `171511`, PANEL_HI `221e18`, HOVER `2c271e`, SHADE (örtü), PLATE (pencere zemini), GOLD `d6b25e`, GOLD_DIM `8f7a45`, TEXT `e9e4d6`, TEXT_DIM `9a958a`, DANGER `c0504a`, OK `7fae7a`. Nötrler sıcak (mor/mavi kayma yok). Köşe en fazla `UIKit.RADIUS` (3 px). Yeni renk ekleme; gerekiyorsa UIKit'e sabit olarak ekle. Ayrıntı: `docs/ux/gorsel_dil_v2.md`.
 - **Tipografi**: başlık/ad `UIKit.serif()` (EB Garamond); bölüm başlığı `UIKit.caps()` aralıklı büyük harf; gövde varsayılan sans. Türkçe büyük harf için `UIKit.tr_upper()`.
 - **İmza öğeler**: ekran başlık bandı `UIKit.band_style()`; önemli panelde `UIKit.ornament()` köşebentleri; ekran başlığı altında `UIKit.divider()`; bölüm başlığı `main.gd::_section(başlık, açıklama)`.
 - **Düğme hiyerarşisi**: `PrimaryButton` (ekranda bir tane: ana eylem), varsayılan Button, `ChoiceButton` (karar seçenekleri), `GhostButton` (gezinme), `DangerButton` (geri dönüşsüz/zarar veren).

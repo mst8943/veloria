@@ -140,7 +140,7 @@ func _build() -> void:
 func _make_site(id: String) -> void:
 	var s: Dictionary = _sites[id]
 	var plate := PanelContainer.new()
-	var sb := UIKit.box(Color(0.04, 0.035, 0.05, 0.86), Color(UIKit.GOLD, 0.55), 6, 14)
+	var sb := UIKit.box(Color(UIKit.PLATE, 0.86), Color(UIKit.GOLD, 0.55), 6, 14)
 	plate.add_theme_stylebox_override("panel", sb)
 	plate.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	add_child(plate)
@@ -194,7 +194,7 @@ func _make_site(id: String) -> void:
 		plate.create_tween().tween_property(plate, "scale", Vector2(1.06, 1.06), 0.15))
 	plate.mouse_exited.connect(func() -> void:
 		sb.border_color = Color(UIKit.GOLD, 0.55)
-		sb.bg_color = Color(0.04, 0.035, 0.05, 0.86)
+		sb.bg_color = Color(UIKit.PLATE, 0.86)
 		plate.create_tween().tween_property(plate, "scale", Vector2.ONE, 0.15))
 	plate.gui_input.connect(func(ev: InputEvent) -> void:
 		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
@@ -209,7 +209,7 @@ func _make_site(id: String) -> void:
 
 func _build_drawer() -> void:
 	_drawer = PanelContainer.new()
-	_drawer.add_theme_stylebox_override("panel", UIKit.box(Color(0.04, 0.035, 0.05, 0.96), UIKit.GOLD, 10, 20))
+	_drawer.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PLATE, 0.96), UIKit.GOLD, 10, 20))
 	var w := 560.0 if not mobile else 620.0
 	_drawer.anchor_left = 1.0
 	_drawer.anchor_right = 1.0

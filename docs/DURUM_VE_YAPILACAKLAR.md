@@ -1,6 +1,6 @@
 # Veloria — Durum ve Yapılacaklar (yeni oturum için devir notu)
 
-Son güncelleme: 2026-10-04 (dördüncü oturum: meclis görüşleri + darbe aşamaları). Dal: `veloria`.
+Son güncelleme: 2026-10-05 (beşinci oturum: görsel dil v2). Dal: `veloria`.
 
 ## Yeni oturumda ilk iş
 1. Bu dosyayı oku.
@@ -55,6 +55,9 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
   - Kullanıcı: "ilk sayfa kalabalık; özellik silme, gerekirse taşı; ilk girince ne yapacağını anlasın". Ayrıntı: `docs/ux/ana_ekran_sadelestirme.md`.
   - Eylemler kategori sekmelerinde; raporlar sağ sütunda kaynaklarının altında; ilk 3 haftada "Bu hafta ne yapmalı?" yol göstericisi; kompakt bildirim ve kâtip notu; mobil kartlar kısaldı.
   - Analiz raporunun durumlu sürümü: `docs/YOL_HARITASI.md` (yapılan / kalan).
+- **Beşinci oturum: Görsel dil v2 ("devlet arşivi" cilası)**
+  - Kullanıcı: "renk/tasarım fena değil ama daha profesyonel olsun". Ayrıntı ve kabul ölçütleri: `docs/ux/gorsel_dil_v2.md`.
+  - Nötrler sıcak kömüre çekildi (mor kayma gitti; `UIKit.HOVER/SHADE/PLATE`), tüm kutular en fazla 3 px köşe (`UIKit.RADIUS`), köşebentli paneller çift çerçeve (iç kıl çizgisi), düğmeler 1 px kalkık, sekmeler üst çizgiyle seçili, alamet şeridi, rapor satırında yalnızca sol renk çizgisi, oyun sonu başlık bandı.
 
 ## Ölçülmüş denge (probe_template, 80 kampanya, darbe aşamalarından sonra)
 | Bot | Kolay | Normal | Zor |
@@ -99,7 +102,7 @@ Oyuncu testinden sonra karar verilecekler: meclis görüşlerinin açık sorular
 Faz 2 adayı: kayıp çeşitliliği (darbe dışı kayıplar hâlâ nadir).
 
 ## Bilinen küçük sorunlar
-- Sağ üstteki bildirimler masa ve haritanın, mobilde haber şeridinin üstünde kalıyor (menü açılınca temizleniyor).
+- Sağ üstteki bildirimler masa ve haritanın, mobilde alamet şeridinin üstünde kalıyor (masaüstünde şerit artık bildirim sütununa girmiyor).
 - Masada soldaki günlük lambadan uzak olduğu için karanlık kalıyor; okunurluk için `desk_lit` `ambient` ya da günlüğün yeri ayarlanabilir.
 - Meclis görüşü metinleri genel kalıplardan kuruluyor (danışmana özgü ses yalnızca kılıf cümlelerinde). İçerik turunda danışman başına söyleyiş eklenebilir.
 - Kullanıcı henüz tam bir saltanat oynamadı; denge, metin ve ses geri bildirimi bekleniyor. Linux build gerçek makinede denenmedi. Android/iOS kasıtlı yapılmadı.

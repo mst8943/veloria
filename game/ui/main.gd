@@ -313,7 +313,7 @@ func _build_ui() -> void:
 		breathe.tween_property(bg, "scale", Vector2(1.05, 1.05), 28.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		breathe.tween_property(bg, "scale", Vector2.ONE, 28.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		var dim := ColorRect.new()
-		dim.color = Color(0.03, 0.02, 0.04, 0.7)
+		dim.color = Color(UIKit.SHADE, 0.7)
 		dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 		_stage.add_child(dim)
 	else:
@@ -335,11 +335,28 @@ func _build_ui() -> void:
 
 	_build_header(root)
 
+	# Alamet/haber şeridi: koyu zemin, solda amber çizgi; boşken gizli (bkz. _refresh).
 	_headline = Label.new()
-	_headline.add_theme_color_override("font_color", Color("ffb15e"))
+	_headline.add_theme_color_override("font_color", UIKit.AMBER.lightened(0.35))
+	_headline.add_theme_font_size_override("font_size", _fs(14))
 	_headline.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_headline.custom_minimum_size.y = 22
-	root.add_child(_headline)
+	var hl_sb := UIKit.box(Color(UIKit.PLATE, 0.78), Color(0, 0, 0, 0), 2, 12)
+	hl_sb.border_color = UIKit.AMBER
+	hl_sb.border_width_left = 3
+	hl_sb.content_margin_top = 5
+	hl_sb.content_margin_bottom = 5
+	_headline.add_theme_stylebox_override("normal", hl_sb)
+	_headline.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	# Şerit sağ üstteki bildirimlerin altına girmesin: masaüstünde bildirim sütunu kadar boşluk.
+	var hl_row := HBoxContainer.new()
+	hl_row.visible = false
+	hl_row.add_child(_headline)
+	if not _mobile:
+		var hl_gap := Control.new()
+		hl_gap.custom_minimum_size.x = 436
+		hl_gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		hl_row.add_child(hl_gap)
+	root.add_child(hl_row)
 
 	var cols := HBoxContainer.new()
 	cols.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -768,7 +785,7 @@ func _build_fx() -> void:
 	atmos.material = mat
 	_fx.add_child(atmos)
 	_curtain = ColorRect.new()
-	_curtain.color = Color(0.02, 0.015, 0.025, 1.0)
+	_curtain.color = Color(UIKit.SHADE.darkened(0.3), 1.0)
 	_curtain.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_curtain.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_curtain.modulate.a = 0.0
@@ -845,8 +862,8 @@ func _build_menu() -> void:
 		_menu_bg.add_child(t)
 	else:
 		var grad := Gradient.new()
-		grad.set_color(0, Color("1a1620"))
-		grad.set_color(1, Color("07060a"))
+		grad.set_color(0, Color("1c1813"))
+		grad.set_color(1, Color("080706"))
 		var gt := GradientTexture2D.new()
 		gt.gradient = grad
 		gt.fill = GradientTexture2D.FILL_RADIAL
@@ -861,7 +878,7 @@ func _build_menu() -> void:
 		t2.set_anchors_preset(Control.PRESET_FULL_RECT)
 		_menu_bg.add_child(t2)
 	var shade := ColorRect.new()
-	shade.color = Color(0.03, 0.02, 0.04, 0.5)
+	shade.color = Color(UIKit.SHADE, 0.5)
 	shade.set_anchors_preset(Control.PRESET_FULL_RECT)
 	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_menu.add_child(shade)
@@ -877,7 +894,7 @@ func _build_menu() -> void:
 	center.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	menu_scroll.add_child(center)
 	var plate := PanelContainer.new()
-	plate.add_theme_stylebox_override("panel", UIKit.box(Color(0.03, 0.025, 0.04, 0.72), Color(UIKit.GOLD_DIM, 0.35), 10, 34))
+	plate.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PLATE, 0.72), Color(UIKit.GOLD_DIM, 0.35), 10, 34))
 	center.add_child(plate)
 	UIKit.ornament(plate, Color(UIKit.GOLD, 0.8), 24, 9)
 	var box := VBoxContainer.new()
@@ -1059,7 +1076,7 @@ func _build_modal() -> void:
 		m.add_theme_constant_override("margin_" + side, 24 if _mobile else 60)
 	_modal.add_child(m)
 	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", UIKit.box(Color(0.05, 0.045, 0.06, 0.97), UIKit.GOLD, 10, 28))
+	panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PLATE, 0.97), UIKit.GOLD, 10, 28))
 	m.add_child(panel)
 	UIKit.ornament(panel, UIKit.GOLD, 24, 9)
 	var v := VBoxContainer.new()
@@ -1203,11 +1220,11 @@ func _build_end() -> void:
 	_end_bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_end_overlay.add_child(_end_bg)
 	var shade := ColorRect.new()
-	shade.color = Color(0.03, 0.02, 0.04, 0.82)
+	shade.color = Color(UIKit.SHADE, 0.82)
 	shade.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_end_overlay.add_child(shade)
 	var under := ColorRect.new()
-	under.color = Color(0.03, 0.02, 0.04, 1.0)
+	under.color = Color(UIKit.SHADE, 1.0)
 	under.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_end_overlay.add_child(under)
 	_end_overlay.move_child(under, 0)
@@ -1225,7 +1242,10 @@ func _build_end() -> void:
 	_end_head.scroll_active = false
 	_end_head.add_theme_font_override("bold_font", UIKit.serif())
 	_end_head.add_theme_font_override("normal_font", UIKit.serif())
-	v.add_child(_end_head)
+	var head_band := PanelContainer.new()
+	head_band.add_theme_stylebox_override("panel", UIKit.band_style())
+	head_band.add_child(_end_head)
+	v.add_child(head_band)
 	# Sekmeler: Özet / Grafik / Tarihçiler / Hakikat Dosyası / Kararlar
 	_end_tabs = TabContainer.new()
 	_end_tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -1415,7 +1435,7 @@ func _toast_msg(text: String) -> void:
 		_toasts.remove_child(old)
 		old.queue_free()
 	var card := PanelContainer.new()
-	var sb := UIKit.box(Color(0.05, 0.045, 0.06, 0.95), Color(UIKit.GOLD_DIM, 0.7), 6, 9)
+	var sb := UIKit.box(Color(UIKit.PLATE, 0.95), Color(UIKit.GOLD_DIM, 0.7), 6, 9)
 	sb.border_width_left = 4
 	sb.border_color = UIKit.GOLD
 	sb.shadow_color = Color(0, 0, 0, 0.5)
@@ -1570,6 +1590,7 @@ func _after_load(message: String) -> void:
 	_hide_menu()
 	_journal.clear()
 	_headline.text = ""
+	_headline.get_parent().visible = false
 	_sel.clear()
 	_cards_sig = ""
 	_last_mesai = -1
@@ -2316,7 +2337,8 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		var panel := PanelContainer.new()
 		panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var band := clampi(int(r.get("band", 1)), 0, 2)
-		var sb := UIKit.box(Color(UIKit.PANEL_HI, 0.5), Color(UIKit.GOLD_DIM, 0.15), 5, 6)
+		# Renk yalnızca sol çizgide: raporun söylediği durum. Kutu kenarı yok, liste sakin kalır.
+		var sb := UIKit.box(Color(UIKit.PANEL_HI, 0.42), Color(0, 0, 0, 0), 2, 6)
 		sb.content_margin_top = 3
 		sb.content_margin_bottom = 3
 		sb.border_width_left = 3
@@ -2769,6 +2791,7 @@ func _trait(text: String, col: Color, filled := -1, total := 0, tip := "") -> Co
 
 func _on_week(_w: int) -> void:
 	_headline.text = "  ·  ".join(Sim.weekly_news.slice(0, 3)) if not Sim.weekly_news.is_empty() else ""
+	_headline.get_parent().visible = _headline.text != ""
 	if not Sim.weekly_news.is_empty():
 		_journal.append_text("[color=orange]Hafta %d: %s[/color]\n" % [Sim.week, "; ".join(Sim.weekly_news)])
 		for n in Sim.weekly_news:
