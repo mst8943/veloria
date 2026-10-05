@@ -4,13 +4,14 @@ extends Control
 const UIKit := preload("res://game/ui/ui_kit.gd")
 const ATMOS_SHADER := preload("res://game/ui/atmosphere.gdshader")
 const CINEMA := preload("res://game/ui/cinema.gd")
-const SHIMMER_SHADER := preload("res://game/ui/shimmer.gdshader")
 const MEDIA_VIEW := preload("res://game/ui/media_view.gd")
 const DESK_VIEW := preload("res://game/ui/desk_view.gd")
 const CITY_VIEW := preload("res://game/ui/city_view.gd")
 const TRUTH_CHART := preload("res://game/ui/truth_chart.gd")
 const AUTOPLAY := preload("res://game/ui/autoplay.gd")
 const END_SCREEN := preload("res://game/ui/end_screen.gd")
+const MENU := preload("res://game/ui/menu.gd")
+const MODAL := preload("res://game/ui/modal.gd")
 
 const ROLE := {"army": "Ordu", "intel": "İstihbarat", "economy": "Maliye", "media": "Medya", "press": "Basın",
 	"gate": "Saray", "royal": "Hanedan", "opposition": "Muhalefet", "court": "Yargı"}
@@ -48,40 +49,6 @@ const CAT_TIPS := {
 	"OPERASYON": "Operasyon (2 mesai)\n1–3 kişiyle gizli iş. Çemberi kurmak için Çoklu seçim'i aç ya da Ctrl ile kişi ekle.",
 }
 
-## Emeği geçenler ve lisans bildirimleri (Godot MIT ve EB Garamond OFL bildirimi dağıtımda zorunludur).
-const CREDITS := """[b][font_size=30][color=#d6b25e]VELORIA[/color][/font_size][/b]
-[color=gray]Reaktif bir siyaset ve iktidar simülasyonu[/color]
-
-[b]Yapım[/b]
-Mesut Canturk
-
-[b]Tasarım ve geliştirme desteği[/b]
-Claude (Anthropic)
-
-[b]Görseller[/b]
-Yapay zekâ ile üretilmiş özgün görseller. Tüm karakterler ve kurumlar kurgusaldır; gerçek kişi ve kurumlarla benzerlik tesadüftür.
-
-[b]Yazı tipi[/b]
-EB Garamond — Copyright 2017 The EB Garamond Project Authors (github.com/octaviopardo/EBGaramond12).
-IBM Plex Sans — Copyright 2017 IBM Corp. (github.com/IBM/plex).
-İkisi de SIL Open Font License 1.1 altında kullanılmıştır (lisans metinleri oyun dosyalarında: game/fonts/OFL.txt, game/fonts/OFL_IBMPlexSans.txt).
-
-[b]Oyun motoru[/b]
-Bu oyun Godot Engine ile yapılmıştır ve aşağıdaki lisans altında kullanılmaktadır:
-
-[color=gray][font_size=13]Copyright (c) 2014-present Godot Engine contributors.
-Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-Portions of this software are copyright © The FreeType Project (www.freetype.org). All rights reserved.[/font_size][/color]"""
-
-## Nasıl oynanır penceresi (ana menüdeki bağlantı).
-const HOW_TO := "[b][font_size=26][color=#d6b25e]Nasıl oynanır[/color][/font_size][/b]\n\n• 104 hafta tahtta kal. Haftada [b]4 mesain[/b] var; kararlar, emirler ve operasyonlar mesai harcar.\n• Sayıları göremezsin; yalnızca [b]raporlar[/b] vardır ve herkes yalan söyleyebilir. Korktukça insanlar sana gerçeği söylemez; hepsi aynı cümleyi kurmaya başlar.\n• Verdiğin güç sana dönebilir. Terfi, borç ve gizli ödemeler iz bırakır.\n• Söz vermek kolaydır; vadesi gelince ya tutarsın ya da bedelini ödersin. Aynı makamı iki kişiye vaat etmek er geç duyulur.\n• Herkesin bildiği bir sır, gizli bir sırdan çok daha tehlikelidir.\n• Her kararda [b]meclisten iki kişi[/b] görüş bildirir. Gerekçeleri doğrudur ama seçicidir; [color=#d08a3d]ÇIKARI VAR[/color] olanın önerisi tarafsız olmayabilir.\n• Darbe bir sabah gelmez: önce [b]alametler[/b] görünür, kişi kartında [color=#d08a3d]ŞÜPHELİ[/color] yazar. Bir kısmı dedikodudur; [b]Huzura Çağır[/b] ile yoklayabilirsin. Darbe kapına dayandığında son kararı sen verirsin.\n• Ertelediğin kararlar iki hafta sonra kendi kendine çözülür.\n• Oyun bittiğinde [b]Hakikat Dosyası[/b] sana kimin ne zaman yalan söylediğini gösterir."
 
 ## İlk haftalarda yeni oyuncuya kısa yol gösterme notları (hafta -> metin).
 const ADVICE := {
@@ -119,11 +86,7 @@ var _week_log: Array[String] = []   # bu haftanın eylem sonuçları (Gündem > 
 var _week_log_week := -1
 var _sel: Array[String] = []
 var _icons: Dictionary = {}
-var _menu: Control
-var _menu_bg: Control
-var _menu_items: Array[Control] = []
-var _menu_pages: Dictionary = {}
-var _menu_page_now := "main"
+var _menu: Control    # ana menü (menu.gd)
 var _end_overlay: Control   # oyun sonu ekranı (end_screen.gd)
 var _fx: CanvasLayer
 var _curtain: ColorRect
@@ -144,11 +107,7 @@ var _mesai_box: HBoxContainer
 var _curtain_img: TextureRect
 var _curtain_skip := false
 var _cinema: Control
-var _modal: Control
-var _modal_text: RichTextLabel
-var _modal_yes: Button
-var _modal_close: Button
-var _modal_cb := Callable()
+var _modal: Control   # bilgi/onay penceresi (modal.gd)
 var _promise_list: RichTextLabel
 var _multi_btn: Button
 var _act_cat := "KAZAN"            # eylem panelinde açık kategori
@@ -242,7 +201,7 @@ func _ready() -> void:
 			_start_new()
 		match str(ProjectSettings.get_setting("veloria/dev_modal", "")):
 			"about":
-				_show_modal(CREDITS)
+				_show_modal(MENU.CREDITS)
 			"chronicle":
 				_show_chronicle()
 
@@ -260,7 +219,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		KEY_ESCAPE:
 			if _modal.visible:
 				_modal.hide()
-			elif _menu.visible and _menu_page_now != "main":
+			elif _menu.visible and _menu.page_now != "main":
 				_menu_show_page("main")
 			elif _desk.visible and not _menu.visible:
 				_desk.close_view()
@@ -634,7 +593,10 @@ func _build_ui() -> void:
 	_media.closed.connect(func() -> void: _refresh())
 	add_child(_media)
 
-	_build_menu()
+	_menu = MENU.new(self)
+	add_child(_menu)
+	_modal = MODAL.new(self)
+	add_child(_modal)   # menünün üstünde
 	_end_overlay = END_SCREEN.new(self)
 	add_child(_end_overlay)
 
@@ -843,286 +805,13 @@ func _build_fx() -> void:
 	cl.add_child(_cinema)
 
 
-func _build_menu() -> void:
-	_menu = Control.new()
-	_menu.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_menu.clip_contents = true
-	add_child(_menu)
-	_menu_bg = Control.new()
-	_menu_bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_menu_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_menu.add_child(_menu_bg)
-	var tex := _art("res://art/menu_bg.png")
-	if tex:
-		var t := TextureRect.new()
-		t.texture = tex
-		t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-		t.set_anchors_preset(Control.PRESET_FULL_RECT)
-		_menu_bg.add_child(t)
-	else:
-		var grad := Gradient.new()
-		grad.set_color(0, Color("1c1813"))
-		grad.set_color(1, Color("080706"))
-		var gt := GradientTexture2D.new()
-		gt.gradient = grad
-		gt.fill = GradientTexture2D.FILL_RADIAL
-		gt.fill_from = Vector2(0.5, 0.45)
-		gt.fill_to = Vector2(1.0, 1.0)
-		gt.width = 512
-		gt.height = 512
-		var t2 := TextureRect.new()
-		t2.texture = gt
-		t2.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		t2.stretch_mode = TextureRect.STRETCH_SCALE
-		t2.set_anchors_preset(Control.PRESET_FULL_RECT)
-		_menu_bg.add_child(t2)
-	var shade := ColorRect.new()
-	shade.color = Color(UIKit.SHADE, 0.5)
-	shade.set_anchors_preset(Control.PRESET_FULL_RECT)
-	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_menu.add_child(shade)
-	_menu.add_child(UIKit.dust(Vector2(1600, 900), 60, 0.4))
-
-	# Menü kaydırılabilir: küçük ekranda taşarsa kaydırılır, büyükte ortada durur.
-	var menu_scroll := ScrollContainer.new()
-	menu_scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
-	menu_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_menu.add_child(menu_scroll)
-	var center := CenterContainer.new()
-	center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	center.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	menu_scroll.add_child(center)
-	var plate := PanelContainer.new()
-	plate.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PLATE, 0.72), Color(UIKit.GOLD_DIM, 0.35), 10, 34))
-	center.add_child(plate)
-	UIKit.ornament(plate, Color(UIKit.GOLD, 0.8), 24, 9)
-	var box := VBoxContainer.new()
-	box.custom_minimum_size.x = 560
-	box.add_theme_constant_override("separation", 12)
-	plate.add_child(box)
-	var title := Label.new()
-	title.text = "V E L O R İ A"
-	var shine := ShaderMaterial.new()
-	shine.shader = SHIMMER_SHADER
-	shine.set_shader_parameter("screen_w", 1067.0 if _mobile else 1600.0)
-	title.material = shine
-	title.add_theme_font_override("font", UIKit.serif())
-	title.add_theme_font_size_override("font_size", 60 if _mobile else 84)
-	title.add_theme_color_override("font_color", UIKit.GOLD)
-	title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.7))
-	title.add_theme_constant_override("shadow_offset_y", 4)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	box.add_child(title)
-	var sub := Label.new()
-	sub.text = "Tahtta kalmak, ülkeyi yönetmekten daha zordur."
-	sub.add_theme_font_override("font", UIKit.serif())
-	sub.add_theme_font_size_override("font_size", _fs(20))
-	sub.add_theme_color_override("font_color", Color(UIKit.TEXT, 0.85))
-	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	var mdiv := UIKit.divider(380.0)
-	mdiv.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	box.add_child(mdiv)
-	box.add_child(sub)
-	var sp := Control.new()
-	sp.custom_minimum_size.y = 10 if _mobile else 18
-	box.add_child(sp)
-
-	# --- Ana sayfa: dört büyük düğme, altında küçük bağlantılar
-	var main_page := _menu_page("main", box)
-	var b_first := _menu_btn(main_page, "Devam Et", func() -> void:
-		if not Sim.actors.is_empty() and not Sim.ended:
-			_hide_menu()
-		else:
-			_continue())
-	var b_new := _menu_btn(main_page, "Yeni Oyun", func() -> void: _menu_show_page("new"))
-	var b_set := _menu_btn(main_page, "Ayarlar", func() -> void: _menu_show_page("settings"))
-	var b_quit := _menu_btn(main_page, "Çıkış", func() -> void: get_tree().quit())
-	b_quit.visible = not OS.has_feature("web")   # tarayıcıda çıkış anlamsız
-	for b in [b_first, b_new, b_set, b_quit]:
-		b.custom_minimum_size.y = 50 if _mobile else 58
-		b.add_theme_font_override("font", UIKit.serif())
-		b.add_theme_font_size_override("font_size", _fs(21))
-	var links := HBoxContainer.new()
-	links.alignment = BoxContainer.ALIGNMENT_CENTER
-	links.add_theme_constant_override("separation", 6)
-	main_page.add_child(links)
-	for l in [["Nasıl Oynanır", func() -> void: _show_modal(HOW_TO)], ["Hükümdarlık Arşivi", _show_chronicle], ["Hakkında", func() -> void: _show_modal(CREDITS)]]:
-		var lb := Button.new()
-		lb.text = l[0]
-		lb.theme_type_variation = "GhostButton"
-		lb.custom_minimum_size.y = 40
-		_wire(lb)
-		lb.pressed.connect(l[1])
-		links.add_child(lb)
-
-	# --- Yeni oyun: zorluk seçimi
-	var new_page := _menu_page("new", box)
-	new_page.add_child(_menu_heading("YENİ SALTANAT"))
-	var dgroup := ButtonGroup.new()
-	var ddesc := [
-		"5 mesai, daha uzun koruma süresi ve bol gelir. İlk saltanat için.",
-		"4 mesai. Dengeli: hatalarını affeder ama unutmaz.",
-		"4 mesai, kısa koruma, az gelir. Darbeler daha erken ve kolay gelir.",
-	]
-	for i in Sim.DIFFICULTY.size():
-		var db := Button.new()
-		db.text = "  %s\n  %s" % [Sim.DIFFICULTY[i]["name"], ddesc[i]]
-		db.theme_type_variation = "ChoiceButton"
-		db.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		db.toggle_mode = true
-		db.button_group = dgroup
-		db.button_pressed = i == Sfx.difficulty
-		db.custom_minimum_size.y = 58
-		db.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		_wire(db)
-		db.pressed.connect(func() -> void:
-			Sfx.difficulty = i
-			Sfx.save_settings())
-		new_page.add_child(db)
-	var nrow := HBoxContainer.new()
-	nrow.add_theme_constant_override("separation", 10)
-	new_page.add_child(nrow)
-	var b_back1 := _menu_btn(nrow, "Geri", func() -> void: _menu_show_page("main"))
-	b_back1.theme_type_variation = "GhostButton"
-	b_back1.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var b_go := _menu_btn(nrow, "Tahta Çık", _request_new_game, true)
-	b_go.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b_go.size_flags_stretch_ratio = 2.0
-
-	# --- Ayarlar
-	var set_page := _menu_page("settings", box)
-	set_page.add_child(_menu_heading("AYARLAR"))
-	var grid := GridContainer.new()
-	grid.columns = 2
-	grid.add_theme_constant_override("h_separation", 24)
-	grid.add_theme_constant_override("v_separation", 6)
-	set_page.add_child(grid)
-	var checks := [
-		["Tam ekran (F11)", Sfx.fullscreen, func(on: bool) -> void: Sfx.set_fullscreen(on), not _mobile],
-		["Kısa geçişler", Sfx.short_fx, func(on: bool) -> void: Sfx.short_fx = on, true],
-		["Danışman ipuçları", Sfx.tips, func(on: bool) -> void: Sfx.tips = on, true],
-		["Açılış sineması", Sfx.intro, func(on: bool) -> void: Sfx.intro = on, true],
-		["Haftaya masadan başla", Sfx.desk_start, func(on: bool) -> void: Sfx.desk_start = on, true],
-	]
-	for c in checks:
-		if not c[3]:
-			continue
-		var cb := CheckBox.new()
-		cb.text = c[0]
-		cb.button_pressed = c[1]
-		var apply: Callable = c[2]
-		cb.toggled.connect(func(on: bool) -> void:
-			apply.call(on)
-			Sfx.save_settings())
-		grid.add_child(cb)
-	var vgrid := GridContainer.new()
-	vgrid.columns = 2
-	vgrid.add_theme_constant_override("h_separation", 16)
-	vgrid.add_theme_constant_override("v_separation", 10)
-	set_page.add_child(vgrid)
-	vgrid.add_child(_label_dim("Müzik"))
-	var s_music := _slider(Sfx.music_volume, func(v: float) -> void:
-		Sfx.set_music(v)
-		Sfx.save_settings())
-	s_music.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	vgrid.add_child(s_music)
-	vgrid.add_child(_label_dim("Ses efekti"))
-	var s_sfx := _slider(Sfx.sfx_volume, func(v: float) -> void:
-		Sfx.set_sfx(v)
-		Sfx.play("click")
-		Sfx.save_settings())
-	s_sfx.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	vgrid.add_child(s_sfx)
-	var b_back2 := _menu_btn(set_page, "Geri", func() -> void: _menu_show_page("main"))
-	b_back2.theme_type_variation = "GhostButton"
-
-	_menu_items = [title, mdiv, sub, b_first, b_new, b_set, b_quit, links]
-	_menu.set_meta("first", b_first)
-	_menu.set_meta("new", b_new)
-	var ver := Label.new()
-	ver.text = "v%s   ·   Esc: menü   Boşluk: haftayı bitir   Ctrl+S: kaydet   F11: tam ekran" % str(ProjectSettings.get_setting("application/config/version", "1.0.0"))
-	if _mobile:
-		ver.text = "v%s" % str(ProjectSettings.get_setting("application/config/version", "1.0.0"))
-	ver.add_theme_color_override("font_color", Color(UIKit.TEXT_DIM, 0.7))
-	ver.add_theme_font_size_override("font_size", _fs(12))
-	ver.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_MINSIZE, 12)
-	ver.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-	ver.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	_menu.add_child(ver)
-	_build_modal()
-	_menu.hide()
-	# Yavaş "Ken Burns" kaydırma
-	_menu_bg.pivot_offset = Vector2(800, 450)
-	var kb := _menu_bg.create_tween().set_loops()
-	kb.tween_property(_menu_bg, "scale", Vector2(1.07, 1.07), 22.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	kb.tween_property(_menu_bg, "scale", Vector2(1.0, 1.0), 22.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-
-
-func _build_modal() -> void:
-	_modal = Control.new()
-	_modal.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(_modal)  # menüden bağımsız: masadan (hanedan fotoğrafı) da açılabilir
-	var dim := ColorRect.new()
-	dim.color = Color(0, 0, 0, 0.75)
-	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_modal.add_child(dim)
-	var m := MarginContainer.new()
-	m.set_anchors_preset(Control.PRESET_FULL_RECT)
-	var gap := 30 if _mobile else 120
-	for side in ["left", "right"]:
-		m.add_theme_constant_override("margin_" + side, gap)
-	for side in ["top", "bottom"]:
-		m.add_theme_constant_override("margin_" + side, 24 if _mobile else 60)
-	_modal.add_child(m)
-	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PLATE, 0.97), UIKit.GOLD, 10, 28))
-	m.add_child(panel)
-	UIKit.ornament(panel, UIKit.GOLD, 24, 9)
-	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 12)
-	panel.add_child(v)
-	_modal_text = RichTextLabel.new()
-	_modal_text.bbcode_enabled = true
-	_modal_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_modal_text.add_theme_font_override("bold_font", UIKit.serif())
-	_modal_text.add_theme_font_size_override("bold_font_size", _fs(20))
-	v.add_child(_modal_text)
-	var brow := HBoxContainer.new()
-	brow.add_theme_constant_override("separation", 10)
-	v.add_child(brow)
-	_modal_yes = Button.new()
-	_modal_yes.theme_type_variation = "PrimaryButton"
-	_modal_yes.custom_minimum_size.y = 44
-	_modal_yes.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_wire(_modal_yes)
-	_modal_yes.pressed.connect(func() -> void:
-		_modal.hide()
-		if _modal_cb.is_valid():
-			_modal_cb.call())
-	brow.add_child(_modal_yes)
-	_modal_close = Button.new()
-	_modal_close.text = "Kapat"
-	_modal_close.custom_minimum_size.y = 44
-	_modal_close.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_wire(_modal_close)
-	_modal_close.pressed.connect(func() -> void: _modal.hide())
-	brow.add_child(_modal_close)
-	_modal.hide()
-
-
 ## Bilgi penceresi; yes_label verilirse onay penceresi olur (Evet -> yes_cb).
 func _show_modal(bbcode: String, yes_label := "", yes_cb := Callable()) -> void:
-	_modal_text.clear()
-	_modal_text.append_text(bbcode)
-	_modal_text.scroll_to_line(0)
-	_modal_yes.visible = yes_label != ""
-	_modal_yes.text = yes_label
-	_modal_cb = yes_cb
-	_modal_close.text = "Vazgeç" if yes_label != "" else "Kapat"
-	_modal.show()
-	if not _fast():
-		UIKit.fade_in(_modal, 0.25)
+	_modal.show_text(bbcode, yes_label, yes_cb)
+
+
+func _menu_show_page(page_name: String) -> void:
+	_menu.show_page(page_name)
 
 
 func _show_chronicle() -> void:
@@ -1150,64 +839,6 @@ func _show_chronicle() -> void:
 		else:
 			t += "[color=#55524c]·  %s  ·  %s[/color]\n" % [info[0], info[1]]
 	_show_modal(t)
-
-
-func _menu_btn(parent: Control, text: String, cb: Callable, primary := false) -> Button:
-	var b := Button.new()
-	b.text = text
-	b.custom_minimum_size.y = 46
-	if primary:
-		b.theme_type_variation = "PrimaryButton"
-	_wire(b)
-	b.pressed.connect(cb)
-	parent.add_child(b)
-	return b
-
-
-## Menü sayfası: aynı anda yalnızca biri görünür (ana sayfa, yeni oyun, ayarlar).
-func _menu_page(page_name: String, parent: Control) -> VBoxContainer:
-	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 10)
-	v.visible = page_name == "main"
-	parent.add_child(v)
-	_menu_pages[page_name] = v
-	return v
-
-
-func _menu_heading(t: String) -> Label:
-	var l := Label.new()
-	l.text = t
-	l.add_theme_font_override("font", UIKit.serif())
-	l.add_theme_font_size_override("font_size", _fs(24))
-	l.add_theme_color_override("font_color", UIKit.GOLD)
-	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	return l
-
-
-func _menu_show_page(page_name: String) -> void:
-	_menu_page_now = page_name
-	for k in _menu_pages:
-		(_menu_pages[k] as Control).visible = k == page_name
-	if not _fast():
-		UIKit.fade_in(_menu_pages[page_name], 0.25)
-
-
-func _label_dim(t: String) -> Label:
-	var l := Label.new()
-	l.text = t
-	l.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-	return l
-
-
-func _slider(value: float, cb: Callable) -> HSlider:
-	var s := HSlider.new()
-	s.min_value = 0.0
-	s.max_value = 1.0
-	s.step = 0.05
-	s.value = value
-	s.custom_minimum_size = Vector2(120, 22)
-	s.value_changed.connect(cb)
-	return s
 
 
 # ---------------------------------------------------------------- Yardımcılar
@@ -1518,10 +1149,10 @@ func _show_menu() -> void:
 	b_new.theme_type_variation = "" if first_primary else "PrimaryButton"
 	if not _instant:
 		var i := 0
-		for it in _menu_items:
+		for it in _menu.items:
 			UIKit.fade_in(it, 0.55, 0.12 * i)
 			i += 1
-		var title := _menu_items[0] as Control
+		var title := _menu.items[0] as Control
 		title.pivot_offset = title.size / 2.0
 		title.scale = Vector2(1.08, 1.08)
 		title.create_tween().tween_property(title, "scale", Vector2.ONE, 1.4).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
