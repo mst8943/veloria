@@ -11,6 +11,8 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 ## Tamamlanan adımlar
 
 - **4a.1** `3eb95af`: dört kapasite alanı ayrı tohum üreteciyle başlatılır; kasa, bütçe duruşu, saray payı ve kapasite çizelgesi kaydedilir. `SAVE_VERSION=5`, v4 göçü ve kayıt testi eklendi. Bütün testler geçti; `--full` çıktısı tabanla aynı.
+- **4a.1 test düzeltmesi** `2bed482`: `var_to_str` kayan nokta yuvarlaması için toleranslı kapasite karşılaştırması.
+- **4a.2** `501d68b`: haftalık yıpranma/kasa/ekonomi/huzursuzluk, emir uygulama, kriz şansı, yargı baskısı ve rapor gürültüsü; Kessler'in raporu ekonomi ve kasayı birlikte okur. Kalibrasyon `ATTRITION=0,04`, ekonomi katsayıları `0,003/0,001`, Zor kasa gideri çarpanı `1,8`, Zor ordu toparlama paydası `100`. Bütün testler geçti; `--full` 104 hafta TAHTTA, 120 olay.
 
 ## Son ölçüm
 
@@ -18,11 +20,12 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 |---|---:|---:|---:|
 | Taban | %83 | %45 | %16 |
 | 4a.1 | %83 | %45 | %16 |
+| 4a.2 | %80 | %42 | %18 |
 
 ## Açık sorunlar
 
-Tempo testinde 73–80. hafta dilimi **0,70**; bu, henüz haftalık akışa etkisi olmayan 4a.1'de de mevcut. 4a içerik adımıyla ≥0,8'e çıkarılmalı. `export_presets.cfg` kullanıcı değişikliği olarak çalışma ağacında duruyor.
+Tempo testinde 73–80. hafta dilimi **0,78**; 4a içerik adımıyla ≥0,8'e çıkarılmalı. `--full` olay sayısı mekanik değişim nedeniyle tabandaki 115'ten 120'ye çıktı. `export_presets.cfg` kullanıcı değişikliği olarak çalışma ağacında duruyor.
 
 ## SIRADAKİ ADIM
 
-4a.2: §5 haftalık kapasite/kasa etkileri ve emir, kriz, rapor bağlantıları. Sonra bütün testler ve 80 kampanyalık ölçüm; ölçüt botun tabandan ±3 puanda kalmasını sağla.
+4a.3: `min_cap/max_cap` ve `min_treasury/max_treasury` olay koşulları, doğrulayıcı denetimi ve VELORIA şeması. Ardından bütün testler ve 80 kampanyalık ölçüm.
