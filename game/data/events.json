@@ -1061,5 +1061,1350 @@
   {"id": "hamle_prens_soylular", "min_week": 4, "once": false, "cooldown": 12, "chance": 0.14, "actor_min": {"prens": {"ambition": 50}}, "actor": "prens", "tone": -1, "title": "Prens soylu ailelerle yemekte", "news": "Prens bu hafta üç soylu aileyle yemek yedi. Masada tahtın geleceği konuşulmuş.", "fx": {}},
   {"id": "hamle_prens_vakif", "min_week": 4, "once": false, "cooldown": 18, "chance": 0.084, "alive": ["prens"], "actor": "prens", "tone": 0, "title": "Prens bir vakıf kurdu", "news": "Prens yoksul çocuklar için bir vakıf kurdu. Halk onu seviyor; soylular onu izliyor.", "fx": {"unrest": -2, "actors": {"prens": {"l_career": 1}}}},
   {"id": "hamle_falk_dava", "min_week": 4, "once": false, "cooldown": 14, "chance": 0.105, "alive": ["falk"], "actor_min": {"falk": {"power": 40}}, "actor": "falk", "tone": 0, "title": "Falk bir bakan hakkında dava açtı", "news": "Yargıç Falk bir bakanın ihale dosyasını yeniden açtı. Mahkeme koridorları kalabalık.", "fx": {"opp": -1, "actors": {"falk": {"power": 1}}}},
-  {"id": "hamle_dorn_liste", "min_week": 4, "once": false, "cooldown": 14, "chance": 0.126, "alive": ["dorn"], "actor_min": {"dorn": {"power": 35}}, "actor": "dorn", "tone": -1, "title": "Dorn randevu listesini daralttı", "news": "Dorn bu hafta üç bakanın randevusunu 'Majestelerinin yorgunluğu' gerekçesiyle iptal etti.", "fx": {"actors": {"dorn": {"power": 1}}}}
+  {"id": "hamle_dorn_liste", "min_week": 4, "once": false, "cooldown": 14, "chance": 0.126, "alive": ["dorn"], "actor_min": {"dorn": {"power": 35}}, "actor": "dorn", "tone": -1, "title": "Dorn randevu listesini daralttı", "news": "Dorn bu hafta üç bakanın randevusunu 'Majestelerinin yorgunluğu' gerekçesiyle iptal etti.", "fx": {"actors": {"dorn": {"power": 1}}}},
+  {
+    "id": "yay_arden_yukselis",
+    "min_week": 20,
+    "max_week": 60,
+    "alive": [
+      "arden"
+    ],
+    "art": "general_atamalari",
+    "title": "Arden’in subay listesi",
+    "text": "Arden bir atama listesi bıraktı. “Ordu emirle yürür, Majesteleri. İmzanız olmadan hiçbir subay yer değiştirmez.” Listenin altındaki mühür yeri boş.",
+    "choices": [
+      {
+        "label": "Listeyi açık kurulda incele",
+        "text": "Listeyi açık kurulda incele.",
+        "fx": {
+          "king": 1,
+          "flag": "yay_arden_basladi"
+        }
+      },
+      {
+        "label": "Atamaları Arden’e bırak",
+        "text": "Atamaları Arden’e bırak.",
+        "fx": {
+          "actors": {
+            "arden": {
+              "obligation": 2
+            }
+          },
+          "flag": "yay_arden_basladi"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Teklif cevapsız kaldı.",
+      "fx": {
+        "flag": "yay_arden_basladi"
+      }
+    },
+    "chance": 0.55
+  },
+  {
+    "id": "yay_arden_sinav",
+    "min_week": 23,
+    "max_week": 88,
+    "alive": [
+      "arden"
+    ],
+    "art": "sinir_krizi",
+    "title": "Karargâhta iki emir",
+    "text": "Sınırdaki birliğe iki farklı talimat ulaşmış. Arden dosyayı masaya koydu: “Siyaset karargâha girerse nöbetçi kimi dinleyeceğini şaşırır.”",
+    "choices": [
+      {
+        "label": "Emri senin imzanla netleştir",
+        "text": "Emri senin imzanla netleştir.",
+        "fx": {
+          "king": 1,
+          "flag": "yay_arden_guven"
+        }
+      },
+      {
+        "label": "Karargâh kendi yolunu bulsun",
+        "text": "Karargâh kendi yolunu bulsun.",
+        "fx": {
+          "king": -1,
+          "flag": "yay_arden_kopus"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Karar verilmedi; kişi bunu sessizlik saydı.",
+      "fx": {
+        "flag": "yay_arden_kopus"
+      }
+    },
+    "flag_age": {
+      "yay_arden_basladi": 3
+    },
+    "chance": 0.65
+  },
+  {
+    "id": "yay_arden_sadakat",
+    "min_week": 26,
+    "max_week": 103,
+    "alive": [
+      "arden"
+    ],
+    "art": "terhis",
+    "title": "Arden emir zincirini koruyor",
+    "text": "Sınır emrinde Arden’in usulünü korumuştun. General şimdi subaylarının önünde imzanı gösteriyor: “Bu orduda son söz taçtadır.”",
+    "choices": [
+      {
+        "label": "Komutanlarla birlikte konuş",
+        "text": "Komutanlarla birlikte konuş.",
+        "fx": {
+          "king": 1
+        }
+      },
+      {
+        "label": "Arden’i görevine gönder",
+        "text": "Arden’i görevine gönder.",
+        "fx": {}
+      }
+    ],
+    "ignore": {
+      "text": "Bu yakınlık karşılıksız kaldı.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_arden_guven": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_arden_kopus",
+    "min_week": 26,
+    "max_week": 103,
+    "alive": [
+      "arden"
+    ],
+    "art": "terhis",
+    "title": "Subaylar Arden’i bekliyor",
+    "text": "Sınır emrinde karargâhı yalnız bırakmıştın. Arden sertçe konuştu: “Subaylar bekleyemez. Bir emir gelmeyince kendi emrimi verdim.”",
+    "choices": [
+      {
+        "label": "Emir zincirini yazılı hatırlat",
+        "text": "Emir zincirini yazılı hatırlat.",
+        "fx": {
+          "king": 1
+        }
+      },
+      {
+        "label": "Bu kez sessiz kal",
+        "text": "Bu kez sessiz kal.",
+        "fx": {
+          "king": -1
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Aradaki mesafe büyüdü.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_arden_kopus": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_voss_yukselis",
+    "min_week": 25,
+    "max_week": 60,
+    "alive": [
+      "voss"
+    ],
+    "art": "voss_arden_catisma",
+    "title": "Voss’un bilgi masası",
+    "text": "Voss, saraya gelen her raporu tek masada toplamayı önerdi. “Dağınık bilgi, işlenmemiş bilgidir. Bunu düzene sokalım.”",
+    "choices": [
+      {
+        "label": "Kayıtları ortak deftere geçir",
+        "text": "Kayıtları ortak deftere geçir.",
+        "fx": {
+          "actors": {
+            "voss": {
+              "l_ideology": 1
+            }
+          },
+          "flag": "yay_voss_basladi"
+        }
+      },
+      {
+        "label": "Masayı Voss’a bırak",
+        "text": "Masayı Voss’a bırak.",
+        "fx": {
+          "actors": {
+            "voss": {
+              "obligation": 2
+            }
+          },
+          "flag": "yay_voss_basladi"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Teklif cevapsız kaldı.",
+      "fx": {
+        "flag": "yay_voss_basladi"
+      }
+    },
+    "chance": 0.55
+  },
+  {
+    "id": "yay_voss_sinav",
+    "min_week": 28,
+    "max_week": 88,
+    "alive": [
+      "voss"
+    ],
+    "art": "gizli_toplanti",
+    "title": "Kapalı dosyanın anahtarı",
+    "text": "Bir dosyada hem bir bakanın hem sarayın adı geçiyor. Voss gözünü kaldırmadan sordu: “Kayıt mahkemeye mi gider, kasaya mı?”",
+    "choices": [
+      {
+        "label": "Dosyayı Falk’a teslim et",
+        "text": "Dosyayı Falk’a teslim et.",
+        "fx": {
+          "actors": {
+            "falk": {
+              "l_ideology": 1
+            }
+          },
+          "flag": "yay_voss_guven"
+        }
+      },
+      {
+        "label": "Voss’un kasasında tut",
+        "text": "Voss’un kasasında tut.",
+        "fx": {
+          "actors": {
+            "voss": {
+              "obligation": 2
+            }
+          },
+          "flag": "yay_voss_kopus"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Karar verilmedi; kişi bunu sessizlik saydı.",
+      "fx": {
+        "flag": "yay_voss_kopus"
+      }
+    },
+    "flag_age": {
+      "yay_voss_basladi": 3
+    },
+    "chance": 0.65
+  },
+  {
+    "id": "yay_voss_sadakat",
+    "min_week": 31,
+    "max_week": 103,
+    "alive": [
+      "voss"
+    ],
+    "art": "deepfake",
+    "title": "Voss arşivi açıyor",
+    "text": "Mahkeme yolunu seçtiğini hatırlayan Voss dosyayı usulünce teslim etti. “Bir kopyası bende yok, Majesteleri. Bu kez.”",
+    "choices": [
+      {
+        "label": "Teslim tutanağını imzala",
+        "text": "Teslim tutanağını imzala.",
+        "fx": {
+          "king": 1
+        }
+      },
+      {
+        "label": "Dosyayı kapat",
+        "text": "Dosyayı kapat.",
+        "fx": {}
+      }
+    ],
+    "ignore": {
+      "text": "Bu yakınlık karşılıksız kaldı.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_voss_guven": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_voss_kopus",
+    "min_week": 31,
+    "max_week": 103,
+    "alive": [
+      "voss"
+    ],
+    "art": "deepfake",
+    "title": "Voss’un ikinci arşivi",
+    "text": "Dosyayı kasada tutmasına izin vermiştin. Voss ince bir klasör uzattı: “Aslı emniyette. Yerini bilmeniz şimdilik gerekmiyor.”",
+    "choices": [
+      {
+        "label": "Arşivin kaydını iste",
+        "text": "Arşivin kaydını iste.",
+        "fx": {
+          "king": 1
+        }
+      },
+      {
+        "label": "Onu şimdilik izle",
+        "text": "Onu şimdilik izle.",
+        "fx": {}
+      }
+    ],
+    "ignore": {
+      "text": "Aradaki mesafe büyüdü.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_voss_kopus": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_kessler_yukselis",
+    "min_week": 30,
+    "max_week": 60,
+    "alive": [
+      "kessler"
+    ],
+    "art": "kessler_reform",
+    "title": "Kessler’in cetveli",
+    "text": "Kessler cetvelin kenarına kendi eliyle not düşmüş: “Her kuruşun yeri belli olursa korkacak bir şey kalmaz.” Son satırın mürekkebi henüz kurumamış.",
+    "choices": [
+      {
+        "label": "Cetveli meclise de göster",
+        "text": "Cetveli meclise de göster.",
+        "fx": {
+          "economy": 1,
+          "flag": "yay_kessler_basladi"
+        }
+      },
+      {
+        "label": "Önce sarayda tut",
+        "text": "Önce sarayda tut.",
+        "fx": {
+          "flag": "yay_kessler_basladi"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Teklif cevapsız kaldı.",
+      "fx": {
+        "flag": "yay_kessler_basladi"
+      }
+    },
+    "chance": 0.55
+  },
+  {
+    "id": "yay_kessler_sinav",
+    "min_week": 33,
+    "max_week": 88,
+    "alive": [
+      "kessler"
+    ],
+    "art": "butce_acigi",
+    "title": "Eksik bütçe satırı",
+    "text": "Hazine giderlerinde açıklanmayan bir kalem var. Kessler fısıldadı: “Bu satırı kapatırsam bugün rahat ederiz. Yarın edemeyiz.”",
+    "choices": [
+      {
+        "label": "Açığı açıkça yaz",
+        "text": "Açığı açıkça yaz.",
+        "fx": {
+          "economy": -1,
+          "king": 1,
+          "flag": "yay_kessler_guven"
+        }
+      },
+      {
+        "label": "Kalemi gelecek yıla taşı",
+        "text": "Kalemi gelecek yıla taşı.",
+        "fx": {
+          "economy": 1,
+          "king": -1,
+          "flag": "yay_kessler_kopus"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Karar verilmedi; kişi bunu sessizlik saydı.",
+      "fx": {
+        "flag": "yay_kessler_kopus"
+      }
+    },
+    "flag_age": {
+      "yay_kessler_basladi": 3
+    },
+    "chance": 0.65
+  },
+  {
+    "id": "yay_kessler_sadakat",
+    "min_week": 36,
+    "max_week": 103,
+    "alive": [
+      "kessler"
+    ],
+    "art": "butce_ifsa",
+    "title": "Kessler imzasını koyuyor",
+    "text": "Açığı açıklamasına izin vermiştin. Kessler titreyen elini imzanın yanına koydu: “Rakamlar ağır, fakat artık bizim.”",
+    "choices": [
+      {
+        "label": "Bakanın arkasında dur",
+        "text": "Bakanın arkasında dur.",
+        "fx": {
+          "actors": {
+            "kessler": {
+              "l_ideology": 2
+            }
+          }
+        }
+      },
+      {
+        "label": "Bağımsız denetim iste",
+        "text": "Bağımsız denetim iste.",
+        "fx": {}
+      }
+    ],
+    "ignore": {
+      "text": "Bu yakınlık karşılıksız kaldı.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_kessler_guven": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_kessler_kopus",
+    "min_week": 36,
+    "max_week": 103,
+    "alive": [
+      "kessler"
+    ],
+    "art": "butce_ifsa",
+    "title": "Defterde boş bir satır",
+    "text": "Eksik kalemi gizlemesini istemiştin. Kessler defteri kapatmadı: “Majesteleri, boş bıraktığım yer her gün biraz büyüyor.”",
+    "choices": [
+      {
+        "label": "Defteri yeniden aç",
+        "text": "Defteri yeniden aç.",
+        "fx": {
+          "economy": -1
+        }
+      },
+      {
+        "label": "Susmasını iste",
+        "text": "Susmasını iste.",
+        "fx": {
+          "king": -1
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Aradaki mesafe büyüdü.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_kessler_kopus": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_halden_yukselis",
+    "min_week": 35,
+    "max_week": 60,
+    "alive": [
+      "halden"
+    ],
+    "art": "halden_kanal",
+    "title": "Halden’in açık mikrofonu",
+    "text": "Halden stüdyonun kapılarını açtı. “Ekran benden, ses sizden. İsterseniz yarın bütün ülke sizi dinler.” Gülümserken reklam defterini de uzattı.",
+    "choices": [
+      {
+        "label": "Yayını açık tut",
+        "text": "Yayını açık tut.",
+        "fx": {
+          "king": 1,
+          "flag": "yay_halden_basladi"
+        }
+      },
+      {
+        "label": "Önce koşulları dinle",
+        "text": "Önce koşulları dinle.",
+        "fx": {
+          "wealth": 1,
+          "flag": "yay_halden_basladi"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Teklif cevapsız kaldı.",
+      "fx": {
+        "flag": "yay_halden_basladi"
+      }
+    },
+    "chance": 0.55
+  },
+  {
+    "id": "yay_halden_sinav",
+    "min_week": 38,
+    "max_week": 88,
+    "alive": [
+      "halden"
+    ],
+    "art": "halden_ihale",
+    "title": "Ekranın bedeli",
+    "text": "Bir ihale haberini yayından çıkarmak istiyor. Halden elini omzuna koydu: “Bir tek akşamlık sessizlik, Majesteleri. Sonra herkes kazanır.”",
+    "choices": [
+      {
+        "label": "Haberi yayınla",
+        "text": "Haberi yayınla.",
+        "fx": {
+          "king": 1,
+          "actors": {
+            "halden": {
+              "l_money": -1
+            }
+          },
+          "flag": "yay_halden_guven"
+        }
+      },
+      {
+        "label": "Bu akşam sustur",
+        "text": "Bu akşam sustur.",
+        "fx": {
+          "king": -1,
+          "actors": {
+            "halden": {
+              "obligation": 2
+            }
+          },
+          "flag": "yay_halden_kopus"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Karar verilmedi; kişi bunu sessizlik saydı.",
+      "fx": {
+        "flag": "yay_halden_kopus"
+      }
+    },
+    "flag_age": {
+      "yay_halden_basladi": 3
+    },
+    "chance": 0.65
+  },
+  {
+    "id": "yay_halden_sadakat",
+    "min_week": 41,
+    "max_week": 103,
+    "alive": [
+      "halden"
+    ],
+    "art": "halden_fatura",
+    "title": "Halden sözleşmeyi gösteriyor",
+    "text": "Haberi yayında bırakmıştın. Halden anlaşmayı masaya serdi: “Açık iş, açık hesap. Bu kadar dürüstlüğe alışmam gerekecek.”",
+    "choices": [
+      {
+        "label": "Sözleşmeyi yayımla",
+        "text": "Sözleşmeyi yayımla.",
+        "fx": {
+          "king": 1
+        }
+      },
+      {
+        "label": "Masada bırak",
+        "text": "Masada bırak.",
+        "fx": {}
+      }
+    ],
+    "ignore": {
+      "text": "Bu yakınlık karşılıksız kaldı.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_halden_guven": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_halden_kopus",
+    "min_week": 41,
+    "max_week": 103,
+    "alive": [
+      "halden"
+    ],
+    "art": "halden_fatura",
+    "title": "Halden yayını kesiyor",
+    "text": "Yayını durdurmasına izin vermiştin. Halden kumandayı cebine koydu: “Sizi korudum. Bir gün hangi düğmeye bastığımı hatırlarsınız.”",
+    "choices": [
+      {
+        "label": "Yayın takvimini iste",
+        "text": "Yayın takvimini iste.",
+        "fx": {
+          "king": 1
+        }
+      },
+      {
+        "label": "Bedeli kabul et",
+        "text": "Bedeli kabul et.",
+        "fx": {
+          "wealth": -1
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Aradaki mesafe büyüdü.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_halden_kopus": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_lena_yukselis",
+    "min_week": 40,
+    "max_week": 60,
+    "alive": [
+      "lena"
+    ],
+    "art": "lena_roportaj",
+    "title": "Lena’nın kaynak defteri",
+    "text": "Lena gece boyunca belge karşılaştırdı. “Yazmadan önce üçüncü bir kişiye daha soracağım. Bir yanlış, doğruyu da yakar.”",
+    "choices": [
+      {
+        "label": "Belgelerin doğrulanmasını bekle",
+        "text": "Belgelerin doğrulanmasını bekle.",
+        "fx": {
+          "king": 1,
+          "flag": "yay_lena_basladi"
+        }
+      },
+      {
+        "label": "Haberi erkenden iste",
+        "text": "Haberi erkenden iste.",
+        "fx": {
+          "king": -1,
+          "flag": "yay_lena_basladi"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Teklif cevapsız kaldı.",
+      "fx": {
+        "flag": "yay_lena_basladi"
+      }
+    },
+    "chance": 0.55
+  },
+  {
+    "id": "yay_lena_sinav",
+    "min_week": 43,
+    "max_week": 88,
+    "alive": [
+      "lena"
+    ],
+    "art": "gazeteci_ihale",
+    "title": "Kaynağın adı soruluyor",
+    "text": "Saraydan biri Lena’nın kaynağını öğrenmek istiyor. Lena dosyayı elinden bırakmadı: “Haberi tartışırım. İsmi vermem.”",
+    "choices": [
+      {
+        "label": "Kaynağı koru",
+        "text": "Kaynağı koru.",
+        "fx": {
+          "actors": {
+            "lena": {
+              "l_ideology": 2
+            }
+          },
+          "flag": "yay_lena_guven"
+        }
+      },
+      {
+        "label": "İsmini saraya iste",
+        "text": "İsmini saraya iste.",
+        "fx": {
+          "actors": {
+            "lena": {
+              "l_ideology": -2
+            }
+          },
+          "flag": "yay_lena_kopus"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Karar verilmedi; kişi bunu sessizlik saydı.",
+      "fx": {
+        "flag": "yay_lena_kopus"
+      }
+    },
+    "flag_age": {
+      "yay_lena_basladi": 3
+    },
+    "chance": 0.65
+  },
+  {
+    "id": "yay_lena_sadakat",
+    "min_week": 46,
+    "max_week": 103,
+    "alive": [
+      "lena"
+    ],
+    "art": "lena_kitap",
+    "title": "Lena kaynağını koruyor",
+    "text": "Kaynağın peşine düşmemiştin. Lena başını salladı: “Bana inanmanız gerekmiyor. Yazdığımı sınayın.”",
+    "choices": [
+      {
+        "label": "Açık yanıt ver",
+        "text": "Açık yanıt ver.",
+        "fx": {
+          "king": 1
+        }
+      },
+      {
+        "label": "Yalnızca izle",
+        "text": "Yalnızca izle.",
+        "fx": {}
+      }
+    ],
+    "ignore": {
+      "text": "Bu yakınlık karşılıksız kaldı.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_lena_guven": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_lena_kopus",
+    "min_week": 46,
+    "max_week": 103,
+    "alive": [
+      "lena"
+    ],
+    "art": "lena_kitap",
+    "title": "Lena kapıyı kapatıyor",
+    "text": "Kaynağı istemiştin. Lena kapıyı kapatırken konuştu: “Bir daha bana değil, yayımladığım belgeye cevap verin.”",
+    "choices": [
+      {
+        "label": "Basına yanıt hakkı gönder",
+        "text": "Basına yanıt hakkı gönder.",
+        "fx": {
+          "king": 1
+        }
+      },
+      {
+        "label": "Kapıyı kapalı bırak",
+        "text": "Kapıyı kapalı bırak.",
+        "fx": {
+          "king": -1
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Aradaki mesafe büyüdü.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_lena_kopus": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_dorn_yukselis",
+    "min_week": 45,
+    "max_week": 60,
+    "alive": [
+      "dorn"
+    ],
+    "art": "dorn_filtre",
+    "title": "Dorn’un randevu defteri",
+    "text": "Dorn gümüş tepside randevu defterini getirdi. “Majesteleri, kapıdaki herkes kendini acil sanıyor. Ben yalnızca sırayı koruyorum.”",
+    "choices": [
+      {
+        "label": "Defteri denetime aç",
+        "text": "Defteri denetime aç.",
+        "fx": {
+          "king": 1,
+          "flag": "yay_dorn_basladi"
+        }
+      },
+      {
+        "label": "Dorn’un takdirine bırak",
+        "text": "Dorn’un takdirine bırak.",
+        "fx": {
+          "actors": {
+            "dorn": {
+              "obligation": 2
+            }
+          },
+          "flag": "yay_dorn_basladi"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Teklif cevapsız kaldı.",
+      "fx": {
+        "flag": "yay_dorn_basladi"
+      }
+    },
+    "chance": 0.55
+  },
+  {
+    "id": "yay_dorn_sinav",
+    "min_week": 48,
+    "max_week": 88,
+    "alive": [
+      "dorn"
+    ],
+    "art": "dorn_rusvet",
+    "title": "Saray kapısındaki sıra",
+    "text": "İki heyet aynı saate yazılmış. Dorn hafifçe eğildi: “Hangisinin önce girdiği, hangisinin daha önemli sayılacağını belirler.”",
+    "choices": [
+      {
+        "label": "Sırayı ilan et",
+        "text": "Sırayı ilan et.",
+        "fx": {
+          "king": 1,
+          "flag": "yay_dorn_guven"
+        }
+      },
+      {
+        "label": "Özel kapıyı kullan",
+        "text": "Özel kapıyı kullan.",
+        "fx": {
+          "king": -1,
+          "flag": "yay_dorn_kopus"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Karar verilmedi; kişi bunu sessizlik saydı.",
+      "fx": {
+        "flag": "yay_dorn_kopus"
+      }
+    },
+    "flag_age": {
+      "yay_dorn_basladi": 3
+    },
+    "chance": 0.65
+  },
+  {
+    "id": "yay_dorn_sadakat",
+    "min_week": 51,
+    "max_week": 103,
+    "alive": [
+      "dorn"
+    ],
+    "art": "dorn_sir",
+    "title": "Dorn defteri açıyor",
+    "text": "Sırayı açık tutmasını istemiştin. Dorn kalemi sana uzattı: “Bugün kapıyı ben değil, kayıt açtı.”",
+    "choices": [
+      {
+        "label": "Tutanağı sakla",
+        "text": "Tutanağı sakla.",
+        "fx": {}
+      },
+      {
+        "label": "Yeni kural yaz",
+        "text": "Yeni kural yaz.",
+        "fx": {
+          "king": 1
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Bu yakınlık karşılıksız kaldı.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_dorn_guven": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_dorn_kopus",
+    "min_week": 51,
+    "max_week": 103,
+    "alive": [
+      "dorn"
+    ],
+    "art": "dorn_sir",
+    "title": "Dorn’un özel kapısı",
+    "text": "Sırayı gizlemesine izin vermiştin. Dorn yine eğildi: “Arka kapı da sarayın kapısıdır, Majesteleri.”",
+    "choices": [
+      {
+        "label": "Kapıları yeniden say",
+        "text": "Kapıları yeniden say.",
+        "fx": {
+          "king": 1
+        }
+      },
+      {
+        "label": "Görmezden gel",
+        "text": "Görmezden gel.",
+        "fx": {
+          "king": -1
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Aradaki mesafe büyüdü.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_dorn_kopus": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_prens_yukselis",
+    "min_week": 50,
+    "max_week": 60,
+    "alive": [
+      "prens"
+    ],
+    "art": "prens_hirs",
+    "title": "Prens’in boş sandalyesi",
+    "text": "Cassian törende kendisine yer ayrılmadığını gördü. “Babamız aynı sofrayı kurardı. Taç size kaldı diye sandalyem yok olmadı.”",
+    "choices": [
+      {
+        "label": "Törende yer aç",
+        "text": "Törende yer aç.",
+        "fx": {
+          "actors": {
+            "prens": {
+              "l_career": 1
+            }
+          },
+          "flag": "yay_prens_basladi"
+        }
+      },
+      {
+        "label": "Töreni değiştirme",
+        "text": "Töreni değiştirme.",
+        "fx": {
+          "flag": "yay_prens_basladi"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Teklif cevapsız kaldı.",
+      "fx": {
+        "flag": "yay_prens_basladi"
+      }
+    },
+    "chance": 0.55
+  },
+  {
+    "id": "yay_prens_sinav",
+    "min_week": 53,
+    "max_week": 88,
+    "alive": [
+      "prens"
+    ],
+    "art": "prens_veliaht",
+    "title": "Aile sofrasındaki mühür",
+    "text": "Hanedanın ortak bildirisi için mühür bekleniyor. Cassian durdu: “Kardeş olarak mı imzalıyorum, gölge olarak mı?”",
+    "choices": [
+      {
+        "label": "Ortak bildiriyi birlikte imzala",
+        "text": "Ortak bildiriyi birlikte imzala.",
+        "fx": {
+          "king": 1,
+          "flag": "yay_prens_guven"
+        }
+      },
+      {
+        "label": "Mührü yalnız sen bas",
+        "text": "Mührü yalnız sen bas.",
+        "fx": {
+          "king": -1,
+          "flag": "yay_prens_kopus"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Karar verilmedi; kişi bunu sessizlik saydı.",
+      "fx": {
+        "flag": "yay_prens_kopus"
+      }
+    },
+    "flag_age": {
+      "yay_prens_basladi": 3
+    },
+    "chance": 0.65
+  },
+  {
+    "id": "yay_prens_sadakat",
+    "min_week": 56,
+    "max_week": 103,
+    "alive": [
+      "prens"
+    ],
+    "art": "prens_kacis",
+    "title": "Prens yanında duruyor",
+    "text": "Onu bildiride eşit aile üyesi saymıştın. Cassian kalabalığa dönüp “Kardeşimin tacını ben de korurum” dedi.",
+    "choices": [
+      {
+        "label": "Sözünü kabul et",
+        "text": "Sözünü kabul et.",
+        "fx": {
+          "king": 1
+        }
+      },
+      {
+        "label": "Kendi yolunu çizmesini iste",
+        "text": "Kendi yolunu çizmesini iste.",
+        "fx": {}
+      }
+    ],
+    "ignore": {
+      "text": "Bu yakınlık karşılıksız kaldı.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_prens_guven": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_prens_kopus",
+    "min_week": 56,
+    "max_week": 103,
+    "alive": [
+      "prens"
+    ],
+    "art": "prens_kacis",
+    "title": "Prens ayrı sofra kuruyor",
+    "text": "Mührü ondan esirgemiştin. Cassian kırgınlığını saklamadı: “Sarayınızın dışında da bir aile soframız var.”",
+    "choices": [
+      {
+        "label": "Aileyle görüş",
+        "text": "Aileyle görüş.",
+        "fx": {
+          "king": 1
+        }
+      },
+      {
+        "label": "Mesafe bırak",
+        "text": "Mesafe bırak.",
+        "fx": {}
+      }
+    ],
+    "ignore": {
+      "text": "Aradaki mesafe büyüdü.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_prens_kopus": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_brandt_yukselis",
+    "min_week": 55,
+    "max_week": 60,
+    "alive": [
+      "brandt"
+    ],
+    "art": "brandt_koalisyon",
+    "title": "Brandt mahallelerde",
+    "text": "Brandt fabrika kapısında konuştu: “İnsanlar ekmekle oy arasında seçim yapmak zorunda kalmamalı.” Ardından gelenleri tek tek dinledi.",
+    "choices": [
+      {
+        "label": "Temsilcileri dinle",
+        "text": "Temsilcileri dinle.",
+        "fx": {
+          "unrest": -1,
+          "flag": "yay_brandt_basladi"
+        }
+      },
+      {
+        "label": "Görüşmeyi ertele",
+        "text": "Görüşmeyi ertele.",
+        "fx": {
+          "unrest": 1,
+          "flag": "yay_brandt_basladi"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Teklif cevapsız kaldı.",
+      "fx": {
+        "flag": "yay_brandt_basladi"
+      }
+    },
+    "chance": 0.55
+  },
+  {
+    "id": "yay_brandt_sinav",
+    "min_week": 58,
+    "max_week": 88,
+    "alive": [
+      "brandt"
+    ],
+    "art": "genel_grev",
+    "title": "Meydanın sesi yükseliyor",
+    "text": "Meydanda öfkeli bir kalabalık var. Brandt yumruğunu indirdi: “Bugün söz vermezsek yarın taş konuşacak.”",
+    "choices": [
+      {
+        "label": "Masaya çağır",
+        "text": "Masaya çağır.",
+        "fx": {
+          "unrest": -2,
+          "opp": 1,
+          "flag": "yay_brandt_guven"
+        }
+      },
+      {
+        "label": "Kapıyı kapat",
+        "text": "Kapıyı kapat.",
+        "fx": {
+          "unrest": 2,
+          "flag": "yay_brandt_kopus"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Karar verilmedi; kişi bunu sessizlik saydı.",
+      "fx": {
+        "flag": "yay_brandt_kopus"
+      }
+    },
+    "flag_age": {
+      "yay_brandt_basladi": 3
+    },
+    "chance": 0.65
+  },
+  {
+    "id": "yay_brandt_sadakat",
+    "min_week": 61,
+    "max_week": 103,
+    "alive": [
+      "brandt"
+    ],
+    "art": "muhalefet_birlesme",
+    "title": "Brandt sandığı işaret ediyor",
+    "text": "Masaya çağrını hatırladı. Brandt meydanda “Hesabı sandıkta soracağız” dedi; alkış arasında ıslık da vardı.",
+    "choices": [
+      {
+        "label": "Seçim takvimini tartış",
+        "text": "Seçim takvimini tartış.",
+        "fx": {
+          "unrest": -1
+        }
+      },
+      {
+        "label": "Sözünü not et",
+        "text": "Sözünü not et.",
+        "fx": {}
+      }
+    ],
+    "ignore": {
+      "text": "Bu yakınlık karşılıksız kaldı.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_brandt_guven": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_brandt_kopus",
+    "min_week": 61,
+    "max_week": 103,
+    "alive": [
+      "brandt"
+    ],
+    "art": "muhalefet_birlesme",
+    "title": "Brandt meydanı bırakmıyor",
+    "text": "Kapıları kapatmıştın. Brandt öfkeyle konuştu: “Bizi dinlemeyen saraya, meydan kendi cevabını verir.”",
+    "choices": [
+      {
+        "label": "Açık konuşma öner",
+        "text": "Açık konuşma öner.",
+        "fx": {
+          "unrest": -1
+        }
+      },
+      {
+        "label": "Meydanı uzaktan izle",
+        "text": "Meydanı uzaktan izle.",
+        "fx": {
+          "unrest": 1
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Aradaki mesafe büyüdü.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_brandt_kopus": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_falk_yukselis",
+    "min_week": 60,
+    "max_week": 60,
+    "alive": [
+      "falk"
+    ],
+    "art": "yargic_dosya",
+    "title": "Falk’ın bağımsızlık metni",
+    "text": "Falk kısa bir metin okudu: “Kanun kral için de yazılır. Başka türlü kanun değildir.” Salondaki sessizlik alkıştan uzundu.",
+    "choices": [
+      {
+        "label": "Metni kayda geçir",
+        "text": "Metni kayda geçir.",
+        "fx": {
+          "actors": {
+            "falk": {
+              "l_ideology": 1
+            }
+          },
+          "flag": "yay_falk_basladi"
+        }
+      },
+      {
+        "label": "Töreni kısa kes",
+        "text": "Töreni kısa kes.",
+        "fx": {
+          "flag": "yay_falk_basladi"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Teklif cevapsız kaldı.",
+      "fx": {
+        "flag": "yay_falk_basladi"
+      }
+    },
+    "chance": 0.55
+  },
+  {
+    "id": "yay_falk_sinav",
+    "min_week": 63,
+    "max_week": 88,
+    "alive": [
+      "falk"
+    ],
+    "art": "anayasa_degisikligi",
+    "title": "Saray dosyasının usulü",
+    "text": "Sarayla ilgili dosya önüne geldi. Falk cübbesini düzeltti: “İçeriğine hükmetmem. Önce usulüne bakarım.”",
+    "choices": [
+      {
+        "label": "Dosyayı usulüne bırak",
+        "text": "Dosyayı usulüne bırak.",
+        "fx": {
+          "actors": {
+            "falk": {
+              "l_ideology": 2
+            }
+          },
+          "flag": "yay_falk_guven"
+        }
+      },
+      {
+        "label": "Saraydan görüş iste",
+        "text": "Saraydan görüş iste.",
+        "fx": {
+          "actors": {
+            "falk": {
+              "l_ideology": -2
+            }
+          },
+          "flag": "yay_falk_kopus"
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Karar verilmedi; kişi bunu sessizlik saydı.",
+      "fx": {
+        "flag": "yay_falk_kopus"
+      }
+    },
+    "flag_age": {
+      "yay_falk_basladi": 3
+    },
+    "chance": 0.65
+  },
+  {
+    "id": "yay_falk_sadakat",
+    "min_week": 66,
+    "max_week": 103,
+    "alive": [
+      "falk"
+    ],
+    "art": "falk_istifa",
+    "title": "Falk kürsüsünde kalıyor",
+    "text": "Usulü korumasına izin vermiştin. Falk dosyayı mühürledi: “Bu karar ne sizin ne benim. Mahkemenin.”",
+    "choices": [
+      {
+        "label": "Mahkeme kararını uygula",
+        "text": "Mahkeme kararını uygula.",
+        "fx": {
+          "king": 1
+        }
+      },
+      {
+        "label": "Temyiz yolunu bekle",
+        "text": "Temyiz yolunu bekle.",
+        "fx": {}
+      }
+    ],
+    "ignore": {
+      "text": "Bu yakınlık karşılıksız kaldı.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_falk_guven": 3
+    },
+    "chance": 0.7
+  },
+  {
+    "id": "yay_falk_kopus",
+    "min_week": 66,
+    "max_week": 103,
+    "alive": [
+      "falk"
+    ],
+    "art": "falk_istifa",
+    "title": "Falk yalnız kalıyor",
+    "text": "Usule karışmıştın. Falk kürsüde tek başına kaldı: “Bir yargıç yalnız kalsa da kararını yazmalı.”",
+    "choices": [
+      {
+        "label": "Yargıcın sözünü dinle",
+        "text": "Yargıcın sözünü dinle.",
+        "fx": {
+          "king": 1
+        }
+      },
+      {
+        "label": "Dosyayı beklet",
+        "text": "Dosyayı beklet.",
+        "fx": {
+          "king": -1
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Aradaki mesafe büyüdü.",
+      "fx": {}
+    },
+    "flag_age": {
+      "yay_falk_kopus": 3
+    },
+    "chance": 0.7
+  }
 ]
