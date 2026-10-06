@@ -81,7 +81,7 @@ Baştan sona oynanabilir, sağlam bir dikey dilim (erken alfa): 104 hafta, 9 gü
 - ✅ Denge hedefleri görünür bilgiye dayalı botla (hedefler güncellendi: ölçüt botu Kolay %70–85, Normal ~%45, Zor %15–30)
 
 **Faz 3 — Kampanya ve içerik: ✅** dönemler (Bedellerin Dönüşü / Hesaplaşma) · ✅ ikinci yıl için 30 olay (`docs/design/ikinci_yil.md`) · ✅ dokuz karakterin hikâye yayı (`docs/design/hikaye_yaylari.md`) · ✅ altı rejim tipi ve final tehdidi (`docs/design/rejim_tipi.md`)
-**Faz 4 — Büyük sistemler:** ⬜ devlet bütçesi/kapasitesi · ⬜ patronaj/oligark
+**Faz 4 — Büyük sistemler:** ✅ tasarım yazıldı (`docs/design/devlet_ve_patronaj.md`; 4a devlet kapasitesi ve kasa, 4b patronaj/oligark, 4c bağlama) · ⬜ 4a · ⬜ 4b · ⬜ 4c
 **Faz 5 — Cila ve altyapı:** ⬜ gerçek ses/müzik · ✅ `main.gd` bölmesi · ⬜ artırımlı arayüz güncellemesi · ⬜ yerelleştirme
 
 ## 5. Sıradaki

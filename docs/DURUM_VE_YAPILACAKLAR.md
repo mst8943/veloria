@@ -144,7 +144,7 @@ Hedef bantlar (ölçüt bot): Kolay %70–85, Normal %35–55, Zor %15–30. Tar
 - **Faz 1 Okunabilirlik:** ✅ danışman görüşleri · ✅ aşamalı darbe · ✅ rapor değişimi ve "neler değişti" · ✅ eylem önizlemesi
 - **Faz 2 Strateji derinliği:** ✅ kayıp çeşitliliği (kısmi) · ✅ rüşvet (ölçüldü, gerekmedi) · ✅ Birbirine Düşür · ✅ aktör hamleleri
 - **Faz 3 Kampanya ve içerik: ✅** dönemler · ✅ ikinci yıl olayları · ✅ karakter hikâye yayları · ✅ rejim tipi ve buna bağlı final tehdidi
-- **Faz 4 Büyük sistemler:** ⬜ devlet bütçesi/kapasitesi (Tasarım Özeti §24) · ⬜ patronaj/oligark (§17)
+- **Faz 4 Büyük sistemler:** ✅ tasarım belgesi yazıldı (`docs/design/devlet_ve_patronaj.md`, 2026-10-07; kodlanmadı) · ⬜ 4a devlet kapasitesi ve kasa · ⬜ 4b patronaj/oligark · ⬜ 4c bağlama (rejim, oyun sonu, başarımlar)
 - **Faz 5 Cila ve altyapı:** ⬜ gerçek ses/müzik · ✅ main.gd bölme · ⬜ artırımlı yeniden çizim · ⬜ yerelleştirme
 
 ## KALAN İŞLER (öncelik sırasıyla)
@@ -155,7 +155,7 @@ Hedef bantlar (ölçüt bot): Kolay %70–85, Normal %35–55, Zor %15–30. Tar
 4. 👤 İsteğe bağlı görsel üretimi: yeni olaylar mevcut görsellere yaklaşık eşleştirildi; özel görsel istenenler (muhtıra, çadır kent, maden faciası, kuraklık, soylular meclisi, Saray dosyası): prompt'ları ben hazırlarım (`/asset-spec`).
 
 **Geliştirme (benim)**
-5. **Faz 4:** devlet kapasitesi/bütçesi (§24) ve patronaj/oligark (§17). Büyük sistemler: önce `/design-system` ile GDD, ayrı oturum.
+5. **Faz 4:** GDD hazır (`docs/design/devlet_ve_patronaj.md`). Önce §13 "Açık sorular" cevaplanır (tek oligark mı, kapasite gösterimi, bütçe kartı sıklığı, "DEVLET" sekmesi...); sonra 4a, 4b, 4c ayrı oturumlarda uygulanır (belgenin §12 planı; her adımda taban denge ±3 puan korunmalı).
 6. **Faz 5:** gerçek ses ve müzik (şimdi sentez; kullanıcı dosya sağlar ya da prompt verilir); `_refresh` artırımlı çizim; `tr()` ile yerelleştirme. İçerik JSON'a ve arayüz bileşenleri ayrı betiklere ayrıldı.
 7. **Dağıtım:** 1.2.0 Windows/Linux/Web paketleri hazır. Linux üzerinde çalışma ve Web ses/kayıt akışının insan eliyle doğrulanması kaldı.
 8. **Denge açıkları:** darbe hâlâ baskın kayıp (ölçüt botta darbe dışı ~%4–10): darbe sıklığı düşürülebilir ya da sokak/mahkeme yollarına daha çok sürekli baskı eklenebilir. Alamete tepki vermek botta nötr: oyuncu "gördüm ama işe yaramadı" derse Huzura Çağır güçlendirilmeli. Zor'da `visible_wise` ~%70'lerde (tavan hedef değil, ama izlenmeli).
