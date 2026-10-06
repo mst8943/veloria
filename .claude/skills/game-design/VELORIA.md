@@ -21,7 +21,8 @@ Kaynak: `VELORIA — Oyun Tasarım Özeti.md` (958 satır, 30 bölüm) ve `CLAUD
 ## Mimari haritası
 | Dosya | Görev |
 |---|---|
-| `game/core/sim.gd` (autoload `Sim`) | Gerçek dünya durumu, oyuncu eylemleri, haftalık tick, olay motoru, kaskad/darbe, raporlar (yalan filtresi), kayıt, başarımlar, tarihçiler |
+| `game/core/sim.gd` (autoload `Sim`) | Gerçek dünya durumu, oyuncu eylemleri, haftalık tick, olay motoru, kaskad/darbe, raporlar (yalan filtresi), kayıt; 2205 satır |
+| `game/core/advice.gd`, `narrative.gd`, `content_data.gd` | Meclis hesabı, rapor/alamet/tarihçi anlatısı, JSON yükleme ve şema denetimi; `Sim` dış API'si korunur |
 | `game/core/actor.gd` | Aktör verisi: power, ambition, fear, honesty, threshold, loyalty{money,fear,ideology,career,complicity}, obligation, perceived_king, ready, moved, secrets_on_king, known_weak/red. `rebellion_drive()` |
 | `game/core/press.gd` | Gazeteler/TV: gizli durumdan, yayın sahibinin süslemesiyle üretilir |
 | `game/core/sfx.gd` (autoload `Sfx`) | Ses (şu an sentez), müzik, ayarlar (`user://veloria_settings.cfg`) |
@@ -32,6 +33,7 @@ Kaynak: `VELORIA — Oyun Tasarım Özeti.md` (958 satır, 30 bölüm) ve `CLAUD
 | `game/ui/city_view.gd`, `media_view.gd`, `cinema.gd`, `truth_chart.gd` | Başkent haritası, Medya Merkezi, sinematikler, hakikat grafiği |
 | `game/data/actors.json` | 9 aktör: arden(ordu, military) voss(istihbarat) kessler(maliye) halden(medya) lena(basın, insider=false) dorn(kâhya) prens(royal) brandt(muhalefet, insider=false) falk(yargı) |
 | `game/data/events.json` | 159 kayıt: 101 temel karar, 16 aktör hamlesi, 36 karakter yayı, 6 rejim hesaplaşması |
+| `game/data/content_*.json` | Rapor/alamet, Meclis, tarihçi, başarım, ödül/kademe/rejim metin tabloları; sıra önemli, `content_check.gd` ile doğrula |
 | `art/` | Görseller; `ART_PROMPTS.md` üretim promptları + STİL BLOĞU |
 | `tests/` | `sim_test.gd`, `pacing_test.gd`, `cause_probe.gd`, `ui_shots.gd` (`unit_tests.gd` ve `ci-smoke.ps1` Beckett eklentisine ait, dokunma) |
 | `docs/` | `DURUM_VE_YAPILACAKLAR.md` (devir notu — her oturum sonunda güncelle), `OYUNCU_REHBERI.md`, `GELISTIRICI_REHBERI.md`, `ARAYUZ_PLANI.md` |
@@ -58,6 +60,7 @@ Seçim yapılınca bayrak `<olay_id>_<seçenek_index>` = hafta olarak yazılır 
 Godot (console): `C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe` (aşağıda `$G`)
 - Simülasyon/denge: `"$G" --headless --path . --script res://tests/sim_test.gd` → sonda `TEST: OK`
 - Olay verisi doğrulayıcısı: `"$G" --headless --path . --script res://tests/event_check.gd` → `EVENTS: OK` (bilinmeyen anahtar/aktör/özellik, çözülemeyen bayrak, tutarsız hafta; **olay ekleyince/değiştirince çalıştır**). Başka dosya: `-- --file=<yol>`
+- İçerik doğrulayıcısı: `"$G" --headless --path . --script res://tests/content_check.gd` → `CONTENT: OK` (beş JSON, eksik/boş metin, bilinmeyen aktör, bozuk dosya). Metin ekleyince çalıştır. Eksik/bozuk içerik kampanyayı durdurur ve Türkçe hatayı menüde gösterir.
 - Kayıt sürümü/göç: `"$G" --headless --path . --script res://tests/save_test.gd` → `SAVE: OK`
 - Tempo: `"$G" --headless --path . --script res://tests/pacing_test.gd`
 - Arayüz otomatik oynatma: `"$G" --headless --path . -- --autoplay` (`--mobile`, `--full` = Kolay'da 104 hafta)

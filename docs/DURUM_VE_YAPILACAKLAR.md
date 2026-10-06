@@ -2,6 +2,12 @@
 
 Son güncelleme: 2026-10-06 (dağıtım 1.1.0). Dal: `veloria`.
 
+## İçerik verisi ayrıldı (kaynak ağacı; dağıtım 1.1.0 bunu henüz içermez)
+- Raporlar, alametler, Meclis söyleyişleri/uzman eşleşmeleri, başarımlar, tarihçi anlatıları, rejim/arayüz etiketleri `game/data/content_*.json` içindedir. Meclis davranışı `game/core/advice.gd`, metin kurma `narrative.gd`, yükleme ve şema denetimi `content_data.gd` içinde; `sim.gd` **2607 → 2205 satır** (402 satır azalma). Tasarım: `docs/design/icerik_verisi.md`.
+- Başlangıç ve sonuç çıktıları birebir aynı: `sim_test` 54 satır, `--autoplay --full` 3 satır (tohum 101: 104 hafta, Oligark Rejimi, 115 olay), 80 kampanyalık `advice_weighted` 8 satır (Kolay **67/80 = %83**, Normal **36/80 = %45**, Zor **13/80 = %16**). Kayıtlar `dist/content_before_*.log` ve `dist/content_final_*.log`.
+- `CONTENT: OK (5 dosya, 5 bozuk örnek)`, `TEST: OK`, `EVENTS: OK (159 olay, 0 uyarı)`, `SAVE: OK`; masaüstü/mobil `AUTOPLAY DONE`. Pencereli görüntüler `dist/qa_content/1_oyun.png`, `1_karar.png`, `1_kriz.png` ve mobil eşleri. Eksik/bozuk içerikte Türkçe dosya yolu ve neden menüde gösterilir, kampanya başlatılmaz. `export_presets.cfg` değiştirilmedi.
+- Bilinen sınır: JSON'a taşınan metinler serbestçe düzenlenebilir; anlatıların hangi koşulda seçildiği ve Meclis'in sayısal hesapları betiklerde kalır. Yeni kaynak henüz 1.1.0 dağıtım paketlerinde yoktur.
+
 ## Faz 3 tamamlandı (kaynak ağacı; dağıtım paketleri henüz bu değişiklikleri içermez)
 - Dokuz güç merkezi için yükseliş, sınav ve karara göre sadakat/kopuş sahneleri: 36 yeni `yay_*` olay kaydı. Başlangıçlar 20–60. haftalara dağıldı; mevcut olay görselleri kullanıldı. Tasarım ve gerekçe: `docs/design/hikaye_yaylari.md`.
 - Altı rejim tipi hafta 60'ta geçmişten bir kez seçilir; haber ve "Geçen haftadan beri" satırı, 82–100. hafta arasında tipe özgü altı hesaplaşma kartından biri, final Özet'i ve ünvanı kullanır. Kayıt sürümü 4, v3 göçü eklendi. Tasarım: `docs/design/rejim_tipi.md`. Toplam 159 olay kaydı.
@@ -35,7 +41,7 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
 
 ## Çalıştırma ve test (ayrıntı: VELORIA.md > Komutlar)
 - Godot console: `C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe`
-- Her değişiklikten sonra: `sim_test.gd` (**TEST: OK**), `event_check.gd` (**EVENTS: OK**, olay eklerken), `save_test.gd` (**SAVE: OK**, kayıt biçimi değişince), `-- --autoplay`, `--autoplay --mobile`, `--autoplay --full` (6 tohuma kadar dener; çıktıyı `tail` ile kısaltma, hepsini oku).
+- Her değişiklikten sonra: `sim_test.gd` (**TEST: OK**), `event_check.gd` (**EVENTS: OK**, olay eklerken), `content_check.gd` (**CONTENT: OK**, içerik JSON'u değişince), `save_test.gd` (**SAVE: OK**, kayıt biçimi değişince), `-- --autoplay`, `--autoplay --mobile`, `--autoplay --full` (6 tohuma kadar dener; çıktıyı `tail` ile kısaltma, hepsini oku).
 - Tempo: `pacing_test.gd`. Ekran görüntüsü: `ui_shots.gd` (pencereli; `--only-desk`, `--only-decision`, `--only-world`, `--mobile`, `--guide`). Denge sondajı: `.claude/skills/balance-check/probe_template.gd` (`-- --n=80 --all-diffs --bots=advice_weighted,advice_soft,advice_dirty,advice_scheme,visible_wise`).
 - İçe aktarma (editör kapalıyken): `--headless --path . --import` (sonra `.mcp.json` portunu geri al).
 
@@ -89,7 +95,7 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
   - Mekanik değişmedi: `--full` sonucu birebir aynı (tohum 101, aynı ünvan, 54 olay).
   - Yayın durdurma mührü yerleşti (`art/media/yayin_muhru.png`).
 - **Beşinci oturum (devam): Faz 0 güvence**
-  - Kayıt sürümü: `Sim.SAVE_VERSION` (şimdi 3), `_migrate_save` (1 -> 2 -> 3), `SAVE_REQUIRED` denetimi `new_game`'den önce; yeni sürüm/eksik alan/bozuk dosya çökmeden reddedilir, menüde nedeni pencerede gösterilir (`Sim.load_error`). Test: `tests/save_test.gd`.
+  - Kayıt sürümü: `Sim.SAVE_VERSION` (şimdi 4), `_migrate_save` (1 -> 2 -> 3 -> 4), `SAVE_REQUIRED` denetimi `new_game`'den önce; yeni sürüm/eksik alan/bozuk dosya çökmeden reddedilir, menüde nedeni pencerede gösterilir (`Sim.load_error`). Test: `tests/save_test.gd`.
   - Olay doğrulayıcısı: `tests/event_check.gd` (71 olay temiz). Kendisi de sınandı: bilerek bozulmuş kopyada 8 hatanın 8'i yakalandı (`-- --file=`).
 - **Beşinci oturum (devam): İkinci yıl paketi** — `docs/design/ikinci_yil.md`.
   - 30 yeni olay (71 -> 101): Bedellerin Dönüşü (oyuncu geçmişine bağlı; yeni koşul `min_stat`/`max_stat`), Hesaplaşma (ordu muhtırası, Halden'in meclisi, çadır kent, soylular meclisi, Saray dosyası, gölge kabine), ortam olayları, iki zincir devamı. Hepsi mevcut görsellere bağlı.
@@ -142,7 +148,7 @@ Hedef bantlar (ölçüt bot): Kolay %70–85, Normal %35–55, Zor %15–30. Tar
 
 **Geliştirme (benim)**
 5. **Faz 4:** devlet kapasitesi/bütçesi (§24) ve patronaj/oligark (§17). Büyük sistemler: önce `/design-system` ile GDD, ayrı oturum.
-6. **Faz 5:** gerçek ses ve müzik (şimdi sentez; kullanıcı dosya sağlar ya da prompt verilir); `main.gd`'nin kalanı (`docs/TECH_DEBT.md`: gündem -> `agenda_view.gd`, kişi paneli -> `person_panel.gd`); `sim.gd` içeriğini (PHRASES, SIGN_TEXTS, ACHIEVEMENTS) JSON'a; `_refresh` artırımlı çizim; `tr()` ile yerelleştirme.
+6. **Faz 5:** gerçek ses ve müzik (şimdi sentez; kullanıcı dosya sağlar ya da prompt verilir); `main.gd`'nin kalanı (`docs/TECH_DEBT.md`: gündem -> `agenda_view.gd`, kişi paneli -> `person_panel.gd`); `_refresh` artırımlı çizim; `tr()` ile yerelleştirme. İçerik JSON'a ayrıldı.
 7. **Dağıtım:** Faz 3 kodunu içerecek yeni Windows/Linux/Web paketlerini sonraki sürümde export et; 1.1.0 paketleri önceki içeriktir.
 8. **Denge açıkları:** darbe hâlâ baskın kayıp (ölçüt botta darbe dışı ~%4–10): darbe sıklığı düşürülebilir ya da sokak/mahkeme yollarına daha çok sürekli baskı eklenebilir. Alamete tepki vermek botta nötr: oyuncu "gördüm ama işe yaramadı" derse Huzura Çağır güçlendirilmeli. Zor'da `visible_wise` ~%70'lerde (tavan hedef değil, ama izlenmeli).
 9. **Küçük içerik/teknik:** meclis görüşü metinleri danışmana özgü değil (söyleyiş eklenebilir); olay görselleri için `_b` varyantları; sim_test botları rüşvet/şantaj kullanmadığı için istatistik olaylarını "hiç tetiklenmeyen" listesinde gösterir (ulaşılabilirlik kontrolü bunları doğrular); `FULLRUN` testi 104 haftayı ilk tohumda tamamlıyor, diğer tohumlar çoğu zaman düşüyor (bot basit).

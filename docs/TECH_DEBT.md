@@ -6,7 +6,8 @@ Son güncelleme: 2026-10-06. Yöntem: `.claude/skills/tech-debt/SKILL.md`.
 | Dosya | Satır | Not |
 |---|---|---|
 | `game/ui/main.gd` | 2548 (önce 3249) | ana ekran: kurulum, gündem, kartlar, eylem paneli, akış |
-| `game/core/sim.gd` | 2478 | kurallar + içerik (PHRASES, SIGN_TEXTS) + kayıt + krizler |
+| `game/core/sim.gd` | 2205 (önce 2607) | kurallar + kayıt + krizler; içerik JSON'da |
+| `game/core/advice.gd`, `narrative.gd`, `content_data.gd` | ayrı | Meclis hesabı, anlatı kurma, içerik şeması |
 | `game/ui/media_view.gd` | 688 | gazete + TV |
 | `game/ui/desk_view.gd` | 649 | çalışma masası |
 | `game/ui/menu.gd` | 324 | yeni (main.gd'den) |
@@ -28,7 +29,7 @@ En uzun fonksiyonlar (main.gd): `_build_ui` ~350 satır, `_rebuild_agenda` ~170,
 | # | Borç | Durum | Öncelik | Çaba |
 |---|---|---|---|---|
 | 1 | main.gd büyük | **kısmen** (3249 -> 2548): otomatik oynatma, oyun sonu, menü, pencere ayrıldı | 6 | M |
-| 2 | sim.gd'de içerik (PHRASES, SIGN_TEXTS, ACHIEVEMENTS) kodda | açık | 4 | M |
+| 2 | sim.gd'de içerik (PHRASES, SIGN_TEXTS, ACHIEVEMENTS) kodda | **yapıldı** (`game/data/content_*.json`, `tests/content_check.gd`) | — | — |
 | 3 | Kayıt sürümü / göç | **yapıldı** (`SAVE_VERSION`, `tests/save_test.gd`) | — | — |
 | 4 | Olay verisi doğrulanmıyor | **yapıldı** (`tests/event_check.gd`) | — | — |
 | 5 | Her `Sim.changed`'de gündem/kartlar baştan kuruluyor | açık | 3 | M |
@@ -41,5 +42,5 @@ En uzun fonksiyonlar (main.gd): `_build_ui` ~350 satır, `_rebuild_agenda` ~170,
 ## Önerilen sıra
 1. **(Kullanıcı) kendi deponu aç** — kodun uzak yedeği yok; en yüksek risk.
 2. main.gd'nin kalanı, dokunuldukça: gündem (`_rebuild_agenda`, `_add_changes`, `_add_week_ledger`, raporlar, meclis; ~550 satır) -> `agenda_view.gd`; kişi kartları ve eylem paneli (`_make_card`, `_update_info`, `_preview`, `ACTION_META`; ~400 satır) -> `person_panel.gd`. Bunlar ana ekranın çekirdeği ve birbirine bağlı (`_sel`, `_hint`, `_buttons`); otomatik oynatma bu adlara eriştiği için birlikte güncellenmeli.
-3. sim.gd içeriği (PHRASES, SIGN_TEXTS) `game/data/*.json`'a.
+3. **Yapıldı:** sim.gd içerik tabloları `game/data/content_*.json`'a ayrıldı; `sim.gd` 402 satır kısaldı.
 4. Artırımlı yeniden çizim (`_refresh` imzaları).

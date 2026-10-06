@@ -81,6 +81,12 @@ export_presets.cfg Windows, Linux, Web
 
 Her seçim otomatik olarak `<olay_id>_<seçenek_no>` bayrağını, erteleme `<olay_id>_ertelendi` bayrağını koyar. Zincir olaylar bunlara `flag_age` ile bağlanır.
 
+## İçerik metni eklemek
+
+`game/data/content_reports.json` rapor ve alamet cümlelerini; `content_council.json` Meclis gerekçelerini, uzman eşleşmelerini ve söyleyişleri; `content_history.json` tarihçi anlatılarını; `content_achievements.json` başarım ad/açıklamalarını; `content_labels.json` ödül, kademe ve rejim adlarını tutar. Dizi sırası seçimleri etkileyebilir; var olan sırayı koru. Metinleri değiştirdikten sonra `tests/content_check.gd` çalıştır: eksik anahtar, boş metin, bilinmeyen aktör ve bozuk JSON'u yakalar. Yükleme hatası menüde dosya yoluyla görünür; yeni oyun açılmaz. Ayrıntı: `docs/design/icerik_verisi.md`.
+
+Meclis'in sayısal hesabı `game/core/advice.gd`, rapor/alamet/tarihçi metni kurma `game/core/narrative.gd`, veri yükleme `game/core/content_data.gd` içindedir. `Sim`'in `choice_value`, `advice_for`, `short_name`, `historians` dış API'si korunur. İçerik dosyaları mevcut `game/data/*.json` export filtresine girer.
+
 Faz 3'te dokuz karakterin üç sahnelik dallanan yayı `yay_*` kayıtlarında yer alır (`docs/design/hikaye_yaylari.md`). Hafta 60'ta `Sim._choose_regime()` oyuncu geçmişi, karar bayrakları ve görünen güç kademelerinden altı tipten birini seçer. `regime` kayıt alanı sürüm 4'tedir; `REJIM_*` bayrağı yalnızca seçilen `rejim_*_hesap` kartını açar. Oyun sonu Özet'i aynı etiketi ve tehdidi kullanır (`docs/design/rejim_tipi.md`).
 
 **Etkiler (`fx`)**: `unrest`, `economy`, `king`, `opp`, `wealth`, `actors` (özellik değişimi; `l_<neden>` sadakat nedenini değiştirir, örn. `l_career`), `fact` (yeni sır), `flag`, `leak` (sırrı kamuya aç), `remove` (aktörü oyundan çıkar).
@@ -89,7 +95,7 @@ Görseli için `art/events/<id>.png` ekle; yoksa kart görselsiz çıkar.
 
 ## Yeni karakter eklemek
 
-`game/data/actors.json`'a ekle (`domain` rapor alanını belirler), `art/portraits/<id>.png` koy. Yeni bir `domain` kullanılırsa `sim.gd` içindeki `PHRASES` ve `_domain_truth`'a karşılığını ekle.
+`game/data/actors.json`'a ekle (`domain` rapor alanını belirler), `art/portraits/<id>.png` koy. Yeni bir `domain` kullanılırsa `content_reports.json` içindeki `phrases` alanını ve `sim.gd::_domain_truth` kuralını güncelle.
 
 ## Görsel ekleme
 
@@ -104,6 +110,7 @@ Godot console exe ile:
 ```bash
 Godot_console.exe --headless --path . --script res://tests/sim_test.gd
 Godot_console.exe --headless --path . --script res://tests/event_check.gd   # olay ekleyince: EVENTS: OK
+Godot_console.exe --headless --path . --script res://tests/content_check.gd # içerik metni ekleyince: CONTENT: OK
 Godot_console.exe --headless --path . --script res://tests/save_test.gd     # SAVE: OK
 ```
 
