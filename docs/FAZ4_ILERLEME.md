@@ -15,6 +15,7 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 - **4a.2** `501d68b`: haftalık yıpranma/kasa/ekonomi/huzursuzluk, emir uygulama, kriz şansı, yargı baskısı ve rapor gürültüsü; Kessler'in raporu ekonomi ve kasayı birlikte okur. Kalibrasyon `ATTRITION=0,04`, ekonomi katsayıları `0,003/0,001`, Zor kasa gideri çarpanı `1,8`, Zor ordu toparlama paydası `100`. Bütün testler geçti; `--full` 104 hafta TAHTTA, 120 olay.
 - **4a.3** `6f0ac53`: kapasite/kasa olay koşulları, kurum adı doğrulaması, sentetik uygunluk testi ve olay şeması belgesi. Bütün testler geçti; `--full` ve denge 4a.2 ile aynı.
 - **4a.4** `b0c0b49`: yedi çeyrek haftasında bütçe kartı; dört karar, ertelenirse Dengeli, en çok üç bekleyen sınırı, Kessler'in mevcut raporundan metin, saray payında sır. Meclis değer terimleri kasa/kapasite/holding'i anlar. Bütün testler geçti; `--full` 104 hafta TAHTTA, 108 olay.
+- **4a.5** `4f0932b`: dört başkan için Sadık/Liyakatli Ata, sekiz hafta bekleme; Terfi, Görevden Al ve emirlerin kurum etkileri. Yedinci eylem sekmesi DEVLET masaüstü ve mobilde sığıyor. Bütün testler geçti; `--full` 104 hafta TAHTTA, 108 olay. Görüntüler: `dist/phase4a5_state_shots/1_devlet.png`, `dist/phase4a5_state_shots_mobile/1_saray_devlet.png` (açılıp gözle bakıldı).
 
 ## Son ölçüm
 
@@ -25,6 +26,7 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 | 4a.2 | %80 | %42 | %18 |
 | 4a.3 | %80 | %42 | %18 |
 | 4a.4 | %83 | %42 | %16 |
+| 4a.5 | %83 | %42 | %17 |
 
 ## Açık sorunlar
 
@@ -32,4 +34,4 @@ Tempo testinde 73–80. hafta dilimi **0,72**, 81–88 dilimi **0,64**; 4a içer
 
 ## SIRADAKİ ADIM
 
-4a.5: Sadık/Liyakatli Ata eylemleri, mevcut eylemlerin küçük kurum etkileri, DEVLET sekmesi ve önizleme. Sonra tüm testler, 80 kampanya ölçümü ve pencereli görüntü.
+4a.6: Başkent kurum panelleri, yalana açık üç bant, Doğrula'nın altı haftalık gürültüsüz okuması, bir defalık eşik haberleri ve özet/TV filtresi. Sonra tüm testler, ölçüm ve pencereli görüntü.
