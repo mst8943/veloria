@@ -9,6 +9,8 @@ signal game_ended(record: Dictionary)
 
 const Actor := preload("res://game/core/actor.gd")
 const Advice := preload("res://game/core/advice.gd")
+const ContentData := preload("res://game/core/content_data.gd")
+const Narrative := preload("res://game/core/narrative.gd")
 const MAX_WEEKS := 104
 const MESAI_PER_WEEK := 4
 const KING_NAME := "Adrian IV"
@@ -29,7 +31,7 @@ const DIFFICULTY := [
 ]
 
 ## Vaat edilebilecek ödüller: her biri yalnızca bir kişiye gerçekten verilebilir.
-const PRIZES := ["Başbakanlık", "Liman İhalesi", "Dokunulmazlık"]
+var PRIZES: Array = []
 
 var difficulty := 1
 var mesai_max := MESAI_PER_WEEK
@@ -66,12 +68,24 @@ var coup_leader := ""
 
 var _events: Array = []
 var _advice: RefCounted
+var _narrative: RefCounted
+var content_error := ""
+var _content_loader: RefCounted
+var COUNCIL_CONTENT: Dictionary = {}
+var REPORT_CONTENT: Dictionary = {}
+var HISTORY_CONTENT: Dictionary = {}
 
 func _init() -> void:
 	_advice = Advice.new(self)
+	_narrative = Narrative.new(self)
+	_content_loader = ContentData.new()
+	_load_content()
 
 
 func new_game(seed_value: int = 0, diff: int = -1) -> void:
+	if content_error != "":
+		push_error(content_error)
+		return
 	if seed_value == 0:
 		rng.randomize()
 	else:
@@ -149,6 +163,28 @@ static func ek(name: String, kind: String) -> String:
 	if kind == "i":  # belirtme: Arden'i, Voss'u, Lena'yı
 		return "%s'%s%s" % [name, "y" if ends_vowel else "", v]
 	return "%s'%s%sn" % [name, "n" if ends_vowel else "", v]
+
+
+func _load_content() -> void:
+	var all: Dictionary = _content_loader.load_all()
+	content_error = _content_loader.error
+	if content_error != "":
+		push_error(content_error)
+		return
+	var reports: Dictionary = all["reports"]
+	REPORT_CONTENT = reports
+	COUNCIL_CONTENT = all["council"]
+	HISTORY_CONTENT = all["history"]
+	ACHIEVEMENTS = all["achievements"]
+	var labels: Dictionary = all["labels"]
+	PRIZES = labels["prizes"]
+	POWER_TIER_NAMES = labels["power_tiers"]
+	REPORT_TONES = labels["report_tones"]
+	SUSPICION_NAMES = labels["suspicion_names"]
+	REGIME_NAMES = labels["regime_names"]
+	REGIME_TITLES = labels["regime_titles"]
+	REGIME_THREATS = labels["regime_threats"]
+	REGIME_ORDER = labels["regime_order"]
 
 
 func _diff(key: String) -> float:
@@ -229,6 +265,9 @@ func save_game() -> bool:
 
 func load_game() -> bool:
 	load_error = ""
+	if content_error != "":
+		load_error = content_error
+		return false
 	if not has_save():
 		load_error = "Kayıtlı oyun bulunamadı."
 		return false
@@ -1036,8 +1075,8 @@ static func power_tier(power: float) -> int:
 	return 1 if power < 40.0 else (2 if power < 65.0 else 3)
 
 
-const POWER_TIER_NAMES := ["", "ikinci planda", "etkili", "vazgeçilmez"]
-const REPORT_TONES := ["iyimser", "tedirgin", "karamsar"]   # raporun söylediği band
+var POWER_TIER_NAMES: Array = []
+var REPORT_TONES: Array = []   # raporun söylediği band
 const CHANGES_MAX := 6
 
 
@@ -1258,16 +1297,10 @@ func _as_array(v: Variant) -> Array:
 
 
 # Rejim bir siyasi yorumdur: yalnızca oyuncunun yaptığı eylemler, açık sözler ve karttaki güç kademesi.
-const REGIME_NAMES := {
-	"guvenlikci": "güvenlikçi", "populist": "popülist", "patronajci": "patronajcı",
-	"oligark": "oligarklara dayanan", "medya": "medya kontrollü", "istihbarat": "istihbarat merkezli"}
-const REGIME_TITLES := {
-	"guvenlikci": "Güvenlikçi Rejimi", "populist": "Popülist Rejimi", "patronajci": "Patronaj Rejimi",
-	"oligark": "Oligark Rejimi", "medya": "Medya Rejimi", "istihbarat": "İstihbarat Rejimi"}
-const REGIME_THREATS := {
-	"guvenlikci": "ordu komutasının muhtırası", "populist": "meydanın kuşatması",
-	"patronajci": "makam sahiplerinin hesabı", "oligark": "sermaye çevrelerinin kuşatması",
-	"medya": "yayınların desteği çekmesi", "istihbarat": "gizli arşivin muhtırası"}
+var REGIME_NAMES: Dictionary = {}
+var REGIME_TITLES: Dictionary = {}
+var REGIME_THREATS: Dictionary = {}
+var REGIME_ORDER: Array = []
 
 
 func regime_name() -> String:
@@ -1305,7 +1338,7 @@ func _choose_regime() -> String:
 		"istihbarat": _regime_stat("investigations") + 2 * _regime_stat("blackmails") + _regime_stat("checks")
 			+ _regime_tier("voss") + (2 if flags.has("voss_dosyalar_0") or flags.has("yay_voss_kopus") else 0)}
 	var best := "guvenlikci"
-	for id in REGIME_NAMES:
+	for id in REGIME_ORDER:
 		if int(scores[id]) > int(scores[best]):
 			best = id
 	return best
@@ -1354,24 +1387,7 @@ const CRISIS_RALLY_BASE := 0.05
 const CRISIS_CONCEDE := [1.0, 0.5, 0.2]   # taviz: ilki kesin, sonrakilere inanılmaz
 const CRISIS_APPEAL_BASE := 0.6
 const CRISIS_COOLDOWN := 6           # çözülen krizden sonra yeni kriz için en az hafta
-const SUSPICION_NAMES := ["Sakin", "Huzursuz", "Şüpheli", "Tehlikeli"]
-## Alamet söyleyişleri: aşama -> alan -> cümleler ("_" genel). {n} ad, {n_in} ad+ilgi, {p_e} başka bir komplocuya.
-const SIGN_TEXTS := {
-	0: {"_": ["Koridorlarda {n} hakkında fısıltılar var; kaynağı belirsiz.", "Bir hizmetkâr {n_i} gece geç saatte sarayın arka kapısında gördüğünü anlatıyor.",
-		"Masana {n_in} sadakatini sorgulayan imzasız bir not bırakılmış.", "{n_in} yakın çevresinden biri fazla konuşuyormuş; ne dediği belli değil."]},
-	1: {"_": ["{n} toplantılarda sık sık iç çekiyor.", "{n} yakın çevresine sarayın gidişatından yakınmış.", "{n} son ödüllendirmelerden hoşnut görünmüyor.",
-		"{n_in} sana selamı eskisinden soğuk."]},
-	2: {"_": ["{n}, {p_e} kapalı kapılar ardında uzun bir ziyaret yaptı.", "{n_in} konağında geç saatlere kadar ışık yanıyor.", "{n} bazı bakanlara 'geçiş dönemi'nden söz etmiş."],
-		"army": ["{n_in} subayları geç saatlere kadar karargâhta toplanıyor.", "{n} bazı alay komutanlarıyla baş başa yemek yedi."],
-		"intel": ["{n} bazı dosyaları sarayın arşivinden kendi ofisine taşıttı.", "{n_in} adamları senin bakanlarını izliyor."],
-		"media": ["{n_in} kanallarında adın giderek daha az geçiyor.", "{n} yabancı bankacılarla gizlice görüştü."],
-		"royal": ["Prens'in konağına gece yarısı arabalar yanaşıyor.", "Prens soylu ailelerle mühürlü mektuplar yazışıyor."]},
-	3: {"_": ["{n} artık çağrılarına geç dönüyor; yanındakiler senin değil onun emrini bekliyor.", "{n} ile görüşen bakanların listesi her gün uzuyor."],
-		"army": ["{n} kendi adamlarını başkentteki kritik birliklere atadı.", "Başkentin girişlerindeki birliklerin komutanları değişti; hepsi {n_in} adamı."],
-		"royal": ["Prens'in muhafızları iki katına çıktı.", "Soylu aileler Prens'e 'Majesteleri' diye hitap etmeye başladı."],
-		"intel": ["{n} saray telefonlarının dinlenme kayıtlarını kendi kasasına kilitledi."],
-		"media": ["{n_in} kanalları 'olağanüstü bir gece' için canlı yayın ekipleri hazırlıyor."]},
-}
+var SUSPICION_NAMES: Array = []
 
 var coup_crisis: Dictionary = {}   # {leader, week, failed?}: kriz kartı bekliyor
 var crisis_cooldown := 0           # bu haftadan önce yeni kriz açılmaz
@@ -1502,18 +1518,7 @@ func _add_sign(a: Actor, text: String, weight: int, real: bool) -> void:
 
 
 func _sign_text(a: Actor, st: int) -> String:
-	var by: Dictionary = SIGN_TEXTS[st]
-	var pool: Array = by.get(a.domain, [])
-	if pool.is_empty() or rng.randf() < 0.35:
-		pool = by["_"]
-	var t: String = pool[rng.randi() % pool.size()]
-	var nm := short_name(a)
-	var partner := ""
-	for o: Actor in actors.values():
-		if o != a and o.ready and o.insider and not o.moved:
-			partner = short_name(o)
-	var p_e := ek(partner, "e") if partner != "" else "tanınmayan bir heyete"
-	return t.replace("{n_in}", ek(nm, "in")).replace("{n_e}", ek(nm, "e")).replace("{n_i}", ek(nm, "i")).replace("{p_e}", p_e).replace("{n}", nm)
+	return _narrative._sign_text(a, st)
 
 
 ## Oyuncunun gördüğü alametlerin son haftalardaki ağırlığı (sayı olarak gösterilmez).
@@ -1979,77 +1984,13 @@ func _end(survived: bool) -> void:
 	game_ended.emit(record)
 
 
-## İki taraflı tarih: aynı saltanatı saray tarihçisi ve sürgündeki tarihçi farklı yazar.
 func historians(survived: bool) -> Array:
-	var weeks := week - 1
-	var pro: Array[String] = []
-	var con: Array[String] = []
-	if survived:
-		pro.append("Kral %s, iki yıl boyunca sayısız fırtınaya rağmen tahtını korudu." % KING_NAME)
-	else:
-		pro.append("Kral %s, %d hafta boyunca imkânsız bir krallığı ayakta tutmaya çalıştı; düşüşü, ihanetin eseriydi." % [KING_NAME, weeks])
-	if economy >= 55.0:
-		pro.append("Saltanatında hazine doldu, pazarlar canlandı.")
-	if flags.has("kessler_reform_0"):
-		pro.append("Vergi reformu, ondan sonra gelenlerin de övündüğü bir miras oldu.")
-	if unrest < 35.0:
-		pro.append("Sokaklarda huzur vardı.")
-	if int(stats.get("kept", 0)) > 0:
-		pro.append("Verdiği sözlerin %d tanesini tuttu." % int(stats.get("kept", 0)))
-	if flags.has("tac_giyme_2") or flags.has("yildonumu_0"):
-		pro.append("Halkın karşısına çıkmaktan çekinmeyen bir hükümdardı.")
-	if flags.has("halef_karari_0"):
-		pro.append("Saltanatının sonunda Meclise gerçek yetki vererek anayasal monarşinin kurucusu oldu.")
-	elif flags.has("halef_karari_1"):
-		pro.append("Hanedanın devamını güvence altına aldı.")
-	if pro.size() == 1:
-		pro.append("Zor zamanlarda, zor kararlar vermek zorunda kaldı.")
-	var public_secrets := 0
-	for f: Dictionary in facts.values():
-		if f["subject"] == "king" and f.get("public", false):
-			public_secrets += 1
-	if public_secrets > 0:
-		con.append("Saltanatı, ortaya saçılan %d sırla hatırlanır." % public_secrets)
-	if int(stats.get("bribes", 0)) >= 2:
-		con.append("Sadakati parayla satın aldı; %d gizli ödeme kayıtlara geçti." % int(stats.get("bribes", 0)))
-	if int(stats.get("blackmails", 0)) > 0:
-		con.append("Yakın çevresini şantajla yönetti.")
-	if int(stats.get("broken", 0)) > 0:
-		con.append("%d sözünü tutmadı." % int(stats.get("broken", 0)))
-	if flags.has("GAZETECI_SUSTURULDU") or flags.has("gazeteci_ihale_1"):
-		con.append("Basını susturdu.")
-	if flags.has("muhalefet_birlesme_2"):
-		con.append("Muhalefet liderini hapse attı.")
-	if economy < 35.0:
-		con.append("Ekonomiyi harabeye çevirdi.")
-	if echo_level() > 0.7:
-		con.append("Son aylarında artık kimse ona gerçeği söylemiyordu.")
-	if flags.has("halef_karari_2"):
-		con.append("Ve gitmeden önce yetkiyi kimseyle paylaşmayacak biçimde kilitledi.")
-	if con.is_empty():
-		con.append("Sürgündeki tarihçiler bile bu saltanata ağır bir suçlama bulmakta zorlandı.")
-	return [" ".join(pro), " ".join(con)]
+	return _narrative.historians(survived)
 
 
 ## Başarımlar: id -> [ad, açıklama]. Kalıcıdır, saltanatlar arası birikir.
 const ACHIEVEMENTS_PATH := "user://veloria_achievements.txt"
-const ACHIEVEMENTS := {
-	"ilk_saltanat": ["İlk Saltanat", "Bir saltanatı sonuna kadar götür (ya da düş)."],
-	"tahtta_kal": ["İki Yıl", "104 haftayı tahtta tamamla."],
-	"zor_zafer": ["Demir İrade", "Zor seviyede tahtta kal."],
-	"temiz_eller": ["Temiz Eller", "Hiç gizli ödeme, şantaj ya da yazılı emir kullanmadan tahtta kal."],
-	"sozunun_eri": ["Sözünün Eri", "En az 2 söz tut, hiçbirini bozma ve tahtta kal."],
-	"sirlar": ["Sırların Efendisi", "Bir saltanatta 3 kez şantaj yap."],
-	"operator": ["Gölgelerin Kralı", "Bir saltanatta 5 gizli operasyon yürüt."],
-	"gercegi_goren": ["Gerçeği Gören", "Bir saltanatta 10 raporu doğrula."],
-	"reformcu": ["Reformcu", "Kessler'in reformunun meyvelerini gör."],
-	"anayasal": ["Anayasal Kral", "Anayasal monarşiye geçişi ilan et ve tahtta kal."],
-	"hanedan": ["Hanedanın Bekçisi", "Prensi halef ilan et ve tahtta kal."],
-	"kukla": ["İpler Başkasında", "Tahtta kal, ama birinin kuklası olarak."],
-	"darbe": ["Tanklar Kapıda", "Bir darbeyle devril."],
-	"ayaklanma": ["Meydanların Öfkesi", "Halk ayaklanmasıyla devril."],
-	"yetkisiz": ["Skandal", "Biriken skandallar yüzünden yetkisiz bırakıl."],
-}
+var ACHIEVEMENTS: Dictionary = {}
 
 
 func load_achievements() -> Dictionary:
@@ -2253,57 +2194,10 @@ func _generate_reports() -> void:
 				"truth": "%s: %s" % [dropped["name"], dropped["text"]], "diff": 2})
 
 
-## Alan -> [iyi, orta, kötü] durum -> aynı anlamın farklı söylenişleri.
-## Her kişinin kendi sesi var; hangi söylenişin çıkacağı haftaya ve kişiye göre seçilir.
-const PHRASES := {
-	"army": [
-		["Birlikler emirlere hazır, moral yüksek.", "Kışlalarda düzen tam; subaylar size bağlılıklarını iletiyor.", "Ordu sağlam. Endişe edecek bir şey görmüyorum."],
-		["Subaylar arasında huzursuz mırıltılar var, ama disiplin sürüyor.", "Bazı alaylarda maaş ve terfi şikâyetleri duyuluyor.", "Ordu emir bekliyor; ama neden beklediğini soranlar çoğalıyor."],
-		["Bazı birlikler emirleri geciktiriyor. Gençler konuşuyor.", "Bazı komutanlar telefonlarıma artık geç dönüyor.", "Kışlalarda siyaset konuşuluyor. Bu iyiye işaret değil."]],
-	"intel": [
-		["Dosyalarda olağanüstü bir şey yok.", "Takip ettiğimiz isimler sessiz. Sessizlik de bilgidir, ama şimdilik iyi.", "Rutin hafta. Raporlarım masanızda."],
-		["Sokakta ve muhalefette hareketlenme izliyoruz.", "Birkaç ismin telefon trafiği arttı. İzliyoruz.", "Muhalefetin toplantıları sıklaştı; içlerinde kulağımız var."],
-		["Gizli görüşmeler artıyor. Tehdit gerçek olabilir.", "Sarayın çevresinde, sizi değil birbirlerini arayan insanlar var.", "Bazı dosyalar artık bana bile kapalı. Bu beni endişelendiriyor."]],
-	"economy": [
-		["Büyüme sağlıklı, enflasyon kontrolde.", "Hazine dengede; piyasalar sakin.", "Vergi gelirleri beklentinin üstünde, Majesteleri."],
-		["Fiyatlar yükseliyor; bazı sektörler zorlanıyor.", "Kasadaki rakamlar tutuyor, ama pazardaki fiyatlar tutmuyor.", "Bazı fabrikalar vardiya azaltıyor. Henüz alarm değil."],
-		["Bütçe açığı büyüyor. Müdahale gerekebilir.", "Maaşları gelecek ay nasıl ödeyeceğimizi hesaplıyorum.", "Rakamları güzelleştirebilirim. Ama gerçeği bilmeniz gerekiyor."]],
-	"media": [
-		["Halk sizden memnun, manşetler olumlu.", "Kanallarım sizi seviyor; halk da kanallarımı.", "Bu hafta manşetler sizin. Rica ederim."],
-		["Kamuoyu kararsız; doğru haber akışı gerekir.", "Halk kimin hikâyesine inanacağına henüz karar vermedi.", "Biraz yardımla bu haftayı kurtarabiliriz."],
-		["Anlatıyı kaybediyoruz. Bana güvenmeniz gerek.", "Kanallarım bile artık haberleri tutamıyor.", "Sokağın sesi ekranlarımızdan daha yüksek çıkıyor."]],
-	"press": [
-		["Sokakta sakin bir hava var.", "Kahvehanelerde siyaset değil, futbol konuşuluyor.", "İnsanlar günlerine bakıyor; öfke görmüyorum."],
-		["İnsanlar daha çok soru soruyor.", "Okurlarımın mektupları sertleşiyor.", "Fırın kuyruklarında sesler yükseliyor."],
-		["Halk öfkeli ve artık korkmuyor.", "Duvarlara yazılanları okumalısınız, Majesteleri.", "İnsanlar artık isimlerini saklamadan konuşuyor."]],
-	"gate": [
-		["Saray sakin; kimse sizi rahatsız etmek istemiyor.", "Randevu defteriniz düzenli; her şey yolunda.", "Koridorlarda huzur var, Majesteleri."],
-		["Bazı heyetler randevu istiyor, ben ertelemeyi tercih ettim.", "Birkaç ziyaretçiyi sizi yormasın diye bekleme odasında tuttum.", "Sarayda fısıltılar var; önemsiz şeyler, eminim."],
-		["Bazı haberleri size ulaştırmamayı doğru buldum.", "Ziyaretçi defterini ben düzenliyorum; endişelenmeyin.", "Sarayda kimin kimle görüştüğünü artık ben de tam bilmiyorum."]],
-	"royal": [
-		["Prens törenlerde sessiz ve uyumlu.", "Kardeşiniz bu hafta av ve resimle meşguldü.", "Prens size selamlarını gönderiyor."],
-		["Prens soylularla sık yemek yiyor; sebebini bilmiyoruz.", "Prens son günlerde yabancı elçilerle fotoğraf veriyor.", "Kardeşiniz eski hanedan mektuplarını okuyormuş."],
-		["Prensin çevresinde hazırlık var. Taht konuşuluyor.", "Soylu aileler prense 'Majesteleri' diye hitap etmeye başladı.", "Prensin muhafızları çoğaldı. Kimden korunduğunu sormak lazım."]],
-	"opposition": [
-		["Muhalefet dağınık, sesi cılız.", "Muhalefet kendi içinde kavgalı; size vakit ayıramıyorlar.", "Brandt'ın mitingleri yarı boş."],
-		["Muhalefet kanatları arasında gizli görüşmeler sürüyor.", "Brandt'ın konuşmaları sertleşiyor ve dinleyeni artıyor.", "Muhalefet üniversitelerde örgütleniyor."],
-		["Muhalefet birleşiyor; sokakla koordinasyon başladı.", "Muhalefetin çağrısıyla meydanlar dolabilir.", "Brandt artık 'geçiş hükümeti'nden söz ediyor."]],
-	"court": [
-		["Mahkemeler olağan işleyişinde.", "Yargının gündeminde saraya dair bir şey yok.", "Davalar takvimine uygun ilerliyor."],
-		["Bazı dosyalar yargıda beklenenden hızlı ilerliyor.", "Savcılar bazı eski dosyaları yeniden açıyor.", "Mahkemede adınız henüz geçmiyor. Henüz."],
-		["Yargı saraya yaklaşıyor; savcılar sabırsız.", "Bazı hâkimler anayasanın kraldan üstün olduğunu yazmaya başladı.", "Bir soruşturma dosyasının kapağında sarayın adresi var."]],
-}
 
 
 func _phrase(a: Actor, value: float, echo: float) -> String:
-	if echo > 0.75:
-		# Yankı odası: korku herkesin aynı cümleyi kurmasına yol açar. Bu tekdüzelik bir ipucudur.
-		return "Majesteleri, her şey kontrol altında ve sizin liderliğinizde yolunda gidiyor."
-	var band := _band(a, value)
-	if not PHRASES.has(a.domain):
-		return "…"
-	var variants: Array = PHRASES[a.domain][band]
-	return variants[absi(("%s%d" % [a.id, week]).hash()) % variants.size()]
+	return _narrative._phrase(a, value, echo)
 
 
 func _add_fact(id: String, text: String, subject: String, severity: float, knowers: Array, copies: int, leakiness: float = 0.5) -> void:

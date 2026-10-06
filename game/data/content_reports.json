@@ -1,0 +1,221 @@
+{
+  "phrases": {
+    "army": [
+      [
+        "Birlikler emirlere hazır, moral yüksek.",
+        "Kışlalarda düzen tam; subaylar size bağlılıklarını iletiyor.",
+        "Ordu sağlam. Endişe edecek bir şey görmüyorum."
+      ],
+      [
+        "Subaylar arasında huzursuz mırıltılar var, ama disiplin sürüyor.",
+        "Bazı alaylarda maaş ve terfi şikâyetleri duyuluyor.",
+        "Ordu emir bekliyor; ama neden beklediğini soranlar çoğalıyor."
+      ],
+      [
+        "Bazı birlikler emirleri geciktiriyor. Gençler konuşuyor.",
+        "Bazı komutanlar telefonlarıma artık geç dönüyor.",
+        "Kışlalarda siyaset konuşuluyor. Bu iyiye işaret değil."
+      ]
+    ],
+    "intel": [
+      [
+        "Dosyalarda olağanüstü bir şey yok.",
+        "Takip ettiğimiz isimler sessiz. Sessizlik de bilgidir, ama şimdilik iyi.",
+        "Rutin hafta. Raporlarım masanızda."
+      ],
+      [
+        "Sokakta ve muhalefette hareketlenme izliyoruz.",
+        "Birkaç ismin telefon trafiği arttı. İzliyoruz.",
+        "Muhalefetin toplantıları sıklaştı; içlerinde kulağımız var."
+      ],
+      [
+        "Gizli görüşmeler artıyor. Tehdit gerçek olabilir.",
+        "Sarayın çevresinde, sizi değil birbirlerini arayan insanlar var.",
+        "Bazı dosyalar artık bana bile kapalı. Bu beni endişelendiriyor."
+      ]
+    ],
+    "economy": [
+      [
+        "Büyüme sağlıklı, enflasyon kontrolde.",
+        "Hazine dengede; piyasalar sakin.",
+        "Vergi gelirleri beklentinin üstünde, Majesteleri."
+      ],
+      [
+        "Fiyatlar yükseliyor; bazı sektörler zorlanıyor.",
+        "Kasadaki rakamlar tutuyor, ama pazardaki fiyatlar tutmuyor.",
+        "Bazı fabrikalar vardiya azaltıyor. Henüz alarm değil."
+      ],
+      [
+        "Bütçe açığı büyüyor. Müdahale gerekebilir.",
+        "Maaşları gelecek ay nasıl ödeyeceğimizi hesaplıyorum.",
+        "Rakamları güzelleştirebilirim. Ama gerçeği bilmeniz gerekiyor."
+      ]
+    ],
+    "media": [
+      [
+        "Halk sizden memnun, manşetler olumlu.",
+        "Kanallarım sizi seviyor; halk da kanallarımı.",
+        "Bu hafta manşetler sizin. Rica ederim."
+      ],
+      [
+        "Kamuoyu kararsız; doğru haber akışı gerekir.",
+        "Halk kimin hikâyesine inanacağına henüz karar vermedi.",
+        "Biraz yardımla bu haftayı kurtarabiliriz."
+      ],
+      [
+        "Anlatıyı kaybediyoruz. Bana güvenmeniz gerek.",
+        "Kanallarım bile artık haberleri tutamıyor.",
+        "Sokağın sesi ekranlarımızdan daha yüksek çıkıyor."
+      ]
+    ],
+    "press": [
+      [
+        "Sokakta sakin bir hava var.",
+        "Kahvehanelerde siyaset değil, futbol konuşuluyor.",
+        "İnsanlar günlerine bakıyor; öfke görmüyorum."
+      ],
+      [
+        "İnsanlar daha çok soru soruyor.",
+        "Okurlarımın mektupları sertleşiyor.",
+        "Fırın kuyruklarında sesler yükseliyor."
+      ],
+      [
+        "Halk öfkeli ve artık korkmuyor.",
+        "Duvarlara yazılanları okumalısınız, Majesteleri.",
+        "İnsanlar artık isimlerini saklamadan konuşuyor."
+      ]
+    ],
+    "gate": [
+      [
+        "Saray sakin; kimse sizi rahatsız etmek istemiyor.",
+        "Randevu defteriniz düzenli; her şey yolunda.",
+        "Koridorlarda huzur var, Majesteleri."
+      ],
+      [
+        "Bazı heyetler randevu istiyor, ben ertelemeyi tercih ettim.",
+        "Birkaç ziyaretçiyi sizi yormasın diye bekleme odasında tuttum.",
+        "Sarayda fısıltılar var; önemsiz şeyler, eminim."
+      ],
+      [
+        "Bazı haberleri size ulaştırmamayı doğru buldum.",
+        "Ziyaretçi defterini ben düzenliyorum; endişelenmeyin.",
+        "Sarayda kimin kimle görüştüğünü artık ben de tam bilmiyorum."
+      ]
+    ],
+    "royal": [
+      [
+        "Prens törenlerde sessiz ve uyumlu.",
+        "Kardeşiniz bu hafta av ve resimle meşguldü.",
+        "Prens size selamlarını gönderiyor."
+      ],
+      [
+        "Prens soylularla sık yemek yiyor; sebebini bilmiyoruz.",
+        "Prens son günlerde yabancı elçilerle fotoğraf veriyor.",
+        "Kardeşiniz eski hanedan mektuplarını okuyormuş."
+      ],
+      [
+        "Prensin çevresinde hazırlık var. Taht konuşuluyor.",
+        "Soylu aileler prense 'Majesteleri' diye hitap etmeye başladı.",
+        "Prensin muhafızları çoğaldı. Kimden korunduğunu sormak lazım."
+      ]
+    ],
+    "opposition": [
+      [
+        "Muhalefet dağınık, sesi cılız.",
+        "Muhalefet kendi içinde kavgalı; size vakit ayıramıyorlar.",
+        "Brandt'ın mitingleri yarı boş."
+      ],
+      [
+        "Muhalefet kanatları arasında gizli görüşmeler sürüyor.",
+        "Brandt'ın konuşmaları sertleşiyor ve dinleyeni artıyor.",
+        "Muhalefet üniversitelerde örgütleniyor."
+      ],
+      [
+        "Muhalefet birleşiyor; sokakla koordinasyon başladı.",
+        "Muhalefetin çağrısıyla meydanlar dolabilir.",
+        "Brandt artık 'geçiş hükümeti'nden söz ediyor."
+      ]
+    ],
+    "court": [
+      [
+        "Mahkemeler olağan işleyişinde.",
+        "Yargının gündeminde saraya dair bir şey yok.",
+        "Davalar takvimine uygun ilerliyor."
+      ],
+      [
+        "Bazı dosyalar yargıda beklenenden hızlı ilerliyor.",
+        "Savcılar bazı eski dosyaları yeniden açıyor.",
+        "Mahkemede adınız henüz geçmiyor. Henüz."
+      ],
+      [
+        "Yargı saraya yaklaşıyor; savcılar sabırsız.",
+        "Bazı hâkimler anayasanın kraldan üstün olduğunu yazmaya başladı.",
+        "Bir soruşturma dosyasının kapağında sarayın adresi var."
+      ]
+    ]
+  },
+  "sign_texts": {
+    "0": {
+      "_": [
+        "Koridorlarda {n} hakkında fısıltılar var; kaynağı belirsiz.",
+        "Bir hizmetkâr {n_i} gece geç saatte sarayın arka kapısında gördüğünü anlatıyor.",
+        "Masana {n_in} sadakatini sorgulayan imzasız bir not bırakılmış.",
+        "{n_in} yakın çevresinden biri fazla konuşuyormuş; ne dediği belli değil."
+      ]
+    },
+    "1": {
+      "_": [
+        "{n} toplantılarda sık sık iç çekiyor.",
+        "{n} yakın çevresine sarayın gidişatından yakınmış.",
+        "{n} son ödüllendirmelerden hoşnut görünmüyor.",
+        "{n_in} sana selamı eskisinden soğuk."
+      ]
+    },
+    "2": {
+      "_": [
+        "{n}, {p_e} kapalı kapılar ardında uzun bir ziyaret yaptı.",
+        "{n_in} konağında geç saatlere kadar ışık yanıyor.",
+        "{n} bazı bakanlara 'geçiş dönemi'nden söz etmiş."
+      ],
+      "army": [
+        "{n_in} subayları geç saatlere kadar karargâhta toplanıyor.",
+        "{n} bazı alay komutanlarıyla baş başa yemek yedi."
+      ],
+      "intel": [
+        "{n} bazı dosyaları sarayın arşivinden kendi ofisine taşıttı.",
+        "{n_in} adamları senin bakanlarını izliyor."
+      ],
+      "media": [
+        "{n_in} kanallarında adın giderek daha az geçiyor.",
+        "{n} yabancı bankacılarla gizlice görüştü."
+      ],
+      "royal": [
+        "Prens'in konağına gece yarısı arabalar yanaşıyor.",
+        "Prens soylu ailelerle mühürlü mektuplar yazışıyor."
+      ]
+    },
+    "3": {
+      "_": [
+        "{n} artık çağrılarına geç dönüyor; yanındakiler senin değil onun emrini bekliyor.",
+        "{n} ile görüşen bakanların listesi her gün uzuyor."
+      ],
+      "army": [
+        "{n} kendi adamlarını başkentteki kritik birliklere atadı.",
+        "Başkentin girişlerindeki birliklerin komutanları değişti; hepsi {n_in} adamı."
+      ],
+      "royal": [
+        "Prens'in muhafızları iki katına çıktı.",
+        "Soylu aileler Prens'e 'Majesteleri' diye hitap etmeye başladı."
+      ],
+      "intel": [
+        "{n} saray telefonlarının dinlenme kayıtlarını kendi kasasına kilitledi."
+      ],
+      "media": [
+        "{n_in} kanalları 'olağanüstü bir gece' için canlı yayın ekipleri hazırlıyor."
+      ]
+    }
+  },
+  "echo": "Majesteleri, her şey kontrol altında ve sizin liderliğinizde yolunda gidiyor.",
+  "unknown_phrase": "…",
+  "unknown_partner": "tanınmayan bir heyete"
+}

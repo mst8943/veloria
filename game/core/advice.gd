@@ -2,6 +2,8 @@ extends RefCounted
 ## Meclis görüşlerinin davranışı. Sim dış API'yi korur; metin tabloları JSON'dan gelir.
 const Actor := preload("res://game/core/actor.gd")
 var sim: Node
+var content: Dictionary:
+	get: return sim.COUNCIL_CONTENT
 var actors: Dictionary:
 	get: return sim.actors
 var pending: Array:
@@ -49,34 +51,7 @@ const ADVICE_FLAT_GAP := 1.5
 const ADVICE_MISLEAD_GAP := 4.0
 const ADVICE_STAKE_MIN := 1.0        # "ÇIKARI VAR" için en küçük doğrudan pay
 const ADVICE_LOYALTY_VALUE := 0.3    # sadakat isyan eğilimini düşürür: kral için değerlidir
-const ROMAN := ["I", "II", "III", "IV"]
-const ROMAN_ACC := ["I'i", "II'yi", "III'ü", "IV'ü"]
-## Olayın baskın boyutu -> [birincil uzman, ikincil uzman]
-const ADVICE_EXPERTS := {
-	"economy": ["kessler", "halden"], "wealth": ["kessler", "halden"], "unrest": ["arden", "halden"],
-	"opp": ["voss", "halden"], "fact": ["falk", "voss"], "king": ["dorn", "prens"], "actors": ["voss", "dorn"],
-}
-## Gerekçe parçaları: boyut -> [kral için olumlu söyleyişler, olumsuz söyleyişler]. "%s" = kişi adı (eki eklenmiş).
-const ADVICE_REASONS := {
-	"king": [["tahtınızı güçlendirir", "otoritenizi pekiştirir"], ["otoritenizi zedeler", "sizi zayıf gösterir"]],
-	"unrest": [["sokağı yatıştırır", "meydanları sakinleştirir"], ["sokağı kızdırır", "halkı öfkelendirir"]],
-	"economy": [["hazineyi rahatlatır", "piyasaya nefes aldırır"], ["hazineyi zorlar", "bütçeyi deler"]],
-	"opp": [["muhalefeti susturur", "Brandt'ın elini zayıflatır"], ["muhalefete koz verir", "Brandt'a malzeme olur"]],
-	"wealth": [["kişisel kasanızı doldurur", "kasanıza para koyar"], ["kasanızı boşaltır", "cebinizden çıkar"]],
-	"fact": [["iz bırakmaz"], ["iz bırakır", "bir gün önünüze dosya olarak gelir"]],
-	"promise": [["sözünüzü korur"], ["verdiğiniz sözü bozar", "sözünüzü çiğner"]],
-}
-## Önerdiği seçeneğin kral için hiçbir iyi yanı yoksa danışman kendi kılıfını kurar (dikkatli oyuncu için ele veriş).
-const ADVICE_COVER := {
-	"arden": "Ordu güçlüyse taht da güçlüdür.", "voss": "Bazı şeyleri size anlatamam; bana güvenin.",
-	"kessler": "Hesabı ben tutarım; en az zararlısı bu.", "halden": "Kamuoyunu ben hallederim.",
-	"dorn": "Sarayın huzuru için en iyisi bu.", "prens": "Hanedanın onuru bunu gerektirir.",
-	"falk": "Hukuka en uygun yol bu.",
-}
-const ADVICE_EVASIVE := ["Takdir sizindir, Majesteleri.", "Hangisini seçerseniz doğru olan odur, Majesteleri.",
-	"Sizin bileceğiniz iş, Majesteleri."]
-const ADVICE_FLAT := ["Bence hepsi aynı kapıya çıkar.", "Aralarında büyük bir fark görmüyorum, Majesteleri."]
-
+## Uzman eşleşmeleri ve gerekçe söyleyişleri `content_council.json` içindedir.
 
 ## Kralın çıkarı açısından bir seçeneğin değeri (tek doğruluk kaynağı; botlar da bunu kullanır).
 func choice_value(fx: Dictionary) -> float:
@@ -158,7 +133,7 @@ func _event_dims(e: Dictionary) -> Array:
 		for k: String in t:
 			var dim := "actors" if k.begins_with("actor:") else k
 			w[dim] = float(w.get(dim, 0.0)) + absf(float(t[k]))
-	var dims: Array = w.keys().filter(func(k: String) -> bool: return ADVICE_EXPERTS.has(k))
+	var dims: Array = w.keys().filter(func(k: String) -> bool: return content["experts"].has(k))
 	dims.sort_custom(func(x: String, y: String) -> bool: return w[x] > w[y])
 	return dims
 
@@ -189,7 +164,7 @@ func _pick_advisors(e: Dictionary) -> Array:
 	if party != "" and out.size() < 2:
 		out.append(party)
 	for dim in _event_dims(e):
-		for aid in ADVICE_EXPERTS[dim]:
+		for aid in content["experts"][dim]:
 			if out.size() < 2 and _can_advise(aid) and not aid in out:
 				out.append(aid)
 	if out.size() < 2:
@@ -203,7 +178,7 @@ func _advisor_skill(aid: String, e: Dictionary) -> float:
 	var dims := _event_dims(e)
 	if dims.is_empty():
 		return ADVICE_SKILL_GENERAL
-	var ex: Array = ADVICE_EXPERTS[dims[0]]
+	var ex: Array = content["experts"][dims[0]]
 	if aid == ex[0]:
 		return ADVICE_SKILL_EXPERT
 	if aid == ex[1]:
@@ -245,7 +220,7 @@ func _advise(a: Actor, e: Dictionary, r: RandomNumberGenerator) -> Dictionary:
 			item["stake"] = true
 	if a.fear >= ADVICE_FEAR_EVASIVE or echo_level() > 0.75:
 		item["kind"] = "evasive"
-		item["text"] = ADVICE_EVASIVE[r.randi() % ADVICE_EVASIVE.size()]
+		item["text"] = content["evasive"][r.randi() % content["evasive"].size()]
 		return item
 	var sigma := ADVICE_SIGMA * (1.0 - _advisor_skill(a.id, e)) * _diff("advice_noise")
 	var w := clampf(ADVICE_W0 + a.ambition / 100.0 * (1.0 - a.honesty) * ADVICE_W1, 0.0, ADVICE_W_MAX)
@@ -263,24 +238,24 @@ func _advise(a: Actor, e: Dictionary, r: RandomNumberGenerator) -> Dictionary:
 			worst = i
 	if scores[best] - scores[worst] < ADVICE_FLAT_GAP:
 		item["kind"] = "flat"
-		item["text"] = ADVICE_FLAT[r.randi() % ADVICE_FLAT.size()]
+		item["text"] = content["flat"][r.randi() % content["flat"].size()]
 		return item
 	item["rec"] = best
 	var reason := _advice_reason(choices[best].get("fx", {}), true, r, a.id)
 	var text := ""
 	match r.randi() % 3:
 		0:
-			text = "%s öneririm" % ROMAN_ACC[mini(best, 3)]
+			text = content["rec_forms"][0] % content["roman_acc"][mini(best, 3)]
 		1:
-			text = "Bence %s, Majesteleri" % ROMAN[mini(best, 3)]
+			text = content["rec_forms"][1] % content["roman"][mini(best, 3)]
 		_:
-			text = "%s seçin" % ROMAN_ACC[mini(best, 3)]
-	text = "%s: %s." % [text, reason] if reason != "" else "%s. %s" % [text, ADVICE_COVER.get(a.id, "Bana güvenin.")]
+			text = content["rec_forms"][2] % content["roman_acc"][mini(best, 3)]
+	text = "%s: %s." % [text, reason] if reason != "" else "%s. %s" % [text, content["cover"].get(a.id, content["cover_default"])]
 	if scores[best] - scores[worst] >= ADVICE_WARN_GAP:
 		var bad := _advice_reason(choices[worst].get("fx", {}), false, r, a.id)
 		if bad != "":
 			item["warn"] = worst
-			text += " %s ise %s." % [ROMAN[mini(worst, 3)], bad]
+			text += " %s ise %s." % [content["roman"][mini(worst, 3)], bad]
 	item["text"] = text
 	return item
 
@@ -302,10 +277,10 @@ func _advice_reason(fx: Dictionary, good: bool, r: RandomNumberGenerator, self_i
 	if key.begins_with("actor:"):
 		var aid := key.substr(6)
 		var nm: String = short_name(actors[aid]) if actors.has(aid) else aid.capitalize()
-		if good:
-			return [ek(nm, "in") + " gücünü kırpar", ek(nm, "i") + " dizginler"][r.randi() % 2]
-		return [ek(nm, "i") + " fazla güçlendirir", ek(nm, "in") + " elini güçlendirir"][r.randi() % 2]
-	var opts: Array = ADVICE_REASONS[key][0 if good else 1]
+		var forms: Array = content["actor_good"] if good else content["actor_bad"]
+		var line: String = forms[r.randi() % forms.size()]
+		return line.replace("{n_in}", ek(nm, "in")).replace("{n_i}", ek(nm, "i"))
+	var opts: Array = content["reasons"][key][0 if good else 1]
 	return opts[r.randi() % opts.size()]
 
 
@@ -347,5 +322,3 @@ func council_record() -> Array:
 			return x["misled"] > y["misled"]
 		return x["given"] > y["given"])
 	return out
-
-

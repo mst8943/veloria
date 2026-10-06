@@ -1,0 +1,146 @@
+{
+  "experts": {
+    "economy": [
+      "kessler",
+      "halden"
+    ],
+    "wealth": [
+      "kessler",
+      "halden"
+    ],
+    "unrest": [
+      "arden",
+      "halden"
+    ],
+    "opp": [
+      "voss",
+      "halden"
+    ],
+    "fact": [
+      "falk",
+      "voss"
+    ],
+    "king": [
+      "dorn",
+      "prens"
+    ],
+    "actors": [
+      "voss",
+      "dorn"
+    ]
+  },
+  "reasons": {
+    "king": [
+      [
+        "tahtınızı güçlendirir",
+        "otoritenizi pekiştirir"
+      ],
+      [
+        "otoritenizi zedeler",
+        "sizi zayıf gösterir"
+      ]
+    ],
+    "unrest": [
+      [
+        "sokağı yatıştırır",
+        "meydanları sakinleştirir"
+      ],
+      [
+        "sokağı kızdırır",
+        "halkı öfkelendirir"
+      ]
+    ],
+    "economy": [
+      [
+        "hazineyi rahatlatır",
+        "piyasaya nefes aldırır"
+      ],
+      [
+        "hazineyi zorlar",
+        "bütçeyi deler"
+      ]
+    ],
+    "opp": [
+      [
+        "muhalefeti susturur",
+        "Brandt'ın elini zayıflatır"
+      ],
+      [
+        "muhalefete koz verir",
+        "Brandt'a malzeme olur"
+      ]
+    ],
+    "wealth": [
+      [
+        "kişisel kasanızı doldurur",
+        "kasanıza para koyar"
+      ],
+      [
+        "kasanızı boşaltır",
+        "cebinizden çıkar"
+      ]
+    ],
+    "fact": [
+      [
+        "iz bırakmaz"
+      ],
+      [
+        "iz bırakır",
+        "bir gün önünüze dosya olarak gelir"
+      ]
+    ],
+    "promise": [
+      [
+        "sözünüzü korur"
+      ],
+      [
+        "verdiğiniz sözü bozar",
+        "sözünüzü çiğner"
+      ]
+    ]
+  },
+  "cover": {
+    "arden": "Ordu güçlüyse taht da güçlüdür.",
+    "voss": "Bazı şeyleri size anlatamam; bana güvenin.",
+    "kessler": "Hesabı ben tutarım; en az zararlısı bu.",
+    "halden": "Kamuoyunu ben hallederim.",
+    "dorn": "Sarayın huzuru için en iyisi bu.",
+    "prens": "Hanedanın onuru bunu gerektirir.",
+    "falk": "Hukuka en uygun yol bu."
+  },
+  "evasive": [
+    "Takdir sizindir, Majesteleri.",
+    "Hangisini seçerseniz doğru olan odur, Majesteleri.",
+    "Sizin bileceğiniz iş, Majesteleri."
+  ],
+  "flat": [
+    "Bence hepsi aynı kapıya çıkar.",
+    "Aralarında büyük bir fark görmüyorum, Majesteleri."
+  ],
+  "roman": [
+    "I",
+    "II",
+    "III",
+    "IV"
+  ],
+  "roman_acc": [
+    "I'i",
+    "II'yi",
+    "III'ü",
+    "IV'ü"
+  ],
+  "actor_good": [
+    "{n_in} gücünü kırpar",
+    "{n_i} dizginler"
+  ],
+  "actor_bad": [
+    "{n_i} fazla güçlendirir",
+    "{n_in} elini güçlendirir"
+  ],
+  "rec_forms": [
+    "%s öneririm",
+    "Bence %s, Majesteleri",
+    "%s seçin"
+  ],
+  "cover_default": "Bana güvenin."
+}

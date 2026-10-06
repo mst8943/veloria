@@ -1,0 +1,56 @@
+{
+  "prizes": [
+    "Başbakanlık",
+    "Liman İhalesi",
+    "Dokunulmazlık"
+  ],
+  "power_tiers": [
+    "",
+    "ikinci planda",
+    "etkili",
+    "vazgeçilmez"
+  ],
+  "report_tones": [
+    "iyimser",
+    "tedirgin",
+    "karamsar"
+  ],
+  "suspicion_names": [
+    "Sakin",
+    "Huzursuz",
+    "Şüpheli",
+    "Tehlikeli"
+  ],
+  "regime_names": {
+    "guvenlikci": "güvenlikçi",
+    "populist": "popülist",
+    "patronajci": "patronajcı",
+    "oligark": "oligarklara dayanan",
+    "medya": "medya kontrollü",
+    "istihbarat": "istihbarat merkezli"
+  },
+  "regime_titles": {
+    "guvenlikci": "Güvenlikçi Rejimi",
+    "populist": "Popülist Rejimi",
+    "patronajci": "Patronaj Rejimi",
+    "oligark": "Oligark Rejimi",
+    "medya": "Medya Rejimi",
+    "istihbarat": "İstihbarat Rejimi"
+  },
+  "regime_threats": {
+    "guvenlikci": "ordu komutasının muhtırası",
+    "populist": "meydanın kuşatması",
+    "patronajci": "makam sahiplerinin hesabı",
+    "oligark": "sermaye çevrelerinin kuşatması",
+    "medya": "yayınların desteği çekmesi",
+    "istihbarat": "gizli arşivin muhtırası"
+  },
+  "regime_order": [
+    "guvenlikci",
+    "populist",
+    "patronajci",
+    "oligark",
+    "medya",
+    "istihbarat"
+  ]
+}

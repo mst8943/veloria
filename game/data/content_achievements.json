@@ -1,0 +1,62 @@
+{
+  "ilk_saltanat": [
+    "İlk Saltanat",
+    "Bir saltanatı sonuna kadar götür (ya da düş)."
+  ],
+  "tahtta_kal": [
+    "İki Yıl",
+    "104 haftayı tahtta tamamla."
+  ],
+  "zor_zafer": [
+    "Demir İrade",
+    "Zor seviyede tahtta kal."
+  ],
+  "temiz_eller": [
+    "Temiz Eller",
+    "Hiç gizli ödeme, şantaj ya da yazılı emir kullanmadan tahtta kal."
+  ],
+  "sozunun_eri": [
+    "Sözünün Eri",
+    "En az 2 söz tut, hiçbirini bozma ve tahtta kal."
+  ],
+  "sirlar": [
+    "Sırların Efendisi",
+    "Bir saltanatta 3 kez şantaj yap."
+  ],
+  "operator": [
+    "Gölgelerin Kralı",
+    "Bir saltanatta 5 gizli operasyon yürüt."
+  ],
+  "gercegi_goren": [
+    "Gerçeği Gören",
+    "Bir saltanatta 10 raporu doğrula."
+  ],
+  "reformcu": [
+    "Reformcu",
+    "Kessler'in reformunun meyvelerini gör."
+  ],
+  "anayasal": [
+    "Anayasal Kral",
+    "Anayasal monarşiye geçişi ilan et ve tahtta kal."
+  ],
+  "hanedan": [
+    "Hanedanın Bekçisi",
+    "Prensi halef ilan et ve tahtta kal."
+  ],
+  "kukla": [
+    "İpler Başkasında",
+    "Tahtta kal, ama birinin kuklası olarak."
+  ],
+  "darbe": [
+    "Tanklar Kapıda",
+    "Bir darbeyle devril."
+  ],
+  "ayaklanma": [
+    "Meydanların Öfkesi",
+    "Halk ayaklanmasıyla devril."
+  ],
+  "yetkisiz": [
+    "Skandal",
+    "Biriken skandallar yüzünden yetkisiz bırakıl."
+  ]
+}

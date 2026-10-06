@@ -1,0 +1,22 @@
+{
+  "pro_survived": "Kral %s, iki yıl boyunca sayısız fırtınaya rağmen tahtını korudu.",
+  "pro_lost": "Kral %s, %d hafta boyunca imkânsız bir krallığı ayakta tutmaya çalıştı; düşüşü, ihanetin eseriydi.",
+  "pro_economy": "Saltanatında hazine doldu, pazarlar canlandı.",
+  "pro_reform": "Vergi reformu, ondan sonra gelenlerin de övündüğü bir miras oldu.",
+  "pro_peace": "Sokaklarda huzur vardı.",
+  "pro_kept": "Verdiği sözlerin %d tanesini tuttu.",
+  "pro_public": "Halkın karşısına çıkmaktan çekinmeyen bir hükümdardı.",
+  "pro_constitution": "Saltanatının sonunda Meclise gerçek yetki vererek anayasal monarşinin kurucusu oldu.",
+  "pro_heir": "Hanedanın devamını güvence altına aldı.",
+  "pro_default": "Zor zamanlarda, zor kararlar vermek zorunda kaldı.",
+  "con_secrets": "Saltanatı, ortaya saçılan %d sırla hatırlanır.",
+  "con_bribes": "Sadakati parayla satın aldı; %d gizli ödeme kayıtlara geçti.",
+  "con_blackmail": "Yakın çevresini şantajla yönetti.",
+  "con_broken": "%d sözünü tutmadı.",
+  "con_press": "Basını susturdu.",
+  "con_opposition": "Muhalefet liderini hapse attı.",
+  "con_economy": "Ekonomiyi harabeye çevirdi.",
+  "con_echo": "Son aylarında artık kimse ona gerçeği söylemiyordu.",
+  "con_lock": "Ve gitmeden önce yetkiyi kimseyle paylaşmayacak biçimde kilitledi.",
+  "con_default": "Sürgündeki tarihçiler bile bu saltanata ağır bir suçlama bulmakta zorlandı."
+}
