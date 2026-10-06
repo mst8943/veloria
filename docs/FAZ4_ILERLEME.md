@@ -13,6 +13,7 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 - **4a.1** `3eb95af`: dört kapasite alanı ayrı tohum üreteciyle başlatılır; kasa, bütçe duruşu, saray payı ve kapasite çizelgesi kaydedilir. `SAVE_VERSION=5`, v4 göçü ve kayıt testi eklendi. Bütün testler geçti; `--full` çıktısı tabanla aynı.
 - **4a.1 test düzeltmesi** `2bed482`: `var_to_str` kayan nokta yuvarlaması için toleranslı kapasite karşılaştırması.
 - **4a.2** `501d68b`: haftalık yıpranma/kasa/ekonomi/huzursuzluk, emir uygulama, kriz şansı, yargı baskısı ve rapor gürültüsü; Kessler'in raporu ekonomi ve kasayı birlikte okur. Kalibrasyon `ATTRITION=0,04`, ekonomi katsayıları `0,003/0,001`, Zor kasa gideri çarpanı `1,8`, Zor ordu toparlama paydası `100`. Bütün testler geçti; `--full` 104 hafta TAHTTA, 120 olay.
+- **4a.3** `6f0ac53`: kapasite/kasa olay koşulları, kurum adı doğrulaması, sentetik uygunluk testi ve olay şeması belgesi. Bütün testler geçti; `--full` ve denge 4a.2 ile aynı.
 
 ## Son ölçüm
 
@@ -21,6 +22,7 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 | Taban | %83 | %45 | %16 |
 | 4a.1 | %83 | %45 | %16 |
 | 4a.2 | %80 | %42 | %18 |
+| 4a.3 | %80 | %42 | %18 |
 
 ## Açık sorunlar
 
@@ -28,4 +30,4 @@ Tempo testinde 73–80. hafta dilimi **0,78**; 4a içerik adımıyla ≥0,8'e ç
 
 ## SIRADAKİ ADIM
 
-4a.3: `min_cap/max_cap` ve `min_treasury/max_treasury` olay koşulları, doğrulayıcı denetimi ve VELORIA şeması. Ardından bütün testler ve 80 kampanyalık ölçüm.
+4a.4: çeyrek bütçe sistem kartı ve `choice_value` yeni değer terimleri. Erteleme ve bekleyen karar sınırını test et; ardından bütün testler ve denge ölçümü.
