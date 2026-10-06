@@ -36,9 +36,9 @@ Haritada yedi kurum var. Birine tıklayınca başındaki kişiyi, onun bu haftak
 
 ## Medya Merkezi
 
-- **Veloria Haber:** Halden'in gazetesi. Her şeyi güzel gösterir, saray skandallarını yalanlar.
+- **Veloria Haber:** Halden'in kâğıda basılan gazetesi. Her şeyi güzel gösterir, saray skandallarını yalanlar.
 - **Serbest Kalem:** Lena'nın bağımsız gazetesi. Gerçeğe daha yakın yazar ve kulis söylentilerini basar. Lena'yı susturursan kapanır.
-- **Halden TV:** Canlı yayın ve kayan haber şeridi.
+- **Halden TV:** Tüplü televizyonda canlı yayın ve kayan haber şeridi.
 
 İki gazete aynı haftayı farklı anlatıyorsa, aradaki fark sana söylenmeyenleri gösterir.
 

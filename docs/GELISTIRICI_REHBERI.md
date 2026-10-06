@@ -162,14 +162,16 @@ Proje ayarlarında `veloria/` altında; dağıtımdan önce hepsi kapalı olmal�
 ## Build
 
 ```bash
-Godot_console.exe --headless --path . --export-release "Windows Desktop" dist/windows/Veloria.exe
-Godot_console.exe --headless --path . --export-release Linux dist/linux/Veloria.x86_64
-Godot_console.exe --headless --path . --export-release Web dist/web/index.html
+Godot_console.exe --headless --path . --export-release "Windows Desktop"
+Godot_console.exe --headless --path . --export-release Linux
+Godot_console.exe --headless --path . --export-release Web
 ```
 
 Not: Beckett eklentisi headless export sırasında `.mcp.json` portunu değiştirebilir; export sonrası `8770` olduğunu kontrol et.
 
-Web sürümünü yerelde denemek için: `python -m http.server 8060 --directory dist/web`
+Presetler `dist/windows/Veloria.exe`, `dist/linux/Veloria.x86_64` ve `dist/web/index.html` üretir. Sürüm `project.godot` içindeki `application/config/version` alanından gelir. Her platform klasörünün içeriğini kökte olacak şekilde `dist/release/Veloria-<sürüm>-<platform>.zip` içine paketle; güncel `docs/OYUNCU_REHBERI.md` dosyasını `OYUNCU_REHBERI.md` adıyla ekle.
+
+Web sürümünü yerelde denemek için: `python -m http.server 8060 --directory dist/web`. Menü, üç medya sekmesi, hafta geçişi ve oyun sonunu tarayıcıda kontrol et.
 
 ## Lisanslar
 

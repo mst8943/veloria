@@ -1,6 +1,13 @@
 # Veloria — Durum ve Yapılacaklar (yeni oturum için devir notu)
 
-Son güncelleme: 2026-10-06 (beşinci oturumun sonu: görsel dil, Faz 0–2, ikinci yıl, main.gd bölme). Dal: `veloria`.
+Son güncelleme: 2026-10-06 (dağıtım 1.1.0). Dal: `veloria`.
+
+## Dağıtım 1.1.0 (2026-10-06)
+- `project.godot` sürümü 1.1.0; çözünürlük 1600×900. Windows, Linux ve Web export alındı; `export_presets.cfg` değiştirilmedi. Windows exe pencereli açıldı.
+- Paketler (zip doğrulaması temiz): `dist/release/Veloria-1.1.0-windows.zip` **61.636.964 bayt**, `Veloria-1.1.0-linux.zip` **51.857.188 bayt**, `Veloria-1.1.0-web.zip` **35.567.249 bayt**. Eski 1.0.0 zip'leri arşiv olarak duruyor. Her pakette güncel `OYUNCU_REHBERI.md` var.
+- Testler: `TEST: OK`, `EVENTS: OK` (117 olay, 0 uyarı), `SAVE: OK`; masaüstü/mobil `AUTOPLAY DONE`; `--full` ilk tohum 101 ile 104. haftayı `TAHTTA` bitirdi. Denge sondajı (80 kampanya, ölçüt bot): Kolay %80, Normal %41, Zor %27; önceki sonuçla aynı ve hedef bantlarda.
+- Chrome WebGL 2 ile yerel HTTP üzerinden menü, oyun, üç Medya Merkezi sekmesi, bir hafta geçişi ve 15. haftada kayıp ekranı açıldı. Kâğıt ve yarım ton, CRT camı, IBM Plex Sans ile Türkçe karakterler ve oyun sonu düzgün görünüyor; tofu ya da siyah TV ekranı yok. Kanıtlar: `dist/qa_1_1_0/web_loaded.png`, `web_media_news.png`, `web_media_serbest.png`, `web_media_tv.png`, `web_week_2.png`, `web_end_screen.png`. Pencereli Godot görüntüleri aynı klasörde (`1_medya*.png`, `5_son_0.png`).
+- Tarayıcı otomasyonunda ilk kullanıcı hareketinden önce Web Audio `AudioContext` uyarısı görüldü; ses işitsel olarak doğrulanmadı. Uzun otomatik tıklama denemesinde bir kez IndexedDB kayıt uyarısı görüldü; normal oyun akışında tekrarlanıp tekrarlanmadığı bilinmiyor. `.mcp.json` ve `.cursor/mcp.json` portları 8770.
 
 ## Yeni oturumda ilk iş
 1. Bu dosyayı oku.
@@ -9,8 +16,8 @@ Son güncelleme: 2026-10-06 (beşinci oturumun sonu: görsel dil, Faz 0–2, iki
 4. Skill'ler: `docs/SKILL_KULLANIMI.md` (hangi iş için hangi skill).
 
 ## Dokunulmayacaklar
-- Çalışma ağacındaki `.mcp.json`, `.cursor/mcp.json`, `export_presets.cfg` (editörde yapılan değişiklikler), `BECKETT_SETUP.md`, `project.godot` değişiklikleri, `CLAUDE.md` ve `.cursor/` kullanıcınındır. Commit'e katma. `.cursor/mcp.json`'a dokunma izni yok; yalnızca kullanıcıya bildir.
-- Godot `--import` ya da export `.mcp.json` ve `.cursor/mcp.json` portunu değiştirebiliyor (8772 gibi). İşlemden sonra `.mcp.json`'ı `"url": "http://127.0.0.1:8770/mcp"` olarak geri al; token satırını geri ekleme. `.cursor/mcp.json`'ı kullanıcı düzeltir.
+- Çalışma ağacındaki `.mcp.json`, `.cursor/mcp.json`, `export_presets.cfg` (editörde yapılan değişiklikler), `BECKETT_SETUP.md`, `project.godot` değişiklikleri, `CLAUDE.md` ve `.cursor/` kullanıcınındır. Commit'e katma; açık kullanıcı talebiyle yapılan sürüm değişikliği istisnadır.
+- Godot `--import` ya da export `.mcp.json` ve `.cursor/mcp.json` portunu değiştirebiliyor (8772 gibi). İşlemden sonra portları 8770'e geri al; token satırını geri ekleme.
 - `project.godot` çözünürlüğü 1600×900 kalmalı (kullanıcı bir kez 1920×1080 yapmıştı, geri aldı; arayüzün tamamı 1600×900 tabanına göre ayarlı).
 - Push YOK: `origin` Beckett'in deposu. Kullanıcıya kendi deposunu açması önerildi, henüz cevap yok. **Kodun uzak yedeği yok.**
 - Denge ölçümü arka planda çalışırken `git stash`/checkout ya da `events.json` düzenlemesi YAPMA: Sim her `new_game`'de olay dosyasını yeniden okur, ölçüm karışır.
@@ -123,24 +130,23 @@ Hedef bantlar (ölçüt bot): Kolay %70–85, Normal %35–55, Zor %15–30. Tar
 **Sizin (kullanıcı) yapmanız gerekenler**
 1. 👤 **Kendi deponu aç** (GitHub/GitLab). Kodun uzak yedeği yok; en yüksek risk. Bağlamayı ben yaparım.
 2. 👤 **Tam bir saltanat oyna (Normal)** ve not al: Normal fazla zor/kolay mı? Krizler (ayaklanma, yetki, darbe) adil mi, uyarı yeterli mi? Aktör hamleleri dünyanın yaşadığı hissini veriyor mu? Metinler (özellikle 30 yeni olay, ilk taslak) uyuyor mu? Açık tasarım soruları: `danisman_gorusleri.md` §13, `darbe_asamalari.md` §13.
-3. 👤 `.cursor/mcp.json` portunu 8770'e getir; `export_presets.cfg` değişikliğinin bilinçli olup olmadığını doğrula.
+3. 👤 `export_presets.cfg` değişikliğinin bilinçli olup olmadığını doğrula. `.cursor/mcp.json` portu 8770.
 4. 👤 İsteğe bağlı görsel üretimi: yeni olaylar mevcut görsellere yaklaşık eşleştirildi; özel görsel istenenler (muhtıra, çadır kent, maden faciası, kuraklık, soylular meclisi, Saray dosyası): prompt'ları ben hazırlarım (`/asset-spec`).
 
 **Geliştirme (benim)**
-5. **Dağıtım:** `dist/release` hâlâ v1.0.0; bu oturumdaki her şey (yeni shader'lar, font, olaylar, krizler) derlemeye girmedi. Yeniden export al (Windows/Linux/Web), **web'de CRT/kâğıt shader'larını ve yeni fontu dene**, sürümü 1.1.0 yap. Export sonrası `.mcp.json` portunu geri al.
-6. **Faz 3:** karakter hikâye yayları (her güç merkezi için 3–4 olaylık bir yay: yükseliş, sınav, ihanet ya da sadakat) ve rejim tipi (§20: güvenlikçi, popülist, patronajcı, oligark, medya kontrollü, istihbarat merkezli; oyuncunun geçmişinden hesaplanır ve final tehdidini belirler).
-7. **Faz 4:** devlet kapasitesi/bütçesi (§24) ve patronaj/oligark (§17). Büyük sistemler: önce `/design-system` ile GDD, ayrı oturum.
-8. **Faz 5:** gerçek ses ve müzik (şimdi sentez; kullanıcı dosya sağlar ya da prompt verilir); `main.gd`'nin kalanı (`docs/TECH_DEBT.md`: gündem -> `agenda_view.gd`, kişi paneli -> `person_panel.gd`); `sim.gd` içeriğini (PHRASES, SIGN_TEXTS, ACHIEVEMENTS) JSON'a; `_refresh` artırımlı çizim; `tr()` ile yerelleştirme.
-9. **Denge açıkları:** darbe hâlâ baskın kayıp (ölçüt botta darbe dışı ~%4–10): darbe sıklığı düşürülebilir ya da sokak/mahkeme yollarına daha çok sürekli baskı eklenebilir. Alamete tepki vermek botta nötr: oyuncu "gördüm ama işe yaramadı" derse Huzura Çağır güçlendirilmeli. Zor'da `visible_wise` ~%70'lerde (tavan hedef değil, ama izlenmeli).
-10. **Küçük içerik/teknik:** meclis görüşü metinleri danışmana özgü değil (söyleyiş eklenebilir); olay görselleri için `_b` varyantları; sim_test botları rüşvet/şantaj kullanmadığı için istatistik olaylarını "hiç tetiklenmeyen" listesinde gösterir (ulaşılabilirlik kontrolü bunları doğrular); `FULLRUN` testi 104 haftayı ilk tohumda tamamlıyor, diğer tohumlar çoğu zaman düşüyor (bot basit).
+5. **Faz 3:** karakter hikâye yayları (her güç merkezi için 3–4 olaylık bir yay: yükseliş, sınav, ihanet ya da sadakat) ve rejim tipi (§20: güvenlikçi, popülist, patronajcı, oligark, medya kontrollü, istihbarat merkezli; oyuncunun geçmişinden hesaplanır ve final tehdidini belirler).
+6. **Faz 4:** devlet kapasitesi/bütçesi (§24) ve patronaj/oligark (§17). Büyük sistemler: önce `/design-system` ile GDD, ayrı oturum.
+7. **Faz 5:** gerçek ses ve müzik (şimdi sentez; kullanıcı dosya sağlar ya da prompt verilir); `main.gd`'nin kalanı (`docs/TECH_DEBT.md`: gündem -> `agenda_view.gd`, kişi paneli -> `person_panel.gd`); `sim.gd` içeriğini (PHRASES, SIGN_TEXTS, ACHIEVEMENTS) JSON'a; `_refresh` artırımlı çizim; `tr()` ile yerelleştirme.
+8. **Denge açıkları:** darbe hâlâ baskın kayıp (ölçüt botta darbe dışı ~%4–10): darbe sıklığı düşürülebilir ya da sokak/mahkeme yollarına daha çok sürekli baskı eklenebilir. Alamete tepki vermek botta nötr: oyuncu "gördüm ama işe yaramadı" derse Huzura Çağır güçlendirilmeli. Zor'da `visible_wise` ~%70'lerde (tavan hedef değil, ama izlenmeli).
+9. **Küçük içerik/teknik:** meclis görüşü metinleri danışmana özgü değil (söyleyiş eklenebilir); olay görselleri için `_b` varyantları; sim_test botları rüşvet/şantaj kullanmadığı için istatistik olaylarını "hiç tetiklenmeyen" listesinde gösterir (ulaşılabilirlik kontrolü bunları doğrular); `FULLRUN` testi 104 haftayı ilk tohumda tamamlıyor, diğer tohumlar çoğu zaman düşüyor (bot basit).
 
 ## Bilinen küçük sorunlar
 - Sağ üstteki bildirimler masa ve haritanın, mobilde alamet şeridinin üstünde kalıyor (masaüstünde şerit artık bildirim sütununa girmiyor).
 - Aynı çift için Birbirine Düşür bekleme süresi 6 hafta; bot sondajında yalnızca "tavır" göstergesi olan çiftler seçiliyor, gerçek oyuncu daha zekice seçebilir (ölçüt botun üstünde kalabilir).
-- Yeni olay metinleri ve mühür/TV/gazete görünümü yalnızca masaüstü ve mobil ekran görüntüleriyle denendi; gerçek oyuncu gözüyle görülmedi.
+- Yeni olay metinleri gerçek oyuncu gözüyle tam kampanyada görülmedi; mühür/TV/gazete görünümü masaüstü ve web görüntülerinde denendi.
 - Masada soldaki günlük lambadan uzak olduğu için karanlık kalıyor; okunurluk için `desk_lit` `ambient` ya da günlüğün yeri ayarlanabilir.
 - Meclis görüşü metinleri genel kalıplardan kuruluyor (danışmana özgü ses yalnızca kılıf cümlelerinde). İçerik turunda danışman başına söyleyiş eklenebilir.
-- Kullanıcı henüz tam bir saltanat oynamadı; denge, metin ve ses geri bildirimi bekleniyor. Web ve Linux build bu oturumdaki değişikliklerle denenmedi. Android/iOS kasıtlı yapılmadı.
+- Kullanıcı henüz tam bir saltanat oynamadı; denge, metin ve ses geri bildirimi bekleniyor. Linux paketi üretildi ama Linux üzerinde çalıştırılamadı. Android/iOS kasıtlı yapılmadı.
 
 ## Kullanıcı tercihleri
 Sormadan ilerle; büyük özellikte önce tasarla (`CLAUDE.md`). Sonuçta kısa Türkçe özet. Commit'e izin var, push yok.
