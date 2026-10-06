@@ -45,8 +45,8 @@ Baştan sona oynanabilir, sağlam bir dikey dilim (erken alfa): 104 hafta, 9 gü
 - ⬜ Bütün eylemler aynı maliyette
 
 **C. Belge ↔ kod farkları**
-- ⬜ Devlet bütçesi / kapasitesi · ⬜ Patronaj / oligark · ⬜ Aktörlerin kendi hamleleri · ⬜ Kampanya dönemleri · ⬜ Rejim tipi ve final tehdidi
-- ⬜ Belgede 10 kayıp yolu, kodda 4 · ⬜ Kişisel hikâye yayları
+- ⬜ Devlet bütçesi / kapasitesi · ⬜ Patronaj / oligark · ✅ Aktörlerin kendi hamleleri · ✅ Kampanya dönemleri · ✅ Rejim tipi ve final tehdidi
+- ⬜ Belgede 10 kayıp yolu, kodda 4 · ✅ Kişisel hikâye yayları
 
 **D. Arayüz ve görünüm**
 - ⬜ Masa/harita ile ana ekran iki paralel gezinme yolu
@@ -80,7 +80,7 @@ Baştan sona oynanabilir, sağlam bir dikey dilim (erken alfa): 104 hafta, 9 gü
 - ✅ Kayıp çeşitliliği (sokak/mahkeme krizleri, `docs/design/kayip_cesitliligi.md`; ölçüt botta kısmi) · ✅ Rüşvete azalan getiri (ölçüldü: gerek yok; rüşvet botu Kolay %51, Normal %40, Zor %20 — mahkeme yolu bedeli zaten yaratıyor) · ✅ Hedefli "birbirine düşür" (`docs/design/birbirine_dusur.md`) · ✅ Aktörlerin kendi hamleleri (`docs/design/aktor_hamleleri.md`)
 - ✅ Denge hedefleri görünür bilgiye dayalı botla (hedefler güncellendi: ölçüt botu Kolay %70–85, Normal ~%45, Zor %15–30)
 
-**Faz 3 — Kampanya ve içerik:** ✅ dönemler (Bedellerin Dönüşü / Hesaplaşma) · ✅ ikinci yıl için 30 olay (`docs/design/ikinci_yil.md`) · ⬜ hikâye yayları · ⬜ rejim tipi ve final tehdidi
+**Faz 3 — Kampanya ve içerik: ✅** dönemler (Bedellerin Dönüşü / Hesaplaşma) · ✅ ikinci yıl için 30 olay (`docs/design/ikinci_yil.md`) · ✅ dokuz karakterin hikâye yayı (`docs/design/hikaye_yaylari.md`) · ✅ altı rejim tipi ve final tehdidi (`docs/design/rejim_tipi.md`)
 **Faz 4 — Büyük sistemler:** ⬜ devlet bütçesi/kapasitesi · ⬜ patronaj/oligark
 **Faz 5 — Cila ve altyapı:** ⬜ gerçek ses/müzik · ⬜ `main.gd`'yi bölmek (dokunulan yerlerde) · ⬜ artırımlı arayüz güncellemesi · ⬜ yerelleştirme
 

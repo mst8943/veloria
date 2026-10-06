@@ -20,7 +20,7 @@ Dokuz güç merkezi, rastgele kartların konuşan isimleri olmaktan çıkıp oyu
 | Falk, 60 | Mahkeme bağımsızlık bildirisi | Saray dosyasının usulü | Kurumu savunur / yargı saraydan uzaklaşır |
 
 ## Veri ve dallanma
-Her kişi için `yay_<id>_yukselis`, `_sinav`, `_sadakat`, `_kopus` kayıtları kullanılır (36 kayıt, oynanışta üç sahne). İlk kararların tümü ortak bir bayrak koyar; sınav `flag_age` ile gecikir. Sınavın ilk tercihi `_sadakat`, diğer tercihleri ve ertelemesi `_kopus` kartını açar. Son kartlar `needs_flag`/`any_flag` ile ayrışır ve birbirini `blocks_flag` ile kapatır. `actor_min` ya da `min_stat` uygun yerde aynı yaydaki önceki davranışı ve mevcut tutumu destekler; oyuncunun göremediği eşiği tek geçiş kapısı yapmayız. Bir aktör ayrılırsa zincir bitmesi doğaldır; ilk sahneler `alive` ister.
+Her kişi için `yay_<id>_yukselis`, `_sinav`, `_sadakat`, `_kopus` kayıtları kullanılır (36 kayıt, oynanışta üç sahne). İlk kararların tümü ortak bir bayrak koyar; sınav `flag_age` ile gecikir. Sınavın ilk tercihi `_sadakat`, diğer tercihleri ve ertelemesi `_kopus` kartını açar. Son kartlar `flag_age` ile ayrışır. Dallanmanın temel koşulu oyuncunun somut önceki kararıdır; gizli `actor_min` eşiğini tek geçiş kapısı yapmak, oyuncunun sebebini okuyamadığı ölü zincirler yaratır. Sadakat ve borç sonuçları mevcut aktör simülasyonunda etkisini sürdürür. Bir aktör ayrılırsa zincir bitmesi doğaldır; sahneler `alive` ister.
 
 Her kart mevcut `art/events` görseline bağlanır. Yeni çizim beklemek zinciri geciktirmemeli; özel portre ya da sahne gerektiren anlar sonradan `ART_PROMPTS.md` içine alınabilir.
 
@@ -29,3 +29,5 @@ Kararlar çoğunlukla mevcut bedel alanlarını (servet, ekonomi, muhalefet, huz
 
 ## Kabul
 `event_check` 0 uyarıyla geçer; `sim_test` ulaşılabilirliği denetler. İlk yaylar 20–60. haftada başlar, tüm yollar uygun bir kararla oynanabilir, seçenek ve erteleme çıkmaz oluşturmaz. Her mantıksal eklemeden sonra iki ayrı 80 kampanyalık sondajda ölçüt bot Kolay %70–85, Normal %35–55, Zor %15–30 bandında kalır. Sorun varsa bir seferde tek etki grubunu ayarla.
+
+Uygulama ölçümü: iki bağımsız 80 kampanyalık çalıştırmada ölçüt bot Kolay %80, Normal %41, Zor %16. `sim_test` dokuz yayın her iki son dalını da denetler.

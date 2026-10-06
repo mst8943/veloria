@@ -31,7 +31,7 @@ Kaynak: `VELORIA — Oyun Tasarım Özeti.md` (958 satır, 30 bölüm) ve `CLAUD
 | `game/ui/desk_view.gd` | Çalışma Masası (diegetik merkez); `LAYOUT`, `FEEL`, `LAMP_UV`; `desk_lit/desk_shadow.gdshader` |
 | `game/ui/city_view.gd`, `media_view.gd`, `cinema.gd`, `truth_chart.gd` | Başkent haritası, Medya Merkezi, sinematikler, hakikat grafiği |
 | `game/data/actors.json` | 9 aktör: arden(ordu, military) voss(istihbarat) kessler(maliye) halden(medya) lena(basın, insider=false) dorn(kâhya) prens(royal) brandt(muhalefet, insider=false) falk(yargı) |
-| `game/data/events.json` | 101 olay (veri odaklı; ikinci yıl paketi: `docs/design/ikinci_yil.md`) |
+| `game/data/events.json` | 159 kayıt: 101 temel karar, 16 aktör hamlesi, 36 karakter yayı, 6 rejim hesaplaşması |
 | `art/` | Görseller; `ART_PROMPTS.md` üretim promptları + STİL BLOĞU |
 | `tests/` | `sim_test.gd`, `pacing_test.gd`, `cause_probe.gd`, `ui_shots.gd` (`unit_tests.gd` ve `ci-smoke.ps1` Beckett eklentisine ait, dokunma) |
 | `docs/` | `DURUM_VE_YAPILACAKLAR.md` (devir notu — her oturum sonunda güncelle), `OYUNCU_REHBERI.md`, `GELISTIRICI_REHBERI.md`, `ARAYUZ_PLANI.md` |
@@ -42,6 +42,8 @@ Hafta = `mesai_max` mesai (Normal 4, Kolay 5). Eylemler: karar (1), kişi eyleml
 Kayıp: king_strength ≤ 0 (darbe ya da elit koalisyonu), unrest ≥ 100 (ayaklanma), `legal_pressure()` ≥ 100 (yetkisiz bırakılma).
 **Birbirine Düşür** (`docs/design/birbirine_dusur.md`): operasyon sekmesinde, çoklu seçimle tam iki kişi, 2 mesai (`Sim.divide_rivals(ids)`, `rival_wait`, `RIVAL_COOLDOWN`=6). Başarıda ikisi de güç -4 / hırs -3; başarısızlıkta hırs +6, para sadakati -4 ve "dusurme_*" sırrı (şiddet 30); her durumda %15 sızıntı sırrı. `stats["rivalries"]`.
 **Aktör hamleleri** (`docs/design/aktor_hamleleri.md`): `events.json`'da `hamle_*` seçeneksiz olaylar (`news`, `actor`, `tone`; `once: false`). Tetiklenince "HAMLE: ..." haberi ve `Sim.weekly_moves` -> "Geçen haftadan beri". Kural: darbe yapabilen aktörlerin (Arden, Prens) hamleleri güç/hırs eklememeli ya da çok küçük eklemeli; Prens'e küçük güç eklemek Normal'i %40 -> %22 yaptı.
+
+**Faz 3:** `docs/design/hikaye_yaylari.md` (dokuz `yay_*` zinciri; sınav kararı sadakat/kopuş sahnesini seçer) ve `docs/design/rejim_tipi.md` (hafta 60'ta geçmişten tek seferlik rejim; `REJIM_*` bayrağı 82–100 haftasında altı hesaplaşma kartından birini açar). `Sim.SAVE_VERSION = 4`; eski v3 kaydı rejimi yeniden hesaplar, oluşum haberini tekrar yazmaz. Sonuç Özet'i rejim ve tehdidi gösterir.
 **Sokak ve mahkeme krizleri** (`docs/design/kayip_cesitliligi.md`): bastırma emri gizli `street_anger` biriktirir (etkisi azalır, huzursuzluğu besler, haftada %7 söner). Huzursuzluk ≥ `UPRISING_AT` -> "Sokaklar ayakta" kriz kartı (force/concede/appeal); yargı baskısı ≥ `LEGAL_CRISIS_AT` -> yetki krizi (purge/testify/bargain, `legal_relief`). Çözülmezse ya da yol başarısızsa ayaklanma / yetkisiz bırakılma. `Sim.other_crisis`, `_check_crises()`, `active_crisis_label()`; kartlarda `crisis_kind` ve `banner`.
 **Meclis görüşleri** (`docs/design/danisman_gorusleri.md`): `Sim.advice_for(pending_index)` her karta iki danışman görüşü üretir (taraf olan + uzman), tembel ve `pending[i]["advice"]` içinde saklı; ana `rng`'yi tüketmez. Kralın çıkarı tek yerde: `Sim.choice_value(fx)` (botlar da bunu kullanır). Karar verilince `advice_log`'a işlenir; oyun sonunda `record["council"]` = `council_record()`. Ayarlar `ADVICE_*` sabitleri ve `DIFFICULTY[*].advice_noise`.
 **Darbe aşamaları** (`docs/design/darbe_asamalari.md`): `Actor.plot_stage` 0 sakin · 1 huzursuz · 2 komplocu (`ready`) · 3 hazırlıkta; `plot_calm` ile çekilme (ready artık geri dönebilir). Alametler `Actor.signs` ({w,text,weight,real}); oyuncu göstergesi `Sim.suspicion_level(id)` (yalnızca görülen alametlerden). Kriz: `Sim.coup_crisis`, kart `event.crisis = true` (meclis susar), `_resolve_crisis(rally|concede|appeal)`, `crisis_chance()`. Yeni eylem `Sim.summon(id)` (Huzura Çağır). Oyun sonu `record["plot"]`, `record["signs"]`. Zorluk: `crisis_odds`, `leave_gap`.
@@ -79,7 +81,10 @@ Godot (console): `C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4
 - Hafta ortasında oyun bitebilir (kriz). Test/bot döngülerinde `while mesai > 0` güvenli; çünkü `_end` mesaiyi sıfırlar.
 - Commit'te kullanıcının kendi değişikliklerini (`.mcp.json`, `BECKETT_SETUP.md`, `project.godot` token satırı, `CLAUDE.md`) katma. Push yok (origin Beckett'in deposu).
 
-## Ölçülmüş durum (2026-10-06, aktör hamlelerinden sonra, 117 olay, 80 kampanya)
+## Ölçülmüş durum (2026-10-06, Faz 3, 159 olay, 80 kampanya)
+İki bağımsız çalıştırma aynı sonucu verdi: **advice_weighted Kolay %83, Normal %45, Zor %16**. Dokuz yaydan sonra %80/%41/%16 idi. Oligark hesaplaşmasının tek etki grubu ayarlandı; seçilen rejim darbe aktörlerine güç/hırs eklemez.
+
+## Önceki ölçüm (2026-10-06, aktör hamlelerinden sonra, 117 olay, 80 kampanya)
 | Bot | Kolay | Normal | Zor |
 |---|---|---|---|
 | visible | 30% | 21% | 5% |

@@ -64,7 +64,8 @@ Mobilde kişiler ve eylemler ayrı bir **Saray** sekmesindedir.
 6. **Darbe bir sabah gelmez:** Komplo önce **alametler** bırakır (haber şeridinde "ALAMET: …"). Kişi kartında rolün yanında **ŞÜPHELİ** ya da **TEHLİKELİ** yazar; panelde "Tavır" göstergesinin ipucu son alametleri listeler. Alametlerin bir kısmı dedikodudur. Gönlü alınan komplocu geri çekilebilir. Darbe kapına dayandığında son bir **kriz kartı** gelir: sadık birlikleri toplamak, taviz vermek ya da halka seslenmek. Kartın metni muhafızların ve sokağın durumunu anlatır; o hafta karar vermezsen saray düşer. Bir kez taviz verdiysen ikincisine inanılmayabilir.
 7. **Sokak ve mahkeme de seni düşürebilir:** Sokağı bastırmak işe yarar ama öfke biriktirir; her bastırma bir öncekinden az etkili olur ve öfke huzursuzluğu kendi kendine besler (Eylemler önizlemesi bunu uyarır). Meydanlar taşarsa "Sokaklar ayakta" kriz kartı gelir. Kral hakkında biriken dosyalar (rüşvet izleri, yazılı emirler, şantaj, kanlı geceler) ise yargı baskısını büyütür; eşik aşılınca "Mahkeme yetkilerini askıya almayı görüşüyor" kartı gelir. İkisinden önce haber şeridinde SOKAK / MAHKEME uyarısı görürsün. Kartı o hafta çözmezsen ayaklanma ya da yetkisiz bırakılma ile düşersin.
 8. **Güç merkezleri seni beklemez:** Her hafta kişiler kendi alanlarında küçük hamleler yapar: Arden kendi subaylarını atar, Brandt taşrada miting yapar, Kessler bütçede fazla bulur. Bunları haber şeridinde "HAMLE: …" olarak ve Gündem'deki "Geçen haftadan beri" bölümünde portreleriyle görürsün. Kimin ne yaptığını izlemek, kimin büyüdüğünü önceden görmenin en iyi yoludur.
-9. **Eski kararlar geri döner:** Bugün verdiğin bir karar haftalar sonra yeni bir olay olarak karşına çıkabilir.
+9. **Eski kararlar geri döner:** Bugün verdiğin bir karar haftalar sonra yeni bir olay olarak karşına çıkabilir. Dokuz güç merkezinin kendi yükseliş, sınav ve sadakat ya da kopuş hikâyesi vardır; sınavda verdiğin karar son sahneyi belirler.
+10. **Yönetimin bir ad kazanır:** Altmışıncı hafta dolayında saray, bugüne kadarki emirlerini ve ittifaklarını bir rejim olarak anmaya başlar. Bu yorum haberlerde ve "Geçen haftadan beri" bölümünde görünür. Son dönemde bu yönetim tarzına uygun bir güç merkezi hesap sorar; etiket gizli güç değerlerini açıklamaz.
 
 ## Eylemler
 
@@ -103,7 +104,7 @@ Yaptığın gizli işler **Dosyalar** sekmesinde iz olarak birikir. Bir sırrı 
 
 ## Oyun sonu
 
-Saltanat bittiğinde (104 hafta ya da düşüş) sana bir **ünvan** verilir (Demir Taç, Altın Kral, Generallerin Kuklası, Sözünün Eri, Sırların Efendisi…) ve sonuç ekranı sekmelere ayrılır:
+Saltanat bittiğinde (104 hafta ya da düşüş) sana bir **ünvan** verilir. Tahtta kalırsan ünvanın yönetim tarzını taşıyan bir rejim adı olur; düşersen "Devrilen Kral" kalır. Özet, rejimini ve karşılaştığın son tehdidi anlatır. Sonuç ekranı sekmelere ayrılır:
 - **Özet:** Nasıl bittiği, saltanat süresi, söz sicili, yeni başarımlar ve son kararların.
 - **Grafik:** "Gerçekte ne oldu" grafiği, oyun boyunca gizli kalan gidişatı gösterir.
 - **Tarihçiler:** Saray tarihçisi ve sürgündeki tarihçi saltanatını iki farklı biçimde anlatır.

@@ -13,7 +13,7 @@ game/
     press.gd      Gazete ve TV içeriği: gizli durumdan, yayın sahibinin gözüyle üretilir
   data/
     actors.json   9 karakter
-    events.json   Karar olayları (71)
+    events.json   Karar ve aktör olayları (159 kayıt)
     city_map.json (isteğe bağlı) harita bina konumları, yüzde olarak
   ui/
     main.gd       Arayüz: oyun ekranı, gündem, kartlar, eylem paneli, akış
@@ -80,6 +80,8 @@ export_presets.cfg Windows, Linux, Web
 | `art` | Başka bir olayın görselini kullan |
 
 Her seçim otomatik olarak `<olay_id>_<seçenek_no>` bayrağını, erteleme `<olay_id>_ertelendi` bayrağını koyar. Zincir olaylar bunlara `flag_age` ile bağlanır.
+
+Faz 3'te dokuz karakterin üç sahnelik dallanan yayı `yay_*` kayıtlarında yer alır (`docs/design/hikaye_yaylari.md`). Hafta 60'ta `Sim._choose_regime()` oyuncu geçmişi, karar bayrakları ve görünen güç kademelerinden altı tipten birini seçer. `regime` kayıt alanı sürüm 4'tedir; `REJIM_*` bayrağı yalnızca seçilen `rejim_*_hesap` kartını açar. Oyun sonu Özet'i aynı etiketi ve tehdidi kullanır (`docs/design/rejim_tipi.md`).
 
 **Etkiler (`fx`)**: `unrest`, `economy`, `king`, `opp`, `wealth`, `actors` (özellik değişimi; `l_<neden>` sadakat nedenini değiştirir, örn. `l_career`), `fact` (yeni sır), `flag`, `leak` (sırrı kamuya aç), `remove` (aktörü oyundan çıkar).
 

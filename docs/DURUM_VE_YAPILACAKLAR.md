@@ -2,6 +2,13 @@
 
 Son güncelleme: 2026-10-06 (dağıtım 1.1.0). Dal: `veloria`.
 
+## Faz 3 tamamlandı (kaynak ağacı; dağıtım paketleri henüz bu değişiklikleri içermez)
+- Dokuz güç merkezi için yükseliş, sınav ve karara göre sadakat/kopuş sahneleri: 36 yeni `yay_*` olay kaydı. Başlangıçlar 20–60. haftalara dağıldı; mevcut olay görselleri kullanıldı. Tasarım ve gerekçe: `docs/design/hikaye_yaylari.md`.
+- Altı rejim tipi hafta 60'ta geçmişten bir kez seçilir; haber ve "Geçen haftadan beri" satırı, 82–100. hafta arasında tipe özgü altı hesaplaşma kartından biri, final Özet'i ve ünvanı kullanır. Kayıt sürümü 4, v3 göçü eklendi. Tasarım: `docs/design/rejim_tipi.md`. Toplam 159 olay kaydı.
+- İki ayrı 80 kampanyalık sondaj: yalnız yaylardan sonra ölçüt botu Kolay %80 / Normal %41 / Zor %16; rejim ayarından sonra iki bağımsız çalıştırmada %83 / %45 / %16 (hedef bantlarda). Oligark hesaplaşmasının yalnızca etki grubu ayarlandı; Arden/Prens'e güç veya hırs eklenmedi.
+- `TEST: OK` (dokuz zincirin iki dalı ve altı rejim dahil), `EVENTS: OK (159 olay, 0 uyarı)`, `SAVE: OK`; masaüstü/mobil `AUTOPLAY DONE`; `--full` ilk tohum 101 ile 104 haftayı `TAHTTA`, "Oligark Rejimi" bitirdi. Pencereli kanıt: `dist/qa_phase3/5_rejim_son.png`, `dist/qa_phase3_mobile/5_rejim_son.png`; rejim haftası ve özet görüntüleri aynı klasörlerde.
+- Bilinen sınır: rejim hesaplaşması mevcut kriz motoruna siyasi bağlam sağlar; yeni bir otomatik kayıp kuralı değildir. Dağıtım 1.1.0 bu Faz 3 çalışmasından önce derlendi; yeni paket için yeniden export gerekir.
+
 ## Dağıtım 1.1.0 (2026-10-06)
 - `project.godot` sürümü 1.1.0; çözünürlük 1600×900. Windows, Linux ve Web export alındı; `export_presets.cfg` değiştirilmedi. Windows exe pencereli açıldı.
 - Paketler (zip doğrulaması temiz): `dist/release/Veloria-1.1.0-windows.zip` **61.636.964 bayt**, `Veloria-1.1.0-linux.zip` **51.857.188 bayt**, `Veloria-1.1.0-web.zip` **35.567.249 bayt**. Eski 1.0.0 zip'leri arşiv olarak duruyor. Her pakette güncel `OYUNCU_REHBERI.md` var.
@@ -122,7 +129,7 @@ Hedef bantlar (ölçüt bot): Kolay %70–85, Normal %35–55, Zor %15–30. Tar
 - **Faz 0 Güvence:** ✅ boş masa · ✅ görünür bilgi botu · ✅ kayıt sürümü ve göç · ✅ olay doğrulayıcısı · 👤 kendi depo (kullanıcıda)
 - **Faz 1 Okunabilirlik:** ✅ danışman görüşleri · ✅ aşamalı darbe · ✅ rapor değişimi ve "neler değişti" · ✅ eylem önizlemesi
 - **Faz 2 Strateji derinliği:** ✅ kayıp çeşitliliği (kısmi) · ✅ rüşvet (ölçüldü, gerekmedi) · ✅ Birbirine Düşür · ✅ aktör hamleleri
-- **Faz 3 Kampanya ve içerik:** ✅ dönemler · ✅ ikinci yıl olayları · ⬜ karakter hikâye yayları · ⬜ rejim tipi ve buna bağlı final tehdidi
+- **Faz 3 Kampanya ve içerik: ✅** dönemler · ✅ ikinci yıl olayları · ✅ karakter hikâye yayları · ✅ rejim tipi ve buna bağlı final tehdidi
 - **Faz 4 Büyük sistemler:** ⬜ devlet bütçesi/kapasitesi (Tasarım Özeti §24) · ⬜ patronaj/oligark (§17)
 - **Faz 5 Cila ve altyapı:** ⬜ gerçek ses/müzik · ◐ main.gd bölme (kalan: gündem, kişi paneli) · ⬜ artırımlı yeniden çizim · ⬜ yerelleştirme
 
@@ -134,9 +141,9 @@ Hedef bantlar (ölçüt bot): Kolay %70–85, Normal %35–55, Zor %15–30. Tar
 4. 👤 İsteğe bağlı görsel üretimi: yeni olaylar mevcut görsellere yaklaşık eşleştirildi; özel görsel istenenler (muhtıra, çadır kent, maden faciası, kuraklık, soylular meclisi, Saray dosyası): prompt'ları ben hazırlarım (`/asset-spec`).
 
 **Geliştirme (benim)**
-5. **Faz 3:** karakter hikâye yayları (her güç merkezi için 3–4 olaylık bir yay: yükseliş, sınav, ihanet ya da sadakat) ve rejim tipi (§20: güvenlikçi, popülist, patronajcı, oligark, medya kontrollü, istihbarat merkezli; oyuncunun geçmişinden hesaplanır ve final tehdidini belirler).
-6. **Faz 4:** devlet kapasitesi/bütçesi (§24) ve patronaj/oligark (§17). Büyük sistemler: önce `/design-system` ile GDD, ayrı oturum.
-7. **Faz 5:** gerçek ses ve müzik (şimdi sentez; kullanıcı dosya sağlar ya da prompt verilir); `main.gd`'nin kalanı (`docs/TECH_DEBT.md`: gündem -> `agenda_view.gd`, kişi paneli -> `person_panel.gd`); `sim.gd` içeriğini (PHRASES, SIGN_TEXTS, ACHIEVEMENTS) JSON'a; `_refresh` artırımlı çizim; `tr()` ile yerelleştirme.
+5. **Faz 4:** devlet kapasitesi/bütçesi (§24) ve patronaj/oligark (§17). Büyük sistemler: önce `/design-system` ile GDD, ayrı oturum.
+6. **Faz 5:** gerçek ses ve müzik (şimdi sentez; kullanıcı dosya sağlar ya da prompt verilir); `main.gd`'nin kalanı (`docs/TECH_DEBT.md`: gündem -> `agenda_view.gd`, kişi paneli -> `person_panel.gd`); `sim.gd` içeriğini (PHRASES, SIGN_TEXTS, ACHIEVEMENTS) JSON'a; `_refresh` artırımlı çizim; `tr()` ile yerelleştirme.
+7. **Dağıtım:** Faz 3 kodunu içerecek yeni Windows/Linux/Web paketlerini sonraki sürümde export et; 1.1.0 paketleri önceki içeriktir.
 8. **Denge açıkları:** darbe hâlâ baskın kayıp (ölçüt botta darbe dışı ~%4–10): darbe sıklığı düşürülebilir ya da sokak/mahkeme yollarına daha çok sürekli baskı eklenebilir. Alamete tepki vermek botta nötr: oyuncu "gördüm ama işe yaramadı" derse Huzura Çağır güçlendirilmeli. Zor'da `visible_wise` ~%70'lerde (tavan hedef değil, ama izlenmeli).
 9. **Küçük içerik/teknik:** meclis görüşü metinleri danışmana özgü değil (söyleyiş eklenebilir); olay görselleri için `_b` varyantları; sim_test botları rüşvet/şantaj kullanmadığı için istatistik olaylarını "hiç tetiklenmeyen" listesinde gösterir (ulaşılabilirlik kontrolü bunları doğrular); `FULLRUN` testi 104 haftayı ilk tohumda tamamlıyor, diğer tohumlar çoğu zaman düşüyor (bot basit).
 
