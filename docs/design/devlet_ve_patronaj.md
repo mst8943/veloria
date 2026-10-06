@@ -320,13 +320,19 @@ Her adım ayrı commit; refactor ile özellik aynı commit'e girmez. Her adımda
 
 ---
 
-## 13. Açık sorular (kullanıcıya)
+## 13. Kararlar (2026-10-07, kullanıcı: "önerilerine göre")
 
-1. **Tek oligark mı?** MVP: yalnızca Halden. Alternatif: iki küçük iş insanı daha (yeni aktör: arayüz ızgarası, rapor ve hamle sistemi genişler); "oligark yetiştir" fantezisi güçlenir, kapsam büyür.
-2. **Kapasite oyuncuya hiç gösterilsin mi?** Öneri: bantla ve süzgeçle (flattery) göster. Alternatif "en zor mod": hiç gösterme, yalnızca sonuçlardan öğren.
-3. **Çeyrek bütçe kartı** 7 kez geliyor; fazla sık mı? Alternatif: yılda iki kez (26., 52., 78.).
-4. **"DEVLET" 7. sekme mi?** Ya da *Sadık/Liyakatli Ata* KAZAN'a, *İhale Ver* ayrıca. (ux-design'da karar.)
-5. **Halden `moved` olunca "şirketlerine el koy"** seçeneği olsun mu? Güçlü bir tırmanma (holding −40, hukuk kapasitesi −8, düşman yayın kalıcı).
-6. **Sadık/liyakatli atama oyuncuya ipucu versin mi?** Şimdi: yalnızca sonuç metni. Alternatif: başkanın "Tavır" göstergesi anında bir kademe oynar (bilgi sızıntısı, ama tatmin edici).
-7. **Başlangıç kapasitesi**, kampanya başına ±5 oynasın mı? Öneri: evet (tekrar oynanabilirlik); ama kayıt ve ölçümde ek gürültü yaratır.
-8. **Kasa → kişisel servet** dönüşümünün (saray payı) oyuncuya "ahlaki" bir sinyali olsun mu (Dorn/Falk'ın tepkisi)?
+Tasarımın açık soruları şöyle kapatıldı. Uygulayıcı bunları değiştirmez; bir karar uygulanamazsa durur ve bildirir.
+
+| # | Soru | Karar | Gerekçe |
+|---|---|---|---|
+| 1 | Tek oligark mı? | **Yalnızca Halden.** Birden çok iş insanı Faz 4 dışı. | Yeni aktör ızgara, rapor, hamle ve kayıt sistemlerini genişletir; çekirdek döngü Halden ile sınanmadan kapsam büyütülmez |
+| 2 | Kapasite gösterilsin mi? | **Evet: üç kademeli bant, yalana açık** (başkanın iyimserliğiyle şişirilir; Doğrula gürültüsüz bant verir). "Hiç gösterme" kipi yok. | Sezilebilirlik ilkesi: körlük değil belirsizlik |
+| 3 | Çeyrek bütçe kartı sıklığı | **13., 26., 39., 52., 65., 78., 91. haftalar (7 kart).** Tempo etkisi ~0,07 olay/hafta. Etkisi kalıcı duruşla haftalık aktığı için seyrek kart yeterli. | Daha seyrek (yılda 2) duruşu çok uzun tutar ve kararı ağırlaştırmadan sıkıcılaştırır |
+| 4 | Yeni eylemler nerede? | **Masaüstünde yeni 7. sekme "DEVLET"** (İhale Ver, Sadık Ata, Liyakatli Ata). Mobilde sekme etiketleri kısaltılır ya da sekme satırı kaydırılır (1067x600'de sığmalı; ui_shots mobil kanıtı zorunlu). | Eylemler ortak bir temaya ("devlet işleri") ait; KAZAN'ı şişirmez |
+| 5 | Halden `moved` olunca "el koy" | **Faz 4'e dahil değil.** Olası genişleme; `holding_devrildi` olayı yalnızca düşman yayın ve holding erimesiyle yetinir. | İlk sürümde tırmanmayı sınırlı tut |
+| 6 | Atama oyuncuya ipucu versin mi? | **Hayır.** Yalnızca sonuç metni; başkanın Tavır göstergesi anında oynamaz. | Gizli bilgiyi sızdırmaz; ilke 1 |
+| 7 | Başlangıç kapasitesi ±5 | **Evet**, tohumdan türeyen ayrı üreteçle (ana `rng` tüketilmez). | Tekrar oynanabilirlik; eski tohumların akışı korunur |
+| 8 | Saray payının ahlaki sinyali | **Hayır (ilk sürüm).** Yalnızca sır doğar; danışman metni eklenmez. | Kapsamı dar tut |
+
+Faz 4'ün üç parçası ayrı oturumda uygulanır; 4b, 4a'nın, 4c ise 4b'nin commit'lerini gerektirir.
