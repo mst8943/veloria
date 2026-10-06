@@ -41,6 +41,7 @@ if sys.argv[1] == "agenda":
     main_funcs -= moved
     code = prefix(guide + methods, fields | main_funcs)
     code = code.replace('TIPS[kind[0]]', 'host._action_tip(kind[0])')
+    code = code.replace('host._sel = [sid]', 'host._sel.clear()\n\t\t\t\thost._sel.append(sid)')
     for old, new in {
         'var keep_scroll := host._scroll.scroll_vertical': 'var keep_scroll: int = host._scroll.scroll_vertical',
         'var ic_tex := host._art(': 'var ic_tex: Texture2D = host._art(',
@@ -85,6 +86,7 @@ elif sys.argv[1] == "person":
         source += f'\nfunc {name}{sig}:\n\t{ret}{call}\n'
     fields.discard('_card_fade_tex')
     code = prefix(controls + cards, fields | main_funcs)
+    code = code.replace('host._sel = [id]', 'host._sel.clear()\n\t\thost._sel.append(id)')
     # _build_ui body is indented one tab deeper than a method body already.
     ui_code = prefix(ui, fields | main_funcs)
     ui_code = ui_code.replace('var cap := host._section(', 'var cap: Control = host._section(')

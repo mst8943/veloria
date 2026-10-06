@@ -461,7 +461,8 @@ func _on_card_input(ev: InputEvent, id: String) -> void:
 		else:
 			host._sel.append(id)
 	else:
-		host._sel = [id]
+		host._sel.clear()
+		host._sel.append(id)
 	_style_cards()
 	_update_info()
 

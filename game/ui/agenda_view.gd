@@ -498,7 +498,8 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 			var mb := ev as InputEventMouseButton
 			if mb != null and mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT and Sim.actors.has(sid):
 				Sfx.play("click", -4.0)
-				host._sel = [sid]
+				host._sel.clear()
+				host._sel.append(sid)
 				host._style_cards()
 				host._update_info())
 		host._report_box.add_child(panel)
