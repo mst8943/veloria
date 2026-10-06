@@ -46,6 +46,11 @@ var unrest := 30.0
 var economy := 55.0
 var opposition := 20.0
 var private_wealth := 10.0
+var capacity: Dictionary = {"maliye": 55.0, "hukuk": 55.0, "ordu": 55.0, "idare": 55.0}
+var treasury := 55.0
+var budget_stance := 0
+var court_share := false
+var capacity_timeline: Array = []
 var actors: Dictionary = {}  # id -> Actor
 var facts: Dictionary = {}   # id -> Dictionary
 var flags: Dictionary = {}
@@ -100,6 +105,14 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 	economy = 55.0
 	opposition = 20.0
 	private_wealth = 10.0
+	var state_rng := RandomNumberGenerator.new()
+	state_rng.seed = rng.seed ^ 0x5A17E
+	for institution in capacity:
+		capacity[institution] = 55.0 + state_rng.randf_range(-5.0, 5.0)
+	treasury = 55.0
+	budget_stance = 0
+	court_share = false
+	capacity_timeline.clear()
 	actors.clear()
 	facts.clear()
 	flags.clear()
@@ -219,10 +232,11 @@ func save_summary() -> String:
 
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
-## 1: sürüm alanı yokken (2026-10-06 öncesi) · 2: report_prev, week_changes · 3: sokak/mahkeme krizi · 4: rejim tipi
-const SAVE_VERSION := 4
+## 1: sürüm alanı yokken (2026-10-06 öncesi) · 2: report_prev, week_changes · 3: sokak/mahkeme krizi · 4: rejim tipi · 5: devlet durumu
+const SAVE_VERSION := 5
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
-	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime"]
+	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
+	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -238,6 +252,12 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 		d["warned"] = d.get("warned", {})
 	if from < 4:
 		d["regime"] = d.get("regime", "")
+	if from < 5:
+		d["capacity"] = {"maliye": 55.0, "hukuk": 55.0, "ordu": 55.0, "idare": 55.0}
+		d["treasury"] = 55.0
+		d["budget_stance"] = 0
+		d["court_share"] = false
+		d["capacity_timeline"] = []
 	d["version"] = SAVE_VERSION
 	return d
 
@@ -255,7 +275,8 @@ func save_game() -> bool:
 		"stats": stats, "rng": rng.state, "seed": rng.seed, "diff": difficulty, "promises": promises,
 		"timeline": timeline, "report_prev": report_prev, "week_changes": week_changes,
 		"street_anger": street_anger, "legal_relief": legal_relief, "other_crisis": other_crisis, "warned": warned,
-		"regime": regime, "version": SAVE_VERSION}
+		"regime": regime, "capacity": capacity, "treasury": treasury, "budget_stance": budget_stance,
+		"court_share": court_share, "capacity_timeline": capacity_timeline, "version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -294,6 +315,11 @@ func load_game() -> bool:
 	economy = d["economy"]
 	opposition = d["opp"]
 	private_wealth = d["wealth"]
+	capacity = d["capacity"]
+	treasury = float(d["treasury"])
+	budget_stance = int(d["budget_stance"])
+	court_share = bool(d["court_share"])
+	capacity_timeline = d["capacity_timeline"]
 	for id in d["actors"]:
 		if actors.has(id):
 			actors[id].from_save(d["actors"][id])
@@ -1163,6 +1189,8 @@ func _diff_visible(b: Dictionary, n: Dictionary) -> Array:
 func _record_timeline() -> void:
 	timeline.append({"w": week, "king": snappedf(king_strength, 0.1), "unrest": snappedf(unrest, 0.1),
 		"economy": snappedf(economy, 0.1), "opp": snappedf(opposition, 0.1), "plot": snappedf(_ready_power_share() * 100.0, 0.1)})
+	capacity_timeline.append({"w": week, "maliye": capacity["maliye"], "hukuk": capacity["hukuk"],
+		"ordu": capacity["ordu"], "idare": capacity["idare"]})
 
 
 func _world_tick() -> void:
