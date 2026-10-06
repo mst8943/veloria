@@ -51,6 +51,15 @@ var treasury := 55.0
 var budget_stance := 0
 var court_share := false
 var capacity_timeline: Array = []
+const ATTRITION := 0.04
+const STANCE_CAP := 0.23
+const TREASURY_COST := 0.15
+const TREASURY_DIFF := [0.8, 1.0, 1.8]
+const STATE_REPORT_NOISE := 110.0
+const STATE_RALLY_DENOM := [400.0, 400.0, 100.0]
+const STATE_ECON_MALIYE := 0.003
+const STATE_ECON_HUKUK := 0.001
+const STATE_DIFF := [0.7, 1.0, 1.2]
 var actors: Dictionary = {}  # id -> Actor
 var facts: Dictionary = {}   # id -> Dictionary
 var flags: Dictionary = {}
@@ -483,6 +492,7 @@ func order(id: String, task: String, channel: String) -> String:
 		a.ambition += 5.0
 		a.loyalty["ideology"] = maxf(0.0, float(a.loyalty["ideology"]) - 6.0)
 		a.known_red = true
+	fidelity *= 0.85 + float(capacity["idare"]) / 370.0
 	var text := ""
 	match task:
 		"bastir":
@@ -1215,6 +1225,19 @@ func _world_tick() -> void:
 	economy = clampf(economy + rng.randf_range(-2.5, 2.8) - unrest * 0.02 + (55.0 - economy) * 0.03, 0.0, 100.0)
 	king_strength = clampf(king_strength - unrest * 0.012 - opposition * 0.004 + (economy - 50.0) * 0.01 + 0.4, 0.0, 100.0)
 	private_wealth += _diff("income")  # sivil liste ödeneği
+	_tick_state()
+
+
+func _tick_state() -> void:
+	for institution in capacity:
+		capacity[institution] = clampf(float(capacity[institution]) - ATTRITION * STATE_DIFF[difficulty] + budget_stance * STANCE_CAP, 5.0, 100.0)
+	economy = clampf(economy + (float(capacity["maliye"]) - 55.0) * STATE_ECON_MALIYE
+		+ (float(capacity["hukuk"]) - 55.0) * STATE_ECON_HUKUK + budget_stance * 0.08, 0.0, 100.0)
+	treasury = clampf(treasury + (economy - 50.0) * 0.05 + (float(capacity["maliye"]) - 55.0) * 0.03
+		- TREASURY_COST * TREASURY_DIFF[difficulty] - budget_stance * 0.9 - (0.6 if court_share else 0.0), 0.0, 100.0)
+	unrest = clampf(unrest + maxf(0.0, 55.0 - float(capacity["hukuk"])) * 0.01 - budget_stance * 0.15, 0.0, 100.0)
+	if court_share:
+		private_wealth += 0.6
 
 
 func _decay_facts() -> void:
@@ -1584,7 +1607,7 @@ func _crisis_guard() -> float:
 func crisis_chance(action: String) -> float:
 	var share := _ready_power_share()
 	if action == "rally":
-		return clampf((CRISIS_RALLY_BASE + (king_strength - 50.0) / 100.0 + _crisis_guard() * 0.3 + (1.0 - share) * 0.5) * _diff("crisis_odds"), 0.05, 0.85)
+		return clampf((CRISIS_RALLY_BASE + (king_strength - 50.0) / 100.0 + _crisis_guard() * 0.3 + (1.0 - share) * 0.5) * _diff("crisis_odds") + (float(capacity["ordu"]) - 55.0) / STATE_RALLY_DENOM[difficulty], 0.05, 0.85)
 	if action == "appeal":
 		return clampf((CRISIS_APPEAL_BASE - unrest / 100.0 - opposition / 200.0 + (king_strength - 50.0) / 200.0) * _diff("crisis_odds"), 0.05, 0.8)
 	return float(CRISIS_CONCEDE[mini(int(stats.get("concessions", 0)), CRISIS_CONCEDE.size() - 1)])
@@ -1763,7 +1786,7 @@ func other_chance(action: String) -> float:
 	var odds := _diff("crisis_odds")
 	match action:
 		"force":
-			return clampf((0.25 + _army_loyalty() / 200.0 - street_anger / 200.0 + (king_strength - 50.0) / 200.0) * odds, 0.05, 0.85)
+			return clampf((0.25 + _army_loyalty() / 200.0 - street_anger / 200.0 + (king_strength - 50.0) / 200.0) * odds + (float(capacity["ordu"]) - 55.0) / 250.0, 0.05, 0.85)
 		"appeal":
 			return clampf((0.5 + (king_strength - 50.0) / 100.0 - street_anger / 150.0 - opposition / 300.0) * odds, 0.05, 0.8)
 		"purge":
@@ -1951,7 +1974,7 @@ func legal_pressure() -> float:
 		if f.get("public", false):
 			w = maxf(0.4, 1.0 - float(week - int(f.get("public_week", week))) / 50.0)
 		s += float(f["severity"]) * w
-	return clampf(s / 2.4 - legal_relief, 0.0, 100.0)
+	return clampf((s / 2.4 - legal_relief) * (1.0 + (float(capacity["hukuk"]) - 55.0) / 100.0), 0.0, 100.0)
 
 
 func _check_end() -> void:
@@ -2154,7 +2177,7 @@ func echo_level() -> float:
 func _domain_truth(domain: String) -> float:
 	match domain:
 		"economy":
-			return economy
+			return economy * 0.7 + treasury * 0.3
 		"army":
 			return clampf(unrest * 0.5 + maxf(0.0, 55.0 - _army_loyalty()), 0.0, 100.0)
 		"gate":
@@ -2203,7 +2226,7 @@ func _generate_reports() -> void:
 	for a: Actor in actors.values():
 		if a.moved:
 			continue
-		var reported := _domain_reported(a) + rng.randf_range(-6.0, 6.0) * (1.0 - a.honesty * 0.5)
+		var reported := _domain_reported(a) + rng.randf_range(-6.0, 6.0) * (1.0 - a.honesty * 0.5) * (1.0 + (55.0 - float(capacity["idare"])) / STATE_REPORT_NOISE)
 		var rb := _band(a, reported)
 		var tb := _band(a, _domain_truth(a.domain))
 		if rb < tb:
