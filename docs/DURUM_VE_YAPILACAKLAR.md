@@ -1,6 +1,6 @@
 # Veloria — Durum ve Yapılacaklar (yeni oturum için devir notu)
 
-Son güncelleme: 2026-10-05 (beşinci oturum: görsel dil v2). Dal: `veloria`.
+Son güncelleme: 2026-10-06 (beşinci oturumun sonu: görsel dil, Faz 0–2, ikinci yıl, main.gd bölme). Dal: `veloria`.
 
 ## Yeni oturumda ilk iş
 1. Bu dosyayı oku.
@@ -9,21 +9,24 @@ Son güncelleme: 2026-10-05 (beşinci oturum: görsel dil v2). Dal: `veloria`.
 4. Skill'ler: `docs/SKILL_KULLANIMI.md` (hangi iş için hangi skill).
 
 ## Dokunulmayacaklar
-- Çalışma ağacındaki `.mcp.json`, `BECKETT_SETUP.md`, `project.godot` değişiklikleri (Beckett token'ının kaldırılması), `CLAUDE.md` ve `.cursor/` kullanıcınındır. Commit'e katma.
-- Godot `--import` ya da export `.mcp.json` portunu değiştirebiliyor (8772 gibi). İşlemden sonra `"url": "http://127.0.0.1:8770/mcp"` olarak geri al; token satırını geri ekleme.
-- Push YOK: `origin` Beckett'in deposu. Kullanıcıya kendi deposunu açması önerildi, henüz cevap yok. Kodun uzak yedeği yok.
+- Çalışma ağacındaki `.mcp.json`, `.cursor/mcp.json`, `export_presets.cfg` (editörde yapılan değişiklikler), `BECKETT_SETUP.md`, `project.godot` değişiklikleri, `CLAUDE.md` ve `.cursor/` kullanıcınındır. Commit'e katma. `.cursor/mcp.json`'a dokunma izni yok; yalnızca kullanıcıya bildir.
+- Godot `--import` ya da export `.mcp.json` ve `.cursor/mcp.json` portunu değiştirebiliyor (8772 gibi). İşlemden sonra `.mcp.json`'ı `"url": "http://127.0.0.1:8770/mcp"` olarak geri al; token satırını geri ekleme. `.cursor/mcp.json`'ı kullanıcı düzeltir.
+- `project.godot` çözünürlüğü 1600×900 kalmalı (kullanıcı bir kez 1920×1080 yapmıştı, geri aldı; arayüzün tamamı 1600×900 tabanına göre ayarlı).
+- Push YOK: `origin` Beckett'in deposu. Kullanıcıya kendi deposunu açması önerildi, henüz cevap yok. **Kodun uzak yedeği yok.**
+- Denge ölçümü arka planda çalışırken `git stash`/checkout ya da `events.json` düzenlemesi YAPMA: Sim her `new_game`'de olay dosyasını yeniden okur, ölçüm karışır.
+- Düzenleme betiklerini Git Bash heredoc'uyla değil, Write ile `.py` dosyası yazarak çalıştır (Türkçe/özel karakterler bozulabiliyor).
 
 ## Proje
 Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyonu. Kullanıcı: Mesut Canturk. Görselleri kullanıcı ChatGPT/Imagen ile üretiyor, prompt'ları ben veriyorum (`ART_PROMPTS.md`). Görselleri rastgele adla `art/` içine atıyor; yerleştirme süreci `/asset-spec` skill'inde tanımlı.
 
 ## Çalıştırma ve test (ayrıntı: VELORIA.md > Komutlar)
 - Godot console: `C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe`
-- `sim_test.gd` (TEST: OK), `pacing_test.gd`, `-- --autoplay` (`--mobile`, `--full`), `ui_shots.gd` (pencereli ekran görüntüsü; `--only-desk`, `--only-decision`, `--only-world`, `--mobile`, `--guide` = 1. hafta)
-- Denge sondajı: `.claude/skills/balance-check/probe_template.gd` (`-- --n=40 --all-diffs`, `--bots=advice_weighted,visible`)
-- İçe aktarma (editör kapalıyken): `--headless --path . --import`
+- Her değişiklikten sonra: `sim_test.gd` (**TEST: OK**), `event_check.gd` (**EVENTS: OK**, olay eklerken), `save_test.gd` (**SAVE: OK**, kayıt biçimi değişince), `-- --autoplay`, `--autoplay --mobile`, `--autoplay --full` (6 tohuma kadar dener; çıktıyı `tail` ile kısaltma, hepsini oku).
+- Tempo: `pacing_test.gd`. Ekran görüntüsü: `ui_shots.gd` (pencereli; `--only-desk`, `--only-decision`, `--only-world`, `--mobile`, `--guide`). Denge sondajı: `.claude/skills/balance-check/probe_template.gd` (`-- --n=80 --all-diffs --bots=advice_weighted,advice_soft,advice_dirty,advice_scheme,visible_wise`).
+- İçe aktarma (editör kapalıyken): `--headless --path . --import` (sonra `.mcp.json` portunu geri al).
 
 ## Yapılanlar (tamamı commit'li)
-- **Simülasyon:** gizli durum + yalan söyleyen raporlar, ortak bilgi ve eşik kaskadı/darbe, emir kanalları, operasyonlar, şantaj/araştır/kırmızı çizgi, söz defteri, 3 zorluk, 71 olay, 15 başarım, tarihçiler, Hakikat Dosyası + grafik, arşiv, otomatik kayıt.
+- **Simülasyon:** gizli durum + yalan söyleyen raporlar, ortak bilgi ve eşik kaskadı/darbe, emir kanalları, operasyonlar, şantaj/araştır/kırmızı çizgi, söz defteri, 3 zorluk, 117 olay kaydı (101 karar + 16 aktör hamlesi), 15 başarım, tarihçiler, Hakikat Dosyası + grafik, arşiv, otomatik kayıt.
 - **Arayüz turları 1–3:**
   - akış şeridi
   - sekmeli oyun sonu
@@ -72,7 +75,7 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
   - Mekanik değişmedi: `--full` sonucu birebir aynı (tohum 101, aynı ünvan, 54 olay).
   - Yayın durdurma mührü yerleşti (`art/media/yayin_muhru.png`).
 - **Beşinci oturum (devam): Faz 0 güvence**
-  - Kayıt sürümü: `Sim.SAVE_VERSION` (=2), `_migrate_save` (1 -> 2), `SAVE_REQUIRED` denetimi `new_game`'den önce; yeni sürüm/eksik alan/bozuk dosya çökmeden reddedilir, menüde nedeni pencerede gösterilir (`Sim.load_error`). Test: `tests/save_test.gd`.
+  - Kayıt sürümü: `Sim.SAVE_VERSION` (şimdi 3), `_migrate_save` (1 -> 2 -> 3), `SAVE_REQUIRED` denetimi `new_game`'den önce; yeni sürüm/eksik alan/bozuk dosya çökmeden reddedilir, menüde nedeni pencerede gösterilir (`Sim.load_error`). Test: `tests/save_test.gd`.
   - Olay doğrulayıcısı: `tests/event_check.gd` (71 olay temiz). Kendisi de sınandı: bilerek bozulmuş kopyada 8 hatanın 8'i yakalandı (`-- --file=`).
 - **Beşinci oturum (devam): İkinci yıl paketi** — `docs/design/ikinci_yil.md`.
   - 30 yeni olay (71 -> 101): Bedellerin Dönüşü (oyuncu geçmişine bağlı; yeni koşul `min_stat`/`max_stat`), Hesaplaşma (ordu muhtırası, Halden'in meclisi, çadır kent, soylular meclisi, Saray dosyası, gölge kabine), ortam olayları, iki zincir devamı. Hepsi mevcut görsellere bağlı.
@@ -89,54 +92,55 @@ Godot 4.7.2, Türkçe, yatay. Kral Adrian IV, 104 hafta tahtta kalma simülasyon
   - Testler: `event_check` seçeneksiz olayı ayrı denetler; `pacing_test` hamleleri saymaz; sim_test ulaşılabilirlik kontrolü aktör koşullarını da sağlar; `--full` UI testi dikkatli oynar (haftada en çok bir ödeme, krizde uzlaşma).
 - **Beşinci oturum (devam): main.gd bölme** — `docs/TECH_DEBT.md`.
   - 3249 -> 2548 satır: `autoplay.gd`, `end_screen.gd`, `menu.gd`, `modal.gd`. Her adım ayrı commit, davranış aynı (`--full` aynı tohum/sonuç, görüntüler aynı). Desen ve sıradaki adımlar (gündem -> `agenda_view.gd`, kişi paneli -> `person_panel.gd`) belgede.
+- **Beşinci oturum (devam): Birbirine Düşür — Faz 2 tamamlandı** — `docs/design/birbirine_dusur.md`.
+  - Operasyon sekmesinde yeni eylem: çoklu seçimle tam iki kişi, 2 mesai, aynı çift için 6 hafta bekleme (`Sim.divide_rivals`, `rival_wait`). Başarıda ikisi de güç -4 / hırs -3; başarısızlıkta ikisi de kimin yaptığını anlar (hırs +6, para sadakati -4, "dusurme" sırrı); %15 sızıntı sırrı. Önizleme, ipucu, kayıt testi (`_test_rivals`) ve sondaj botu (`advice_scheme`) eklendi.
+  - Ölçüm: ilk sürüm Normal'de ölçüt botu %41 -> %55 yapıyordu; hırs etkisi -5 -> -3'e indirilerek %52'ye çekildi. Kolay'da kullanmak daha az kazandırıyor (başarısız denemelerin sırları mahkeme yolunu besliyor): bedelsiz bir güç değil.
 
-## Ölçülmüş denge (probe_template, 80 kampanya, darbe aşamalarından sonra)
+### Oturum özeti (beşinci oturum, 2026-10-05/06) — neler değişti
+Görünüm: sıcak palet, keskin köşeler, çift çerçeve, IBM Plex Sans gövde fontu, gerçekçi gazeteler (kâğıt/yarım ton) ve tüplü TV. Okunabilirlik: "Geçen haftadan beri", rapor yön okları, eylem önizlemesi, "Bu hafta" defteri. Güvence: kayıt sürümü (3), olay doğrulayıcısı. İçerik: 30 ikinci yıl olayı + 16 aktör hamlesi (toplam 117 kayıt). Denge/derinlik: sokak ve mahkeme krizleri (bastırma borç), Birbirine Düşür; rüşvet ölçüldü (gerek yok). Altyapı: main.gd 3249 -> 2548 satır (4 bileşen ayrıldı), `docs/TECH_DEBT.md`. Test araçları: `event_check.gd`, `save_test.gd`, sondaj botları `advice_soft/dirty/scheme`, `--keep=` yalıtma yöntemi (bkz. aktor_hamleleri.md).
+
+## Ölçülmüş denge (2026-10-06, `probe_template`, 80 kampanya, tüm değişikliklerden sonra: 117 olay, krizler, hamleler, Birbirine Düşür)
 | Bot | Kolay | Normal | Zor |
 |---|---|---|---|
-| visible (görüşsüz, alametsiz) | 56% | 23% | 15% |
-| advice_weighted (**ölçüt**) | 80% | 48% | 27% |
-| advice_naive | 90% | 61% | 32% |
-| visible_wise (tavan) | 100% | 98% | 88% |
+| visible (görüşsüz) | 30% | 21% | 5% |
+| advice_weighted (**ölçüt**) | 80% | 41% | 27% |
+| advice_soft (hiç bastırmaz) | 76% | 41% | 31% |
+| advice_dirty (yazılı emir, şantaj) | 53% | 33% | 22% |
+| advice_scheme (iki şüpheliyi düşürür) | 70% | 52% | 22% |
+| visible_wise (tavan) | 98% | 92% | 72% |
 
-Üç seviye de hedef aralığında. Aynı hafta patlayan darbe %25 → ~%5–10. Kayıpların çoğu hâlâ askerî darbe (artık kriz kartından geçerek); ünvanlar çeşitlendi ama "… Kuklası" ağırlıklı. İkinci yılda olay yoğunluğu ~0,5/hafta.
+Hedef bantlar (ölçüt bot): Kolay %70–85, Normal %35–55, Zor %15–30. Tarz botları kaybın oyun tarzına bağlı olduğunu gösterir (kirli oynayan mahkemeyle, sokağı bastırmayan sokakla yüzleşir). Tempo: 57–96. haftalar her dilimde ~0,7–1,1 olay/hafta (hamleler sayılmaz). Kayıpların çoğu hâlâ askerî darbe; darbe dışı pay ölçüt botta düşük (~%4–10).
 
-## Yol haritası (analiz raporundan; durumlu tam sürüm: `docs/YOL_HARITASI.md`)
-**Faz 0 — Güvence**
-- kendi deposunu açması (kullanıcı)
-- kayıt dosyasına `version` alanı ve göç (`/tech-debt`)
-- `events.json` doğrulayıcı
-- ~~boş masa~~ (yapıldı)
-- ~~görünür bilgi botu~~ (probe_template'te var; `sim_test`'e de eklenebilir)
+## Yol haritası (durumlu tam sürüm: `docs/YOL_HARITASI.md`)
+- **Faz 0 Güvence:** ✅ boş masa · ✅ görünür bilgi botu · ✅ kayıt sürümü ve göç · ✅ olay doğrulayıcısı · 👤 kendi depo (kullanıcıda)
+- **Faz 1 Okunabilirlik:** ✅ danışman görüşleri · ✅ aşamalı darbe · ✅ rapor değişimi ve "neler değişti" · ✅ eylem önizlemesi
+- **Faz 2 Strateji derinliği:** ✅ kayıp çeşitliliği (kısmi) · ✅ rüşvet (ölçüldü, gerekmedi) · ✅ Birbirine Düşür · ✅ aktör hamleleri
+- **Faz 3 Kampanya ve içerik:** ✅ dönemler · ✅ ikinci yıl olayları · ⬜ karakter hikâye yayları · ⬜ rejim tipi ve buna bağlı final tehdidi
+- **Faz 4 Büyük sistemler:** ⬜ devlet bütçesi/kapasitesi (Tasarım Özeti §24) · ⬜ patronaj/oligark (§17)
+- **Faz 5 Cila ve altyapı:** ⬜ gerçek ses/müzik · ◐ main.gd bölme (kalan: gündem, kişi paneli) · ⬜ artırımlı yeniden çizim · ⬜ yerelleştirme
 
-**Faz 1 — Okunabilirlik (en yüksek etki)**
-- ~~seçeneklerde yanılabilir danışman görüşleri~~ (yapıldı)
-- ~~darbeyi aşamalı ve görünür yapmak, kişi kartında "huzursuz/şüpheli" sinyali~~ (yapıldı)
-- raporlarda geçen haftaya göre değişim
-- hafta sonu "neler değişti" özeti
-- eylem önizlemesi (maliyet / risk / iz)
+## KALAN İŞLER (öncelik sırasıyla)
+**Sizin (kullanıcı) yapmanız gerekenler**
+1. 👤 **Kendi deponu aç** (GitHub/GitLab). Kodun uzak yedeği yok; en yüksek risk. Bağlamayı ben yaparım.
+2. 👤 **Tam bir saltanat oyna (Normal)** ve not al: Normal fazla zor/kolay mı? Krizler (ayaklanma, yetki, darbe) adil mi, uyarı yeterli mi? Aktör hamleleri dünyanın yaşadığı hissini veriyor mu? Metinler (özellikle 30 yeni olay, ilk taslak) uyuyor mu? Açık tasarım soruları: `danisman_gorusleri.md` §13, `darbe_asamalari.md` §13.
+3. 👤 `.cursor/mcp.json` portunu 8770'e getir; `export_presets.cfg` değişikliğinin bilinçli olup olmadığını doğrula.
+4. 👤 İsteğe bağlı görsel üretimi: yeni olaylar mevcut görsellere yaklaşık eşleştirildi; özel görsel istenenler (muhtıra, çadır kent, maden faciası, kuraklık, soylular meclisi, Saray dosyası): prompt'ları ben hazırlarım (`/asset-spec`).
 
-**Faz 2 — Strateji derinliği ve denge**
-- kayıp çeşitliliği
-- rüşvete azalan getiri
-- hedefli "birbirine düşür"
-- aktörlerin kendi hamleleri
-- denge hedefleri `/balance-check`'te
-
-**Faz 3 — Kampanya ve içerik:** dönemler, ikinci yıl için 20–30 olay, karakter hikâye yayları, rejim tipi ve buna bağlı final tehdidi.
-
-**Faz 4 — Belgedeki büyük sistemler:** devlet bütçesi/kapasitesi, patronaj/oligark.
-
-**Faz 5 — Cila ve altyapı:** gerçek ses ve müzik, `main.gd`'yi bölmek, artırımlı arayüz güncellemesi, yerelleştirme.
-
-Önerilen sıradaki iş: Faz 1'in kalanları. **Raporlarda geçen haftaya göre değişim** ve **hafta sonu "neler değişti" özeti** küçük ve yüksek etkili. Ardından **eylem önizlemesi** (maliyet / risk / iz). Arayüz işleri için `/team-ui`.
-Oyuncu testinden sonra karar verilecekler: meclis görüşlerinin açık soruları (danisman_gorusleri.md §13) ve darbe aşamalarınınkiler (darbe_asamalari.md §13). Bir de alamete tepki vermenin botta nötr çıkması: oyuncu "gördüm ama işe yaramadı" derse Huzura Çağır güçlendirilmeli.
-Faz 2 adayı: kayıp çeşitliliği (darbe dışı kayıplar hâlâ nadir).
+**Geliştirme (benim)**
+5. **Dağıtım:** `dist/release` hâlâ v1.0.0; bu oturumdaki her şey (yeni shader'lar, font, olaylar, krizler) derlemeye girmedi. Yeniden export al (Windows/Linux/Web), **web'de CRT/kâğıt shader'larını ve yeni fontu dene**, sürümü 1.1.0 yap. Export sonrası `.mcp.json` portunu geri al.
+6. **Faz 3:** karakter hikâye yayları (her güç merkezi için 3–4 olaylık bir yay: yükseliş, sınav, ihanet ya da sadakat) ve rejim tipi (§20: güvenlikçi, popülist, patronajcı, oligark, medya kontrollü, istihbarat merkezli; oyuncunun geçmişinden hesaplanır ve final tehdidini belirler).
+7. **Faz 4:** devlet kapasitesi/bütçesi (§24) ve patronaj/oligark (§17). Büyük sistemler: önce `/design-system` ile GDD, ayrı oturum.
+8. **Faz 5:** gerçek ses ve müzik (şimdi sentez; kullanıcı dosya sağlar ya da prompt verilir); `main.gd`'nin kalanı (`docs/TECH_DEBT.md`: gündem -> `agenda_view.gd`, kişi paneli -> `person_panel.gd`); `sim.gd` içeriğini (PHRASES, SIGN_TEXTS, ACHIEVEMENTS) JSON'a; `_refresh` artırımlı çizim; `tr()` ile yerelleştirme.
+9. **Denge açıkları:** darbe hâlâ baskın kayıp (ölçüt botta darbe dışı ~%4–10): darbe sıklığı düşürülebilir ya da sokak/mahkeme yollarına daha çok sürekli baskı eklenebilir. Alamete tepki vermek botta nötr: oyuncu "gördüm ama işe yaramadı" derse Huzura Çağır güçlendirilmeli. Zor'da `visible_wise` ~%70'lerde (tavan hedef değil, ama izlenmeli).
+10. **Küçük içerik/teknik:** meclis görüşü metinleri danışmana özgü değil (söyleyiş eklenebilir); olay görselleri için `_b` varyantları; sim_test botları rüşvet/şantaj kullanmadığı için istatistik olaylarını "hiç tetiklenmeyen" listesinde gösterir (ulaşılabilirlik kontrolü bunları doğrular); `FULLRUN` testi 104 haftayı ilk tohumda tamamlıyor, diğer tohumlar çoğu zaman düşüyor (bot basit).
 
 ## Bilinen küçük sorunlar
 - Sağ üstteki bildirimler masa ve haritanın, mobilde alamet şeridinin üstünde kalıyor (masaüstünde şerit artık bildirim sütununa girmiyor).
+- Aynı çift için Birbirine Düşür bekleme süresi 6 hafta; bot sondajında yalnızca "tavır" göstergesi olan çiftler seçiliyor, gerçek oyuncu daha zekice seçebilir (ölçüt botun üstünde kalabilir).
+- Yeni olay metinleri ve mühür/TV/gazete görünümü yalnızca masaüstü ve mobil ekran görüntüleriyle denendi; gerçek oyuncu gözüyle görülmedi.
 - Masada soldaki günlük lambadan uzak olduğu için karanlık kalıyor; okunurluk için `desk_lit` `ambient` ya da günlüğün yeri ayarlanabilir.
 - Meclis görüşü metinleri genel kalıplardan kuruluyor (danışmana özgü ses yalnızca kılıf cümlelerinde). İçerik turunda danışman başına söyleyiş eklenebilir.
-- Kullanıcı henüz tam bir saltanat oynamadı; denge, metin ve ses geri bildirimi bekleniyor. Linux build gerçek makinede denenmedi. Android/iOS kasıtlı yapılmadı.
+- Kullanıcı henüz tam bir saltanat oynamadı; denge, metin ve ses geri bildirimi bekleniyor. Web ve Linux build bu oturumdaki değişikliklerle denenmedi. Android/iOS kasıtlı yapılmadı.
 
 ## Kullanıcı tercihleri
 Sormadan ilerle; büyük özellikte önce tasarla (`CLAUDE.md`). Sonuçta kısa Türkçe özet. Commit'e izin var, push yok.

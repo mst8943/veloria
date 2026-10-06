@@ -18,10 +18,11 @@ extends SceneTree
 ##   advice_kessler   visible + Kessler konuşuyorsa ona, yoksa advice_weighted gibi (baskın strateji kontrolü)
 ##   advice_soft      advice_weighted ama sokağı hiç bastırmaz (huzura çağırır/doğrular): sokak yolunu ölçer
 ##   advice_dirty     advice_weighted ama yazılı emir, araştırma ve şantaj kullanır: mahkeme yolunu ölçer
+##   advice_scheme    advice_weighted ama haftada bir, en şüpheli iki kişiyi birbirine düşürür (Birbirine Düşür'ün gücünü ölçer)
 
 var sim: Node
 var rng := RandomNumberGenerator.new()
-const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "visible_wise", "omniscient"]
+const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "visible_wise", "omniscient"]
 var style := ""   # advice_soft / advice_dirty oyun tarzı
 
 
@@ -97,6 +98,8 @@ func _play(bot: String) -> void:
 			_act_omniscient()
 		_:
 			style = "soft" if bot == "advice_soft" else ("dirty" if bot == "advice_dirty" else "")
+			if bot == "advice_scheme":
+				_scheme()
 			_act_visible(bot.begins_with("advice_") and bot != "advice_quiet")
 
 
@@ -113,7 +116,7 @@ func _decide(bot: String) -> void:
 		elif bot in ["visible_wise", "omniscient"]:
 			ci = _wise_choice(ev)
 		elif bot.begins_with("advice_"):
-			ci = _advice_choice("advice_weighted" if bot in ["advice_soft", "advice_dirty"] else bot, sim.advice_for(0), ci)
+			ci = _advice_choice("advice_weighted" if bot in ["advice_soft", "advice_dirty", "advice_scheme"] else bot, sim.advice_for(0), ci)
 		sim.resolve_decision(0, ci)
 
 
@@ -276,3 +279,21 @@ func _act_omniscient() -> void:
 			sim.bribe(target.id)
 		else:
 			sim.cross_check(target.id)
+
+
+## Görünür bilgiyle düşürme: tavır göstergesi en yüksek iki içeriden kişi (en az "Huzursuz"), aynı çift bekleme dışındaysa.
+func _scheme() -> void:
+	if sim.mesai < 3:
+		return
+	var cand: Array = []
+	for a in sim.actors.values():
+		if a.moved or not a.insider:
+			continue
+		if sim.suspicion_level(a.id) >= 1:
+			cand.append(a)
+	cand.sort_custom(func(x, y) -> bool: return sim.suspicion(x.id) > sim.suspicion(y.id))
+	if cand.size() < 2:
+		return
+	var ids := [cand[0].id, cand[1].id]
+	if sim.rival_wait(ids) == 0:
+		sim.divide_rivals(ids)

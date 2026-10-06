@@ -81,6 +81,7 @@ Mobilde kişiler ve eylemler ayrı bir **Saray** sekmesindedir.
 | İma | İnkâr edilebilir emir | Hırslı biri aşırı yorumlar |
 | Soruşturma | Sorunlu isimlere dair ipucu getirir | İpucu yanlış olabilir |
 | Gizli Operasyon | 1–3 kişiyle dikkat dağıt, muhalefeti böl, rakibi zayıflat | 2 mesai; çember büyüdükçe sızıntı riski artar |
+| Birbirine Düşür | Çoklu seçimle tam iki kişiyi seç: kapışırlarsa ikisi de güç ve hırs kaybeder (komplo koordinasyonu zayıflar) | 2 mesai; başarısız olursa ikisi de kimin yaptığını anlar, hırsları artar ve bir sır doğar; aynı çift için 6 hafta bekleme |
 | Söz Ver | Başbakanlık, ihale ya da dokunulmazlık vaat eder | Vadesi gelince ya tutarsın ya bedelini ödersin |
 
 Eylemler, Eylemler panelinde altı sekmede toplanır (KAZAN · SÖZ VER · ÖĞREN · EMRET · BASKI · OPERASYON); bir sekmeye tıklayınca o gruptaki eylemler açılır. Bir eylemin üzerine gelince ne yaptığı, eylemden sonra da sonucu panelin altında görünür. Operasyon için birden fazla kişi seçmek gerekirse OPERASYON sekmesindeki **Çoklu seçim**i aç (ya da Ctrl ile tıkla).

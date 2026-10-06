@@ -586,6 +586,63 @@ func operation(kind: String, ids: Array) -> String:
 	return text
 
 
+## Birbirine düşür (docs/design/birbirine_dusur.md): tam iki kişi, 2 mesai, aynı çift için bekleme.
+const RIVAL_COOLDOWN := 6
+const RIVAL_LEAK := 0.15
+
+
+func rival_wait(ids: Array) -> int:
+	if ids.size() != 2:
+		return 0
+	return maxi(0, int(flags.get(_rival_key(ids), -100)) + RIVAL_COOLDOWN - week)
+
+
+func _rival_key(ids: Array) -> String:
+	var parts: Array = []
+	for i in ids:
+		parts.append(str(i).to_upper())
+	parts.sort()
+	return "DUS_" + "_".join(PackedStringArray(parts))
+
+
+func divide_rivals(ids: Array) -> String:
+	if ids.size() != 2:
+		return "Birbirine düşürmek için tam iki kişi seç (Çoklu seçim)."
+	var a: Actor = actors.get(ids[0])
+	var b: Actor = actors.get(ids[1])
+	if a == null or b == null:
+		return "Seçilen kişilerden biri artık sarayda değil."
+	if a.moved or b.moved:
+		return "Sana karşı harekete geçmiş biriyle oyun oynamak işe yaramaz."
+	var wait := rival_wait(ids)
+	if wait > 0:
+		return "%s ile %s'i yakın zamanda birbirine düşürmeyi denedin; %d hafta bekle." % [a.display_name, b.display_name, wait]
+	if mesai < 2:
+		return "Birbirine düşürmek 2 mesai ister."
+	spend_mesai(2)
+	stats["rivalries"] = int(stats.get("rivalries", 0)) + 1
+	flags[_rival_key(ids)] = week
+	var chance := clampf(0.4 + (a.ambition + b.ambition) / 400.0, 0.25, 0.8)
+	var text := ""
+	if rng.randf() < chance:
+		for x: Actor in [a, b]:
+			x.power = maxf(5.0, x.power - 4.0)
+			x.ambition = maxf(0.0, x.ambition - 3.0)
+			x.fear += 4.0
+		text = "%s ile %s birbirine girdi. İkisi de artık birbirini izliyor; sana ayıracak zamanları az." % [a.display_name, b.display_name]
+	else:
+		for x: Actor in [a, b]:
+			x.ambition += 6.0
+			x.loyalty["money"] = maxf(0.0, float(x.loyalty["money"]) - 4.0)
+		_add_fact("dusurme_%d_%d" % [stats["rivalries"], week], "Kralın danışmanlarını birbirine düşürme girişimi", "king", 30, [a.id, b.id], 1, 0.7)
+		text = "%s ile %s oyunu anladı: iki taraf da bunun arkasında kimin olduğunu biliyor." % [a.display_name, b.display_name]
+	if rng.randf() < RIVAL_LEAK:
+		_add_fact("dusurme_sizinti_%d_%d" % [stats["rivalries"], week], "Saray içi rekabetin kralca kışkırtılması", "king", 20, [a.id, b.id], 1, 0.6)
+		text += " Bir şey sızmış gibi."
+	changed.emit()
+	return text
+
+
 ## Bir olguyu yay (ortak bilgi artar) ya da bastır.
 func leak_fact(fact_id: String) -> String:
 	if not facts.has(fact_id) or not spend_mesai():

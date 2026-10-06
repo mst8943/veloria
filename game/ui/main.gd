@@ -34,6 +34,7 @@ const TIPS := {
 	"op_dikkat": "Dikkat Dağıt (2 mesai)\nSahte bir kriz yaratıp huzursuzluğu azaltır. Çember büyüdükçe başarı da, sızıntı riski de artar.",
 	"op_bol": "Muhalefeti Böl (2 mesai)\nMuhalefet kanatlarını birbirine düşürür.",
 	"op_zayif": "Rakibi Zayıflat (2 mesai)\nEn güçlü kişinin itibarını kırar. Kim yaptığını tahmin eder.",
+	"op_dus": "Birbirine Düşür (2 mesai)\nÇoklu seçimle tam iki kişi seç. Başarırsan ikisi de birbiriyle uğraşırken güç ve hırs kaybeder; başarısız olursan kimin yaptığını anlarlar ve bir sır doğar. Aynı çift için 6 hafta bekle.",
 	"leak": "Sızdır (1 mesai)\nBir dosyayı basına verir; ortak bilgi artar. Herkesin bildiği şey en tehlikelisidir.",
 	"hush": "Bastır (1 mesai)\nDedikoduyu düşürür ama kanıtın kopyaları durur.",
 	"destroy": "Kanıtı Yok Et (1 mesai)\nKopyalar bitince gerçekten silinir; girişim fark edilebilir.",
@@ -448,7 +449,7 @@ func _build_ui() -> void:
 		["ÖĞREN", [["cross", "Doğrula"], ["investigate", "Araştır"], ["o_sor", "Soruşturma"]]],
 		["EMRET", [["o_yaz", "Yazılı Emir"], ["o_soz", "Sözlü Emir"], ["o_ima", "İma"]]],
 		["BASKI", [["blackmail", "Şantaj"], ["dismiss", "Görevden Al"]]],
-		["OPERASYON", [["op_dikkat", "Dikkat Dağıt"], ["op_bol", "Muhalefeti Böl"], ["op_zayif", "Rakibi Zayıflat"]]],
+		["OPERASYON", [["op_dikkat", "Dikkat Dağıt"], ["op_bol", "Muhalefeti Böl"], ["op_zayif", "Rakibi Zayıflat"], ["op_dus", "Birbirine Düşür"]]],
 	]
 	var actions := {
 		"summon": func() -> void: _act(func(id: String) -> String: return Sim.summon(id)),
@@ -465,6 +466,7 @@ func _build_ui() -> void:
 		"op_dikkat": func() -> void: _op("dikkat"),
 		"op_bol": func() -> void: _op("bol"),
 		"op_zayif": func() -> void: _op("zayiflat"),
+		"op_dus": func() -> void: _op("dus"),
 	}
 	for i in Sim.PRIZES.size():
 		var prize: String = Sim.PRIZES[i]
@@ -968,6 +970,7 @@ const ACTION_META := {
 	"op_dikkat": ["Dikkat Dağıt", 2, 0.0, 1, 1],
 	"op_bol": ["Muhalefeti Böl", 2, 0.0, 1, 1],
 	"op_zayif": ["Rakibi Zayıflat", 2, 0.0, 1, 2],
+	"op_dus": ["Birbirine Düşür", 2, 0.0, 1, 1],
 }
 const TRACE_NAMES := ["iz yok", "inkâr edilebilir", "iz bırakır", "kanıt bırakır"]
 const RISK_NAMES := ["düşük", "orta", "yüksek"]
@@ -980,7 +983,15 @@ func _preview(key: String) -> void:
 	var risk := int(m[4])
 	var note := ""
 	var id := _selected_primary()
-	if key.begins_with("op_"):
+	if key == "op_dus":
+		var n := _sel.size()
+		if n != 2:
+			note = "Çoklu seçimi aç ve tam iki kişi seç."
+		elif Sim.rival_wait(_sel) > 0:
+			note = "Bu çifti yakın zamanda denedin; %d hafta bekle." % Sim.rival_wait(_sel)
+		else:
+			note = "İkisi de güçlü ve hırslıysa daha çok kapışırlar. Başarısız olursa kimin yaptığını anlarlar."
+	elif key.begins_with("op_"):
 		var n := _sel.size()
 		risk = clampi(risk + maxi(0, n - 2), 0, 2)
 		note = "Önce çemberi kur: 1–3 kişi seç." if n == 0 else "Çember büyüdükçe başarı da, sızıntı riski de artar."
@@ -1435,7 +1446,7 @@ func _op(kind: String) -> void:
 		if Sim.actors.has(s):
 			ids.append(s)
 	_acted_week = Sim.week
-	_log(Sim.operation(kind, ids))
+	_log(Sim.divide_rivals(ids) if kind == "dus" else Sim.operation(kind, ids))
 
 
 ## İlk haftaların yol göstericisi: haftanın dört adımı ve sıradaki adım.
@@ -2372,7 +2383,7 @@ func _style_cards(hover_id := "") -> void:
 
 
 const PERSON_ACTIONS := ["summon", "promote", "bribe", "p_0", "p_1", "p_2", "cross", "investigate", "o_sor", "o_yaz", "o_soz", "o_ima", "blackmail", "dismiss"]
-const OP_ACTIONS := ["op_dikkat", "op_bol", "op_zayif"]
+const OP_ACTIONS := ["op_dikkat", "op_bol", "op_zayif", "op_dus"]
 
 
 ## Eylem düğmelerinin kullanılabilirliği: kişi seçili mi, mesai/servet yetiyor mu.
@@ -2404,6 +2415,8 @@ func _update_action_states() -> void:
 		var b := _buttons.get(k) as Button
 		if b:
 			b.disabled = busy or _sel.is_empty() or _sel.size() > 3 or Sim.mesai < 2
+			if k == "op_dus":
+				b.disabled = busy or _sel.size() != 2 or Sim.mesai < 2 or Sim.rival_wait(_sel) > 0
 
 
 func _update_info() -> void:

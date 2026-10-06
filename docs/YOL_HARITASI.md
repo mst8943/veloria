@@ -57,10 +57,10 @@ Baştan sona oynanabilir, sağlam bir dikey dilim (erken alfa): 104 hafta, 9 gü
 - ⬜ Yerelleştirme altyapısı yok
 
 **E. Teknik borç ve riskler**
-- ⬜ `main.gd` ~2.800 satır, `sim.gd` ~1.800 satır
+- ◐ `main.gd` 3249 -> ~2550 satır (menü, pencere, oyun sonu, otomatik oynatma ayrıldı; bkz. `docs/TECH_DEBT.md`), `sim.gd` ~2550 satır
 - ⬜ Tam yeniden kurulum (her değişiklikte gündem/kartlar baştan)
-- ⬜ Kayıtta sürüm alanı yok, tek yuva, bekleyen olaylar metinleriyle gömülü
-- ⬜ `events.json` doğrulayıcısı yok
+- ◐ Kayıt sürümü ve göç yapıldı; tek yuva ve bekleyen olayların metinle gömülü olması duruyor
+- ✅ `events.json` doğrulayıcısı (`tests/event_check.gd`)
 - 👤 **Kodun uzak yedeği yok** (origin Beckett'in deposu)
 
 ## 4. Fazlar
@@ -77,7 +77,7 @@ Baştan sona oynanabilir, sağlam bir dikey dilim (erken alfa): 104 hafta, 9 gü
 - ✅ Eylem önizlemesi (maliyet / risk / iz)
 
 **Faz 2 — Strateji derinliği ve denge**
-- ✅ Kayıp çeşitliliği (sokak/mahkeme krizleri, `docs/design/kayip_cesitliligi.md`; ölçüt botta kısmi) · ✅ Rüşvete azalan getiri (ölçüldü: gerek yok; rüşvet botu Kolay %51, Normal %40, Zor %20 — mahkeme yolu bedeli zaten yaratıyor) · ⬜ Hedefli "birbirine düşür" · ✅ Aktörlerin kendi hamleleri (`docs/design/aktor_hamleleri.md`)
+- ✅ Kayıp çeşitliliği (sokak/mahkeme krizleri, `docs/design/kayip_cesitliligi.md`; ölçüt botta kısmi) · ✅ Rüşvete azalan getiri (ölçüldü: gerek yok; rüşvet botu Kolay %51, Normal %40, Zor %20 — mahkeme yolu bedeli zaten yaratıyor) · ✅ Hedefli "birbirine düşür" (`docs/design/birbirine_dusur.md`) · ✅ Aktörlerin kendi hamleleri (`docs/design/aktor_hamleleri.md`)
 - ✅ Denge hedefleri görünür bilgiye dayalı botla (hedefler güncellendi: ölçüt botu Kolay %70–85, Normal ~%45, Zor %15–30)
 
 **Faz 3 — Kampanya ve içerik:** ✅ dönemler (Bedellerin Dönüşü / Hesaplaşma) · ✅ ikinci yıl için 30 olay (`docs/design/ikinci_yil.md`) · ⬜ hikâye yayları · ⬜ rejim tipi ve final tehdidi

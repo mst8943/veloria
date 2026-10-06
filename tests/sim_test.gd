@@ -178,6 +178,8 @@ func _init() -> void:
 		ok = false
 	print("Kayıt/yükleme: ", "OK" if ok else "HATA", " (hafta %d)" % sim.week)
 
+	# Birbirine düşür: tam iki kişi, bekleme, etki yönü.
+	ok = _test_rivals() and ok
 	# Meclis görüşleri: deterministik, kayıtta korunur, ana rng'ye dokunmaz, hazır aktör kötü önerir.
 	ok = _test_advice() and ok
 	# Darbe aşamaları: çekilme, kriz kartı, kriz sonuçları, kayıt, huzura çağırma.
@@ -323,6 +325,36 @@ func _all_plotting() -> void:
 	for a in sim.actors.values():
 		if a.insider:
 			a.ambition = 200.0
+
+
+func _test_rivals() -> bool:
+	var good := true
+	sim.new_game(11, 1)
+	if sim.divide_rivals(["arden"]).find("tam iki") < 0 or sim.divide_rivals(["arden", "voss", "kessler"]).find("tam iki") < 0:
+		push_error("düşürme tam iki kişi istemiyor")
+		good = false
+	var m0: int = sim.mesai
+	var pw0: float = sim.actors["arden"].power + sim.actors["voss"].power
+	var amb0: float = sim.actors["arden"].ambition + sim.actors["voss"].ambition
+	var text: String = sim.divide_rivals(["arden", "voss"])
+	var pw1: float = sim.actors["arden"].power + sim.actors["voss"].power
+	var amb1: float = sim.actors["arden"].ambition + sim.actors["voss"].ambition
+	if sim.mesai != m0 - 2 or int(sim.stats.get("rivalries", 0)) != 1 or (pw1 >= pw0 and amb1 <= amb0):
+		push_error("düşürme sonucu hiçbir etki yaratmadı / 2 mesai harcamadı: " + text)
+		good = false
+	if sim.rival_wait(["voss", "arden"]) <= 0 or sim.divide_rivals(["voss", "arden"]).find("bekle") < 0:
+		push_error("aynı çift için bekleme yok (sıra bağımsız olmalı)")
+		good = false
+	var fresh: int = sim.mesai
+	if sim.divide_rivals(["kessler", "halden"]) == "" or fresh == sim.mesai:
+		push_error("farklı çift engellendi")
+		good = false
+	sim.mesai = 1
+	if sim.divide_rivals(["dorn", "falk"]).find("2 mesai") < 0:
+		push_error("1 mesaiyle düşürme yapıldı")
+		good = false
+	print("Birbirine düşür: ", "OK" if good else "HATA")
+	return good
 
 
 func _test_plot() -> bool:
