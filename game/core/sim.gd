@@ -1275,6 +1275,14 @@ func _eligible(e: Dictionary) -> bool:
 		return false
 	if economy < float(e.get("min_economy", 0)) or economy > float(e.get("max_economy", 100)):
 		return false
+	if treasury < float(e.get("min_treasury", 0)) or treasury > float(e.get("max_treasury", 100)):
+		return false
+	for institution in e.get("min_cap", {}):
+		if not capacity.has(institution) or float(capacity[institution]) < float(e["min_cap"][institution]):
+			return false
+	for institution in e.get("max_cap", {}):
+		if not capacity.has(institution) or float(capacity[institution]) > float(e["max_cap"][institution]):
+			return false
 	if opposition < float(e.get("min_opposition", 0)):
 		return false
 	var mp: Dictionary = e.get("min_power", {})

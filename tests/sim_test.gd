@@ -53,6 +53,11 @@ func _init() -> void:
 				wk2 += sim.record["weeks"]
 			print("[%s / %s] kazanma %d/40, ort. hafta %.1f" % [sim.DIFFICULTY[diff]["name"], policy, w2, wk2 / 40.0])
 	sim.new_game(1, 1)
+	sim.capacity["maliye"] = 55.0
+	sim.treasury = 55.0
+	if not sim._eligible({"id": "test_cap", "min_cap": {"maliye": 55}, "max_treasury": 55}) or sim._eligible({"id": "test_cap", "min_cap": {"maliye": 56}}) or sim._eligible({"id": "test_cap", "max_cap": {"maliye": 54}}) or sim._eligible({"id": "test_cap", "min_treasury": 56}):
+		push_error("kapasite/kasa olay koşulları hatalı")
+		ok = false
 
 	# Araştırma ve şantaj
 	sim.new_game(8, 1)

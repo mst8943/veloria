@@ -11,11 +11,12 @@ const ACTOR := preload("res://game/core/actor.gd")
 
 const TOP_KEYS := ["id", "title", "text", "choices", "ignore", "fx", "art", "crisis", "advisors",
 	"min_week", "max_week", "chance", "once", "cooldown", "min_unrest", "max_unrest", "min_economy", "max_economy",
-	"min_opposition", "min_power", "needs_flag", "blocks_flag", "any_flag", "flag_age", "actor_min", "actor_max",
+	"min_opposition", "min_power", "min_cap", "max_cap", "min_treasury", "max_treasury", "needs_flag", "blocks_flag", "any_flag", "flag_age", "actor_min", "actor_max",
 	"alive", "needs_fact", "needs_ready", "min_stat", "max_stat", "news", "actor", "tone"]
 ## Sim.stats anahtarları (min_stat / max_stat koşulları)
 const STAT_KEYS := ["ops", "bribes", "promotes", "leaks", "dismissals", "written", "hints", "checks",
 	"investigations", "blackmails", "promises", "kept", "broken", "summons", "concessions", "street_concessions", "legal_concessions", "rivalries"]
+const CAP_KEYS := ["maliye", "hukuk", "ordu", "idare"]
 const FX_KEYS := ["king", "unrest", "economy", "opp", "wealth", "actors", "fact", "flag", "leak", "remove",
 	"promise_keep", "promise_break", "promise_delay"]
 const FX_NUMBERS := ["king", "unrest", "economy", "opp", "wealth"]
@@ -149,6 +150,20 @@ func _check_event(e: Dictionary) -> void:
 
 func _check_conditions(e: Dictionary) -> void:
 	var id := str(e.get("id", "?"))
+	for k in ["min_treasury", "max_treasury"]:
+		if e.has(k) and (not (e[k] is int or e[k] is float) or float(e[k]) < 0.0 or float(e[k]) > 100.0):
+			errors.append("%s: %s 0–100 arası sayı olmalı" % [id, k])
+	for k in ["min_cap", "max_cap"]:
+		if not e.has(k):
+			continue
+		if not e[k] is Dictionary:
+			errors.append("%s: %s kurum sözlüğü olmalı" % [id, k])
+			continue
+		for institution in e[k]:
+			if not institution in CAP_KEYS:
+				errors.append("%s: %s bilinmeyen kurum '%s'" % [id, k, institution])
+			if not (e[k][institution] is int or e[k][institution] is float) or float(e[k][institution]) < 5.0 or float(e[k][institution]) > 100.0:
+				errors.append("%s: %s.%s 5–100 arası sayı olmalı" % [id, k, institution])
 	if e.has("min_week") and e.has("max_week") and int(e["min_week"]) > int(e["max_week"]):
 		errors.append("%s: min_week (%d) > max_week (%d), hiç tetiklenmez" % [id, int(e["min_week"]), int(e["max_week"])])
 	if e.has("chance") and (float(e["chance"]) <= 0.0 or float(e["chance"]) > 1.0):
