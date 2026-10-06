@@ -84,6 +84,23 @@ func _init() -> void:
 		if sim.budget_stance != 0 or sim.court_share:
 			push_error("ertelenen bütçe dengeli sayılmadı")
 			ok = false
+	sim.new_game(31, 1)
+	var maliye_before: float = sim.capacity["maliye"]
+	var career_before: float = sim.actors["kessler"].loyalty["career"]
+	sim.appoint("kessler", "loyal")
+	if sim.capacity["maliye"] != maliye_before - 8.0 or sim.actors["kessler"].loyalty["career"] != career_before + 8.0 or sim.appoint_wait("kessler") != 8:
+		push_error("sadık atama hatalı")
+		ok = false
+	var after_appoint: float = sim.capacity["maliye"]
+	sim.appoint("kessler", "merit")
+	if sim.capacity["maliye"] != after_appoint:
+		push_error("atama bekleme süresi uygulanmadı")
+		ok = false
+	sim.week += 8
+	sim.appoint("kessler", "merit")
+	if sim.capacity["maliye"] != after_appoint + 7.0:
+		push_error("liyakatli atama hatalı")
+		ok = false
 
 	# Araştırma ve şantaj
 	sim.new_game(8, 1)

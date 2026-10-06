@@ -15,7 +15,8 @@ const TOP_KEYS := ["id", "title", "text", "choices", "ignore", "fx", "art", "cri
 	"alive", "needs_fact", "needs_ready", "min_stat", "max_stat", "news", "actor", "tone"]
 ## Sim.stats anahtarları (min_stat / max_stat koşulları)
 const STAT_KEYS := ["ops", "bribes", "promotes", "leaks", "dismissals", "written", "hints", "checks",
-	"investigations", "blackmails", "promises", "kept", "broken", "summons", "concessions", "street_concessions", "legal_concessions", "rivalries"]
+	"investigations", "blackmails", "promises", "kept", "broken", "summons", "concessions", "street_concessions", "legal_concessions", "rivalries",
+	"sadik_maliye", "sadik_hukuk", "sadik_ordu", "sadik_idare", "liyakatli_maliye", "liyakatli_hukuk", "liyakatli_ordu", "liyakatli_idare"]
 const CAP_KEYS := ["maliye", "hukuk", "ordu", "idare"]
 const FX_KEYS := ["king", "unrest", "economy", "opp", "wealth", "treasury", "capacity", "budget_stance", "court_share", "actors", "fact", "flag", "leak", "remove",
 	"promise_keep", "promise_break", "promise_delay"]

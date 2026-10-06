@@ -42,6 +42,13 @@ func _run() -> void:
 	main._style_cards()
 	main._update_info()
 	await _shot("1_oyun")
+	main._sel.clear()
+	main._sel.append("kessler")
+	main._style_cards()
+	main._update_info()
+	main._show_act_cat("DEVLET")
+	await _shot("1_devlet")
+	main._show_act_cat("KAZAN")
 	# Karar kartı + meclis görüşü: taraf olan danışmanı olan bir olayı başa koy.
 	for e in sim0._events:
 		if e["id"] == "gida_protestosu":
@@ -54,6 +61,10 @@ func _run() -> void:
 	if saray != null:
 		main._select_tab(saray)
 		await _shot("1_saray")
+		main._show_act_cat("DEVLET")
+		(saray as ScrollContainer).scroll_vertical = int((saray as ScrollContainer).get_v_scroll_bar().max_value)
+		await _shot("1_saray_devlet")
+		main._show_act_cat("KAZAN")
 		main._on_flow("gundem")
 	if "--only-decision" in OS.get_cmdline_user_args():
 		# Darbe krizi kartı + şüphe göstergesi (yalnızca bu kipte: sonraki ekranların durumunu bozmasın).

@@ -57,6 +57,8 @@ const TREASURY_COST := 0.15
 const TREASURY_DIFF := [0.8, 1.0, 1.8]
 const STATE_REPORT_NOISE := 110.0
 const STATE_RALLY_DENOM := [400.0, 400.0, 100.0]
+const INSTITUTION_HEADS := {"kessler": "maliye", "falk": "hukuk", "arden": "ordu", "dorn": "idare"}
+const APPOINT_COOLDOWN := 8
 const STATE_ECON_MALIYE := 0.003
 const STATE_ECON_HUKUK := 0.001
 const STATE_DIFF := [0.7, 1.0, 1.2]
@@ -391,9 +393,43 @@ func promote(id: String) -> String:
 	a.obligation += 10.0
 	a.ambition += 4.0
 	stats["promotes"] += 1
+	if INSTITUTION_HEADS.has(id):
+		capacity[INSTITUTION_HEADS[id]] = maxf(5.0, float(capacity[INSTITUTION_HEADS[id]]) - 1.0)
 	flags[id.to_upper() + "_GUCLENDI"] = week
 	changed.emit()
 	return "%s terfi etti. Sana minnettar, ama artık daha güçlü." % a.display_name
+
+
+func appoint_wait(id: String) -> int:
+	if not INSTITUTION_HEADS.has(id):
+		return -1
+	return maxi(0, APPOINT_COOLDOWN - (week - int(flags.get("KADRO_" + INSTITUTION_HEADS[id], -100))))
+
+
+func appoint(id: String, kind: String) -> String:
+	if not INSTITUTION_HEADS.has(id) or not actors.has(id) or actors[id].moved or not kind in ["loyal", "merit"]:
+		return "Bu kadro kararnamesi çıkarılamaz."
+	if appoint_wait(id) > 0:
+		return "Bu kurumda yeni bir atama için beklemelisin."
+	if not spend_mesai():
+		return _no_mesai()
+	var institution: String = INSTITUTION_HEADS[id]
+	var a: Actor = actors[id]
+	flags["KADRO_" + institution] = week
+	if kind == "loyal":
+		a.loyalty["career"] += 8.0
+		a.ambition -= 3.0
+		a.obligation += 3.0
+		capacity[institution] = maxf(5.0, float(capacity[institution]) - 8.0)
+		stats["sadik_" + institution] = int(stats.get("sadik_" + institution, 0)) + 1
+	else:
+		capacity[institution] = minf(100.0, float(capacity[institution]) + 7.0)
+		a.ambition += 3.0
+		a.loyalty["career"] = maxf(0.0, float(a.loyalty["career"]) - 3.0)
+		a.obligation = maxf(0.0, a.obligation - 2.0)
+		stats["liyakatli_" + institution] = int(stats.get("liyakatli_" + institution, 0)) + 1
+	changed.emit()
+	return "%s için %s kadro kararnamesi imzalandı. Sonucu kurumun işinde göreceksin." % [a.display_name, "sadık" if kind == "loyal" else "liyakatli"]
 
 
 ## Huzura çağır: izsiz, parasız bir yoklama. Kişiyi biraz yatıştırır ve gürültülü bir okuma verir:
@@ -495,6 +531,8 @@ func order(id: String, task: String, channel: String) -> String:
 		a.loyalty["ideology"] = maxf(0.0, float(a.loyalty["ideology"]) - 6.0)
 		a.known_red = true
 	fidelity *= 0.85 + float(capacity["idare"]) / 370.0
+	if channel == "yazili" or task == "bastir":
+		capacity["ordu"] = maxf(5.0, float(capacity["ordu"]) - 0.5)
 	var text := ""
 	match task:
 		"bastir":
@@ -918,6 +956,10 @@ func dismiss(id: String) -> String:
 	if not spend_mesai():
 		return _no_mesai()
 	stats["dismissals"] += 1
+	if INSTITUTION_HEADS.has(id):
+		var institution: String = INSTITUTION_HEADS[id]
+		capacity[institution] = maxf(5.0, float(capacity[institution]) - 12.0)
+		flags["KURUM_%s_BOS" % institution] = week
 	if a.secrets_on_king >= 2 or a.power >= 60.0:
 		a.moved = true
 		a.ready = true
@@ -1244,6 +1286,10 @@ func _world_tick() -> void:
 func _tick_state() -> void:
 	for institution in capacity:
 		capacity[institution] = clampf(float(capacity[institution]) - ATTRITION * STATE_DIFF[difficulty] + budget_stance * STANCE_CAP, 5.0, 100.0)
+		var vacancy := "KURUM_%s_BOS" % institution
+		if flags.has(vacancy) and week - int(flags[vacancy]) >= 6:
+			capacity[institution] = minf(100.0, float(capacity[institution]) + 5.0)
+			flags.erase(vacancy)
 	economy = clampf(economy + (float(capacity["maliye"]) - 55.0) * STATE_ECON_MALIYE
 		+ (float(capacity["hukuk"]) - 55.0) * STATE_ECON_HUKUK + budget_stance * 0.08, 0.0, 100.0)
 	treasury = clampf(treasury + (economy - 50.0) * 0.05 + (float(capacity["maliye"]) - 55.0) * 0.03
