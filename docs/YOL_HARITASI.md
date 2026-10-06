@@ -51,13 +51,13 @@ Baştan sona oynanabilir, sağlam bir dikey dilim (erken alfa): 104 hafta, 9 gü
 **D. Arayüz ve görünüm**
 - ⬜ Masa/harita ile ana ekran iki paralel gezinme yolu
 - ✅ Ana ekran sadeleştirildi: eylemler kategori sekmelerinde (17 düğme → 6 sekme + 3 düğme), raporlar kaynaklarının altında, ilk haftalarda "Bu hafta ne yapmalı?" yol göstericisi (`docs/ux/ana_ekran_sadelestirme.md`)
-- ⬜ Eylem önizlemesi (maliyet / risk / iz)
+- ✅ Eylem önizlemesi (maliyet / risk / iz)
 - ⬜ Ses sentetik
 - 🟡 Bildirimler kompakt ve en çok 2 (mobilde 1); mobilde haber şeridinin üstüne binmesi sürüyor
 - ⬜ Yerelleştirme altyapısı yok
 
 **E. Teknik borç ve riskler**
-- ◐ `main.gd` 3249 -> ~2550 satır (menü, pencere, oyun sonu, otomatik oynatma ayrıldı; bkz. `docs/TECH_DEBT.md`), `sim.gd` ~2550 satır
+- ✅ `main.gd` 3249 -> 1390 satır (gündem ve kişi paneli dahil bileşenler ayrıldı; bkz. `docs/TECH_DEBT.md`), `sim.gd` 2205 satır
 - ⬜ Tam yeniden kurulum (her değişiklikte gündem/kartlar baştan)
 - ◐ Kayıt sürümü ve göç yapıldı; tek yuva ve bekleyen olayların metinle gömülü olması duruyor
 - ✅ `events.json` doğrulayıcısı (`tests/event_check.gd`)
@@ -82,7 +82,7 @@ Baştan sona oynanabilir, sağlam bir dikey dilim (erken alfa): 104 hafta, 9 gü
 
 **Faz 3 — Kampanya ve içerik: ✅** dönemler (Bedellerin Dönüşü / Hesaplaşma) · ✅ ikinci yıl için 30 olay (`docs/design/ikinci_yil.md`) · ✅ dokuz karakterin hikâye yayı (`docs/design/hikaye_yaylari.md`) · ✅ altı rejim tipi ve final tehdidi (`docs/design/rejim_tipi.md`)
 **Faz 4 — Büyük sistemler:** ⬜ devlet bütçesi/kapasitesi · ⬜ patronaj/oligark
-**Faz 5 — Cila ve altyapı:** ⬜ gerçek ses/müzik · ⬜ `main.gd`'yi bölmek (dokunulan yerlerde) · ⬜ artırımlı arayüz güncellemesi · ⬜ yerelleştirme
+**Faz 5 — Cila ve altyapı:** ⬜ gerçek ses/müzik · ✅ `main.gd` bölmesi · ⬜ artırımlı arayüz güncellemesi · ⬜ yerelleştirme
 
 ## 5. Sıradaki
 1. ✅ Arayüz sadeleştirme turu (ilk ekran kalabalık) — `docs/ux/ana_ekran_sadelestirme.md`

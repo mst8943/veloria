@@ -1,6 +1,6 @@
 # Veloria — Proje Başvuru Kartı (tüm skill'ler bunu kullanır)
 
-Güncel dağıtım sürümü: **1.1.0** (Windows, Linux, Web). Sürüm `project.godot` içindeki `application/config/version` değeridir; paketler `dist/release/Veloria-1.1.0-<platform>.zip` adını taşır.
+Güncel dağıtım sürümü: **1.2.0** (Windows, Linux, Web). Sürüm `project.godot` içindeki `application/config/version` değeridir; paketler `dist/release/Veloria-1.2.0-<platform>.zip` adını taşır.
 
 Bu dosya, skill'lerin projeyi her seferinde baştan keşfetmemesi için tek doğruluk kaynağıdır.
 Bir şey değiştiyse (dosya taşındı, komut değişti) önce burayı güncelle.
@@ -26,8 +26,9 @@ Kaynak: `VELORIA — Oyun Tasarım Özeti.md` (958 satır, 30 bölüm) ve `CLAUD
 | `game/core/actor.gd` | Aktör verisi: power, ambition, fear, honesty, threshold, loyalty{money,fear,ideology,career,complicity}, obligation, perceived_king, ready, moved, secrets_on_king, known_weak/red. `rebellion_drive()` |
 | `game/core/press.gd` | Gazeteler/TV: gizli durumdan, yayın sahibinin süslemesiyle üretilir |
 | `game/core/sfx.gd` (autoload `Sfx`) | Ses (şu an sentez), müzik, ayarlar (`user://veloria_settings.cfg`) |
-| `game/ui/main.gd` | Ana ekran: kurulum, gündem, kartlar, eylem paneli, akış; ~2550 satır (bölme süreci: `docs/TECH_DEBT.md`) |
-| `game/ui/menu.gd`, `modal.gd`, `end_screen.gd`, `autoplay.gd` | main.gd'den ayrılan bileşenler (`_init(main)`, `host`); main.gd onları `_menu`, `_modal`, `_end_overlay` olarak tutar |
+| `game/ui/main.gd` | Ana ekran kurulum ve akış yönlendirmesi; 1390 satır (`docs/TECH_DEBT.md`) |
+| `game/ui/agenda_view.gd`, `person_panel.gd` | Gündem ve dosyalar; kişi kartları ve eylem paneli (`_init(main)`, `host`); dış erişim alanları main.gd'de kalır |
+| `game/ui/menu.gd`, `modal.gd`, `end_screen.gd`, `autoplay.gd` | Diğer ayrılmış bileşenler (`_init(main)`, `host`) |
 | `game/ui/ui_kit.gd` | Tema, palet, `box()`, `band_style()`, `ornament()`, `divider()`, `caps()`, `serif()`, `tr_upper()`, animasyon yardımcıları |
 | `game/ui/desk_view.gd` | Çalışma Masası (diegetik merkez); `LAYOUT`, `FEEL`, `LAMP_UV`; `desk_lit/desk_shadow.gdshader` |
 | `game/ui/city_view.gd`, `media_view.gd`, `cinema.gd`, `truth_chart.gd` | Başkent haritası, Medya Merkezi, sinematikler, hakikat grafiği |
@@ -62,6 +63,7 @@ Godot (console): `C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4
 - Olay verisi doğrulayıcısı: `"$G" --headless --path . --script res://tests/event_check.gd` → `EVENTS: OK` (bilinmeyen anahtar/aktör/özellik, çözülemeyen bayrak, tutarsız hafta; **olay ekleyince/değiştirince çalıştır**). Başka dosya: `-- --file=<yol>`
 - İçerik doğrulayıcısı: `"$G" --headless --path . --script res://tests/content_check.gd` → `CONTENT: OK` (beş JSON, eksik/boş metin, bilinmeyen aktör, bozuk dosya). Metin ekleyince çalıştır. Eksik/bozuk içerik kampanyayı durdurur ve Türkçe hatayı menüde gösterir.
 - Kayıt sürümü/göç: `"$G" --headless --path . --script res://tests/save_test.gd` → `SAVE: OK`
+- UI giriş testi (pencereli): `"$G" --path . --script res://tests/ui_input_test.gd` → `UI INPUT: OK` (kişi kartı ve rapor tıklaması)
 - Tempo: `"$G" --headless --path . --script res://tests/pacing_test.gd`
 - Arayüz otomatik oynatma: `"$G" --headless --path . -- --autoplay` (`--mobile`, `--full` = Kolay'da 104 hafta)
 - Ekran görüntüsü (pencereli, headless çizmez): `"$G" --path . --script res://tests/ui_shots.gd -- --out=<klasör> [--mobile] [--only-desk|--only-world]` → PNG'leri Read ile incele
@@ -75,7 +77,7 @@ Godot (console): `C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4
 - Olay motoru (`_apply_effects`, `_bump`) bilinmeyen anahtarı ve yanlış yazılmış aktör özelliğini hata vermeden yok sayar: `event_check.gd` bunun için var.
 - Web'de sistem font yedeği yok: ◆ ⏳ → ✓ ✗ gibi glifler kutu çıkar. Şekil gerekiyorsa çiz (Panel/draw_*).
 - Görünmez (modulate.a=0) Control'ler tıklama yutar; Beckett `ui_snapshot` → `occluded_by` ile tara.
-- Yapay `push_input` tıklama testi çalışmıyor; düğmeyi `pressed.emit()` ile tetikle.
+- `tests/ui_input_test.gd` pencereli `Viewport.push_input` ile kart/rapor tıklamasını sınar; otomatik oynatma düğmeleri `pressed.emit()` ile tetikler.
 - Testler oyuncu kaydına/arşive dokunmamalı (`save_path`, `record_chronicle`, `autosave`).
 - `veloria/dev_*` proje ayarları project.godot'ta **false/boş** kalmalı; deneyde yalnızca bellekte `ProjectSettings.set_setting` kullan.
 - Çok satırlı GDScript lambdası bir blok içinde bitip ardından deyim gelirse ayrıştırma hatası verir; ayrı fonksiyona taşı.

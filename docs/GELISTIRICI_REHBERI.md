@@ -16,7 +16,9 @@ game/
     events.json   Karar ve aktör olayları (159 kayıt)
     city_map.json (isteğe bağlı) harita bina konumları, yüzde olarak
   ui/
-    main.gd       Arayüz: oyun ekranı, gündem, kartlar, eylem paneli, akış
+    main.gd       Ana ekran kurulumu, akış ve bileşen yönlendirmesi
+    agenda_view.gd Gündem, değişim defteri, raporlar, Meclis ve dosyalar
+    person_panel.gd Kişi kartları, eylem paneli ve önizleme
     menu.gd       Ana menü (sayfalar, ayarlar, Hakkında/Nasıl Oynanır metinleri)
     modal.gd      Bilgi/onay penceresi
     end_screen.gd Oyun sonu ekranı (sekmeler, Hakikat Dosyası)
@@ -38,6 +40,8 @@ art/
 tests/sim_test.gd Headless simülasyon, denge ve sistem testleri
 tests/event_check.gd  events.json doğrulayıcısı (şema, aktör/özellik adları, bayrak başvuruları)
 tests/save_test.gd    Kayıt sürümü ve göç testi
+tests/content_check.gd İçerik JSON şeması
+tests/ui_input_test.gd Kart ve rapor tıklamasından kişi seçimi (pencereli)
 tests/ui_shots.gd Arayüz ekran görüntüleri (oyun, menü sayfaları, oyun sonu sekmeleri)
 ART_PROMPTS.md    Tüm görsellerin üretim prompt'ları
 export_presets.cfg Windows, Linux, Web
@@ -49,6 +53,7 @@ export_presets.cfg Windows, Linux, Web
 - Her hafta aktörler kendi hamlelerini yapar, sırlar yayılır, olaylar tetiklenir, **eşik kaskadı** hesaplanır: her aktörün "kaç kişi kıpırdarsa ben de kıpırdarım" eşiği vardır; kamuya açık zayıflıklar bu eşikleri düşürür.
 - Raporlar, gerçeğin aktörün korkusu ve dürüstlüğüyle süslenmiş hâlidir. Süslenen her rapor **Hakikat Dosyası**'na yazılır.
 - Arayüz Sim'in sinyallerini (`changed`, `week_advanced`, `game_ended`) dinler.
+- `main.gd` 1390 satırdır; `agenda_view.gd` ve `person_panel.gd` ana ekranı `_init(main)` ile `host` olarak alır. Dışarıdan kullanılan `_sel`, `_buttons`, `_cards` alanları ve yöntem adları `main.gd` üzerinde kalır (`docs/TECH_DEBT.md`).
 
 ## Yeni olay eklemek
 
@@ -181,6 +186,8 @@ Not: Beckett eklentisi headless export sırasında `.mcp.json` portunu değişti
 Presetler `dist/windows/Veloria.exe`, `dist/linux/Veloria.x86_64` ve `dist/web/index.html` üretir. Sürüm `project.godot` içindeki `application/config/version` alanından gelir. Her platform klasörünün içeriğini kökte olacak şekilde `dist/release/Veloria-<sürüm>-<platform>.zip` içine paketle; güncel `docs/OYUNCU_REHBERI.md` dosyasını `OYUNCU_REHBERI.md` adıyla ekle.
 
 Web sürümünü yerelde denemek için: `python -m http.server 8060 --directory dist/web`. Menü, üç medya sekmesi, hafta geçişi ve oyun sonunu tarayıcıda kontrol et.
+
+`tests/ui_input_test.gd` pencereli çalışır; kişi kartı ve rapor tıklamalarını gerçek GUI giriş olayıyla sınar. `ui_shots.gd --regime` rejim haberi, “Geçen haftadan beri” satırı ve rejimli finali görüntüler.
 
 ## Lisanslar
 

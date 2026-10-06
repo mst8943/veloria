@@ -1,19 +1,27 @@
 # Veloria — Durum ve Yapılacaklar (yeni oturum için devir notu)
 
-Son güncelleme: 2026-10-06 (dağıtım 1.1.0). Dal: `veloria`.
+Son güncelleme: 2026-10-07 (dağıtım 1.2.0). Dal: `veloria`.
 
-## İçerik verisi ayrıldı (kaynak ağacı; dağıtım 1.1.0 bunu henüz içermez)
+## Dağıtım 1.2.0 ve arayüz bölmesi
+- `main.gd` 2568 → 1390 satır; gündem/dosyalar/raporlar `agenda_view.gd`, kişi kartları/eylem paneli `person_panel.gd` içinde. İki refactor ayrı committe; dış erişim adları korundu. Web denetiminde bulunan türlenmiş `_sel` ataması ayrıca düzeltildi; pencereli `UI INPUT: OK` kart ve rapor tıklamasını doğrular. `docs/TECH_DEBT.md` güncellendi.
+- Sürüm `project.godot` içinde **1.2.0**, çözünürlük **1600×900**. Windows, Linux ve Web export yeniden alındı; `export_presets.cfg` değiştirilmedi. `dist/.gdignore` test PNG'lerinin export kaynaklarına girmesini önler. 1.1.0 zip'leri korunuyor; yeni paketlerin zip bütünlük denetimi temiz. `dist/release/Veloria-1.2.0-<platform>.zip` boyutları: Windows **60.341.270 bayt**, Linux **50.561.093 bayt**, Web **34.271.010 bayt**.
+- Testler: `TEST: OK`, `EVENTS: OK (159 olay, 0 uyarı)`, `SAVE: OK`, `CONTENT: OK (5 dosya, 5 bozuk örnek)`, `UI INPUT: OK`; masaüstü/mobil `AUTOPLAY DONE`; tohum 101 `FULLRUN ... hafta=104 ... TAHTTA ... Oligark Rejimi ... olay=115` (bölmeden öncekiyle aynı). Son sondajda ölçüt `advice_weighted`, 80 kampanya: Kolay **67/80 (%83)**, Normal **36/80 (%45)**, Zor **13/80 (%16)**; önceki sonuçlarla birebir aynı ve hedef bantlarda. Diğer botların çıktısı `dist/qa_120_probe.log`.
+- Pencereli karşılaştırma: `dist/qa_120_before*`, `qa_120_agenda_shots*`, `qa_120_person_shots*` içindeki masaüstü/mobil `1_oyun`, `1_karar`, `5_son_*`, mobil `1_saray` açıldı; yerleşim ve davranış korunuyor (rastgele başlayan olay metinleri/görseller değişebilir). Rejim kanıtı `dist/qa_1_2_0_regime/5_rejim_ozet.png` (haber satırı), `5_rejim_son.png` (Oligark Rejimi finali).
+- Web paketi yerel HTTP ile Chromium WebGL 2 üzerinde açıldı: `dist/qa_1_2_0/web_loaded.png`, `web_action_preview_clear.png`, `web_media_news.png`, `web_media_serbest.png`, `web_media_tv.png`, `web_week_2.png`, `web_end_screen.png`. Menüde 1.2.0, Gündem, kişi seçimi, eylem önizlemesi, üç medya sekmesi, hafta geçişi ve oyun sonu görüldü. Kâğıt ve yarım ton, CRT camı, IBM Plex Sans/Türkçe karakterler doğru; tofu veya siyah TV yok. Windows exe pencereli açıldı (`Veloria`, yanıt veriyor).
+- Doğrulanamayanlar/sınırlar: Linux paketi bu Windows makinede çalıştırılmadı; ses işitsel olarak denetlenmedi. Chromium ilk etkileşim öncesi Web Audio uyarısı ve hızlı art arda hafta geçişinde bir kez `Failed to save IDB file system: undefined` hatası verdi; normal kayıt akışında tekrarı araştırılmalı. Rejim haberi ve rejimli final Web tarayıcısında 60 hafta oynanarak ayrıca açılmadı; aynı kaynak kodun pencereli `--regime` görüntüleriyle doğrulandı.
+
+## İçerik verisi ayrıldı (1.2.0 paketlerinde)
 - Raporlar, alametler, Meclis söyleyişleri/uzman eşleşmeleri, başarımlar, tarihçi anlatıları, rejim/arayüz etiketleri `game/data/content_*.json` içindedir. Meclis davranışı `game/core/advice.gd`, metin kurma `narrative.gd`, yükleme ve şema denetimi `content_data.gd` içinde; `sim.gd` **2607 → 2205 satır** (402 satır azalma). Tasarım: `docs/design/icerik_verisi.md`.
 - Başlangıç ve sonuç çıktıları birebir aynı: `sim_test` 54 satır, `--autoplay --full` 3 satır (tohum 101: 104 hafta, Oligark Rejimi, 115 olay), 80 kampanyalık `advice_weighted` 8 satır (Kolay **67/80 = %83**, Normal **36/80 = %45**, Zor **13/80 = %16**). Kayıtlar `dist/content_before_*.log` ve `dist/content_final_*.log`.
 - `CONTENT: OK (5 dosya, 5 bozuk örnek)`, `TEST: OK`, `EVENTS: OK (159 olay, 0 uyarı)`, `SAVE: OK`; masaüstü/mobil `AUTOPLAY DONE`. Pencereli görüntüler `dist/qa_content/1_oyun.png`, `1_karar.png`, `1_kriz.png` ve mobil eşleri. Eksik/bozuk içerikte Türkçe dosya yolu ve neden menüde gösterilir, kampanya başlatılmaz. `export_presets.cfg` değiştirilmedi.
-- Bilinen sınır: JSON'a taşınan metinler serbestçe düzenlenebilir; anlatıların hangi koşulda seçildiği ve Meclis'in sayısal hesapları betiklerde kalır. Yeni kaynak henüz 1.1.0 dağıtım paketlerinde yoktur.
+- Bilinen sınır: JSON'a taşınan metinler serbestçe düzenlenebilir; anlatıların hangi koşulda seçildiği ve Meclis'in sayısal hesapları betiklerde kalır. Bu kaynak 1.2.0 paketlerinde bulunur.
 
-## Faz 3 tamamlandı (kaynak ağacı; dağıtım paketleri henüz bu değişiklikleri içermez)
+## Faz 3 tamamlandı (1.2.0 paketlerinde)
 - Dokuz güç merkezi için yükseliş, sınav ve karara göre sadakat/kopuş sahneleri: 36 yeni `yay_*` olay kaydı. Başlangıçlar 20–60. haftalara dağıldı; mevcut olay görselleri kullanıldı. Tasarım ve gerekçe: `docs/design/hikaye_yaylari.md`.
 - Altı rejim tipi hafta 60'ta geçmişten bir kez seçilir; haber ve "Geçen haftadan beri" satırı, 82–100. hafta arasında tipe özgü altı hesaplaşma kartından biri, final Özet'i ve ünvanı kullanır. Kayıt sürümü 4, v3 göçü eklendi. Tasarım: `docs/design/rejim_tipi.md`. Toplam 159 olay kaydı.
 - İki ayrı 80 kampanyalık sondaj: yalnız yaylardan sonra ölçüt botu Kolay %80 / Normal %41 / Zor %16; rejim ayarından sonra iki bağımsız çalıştırmada %83 / %45 / %16 (hedef bantlarda). Oligark hesaplaşmasının yalnızca etki grubu ayarlandı; Arden/Prens'e güç veya hırs eklenmedi.
 - `TEST: OK` (dokuz zincirin iki dalı ve altı rejim dahil), `EVENTS: OK (159 olay, 0 uyarı)`, `SAVE: OK`; masaüstü/mobil `AUTOPLAY DONE`; `--full` ilk tohum 101 ile 104 haftayı `TAHTTA`, "Oligark Rejimi" bitirdi. Pencereli kanıt: `dist/qa_phase3/5_rejim_son.png`, `dist/qa_phase3_mobile/5_rejim_son.png`; rejim haftası ve özet görüntüleri aynı klasörlerde.
-- Bilinen sınır: rejim hesaplaşması mevcut kriz motoruna siyasi bağlam sağlar; yeni bir otomatik kayıp kuralı değildir. Dağıtım 1.1.0 bu Faz 3 çalışmasından önce derlendi; yeni paket için yeniden export gerekir.
+- Bilinen sınır: rejim hesaplaşması mevcut kriz motoruna siyasi bağlam sağlar; yeni bir otomatik kayıp kuralı değildir. 1.1.0 eski içerik olarak arşivde durur; 1.2.0 Faz 3'ü içerir.
 
 ## Dağıtım 1.1.0 (2026-10-06)
 - `project.godot` sürümü 1.1.0; çözünürlük 1600×900. Windows, Linux ve Web export alındı; `export_presets.cfg` değiştirilmedi. Windows exe pencereli açıldı.
@@ -137,7 +145,7 @@ Hedef bantlar (ölçüt bot): Kolay %70–85, Normal %35–55, Zor %15–30. Tar
 - **Faz 2 Strateji derinliği:** ✅ kayıp çeşitliliği (kısmi) · ✅ rüşvet (ölçüldü, gerekmedi) · ✅ Birbirine Düşür · ✅ aktör hamleleri
 - **Faz 3 Kampanya ve içerik: ✅** dönemler · ✅ ikinci yıl olayları · ✅ karakter hikâye yayları · ✅ rejim tipi ve buna bağlı final tehdidi
 - **Faz 4 Büyük sistemler:** ⬜ devlet bütçesi/kapasitesi (Tasarım Özeti §24) · ⬜ patronaj/oligark (§17)
-- **Faz 5 Cila ve altyapı:** ⬜ gerçek ses/müzik · ◐ main.gd bölme (kalan: gündem, kişi paneli) · ⬜ artırımlı yeniden çizim · ⬜ yerelleştirme
+- **Faz 5 Cila ve altyapı:** ⬜ gerçek ses/müzik · ✅ main.gd bölme · ⬜ artırımlı yeniden çizim · ⬜ yerelleştirme
 
 ## KALAN İŞLER (öncelik sırasıyla)
 **Sizin (kullanıcı) yapmanız gerekenler**
@@ -148,8 +156,8 @@ Hedef bantlar (ölçüt bot): Kolay %70–85, Normal %35–55, Zor %15–30. Tar
 
 **Geliştirme (benim)**
 5. **Faz 4:** devlet kapasitesi/bütçesi (§24) ve patronaj/oligark (§17). Büyük sistemler: önce `/design-system` ile GDD, ayrı oturum.
-6. **Faz 5:** gerçek ses ve müzik (şimdi sentez; kullanıcı dosya sağlar ya da prompt verilir); `main.gd`'nin kalanı (`docs/TECH_DEBT.md`: gündem -> `agenda_view.gd`, kişi paneli -> `person_panel.gd`); `_refresh` artırımlı çizim; `tr()` ile yerelleştirme. İçerik JSON'a ayrıldı.
-7. **Dağıtım:** Faz 3 kodunu içerecek yeni Windows/Linux/Web paketlerini sonraki sürümde export et; 1.1.0 paketleri önceki içeriktir.
+6. **Faz 5:** gerçek ses ve müzik (şimdi sentez; kullanıcı dosya sağlar ya da prompt verilir); `_refresh` artırımlı çizim; `tr()` ile yerelleştirme. İçerik JSON'a ve arayüz bileşenleri ayrı betiklere ayrıldı.
+7. **Dağıtım:** 1.2.0 Windows/Linux/Web paketleri hazır. Linux üzerinde çalışma ve Web ses/kayıt akışının insan eliyle doğrulanması kaldı.
 8. **Denge açıkları:** darbe hâlâ baskın kayıp (ölçüt botta darbe dışı ~%4–10): darbe sıklığı düşürülebilir ya da sokak/mahkeme yollarına daha çok sürekli baskı eklenebilir. Alamete tepki vermek botta nötr: oyuncu "gördüm ama işe yaramadı" derse Huzura Çağır güçlendirilmeli. Zor'da `visible_wise` ~%70'lerde (tavan hedef değil, ama izlenmeli).
 9. **Küçük içerik/teknik:** meclis görüşü metinleri danışmana özgü değil (söyleyiş eklenebilir); olay görselleri için `_b` varyantları; sim_test botları rüşvet/şantaj kullanmadığı için istatistik olaylarını "hiç tetiklenmeyen" listesinde gösterir (ulaşılabilirlik kontrolü bunları doğrular); `FULLRUN` testi 104 haftayı ilk tohumda tamamlıyor, diğer tohumlar çoğu zaman düşüyor (bot basit).
 

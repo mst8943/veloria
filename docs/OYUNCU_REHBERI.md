@@ -6,11 +6,13 @@ Veloria'da modern kurumlara sahip hayali bir krallığın yeni kralısın: **Adr
 
 ## Kurulum
 
+Bu rehber **1.2.0** Windows, Linux ve Web paketleriyle birlikte gelir.
+
 | Platform | Nasıl açılır |
 |---|---|
 | Windows | `Veloria.exe` dosyasını çift tıkla. Kurulum gerekmez. |
 | Linux | `Veloria.x86_64` dosyasına çalıştırma izni ver (`chmod +x`) ve çalıştır. |
-| Web | `web` klasörünü bir web sunucusunda yayınla ve `index.html`'i aç. Telefon tarayıcısında otomatik olarak mobil düzene geçer. |
+| Web | Web zip'inin içeriğini bir web sunucusunda yayınla ve `index.html`'i aç. Telefon tarayıcısında otomatik olarak mobil düzene geçer. |
 
 ## Çalışma Masası
 
