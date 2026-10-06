@@ -23,9 +23,17 @@ func _init() -> void:
 	var d: Dictionary = str_to_var(f.get_as_text())
 	f.close()
 	_check("sürüm yazıldı", int(d.get("version", 0)) == sim.SAVE_VERSION)
+	# Sürüm 3: rejim henüz kayıt şemasında yoktu.
+	var v3 := d.duplicate(true)
+	v3["version"] = 3
+	v3["week"] = 62
+	v3.erase("regime")
+	_write(sim.save_path, v3)
+	_check("v3 rejim göçü", sim.load_game() and sim.regime != "" and sim.week == 62)
+	_check("göçte haber tekrarı yok", sim.weekly_news.filter(func(x: String) -> bool: return x.begins_with("REJİM:")).is_empty())
 	# Sürüm 1: sürüm alanı ve 2'de eklenen alanlar yok.
 	var v1 := d.duplicate(true)
-	for k in ["version", "report_prev", "week_changes"]:
+	for k in ["version", "report_prev", "week_changes", "regime"]:
 		v1.erase(k)
 	_write(sim.save_path, v1)
 	_check("v1 göçü", sim.load_game() and sim.week == wk)

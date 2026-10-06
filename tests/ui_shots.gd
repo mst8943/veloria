@@ -104,6 +104,21 @@ func _run() -> void:
 	main._menu.hide()
 	main._instant = true
 	var sim: Node = root.get_node("Sim")
+	if "--regime" in OS.get_cmdline_user_args():
+		sim.week = 59
+		sim.king_strength = 90.0
+		sim.unrest = 20.0
+		sim.stats["bribes"] = 5
+		sim.end_week()
+		main._on_flow("gundem")
+		await _shot("5_rejim_hafta")
+		main._scroll.scroll_vertical = int(main._scroll.get_v_scroll_bar().max_value)
+		await _shot("5_rejim_ozet")
+		sim.week = 105
+		sim._end(true)
+		await _shot("5_rejim_son")
+		quit(0)
+		return
 	while not sim.ended:
 		while not sim.pending.is_empty() and sim.mesai > 0:
 			sim.resolve_decision(0, 0)   # meclis sicili dolsun

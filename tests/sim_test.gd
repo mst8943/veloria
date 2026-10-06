@@ -117,6 +117,10 @@ func _init() -> void:
 			continue
 		for fl in e.get("flag_age", {}):
 			sim.flags[fl] = 1
+		for fl in sim._as_array(e.get("needs_flag", [])):
+			sim.flags[fl] = 1
+		for fl in sim._as_array(e.get("any_flag", [])):
+			sim.flags[fl] = 1
 		for fid in sim._as_array(e.get("needs_fact", [])):
 			sim._add_fact(fid, fid, "king", 10, ["voss"], 1)
 		sim.week = maxi(40, int(e.get("min_week", 0)))   # ikinci yıl olayları 40'tan sonra başlar
@@ -180,6 +184,8 @@ func _init() -> void:
 
 	# Birbirine düşür: tam iki kişi, bekleme, etki yönü.
 	ok = _test_rivals() and ok
+	ok = _test_arcs() and ok
+	ok = _test_regimes() and ok
 	# Meclis görüşleri: deterministik, kayıtta korunur, ana rng'ye dokunmaz, hazır aktör kötü önerir.
 	ok = _test_advice() and ok
 	# Darbe aşamaları: çekilme, kriz kartı, kriz sonuçları, kayıt, huzura çağırma.
@@ -194,6 +200,86 @@ func _init() -> void:
 		print("  H%d %s: '%s' -> gerçekte '%s'" % [l["week"], l["name"], l["said"], l["truth"]])
 	print("TEST: ", "OK" if ok else "FAIL")
 	quit(0 if ok else 1)
+
+
+func _test_arcs() -> bool:
+	var ok := true
+	var ids := ["arden", "voss", "kessler", "halden", "lena", "dorn", "prens", "brandt", "falk"]
+	for i in ids.size():
+		var id: String = ids[i]
+		sim.new_game(123, 1)
+		var cards := {}
+		for e: Dictionary in sim._events:
+			if str(e["id"]).begins_with("yay_" + id + "_"):
+				cards[str(e["id"]).trim_prefix("yay_" + id + "_")] = e
+		if cards.size() != 4:
+			push_error("hikâye yayında sahne eksik: " + id)
+			ok = false
+			continue
+		var start := 20 + 5 * i
+		sim.week = start
+		if not sim._eligible(cards["yukselis"]) or sim._eligible(cards["sinav"]):
+			push_error("hikâye başlangıcı/gecikmesi hatalı: " + id)
+			ok = false
+		sim.flags["yay_" + id + "_basladi"] = start
+		sim.week = start + 3
+		if not sim._eligible(cards["sinav"]):
+			push_error("hikâye sınavı açılmadı: " + id)
+			ok = false
+		for route in ["guven", "kopus"]:
+			sim.flags["yay_" + id + "_" + route] = start + 3
+			sim.week = start + 6
+			var wanted: String = "sadakat" if route == "guven" else "kopus"
+			var other: String = "kopus" if route == "guven" else "sadakat"
+			if not sim._eligible(cards[wanted]) or sim._eligible(cards[other]):
+				push_error("hikâye dalı hatalı: %s/%s" % [id, route])
+				ok = false
+			sim.flags.erase("yay_" + id + "_" + route)
+	print("Dokuz hikâye yayı: ", "OK" if ok else "HATA")
+	return ok
+
+
+func _test_regimes() -> bool:
+	var ok := true
+	var styles := {
+		"guvenlikci": "written", "populist": "street_concessions", "patronajci": "promotes",
+		"oligark": "bribes", "medya": "", "istihbarat": "investigations"}
+	for kind in styles:
+		sim.new_game(123, 1)
+		sim.week = 59
+		sim.king_strength = 90.0
+		sim.unrest = 20.0
+		if styles[kind] != "":
+			sim.stats[styles[kind]] = 5
+		if kind == "medya":
+			sim.flags["halden_kanal_0"] = 40
+			sim.flags["gazeteci_ihale_2"] = 40
+		sim.end_week()
+		if sim.regime != kind or not sim.flags.has("REJIM_" + kind.to_upper()):
+			push_error("rejim seçimi hatalı: %s -> %s" % [kind, sim.regime])
+			ok = false
+		if sim.week_changes.filter(func(x: Dictionary) -> bool: return str(x["text"]).contains("rejim olarak")).size() != 1:
+			push_error("rejim hafta özetinde yok: " + kind)
+			ok = false
+		sim.end_week()
+		if sim.weekly_news.filter(func(x: String) -> bool: return x.begins_with("REJİM:")).size() > 0:
+			push_error("rejim haberi ikinci kez çıktı: " + kind)
+			ok = false
+		sim.week = 82
+		var matching := 0
+		for e: Dictionary in sim._events:
+			if str(e["id"]).begins_with("rejim_") and str(e["id"]).ends_with("_hesap") and sim._eligible(e):
+				matching += 1
+		if matching != 1:
+			push_error("rejim hesabı tek kart seçmedi: %s (%d)" % [kind, matching])
+			ok = false
+		sim.week = 105
+		sim._end(true)
+		if str(sim.record["title"]) != str(sim.REGIME_TITLES[kind]) or str(sim.record["threat"]) == "":
+			push_error("rejim oyun sonuna geçmedi: " + kind)
+			ok = false
+	print("Rejim tipleri: ", "OK" if ok else "HATA")
+	return ok
 
 
 func _play_week(policy: String) -> void:

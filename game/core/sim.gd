@@ -54,6 +54,7 @@ var truth_log: Array = []
 var karne: Dictionary = {}   # kaynak -> {ok, bad}
 var advice_log: Array = []   # meclis görüşlerinin sicili (oyun sonunda açılır)
 var stats: Dictionary = {}
+var regime := ""              # 60. haftadan sonra bir kez biçimlenir; oyuncunun geçmişinin yorumu
 var weekly_news: Array = []
 var report_prev: Dictionary = {}   # kaynak -> geçen haftaki raporun SÖYLEDİĞİ band (gerçek değil)
 var week_changes: Array = []       # {tone, text, actor}: görünür göstergelerin geçen haftaya göre farkı
@@ -105,6 +106,7 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 	timeline.clear()
 	stats = {"ops": 0, "bribes": 0, "promotes": 0, "leaks": 0, "dismissals": 0, "written": 0, "hints": 0, "checks": 0,
 		"investigations": 0, "blackmails": 0, "promises": 0, "kept": 0, "broken": 0}
+	regime = ""
 	ended = false
 	record = {}
 	coup_leader = ""
@@ -176,10 +178,10 @@ func save_summary() -> String:
 
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
-## 1: sürüm alanı yokken (2026-10-06 öncesi) · 2: report_prev, week_changes · 3: sokak öfkesi, sokak/mahkeme krizi
-const SAVE_VERSION := 3
+## 1: sürüm alanı yokken (2026-10-06 öncesi) · 2: report_prev, week_changes · 3: sokak/mahkeme krizi · 4: rejim tipi
+const SAVE_VERSION := 4
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
-	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff"]
+	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -193,6 +195,8 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 		d["legal_relief"] = d.get("legal_relief", 0.0)
 		d["other_crisis"] = d.get("other_crisis", {})
 		d["warned"] = d.get("warned", {})
+	if from < 4:
+		d["regime"] = d.get("regime", "")
 	d["version"] = SAVE_VERSION
 	return d
 
@@ -210,7 +214,7 @@ func save_game() -> bool:
 		"stats": stats, "rng": rng.state, "seed": rng.seed, "diff": difficulty, "promises": promises,
 		"timeline": timeline, "report_prev": report_prev, "week_changes": week_changes,
 		"street_anger": street_anger, "legal_relief": legal_relief, "other_crisis": other_crisis, "warned": warned,
-		"version": SAVE_VERSION}
+		"regime": regime, "version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -274,6 +278,11 @@ func load_game() -> bool:
 	legal_relief = float(d.get("legal_relief", 0.0))
 	other_crisis = d.get("other_crisis", {})
 	warned = d.get("warned", {})
+	regime = str(d["regime"])
+	if regime == "" and week >= 60:
+		regime = _choose_regime()  # eski kayıtta haber tekrarlanmaz
+	if regime != "":
+		flags["REJIM_" + regime.to_upper()] = 60
 	changed.emit()
 	return true
 
@@ -1294,6 +1303,10 @@ func end_week() -> void:
 	_world_tick()
 	_decay_facts()
 	_fire_events()
+	if regime == "" and week >= 60:
+		regime = _choose_regime()
+		flags["REJIM_" + regime.to_upper()] = week
+		weekly_news.append("REJİM: Saray artık %s bir düzen olarak anılıyor." % regime_name())
 	_tick_promises()
 	_run_cascade()
 	_check_crises()
@@ -1301,6 +1314,10 @@ func end_week() -> void:
 	_generate_reports()
 	_record_timeline()
 	week_changes = _diff_visible(before, _visible_snapshot())
+	if week == 60 and regime != "":
+		if week_changes.size() >= CHANGES_MAX:
+			week_changes.pop_back()
+		week_changes.append({"tone": 0, "actor": "", "text": "Yönetimin %s bir rejim olarak anılmaya başladı." % regime_name()})
 	_check_end()
 	if autosave and not ended:
 		save_game()
@@ -1534,6 +1551,60 @@ func _as_array(v: Variant) -> Array:
 	if v is String and v != "":
 		return [v]
 	return []
+
+
+# Rejim bir siyasi yorumdur: yalnızca oyuncunun yaptığı eylemler, açık sözler ve karttaki güç kademesi.
+const REGIME_NAMES := {
+	"guvenlikci": "güvenlikçi", "populist": "popülist", "patronajci": "patronajcı",
+	"oligark": "oligarklara dayanan", "medya": "medya kontrollü", "istihbarat": "istihbarat merkezli"}
+const REGIME_TITLES := {
+	"guvenlikci": "Güvenlikçi Rejimi", "populist": "Popülist Rejimi", "patronajci": "Patronaj Rejimi",
+	"oligark": "Oligark Rejimi", "medya": "Medya Rejimi", "istihbarat": "İstihbarat Rejimi"}
+const REGIME_THREATS := {
+	"guvenlikci": "ordu komutasının muhtırası", "populist": "meydanın kuşatması",
+	"patronajci": "makam sahiplerinin hesabı", "oligark": "sermaye çevrelerinin kuşatması",
+	"medya": "yayınların desteği çekmesi", "istihbarat": "gizli arşivin muhtırası"}
+
+
+func regime_name() -> String:
+	return str(REGIME_NAMES.get(regime, "henüz şekillenmemiş"))
+
+
+func regime_threat() -> String:
+	return str(REGIME_THREATS.get(regime, "belirsiz"))
+
+
+func _regime_tier(id: String) -> int:
+	return maxi(0, power_tier(actors[id].power) - 1) if actors.has(id) else 0
+
+
+func _regime_stat(id: String) -> int:
+	return mini(5, int(stats.get(id, 0)))
+
+
+func _choose_regime() -> String:
+	var debt := 0
+	for p: Dictionary in promises:
+		if p.get("state", "") == "active":
+			debt += 1
+	var scores := {
+		"guvenlikci": 2 * _regime_stat("written") + _regime_stat("ops") + _regime_tier("arden")
+			+ (2 if flags.has("gida_protestosu_1") or flags.has("yay_arden_kopus") else 0),
+		"populist": 2 * _regime_stat("street_concessions") + _regime_stat("legal_concessions") + _regime_tier("brandt")
+			+ (2 if flags.has("genel_grev_0") or flags.has("yay_brandt_guven") else 0),
+		"patronajci": 2 * _regime_stat("promotes") + _regime_stat("promises") + mini(5, debt) + _regime_tier("dorn")
+			+ (2 if flags.has("dorn_filtre_1") or flags.has("yay_dorn_kopus") else 0),
+		"oligark": 2 * _regime_stat("bribes") + _regime_tier("halden")
+			+ (2 if flags.has("halden_ihale_0") or flags.has("milletvekili_satin_0") else 0),
+		"medya": _regime_tier("lena") + _regime_tier("halden")
+			+ (3 if flags.has("halden_kanal_0") else 0) + (2 if flags.has("gazeteci_ihale_2") or flags.has("yay_halden_kopus") else 0),
+		"istihbarat": _regime_stat("investigations") + 2 * _regime_stat("blackmails") + _regime_stat("checks")
+			+ _regime_tier("voss") + (2 if flags.has("voss_dosyalar_0") or flags.has("yay_voss_kopus") else 0)}
+	var best := "guvenlikci"
+	for id in REGIME_NAMES:
+		if int(scores[id]) > int(scores[best]):
+			best = id
+	return best
 
 
 func _fire_events() -> void:
@@ -2187,10 +2258,11 @@ func _end(survived: bool) -> void:
 			cause = "Saltanatının %d. haftasında elit koalisyonu desteğini çekti; tahtta kimse seni savunmadı." % (week - 1)
 	else:
 		cause = "104 haftalık saltanatın sonunda tahtını korudun."
-		title = _survivor_title(top)
+		title = str(REGIME_TITLES.get(regime, _survivor_title(top)))
 	record = {"survived": survived, "title": title, "weeks": week - 1, "cause": cause,
 		"top_actor": top.display_name if top else "", "history": history.duplicate(),
 		"lies": _top_lies(), "king": KING_NAME,
+		"regime": regime_name() if regime != "" else "", "threat": regime_threat() if regime != "" else "",
 		"promises": "%d söz verdin: %d tutuldu, %d bozuldu." % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
 		"historians": historians(survived), "timeline": timeline.duplicate(), "council": council_record(),
 		"plot": plot_log.duplicate(), "signs": sign_record()}

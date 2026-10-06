@@ -183,6 +183,8 @@ func show_record(record: Dictionary) -> String:
 	summary.append_text("%s\n\n" % record["cause"])
 	summary.append_text("[b]Saltanat:[/b] %d hafta  ·  [b]En güçlü isim:[/b] %s\n[b]Söz sicili:[/b] %s\n[b]Karar defteri:[/b] %d kayıt\n" % [
 		int(record["weeks"]), record["top_actor"], record.get("promises", ""), hist_log.size()])
+	if str(record.get("regime", "")) != "":
+		summary.append_text("[b]Rejimin:[/b] %s. [b]Son sınavı:[/b] %s.\n" % [record["regime"], record["threat"]])
 	if lies.is_empty():
 		summary.append_text("[b]Hakikat Dosyası:[/b] kimse sana belirgin biçimde yalan söylemedi.\n")
 	else:

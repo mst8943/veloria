@@ -21,7 +21,8 @@ const FX_KEYS := ["king", "unrest", "economy", "opp", "wealth", "actors", "fact"
 const FX_NUMBERS := ["king", "unrest", "economy", "opp", "wealth"]
 const FACT_KEYS := ["id", "text", "subject", "severity", "knowers"]
 ## Oyun kodunun (sim.gd) kendisinin koyduğu bayraklar; <AKTÖR>_GITTI, _GUCLENDI, HUZUR_<AKTÖR> kalıpları ayrıca.
-const CODE_FLAGS := ["DARBE_BASTIRILDI", "DARBE_HALK", "DARBE_TAVIZ"]
+const CODE_FLAGS := ["DARBE_BASTIRILDI", "DARBE_HALK", "DARBE_TAVIZ",
+	"REJIM_GUVENLIKCI", "REJIM_POPULIST", "REJIM_PATRONAJCI", "REJIM_OLIGARK", "REJIM_MEDYA", "REJIM_ISTIHBARAT"]
 
 var errors: Array[String] = []
 var warnings: Array[String] = []

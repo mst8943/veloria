@@ -2406,5 +2406,221 @@
       "yay_falk_kopus": 3
     },
     "chance": 0.7
+  },
+  {
+    "id": "rejim_guvenlikci_hesap",
+    "min_week": 82,
+    "max_week": 100,
+    "flag_age": {
+      "REJIM_GUVENLIKCI": 18
+    },
+    "chance": 0.7,
+    "art": "general_atamalari",
+    "title": "Komuta heyetinin muhtırası",
+    "text": "Savunma kurulu kapalı oturum istedi. Masaya bırakılan metin ordunun artık hükümetten önce konuştuğunu gösteriyor. Arden imzalamış olsun ya da olmasın, subaylar tacın cevabını bekliyor.",
+    "choices": [
+      {
+        "label": "Kurulu meclis önünde dinle",
+        "text": "Muhtıra açık kürsüye taşındı; subaylar da siviller de sözünü duydu.",
+        "fx": {
+          "king": 1,
+          "opp": 1
+        }
+      },
+      {
+        "label": "Yalnız karargâhta görüş",
+        "text": "Görüşme sessiz bitti. Dışarıda herkes kendi tutanağını yazdı.",
+        "fx": {
+          "king": -1,
+          "unrest": -1
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Hesaplaşma cevapsız kaldı.",
+      "fx": {
+        "king": -1
+      }
+    }
+  },
+  {
+    "id": "rejim_populist_hesap",
+    "min_week": 82,
+    "max_week": 100,
+    "flag_age": {
+      "REJIM_POPULIST": 18
+    },
+    "chance": 0.7,
+    "art": "genel_grev",
+    "title": "Meydanın kuşatması",
+    "text": "Meydanı yıllarca dinledin; şimdi her mahalle kendi hesabını getiriyor. Brandt kürsüden “Alkışla değil, cevapla yönetin” diye seslendi. Saray kapısı açık ama yol kalabalık.",
+    "choices": [
+      {
+        "label": "Temsilcileri saraya al",
+        "text": "Saray kapısı açıldı; konuşma başladı, talepler masada kaldı.",
+        "fx": {
+          "unrest": -2,
+          "opp": 1
+        }
+      },
+      {
+        "label": "Meydana kendin çık",
+        "text": "Kral göründü; meydan dinledi, sonra daha yüksek sesle konuştu.",
+        "fx": {
+          "king": 1,
+          "unrest": 1
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Hesaplaşma cevapsız kaldı.",
+      "fx": {
+        "king": -1
+      }
+    }
+  },
+  {
+    "id": "rejim_patronajci_hesap",
+    "min_week": 82,
+    "max_week": 100,
+    "flag_age": {
+      "REJIM_PATRONAJCI": 18
+    },
+    "chance": 0.7,
+    "art": "dorn_filtre",
+    "title": "Makamların hesabı",
+    "text": "Dorn’un defterinde senden görev alanların adları yan yana duruyor. Her biri ayrı bir karşılık bekliyor. Kâhya kibarca eğildi: “Majesteleri, bu sıra kendi kendine oluşmadı.”",
+    "choices": [
+      {
+        "label": "Atamaları açıkça gözden geçir",
+        "text": "Lütufların gerekçesi soruldu; bazı dostlar salondan erken çıktı.",
+        "fx": {
+          "king": 1,
+          "opp": 1
+        }
+      },
+      {
+        "label": "Dorn’dan sözleri toplamasını iste",
+        "text": "Kâhya kapıları kapattı; beklentiler kapanmadı.",
+        "fx": {
+          "king": -1,
+          "unrest": -1
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Hesaplaşma cevapsız kaldı.",
+      "fx": {
+        "king": -1
+      }
+    }
+  },
+  {
+    "id": "rejim_oligark_hesap",
+    "min_week": 82,
+    "max_week": 100,
+    "flag_age": {
+      "REJIM_OLIGARK": 18
+    },
+    "chance": 0.7,
+    "art": "milletvekili_satin",
+    "title": "Sermayenin meclis kuşatması",
+    "text": "Sermaye çevreleri bütçe oylaması öncesi aynı masada toplandı. Halden’in adı listede var; masayı kimin kurduğunu herkes başka anlatıyor. Vekiller karar için saraya bakıyor.",
+    "choices": [
+      {
+        "label": "Bağış defterlerini aç",
+        "text": "Defterler açıldı; piyasalar tedirgin, vekiller dikkatli.",
+        "fx": {
+          "king": -2,
+          "economy": -2
+        }
+      },
+      {
+        "label": "Ödenek pazarlığına otur",
+        "text": "Bütçe geçecek gibi; mecliste bunun bedeli konuşuluyor.",
+        "fx": {
+          "economy": 1,
+          "opp": 4
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Hesaplaşma cevapsız kaldı.",
+      "fx": {
+        "king": -2
+      }
+    }
+  },
+  {
+    "id": "rejim_medya_hesap",
+    "min_week": 82,
+    "max_week": 100,
+    "flag_age": {
+      "REJIM_MEDYA": 18
+    },
+    "chance": 0.7,
+    "art": "halden_kanal",
+    "title": "Yayınlar desteğini çekiyor",
+    "text": "Sabah bültenleri aynı boşluğu bıraktı: kralın adı yok. Halden’in kanalı ve bağımsız gazeteler farklı sebeplerle susuyor. Ülke bu sessizliği bir haber gibi okuyor.",
+    "choices": [
+      {
+        "label": "Kameralar önünde soru al",
+        "text": "Sorular yayına girdi; bazı cevaplar beğenilmedi.",
+        "fx": {
+          "king": 1,
+          "unrest": 1
+        }
+      },
+      {
+        "label": "Yayınlara yazılı yanıt ver",
+        "text": "Metin yayımlandı; sesin kâğıt kadar uzağa gitti.",
+        "fx": {
+          "king": -1,
+          "unrest": -1
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Hesaplaşma cevapsız kaldı.",
+      "fx": {
+        "king": -1
+      }
+    }
+  },
+  {
+    "id": "rejim_istihbarat_hesap",
+    "min_week": 82,
+    "max_week": 100,
+    "flag_age": {
+      "REJIM_ISTIHBARAT": 18
+    },
+    "chance": 0.7,
+    "art": "voss_arden_catisma",
+    "title": "Gizli arşivin muhtırası",
+    "text": "Bakanların masasına aynı anda mühürlü zarflar bırakıldı. İçindekileri yalnız istihbarat biliyor. Voss ortada görünmüyor; kurduğu arşiv şimdi kendi adına konuşuyor.",
+    "choices": [
+      {
+        "label": "Dosyaları Falk’a teslim et",
+        "text": "Mühürler mahkemede açıldı; saray da kendi dosyasını gördü.",
+        "fx": {
+          "king": 1,
+          "opp": 1
+        }
+      },
+      {
+        "label": "Zarfları sarayda tut",
+        "text": "Zarflar saklandı; onları gönderenler yerinde kaldı.",
+        "fx": {
+          "king": -1,
+          "unrest": -1
+        }
+      }
+    ],
+    "ignore": {
+      "text": "Hesaplaşma cevapsız kaldı.",
+      "fx": {
+        "king": -1
+      }
+    }
   }
 ]
