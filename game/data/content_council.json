@@ -8,6 +8,9 @@
       "kessler",
       "halden"
     ],
+    "treasury": ["kessler", "dorn"],
+    "capacity": ["falk", "kessler"],
+    "holding": ["halden", "dorn"],
     "unrest": [
       "arden",
       "halden"
@@ -79,6 +82,18 @@
         "kasanızı boşaltır",
         "cebinizden çıkar"
       ]
+    ],
+    "treasury": [
+      ["devlet kasasına nefes aldırır"],
+      ["devlet kasasını daraltır"]
+    ],
+    "capacity": [
+      ["kurumların işini kolaylaştırır"],
+      ["kurumları yıpratır"]
+    ],
+    "holding": [
+      ["Halden'in elini sınırlar"],
+      ["Halden'in nüfuzunu artırır"]
     ],
     "fact": [
       [

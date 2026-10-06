@@ -88,6 +88,7 @@ var _content_loader: RefCounted
 var COUNCIL_CONTENT: Dictionary = {}
 var REPORT_CONTENT: Dictionary = {}
 var HISTORY_CONTENT: Dictionary = {}
+var STATE_CONTENT: Dictionary = {}
 
 func _init() -> void:
 	_advice = Advice.new(self)
@@ -199,6 +200,7 @@ func _load_content() -> void:
 	HISTORY_CONTENT = all["history"]
 	ACHIEVEMENTS = all["achievements"]
 	var labels: Dictionary = all["labels"]
+	STATE_CONTENT = labels["budget"]
 	PRIZES = labels["prizes"]
 	POWER_TIER_NAMES = labels["power_tiers"]
 	REPORT_TONES = labels["report_tones"]
@@ -973,6 +975,16 @@ func _apply_effects(fx: Dictionary) -> void:
 	king_strength = clampf(king_strength + float(fx.get("king", 0)), 0.0, 100.0)
 	opposition = clampf(opposition + float(fx.get("opp", 0)), 0.0, 100.0)
 	private_wealth = maxf(0.0, private_wealth + float(fx.get("wealth", 0)))
+	treasury = clampf(treasury + float(fx.get("treasury", 0)), 0.0, 100.0)
+	for institution in fx.get("capacity", {}):
+		if capacity.has(institution):
+			capacity[institution] = clampf(float(capacity[institution]) + float(fx["capacity"][institution]), 5.0, 100.0)
+	if fx.has("budget_stance"):
+		budget_stance = int(fx["budget_stance"])
+	if fx.has("court_share"):
+		court_share = bool(fx["court_share"])
+		if court_share:
+			_add_fact("saray_payi_%d" % week, "saray payı devlet kasasından ayrılıyor", "king", 18, ["kessler", "dorn"], 1)
 	var af: Dictionary = fx.get("actors", {})
 	for aid in af:
 		if actors.has(aid):
@@ -1082,6 +1094,7 @@ func end_week() -> void:
 	_world_tick()
 	_decay_facts()
 	_fire_events()
+	_fire_budget()
 	if regime == "" and week >= 60:
 		regime = _choose_regime()
 		flags["REJIM_" + regime.to_upper()] = week
@@ -1427,6 +1440,30 @@ func _fire_events() -> void:
 			weekly_moves.append({"tone": int(e.get("tone", 0)), "actor": str(e.get("actor", "")), "text": str(e["news"])})
 		else:
 			weekly_news.append("OLAY: %s" % e["title"])
+
+
+func _fire_budget() -> void:
+	if not week in [13, 26, 39, 52, 65, 78, 91]:
+		return
+	if pending.size() >= 3:
+		budget_stance = 0
+		court_share = false
+		weekly_news.append("MALİYE: Meclis bütçeyi görüşemedi; eski dengeli düzen sürdü.")
+		return
+	var note := ""
+	for report: Dictionary in reports:
+		if report["source"] == "kessler":
+			note = " Kessler'in son raporu: " + str(report["text"])
+			break
+	var choices: Array = []
+	for option: Dictionary in STATE_CONTENT["choices"]:
+		choices.append({"label": option["label"], "text": option["text"], "fx":
+			{"budget_stance": option["stance"], "court_share": option["court_share"]}})
+	var e := {"id": "ceyrek_butce", "title": STATE_CONTENT["title"], "text": str(STATE_CONTENT["text"]) + note,
+		"art": "butce_acigi", "advisors": ["kessler", "dorn"], "kind": "budget", "choices": choices,
+		"ignore": {"text": STATE_CONTENT["ignore"], "fx": {"budget_stance": 0, "court_share": false}}}
+	pending.append({"event": e, "age": 0})
+	weekly_news.append("OLAY: " + str(e["title"]))
 
 
 # ---------------------------------------------------------------- Darbe aşamaları (docs/design/darbe_asamalari.md)

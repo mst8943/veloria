@@ -19,6 +19,9 @@ func _init() -> void:
 	bad = all["council"].duplicate(true)
 	bad["experts"]["king"][0] = "bilinmeyen_kisi"
 	ok = _expect_bad(loader, "council", bad, "bilinmeyen uzman aktör") and ok
+	bad = all["labels"].duplicate(true)
+	bad["budget"]["choices"][0]["text"] = ""
+	ok = _expect_bad(loader, "labels", bad, "bütçe seçeneği hatalı") and ok
 	loader.load_all({"reports": "res://game/data/olmayan_icerik.json"})
 	if not loader.error.contains("İçerik dosyası hatalı"):
 		push_error("eksik içerik dosyası açık hata vermedi")
@@ -32,7 +35,7 @@ func _init() -> void:
 	if not loader.error.contains("JSON bozuk"):
 		push_error("bozuk JSON açık hata vermedi")
 		ok = false
-	print("CONTENT: %s (5 dosya, 5 bozuk örnek)" % ("OK" if ok else "FAIL"))
+	print("CONTENT: %s (5 dosya, 6 bozuk örnek)" % ("OK" if ok else "FAIL"))
 	quit(0 if ok else 1)
 
 

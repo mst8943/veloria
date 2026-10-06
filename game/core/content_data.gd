@@ -160,7 +160,7 @@ func _council(data: Dictionary, ids: Dictionary) -> String:
 		var pair: Variant = data["reasons"][dim]
 		if not pair is Array or pair.size() != 2 or not _texts(pair[0]) or not _texts(pair[1]):
 			return "eksik/boş gerekçe: %s" % dim
-	for dim in ["king", "unrest", "economy", "opp", "wealth", "fact", "promise"]:
+	for dim in ["king", "unrest", "economy", "opp", "wealth", "treasury", "capacity", "holding", "fact", "promise"]:
 		if not data["reasons"].has(dim): return "eksik gerekçe: %s" % dim
 	return ""
 
@@ -175,7 +175,7 @@ func _achievements(data: Dictionary) -> String:
 
 func _labels(data: Dictionary) -> String:
 	var issue := _keys(data, ["prizes", "power_tiers", "report_tones", "suspicion_names",
-		"regime_names", "regime_titles", "regime_threats", "regime_order"])
+		"regime_names", "regime_titles", "regime_threats", "regime_order", "budget"])
 	if issue != "": return issue
 	for key in ["prizes", "report_tones", "suspicion_names", "regime_order"]:
 		if not _texts(data[key]): return "eksik/boş etiket: %s" % key
@@ -187,6 +187,18 @@ func _labels(data: Dictionary) -> String:
 	if data["report_tones"].size() != 3 or data["suspicion_names"].size() != 4:
 		return "rapor/tavır kademeleri eksik"
 	if data["regime_order"] != REGIMES: return "rejim sırası/kimlikleri değişmiş"
+	var budget: Variant = data["budget"]
+	if not budget is Dictionary or _keys(budget, ["title", "text", "ignore", "choices"]) != "":
+		return "bütçe kartı anahtarları eksik"
+	for key in ["title", "text", "ignore"]:
+		if not _text(budget[key]): return "boş bütçe metni: %s" % key
+	if not budget["choices"] is Array or budget["choices"].size() != 4:
+		return "bütçe kartında dört seçenek gerekli"
+	for option in budget["choices"]:
+		if not option is Dictionary or _keys(option, ["label", "text", "stance", "court_share"]) != "":
+			return "bütçe seçeneği eksik"
+		if not _text(option["label"]) or not _text(option["text"]) or not (option["stance"] is int or option["stance"] is float) or not float(option["stance"]) in [-1.0, 0.0, 1.0] or not option["court_share"] is bool:
+			return "bütçe seçeneği hatalı"
 	for key in ["regime_names", "regime_titles", "regime_threats"]:
 		if not data[key] is Dictionary: return "%s sözlük olmalı" % key
 		issue = _keys(data[key], REGIMES)

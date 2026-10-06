@@ -52,5 +52,16 @@
     "oligark",
     "medya",
     "istihbarat"
-  ]
+  ],
+  "budget": {
+    "title": "Çeyrek bütçesi",
+    "text": "Marta Kessler önüne gelecek çeyreğin defterini koydu. Bakanlıkların nefesi ile kasanın ömrü aynı sayfaya sığmıyor.",
+    "ignore": "Meclis görüşemedi; eski dengeli düzen sürdü.",
+    "choices": [
+      {"label": "Sıkı bütçe", "text": "Kasa korunacak; kurumlar biraz daha yıpranacak, sokak daralacak.", "stance": -1, "court_share": false},
+      {"label": "Dengeli bütçe", "text": "Açık ve yük birbirini götürecek; hiçbir kapı hemen açılmayacak.", "stance": 0, "court_share": false},
+      {"label": "Cömert bütçe", "text": "Kurumlar ve sokak nefes alacak; kasa bunun bedelini taşıyacak.", "stance": 1, "court_share": false},
+      {"label": "Saray payı", "text": "Defter dengeli kalacak; sarayın payı kasadan sessizce ayrılacak ve iz bırakacak.", "stance": 0, "court_share": true}
+    ]
+  }
 }

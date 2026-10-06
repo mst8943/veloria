@@ -17,9 +17,9 @@ const TOP_KEYS := ["id", "title", "text", "choices", "ignore", "fx", "art", "cri
 const STAT_KEYS := ["ops", "bribes", "promotes", "leaks", "dismissals", "written", "hints", "checks",
 	"investigations", "blackmails", "promises", "kept", "broken", "summons", "concessions", "street_concessions", "legal_concessions", "rivalries"]
 const CAP_KEYS := ["maliye", "hukuk", "ordu", "idare"]
-const FX_KEYS := ["king", "unrest", "economy", "opp", "wealth", "actors", "fact", "flag", "leak", "remove",
+const FX_KEYS := ["king", "unrest", "economy", "opp", "wealth", "treasury", "capacity", "budget_stance", "court_share", "actors", "fact", "flag", "leak", "remove",
 	"promise_keep", "promise_break", "promise_delay"]
-const FX_NUMBERS := ["king", "unrest", "economy", "opp", "wealth"]
+const FX_NUMBERS := ["king", "unrest", "economy", "opp", "wealth", "treasury"]
 const FACT_KEYS := ["id", "text", "subject", "severity", "knowers"]
 ## Oyun kodunun (sim.gd) kendisinin koyduğu bayraklar; <AKTÖR>_GITTI, _GUCLENDI, HUZUR_<AKTÖR> kalıpları ayrıca.
 const CODE_FLAGS := ["DARBE_BASTIRILDI", "DARBE_HALK", "DARBE_TAVIZ",
@@ -199,6 +199,13 @@ func _check_fx(id: String, fx: Dictionary) -> void:
 	for k in FX_NUMBERS:
 		if fx.has(k) and not (fx[k] is float or fx[k] is int):
 			errors.append("%s: etki '%s' sayı olmalı" % [id, k])
+	if fx.has("capacity"):
+		if not fx["capacity"] is Dictionary:
+			errors.append("%s: capacity kurum sözlüğü olmalı" % id)
+		else:
+			for institution in fx["capacity"]:
+				if not institution in CAP_KEYS or not (fx["capacity"][institution] is int or fx["capacity"][institution] is float):
+					errors.append("%s: bilinmeyen kapasite etkisi '%s'" % [id, institution])
 	for aid in fx.get("actors", {}):
 		_check_actor(id, "fx.actors", str(aid))
 		for prop in fx["actors"][aid]:

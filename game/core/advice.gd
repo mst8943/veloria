@@ -74,6 +74,21 @@ func _value_terms(fx: Dictionary) -> Dictionary:
 		t["opp"] = -0.5 * float(fx["opp"])
 	if fx.has("wealth"):
 		t["wealth"] = 0.3 * float(fx["wealth"])
+	if fx.has("treasury"):
+		t["treasury"] = 0.25 * float(fx["treasury"])
+	if fx.has("capacity"):
+		for institution in fx["capacity"]:
+			t["capacity:" + str(institution)] = 0.3 * float(fx["capacity"][institution])
+	if fx.has("holding"):
+		t["holding"] = -0.1 * float(fx["holding"])
+	if fx.has("budget_stance"):
+		# Bir çeyreklik kasa, kurum ve sokak etkisinin kaba karşılığı.
+		t["treasury"] = float(t.get("treasury", 0.0)) - 2.9 * float(fx["budget_stance"])
+		t["capacity:maliye"] = float(t.get("capacity:maliye", 0.0)) + 3.6 * float(fx["budget_stance"])
+	if fx.get("court_share", false):
+		t["wealth"] = float(t.get("wealth", 0.0)) + 2.3
+		t["treasury"] = float(t.get("treasury", 0.0)) - 2.0
+		t["fact"] = -3.0
 	var af: Dictionary = fx.get("actors", {})
 	for aid in af:
 		var d: Dictionary = af[aid]
@@ -131,7 +146,7 @@ func _event_dims(e: Dictionary) -> Array:
 	for ch: Dictionary in e["choices"]:
 		var t := _value_terms(ch.get("fx", {}))
 		for k: String in t:
-			var dim := "actors" if k.begins_with("actor:") else k
+			var dim := "actors" if k.begins_with("actor:") else ("capacity" if k.begins_with("capacity:") else k)
 			w[dim] = float(w.get(dim, 0.0)) + absf(float(t[k]))
 	var dims: Array = w.keys().filter(func(k: String) -> bool: return content["experts"].has(k))
 	dims.sort_custom(func(x: String, y: String) -> bool: return w[x] > w[y])
@@ -280,6 +295,8 @@ func _advice_reason(fx: Dictionary, good: bool, r: RandomNumberGenerator, self_i
 		var forms: Array = content["actor_good"] if good else content["actor_bad"]
 		var line: String = forms[r.randi() % forms.size()]
 		return line.replace("{n_in}", ek(nm, "in")).replace("{n_i}", ek(nm, "i"))
+	if key.begins_with("capacity:"):
+		key = "capacity"
 	var opts: Array = content["reasons"][key][0 if good else 1]
 	return opts[r.randi() % opts.size()]
 

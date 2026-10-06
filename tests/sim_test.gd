@@ -58,6 +58,32 @@ func _init() -> void:
 	if not sim._eligible({"id": "test_cap", "min_cap": {"maliye": 55}, "max_treasury": 55}) or sim._eligible({"id": "test_cap", "min_cap": {"maliye": 56}}) or sim._eligible({"id": "test_cap", "max_cap": {"maliye": 54}}) or sim._eligible({"id": "test_cap", "min_treasury": 56}):
 		push_error("kapasite/kasa olay koşulları hatalı")
 		ok = false
+	sim.week = 12
+	sim.pending.clear()
+	sim.end_week()
+	var budget: Dictionary = {}
+	for p: Dictionary in sim.pending:
+		if p["event"].get("kind", "") == "budget":
+			budget = p["event"]
+			break
+	if budget.is_empty() or budget["choices"].size() != 4:
+		push_error("çeyrek bütçe kartı açılmadı")
+		ok = false
+	else:
+		var budget_index := -1
+		for i in sim.pending.size():
+			if sim.pending[i]["event"].get("kind", "") == "budget":
+				budget_index = i
+				break
+		sim.resolve_decision(budget_index, 0)
+		if sim.budget_stance != -1 or sim.court_share:
+			push_error("bütçe duruşu uygulanmadı")
+			ok = false
+		sim.pending = [{"event": budget, "age": 1}]
+		sim.end_week()
+		if sim.budget_stance != 0 or sim.court_share:
+			push_error("ertelenen bütçe dengeli sayılmadı")
+			ok = false
 
 	# Araştırma ve şantaj
 	sim.new_game(8, 1)
