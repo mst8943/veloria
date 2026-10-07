@@ -101,6 +101,29 @@ func _init() -> void:
 	if sim.capacity["maliye"] != after_appoint + 7.0:
 		push_error("liyakatli atama hatalı")
 		ok = false
+	sim.new_game(31, 1)
+	var tender_before := [sim.holding, sim.private_wealth, sim.treasury, sim.economy, sim.capacity["maliye"], sim.actors["halden"].power, sim.actors["halden"].loyalty["money"]]
+	sim.give_tender("halden")
+	if sim.holding != tender_before[0] + 10.0 or sim.private_wealth != tender_before[1] + 6.0 or sim.treasury != tender_before[2] - 3.0 or sim.economy != tender_before[3] + 1.0 or sim.capacity["maliye"] != tender_before[4] - 2.0 or sim.actors["halden"].power != tender_before[5] + 3.0 or sim.actors["halden"].loyalty["money"] != tender_before[6] + 6.0 or sim.tender_wait() != 3 or not sim.facts.has("ihale_komisyonu_1"):
+		push_error("ihale etkileri veya komisyon sırrı hatalı")
+		ok = false
+	var held: float = sim.holding
+	sim.give_tender("halden")
+	if sim.holding != held:
+		push_error("ihale bekleme süresi uygulanmadı")
+		ok = false
+	sim.week += 3
+	sim.give_tender("halden")
+	if sim.holding != held + 10.0:
+		push_error("ihale bekleme süresi dolmadı")
+		ok = false
+	sim.actors["halden"].moved = true
+	sim.week += 3
+	sim.give_tender("halden")
+	if sim.holding != held + 10.0:
+		push_error("karşı saftaki Halden'e ihale verildi")
+		ok = false
+	sim.new_game(31, 1)
 	sim.capacity["maliye"] = 20.0
 	sim.treasury = 20.0
 	sim.weekly_news.clear()

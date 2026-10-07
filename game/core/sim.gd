@@ -64,6 +64,7 @@ const STATE_REPORT_NOISE := 110.0
 const STATE_RALLY_DENOM := [400.0, 400.0, 250.0]
 const INSTITUTION_HEADS := {"kessler": "maliye", "falk": "hukuk", "arden": "ordu", "dorn": "idare"}
 const APPOINT_COOLDOWN := 8
+const TENDER_COOLDOWN := 3
 const STATE_ECON_MALIYE := 0.003
 const STATE_ECON_HUKUK := 0.001
 const STATE_DIFF := [0.7, 1.0, 1.2]
@@ -461,6 +462,31 @@ func appoint(id: String, kind: String) -> String:
 		stats["liyakatli_" + institution] = int(stats.get("liyakatli_" + institution, 0)) + 1
 	changed.emit()
 	return "%s için %s kadro kararnamesi imzalandı. Sonucu kurumun işinde göreceksin." % [a.display_name, "sadık" if kind == "loyal" else "liyakatli"]
+
+
+func tender_wait() -> int:
+	return maxi(0, TENDER_COOLDOWN - (week - int(flags.get("IHALE_VER", -100))))
+
+
+func give_tender(id: String) -> String:
+	if id != "halden" or not actors.has(id) or actors[id].moved:
+		return "Bu ihale Halden'e verilemez."
+	if tender_wait() > 0:
+		return "İhale komisyonu yeni dosyayı henüz açmıyor."
+	if not spend_mesai():
+		return _no_mesai()
+	flags["IHALE_VER"] = week
+	stats["tenders"] = int(stats.get("tenders", 0)) + 1
+	holding = minf(100.0, holding + 10.0)
+	private_wealth += 6.0
+	treasury = maxf(0.0, treasury - 3.0)
+	economy = minf(100.0, economy + 1.0)
+	capacity["maliye"] = maxf(5.0, float(capacity["maliye"]) - 2.0)
+	actors[id].power += 3.0
+	actors[id].loyalty["money"] += 6.0
+	_add_fact("ihale_komisyonu_%d" % week, "Halden ihalesinden saraya aktarılan komisyon", "king", 18.0, ["halden", "kessler"], 1)
+	changed.emit()
+	return "İhale Halden'e verildi. Şirketleri işi üstlendi; Kessler sözleşmenin bir kopyasını sakladı."
 
 
 ## Huzura çağır: izsiz, parasız bir yoklama. Kişiyi biraz yatıştırır ve gürültülü bir okuma verir:
