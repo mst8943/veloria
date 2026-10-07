@@ -48,6 +48,17 @@ func _run() -> void:
 	main._update_info()
 	main._show_act_cat("DEVLET")
 	await _shot("1_devlet")
+	if "--demand" in OS.get_cmdline_user_args():
+		sim0.week = 18
+		sim0.pending.clear()
+		sim0._fire_patronage()
+		main._refresh()
+		main._on_flow("gundem")
+		await _shot("1_halden_talep")
+		main._scroll.scroll_vertical = 380 if "--mobile" in OS.get_cmdline_user_args() else 0
+		await _shot("1_halden_talep_secimler")
+		quit(0)
+		return
 	main._show_act_cat("KAZAN")
 	# Karar kartı + meclis görüşü: taraf olan danışmanı olan bir olayı başa koy.
 	for e in sim0._events:

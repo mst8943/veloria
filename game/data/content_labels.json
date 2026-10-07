@@ -53,6 +53,21 @@
     "medya",
     "istihbarat"
   ],
+  "patronage": {
+    "title": "Halden'in talebi",
+    "text": [
+      "Halden sözleşme defterini masaya bıraktı. 'Gazetelerim de kanalım da burada, Majesteleri. Karşılığını konuşalım.' Dorn fısıldıyor: 'Yayınları ona bağlı.'",
+      "Halden bu kez ricada bulunmuyor. 'Sarayın sesini taşıyan benim. Yeni payımı istiyorum.' Dorn kapıda bekliyor; gazetelerin kime bağlı olduğunu hatırlatıyor.",
+      "Halden dosyayı açmadan konuştu: 'Benden vazgeçmek kolay değil, Majesteleri.' Dorn, yayınların saraya ne kadar yaklaştığını söylemekten kaçınıyor."
+    ],
+    "ignore": "Halden cevap alamadı; yayın kurulu beklemeye geçti.",
+    "choices": [
+      {"label": "İstediğini ver", "text": "Halden payını aldı. Saraya komisyon ulaştı; Kessler dosyanın bir kopyasını sakladı."},
+      {"label": "Reddet", "text": "Halden sözleşmeyi topladı. Ertesi gün yayınlarının sesi değişti."},
+      {"label": "Rakip yayın kur", "text": "Lena bağımsız yayını büyüttü. Halden bunu unutmayacak."},
+      {"label": "Savcılığa başvur", "text": "Falk holdingin defterlerini mahkemeye taşıdı."}
+    ]
+  },
   "budget": {
     "title": "Çeyrek bütçesi",
     "text": "Marta Kessler önüne gelecek çeyreğin defterini koydu. Bakanlıkların nefesi ile kasanın ömrü aynı sayfaya sığmıyor.",

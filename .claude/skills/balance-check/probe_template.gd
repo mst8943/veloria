@@ -145,6 +145,8 @@ func _decide(bot: String) -> void:
 			ci = _wise_choice(ev)
 		elif bot.begins_with("advice_"):
 			ci = _advice_choice("advice_weighted" if bot in ["advice_soft", "advice_dirty", "advice_scheme"] else bot, sim.advice_for(0), ci)
+		if not ev["choices"][ci].get("available", true) or sim.private_wealth + float(ev["choices"][ci].get("fx", {}).get("wealth", 0)) < 0.0:
+			ci = 1 if ev.get("kind", "") == "patronage" else 0
 		sim.resolve_decision(0, ci)
 
 

@@ -164,6 +164,46 @@ func _init() -> void:
 		push_error("Halden yüksek nüfuz bandı hatalı")
 		ok = false
 	sim.new_game(31, 1)
+	sim.week = 18
+	sim.pending.clear()
+	sim._fire_patronage()
+	if sim.pending.size() != 1 or sim.pending[0]["event"]["choices"].size() != 4 or sim.halden_demands != 1:
+		push_error("Halden talep kartı açılmadı")
+		ok = false
+	else:
+		sim.actors["lena"].moved = true
+		var mesai_before: int = sim.mesai
+		sim.resolve_decision(0, 2)
+		if sim.mesai != mesai_before or sim.pending.is_empty():
+			push_error("Lena yokken rakip yayın kurulabildi")
+			ok = false
+		sim.actors["lena"].moved = false
+		sim.resolve_decision(0, 1)
+		if sim.halden_hostile_until != 24 or sim.stats.get("halden_rejected", 0) != 1:
+			push_error("Halden talebi reddi uygulanmadı")
+			ok = false
+	sim._fire_patronage()
+	if not sim.pending.is_empty():
+		push_error("Halden talebi bekleme süresi uygulanmadı")
+		ok = false
+	sim.week = 26
+	sim.holding = 60.0
+	sim._fire_patronage()
+	if sim.pending.size() != 1 or sim.pending[0]["event"]["level"] != 1:
+		push_error("Halden ikinci talep eşiği çalışmadı")
+		ok = false
+	else:
+		var prior_holding: float = sim.holding
+		sim.resolve_decision(0, 0)
+		if sim.holding != prior_holding + 12.0 or sim.halden_mood() != "sıcak" or sim.stats.get("halden_granted", 0) != 1:
+			push_error("Halden talebini verme etkisi uygulanmadı")
+			ok = false
+	var normal_dep: float = sim.media_dependency()
+	sim.lena_boost_until = sim.week + 12
+	if absf(sim.media_dependency() - normal_dep + 8.0) > 0.001:
+		push_error("Rakip yayın bağımlılığı azaltmadı")
+		ok = false
+	sim.new_game(31, 1)
 	sim.capacity["maliye"] = 20.0
 	sim.treasury = 20.0
 	sim.weekly_news.clear()

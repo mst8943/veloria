@@ -11,6 +11,7 @@ const Actor := preload("res://game/core/actor.gd")
 const Advice := preload("res://game/core/advice.gd")
 const ContentData := preload("res://game/core/content_data.gd")
 const Narrative := preload("res://game/core/narrative.gd")
+const Press := preload("res://game/core/press.gd")
 const MAX_WEEKS := 104
 const MESAI_PER_WEEK := 4
 const KING_NAME := "Adrian IV"
@@ -100,6 +101,7 @@ var COUNCIL_CONTENT: Dictionary = {}
 var REPORT_CONTENT: Dictionary = {}
 var HISTORY_CONTENT: Dictionary = {}
 var STATE_CONTENT: Dictionary = {}
+var PATRONAGE_CONTENT: Dictionary = {}
 
 func _init() -> void:
 	_advice = Advice.new(self)
@@ -217,6 +219,7 @@ func _load_content() -> void:
 	ACHIEVEMENTS = all["achievements"]
 	var labels: Dictionary = all["labels"]
 	STATE_CONTENT = labels["budget"]
+	PATRONAGE_CONTENT = labels["patronage"]
 	PRIZES = labels["prizes"]
 	POWER_TIER_NAMES = labels["power_tiers"]
 	REPORT_TONES = labels["report_tones"]
@@ -496,12 +499,19 @@ func halden_mood() -> String:
 	var halden: Actor = actors.get("halden")
 	if halden == null or halden.moved or week < halden_hostile_until:
 		return "düşmanca"
+	if week < int(flags.get("HALDEN_SICAK", -100)) + 10:
+		return "sıcak"
 	return "sıcak" if halden.total_loyalty() >= 25.0 else "mesafeli"
 
 
 func halden_influence_band() -> String:
 	var seen := holding - 8.0  # Halden ağının gerçek sınırlarını küçümser.
 	return "sınırlı" if seen < 40.0 else ("yaygın" if seen < 70.0 else "her yerde")
+
+
+func media_dependency() -> float:
+	return clampf(0.6 * holding + 20.0 - (0.0 if Press.is_closed(self, "free") else 15.0)
+		- (8.0 if week < lena_boost_until else 0.0), 0.0, 100.0)
 
 
 ## Huzura çağır: izsiz, parasız bir yoklama. Kişiyi biraz yatıştırır ve gürültülü bir okuma verir:
@@ -1058,6 +1068,13 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 		return ""
 	var e: Dictionary = pending[pending_index]["event"]
 	var ch: Dictionary = e["choices"][choice_index]
+	if not ch.get("available", true):
+		return "Bu kararın gerektirdiği kişi artık sarayda değil."
+	if e.get("kind", "") == "patronage":
+		if choice_index == 2 and (not actors.has("lena") or actors["lena"].moved or Press.is_closed(self, "free")):
+			return "Lena artık bağımsız yayın kuramıyor."
+		if choice_index == 3 and (not actors.has("falk") or actors["falk"].moved):
+			return "Falk artık savcılığa başvuramıyor."
 	var fx: Dictionary = ch.get("fx", {})
 	if float(fx.get("wealth", 0)) + private_wealth < 0.0:
 		return "Kişisel servetin yetersiz."
@@ -1075,6 +1092,11 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 	_log_advice(e, advice_for(pending_index), choice_index)
 	pending.remove_at(pending_index)
 	flags["%s_%d" % [e["id"], choice_index]] = week
+	if e.get("kind", "") == "patronage":
+		var patronage_text := _resolve_patronage(choice_index, int(e["level"]))
+		history.append("Hafta %d — %s » %s" % [week, e["title"], ch["label"]])
+		changed.emit()
+		return patronage_text
 	_extra_msgs.clear()
 	_apply_effects(fx)
 	history.append("Hafta %d — %s » %s" % [week, e["title"], ch["label"]])
@@ -1212,6 +1234,7 @@ func end_week() -> void:
 	_decay_facts()
 	_fire_events()
 	_fire_budget()
+	_fire_patronage()
 	if regime == "" and week >= 60:
 		regime = _choose_regime()
 		flags["REJIM_" + regime.to_upper()] = week
@@ -1645,6 +1668,83 @@ func _fire_budget() -> void:
 		"ignore": {"text": STATE_CONTENT["ignore"], "fx": {"budget_stance": 0, "court_share": false}}}
 	pending.append({"event": e, "age": 0})
 	weekly_news.append("OLAY: " + str(e["title"]))
+
+
+func _fire_patronage() -> void:
+	if week < 18 or pending.size() >= 3 or not actors.has("halden") or actors["halden"].moved:
+		return
+	var last := int(flags.get("HALDEN_TALEP", -100))
+	if week - last < 8:
+		return
+	var reached := false
+	for threshold in [40, 55, 70, 85]:
+		if holding >= threshold and not flags.has("HALDEN_ESIK_%d" % threshold):
+			reached = true
+	if not reached and (week - last < 12 or media_dependency() < 50.0):
+		return
+	for threshold in [40, 55, 70, 85]:
+		if holding >= threshold:
+			flags["HALDEN_ESIK_%d" % threshold] = week
+	flags["HALDEN_TALEP"] = week
+	var level := halden_demands
+	halden_demands += 1
+	var choices: Array = []
+	var effects := [
+		{"holding": 10 + 2 * level, "wealth": 3, "treasury": -(3 + level), "king": 2},
+		{"unrest": 2, "actors": {"halden": {"ambition": 8}}},
+		{"wealth": -6, "actors": {"lena": {"power": 6}, "halden": {"ambition": 4}}},
+		{"holding": -8, "actors": {"halden": {"ambition": 6}}}
+	]
+	for i in 4:
+		var option: Dictionary = PATRONAGE_CONTENT["choices"][i]
+		choices.append({"label": option["label"], "text": option["text"], "fx": effects[i],
+			"available": (i != 2 or (actors.has("lena") and not actors["lena"].moved and not Press.is_closed(self, "free")))
+				and (i != 3 or (actors.has("falk") and not actors["falk"].moved))})
+	var e := {"id": "halden_talep", "kind": "patronage", "level": level, "title": PATRONAGE_CONTENT["title"],
+		"text": PATRONAGE_CONTENT["text"][mini(level, 2)], "art": "halden_fatura", "advisors": ["dorn", "kessler"],
+		"choices": choices, "ignore": {"text": PATRONAGE_CONTENT["ignore"], "fx": {}}}
+	pending.append({"event": e, "age": 0})
+	weekly_news.append("OLAY: " + str(e["title"]))
+
+
+func _resolve_patronage(choice: int, level: int) -> String:
+	var halden: Actor = actors["halden"]
+	var option: Dictionary = PATRONAGE_CONTENT["choices"][choice]
+	match choice:
+		0:
+			holding = minf(100.0, holding + 10.0 + 2.0 * level)
+			private_wealth += 3.0
+			treasury = maxf(0.0, treasury - 3.0 - level)
+			halden_hostile_until = 0
+			flags["HALDEN_SICAK"] = week
+			stats["halden_granted"] = int(stats.get("halden_granted", 0)) + 1
+			_add_fact("halden_talep_%d" % week, "Halden'e verilen yeni yayın ve ihale payı", "king", 18.0 + 2.0 * level, ["halden", "kessler"], 1)
+		1:
+			halden_hostile_until = week + 6 + 2 * level
+			halden.ambition += 8.0
+			unrest = minf(100.0, unrest + 2.0)
+			stats["halden_rejected"] = int(stats.get("halden_rejected", 0)) + 1
+			for fact: Dictionary in facts.values():
+				if "halden" in fact["knowers"]:
+					fact["common"] = minf(1.0, float(fact["common"]) + 0.25)
+		2:
+			private_wealth -= 6.0
+			lena_boost_until = week + 12
+			actors["lena"].power += 6.0
+			halden.ambition += 4.0
+		3:
+			var chance := clampf(0.25 + (float(capacity["hukuk"]) - 40.0) / 100.0 - holding / 250.0, 0.10, 0.75)
+			if rng.randf() < chance:
+				holding = maxf(0.0, holding - 25.0)
+				halden.fear += 15.0
+				halden.ambition += 6.0
+				flags["HALDEN_SAVCI_BASARILI"] = week
+				return str(option["text"]) + " Defterler açıldı; Halden geri çekiliyor."
+			halden_hostile_until = week + 8
+			flags["HALDEN_SAVCI_SIZDI"] = week
+			_add_fact("halden_savci_sizinti_%d" % week, "Halden soruşturmasının saraydan sızması", "king", 25.0, ["halden", "falk"], 1)
+			return str(option["text"]) + " Dosya sızdı; yayınlar sarayı hedef alıyor."
+	return str(option["text"])
 
 
 # ---------------------------------------------------------------- Darbe aşamaları (docs/design/darbe_asamalari.md)

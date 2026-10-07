@@ -241,12 +241,15 @@ func _advise(a: Actor, e: Dictionary, r: RandomNumberGenerator) -> Dictionary:
 	var w := clampf(ADVICE_W0 + a.ambition / 100.0 * (1.0 - a.honesty) * ADVICE_W1, 0.0, ADVICE_W_MAX)
 	var k := ADVICE_K_READY if a.ready else 1.0
 	var scores: Array[float] = []
+	var available: Array[int] = []
 	for ch: Dictionary in choices:
 		var fx: Dictionary = ch.get("fx", {})
 		scores.append(k * (choice_value(fx) + r.randfn(0.0, sigma)) + w * _self_interest(a, fx))
-	var best := 0
-	var worst := 0
-	for i in scores.size():
+		if ch.get("available", true):
+			available.append(scores.size() - 1)
+	var best := available[0]
+	var worst := available[0]
+	for i in available:
 		if scores[i] > scores[best]:
 			best = i
 		if scores[i] < scores[worst]:
@@ -272,6 +275,8 @@ func _advise(a: Actor, e: Dictionary, r: RandomNumberGenerator) -> Dictionary:
 			item["warn"] = worst
 			text += " %s ise %s." % [content["roman"][mini(worst, 3)], bad]
 	item["text"] = text
+	if e.get("kind", "") == "patronage" and a.id == "dorn":
+		item["text"] += " Gazeteler ona bağlı, Majesteleri."
 	return item
 
 
@@ -305,7 +310,7 @@ func _log_advice(e: Dictionary, advice: Array, chosen: int) -> void:
 	var choices: Array = e["choices"]
 	var best := 0
 	for i in choices.size():
-		if choice_value(choices[i].get("fx", {})) > choice_value(choices[best].get("fx", {})):
+		if choices[i].get("available", true) and (not choices[best].get("available", true) or choice_value(choices[i].get("fx", {})) > choice_value(choices[best].get("fx", {}))):
 			best = i
 	for it: Dictionary in advice:
 		var rec := int(it["rec"])

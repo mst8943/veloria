@@ -185,7 +185,7 @@ func _achievements(data: Dictionary) -> String:
 
 func _labels(data: Dictionary) -> String:
 	var issue := _keys(data, ["prizes", "power_tiers", "report_tones", "suspicion_names",
-		"regime_names", "regime_titles", "regime_threats", "regime_order", "budget"])
+		"regime_names", "regime_titles", "regime_threats", "regime_order", "budget", "patronage"])
 	if issue != "": return issue
 	for key in ["prizes", "report_tones", "suspicion_names", "regime_order"]:
 		if not _texts(data[key]): return "eksik/boş etiket: %s" % key
@@ -209,6 +209,16 @@ func _labels(data: Dictionary) -> String:
 			return "bütçe seçeneği eksik"
 		if not _text(option["label"]) or not _text(option["text"]) or not (option["stance"] is int or option["stance"] is float) or not float(option["stance"]) in [-1.0, 0.0, 1.0] or not option["court_share"] is bool:
 			return "bütçe seçeneği hatalı"
+	var patronage: Variant = data["patronage"]
+	if not patronage is Dictionary or _keys(patronage, ["title", "text", "ignore", "choices"]) != "":
+		return "Halden talep kartı anahtarları eksik"
+	if not _text(patronage["title"]) or not _texts(patronage["text"], 3) or patronage["text"].size() != 3 or not _text(patronage["ignore"]):
+		return "Halden talep metni eksik"
+	if not patronage["choices"] is Array or patronage["choices"].size() != 4:
+		return "Halden talebinde dört seçenek gerekli"
+	for option in patronage["choices"]:
+		if not option is Dictionary or _keys(option, ["label", "text"]) != "" or not _text(option["label"]) or not _text(option["text"]):
+			return "Halden talep seçeneği hatalı"
 	for key in ["regime_names", "regime_titles", "regime_threats"]:
 		if not data[key] is Dictionary: return "%s sözlük olmalı" % key
 		issue = _keys(data[key], REGIMES)

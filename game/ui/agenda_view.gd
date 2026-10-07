@@ -315,8 +315,8 @@ func _rebuild_agenda() -> void:
 		for ci in e["choices"].size():
 			var b := Button.new()
 			b.text = "  %s   %s" % [["I", "II", "III", "IV"][mini(ci, 3)], str(e["choices"][ci]["label"])]
-			b.disabled = Sim.mesai < 1
-			b.tooltip_text = "Bu karar 1 mesai harcar." if Sim.mesai >= 1 else "Bu hafta mesain kalmadı. Haftayı bitir; karar bir hafta daha bekleyebilir."
+			b.disabled = Sim.mesai < 1 or not e["choices"][ci].get("available", true) or (e.get("kind", "") == "patronage" and ci == 2 and Sim.private_wealth < 6.0)
+			b.tooltip_text = "Bu seçenek için gerekli kişi ya da servet yok." if b.disabled and Sim.mesai >= 1 else ("Bu karar 1 mesai harcar." if Sim.mesai >= 1 else "Bu hafta mesain kalmadı. Haftayı bitir; karar bir hafta daha bekleyebilir.")
 			if council.has(ci):
 				b.tooltip_text += "\n\n" + "\n".join(council[ci])
 			b.alignment = HORIZONTAL_ALIGNMENT_LEFT

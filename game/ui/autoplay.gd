@@ -26,7 +26,9 @@ func _autoplay_full() -> void:
 				var e: Dictionary = Sim.pending[0]["event"]
 				var best := 0
 				for i in e["choices"].size():
-					if Sim.choice_value(e["choices"][i].get("fx", {})) > Sim.choice_value(e["choices"][best].get("fx", {})):
+					if not e["choices"][i].get("available", true) or Sim.private_wealth + float(e["choices"][i].get("fx", {}).get("wealth", 0)) < 0.0:
+						continue
+					if not e["choices"][best].get("available", true) or Sim.choice_value(e["choices"][i].get("fx", {})) > Sim.choice_value(e["choices"][best].get("fx", {})):
 						best = i
 				if e.get("crisis", false):
 					best = 1   # kriz kartı: taviz / uzlaşma (etkisi boş seçenekleri choice_value ayırt edemez)
