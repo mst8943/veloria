@@ -1,6 +1,6 @@
 # Faz 4 ilerleme
 
-Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design/devlet_ve_patronaj.md` §13.
+Tarih: 2026-10-08. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design/devlet_ve_patronaj.md` §13.
 
 ## Taban
 
@@ -85,7 +85,7 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 
 ## Açık sorunlar
 
-4b kapısı sayıyla kapandı. 4c finali ve başarımlar tamamlandı; 1.3.0 paketleri henüz yapılmadı. Ayrı taban çalışma ağacı `dist/baseline_worktree` ölçüm için oluşturuldu; temizlenebilir. `export_presets.cfg` kullanıcı değişikliği olarak çalışma ağacında duruyor.
+4b kapısı sayıyla kapandı. 4c finali ve başarımlar ile 1.3.0 paketleri tamamlandı. 4c denge kapısı tamamen kapanmadı: Zor'da `advice_soft` %26 ve `advice_lavish` %28, ölçüt %17'yi +9/+11 puan aşar (sınır +8). Kullanıcı artık tüm botların incelenmesini istemediği için yeni kalibrasyon yapılmadı. Web'de gerçek 104 haftalık final ekranı doğrulanamadı; yapay final ekranları masaüstü/mobilde denetlendi. Ayrı taban çalışma ağacı `dist/baseline_worktree` ölçüm için oluşturuldu; temizlenebilir. `export_presets.cfg` kullanıcı değişikliği olarak çalışma ağacında duruyor.
 
 ### 4c.1 rejim ölçümü — `dist/phase4c1_regimes_full.log`
 
@@ -97,4 +97,8 @@ Kapasite çizelgesine Halden payı eklendi; kayıt sürümü **7**, v6 çizelge 
 
 ## SIRADAKİ ADIM
 
-4c.3: tam bot denge ölçümünü ve 4c kapısını kaydet; belgeleri tamamla, sonra yalnız sürüm satırını 1.3.0 yapıp Windows/Linux/Web paketlerini üret ve web/Windows doğrulamasını yap. `dist/baseline_worktree` iş bitince `git worktree remove --force` ile temizlenebilir.
+1.3.0 dağıtımı hazır. İstenirse 4c denge kapısındaki iki Zor strateji botunu tek parametre grubuyla kalibre edip 80 kampanyalık sondajı yeniden çalıştır; ardından Web'de gerçek kampanya finalini ve sesi insan eliyle denetle. Kullanıcının son talebiyle kapanma zamanlayıcısı `shutdown /a` kullanılarak iptal edildi; yeniden kurma.
+
+### 4c dağıtım doğrulaması — `5d83f77`
+
+`project.godot` yalnızca sürüm satırı 1.3.0 oldu; 1600×900 korundu. Windows, Linux ve Web export başarılı. Arşivler: Windows 60.381.811, Linux 50.600.754, Web 34.311.803 bayt; zip bütünlüğü temiz, her birinde oyuncu rehberi var. Web'de Chrome WebGL/SwiftShader üzerinden menü, oyun, Gündem, DEVLET eylem sekmesi, Maliye paneli, üç Medya Merkezi sekmesi ve hafta geçişi açıldı. Kâğıt yarım ton ve CRT shader'ları, Türkçe harfler görüldü; bu ekranlarda tofu saptanmadı. Kanıtlar `dist/qa_1_3_0/web_*.png`. Web'de gerçek final ekranını otomatik kampanyayla yakalama denemesi zaman aşımına uğradı; final yalnızca pencereli Godot `ui_shots.gd --state` görüntülerinde doğrulandı. Windows exe pencereli açıldı (`Veloria` başlığı). Linux üzerinde çalıştırma, işitsel ses ve gerçek oyuncu testi yapılmadı. `.mcp.json` ve `.cursor/mcp.json` 8770; `export_presets.cfg` kullanıcı değişikliği olarak bırakıldı. Kullanıcı istemiyle zamanlanmış Windows kapanışı `shutdown /a` ile iptal edildi.

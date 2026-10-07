@@ -1,10 +1,20 @@
 # Veloria — Durum ve Yapılacaklar (yeni oturum için devir notu)
 
-Son güncelleme: 2026-10-08 (dağıtım hâlâ 1.2.0). Dal: `veloria`.
+Son güncelleme: 2026-10-08 (dağıtım 1.3.0). Dal: `veloria`.
 
-## Faz 4 geliştirme durumu (henüz dağıtılmadı)
+## Dağıtım 1.3.0 ve Faz 4c
 
-**4a ve 4b geliştirme dalında tamamlandı; henüz paketlenmedi.** Kayıt sürümü 6. 4b'de Halden'e İhale Ver, holding ve medya havası, dört seçenekli talep kartı, düşman yayın ve yeni olaylar eklendi. `events.json` 179 olaydır. Ölçüt botu 80 kampanya/zorlukta %85/%47/%18 (4a tabanı %83/%45/%16); patron botu %66/%33/%23. Tohum 101 tam oyun 104 hafta **TAHTTA**, Oligark Rejimi, 112 olay. Bütün işlev testleri geçti. Geç dönem temposu 97–104 için 258 yaşayan oyun haftasında 1,04 olay/hafta; 4b'nin toplam tempo farkı tabana göre +0,024. Sıradaki faz **4c rejim ve oyun sonu bağlama**, ardından 1.3.0 paketleri. Kapı kanıtları, commitler ve yeniden başlama noktası `docs/FAZ4_ILERLEME.md` içinde.
+Faz 4'ün devlet kapasitesi, kasa, kadro, patronaj ve Halden sistemi; rejim hesabı ile oyun sonundaki Devlet Defteri'ne bağlandı. Kayıt sürümü **7**. Hakikat grafiğinde devlet kapasitesi ile Halden payı, finalde iki yeni unvan ve dört başarım var. Windows/Linux/Web export ve zip paketleri üretildi; 1.0.0–1.2.0 arşivleri korundu. Paketler: Windows **60.381.811**, Linux **50.600.754**, Web **34.311.803 bayt**. Üç zip açılarak bütünlük ve rehber varlığı denetlendi.
+
+Testler: `TEST: OK`, `EVENTS: OK (179 olay, 0 uyarı)`, `SAVE: OK`, `CONTENT: OK (5 dosya, 8 bozuk örnek)`, `UI INPUT: OK`; masaüstü/mobil `AUTOPLAY DONE`. Tam oyun ilk tohum 101'de **104 hafta TAHTTA**, **Medya Rejimi**, **112 olay**. Tempo testinde görülen bütün dilimler ≥1,03. Ölçüt botu 80 kampanya/zorlukta Kolay **%83**, Normal **%46**, Zor **%17**; tabana göre 0/+1/+1 puan, hedef bantta. Rejim ölçümünde 2.400 kampanyanın hiçbir rejimi %50 payı aşmadı; en yüksek İstihbarat %29,2 (rejim oluşan oyunlarda %37,8).
+
+Web paketi yerel HTTP üzerinden Chrome WebGL/SwiftShader ile açıldı. Menü, oyun, DEVLET sekmesi, Maliye paneli, karar ve hafta geçişi, üç Medya Merkezi sekmesi gözle denetlendi. Kâğıt/yarım ton ve CRT görünümü çalışıyor; Türkçe karakterler okunuyor, görünen ekranlarda tofu yok. Kanıtlar `dist/qa_1_3_0/web_{menu,week1,state_tab,decision,week2,maliye,media_news,media_free,media_tv}.png`. Windows exe pencereli `Veloria` başlığıyla açıldı. Yerel test görüntüleri `dist/phase4c2_shots_{desktop,mobile}/5_devlet_{grafik,defteri,son}.png`; bunlar yapay final durumudur. Linux paketi gerçek Linux'ta, ses işitilerek ve gerçek oyuncu akışıyla denenmedi.
+
+**Açık 4c kapı farkı:** Tam bot sondajında `advice_soft` Zor %26 ve `advice_lavish` Zor %28; ölçüt %17'yi sırasıyla 9 ve 11 puan aşıyor. İstenen üst sınır 8 puan. Kullanıcının “Tüm botlara bakmana gerek yok. Şimdiye kadar olanlar yeterli” yönlendirmesiyle yeni bot ayarı ve tekrar sondajı yapılmadı; Faz 4c işlevleri ve paketleri tamamlandı, denge kapısının bu maddesi açık kaldı. Ayrıntı `docs/FAZ4_ILERLEME.md` içinde.
+
+## Faz 4a–4b aşama kayıtları (1.3.0 öncesi)
+
+4b bittiğindeki kayıt sürümü 6 idi. Halden'e İhale Ver, holding ve medya havası, dört seçenekli talep kartı, düşman yayın ve yeni olaylar eklendi. `events.json` 179 olaydır. O aşamada ölçüt botu 80 kampanya/zorlukta %85/%47/%18 (4a tabanı %83/%45/%16); patron botu %66/%33/%23. Tohum 101 tam oyun 104 hafta **TAHTTA**, Oligark Rejimi, 112 olay. Bütün işlev testleri geçti. Geç dönem temposu 97–104 için 258 yaşayan oyun haftasında 1,04 olay/hafta; 4b'nin toplam tempo farkı tabana göre +0,024. Kapı kanıtları ve commitler `docs/FAZ4_ILERLEME.md` içinde.
 
 Son 80 kampanyalık ölçüm (ölçüt `advice_weighted`): taban %83/%45/%16; 4a %83/%45/%16 (Kolay/Normal/Zor). Tarz botları aynı sırayla: Sadık %76/%47/%20, Liyakatli %65/%47/%21, Sıkı bütçe %81/%38/%20, Cömert bütçe %80/%40/%17. Ortalama son kapasite (üç zorluk): Sadık **24,9**, Liyakatli **75,1**. Arden girişimi ölçütte toplam 175/240 kampanya, liyakatlide 203/240: **+11,7 puan**; bu girişim ölçüsüdür, kazanılmış darbe değil. Tempo dilimleri ≥0,8; 81–88'de yalnız dört yaşayan oyun haftası var.
 
@@ -152,7 +162,7 @@ Hedef bantlar (ölçüt bot): Kolay %70–85, Normal %35–55, Zor %15–30. Tar
 - **Faz 1 Okunabilirlik:** ✅ danışman görüşleri · ✅ aşamalı darbe · ✅ rapor değişimi ve "neler değişti" · ✅ eylem önizlemesi
 - **Faz 2 Strateji derinliği:** ✅ kayıp çeşitliliği (kısmi) · ✅ rüşvet (ölçüldü, gerekmedi) · ✅ Birbirine Düşür · ✅ aktör hamleleri
 - **Faz 3 Kampanya ve içerik: ✅** dönemler · ✅ ikinci yıl olayları · ✅ karakter hikâye yayları · ✅ rejim tipi ve buna bağlı final tehdidi
-- **Faz 4 Büyük sistemler:** ✅ tasarım belgesi · ✅ 4a devlet kapasitesi ve kasa · ✅ 4b patronaj/oligark · ⬜ 4c bağlama (rejim, oyun sonu, başarımlar)
+- **Faz 4 Büyük sistemler:** ✅ tasarım belgesi · ✅ 4a devlet kapasitesi ve kasa · ✅ 4b patronaj/oligark · ✅ 4c bağlama ve 1.3.0 dağıtımı (denge kapısındaki iki strateji botu farkı açık)
 - **Faz 5 Cila ve altyapı:** ⬜ gerçek ses/müzik · ✅ main.gd bölme · ⬜ artırımlı yeniden çizim · ⬜ yerelleştirme
 
 ## KALAN İŞLER (öncelik sırasıyla)
@@ -163,9 +173,9 @@ Hedef bantlar (ölçüt bot): Kolay %70–85, Normal %35–55, Zor %15–30. Tar
 4. 👤 İsteğe bağlı görsel üretimi: yeni olaylar mevcut görsellere yaklaşık eşleştirildi; özel görsel istenenler (muhtıra, çadır kent, maden faciası, kuraklık, soylular meclisi, Saray dosyası): prompt'ları ben hazırlarım (`/asset-spec`).
 
 **Geliştirme (benim)**
-5. **Faz 4:** 4a ve 4b kapıları geçti. Sıradaki 4c rejim, final, başarım ve 1.3.0 dağıtımı. Ayrıntı ve kaldığı yer `docs/FAZ4_ILERLEME.md`.
+5. **Faz 4:** 4a ve 4b kapıları geçti; 4c işlevleri ve dağıtımı bitti. 4c denge kapısında `advice_soft` ve `advice_lavish` Zor farkı sırasıyla +9/+11 puan; istenen +8 sınırı için ileride tek parametre grubu üzerinden kalibrasyon ve tekrar ölçüm gerekir. Ayrıntı `docs/FAZ4_ILERLEME.md`.
 6. **Faz 5:** gerçek ses ve müzik (şimdi sentez; kullanıcı dosya sağlar ya da prompt verilir); `_refresh` artırımlı çizim; `tr()` ile yerelleştirme. İçerik JSON'a ve arayüz bileşenleri ayrı betiklere ayrıldı.
-7. **Dağıtım:** 1.2.0 Windows/Linux/Web paketleri hazır. Linux üzerinde çalışma ve Web ses/kayıt akışının insan eliyle doğrulanması kaldı.
+7. **Dağıtım:** 1.3.0 Windows/Linux/Web paketleri hazır. Web'de gerçek kampanya finali, Linux üzerinde çalışma ve Web ses/kayıt akışının insan eliyle doğrulanması kaldı.
 8. **Denge açıkları:** darbe hâlâ baskın kayıp (ölçüt botta darbe dışı ~%4–10): darbe sıklığı düşürülebilir ya da sokak/mahkeme yollarına daha çok sürekli baskı eklenebilir. Alamete tepki vermek botta nötr: oyuncu "gördüm ama işe yaramadı" derse Huzura Çağır güçlendirilmeli. Zor'da `visible_wise` ~%70'lerde (tavan hedef değil, ama izlenmeli).
 9. **Küçük içerik/teknik:** meclis görüşü metinleri danışmana özgü değil (söyleyiş eklenebilir); olay görselleri için `_b` varyantları; sim_test botları rüşvet/şantaj kullanmadığı için istatistik olaylarını "hiç tetiklenmeyen" listesinde gösterir (ulaşılabilirlik kontrolü bunları doğrular); `FULLRUN` testi 104 haftayı ilk tohumda tamamlıyor, diğer tohumlar çoğu zaman düşüyor (bot basit).
 
