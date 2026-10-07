@@ -13,7 +13,7 @@ game/
     press.gd      Gazete ve TV içeriği: gizli durumdan, yayın sahibinin gözüyle üretilir
   data/
     actors.json   9 karakter
-    events.json   Karar ve aktör olayları (159 kayıt)
+    events.json   Karar ve aktör olayları (geliştirme dalında 174 kayıt)
     city_map.json (isteğe bağlı) harita bina konumları, yüzde olarak
   ui/
     main.gd       Ana ekran kurulumu, akış ve bileşen yönlendirmesi

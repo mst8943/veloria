@@ -336,3 +336,9 @@ Tasarımın açık soruları şöyle kapatıldı. Uygulayıcı bunları değişt
 | 8 | Saray payının ahlaki sinyali | **Hayır (ilk sürüm).** Yalnızca sır doğar; danışman metni eklenmez. | Kapsamı dar tut |
 
 Faz 4'ün üç parçası ayrı oturumda uygulanır; 4b, 4a'nın, 4c ise 4b'nin commit'lerini gerektirir.
+
+## 4a Sonuç (2026-10-07)
+
+Kapasite/kasa, yedi çeyrek kartı, dört başkan için iki kadro yolu, Başkent'teki yalana açık üç bant ve Doğrula, eşik haberleri, 15 olay ve kurum raporları uygulandı. Başlangıç kapasitesi ayrı tohum üreteciyle kuruluyor; ana rastgele sayı dizisi bundan etkilenmiyor. Kayıt sürümü 5, v4 göçü var. 4b ve 4c henüz uygulanmadı; 1.2.0 paketleri eski sürüm.
+
+80 kampanya/üç zorluk kapısında ölçüt botu %83/%45/%16 ile tabanın aynısı. Sadık atama botunun ortalama son kapasitesi 24,9; liyakatli atama botunun 75,1. Liyakatlide Arden darbe **girişimi** toplam 175/240'tan 203/240'a çıktı (+11,7 yüzde puanı); başarıyla sonuçlanan darbeler ayrı tutuldu. Tarz botlarının hiçbiri ölçütü 8 puandan fazla aşmadı veya 20 puandan fazla geride kalmadı. Tempo testinde görünen bütün dilimler ≥0,8; 81–88 diliminde yalnız dört yaşayan oyun haftası olduğu için o dilimin kestirimi zayıf. Testler ve masaüstü/mobil kurum, bütçe, DEVLET görüntüleri `docs/FAZ4_ILERLEME.md` içinde.

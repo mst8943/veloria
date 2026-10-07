@@ -8,7 +8,7 @@ Son güncelleme: 2026-10-06. Yöntem: `.claude/skills/tech-debt/SKILL.md`.
 | `game/ui/main.gd` | 1390 (önce 2568; ilk bölmeden sonra 1958) | ana ekran: kurulum, akış ve bileşen yönlendirmesi |
 | `game/ui/agenda_view.gd` | 632 | gündem, dosyalar, raporlar, meclis ve yol gösterici |
 | `game/ui/person_panel.gd` | 630 | kişi kartları, eylem paneli ve önizleme |
-| `game/core/sim.gd` | 2205 (önce 2607) | kurallar + kayıt + krizler; içerik JSON'da |
+| `game/core/sim.gd` | 2396 (önce 2607) | kurallar + kayıt + krizler + Faz 4a devlet sistemi; içerik JSON'da |
 | `game/core/advice.gd`, `narrative.gd`, `content_data.gd` | ayrı | Meclis hesabı, anlatı kurma, içerik şeması |
 | `game/ui/media_view.gd` | 688 | gazete + TV |
 | `game/ui/desk_view.gd` | 649 | çalışma masası |

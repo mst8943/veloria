@@ -2,6 +2,14 @@
 
 Son güncelleme: 2026-10-07 (dağıtım 1.2.0). Dal: `veloria`.
 
+## Faz 4 geliştirme durumu (henüz dağıtılmadı)
+
+**4a devlet kapasitesi ve kasa tamamlandı.** Kayıt sürümü 5 ve v4 göçü, dört kurum kapasitesi, kasa, çeyrek bütçesi, Sadık/Liyakatli Ata, yalana açık kurum bantları, Doğrula, 15 yeni olay ve kurum raporları eklendi. `events.json` 174 olaydır. Sıradaki faz **4b patronaj ve tek oligark Halden**; ardından 4c final bağlamı ve 1.3.0 paketleri. Adım commitleri, açık konular ve yeniden başlama noktası: `docs/FAZ4_ILERLEME.md`.
+
+Son 80 kampanyalık ölçüm (ölçüt `advice_weighted`): taban %83/%45/%16; 4a %83/%45/%16 (Kolay/Normal/Zor). Tarz botları aynı sırayla: Sadık %76/%47/%20, Liyakatli %65/%47/%21, Sıkı bütçe %81/%38/%20, Cömert bütçe %80/%40/%17. Ortalama son kapasite (üç zorluk): Sadık **24,9**, Liyakatli **75,1**. Arden girişimi ölçütte toplam 175/240 kampanya, liyakatlide 203/240: **+11,7 puan**; bu girişim ölçüsüdür, kazanılmış darbe değil. Tempo dilimleri ≥0,8; 81–88'de yalnız dört yaşayan oyun haftası var.
+
+Testler: `TEST: OK`, `EVENTS: OK (174 olay, 0 uyarı)`, `SAVE: OK`, `CONTENT: OK (5 dosya, 7 bozuk örnek)`, `UI INPUT: OK`; masaüstü/mobil `AUTOPLAY DONE`; tohum 101 `FULLRUN ... hafta=104 ... TAHTTA ... Oligark Rejimi ... olay=109`. Masaüstü/mobil görüntüler `dist/phase4a6_state_shots{,_mobile}/1_maliye_aksiyor.png`, `1_adliye_saglam.png`, `1_butce.png` ve `dist/phase4a5_state_shots{,_mobile}/1_devlet.png`/`1_saray_devlet.png` açılarak denetlendi. 1.2.0 paketleri bu değişiklikleri içermez.
+
 ## Dağıtım 1.2.0 ve arayüz bölmesi
 - `main.gd` 2568 → 1390 satır; gündem/dosyalar/raporlar `agenda_view.gd`, kişi kartları/eylem paneli `person_panel.gd` içinde. İki refactor ayrı committe; dış erişim adları korundu. Web denetiminde bulunan türlenmiş `_sel` ataması ayrıca düzeltildi; pencereli `UI INPUT: OK` kart ve rapor tıklamasını doğrular. `docs/TECH_DEBT.md` güncellendi.
 - Sürüm `project.godot` içinde **1.2.0**, çözünürlük **1600×900**. Windows, Linux ve Web export yeniden alındı; `export_presets.cfg` değiştirilmedi. `dist/.gdignore` test PNG'lerinin export kaynaklarına girmesini önler. 1.1.0 zip'leri korunuyor; yeni paketlerin zip bütünlük denetimi temiz. `dist/release/Veloria-1.2.0-<platform>.zip` boyutları: Windows **60.341.270 bayt**, Linux **50.561.093 bayt**, Web **34.271.010 bayt**.
@@ -144,7 +152,7 @@ Hedef bantlar (ölçüt bot): Kolay %70–85, Normal %35–55, Zor %15–30. Tar
 - **Faz 1 Okunabilirlik:** ✅ danışman görüşleri · ✅ aşamalı darbe · ✅ rapor değişimi ve "neler değişti" · ✅ eylem önizlemesi
 - **Faz 2 Strateji derinliği:** ✅ kayıp çeşitliliği (kısmi) · ✅ rüşvet (ölçüldü, gerekmedi) · ✅ Birbirine Düşür · ✅ aktör hamleleri
 - **Faz 3 Kampanya ve içerik: ✅** dönemler · ✅ ikinci yıl olayları · ✅ karakter hikâye yayları · ✅ rejim tipi ve buna bağlı final tehdidi
-- **Faz 4 Büyük sistemler:** ✅ tasarım belgesi yazıldı (`docs/design/devlet_ve_patronaj.md`, 2026-10-07; kodlanmadı) · ⬜ 4a devlet kapasitesi ve kasa · ⬜ 4b patronaj/oligark · ⬜ 4c bağlama (rejim, oyun sonu, başarımlar)
+- **Faz 4 Büyük sistemler:** ✅ tasarım belgesi · ✅ 4a devlet kapasitesi ve kasa · ⬜ 4b patronaj/oligark · ⬜ 4c bağlama (rejim, oyun sonu, başarımlar)
 - **Faz 5 Cila ve altyapı:** ⬜ gerçek ses/müzik · ✅ main.gd bölme · ⬜ artırımlı yeniden çizim · ⬜ yerelleştirme
 
 ## KALAN İŞLER (öncelik sırasıyla)
@@ -155,7 +163,7 @@ Hedef bantlar (ölçüt bot): Kolay %70–85, Normal %35–55, Zor %15–30. Tar
 4. 👤 İsteğe bağlı görsel üretimi: yeni olaylar mevcut görsellere yaklaşık eşleştirildi; özel görsel istenenler (muhtıra, çadır kent, maden faciası, kuraklık, soylular meclisi, Saray dosyası): prompt'ları ben hazırlarım (`/asset-spec`).
 
 **Geliştirme (benim)**
-5. **Faz 4:** GDD hazır (`docs/design/devlet_ve_patronaj.md`). Açık sorular karara bağlandı (§13: tek oligark Halden, kapasite bantla, 7 çeyrek kartı, 7. sekme "DEVLET"); 4a, 4b, 4c ayrı oturumlarda uygulanır (belgenin §12 planı; her adımda taban denge ±3 puan korunmalı).
+5. **Faz 4:** 4a tamamlandı ve kapı ölçümü geçti. Sıradaki 4b patronaj ve Halden, ardından 4c final, başarım ve 1.3.0 dağıtımı. Ayrıntı ve kaldığı yer `docs/FAZ4_ILERLEME.md`.
 6. **Faz 5:** gerçek ses ve müzik (şimdi sentez; kullanıcı dosya sağlar ya da prompt verilir); `_refresh` artırımlı çizim; `tr()` ile yerelleştirme. İçerik JSON'a ve arayüz bileşenleri ayrı betiklere ayrıldı.
 7. **Dağıtım:** 1.2.0 Windows/Linux/Web paketleri hazır. Linux üzerinde çalışma ve Web ses/kayıt akışının insan eliyle doğrulanması kaldı.
 8. **Denge açıkları:** darbe hâlâ baskın kayıp (ölçüt botta darbe dışı ~%4–10): darbe sıklığı düşürülebilir ya da sokak/mahkeme yollarına daha çok sürekli baskı eklenebilir. Alamete tepki vermek botta nötr: oyuncu "gördüm ama işe yaramadı" derse Huzura Çağır güçlendirilmeli. Zor'da `visible_wise` ~%70'lerde (tavan hedef değil, ama izlenmeli).

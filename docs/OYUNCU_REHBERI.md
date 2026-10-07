@@ -6,7 +6,7 @@ Veloria'da modern kurumlara sahip hayali bir krallığın yeni kralısın: **Adr
 
 ## Kurulum
 
-Bu rehber **1.2.0** Windows, Linux ve Web paketleriyle birlikte gelir.
+Dağıtımdaki son paket **1.2.0**. Aşağıdaki devlet kapasitesi bölümü geliştirme dalındaki sonraki sürümü anlatır; 1.2.0 paketinde henüz bulunmaz.
 
 | Platform | Nasıl açılır |
 |---|---|
@@ -87,7 +87,13 @@ Mobilde kişiler ve eylemler ayrı bir **Saray** sekmesindedir.
 | Birbirine Düşür | Çoklu seçimle tam iki kişiyi seç: kapışırlarsa ikisi de güç ve hırs kaybeder (komplo koordinasyonu zayıflar) | 2 mesai; başarısız olursa ikisi de kimin yaptığını anlar, hırsları artar ve bir sır doğar; aynı çift için 6 hafta bekleme |
 | Söz Ver | Başbakanlık, ihale ya da dokunulmazlık vaat eder | Vadesi gelince ya tutarsın ya bedelini ödersin |
 
-Eylemler, Eylemler panelinde altı sekmede toplanır (KAZAN · SÖZ VER · ÖĞREN · EMRET · BASKI · OPERASYON); bir sekmeye tıklayınca o gruptaki eylemler açılır. Bir eylemin üzerine gelince ne yaptığı, eylemden sonra da sonucu panelin altında görünür. Operasyon için birden fazla kişi seçmek gerekirse OPERASYON sekmesindeki **Çoklu seçim**i aç (ya da Ctrl ile tıkla).
+Geliştirme dalında eylemler yedi sekmede toplanır (KAZAN · SÖZ VER · ÖĞREN · EMRET · BASKI · OPERASYON · DEVLET); bir sekmeye tıklayınca o gruptaki eylemler açılır. Bir eylemin üzerine gelince ne yaptığı, eylemden sonra da sonucu panelin altında görünür. Operasyon için birden fazla kişi seçmek gerekirse OPERASYON sekmesindeki **Çoklu seçim**i aç (ya da Ctrl ile tıkla).
+
+## Devletin işleyişi (geliştirme dalı)
+
+Başkent haritasında Maliye Bakanlığı, Adliye, Genelkurmay ve Saray panelleri işleyişi **aksıyor / yürüyor / sağlam** diye anlatır. Makam başkanı durumu olduğundan iyi gösterebilir. Başkanın raporunu **Doğrula** ile karşılaştırırsan bir süre daha güvenilir bir bant görürsün. Kasayı da Maliye panelindeki ifadeden izlersin; kişisel servetinle aynı şey değildir.
+
+Çeyrek bütçesi geldiğinde sıkı, dengeli, cömert bütçe ya da saray payını seçersin. Kararı ertelersen dengeli bütçe uygulanır. DEVLET sekmesindeki **Sadık Ata**, başkanı sana bağlarken kurumun işini zorlaştırır; **Liyakatli Ata** işi toparlar ama başkana bağımsızlık verir. Aynı kurumda peş peşe atama yapamazsın. Sonuçları kurum panellerinden, başkan raporlarından ve haberlerdeki uyarılardan oku.
 
 **İlk haftalarda** gündemin üstünde "Bu hafta ne yapmalı?" yol göstericisi durur: 1 Kararını ver → 2 Raporları oku → 3 Bir kişiye eylem → 4 Haftayı bitir. Sıradaki adım altınla vurgulanır; bir adıma tıklamak seni ilgili yere götürür. İpuçları Ayarlar'dan kapatılabilir.
 
