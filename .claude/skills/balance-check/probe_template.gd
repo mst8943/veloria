@@ -22,7 +22,7 @@ extends SceneTree
 
 var sim: Node
 var rng := RandomNumberGenerator.new()
-const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "visible_wise", "omniscient"]
+const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "advice_patron", "visible_wise", "omniscient"]
 var style := ""   # advice_soft / advice_dirty oyun tarzı
 
 
@@ -59,6 +59,9 @@ func _run(bot: String, diff: int, n: int) -> void:
 	var arden_coups := 0
 	var arden_prepared := 0
 	var arden_attempts := 0
+	var hostile_broadcasts := 0
+	var hostile_weeks := 0
+	var final_wealth := 0.0
 	for s in range(1, n + 1):
 		sim.new_game(s, diff)
 		rng.seed = s * 131 + 7
@@ -66,6 +69,9 @@ func _run(bot: String, diff: int, n: int) -> void:
 			_play(bot)
 			sim.end_week()
 		var r: Dictionary = sim.record
+		hostile_broadcasts += 1 if sim.fired_events.has("halden_yayin_kesti") else 0
+		hostile_weeks += int(sim.stats.get("halden_hostile_weeks", 0))
+		final_wealth += sim.private_wealth
 		for value in sim.capacity.values():
 			final_cap += float(value) / sim.capacity.size()
 		if str(r["cause"]).contains("Arden") and str(r["cause"]).contains("Askerî darbe"):
@@ -89,6 +95,7 @@ func _run(bot: String, diff: int, n: int) -> void:
 	print("[%-12s] kazanma %2d/%d (%3d%%)  ort. hafta %5.1f  kayıplar %s  ünvanlar %s" % [
 		bot, wins, n, int(100.0 * wins / n), float(weeks) / n, causes, titles])
 	print("  ort. son kapasite %.1f | Arden girişimi %d/%d | Arden hazırlığı %d/%d | Arden zaferi %d/%d" % [final_cap / n, arden_attempts, n, arden_prepared, n, arden_coups, n])
+	print("  düşman yayın olayı %.2f/oyun | düşman yayın haftası %.1f/oyun | ort. son servet %.1f" % [float(hostile_broadcasts) / n, float(hostile_weeks) / n, final_wealth / n])
 
 
 func _cause_kind(c: String) -> String:
@@ -116,6 +123,8 @@ func _play(bot: String) -> void:
 			_act_omniscient()
 		_:
 			style = "soft" if bot == "advice_soft" else ("dirty" if bot == "advice_dirty" else "")
+			if bot == "advice_patron" and sim.week % 3 == 0 and sim.mesai > 0 and sim.tender_wait() == 0 and not sim.actors["halden"].moved:
+				sim.give_tender("halden")
 			var cycle := 16 if bot == "advice_loyal" else 20
 			var start := 16 if bot == "advice_loyal" else 12
 			if bot in ["advice_loyal", "advice_merit"] and sim.week >= start and (sim.week - start) % cycle in [0, 1]:
@@ -141,6 +150,8 @@ func _decide(bot: String) -> void:
 			ci = 0
 		elif ev.get("kind", "") == "budget" and bot == "advice_lavish" and sim.week in [13, 39, 65, 91]:
 			ci = 2
+		elif ev.get("kind", "") == "patronage" and bot == "advice_patron":
+			ci = 0
 		elif bot in ["visible_wise", "omniscient"]:
 			ci = _wise_choice(ev)
 		elif bot.begins_with("advice_"):
