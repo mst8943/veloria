@@ -26,6 +26,7 @@ func _init() -> void:
 		var max_streak := 0
 		while not sim.ended:
 			var before: int = sim.fired_events.size()
+			var demands_before: int = sim.halden_demands
 			var repeat_before := 0
 			for k in sim.fired_events:
 				repeat_before += int(sim.fired_events[k])
@@ -38,6 +39,7 @@ func _init() -> void:
 				# Aktör hamleleri (hamle_*) karar olayı değil; tempo yalnızca kararları sayar.
 				if int(sim.fired_events[k]) == sim.week and not str(k).begins_with("hamle_"):
 					new_this_week += 1
+			new_this_week += sim.halden_demands - demands_before
 			var b := int((sim.week - 1) / BUCKET)
 			buckets[b] = int(buckets.get(b, 0)) + new_this_week
 			alive_weeks[b] = int(alive_weeks.get(b, 0)) + 1
