@@ -51,6 +51,11 @@ var treasury := 55.0
 var budget_stance := 0
 var court_share := false
 var capacity_timeline: Array = []
+var holding := 40.0
+var halden_hostile_until := 0
+var halden_demands := 0
+var lena_boost_until := 0
+var kadro_log: Array = []
 const ATTRITION := 0.04
 const STANCE_CAP := 0.23
 const TREASURY_COST := 0.15
@@ -125,6 +130,11 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 	budget_stance = 0
 	court_share = false
 	capacity_timeline.clear()
+	holding = 40.0
+	halden_hostile_until = 0
+	halden_demands = 0
+	lena_boost_until = 0
+	kadro_log.clear()
 	actors.clear()
 	facts.clear()
 	flags.clear()
@@ -245,11 +255,12 @@ func save_summary() -> String:
 
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
-## 1: sürüm alanı yokken (2026-10-06 öncesi) · 2: report_prev, week_changes · 3: sokak/mahkeme krizi · 4: rejim tipi · 5: devlet durumu
-const SAVE_VERSION := 5
+## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Halden ve kadro günlüğü
+const SAVE_VERSION := 6
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
-	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline"]
+	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
+	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -271,6 +282,16 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 		d["budget_stance"] = 0
 		d["court_share"] = false
 		d["capacity_timeline"] = []
+	if from < 6:
+		var old_people: Variant = d.get("actors", {})
+		var old_halden: Dictionary = {}
+		if old_people is Dictionary and old_people.get("halden") is Dictionary:
+			old_halden = old_people["halden"]
+		d["holding"] = clampf(float(old_halden.get("power", 50.0)) - 10.0, 0.0, 100.0)
+		d["halden_hostile_until"] = 0
+		d["halden_demands"] = 0
+		d["lena_boost_until"] = 0
+		d["kadro_log"] = []
 	d["version"] = SAVE_VERSION
 	return d
 
@@ -289,7 +310,9 @@ func save_game() -> bool:
 		"timeline": timeline, "report_prev": report_prev, "week_changes": week_changes,
 		"street_anger": street_anger, "legal_relief": legal_relief, "other_crisis": other_crisis, "warned": warned,
 		"regime": regime, "capacity": capacity, "treasury": treasury, "budget_stance": budget_stance,
-		"court_share": court_share, "capacity_timeline": capacity_timeline, "version": SAVE_VERSION}
+		"court_share": court_share, "capacity_timeline": capacity_timeline, "holding": holding,
+		"halden_hostile_until": halden_hostile_until, "halden_demands": halden_demands,
+		"lena_boost_until": lena_boost_until, "kadro_log": kadro_log, "version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -333,6 +356,11 @@ func load_game() -> bool:
 	budget_stance = int(d["budget_stance"])
 	court_share = bool(d["court_share"])
 	capacity_timeline = d["capacity_timeline"]
+	holding = float(d["holding"])
+	halden_hostile_until = int(d["halden_hostile_until"])
+	halden_demands = int(d["halden_demands"])
+	lena_boost_until = int(d["lena_boost_until"])
+	kadro_log = d["kadro_log"]
 	for id in d["actors"]:
 		if actors.has(id):
 			actors[id].from_save(d["actors"][id])
@@ -416,6 +444,7 @@ func appoint(id: String, kind: String) -> String:
 	var institution: String = INSTITUTION_HEADS[id]
 	var a: Actor = actors[id]
 	flags["KADRO_" + institution] = week
+	kadro_log.append({"week": week, "institution": institution, "kind": kind})
 	if kind == "loyal":
 		flags["KADRO_SADIK_" + institution.to_upper()] = week
 		a.loyalty["career"] += 8.0
