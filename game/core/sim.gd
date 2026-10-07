@@ -68,10 +68,11 @@ const APPOINT_COOLDOWN := 8
 const TENDER_COOLDOWN := 3
 const HALDEN_MEDIA_UNREST := 0.6
 const HALDEN_MEDIA_KING := 0.25
-const HALDEN_MEDIA_REACH := 71.0  # Yayın etkisi ancak holding ülke çapına erişince kitleselleşir.
+const HALDEN_MEDIA_REACH := [71.0, 71.0, 50.0]  # Yayın etkisinin ülke çapına eriştiği holding eşiği.
 const STATE_ECON_MALIYE := 0.003
 const STATE_ECON_HUKUK := 0.001
 const STATE_DIFF := [0.7, 1.0, 1.2]
+const LEGAL_DIFF := [0.5, 1.0, 1.5]
 var actors: Dictionary = {}  # id -> Actor
 var facts: Dictionary = {}   # id -> Dictionary
 var flags: Dictionary = {}
@@ -1413,11 +1414,11 @@ func _tick_holding() -> void:
 	holding = clampf(holding + (-0.5 if halden.moved else 0.12 + halden.power / 500.0), 0.0, 100.0)
 	var mood := halden_mood()
 	var sway := holding / 100.0
-	if mood == "sıcak" and holding >= HALDEN_MEDIA_REACH:
+	if mood == "sıcak" and holding >= HALDEN_MEDIA_REACH[difficulty]:
 		unrest = clampf(unrest - HALDEN_MEDIA_UNREST * sway, 0.0, 100.0)
 		king_strength = clampf(king_strength + HALDEN_MEDIA_KING * sway, 0.0, 100.0)
 	elif mood == "düşmanca":
-		if holding >= HALDEN_MEDIA_REACH:
+		if holding >= HALDEN_MEDIA_REACH[difficulty]:
 			unrest = clampf(unrest + HALDEN_MEDIA_UNREST * sway, 0.0, 100.0)
 			king_strength = clampf(king_strength - HALDEN_MEDIA_KING * sway, 0.0, 100.0)
 		stats["halden_hostile_weeks"] = int(stats.get("halden_hostile_weeks", 0)) + 1
@@ -2313,14 +2314,20 @@ func _ready_power_share() -> float:
 ## (30 haftada ağırlığın %40'ına iner). Gizli kanıtlar az da olsa baskı yaratır.
 func legal_pressure() -> float:
 	var s := 0.0
+	var tender_case := 0.0
 	for f: Dictionary in facts.values():
 		if f["subject"] != "king":
 			continue
 		var w := 0.15
 		if f.get("public", false):
 			w = maxf(0.4, 1.0 - float(week - int(f.get("public_week", week))) / 50.0)
-		s += float(f["severity"]) * w
-	return clampf((s / 2.4 - legal_relief) * (1.0 + (float(capacity["hukuk"]) - 55.0) / 100.0), 0.0, 100.0)
+		var weight: float = float(f["severity"]) * w
+		if str(f["id"]).begins_with("ihale_komisyonu_"):
+			tender_case = maxf(tender_case, weight)
+		else:
+			s += weight
+	s += tender_case
+	return clampf((s / 2.4 - legal_relief) * (1.0 + (float(capacity["hukuk"]) - 55.0) / 100.0) * LEGAL_DIFF[difficulty], 0.0, 100.0)
 
 
 func _check_end() -> void:

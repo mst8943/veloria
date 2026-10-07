@@ -126,6 +126,25 @@ func _init() -> void:
 		push_error("karşı saftaki Halden'e ihale verildi")
 		ok = false
 	sim.new_game(31, 1)
+	sim.facts.clear()
+	sim.capacity["hukuk"] = 55.0
+	sim._add_fact("ihale_komisyonu_1", "ihale izi", "king", 18, ["halden", "kessler"], 1)
+	var one_tender_pressure: float = sim.legal_pressure()
+	sim._add_fact("ihale_komisyonu_4", "ikinci ihale izi", "king", 18, ["halden", "kessler"], 1)
+	if absf(sim.legal_pressure() - one_tender_pressure) > 0.01:
+		push_error("aynı ihale zinciri mahkemede ayrı dosya sayıldı")
+		ok = false
+	sim._add_fact("transfer_dorn_5", "gizli ödeme", "king", 18, ["dorn"], 1)
+	if sim.legal_pressure() <= one_tender_pressure:
+		push_error("ihale dışı kanıt yargı baskısını artırmadı")
+		ok = false
+	sim.difficulty = 0
+	var easy_pressure: float = sim.legal_pressure()
+	sim.difficulty = 2
+	if sim.legal_pressure() <= easy_pressure:
+		push_error("zorluk yargı baskısını değiştirmedi")
+		ok = false
+	sim.new_game(31, 1)
 	sim.holding = 80.0
 	sim.king_strength = 50.0
 	sim.unrest = 30.0
