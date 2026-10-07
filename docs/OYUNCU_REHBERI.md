@@ -95,6 +95,8 @@ Başkent haritasında Maliye Bakanlığı, Adliye, Genelkurmay ve Saray paneller
 
 Çeyrek bütçesi geldiğinde sıkı, dengeli, cömert bütçe ya da saray payını seçersin. Kararı ertelersen dengeli bütçe uygulanır. DEVLET sekmesindeki **Sadık Ata**, başkanı sana bağlarken kurumun işini zorlaştırır; **Liyakatli Ata** işi toparlar ama başkana bağımsızlık verir. Aynı kurumda peş peşe atama yapamazsın. Sonuçları kurum panellerinden, başkan raporlarından ve haberlerdeki uyarılardan oku.
 
+**Halden'e İhale Ver** kişisel servetini artırır, ama devlet kasasını ve Maliye'nin işleyişini yıpratır; komisyonun izi Dosyalar'a düşer. Halden'in holdingi büyüdükçe medya nüfuzu da büyür. Kişi kartındaki **Nüfuz** ve **Medya** ifadelerini oku: destekleyici yayın bir gün sarayı hedef alabilir. Halden'in talep kartında pay verebilir, reddedebilir, Lena ile rakip yayın kurabilir ya da Falk'a başvurabilirsin. Her yolun siyasi bedeli vardır; talebi ertelemek de bir tercihtir.
+
 **İlk haftalarda** gündemin üstünde "Bu hafta ne yapmalı?" yol göstericisi durur: 1 Kararını ver → 2 Raporları oku → 3 Bir kişiye eylem → 4 Haftayı bitir. Sıradaki adım altınla vurgulanır; bir adıma tıklamak seni ilgili yere götürür. İpuçları Ayarlar'dan kapatılabilir.
 
 **Raporlar** masaüstünde güç merkezlerinin altında listelenir; bir rapora tıklamak o kişiyi seçer. Sol kenarın rengi raporun ne *söylediğini* gösterir (yeşil iyi, amber tedirgin, kırmızı kötü); gerçeği değil.

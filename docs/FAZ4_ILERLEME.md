@@ -29,6 +29,8 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 - **4b.7** `0d3eb77`: `advice_patron` botu üç haftada bir Halden'e ihale verip taleplere Ver diyor. Sondaj düşman yayın olayı/haftası ve son serveti de yazıyor. Bütün işlev testleri geçti. Ölçüt %73/%45/%28; patron %28/%7/%7. Patronun kayıpları çoğunlukla biriken komisyon sırlarından gelen yetki kaybı (57/72/70 oyun); denge kalibrasyonu gerekli.
 - **Geç tempo denetimi** `d4367ec`: `pacing_test.gd` örnek sayısı ve zorluk parametresi alıyor; bitmiş oyunun 105. haftasını saymıyor. Dört bin Kolay tohumda 81–88: 1,40 (8.881 yaşayan oyun haftası), 89–96: 1,09 (1.742), 97–104: **0,60 (97)** bulundu. Önceki 40 tohumluk koşu bu geç dönem açığını saklamıştı.
 - **Geç gündem** `301be17`: 97., 100. ve 103. hafta için üç küçük karar eklendi. Aynı dört bin Kolay tohumda 81–88: 1,40 (8.881), 89–96: 1,09 (1.742), 97–104: **1,08 (99)**. `event_check`: 179 olay, 0 uyarı; bütün işlev testleri geçti. Ölçüt %75/%47/%27, patron %26/%8/%6; tohum 101 hâlâ 87. haftada düştü.
+- **4b kalibrasyonu** `cece037`, `5621a35`: aynı ihaleden doğan kanıtlar mahkemede tek dosya sayılıyor; yargı baskısı ve medya erişimi zorluk düzeyine göre ayarlandı. Patron botu biriken serveti Dorn'a gizli ödemeyle harcıyor. `sim_test` aynı ihale dosyası ve zorluk etkisini denetliyor. `--full` tohum 101 hafta 104 **TAHTTA**, Oligark Rejimi, 112 olay. Sıkı bütçe botunun Zor'da son çeyrek tercihi `53e375a` ile dengelendi.
+- **4b tempo sayacı** `1026073`: Halden talep kartları tempo ölçümüne katılıyor. 1.000 Kolay oyunda 4a tabanı 1,333; 4b 1,357 olay/hafta, fark **+0,024**. 97–104 dilimi **1,04** (258 yaşayan oyun haftası). Bütün dilimler ≥0,80.
 
 ## Son ölçüm
 
@@ -51,6 +53,21 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 | 4b.6 | %73 | %45 | %28 |
 | 4b.7 | %73 | %45 | %28 |
 | Geç gündem | %75 | %47 | %27 |
+| **4b kapısı** | **%85** | **%47** | **%18** |
+
+### 4b kapısı — `dist/phase4b_gate_full_probe.log`
+
+| Bot | Kolay | Normal | Zor |
+|---|---:|---:|---:|
+| advice_weighted | %85 | %47 | %18 |
+| advice_loyal | %87 | %52 | %25 |
+| advice_merit | %77 | %42 | %22 |
+| advice_austere | %73 | %52 | %23¹ |
+| advice_lavish | %81 | %47 | %26 |
+| advice_patron | %66 | %33 | %23 |
+| advice_dirty | %88 | %42 | %12 |
+
+¹ Son çeyrek tercihi düzeltildikten sonraki `dist/phase4b_austere_trial.log`; önceki değer %27 idi. Ölçüt 4a tabanına göre +2/+2/+2 puan, üç hedef bantta. Strateji botları ölçütü en çok 8 puan aşar, en çok 19 puan geride kalır. Taban son servet 3,9/3,8/4,5; dört kat sınırı 15,6/15,2/18. Ölçüt son serveti 4,5/4,1/4,4; patron 5,8/10,9/9,5. Ölçütte düşman yayın olayı 0,74/0,70/0,34 oyun başına, üç zorluğun birleşik ortalaması **0,59**. Patron botunda Halden'in her talebine Ver dendiği için düşman yayın olayı görülmedi. Patronun yetkisiz kayıp payı 27/27, 49/53, 58/61; 4a tabanındaki ölçütün 3/13, 0/44, 1/67 payından yüksek. Testler `TEST: OK`, `EVENTS: OK (179, 0 uyarı)`, `SAVE: OK`, `CONTENT: OK`, `UI INPUT: OK`, masaüstü/mobil `AUTOPLAY DONE`, `FULLRUN ... 101 ... 104 ... TAHTTA`; tempo ≥0,80. Görseller: `dist/phase4b_gate_patron/1_halden.png`, `1_dusman_gazete.png`, `1_dusman_tv.png` ve `dist/phase4b_gate_demand_mobile/1_halden_talep_secimler.png` açılıp gözle denetlendi.
 
 ### 4a kapısı — `dist/phase4a8_gate.log`
 
@@ -66,8 +83,8 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 
 ## Açık sorunlar
 
-Ölçüt botu taban ±3 dışında (Kolay 75/83, Zor 27/16); patron botu ölçütten 20 puandan fazla geride; 4b kapısı kapanmadı. Tohum 101 tam oyunda yetki krizinde düşüyor. Geç tempo geniş örneklemde 0,8 üstünde. `export_presets.cfg` kullanıcı değişikliği olarak çalışma ağacında duruyor.
+4b kapısı sayıyla kapandı. 4c rejim, final, başarımlar ve 1.3.0 paketleri henüz yapılmadı. Ayrı taban çalışma ağacı `dist/baseline_worktree` ölçüm için oluşturuldu; temizlenebilir. `export_presets.cfg` kullanıcı değişikliği olarak çalışma ağacında duruyor.
 
 ## SIRADAKİ ADIM
 
-Patron botunun gizli ödeme kaynaklı kanıt birikimini ölç; ihaleyi üç haftada bir, talebi Ver koşulunu koruyarak yargı baskısını ve serveti dengele. Sonra ölçütü taban ±3'e ve tohum 101'i TAHTTA sonucuna kalibre et. 4b kapısının kalan sayılarını (servet tabanı, yetkisiz kayıp payı, yeni kart/olay farkı, görseller) tamamla. Kapı sağlanmadan 4c'ye geçme.
+4c.1: rejim hesabına holding ve Sadık Ata geçmişini bağla; 80 kampanyalık ölçümde hiçbir rejim %50'yi geçmesin. Ardından oyun sonu, başarımlar, görüntü/test kapısı ve 1.3.0 paketleri. `dist/baseline_worktree` iş bitince `git worktree remove --force` ile temizlenebilir.

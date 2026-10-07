@@ -77,6 +77,9 @@ export_presets.cfg Windows, Linux, Web
 | `min_week`, `max_week` | Hafta aralığı |
 | `min_unrest`, `max_unrest`, `min_economy`, `max_economy`, `min_opposition` | Gizli durum eşikleri |
 | `min_power` | `{"arden": 55}` |
+| `min_holding`, `max_holding`, `min_treasury`, `max_treasury` | Halden payı ve kasa eşikleri |
+| `min_cap`, `max_cap` | `{"maliye": 40}` gibi kurum kapasitesi eşikleri |
+| `needs_hostile`, `needs_moved` | Halden düşman yayında mı; belirtilen aktör karşı safta mı |
 | `actor_min`, `actor_max` | `{"kessler": {"fear": 50}}` — herhangi bir aktör özelliği |
 | `needs_flag`, `blocks_flag`, `any_flag` | Bayrak koşulları |
 | `flag_age` | `{"gida_protestosu_0": 8}` — o karar en az 8 hafta önce verilmiş olmalı (gecikmeli sonuç) |
@@ -85,6 +88,8 @@ export_presets.cfg Windows, Linux, Web
 | `art` | Başka bir olayın görselini kullan |
 
 Her seçim otomatik olarak `<olay_id>_<seçenek_no>` bayrağını, erteleme `<olay_id>_ertelendi` bayrağını koyar. Zincir olaylar bunlara `flag_age` ile bağlanır.
+
+Faz 4b'de `Sim.SAVE_VERSION=6`; v5 kaydından holding Halden'in kayıtlı gücünden türetilir. İhale izleri tek soruşturma olarak yargı baskısına katılır; `advice_patron` sondajı servet ve yetki kaybını ölçer. Son ölçüm ve tempo karşılaştırması `docs/FAZ4_ILERLEME.md` içindedir.
 
 ## İçerik metni eklemek
 
