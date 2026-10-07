@@ -6,7 +6,7 @@ Veloria'da modern kurumlara sahip hayali bir krallığın yeni kralısın: **Adr
 
 ## Kurulum
 
-Dağıtımdaki son paket **1.2.0**. Aşağıdaki devlet kapasitesi bölümü geliştirme dalındaki sonraki sürümü anlatır; 1.2.0 paketinde henüz bulunmaz.
+Dağıtımdaki son paket **1.3.0**. Devlet kapasitesi, Halden'in patronajı ve Devlet Defteri bu sürümdedir.
 
 | Platform | Nasıl açılır |
 |---|---|
@@ -114,14 +114,14 @@ Yaptığın gizli işler **Dosyalar** sekmesinde iz olarak birikir. Bir sırrı 
 
 ## Oyun sonu
 
-Saltanat bittiğinde (104 hafta ya da düşüş) sana bir **ünvan** verilir. Tahtta kalırsan ünvanın yönetim tarzını taşıyan bir rejim adı olur; düşersen "Devrilen Kral" kalır. Özet, rejimini ve karşılaştığın son tehdidi anlatır. Sonuç ekranı sekmelere ayrılır:
+Saltanat bittiğinde (104 hafta ya da düşüş) sana bir **ünvan** verilir. Tahtta kalırsan ünvanın çoğu zaman yönetim tarzını taşıyan bir rejim adı olur; kurumlar saltanat boyunca çok zayıf ya da güçlü kaldıysa **Harap Devletin Kralı** veya **Liyakat Kralı** olur. Düşersen "Devrilen Kral" kalır. Özet, rejimini, son tehdidi ve devletin durumunu anlatır. Sonuç ekranı sekmelere ayrılır:
 - **Özet:** Nasıl bittiği, saltanat süresi, söz sicili, yeni başarımlar ve son kararların.
-- **Grafik:** "Gerçekte ne oldu" grafiği, oyun boyunca gizli kalan gidişatı gösterir.
+- **Grafik:** "Gerçekte ne oldu" grafiği, oyun boyunca gizli kalan gidişatı, kurumların işleyişini ve Halden'in payını gösterir.
 - **Tarihçiler:** Saray tarihçisi ve sürgündeki tarihçi saltanatını iki farklı biçimde anlatır.
-- **Hakikat Dosyası:** Kim, ne zaman, sana ne yalan söyledi. Altında **Meclis Sicili** (her danışmanın kaç öneri verdiği, kaçını dinlediğin, kaçında seni yanılttığı) ve **Komplo Defteri** (kim ne zaman huzursuzlandı, komploya katıldı, çekildi; alametlerin kaçı gerçekti).
+- **Hakikat Dosyası:** Kim, ne zaman, sana ne yalan söyledi. Altında **Meclis Sicili** (her danışmanın kaç öneri verdiği, kaçını dinlediğin, kaçında seni yanılttığı), **Komplo Defteri** (kim ne zaman huzursuzlandı, komploya katıldı, çekildi) ve **Devlet Defteri** (atamalar, en zayıf hafta, ihaleler ve düşman yayın) vardır.
 - **Kararlar:** Verdiğin ve ertelediğin tüm kararlar, en yenisi üstte.
 - Saltanatın **Hükümdarlık Arşivi**'ne kaydedilir.
-- Kazandığın yeni **başarımlar** duyurulur. 15 başarımın tamamı Arşiv'de listelenir.
+- Kazandığın yeni **başarımlar** duyurulur. 19 başarımın tamamı Arşiv'de listelenir.
 
 ## Kısayollar
 

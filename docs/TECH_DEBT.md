@@ -1,6 +1,6 @@
 # Teknik borç
 
-Son güncelleme: 2026-10-06. Yöntem: `.claude/skills/tech-debt/SKILL.md`.
+Son güncelleme: 2026-10-08. Yöntem: `.claude/skills/tech-debt/SKILL.md`.
 
 ## Ölçüm
 | Dosya | Satır | Not |
@@ -8,12 +8,13 @@ Son güncelleme: 2026-10-06. Yöntem: `.claude/skills/tech-debt/SKILL.md`.
 | `game/ui/main.gd` | 1390 (önce 2568; ilk bölmeden sonra 1958) | ana ekran: kurulum, akış ve bileşen yönlendirmesi |
 | `game/ui/agenda_view.gd` | 632 | gündem, dosyalar, raporlar, meclis ve yol gösterici |
 | `game/ui/person_panel.gd` | 630 | kişi kartları, eylem paneli ve önizleme |
-| `game/core/sim.gd` | 2396 (önce 2607) | kurallar + kayıt + krizler + Faz 4a devlet sistemi; içerik JSON'da |
+| `game/core/sim.gd` | 2667 (önce 2607) | kurallar + kayıt + krizler + Faz 4 devlet ve patronaj sistemleri; içerik JSON'da |
 | `game/core/advice.gd`, `narrative.gd`, `content_data.gd` | ayrı | Meclis hesabı, anlatı kurma, içerik şeması |
 | `game/ui/media_view.gd` | 688 | gazete + TV |
 | `game/ui/desk_view.gd` | 649 | çalışma masası |
 | `game/ui/menu.gd` | 324 | yeni (main.gd'den) |
-| `game/ui/end_screen.gd` | 243 | yeni (main.gd'den) |
+| `game/ui/end_screen.gd` | 276 | oyun sonu ve Devlet Defteri |
+| `game/ui/truth_chart.gd` | 67 | beş final çizgisi |
 | `game/ui/autoplay.gd` | 121 | yeni (main.gd'den) |
 | `game/ui/modal.gd` | 80 | yeni (main.gd'den) |
 

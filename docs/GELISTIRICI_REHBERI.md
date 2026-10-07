@@ -89,7 +89,7 @@ export_presets.cfg Windows, Linux, Web
 
 Her seçim otomatik olarak `<olay_id>_<seçenek_no>` bayrağını, erteleme `<olay_id>_ertelendi` bayrağını koyar. Zincir olaylar bunlara `flag_age` ile bağlanır.
 
-Faz 4b'de `Sim.SAVE_VERSION=6`; v5 kaydından holding Halden'in kayıtlı gücünden türetilir. İhale izleri tek soruşturma olarak yargı baskısına katılır; `advice_patron` sondajı servet ve yetki kaybını ölçer. Son ölçüm ve tempo karşılaştırması `docs/FAZ4_ILERLEME.md` içindedir.
+Faz 4c'de `Sim.SAVE_VERSION=7`; v5 kaydından holding Halden'in kayıtlı gücünden türetilir, v6 kurum çizelgesine holding payı eklenir. İhale izleri tek soruşturma olarak yargı baskısına katılır; `advice_patron` sondajı servet ve yetki kaybını ölçer. `record["state"]` finalde devlet çizelgesi, en zayıf hafta ve atama günlüğünü taşır. Son ölçüm ve tempo karşılaştırması `docs/FAZ4_ILERLEME.md` içindedir.
 
 ## İçerik metni eklemek
 
@@ -192,7 +192,7 @@ Presetler `dist/windows/Veloria.exe`, `dist/linux/Veloria.x86_64` ve `dist/web/i
 
 Web sürümünü yerelde denemek için: `python -m http.server 8060 --directory dist/web`. Menü, üç medya sekmesi, hafta geçişi ve oyun sonunu tarayıcıda kontrol et.
 
-`tests/ui_input_test.gd` pencereli çalışır; kişi kartı ve rapor tıklamalarını gerçek GUI giriş olayıyla sınar. `ui_shots.gd --regime` rejim haberi, “Geçen haftadan beri” satırı ve rejimli finali görüntüler.
+`tests/ui_input_test.gd` pencereli çalışır; kişi kartı ve rapor tıklamalarını gerçek GUI giriş olayıyla sınar. `ui_shots.gd --regime` rejim haberi, “Geçen haftadan beri” satırı ve rejimli finali; `--state` kurum panelleri ile yapay Liyakat/Harap finalini görüntüler.
 
 ## Lisanslar
 
