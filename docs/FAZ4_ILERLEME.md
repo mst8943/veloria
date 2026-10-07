@@ -27,6 +27,8 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 - **4b.5** `b981183`: Eski iki Halden kartının seçenekleri tek talep kartında birleşti; `halden_ihale_*` ve `halden_fatura_*` bayrakları ile `liman_komisyonu` sırrı korunuyor. `min_holding/max_holding` koşulları ve iki geç Halden olayı için holding eşikleri eklendi. `event_check`: 172 olay, 0 uyarı; diğer işlev testleri geçti. Ölçüt %71/%50/%22 ile henüz taban ±3 dışında. `--full` tohum 101 87. haftada düştü, 102 104. haftada TAHTTA; 4b kapısı öncesinde düzeltilmeli. Tempo 81–88: 1,34 (38 yaşayan oyun haftası); 89+ örnek çıkmadı.
 - **4b.6** `9d7010f`: Dört patronaj olayı (`halden_yayin_kesti`, `ihale_sorusturmasi_sizinti`, `saray_payi_sizdi`, `holding_devrildi`) eklendi; düşman yayın, karşı safa geçen aktör, kesintisiz saray payı koşulları ve holding etkisi doğrulanıyor. `event_check`: 176 olay, 0 uyarı. Bütün işlev testleri geçti; ilk tohum 87. haftada düştüğü ve ölçüt %73/%45/%28 olduğu için **4b kapısı açık**.
 - **4b.7** `0d3eb77`: `advice_patron` botu üç haftada bir Halden'e ihale verip taleplere Ver diyor. Sondaj düşman yayın olayı/haftası ve son serveti de yazıyor. Bütün işlev testleri geçti. Ölçüt %73/%45/%28; patron %28/%7/%7. Patronun kayıpları çoğunlukla biriken komisyon sırlarından gelen yetki kaybı (57/72/70 oyun); denge kalibrasyonu gerekli.
+- **Geç tempo denetimi** `d4367ec`: `pacing_test.gd` örnek sayısı ve zorluk parametresi alıyor; bitmiş oyunun 105. haftasını saymıyor. Dört bin Kolay tohumda 81–88: 1,40 (8.881 yaşayan oyun haftası), 89–96: 1,09 (1.742), 97–104: **0,60 (97)** bulundu. Önceki 40 tohumluk koşu bu geç dönem açığını saklamıştı.
+- **Geç gündem** `301be17`: 97., 100. ve 103. hafta için üç küçük karar eklendi. Aynı dört bin Kolay tohumda 81–88: 1,40 (8.881), 89–96: 1,09 (1.742), 97–104: **1,08 (99)**. `event_check`: 179 olay, 0 uyarı; bütün işlev testleri geçti. Ölçüt %75/%47/%27, patron %26/%8/%6; tohum 101 hâlâ 87. haftada düştü.
 
 ## Son ölçüm
 
@@ -48,6 +50,7 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 | 4b.5 | %71 | %50 | %22 |
 | 4b.6 | %73 | %45 | %28 |
 | 4b.7 | %73 | %45 | %28 |
+| Geç gündem | %75 | %47 | %27 |
 
 ### 4a kapısı — `dist/phase4a8_gate.log`
 
@@ -63,8 +66,8 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 
 ## Açık sorunlar
 
-4b.7 ölçüt botu taban ±3 dışında; patron botu ölçütten 20 puandan fazla geride; 4b kapısı kapanmadı. Tohum 101 tam oyunda düştü. Tempo 89+ haftaları için daha fazla yaşayan örnek gerekli. `export_presets.cfg` kullanıcı değişikliği olarak çalışma ağacında duruyor.
+Ölçüt botu taban ±3 dışında (Kolay 75/83, Zor 27/16); patron botu ölçütten 20 puandan fazla geride; 4b kapısı kapanmadı. Tohum 101 tam oyunda yetki krizinde düşüyor. Geç tempo geniş örneklemde 0,8 üstünde. `export_presets.cfg` kullanıcı değişikliği olarak çalışma ağacında duruyor.
 
 ## SIRADAKİ ADIM
 
-Komisyon sırlarının yargı baskısında birikmesini inceleyip tek parametre grubunda kalibre et. Ölçütü taban ±3'e, patronu strateji sınırına ve tohum 101'i TAHTTA sonucuna getir. Geç hafta temposunu yeterli yaşayan örnekle ölç. 4b kapısı sağlanmadan 4c'ye geçme.
+Patron botunun gizli ödeme kaynaklı kanıt birikimini ölç; ihaleyi üç haftada bir, talebi Ver koşulunu koruyarak yargı baskısını ve serveti dengele. Sonra ölçütü taban ±3'e ve tohum 101'i TAHTTA sonucuna kalibre et. 4b kapısının kalan sayılarını (servet tabanı, yetkisiz kayıp payı, yeni kart/olay farkı, görseller) tamamla. Kapı sağlanmadan 4c'ye geçme.
