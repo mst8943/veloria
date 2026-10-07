@@ -499,6 +499,29 @@ func _test_regimes() -> bool:
 		if str(sim.record["title"]) != str(sim.REGIME_TITLES[kind]) or str(sim.record["threat"]) == "":
 			push_error("rejim oyun sonuna geçmedi: " + kind)
 			ok = false
+	sim.new_game(123, 1)
+	for actor in sim.actors.values():
+		actor.power = 0.0
+	sim.stats["investigations"] = 4
+	sim.holding = 40.0
+	if sim._choose_regime() != "istihbarat":
+		push_error("düşük holding rejimi etkilemedi")
+		ok = false
+	sim.holding = 100.0
+	if sim._choose_regime() != "oligark":
+		push_error("yüksek holding rejimi etkilemedi")
+		ok = false
+	sim.stats["investigations"] = 0
+	sim.holding = 40.0
+	sim.stats["sadik_ordu"] = 2
+	if sim._choose_regime() != "guvenlikci":
+		push_error("sadık ordu rejimi etkilemedi")
+		ok = false
+	sim.stats["sadik_ordu"] = 0
+	sim.stats["sadik_maliye"] = 4
+	if sim._choose_regime() != "patronajci":
+		push_error("sadık kadro rejimi etkilemedi")
+		ok = false
 	print("Rejim tipleri: ", "OK" if ok else "HATA")
 	return ok
 

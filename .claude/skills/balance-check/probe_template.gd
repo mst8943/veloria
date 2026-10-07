@@ -62,6 +62,7 @@ func _run(bot: String, diff: int, n: int) -> void:
 	var hostile_broadcasts := 0
 	var hostile_weeks := 0
 	var final_wealth := 0.0
+	var regimes := {}
 	for s in range(1, n + 1):
 		sim.new_game(s, diff)
 		rng.seed = s * 131 + 7
@@ -72,6 +73,7 @@ func _run(bot: String, diff: int, n: int) -> void:
 		hostile_broadcasts += 1 if sim.fired_events.has("halden_yayin_kesti") else 0
 		hostile_weeks += int(sim.stats.get("halden_hostile_weeks", 0))
 		final_wealth += sim.private_wealth
+		regimes[sim.regime] = int(regimes.get(sim.regime, 0)) + 1
 		for value in sim.capacity.values():
 			final_cap += float(value) / sim.capacity.size()
 		if str(r["cause"]).contains("Arden") and str(r["cause"]).contains("Askerî darbe"):
@@ -96,6 +98,7 @@ func _run(bot: String, diff: int, n: int) -> void:
 		bot, wins, n, int(100.0 * wins / n), float(weeks) / n, causes, titles])
 	print("  ort. son kapasite %.1f | Arden girişimi %d/%d | Arden hazırlığı %d/%d | Arden zaferi %d/%d" % [final_cap / n, arden_attempts, n, arden_prepared, n, arden_coups, n])
 	print("  düşman yayın olayı %.2f/oyun | düşman yayın haftası %.1f/oyun | ort. son servet %.1f" % [float(hostile_broadcasts) / n, float(hostile_weeks) / n, final_wealth / n])
+	print("  rejimler ", regimes)
 
 
 func _cause_kind(c: String) -> String:

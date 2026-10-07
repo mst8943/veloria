@@ -1610,21 +1610,24 @@ func _regime_stat(id: String) -> int:
 
 func _choose_regime() -> String:
 	var debt := 0
+	var loyal_appointments := 0
 	for p: Dictionary in promises:
 		if p.get("state", "") == "active":
 			debt += 1
+	for institution in capacity:
+		loyal_appointments += int(stats.get("sadik_" + institution, 0))
 	var scores := {
 		"guvenlikci": 2 * _regime_stat("written") + _regime_stat("ops") + _regime_tier("arden")
-			+ (2 if flags.has("gida_protestosu_1") or flags.has("yay_arden_kopus") else 0),
+			+ (2 if flags.has("gida_protestosu_1") or flags.has("yay_arden_kopus") else 0) + 2 * int(stats.get("sadik_ordu", 0)),
 		"populist": 2 * _regime_stat("street_concessions") + _regime_stat("legal_concessions") + _regime_tier("brandt")
-			+ (2 if flags.has("genel_grev_0") or flags.has("yay_brandt_guven") else 0),
+			+ (2 if flags.has("genel_grev_0") or flags.has("yay_brandt_guven") else 0) + (14 if budget_stance > 0 else 0),
 		"patronajci": 2 * _regime_stat("promotes") + _regime_stat("promises") + mini(5, debt) + _regime_tier("dorn")
-			+ (2 if flags.has("dorn_filtre_1") or flags.has("yay_dorn_kopus") else 0),
-		"oligark": 2 * _regime_stat("bribes") + _regime_tier("halden")
+			+ (2 if flags.has("dorn_filtre_1") or flags.has("yay_dorn_kopus") else 0) + loyal_appointments + (10 if loyal_appointments >= 3 else 0),
+		"oligark": _regime_stat("bribes") + _regime_tier("halden") + int(holding / 12.0) + mini(8, int(stats.get("tenders", 0)))
 			+ (2 if flags.has("halden_ihale_0") or flags.has("milletvekili_satin_0") else 0),
 		"medya": _regime_tier("lena") + _regime_tier("halden")
-			+ (3 if flags.has("halden_kanal_0") else 0) + (2 if flags.has("gazeteci_ihale_2") or flags.has("yay_halden_kopus") else 0),
-		"istihbarat": _regime_stat("investigations") + 2 * _regime_stat("blackmails") + _regime_stat("checks")
+			+ (3 if flags.has("halden_kanal_0") else 0) + (2 if flags.has("gazeteci_ihale_2") or flags.has("yay_halden_kopus") else 0) + 4 * mini(5, int(stats.get("halden_granted", 0))),
+		"istihbarat": _regime_stat("investigations") + 2 * _regime_stat("blackmails") + mini(14, int(stats.get("checks", 0)) / 8)
 			+ _regime_tier("voss") + (2 if flags.has("voss_dosyalar_0") or flags.has("yay_voss_kopus") else 0)}
 	var best := "guvenlikci"
 	for id in REGIME_ORDER:
