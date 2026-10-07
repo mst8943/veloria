@@ -14,8 +14,14 @@ func _init() -> void:
 	var alive_weeks := {}
 	var empty_streaks: Array = []
 	var games := 40
+	var difficulty := 1
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--n="):
+			games = maxi(1, int(arg.substr(4)))
+		elif arg.begins_with("--diff="):
+			difficulty = clampi(int(arg.substr(7)), 0, 2)
 	for s in range(1, games + 1):
-		sim.new_game(s, 1)
+		sim.new_game(s, difficulty)
 		var streak := 0
 		var max_streak := 0
 		while not sim.ended:
@@ -25,6 +31,8 @@ func _init() -> void:
 				repeat_before += int(sim.fired_events[k])
 			_careful_week(sim)
 			sim.end_week()
+			if sim.week > sim.MAX_WEEKS:
+				continue
 			var new_this_week := 0
 			for k in sim.fired_events:
 				# Aktör hamleleri (hamle_*) karar olayı değil; tempo yalnızca kararları sayar.
