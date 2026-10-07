@@ -19,7 +19,8 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 - **4a.6** `205f0d4`: Başkentte Maliye Bakanlığı ve dört kurumun üç bantlı, başkan iyimserliğine açık işleyiş göstergesi; Doğrula ile altı hafta gürültüsüz bant; bir defalık kurum/kasa eşik haberleri ve özet/şerit önceliği. TV yalnız `OLAY:` satırlarını aldığı için kurum uyarılarını yayınlamıyor. Bütün testler geçti; `--full` 104 hafta TAHTTA, 108 olay. Masaüstü/mobil görüntüler: `dist/phase4a6_state_shots{,_mobile}/1_maliye_aksiyor.png`, `1_adliye_saglam.png`, `1_butce.png` (açılıp gözle bakıldı).
 - **4a.7** `58e4bf8`: Kasa, kurum çöküşü, zayıf sınır, kadro ve geç dönem için 15 olay (159→174); dört kurum × üç bant × üç rapor cümlesi, şema denetimi ve yeni olayların ulaşılabilirlik testi. Bütün testler geçti; `--full` 104 hafta TAHTTA, 109 olay. Tempo 73–80'de 0,93; 81–88'de 1,25 olay/hafta, ancak ikinci dilimde yalnız dört yaşayan oyun haftası var.
 - **4a.8** `80c221c`, `33d04bf`: Zor oyunda ordu kapasitesinin darbe savunma bonusu tek katsayı grubunda kalibre edildi; Sadık, Liyakatli, Sıkı ve Cömert bütçe botları eklendi. Kadro, bütçe ve eşik birim testleri `sim_test.gd` içinde. Bütün testler geçti; `--full` 104 hafta TAHTTA, 109 olay.
-- **4a.9**: Oyuncu/developer rehberi, tasarım sonucu, borç ve durum belgeleri güncellendi. 4a kapısı aşağıda sayılarla kapatıldı; sıradaki faz 4b.
+- **4a.9** `660b557`: Oyuncu/developer rehberi, tasarım sonucu, borç ve durum belgeleri güncellendi. 4a kapısı aşağıda sayılarla kapatıldı.
+- **4b.1** `31c7686`: `holding`, düşman yayın/talep/Lena süreleri ve kadro günlüğü eklendi; `SAVE_VERSION=6`, v5→v6 göçü Halden'in kayıtlı gücünden holding üretir. Bütün testler geçti; `--full` 104 hafta TAHTTA, 109 olay; ölçüt botu %83/%45/%16 ile değişmedi.
 
 ## Son ölçüm
 
@@ -53,4 +54,4 @@ Tempo testinde bütün görünen dilimler ≥0,8; fakat 81–88 diliminde yalnı
 
 ## SIRADAKİ ADIM
 
-4b.1: `holding`, `halden_hostile_until`, `halden_demands`, `lena_boost_until`, `kadro_log` alanları, kayıt sürümü/göç ve save_test. Sonra tüm testler, ölçüt botu ve ilerleme notu; 4b kapısı sağlanmadan 4c'ye geçme.
+4b.2: Halden için DEVLET sekmesinde İhale Ver eylemi (1 mesai, 3 hafta bekleme, `moved` kapısı), küçük etkiler ve ihale komisyonu sırrı; ACTION_META/önizleme/autoplay. Tüm testler ve ölçüt sondajından sonra ayrı commit. 4b kapısı sağlanmadan 4c'ye geçme.
