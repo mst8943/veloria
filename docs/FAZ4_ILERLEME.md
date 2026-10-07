@@ -54,7 +54,8 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 | 4b.7 | %73 | %45 | %28 |
 | Geç gündem | %75 | %47 | %27 |
 | **4b kapısı** | **%85** | **%47** | **%18** |
-| 4c.1 rejim hesabı | %83 | %46 | %17 |
+| 4c.1 rejim hesabı `ba891bc` | %83 | %46 | %17 |
+| 4c.2 devlet finali `bf5347b` | %83 | %46 | %17 |
 
 ### 4b kapısı — `dist/phase4b_gate_full_probe.log`
 
@@ -84,12 +85,16 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 
 ## Açık sorunlar
 
-4b kapısı sayıyla kapandı. 4c final, başarımlar ve 1.3.0 paketleri henüz yapılmadı. Ayrı taban çalışma ağacı `dist/baseline_worktree` ölçüm için oluşturuldu; temizlenebilir. `export_presets.cfg` kullanıcı değişikliği olarak çalışma ağacında duruyor.
+4b kapısı sayıyla kapandı. 4c finali ve başarımlar tamamlandı; 1.3.0 paketleri henüz yapılmadı. Ayrı taban çalışma ağacı `dist/baseline_worktree` ölçüm için oluşturuldu; temizlenebilir. `export_presets.cfg` kullanıcı değişikliği olarak çalışma ağacında duruyor.
 
 ### 4c.1 rejim ölçümü — `dist/phase4c1_regimes_full.log`
 
 Rejim hesabına holdingin on ikide biri, Sadık Ata sayısı ve ordu Sadık Ata ağırlığı eklendi. Önceki puanlamanın oligarşi/istihbarat yığılmasını gidermek için ihale, Halden'e verilen talepler ve bütçe duruşu geçmiş kararın göstergeleri olarak hesaba katıldı; bribe ve rapor doğrulama etkileri yeniden ölçeklendi. 10 bot × 80 tohum × 3 zorluk = **2.400** kampanyada: İstihbarat 700 (%29,2), Oligark 461 (%19,2), Medya 379 (%15,8), Patronaj 174 (%7,3), Popülist 137 (%5,7), rejim oluşmadan erken biten 549 (%22,9). Oluşmuş rejimler içinde en yüksek pay İstihbarat **%37,8**. Tarz botlarının uç davranışı kasıtlı olarak kendi etiketine yığılır; %50 kapısı tüm botların birleşik dağılımına uygulanır. Ölçüt %83/%46/%17, 4b tabanına göre −2/−1/−1 puan; bantta. `TEST: OK`, `EVENTS: OK (179, 0 uyarı)`, `SAVE: OK`, `CONTENT: OK`, `UI INPUT: OK`, iki `AUTOPLAY DONE`, `FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi olay=112`; `pacing_test` görünen dilimleri ≥1,03. Rejim terimlerine ayrı birim kontrolü eklendi.
 
+### 4c.2 devlet finali — `bf5347b`
+
+Kapasite çizelgesine Halden payı eklendi; kayıt sürümü **7**, v6 çizelge göçü ve `SAVE: OK` var. Final kaydındaki `state` kurum ortalamasını, en zayıf haftayı ve o haftanın olayını, atamaları, ihale ile düşman yayın sayısını ve grafik verisini taşır. Hakikat grafiğinde Devlet ve Halden çizgileri; Hakikat Dosyası'nda Devlet Defteri; Özet'te devletin sözel hâli görünüyor. Harap Devletin Kralı ve Liyakat Kralı unvanları ile dört yeni başarım eklendi. Bütün testler geçti: `TEST: OK`, `EVENTS: OK (179 olay, 0 uyarı)`, `SAVE: OK`, `CONTENT: OK (5 dosya, 8 bozuk örnek)`, `UI INPUT: OK`, masaüstü/mobil `AUTOPLAY DONE`, `FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi olay=112`. Ölçüt tekrar **%83/%46/%17**. Masaüstü ve mobil `dist/phase4c2_shots_{desktop,mobile}/5_devlet_{grafik,defteri,son}.png` ile `5_harap_son.png` açılıp gözle kontrol edildi; bu görüntüler testin yapay final durumudur, gerçek kampanya kanıtı değildir.
+
 ## SIRADAKİ ADIM
 
-4c.2: oyun sonu Devlet Defteri, kapasite/holding grafik çizgileri, yeni unvanlar ve başarımlar. Ardından görüntü/test kapısı ve 1.3.0 paketleri. `dist/baseline_worktree` iş bitince `git worktree remove --force` ile temizlenebilir.
+4c.3: tam bot denge ölçümünü ve 4c kapısını kaydet; belgeleri tamamla, sonra yalnız sürüm satırını 1.3.0 yapıp Windows/Linux/Web paketlerini üret ve web/Windows doğrulamasını yap. `dist/baseline_worktree` iş bitince `git worktree remove --force` ile temizlenebilir.
