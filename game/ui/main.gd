@@ -1287,7 +1287,7 @@ func _on_flow(target: String) -> void:
 
 
 func _headline_items() -> Array:
-	var order := ["KRİZ", "ALAMET", "SOKAK", "MAHKEME", "MANŞET", "ERTELENDİ", "KULİS", "OLAY", "SÖZ", "HAMLE"]
+	var order := ["KRİZ", "ALAMET", "SOKAK", "MAHKEME", "MALİYE", "ADLİYE", "İDARE", "ORDU", "MANŞET", "ERTELENDİ", "KULİS", "OLAY", "SÖZ", "HAMLE"]
 	var items: Array = Sim.weekly_news.duplicate()
 	items.sort_custom(func(x, y) -> bool:
 		var ix := order.size()

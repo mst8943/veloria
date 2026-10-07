@@ -641,18 +641,20 @@ func cross_check(id: String) -> String:
 		return _no_mesai()
 	stats["checks"] += 1
 	var a: Actor = actors[id]
+	if INSTITUTION_HEADS.has(id):
+		flags["DOGRULA_" + INSTITUTION_HEADS[id]] = week
 	var gap := _domain_truth(a.domain) - _domain_reported(a)
 	var noisy := gap + rng.randf_range(-8.0, 8.0)
 	var worse := (a.domain == "economy" and noisy < -6.0) or (a.domain != "economy" and noisy > 6.0)
 	changed.emit()
 	if absf(noisy) < 6.0:
 		karne[id]["ok"] += 1
-		return "%s raporu diğer kaynaklarla büyük ölçüde örtüşüyor." % ek(a.display_name, "in")
+		return "%s raporu diğer kaynaklarla büyük ölçüde örtüşüyor.%s" % [ek(a.display_name, "in"), " Kurum defterleri bir süreliğine açıldı." if INSTITUTION_HEADS.has(id) else ""]
 	if worse:
 		karne[id]["bad"] += 1
-		return "Başka kaynaklar durumun %s anlattığından DAHA KÖTÜ olduğunu söylüyor." % ek(a.display_name, "in")
+		return "Başka kaynaklar durumun %s anlattığından DAHA KÖTÜ olduğunu söylüyor.%s" % [ek(a.display_name, "in"), " Kurum defterleri bir süreliğine açıldı." if INSTITUTION_HEADS.has(id) else ""]
 	karne[id]["ok"] += 1
-	return "Başka kaynaklar durumu %s anlattığından biraz daha iyi görüyor." % ek(a.display_name, "in")
+	return "Başka kaynaklar durumu %s anlattığından biraz daha iyi görüyor.%s" % [ek(a.display_name, "in"), " Kurum defterleri bir süreliğine açıldı." if INSTITUTION_HEADS.has(id) else ""]
 
 
 ## Gizli operasyon: katılan her kişi sırrı bilir; çember büyüdükçe başarı ve sızıntı riski artar.
@@ -1134,6 +1136,7 @@ func end_week() -> void:
 	week += 1
 	mesai = mesai_max
 	_world_tick()
+	_state_warnings()
 	_decay_facts()
 	_fire_events()
 	_fire_budget()
@@ -1200,7 +1203,7 @@ func _diff_visible(b: Dictionary, n: Dictionary) -> Array:
 			out.append({"tone": -1, "actor": "", "text": s.substr(8)})
 		elif s.begins_with("KULİS: "):
 			out.append({"tone": 0, "actor": "", "text": s.substr(7)})
-		elif s.begins_with("SOKAK: ") or s.begins_with("MAHKEME: "):
+		elif s.begins_with("SOKAK: ") or s.begins_with("MAHKEME: ") or s.begins_with("MALİYE: ") or s.begins_with("ADLİYE: ") or s.begins_with("İDARE: ") or s.begins_with("ORDU: "):
 			out.append({"tone": -1, "actor": "", "text": s.substr(s.find(" ") + 1)})
 	for mv: Dictionary in weekly_moves:
 		out.append(mv.duplicate())
@@ -1297,6 +1300,45 @@ func _tick_state() -> void:
 	unrest = clampf(unrest + maxf(0.0, 55.0 - float(capacity["hukuk"])) * 0.01 - budget_stance * 0.15, 0.0, 100.0)
 	if court_share:
 		private_wealth += 0.6
+
+
+func _state_warnings() -> void:
+	var messages := {
+		"treasury": [treasury < 30.0, "MALİYE: Kasa daralıyor; maaş defterleri yeniden açıldı."],
+		"maliye": [float(capacity["maliye"]) < 30.0, "MALİYE: Vergi defterleri masalarda birikiyor."],
+		"hukuk": [float(capacity["hukuk"]) < 30.0, "ADLİYE: Dosyalar takviminden düşüyor; savcılar yetişemiyor."],
+		"ordu": [float(capacity["ordu"]) < 40.0, "ORDU: Sınır birliklerinde hazırlık gecikiyor."],
+		"idare": [float(capacity["idare"]) < 30.0, "İDARE: Saray emirleri valiliklere geç ulaşıyor."]}
+	for key in messages:
+		if messages[key][0] and not warned.get("state_" + key, false):
+			warned["state_" + key] = true
+			weekly_news.append(messages[key][1])
+
+
+func _state_noise(institution: String) -> float:
+	var r := RandomNumberGenerator.new()
+	r.seed = rng.seed ^ (week * 7919) ^ institution.hash()
+	return r.randf_range(-5.0, 5.0)
+
+
+func capacity_band(institution: String) -> String:
+	if not capacity.has(institution):
+		return "bilinmiyor"
+	var value: float = capacity[institution]
+	var verified := week < int(flags.get("DOGRULA_" + institution, -100)) + 6
+	if not verified:
+		var aid: String = INSTITUTION_HEADS.find_key(institution)
+		var chief: Actor = actors.get(aid)
+		value += (chief.flattery() * 20.0 if chief else 0.0) + _state_noise(institution)
+	return "aksıyor" if value < 40.0 else ("yürüyor" if value < 70.0 else "sağlam")
+
+
+func treasury_band() -> String:
+	var kessler: Actor = actors.get("kessler")
+	var value := treasury
+	if week >= int(flags.get("DOGRULA_maliye", -100)) + 6:
+		value += (kessler.flattery() * 20.0 if kessler else 0.0) + _state_noise("treasury")
+	return "sıkışık" if value < 30.0 else ("dengeli" if value < 70.0 else "dolu")
 
 
 func _decay_facts() -> void:

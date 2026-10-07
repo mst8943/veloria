@@ -9,6 +9,7 @@ const UIKit := preload("res://game/ui/ui_kit.gd")
 const SITES := {
 	"saray": {"pos": Vector2(0.5, 0.16), "title": "SARAY", "sub": "Çalışma odası ve taht", "actor": "dorn", "art": "toren"},
 	"adliye": {"pos": Vector2(0.22, 0.38), "title": "ADLİYE", "sub": "Soruşturmalar ve hukuk", "actor": "falk", "art": "yargic_dosya"},
+	"maliye": {"pos": Vector2(0.32, 0.58), "title": "MALİYE BAKANLIĞI", "sub": "Kasa ve vergi defterleri", "actor": "kessler", "art": "butce_acigi"},
 	"parlamento": {"pos": Vector2(0.78, 0.38), "title": "PARLAMENTO", "sub": "Yasalar ve siyasi bloklar", "actor": "brandt", "art": "erken_secim"},
 	"genelkurmay": {"pos": Vector2(0.15, 0.7), "title": "GENELKURMAY", "sub": "Ordu ve komuta", "actor": "arden", "art": "general_atamalari"},
 	"medya": {"pos": Vector2(0.5, 0.62), "title": "MEDYA MERKEZİ", "sub": "Basın ve kamuoyu", "actor": "lena", "art": "halden_kanal"},
@@ -260,6 +261,14 @@ func show_site(id: String) -> void:
 	t.add_theme_color_override("font_color", UIKit.GOLD)
 	_drawer_body.add_child(t)
 	_drawer_body.add_child(_text("[color=gray]%s[/color]" % s["sub"]))
+	var institutions := {"maliye": "maliye", "adliye": "hukuk", "genelkurmay": "ordu", "saray": "idare"}
+	if institutions.has(id):
+		var institution: String = institutions[id]
+		var chief: String = str(_sites[id]["actor"])
+		var chief_name: String = Sim.actors[chief].display_name if Sim.actors.has(chief) else "makam boş"
+		_drawer_body.add_child(_text("İşleyiş: [b]%s[/b]\nBaşkan: %s" % [Sim.capacity_band(institution), chief_name]))
+		if id == "maliye":
+			_drawer_body.add_child(_text("Kasa: [b]%s[/b]" % Sim.treasury_band()))
 	var aid: String = s["actor"]
 	if Sim.actors.has(aid):
 		var a = Sim.actors[aid]
@@ -305,6 +314,8 @@ func _site_details(id: String) -> String:
 					total += 1
 					public += 1 if f.get("public", false) else 0
 			return "Saraya uzanan dosyalar: [b]%d[/b] (kamuya açık: %d).\nHer dosya, yargının sana yaklaşan bir adımıdır." % [total, public]
+		"maliye":
+			return "Kessler bütçe defterlerini tutuyor. Saray harcamalarıyla devlet kasasını karıştırma."
 		"parlamento":
 			var active := 0
 			for p in Sim.promises:

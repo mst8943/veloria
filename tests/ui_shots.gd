@@ -95,6 +95,24 @@ func _run() -> void:
 		return
 	main._city.open()
 	await _shot("1_harita")
+	if "--state" in OS.get_cmdline_user_args():
+		sim0.capacity["maliye"] = 20.0
+		sim0.capacity["hukuk"] = 80.0
+		sim0.flags["DOGRULA_maliye"] = sim0.week
+		sim0.flags["DOGRULA_hukuk"] = sim0.week
+		main._city.show_site("maliye")
+		await _shot("1_maliye_aksiyor")
+		main._city.show_site("adliye")
+		await _shot("1_adliye_saglam")
+		main._city.close_view()
+		sim0.week = 13
+		sim0.pending.clear()
+		sim0._fire_budget()
+		main._refresh()
+		main._on_flow("gundem")
+		await _shot("1_butce")
+		quit(0)
+		return
 	main._city.close_view()
 	main._open_media()
 	await _shot("1_medya")

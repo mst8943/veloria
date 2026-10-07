@@ -101,6 +101,19 @@ func _init() -> void:
 	if sim.capacity["maliye"] != after_appoint + 7.0:
 		push_error("liyakatli atama hatalı")
 		ok = false
+	sim.capacity["maliye"] = 20.0
+	sim.treasury = 20.0
+	sim.weekly_news.clear()
+	sim._state_warnings()
+	var warning_count: int = sim.weekly_news.size()
+	sim._state_warnings()
+	if warning_count != 2 or sim.weekly_news.size() != 2:
+		push_error("kurum/kasa eşik haberi bir kez çıkmalı")
+		ok = false
+	sim.cross_check("kessler")
+	if sim.capacity_band("maliye") != "aksıyor" or sim.treasury_band() != "sıkışık":
+		push_error("Doğrula kurum/kasa bandını gürültüsüz göstermeli")
+		ok = false
 
 	# Araştırma ve şantaj
 	sim.new_game(8, 1)
