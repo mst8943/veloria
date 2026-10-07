@@ -3293,5 +3293,32 @@
     {"label": "Bekle", "text": "Holding yeni ortak aradı. Saray kapısı kapalı kaldı.", "fx": {"holding": -3}}
   ],
   "ignore": {"text": "Halden'in kanalları yayınını sürdürdü.", "fx": {}}
+},
+{
+  "id": "son_butce_mektubu", "min_week": 97, "art": "butce_acigi", "title": "Son bütçe mektubu",
+  "text": "Maliye memurları gelecek yılın ilk sayfasını boş bıraktı. Mektupta tek soru vardı: Bu yılın borcu kimin masasında kalacak?",
+  "choices": [
+    {"label": "Kasayı koru", "text": "Mektup kasanın defterine kondu; valilikler beklemeye geçti.", "fx": {"treasury": 1, "capacity": {"idare": -1}}},
+    {"label": "Valiliklere gönder", "text": "Memurlar mührü bastı. Kasa bir satır daha inceldi.", "fx": {"treasury": -1, "capacity": {"idare": 1}}}
+  ],
+  "ignore": {"text": "Boş sayfa olduğu gibi kaldı.", "fx": {}}
+},
+{
+  "id": "son_yayin_kayitlari", "min_week": 100, "art": "halden_kanal", "title": "Yayın kayıtları",
+  "text": "Sarayın kapısına bir kutu yayın kaydı bırakıldı. Manşetler birbirini tutmuyor; hepsi aynı iki yılı anlatıyor.",
+  "choices": [
+    {"label": "Kayıtları sakla", "text": "Kutu arşive girdi. Yayıncılar bir süre sessiz kaldı.", "fx": {"king": 1, "wealth": -1}},
+    {"label": "Halka aç", "text": "Kayıtlar meydanda dinlendi. Herkes başka bir bölümün altını çizdi.", "fx": {"unrest": -1, "king": -1}}
+  ],
+  "ignore": {"text": "Kutu kapının yanında yağmur yedi.", "fx": {}}
+},
+{
+  "id": "son_muhur", "min_week": 103, "art": "halden_fatura", "title": "Son mühür",
+  "text": "Saray kâtibi iki yıllık kararları tek ciltte topladı. İlk sayfada taç var; arkasında imzalar ve üstü çizilmiş adlar.",
+  "choices": [
+    {"label": "Defteri mühürle", "text": "Mühür kurudu. Eksik sayfalar da cildin içinde kaldı.", "fx": {"king": 1}},
+    {"label": "Defteri açık tut", "text": "Kâtip son sayfayı boş bıraktı; gelen herkes bir satır okuyabildi.", "fx": {"opp": -1}}
+  ],
+  "ignore": {"text": "Kâtip defteri rafına kaldırdı.", "fx": {}}
 }
 ]
