@@ -1494,6 +1494,8 @@ func _eligible(e: Dictionary) -> bool:
 		return false
 	if treasury < float(e.get("min_treasury", 0)) or treasury > float(e.get("max_treasury", 100)):
 		return false
+	if holding < float(e.get("min_holding", 0)) or holding > float(e.get("max_holding", 100)):
+		return false
 	for institution in e.get("min_cap", {}):
 		if not capacity.has(institution) or float(capacity[institution]) < float(e["min_cap"][institution]):
 			return false
@@ -1712,6 +1714,8 @@ func _resolve_patronage(choice: int, level: int) -> String:
 	var option: Dictionary = PATRONAGE_CONTENT["choices"][choice]
 	match choice:
 		0:
+			flags["halden_ihale_0"] = week
+			flags["halden_fatura_0"] = week
 			holding = minf(100.0, holding + 10.0 + 2.0 * level)
 			private_wealth += 3.0
 			treasury = maxf(0.0, treasury - 3.0 - level)
@@ -1719,7 +1723,11 @@ func _resolve_patronage(choice: int, level: int) -> String:
 			flags["HALDEN_SICAK"] = week
 			stats["halden_granted"] = int(stats.get("halden_granted", 0)) + 1
 			_add_fact("halden_talep_%d" % week, "Halden'e verilen yeni yayın ve ihale payı", "king", 18.0 + 2.0 * level, ["halden", "kessler"], 1)
+			if not facts.has("liman_komisyonu"):
+				_add_fact("liman_komisyonu", "Liman ihalesindeki komisyon", "king", 35.0, ["halden"], 1)
 		1:
+			flags["halden_ihale_1"] = week
+			flags["halden_fatura_1"] = week
 			halden_hostile_until = week + 6 + 2 * level
 			halden.ambition += 8.0
 			unrest = minf(100.0, unrest + 2.0)
@@ -1728,11 +1736,13 @@ func _resolve_patronage(choice: int, level: int) -> String:
 				if "halden" in fact["knowers"]:
 					fact["common"] = minf(1.0, float(fact["common"]) + 0.25)
 		2:
+			flags["halden_ihale_2"] = week
 			private_wealth -= 6.0
 			lena_boost_until = week + 12
 			actors["lena"].power += 6.0
 			halden.ambition += 4.0
 		3:
+			flags["halden_fatura_2"] = week
 			var chance := clampf(0.25 + (float(capacity["hukuk"]) - 40.0) / 100.0 - holding / 250.0, 0.10, 0.75)
 			if rng.randf() < chance:
 				holding = maxf(0.0, holding - 25.0)

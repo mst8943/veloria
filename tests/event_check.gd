@@ -11,7 +11,7 @@ const ACTOR := preload("res://game/core/actor.gd")
 
 const TOP_KEYS := ["id", "title", "text", "choices", "ignore", "fx", "art", "crisis", "advisors",
 	"min_week", "max_week", "chance", "once", "cooldown", "min_unrest", "max_unrest", "min_economy", "max_economy",
-	"min_opposition", "min_power", "min_cap", "max_cap", "min_treasury", "max_treasury", "needs_flag", "blocks_flag", "any_flag", "flag_age", "actor_min", "actor_max",
+	"min_opposition", "min_power", "min_cap", "max_cap", "min_treasury", "max_treasury", "min_holding", "max_holding", "needs_flag", "blocks_flag", "any_flag", "flag_age", "actor_min", "actor_max",
 	"alive", "needs_fact", "needs_ready", "min_stat", "max_stat", "news", "actor", "tone"]
 ## Sim.stats anahtarları (min_stat / max_stat koşulları)
 const STAT_KEYS := ["ops", "bribes", "promotes", "leaks", "dismissals", "written", "hints", "checks",
@@ -26,6 +26,7 @@ const FACT_KEYS := ["id", "text", "subject", "severity", "knowers"]
 const CODE_FLAGS := ["DARBE_BASTIRILDI", "DARBE_HALK", "DARBE_TAVIZ",
 	"REJIM_GUVENLIKCI", "REJIM_POPULIST", "REJIM_PATRONAJCI", "REJIM_OLIGARK", "REJIM_MEDYA", "REJIM_ISTIHBARAT",
 	"KADRO_SADIK_ORDU", "KADRO_LIYAKATLI_HUKUK", "KADRO_LIYAKATLI_IDARE"]
+const PATRONAGE_FLAGS := ["halden_ihale_0", "halden_ihale_1", "halden_ihale_2", "halden_fatura_0", "halden_fatura_1", "halden_fatura_2"]
 
 var errors: Array[String] = []
 var warnings: Array[String] = []
@@ -34,7 +35,7 @@ var loyalty_keys: Array = []
 var actor_props: Array = []
 var event_ids := {}       # id -> seçenek sayısı
 var set_flags := {}       # fx.flag ile konan bayraklar
-var fact_ids := {}        # olayların ürettiği sırlar
+var fact_ids := {"liman_komisyonu": true}  # bu sır artık talep kartında üretilir
 
 
 func _init() -> void:
@@ -152,7 +153,7 @@ func _check_event(e: Dictionary) -> void:
 
 func _check_conditions(e: Dictionary) -> void:
 	var id := str(e.get("id", "?"))
-	for k in ["min_treasury", "max_treasury"]:
+	for k in ["min_treasury", "max_treasury", "min_holding", "max_holding"]:
 		if e.has(k) and (not (e[k] is int or e[k] is float) or float(e[k]) < 0.0 or float(e[k]) > 100.0):
 			errors.append("%s: %s 0–100 arası sayı olmalı" % [id, k])
 	for k in ["min_cap", "max_cap"]:
@@ -246,7 +247,7 @@ func _check_prop(id: String, where: String, prop: String) -> void:
 
 
 func _flag_known(f: String) -> bool:
-	if set_flags.has(f) or f in CODE_FLAGS:
+	if set_flags.has(f) or f in CODE_FLAGS or f in PATRONAGE_FLAGS:
 		return true
 	if f.ends_with("_ertelendi") and event_ids.has(f.trim_suffix("_ertelendi")):
 		return true

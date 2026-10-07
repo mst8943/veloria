@@ -195,9 +195,18 @@ func _init() -> void:
 	else:
 		var prior_holding: float = sim.holding
 		sim.resolve_decision(0, 0)
-		if sim.holding != prior_holding + 12.0 or sim.halden_mood() != "sıcak" or sim.stats.get("halden_granted", 0) != 1:
+		if sim.holding != prior_holding + 12.0 or sim.halden_mood() != "sıcak" or sim.stats.get("halden_granted", 0) != 1 or not sim.flags.has("halden_ihale_0") or not sim.flags.has("halden_fatura_0") or not sim.facts.has("liman_komisyonu"):
 			push_error("Halden talebini verme etkisi uygulanmadı")
 			ok = false
+		sim.week += 12
+		for old_chain: Dictionary in sim._events:
+			if old_chain["id"] == "liman_skandali" and not sim._eligible(old_chain):
+				push_error("Halden talebi liman skandalı zincirini açmadı")
+				ok = false
+		sim.week -= 12
+	if not sim._eligible({"id": "holding_ok", "min_holding": 70, "max_holding": 75}) or sim._eligible({"id": "holding_high", "min_holding": 73}) or sim._eligible({"id": "holding_low", "max_holding": 65}):
+		push_error("holding olay eşikleri hatalı")
+		ok = false
 	var normal_dep: float = sim.media_dependency()
 	sim.lena_boost_until = sim.week + 12
 	if absf(sim.media_dependency() - normal_dep + 8.0) > 0.001:
@@ -304,6 +313,7 @@ func _init() -> void:
 		sim.opposition = maxf(20.0, float(e.get("min_opposition", 0)))
 		sim.economy = clampf(55.0, float(e.get("min_economy", 0)), float(e.get("max_economy", 100)))
 		sim.treasury = clampf(55.0, float(e.get("min_treasury", 0)), float(e.get("max_treasury", 100)))
+		sim.holding = clampf(55.0, float(e.get("min_holding", 0)), float(e.get("max_holding", 100)))
 		for institution in sim.capacity:
 			sim.capacity[institution] = clampf(55.0, float(e.get("min_cap", {}).get(institution, 5)), float(e.get("max_cap", {}).get(institution, 100)))
 		var ok_e: bool = sim._eligible(e)

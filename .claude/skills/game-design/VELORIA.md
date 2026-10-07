@@ -33,7 +33,7 @@ Kaynak: `VELORIA — Oyun Tasarım Özeti.md` (958 satır, 30 bölüm) ve `CLAUD
 | `game/ui/desk_view.gd` | Çalışma Masası (diegetik merkez); `LAYOUT`, `FEEL`, `LAMP_UV`; `desk_lit/desk_shadow.gdshader` |
 | `game/ui/city_view.gd`, `media_view.gd`, `cinema.gd`, `truth_chart.gd` | Başkent haritası, Medya Merkezi, sinematikler, hakikat grafiği |
 | `game/data/actors.json` | 9 aktör: arden(ordu, military) voss(istihbarat) kessler(maliye) halden(medya) lena(basın, insider=false) dorn(kâhya) prens(royal) brandt(muhalefet, insider=false) falk(yargı) |
-| `game/data/events.json` | Geliştirme dalında 174 kayıt: önceki 159 olaya 15 devlet/kasa/geç dönem olayı eklendi |
+| `game/data/events.json` | Geliştirme dalında 172 kayıt: 15 devlet/kasa/geç dönem olayı eklendi; iki eski Halden karar kartı tek sistem kartına taşındı |
 | `game/data/content_*.json` | Rapor/alamet, Meclis, tarihçi, başarım, ödül/kademe/rejim metin tabloları; sıra önemli, `content_check.gd` ile doğrula |
 | `art/` | Görseller; `ART_PROMPTS.md` üretim promptları + STİL BLOĞU |
 | `tests/` | `sim_test.gd`, `pacing_test.gd`, `cause_probe.gd`, `ui_shots.gd` (`unit_tests.gd` ve `ci-smoke.ps1` Beckett eklentisine ait, dokunma) |
@@ -54,7 +54,7 @@ Kayıp: king_strength ≤ 0 (darbe ya da elit koalisyonu), unrest ≥ 100 (ayakl
 
 ## Olay şeması (`events.json`)
 Zorunlu: `id, title, text, choices[{label, text, fx}], ignore{text, fx}`.
-Koşullar: `min_week, max_week, chance, once, cooldown, min_unrest, max_unrest, min_economy, max_economy, min_opposition, min_power{aktör:değer}, min_cap/max_cap{maliye|hukuk|ordu|idare:değer}, min_treasury/max_treasury, needs_flag, blocks_flag, any_flag, flag_age{flag:hafta}, actor_min/actor_max{aktör:{özellik:değer}}, alive[], needs_fact[], needs_ready, min_stat/max_stat{istatistik:sayı}` (istatistikler `Sim.stats`: bribes, written, blackmails, promotes, broken, ops...; oyuncu geçmişine bağlı "Bedellerin Dönüşü" olayları için). Olay ekledikten sonra `event_check.gd`.
+Koşullar: `min_week, max_week, chance, once, cooldown, min_unrest, max_unrest, min_economy, max_economy, min_opposition, min_power{aktör:değer}, min_cap/max_cap{maliye|hukuk|ordu|idare:değer}, min_treasury/max_treasury, min_holding/max_holding, needs_flag, blocks_flag, any_flag, flag_age{flag:hafta}, actor_min/actor_max{aktör:{özellik:değer}}, alive[], needs_fact[], needs_ready, min_stat/max_stat{istatistik:sayı}` (istatistikler `Sim.stats`: bribes, written, blackmails, promotes, broken, ops...; oyuncu geçmişine bağlı "Bedellerin Dönüşü" olayları için). Olay ekledikten sonra `event_check.gd`.
 Etkiler (`fx`): `king, unrest, economy, opp, wealth, actors{aktör:{özellik|l_<sadakat>: delta}}, fact{id,text,subject,severity,knowers}, flag, leak[], remove[], promise_keep/break/delay`.
 Seçim yapılınca bayrak `<olay_id>_<seçenek_index>` = hafta olarak yazılır (zincir olaylar bunu kullanır). Görsel: `art/events/<art|id>.png` (+ isteğe bağlı `_b`).
 

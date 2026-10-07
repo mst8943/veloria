@@ -164,18 +164,6 @@
     "ignore": {"text": "Açık kendiliğinden büyüdü.", "fx": {"economy": -5, "unrest": 4}}
   },
   {
-    "id": "halden_ihale", "min_week": 18, "min_power": {"halden": 55}, "title": "Halden yeni bir mega ihale istiyor",
-    "text": "Halden, limanın yenilenmesi ihalesini istiyor. Tonu artık rica değil.",
-    "choices": [
-      {"label": "İhaleyi ver", "text": "Halden daha da büyüdü; sana komisyon düştü.",
-       "fx": {"wealth": 6, "actors": {"halden": {"power": 10, "obligation": -4}},
-              "fact": {"id": "liman_komisyonu", "text": "Liman ihalesindeki komisyon", "subject": "king", "severity": 35, "knowers": ["halden"]}}},
-      {"label": "Reddet", "text": "Halden geri çekildi. Dosyalar hâlâ onda.", "fx": {"actors": {"halden": {"ambition": 8, "l_money": -10}}}},
-      {"label": "Rakip bir oligarkı yarıştır", "text": "İki oligark birbirine düştü.", "fx": {"economy": -2, "actors": {"halden": {"fear": 10, "ambition": 3}}}}
-    ],
-    "ignore": {"text": "İhale rakip bir şirkete gitti.", "fx": {"actors": {"halden": {"ambition": 10, "l_money": -10}}}}
-  },
-  {
     "id": "deepfake", "min_week": 28, "title": "Kralın sahte videosu dolaşıyor",
     "text": "Sosyal medyada kralın aşağılayıcı sözler sarf ettiği bir video yayılıyor. Kimse ne gerçek olduğunu bilmiyor.",
     "choices": [
@@ -294,16 +282,6 @@
       {"label": "Devlet medyasıyla karşılık ver", "text": "İki tarafın kanalları birbirini yiyor. Halk kimseye inanmıyor.", "fx": {"king": -1, "unrest": 2}}
     ],
     "ignore": {"text": "Saldırılar sürdü.", "fx": {"king": -4}}
-  },
-  {
-    "id": "halden_fatura", "min_week": 20, "actor_min": {"halden": {"obligation": 16}}, "title": "Halden faturayı kesiyor",
-    "text": "Halden saraya geldi. Yeni kanal lisansları ve geçmiş vergiler için af istiyor. 'Bunca yıl sizi kim korudu, Majesteleri?'",
-    "choices": [
-      {"label": "İstediğini ver", "text": "Halden memnun ayrıldı. Artık ona daha da bağımlısın.", "fx": {"economy": -3, "actors": {"halden": {"power": 10, "obligation": -15}}}},
-      {"label": "Reddet", "text": "Halden gülümsedi. Ertesi gün kanallarında eski bir haber dönmeye başladı.", "fx": {"leak": ["saglik_yalani", "liman_komisyonu"], "actors": {"halden": {"ambition": 12}}}},
-      {"label": "Voss'a onun dosyasını açtır", "text": "Halden'in vergi kaçakçılığı belgeleri artık senin elinde.", "fx": {"actors": {"halden": {"fear": 18, "ambition": 4}, "voss": {"power": 5, "secrets_on_king": 1}}}}
-    ],
-    "ignore": {"text": "Halden cevap alamadı ve sabrı tükeniyor.", "fx": {"actors": {"halden": {"ambition": 8}}}}
   },
   {
     "id": "voss_hakkinda", "min_week": 24, "actor_min": {"voss": {"secrets_on_king": 3, "power": 55}}, "title": "Voss'un senin hakkında da bir dosyası var",
@@ -847,7 +825,7 @@
     "ignore": {"text": "Voss çayını bitirdi ve gitti.", "fx": {"actors": {"voss": {"power": 3}}}}
   },
   {
-    "id": "halden_imparatorluk", "min_week": 68, "actor_min": {"halden": {"power": 68}}, "art": "halden_kanal", "title": "Halden gazeteleri de satın alıyor",
+    "id": "halden_imparatorluk", "min_week": 68, "min_holding": 70, "actor_min": {"halden": {"power": 68}}, "art": "halden_kanal", "title": "Halden gazeteleri de satın alıyor",
     "text": "Halden'in şirketi son iki büyük gazeteyi ve dağıtım ağını satın aldı. Artık kahvaltı masasındaki her manşet onun kaleminden çıkıyor.",
     "choices": [
       {"label": "Rekabet kurulu satışı durdursun", "text": "Satış iptal edildi. Halden'in kanalları seni ilk kez eleştirdi.", "fx": {"king": 2, "actors": {"halden": {"ambition": 10, "power": -5, "l_money": -6}}}},
@@ -907,7 +885,7 @@
     "ignore": {"text": "Generaller yerleşti.", "fx": {"actors": {"arden": {"power": 4}}}}
   },
   {
-    "id": "halden_meclis", "min_week": 82, "alive": ["halden"], "actor_min": {"halden": {"power": 66}}, "art": "milletvekili_satin", "title": "Halden meclisi satın alıyor",
+    "id": "halden_meclis", "min_week": 82, "min_holding": 80, "alive": ["halden"], "actor_min": {"halden": {"power": 66}}, "art": "milletvekili_satin", "title": "Halden meclisi satın alıyor",
     "text": "Halden'in kasası açıldı: bir gecede on bir milletvekili parti değiştirdi. Meclis artık senin yasalarını değil, Halden'in ihalelerini konuşuyor.",
     "choices": [
       {"label": "Halden'le ortaklık kur", "text": "Yasalar geçiyor. Halden'in imzası olmadan hiçbiri.", "fx": {"king": -3, "economy": 4, "actors": {"halden": {"power": 8, "obligation": 12}}}},
