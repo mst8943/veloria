@@ -1114,6 +1114,7 @@ func _apply_effects(fx: Dictionary) -> void:
 	opposition = clampf(opposition + float(fx.get("opp", 0)), 0.0, 100.0)
 	private_wealth = maxf(0.0, private_wealth + float(fx.get("wealth", 0)))
 	treasury = clampf(treasury + float(fx.get("treasury", 0)), 0.0, 100.0)
+	holding = clampf(holding + float(fx.get("holding", 0)), 0.0, 100.0)
 	for institution in fx.get("capacity", {}):
 		if capacity.has(institution):
 			capacity[institution] = clampf(float(capacity[institution]) + float(fx["capacity"][institution]), 5.0, 100.0)
@@ -1122,7 +1123,11 @@ func _apply_effects(fx: Dictionary) -> void:
 	if fx.has("court_share"):
 		court_share = bool(fx["court_share"])
 		if court_share:
+			if not flags.has("SARAY_PAYI_BASLADI"):
+				flags["SARAY_PAYI_BASLADI"] = week
 			_add_fact("saray_payi_%d" % week, "saray payı devlet kasasından ayrılıyor", "king", 18, ["kessler", "dorn"], 1)
+		else:
+			flags.erase("SARAY_PAYI_BASLADI")
 	var af: Dictionary = fx.get("actors", {})
 	for aid in af:
 		if actors.has(aid):
@@ -1496,6 +1501,11 @@ func _eligible(e: Dictionary) -> bool:
 		return false
 	if holding < float(e.get("min_holding", 0)) or holding > float(e.get("max_holding", 100)):
 		return false
+	if e.get("needs_hostile", false) and halden_mood() != "düşmanca":
+		return false
+	for aid in _as_array(e.get("needs_moved", [])):
+		if not actors.has(aid) or not actors[aid].moved:
+			return false
 	for institution in e.get("min_cap", {}):
 		if not capacity.has(institution) or float(capacity[institution]) < float(e["min_cap"][institution]):
 			return false

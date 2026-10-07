@@ -285,6 +285,27 @@ func _init() -> void:
 	# Ulaşılabilirlik: gerekli kararları zorla verip uygunluğu kontrol et.
 	sim.new_game(77)
 	sim.week = 40
+	sim.holding = 70.0
+	if sim._eligible({"id": "test_hostile", "needs_hostile": true}) or sim._eligible({"id": "test_moved", "needs_moved": "halden"}):
+		push_error("patronaj olay koşulları erken açıldı")
+		ok = false
+	sim.halden_hostile_until = 42
+	sim.actors["halden"].moved = true
+	if not sim._eligible({"id": "test_hostile", "needs_hostile": true}) or not sim._eligible({"id": "test_moved", "needs_moved": "halden"}):
+		push_error("patronaj olay koşulları açılmadı")
+		ok = false
+	sim.actors["halden"].moved = false
+	sim.halden_hostile_until = 0
+	sim._apply_effects({"court_share": true, "holding": -3})
+	if not sim.flags.has("SARAY_PAYI_BASLADI") or sim.holding != 67.0:
+		push_error("saray payı izi veya holding etkisi uygulanmadı")
+		ok = false
+	sim._apply_effects({"court_share": false})
+	if sim.flags.has("SARAY_PAYI_BASLADI"):
+		push_error("saray payı izi kapatılmadı")
+		ok = false
+	sim.new_game(77)
+	sim.week = 40
 	for e in sim._events:
 		if not never.has(e["id"]):
 			continue
@@ -314,6 +335,10 @@ func _init() -> void:
 		sim.economy = clampf(55.0, float(e.get("min_economy", 0)), float(e.get("max_economy", 100)))
 		sim.treasury = clampf(55.0, float(e.get("min_treasury", 0)), float(e.get("max_treasury", 100)))
 		sim.holding = clampf(55.0, float(e.get("min_holding", 0)), float(e.get("max_holding", 100)))
+		if e.get("needs_hostile", false):
+			sim.halden_hostile_until = sim.week + 1
+		for aid in sim._as_array(e.get("needs_moved", [])):
+			sim.actors[aid].moved = true
 		for institution in sim.capacity:
 			sim.capacity[institution] = clampf(55.0, float(e.get("min_cap", {}).get(institution, 5)), float(e.get("max_cap", {}).get(institution, 100)))
 		var ok_e: bool = sim._eligible(e)

@@ -3253,5 +3253,45 @@
     "text": "İki dosya da açık kaldı.",
     "fx": {}
   }
+},
+{
+  "id": "halden_yayin_kesti", "min_week": 24, "min_holding": 60, "needs_hostile": true, "chance": 0.35,
+  "art": "halden_kanal", "title": "Bütün kanallar sustu",
+  "text": "Halden'in gazetesi ve televizyonu aynı sabah hükümeti hedef aldı. \"Bir emir vermeniz gerekmiyor Majesteleri,\" dedi Halden. \"Herkes kimin sustuğunu gördü.\"",
+  "choices": [
+    {"label": "Lena'ya söz ver", "text": "Lena, yayında boş bırakılan yerleri kendi sesiyle doldurdu.", "fx": {"wealth": -2, "unrest": -1}},
+    {"label": "Halden'le konuş", "text": "Halden dinledi; yayınları için yeni bir pay istedi.", "fx": {"treasury": -2, "holding": 2}}
+  ],
+  "ignore": {"text": "Ertesi gün manşetler yine sarayı suçladı.", "fx": {"unrest": 1}}
+},
+{
+  "id": "ihale_sorusturmasi_sizinti", "min_week": 20, "needs_flag": "HALDEN_SAVCI_SIZDI", "flag_age": {"HALDEN_SAVCI_SIZDI": 1},
+  "art": "halden_fatura", "title": "Soruşturmanın sayfaları dışarıda",
+  "text": "Falk dosyayı kapatmadan önce Halden'in gazetesi başlığı bastı. \"Mühür adliyede kaldı Majesteleri; sayfalar kalmadı,\" dedi.",
+  "choices": [
+    {"label": "Falk'ı koru", "text": "Falk görevinde kaldı. Saray, soruşturmanın yükünü üstlendi.", "fx": {"king": -1, "capacity": {"hukuk": 1}}},
+    {"label": "Dosyayı beklet", "text": "Falk başını eğdi. Gazete bunu da yazdı.", "fx": {"capacity": {"hukuk": -1}, "unrest": 1}}
+  ],
+  "ignore": {"text": "Sızıntının kaynağı bulunamadı.", "fx": {}}
+},
+{
+  "id": "saray_payi_sizdi", "min_week": 39, "needs_flag": "SARAY_PAYI_BASLADI", "flag_age": {"SARAY_PAYI_BASLADI": 26},
+  "art": "gazeteci_ihale", "title": "Saray payının hesabı",
+  "text": "Kessler'in iki çeyrektir tuttuğu ayrı sütun gazeteye düştü. \"Rakamları ben yazdım Majesteleri,\" dedi. \"Başlığı başkası attı.\"",
+  "choices": [
+    {"label": "Payı kes", "text": "Kessler ayrı sütunu kapattı; kasanın izi yine defterde kaldı.", "fx": {"court_share": false, "king": 1}},
+    {"label": "Payı savun", "text": "Kessler defteri açık bıraktı. Gazete ikinci baskıyı hazırladı.", "fx": {"king": -2, "unrest": 1}}
+  ],
+  "ignore": {"text": "Gazete saraydan yanıt alamadığını yazdı.", "fx": {"king": -1}}
+},
+{
+  "id": "holding_devrildi", "min_week": 52, "min_holding": 70, "needs_moved": "halden", "chance": 0.6,
+  "art": "halden_intikam", "title": "Halden karşı safta",
+  "text": "Halden'in şirketleri sarayla bağını kopardı. Yayınları konuşuyor, holdingi yavaşça eriyor. \"Beni buradan çıkarabilirsiniz Majesteleri,\" dedi, \"sesimi değil.\"",
+  "choices": [
+    {"label": "Rakip yayını destekle", "text": "Lena'nın küçük masası büyüdü; Halden'in kanalları yerinde kaldı.", "fx": {"wealth": -2, "king": 1}},
+    {"label": "Bekle", "text": "Holding yeni ortak aradı. Saray kapısı kapalı kaldı.", "fx": {"holding": -3}}
+  ],
+  "ignore": {"text": "Halden'in kanalları yayınını sürdürdü.", "fx": {}}
 }
 ]

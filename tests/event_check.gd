@@ -11,21 +11,21 @@ const ACTOR := preload("res://game/core/actor.gd")
 
 const TOP_KEYS := ["id", "title", "text", "choices", "ignore", "fx", "art", "crisis", "advisors",
 	"min_week", "max_week", "chance", "once", "cooldown", "min_unrest", "max_unrest", "min_economy", "max_economy",
-	"min_opposition", "min_power", "min_cap", "max_cap", "min_treasury", "max_treasury", "min_holding", "max_holding", "needs_flag", "blocks_flag", "any_flag", "flag_age", "actor_min", "actor_max",
+	"min_opposition", "min_power", "min_cap", "max_cap", "min_treasury", "max_treasury", "min_holding", "max_holding", "needs_hostile", "needs_moved", "needs_flag", "blocks_flag", "any_flag", "flag_age", "actor_min", "actor_max",
 	"alive", "needs_fact", "needs_ready", "min_stat", "max_stat", "news", "actor", "tone"]
 ## Sim.stats anahtarları (min_stat / max_stat koşulları)
 const STAT_KEYS := ["ops", "bribes", "promotes", "leaks", "dismissals", "written", "hints", "checks",
 	"investigations", "blackmails", "promises", "kept", "broken", "summons", "concessions", "street_concessions", "legal_concessions", "rivalries",
 	"sadik_maliye", "sadik_hukuk", "sadik_ordu", "sadik_idare", "liyakatli_maliye", "liyakatli_hukuk", "liyakatli_ordu", "liyakatli_idare"]
 const CAP_KEYS := ["maliye", "hukuk", "ordu", "idare"]
-const FX_KEYS := ["king", "unrest", "economy", "opp", "wealth", "treasury", "capacity", "budget_stance", "court_share", "actors", "fact", "flag", "leak", "remove",
+const FX_KEYS := ["king", "unrest", "economy", "opp", "wealth", "treasury", "holding", "capacity", "budget_stance", "court_share", "actors", "fact", "flag", "leak", "remove",
 	"promise_keep", "promise_break", "promise_delay"]
-const FX_NUMBERS := ["king", "unrest", "economy", "opp", "wealth", "treasury"]
+const FX_NUMBERS := ["king", "unrest", "economy", "opp", "wealth", "treasury", "holding"]
 const FACT_KEYS := ["id", "text", "subject", "severity", "knowers"]
 ## Oyun kodunun (sim.gd) kendisinin koyduğu bayraklar; <AKTÖR>_GITTI, _GUCLENDI, HUZUR_<AKTÖR> kalıpları ayrıca.
 const CODE_FLAGS := ["DARBE_BASTIRILDI", "DARBE_HALK", "DARBE_TAVIZ",
 	"REJIM_GUVENLIKCI", "REJIM_POPULIST", "REJIM_PATRONAJCI", "REJIM_OLIGARK", "REJIM_MEDYA", "REJIM_ISTIHBARAT",
-	"KADRO_SADIK_ORDU", "KADRO_LIYAKATLI_HUKUK", "KADRO_LIYAKATLI_IDARE"]
+	"KADRO_SADIK_ORDU", "KADRO_LIYAKATLI_HUKUK", "KADRO_LIYAKATLI_IDARE", "HALDEN_SAVCI_SIZDI", "SARAY_PAYI_BASLADI"]
 const PATRONAGE_FLAGS := ["halden_ihale_0", "halden_ihale_1", "halden_ihale_2", "halden_fatura_0", "halden_fatura_1", "halden_fatura_2"]
 
 var errors: Array[String] = []
@@ -153,6 +153,10 @@ func _check_event(e: Dictionary) -> void:
 
 func _check_conditions(e: Dictionary) -> void:
 	var id := str(e.get("id", "?"))
+	if e.has("needs_hostile") and not e["needs_hostile"] is bool:
+		errors.append("%s: needs_hostile doğru/yanlış olmalı" % id)
+	for aid in _arr(e.get("needs_moved", [])):
+		_check_actor(id, "needs_moved", str(aid))
 	for k in ["min_treasury", "max_treasury", "min_holding", "max_holding"]:
 		if e.has(k) and (not (e[k] is int or e[k] is float) or float(e[k]) < 0.0 or float(e[k]) > 100.0):
 			errors.append("%s: %s 0–100 arası sayı olmalı" % [id, k])
