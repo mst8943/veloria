@@ -125,6 +125,8 @@ func _play(bot: String) -> void:
 			style = "soft" if bot == "advice_soft" else ("dirty" if bot == "advice_dirty" else "")
 			if bot == "advice_patron" and sim.week % 3 == 0 and sim.mesai > 0 and sim.tender_wait() == 0 and not sim.actors["halden"].moved:
 				sim.give_tender("halden")
+			if bot == "advice_patron" and sim.private_wealth > 11.0 and sim.mesai > 0 and sim.actors.has("dorn") and not sim.actors["dorn"].moved:
+				sim.bribe("dorn")
 			var cycle := 16 if bot == "advice_loyal" else 20
 			var start := 16 if bot == "advice_loyal" else 12
 			if bot in ["advice_loyal", "advice_merit"] and sim.week >= start and (sim.week - start) % cycle in [0, 1]:
