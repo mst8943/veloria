@@ -21,6 +21,7 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 - **4a.8** `80c221c`, `33d04bf`: Zor oyunda ordu kapasitesinin darbe savunma bonusu tek katsayı grubunda kalibre edildi; Sadık, Liyakatli, Sıkı ve Cömert bütçe botları eklendi. Kadro, bütçe ve eşik birim testleri `sim_test.gd` içinde. Bütün testler geçti; `--full` 104 hafta TAHTTA, 109 olay.
 - **4a.9** `660b557`: Oyuncu/developer rehberi, tasarım sonucu, borç ve durum belgeleri güncellendi. 4a kapısı aşağıda sayılarla kapatıldı.
 - **4b.1** `31c7686`: `holding`, düşman yayın/talep/Lena süreleri ve kadro günlüğü eklendi; `SAVE_VERSION=6`, v5→v6 göçü Halden'in kayıtlı gücünden holding üretir. Bütün testler geçti; `--full` 104 hafta TAHTTA, 109 olay; ölçüt botu %83/%45/%16 ile değişmedi.
+- **4b.2** `d0eafd7`: Halden'e üç haftada bir İhale Ver eylemi; holding/servet/kasa/ekonomi/maliye ve Halden etkileri, komisyon sırrı. DEVLET sekmesi, kapalı durumlar, ipucu vermeyen önizleme ve autoplay eklendi. `sim_test`, `event_check`, `save_test`, `content_check`, `ui_input_test`, üç autoplay türü ve tempo testi geçti; `--full` tohum 101 hafta 104 TAHTTA, Oligark Rejimi, 109 olay. Masaüstü `dist/phase4b2_shots/1_devlet.png` açılıp gözle kontrol edildi. Ölçüt %83/%45/%16.
 
 ## Son ölçüm
 
@@ -35,6 +36,8 @@ Tarih: 2026-10-07. Dal: `veloria`. Tasarım ve değişmez kararlar: `docs/design
 | 4a.6 | %83 | %42 | %17 |
 | 4a.7 | %83 | %45 | %16 |
 | **4a kapısı** | **%83** | **%45** | **%16** |
+| 4b.1 | %83 | %45 | %16 |
+| 4b.2 | %83 | %45 | %16 |
 
 ### 4a kapısı — `dist/phase4a8_gate.log`
 
@@ -54,4 +57,4 @@ Tempo testinde bütün görünen dilimler ≥0,8; fakat 81–88 diliminde yalnı
 
 ## SIRADAKİ ADIM
 
-4b.2: Halden için DEVLET sekmesinde İhale Ver eylemi (1 mesai, 3 hafta bekleme, `moved` kapısı), küçük etkiler ve ihale komisyonu sırrı; ACTION_META/önizleme/autoplay. Tüm testler ve ölçüt sondajından sonra ayrı commit. 4b kapısı sağlanmadan 4c'ye geçme.
+4b.3: Holdingin haftalık büyümesi ve Halden'in medya havası; düşman yayınlarında gazete/TV eleştirisi, kişi kartında Nüfuz ve Medya bantları. Sonra tam test ve ölçüm. 4b kapısı sağlanmadan 4c'ye geçme.
