@@ -264,7 +264,7 @@ func save_summary() -> String:
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
 ## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Halden ve kadro günlüğü
-const SAVE_VERSION := 6
+const SAVE_VERSION := 7
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
@@ -300,6 +300,10 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 		d["halden_demands"] = 0
 		d["lena_boost_until"] = 0
 		d["kadro_log"] = []
+	if from < 7:
+		# Eski çizelgede holding yoktu; eldeki değer geçmiş için en dürüst yaklaşık değerdir.
+		for point: Dictionary in d.get("capacity_timeline", []):
+			point["holding"] = float(d.get("holding", 40.0))
 	d["version"] = SAVE_VERSION
 	return d
 
@@ -1362,7 +1366,7 @@ func _record_timeline() -> void:
 	timeline.append({"w": week, "king": snappedf(king_strength, 0.1), "unrest": snappedf(unrest, 0.1),
 		"economy": snappedf(economy, 0.1), "opp": snappedf(opposition, 0.1), "plot": snappedf(_ready_power_share() * 100.0, 0.1)})
 	capacity_timeline.append({"w": week, "maliye": capacity["maliye"], "hukuk": capacity["hukuk"],
-		"ordu": capacity["ordu"], "idare": capacity["idare"]})
+		"ordu": capacity["ordu"], "idare": capacity["idare"], "holding": holding})
 
 
 func _world_tick() -> void:
@@ -2374,14 +2378,15 @@ func _end(survived: bool) -> void:
 			cause = "Saltanatının %d. haftasında elit koalisyonu desteğini çekti; tahtta kimse seni savunmadı." % (week - 1)
 	else:
 		cause = "104 haftalık saltanatın sonunda tahtını korudun."
-		title = str(REGIME_TITLES.get(regime, _survivor_title(top)))
+		var state_title := _survivor_title(top)
+		title = state_title if state_title in ["Harap Devletin Kralı", "Liyakat Kralı"] else str(REGIME_TITLES.get(regime, state_title))
 	record = {"survived": survived, "title": title, "weeks": week - 1, "cause": cause,
 		"top_actor": top.display_name if top else "", "history": history.duplicate(),
 		"lies": _top_lies(), "king": KING_NAME,
 		"regime": regime_name() if regime != "" else "", "threat": regime_threat() if regime != "" else "",
 		"promises": "%d söz verdin: %d tutuldu, %d bozuldu." % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
 		"historians": historians(survived), "timeline": timeline.duplicate(), "council": council_record(),
-		"plot": plot_log.duplicate(), "signs": sign_record()}
+		"plot": plot_log.duplicate(), "signs": sign_record(), "state": _state_record()}
 	record["new_achievements"] = _award_achievements(survived, title, cause) if record_chronicle else []
 	if record_chronicle:
 		_append_chronicle(record)
@@ -2389,6 +2394,39 @@ func _end(survived: bool) -> void:
 	if autosave and FileAccess.file_exists(save_path):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(save_path))
 	game_ended.emit(record)
+
+
+func _capacity_average() -> float:
+	if capacity_timeline.is_empty():
+		return (float(capacity["maliye"]) + float(capacity["hukuk"]) + float(capacity["ordu"]) + float(capacity["idare"])) / 4.0
+	var total := 0.0
+	for point: Dictionary in capacity_timeline:
+		total += (float(point["maliye"]) + float(point["hukuk"]) + float(point["ordu"]) + float(point["idare"])) / 4.0
+	return total / capacity_timeline.size()
+
+
+func _state_record() -> Dictionary:
+	var chart: Array = timeline.duplicate(true)
+	var lowest := 101.0
+	var low_week := 0
+	var peak := holding
+	for i in mini(chart.size(), capacity_timeline.size()):
+		var point: Dictionary = capacity_timeline[i]
+		var mean := (float(point["maliye"]) + float(point["hukuk"]) + float(point["ordu"]) + float(point["idare"])) / 4.0
+		chart[i]["capacity"] = mean
+		chart[i]["holding"] = float(point.get("holding", holding))
+		peak = maxf(peak, float(chart[i]["holding"]))
+		if mean < lowest:
+			lowest = mean
+			low_week = int(point["w"])
+	var low_event := "O hafta kayda geçen bir olay yok."
+	for entry in history:
+		if str(entry).begins_with("Hafta %d " % low_week):
+			low_event = str(entry)
+			break
+	return {"timeline": chart, "average": _capacity_average(), "lowest": lowest, "low_week": low_week,
+		"low_event": low_event, "appointments": kadro_log.duplicate(true), "tenders": int(stats.get("tenders", 0)),
+		"hostile_weeks": int(stats.get("halden_hostile_weeks", 0)), "holding_peak": peak, "holding_final": holding}
 
 
 func historians(survived: bool) -> Array:
@@ -2439,6 +2477,14 @@ func _award_achievements(survived: bool, title: String, cause: String) -> Array:
 		earned.append("gercegi_goren")
 	if fired_events.has("reform_meyve"):
 		earned.append("reformcu")
+	if survived and _capacity_average() < 35.0:
+		earned.append("harap_devlet")
+	if survived and _capacity_average() > 70.0:
+		earned.append("liyakat_krali")
+	if holding >= 90.0:
+		earned.append("oligarkin_esiri")
+	if float(record["state"]["holding_peak"]) >= 70.0 and holding < 40.0:
+		earned.append("oligarki_dizginleyen")
 	var have := load_achievements()
 	var fresh: Array = []
 	for id in earned:
@@ -2471,6 +2517,10 @@ func _append_chronicle(r: Dictionary) -> void:
 
 
 func _survivor_title(top: Actor) -> String:
+	if _capacity_average() < 35.0:
+		return "Harap Devletin Kralı"
+	if _capacity_average() > 70.0:
+		return "Liyakat Kralı"
 	if top != null and top.power > 85.0:
 		if top.military:
 			return "Generallerin Kuklası"

@@ -407,6 +407,7 @@ func _init() -> void:
 	ok = _test_rivals() and ok
 	ok = _test_arcs() and ok
 	ok = _test_regimes() and ok
+	ok = _test_state_end() and ok
 	# Meclis görüşleri: deterministik, kayıtta korunur, ana rng'ye dokunmaz, hazır aktör kötü önerir.
 	ok = _test_advice() and ok
 	# Darbe aşamaları: çekilme, kriz kartı, kriz sonuçları, kayıt, huzura çağırma.
@@ -523,6 +524,28 @@ func _test_regimes() -> bool:
 		push_error("sadık kadro rejimi etkilemedi")
 		ok = false
 	print("Rejim tipleri: ", "OK" if ok else "HATA")
+	return ok
+
+
+func _test_state_end() -> bool:
+	sim.new_game(124, 1)
+	sim.capacity_timeline = [
+		{"w": 1, "maliye": 25.0, "hukuk": 25.0, "ordu": 25.0, "idare": 25.0, "holding": 75.0},
+		{"w": 2, "maliye": 30.0, "hukuk": 30.0, "ordu": 30.0, "idare": 30.0, "holding": 35.0}]
+	sim.timeline = [{"w": 1, "king": 60.0}, {"w": 2, "king": 61.0}]
+	sim.holding = 35.0
+	sim.week = 105
+	sim._end(true)
+	var state: Dictionary = sim.record.get("state", {})
+	var ok: bool = sim.record["title"] == "Harap Devletin Kralı" and state.get("holding_peak", 0.0) == 75.0
+	ok = ok and state.get("low_week", 0) == 1 and state.get("timeline", []).size() == 2
+	ok = ok and float(state["timeline"][0].get("capacity", 0.0)) == 25.0
+	sim.new_game(125, 1)
+	sim.capacity_timeline = [{"w": 1, "maliye": 75.0, "hukuk": 75.0, "ordu": 75.0, "idare": 75.0, "holding": 40.0}]
+	ok = ok and sim._survivor_title(null) == "Liyakat Kralı"
+	if not ok:
+		push_error("devlet final verisi veya yeni unvan hatalı")
+	print("Devlet finali: ", "OK" if ok else "HATA")
 	return ok
 
 

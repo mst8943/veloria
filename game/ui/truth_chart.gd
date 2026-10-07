@@ -1,12 +1,14 @@
 extends Control
 ## Hakikat grafiği: oyun boyunca gizli kalan gerçek durumun haftalık seyri.
-## Altın: tahtın gücü · Kırmızı: halkın öfkesi · Mor: sana karşı hazır olanların gücü.
+## Altın: taht · kırmızı: halk · mor: komplo · yeşil: kurumlar · mavi: Halden.
 
 const UIKit := preload("res://game/ui/ui_kit.gd")
 const SERIES := [
 	{"key": "king", "name": "Tahtın gücü", "color": Color("d6b25e")},
 	{"key": "unrest", "name": "Halkın öfkesi", "color": Color("c0504a")},
 	{"key": "plot", "name": "Komplo", "color": Color("9a6ad6")},
+	{"key": "capacity", "name": "Devlet", "color": Color("7fae7a")},
+	{"key": "holding", "name": "Halden'in payı", "color": Color("66a9bd")},
 ]
 
 var data: Array = []
@@ -30,7 +32,7 @@ func _process(_d: float) -> void:
 
 func _draw() -> void:
 	var font := get_theme_default_font()
-	var r := Rect2(Vector2(44, 26), size - Vector2(60, 50))
+	var r := Rect2(Vector2(44, 48), size - Vector2(60, 72))
 	draw_rect(Rect2(Vector2.ZERO, size), Color(0, 0, 0, 0.35))
 	draw_string(UIKit.serif(), Vector2(10, 18), "GERÇEKTE NE OLDU", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, UIKit.GOLD)
 	# Yatay kılavuz çizgileri
@@ -58,8 +60,8 @@ func _draw() -> void:
 		if pts.size() >= 2:
 			draw_polyline(pts, s["color"], 2.0, true)
 	# Lejant
-	var lx := r.end.x - 330.0
+	var lx := maxf(44.0, r.end.x - 675.0)
 	for s in SERIES:
-		draw_rect(Rect2(Vector2(lx, 8), Vector2(12, 4)), s["color"])
-		draw_string(font, Vector2(lx + 16, 16), s["name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, UIKit.TEXT)
-		lx += 110.0
+		draw_rect(Rect2(Vector2(lx, 32), Vector2(12, 4)), s["color"])
+		draw_string(font, Vector2(lx + 16, 38), s["name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 11, UIKit.TEXT)
+		lx += 135.0

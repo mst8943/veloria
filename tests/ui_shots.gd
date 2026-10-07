@@ -122,6 +122,46 @@ func _run() -> void:
 		main._refresh()
 		main._on_flow("gundem")
 		await _shot("1_butce")
+		# Finali bilinen bir devlet çizelgesiyle kur: iki yeni grafik çizgisi ve defter okunabilsin.
+		main._instant = true
+		sim0.pending.clear()
+		sim0.capacity_timeline.clear()
+		sim0.timeline.clear()
+		for w in range(1, 105):
+			var cap := 25.0 if w == 50 else 78.0
+			sim0.capacity_timeline.append({"w": w, "maliye": cap, "hukuk": cap, "ordu": cap, "idare": cap,
+				"holding": 80.0 if w == 50 else 35.0})
+			sim0.timeline.append({"w": w, "king": 70.0, "unrest": 30.0, "plot": 20.0})
+		sim0.kadro_log = [{"week": 31, "institution": "hukuk", "kind": "merit"}]
+		sim0.stats["tenders"] = 3
+		sim0.stats["halden_hostile_weeks"] = 8
+		sim0.holding = 35.0
+		sim0.week = 105
+		sim0._end(true)
+		await process_frame
+		# Geliştirici kipi başarımları kalıcı yazmaz; yalnızca görüntü için göster.
+		sim0.record["new_achievements"] = ["liyakat_krali", "oligarki_dizginleyen"]
+		main._end_overlay.show_record(sim0.record)
+		var state_tabs: TabContainer = main._end_overlay.tabs
+		state_tabs.current_tab = 0
+		await _shot("5_devlet_son")
+		state_tabs.current_tab = 1
+		await _shot("5_devlet_grafik")
+		state_tabs.current_tab = 3
+		main._end_overlay.lies_page.scroll_to_line(main._end_overlay.lies_page.get_line_count() - 1)
+		await _shot("5_devlet_defteri")
+		sim0.new_game(126)
+		sim0.capacity_timeline.clear()
+		sim0.timeline.clear()
+		for w in range(1, 105):
+			sim0.capacity_timeline.append({"w": w, "maliye": 25.0, "hukuk": 25.0, "ordu": 25.0, "idare": 25.0, "holding": 40.0})
+			sim0.timeline.append({"w": w, "king": 70.0, "unrest": 30.0, "plot": 20.0})
+		sim0.week = 105
+		sim0._end(true)
+		await process_frame
+		sim0.record["new_achievements"] = ["harap_devlet"]
+		main._end_overlay.show_record(sim0.record)
+		await _shot("5_harap_son")
 		quit(0)
 		return
 	main._city.close_view()

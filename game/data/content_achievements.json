@@ -58,5 +58,21 @@
   "yetkisiz": [
     "Skandal",
     "Biriken skandallar yüzünden yetkisiz bırakıl."
+  ],
+  "harap_devlet": [
+    "Harap Devlet",
+    "Kurumlar çökerken 104 haftayı tahtta tamamla."
+  ],
+  "liyakat_krali": [
+    "Liyakat Kralı",
+    "Güçlü kurumlarla 104 haftayı tahtta tamamla."
+  ],
+  "oligarkin_esiri": [
+    "Oligarkın Esiri",
+    "Halden'in payı doruktayken bir saltanatı bitir."
+  ],
+  "oligarki_dizginleyen": [
+    "Oligarkı Dizginleyen",
+    "Halden'in yükselen payını saltanat sonunda geri çek."
   ]
 }

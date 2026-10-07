@@ -160,6 +160,33 @@ func _append_council(council: Array) -> void:
 		lies_page.append_text("\n")
 
 
+func _state_band(value: float) -> String:
+	if value < 35.0:
+		return "çökmüş"
+	if value < 70.0:
+		return "zorlanan"
+	return "sağlam"
+
+
+func _append_state(state: Dictionary) -> void:
+	if state.is_empty():
+		return
+	lies_page.append_text("\n[b][color=#d9b359][font_size=22]DEVLET DEFTERİ — ne pahasına[/font_size][/color][/b]\n")
+	lies_page.append_text("[color=gray]Kurumların ortalama hâli:[/color] %s. En zayıf an: %d. hafta, %s.\n" % [
+		_state_band(float(state.get("average", 55.0))), int(state.get("low_week", 0)), _state_band(float(state.get("lowest", 55.0)))])
+	lies_page.append_text("[color=gray]O haftanın kaydı:[/color] %s\n" % state.get("low_event", ""))
+	var appointments: Array = state.get("appointments", [])
+	var institutions := {"maliye": "Maliye", "hukuk": "Adliye", "ordu": "Ordu", "idare": "İdare"}
+	if appointments.is_empty():
+		lies_page.append_text("Kadroda yeni bir atama yapmadın.\n")
+	else:
+		for item: Dictionary in appointments:
+			lies_page.append_text("• %d. hafta — %s: %s\n" % [int(item["week"]),
+				institutions.get(str(item["institution"]), str(item["institution"])), "Sadık Ata" if item["kind"] == "loyal" else "Liyakatli Ata"])
+	lies_page.append_text("[color=gray]İhale:[/color] %d kez. [color=gray]Halden'in düşman yayını:[/color] %d hafta.\n" % [
+		int(state.get("tenders", 0)), int(state.get("hostile_weeks", 0))])
+
+
 ## Kaydı sekmelere yazar (Özet, Tarihçiler, Hakikat Dosyası, Kararlar) ve final görselinin yolunu döndürür.
 ## Gösterme/sinema main.gd::_on_end'de kalır.
 func show_record(record: Dictionary) -> String:
@@ -185,6 +212,9 @@ func show_record(record: Dictionary) -> String:
 		int(record["weeks"]), record["top_actor"], record.get("promises", ""), hist_log.size()])
 	if str(record.get("regime", "")) != "":
 		summary.append_text("[b]Rejimin:[/b] %s. [b]Son sınavı:[/b] %s.\n" % [record["regime"], record["threat"]])
+	var state: Dictionary = record.get("state", {})
+	if not state.is_empty():
+		summary.append_text("[b]Devletin:[/b] %s. Bedeli Hakikat Dosyası'ndaki Devlet Defteri'nde.\n" % _state_band(float(state.get("average", 55.0))))
 	if lies.is_empty():
 		summary.append_text("[b]Hakikat Dosyası:[/b] kimse sana belirgin biçimde yalan söylemedi.\n")
 	else:
@@ -228,6 +258,7 @@ func show_record(record: Dictionary) -> String:
 		lies_page.append_text("• Hafta %d — [b]%s[/b] sana şunu söyledi: \"%s\"\n   [color=gray]Gerçekte:[/color] %s\n\n" % [l["week"], l["name"], l["said"], l["truth"]])
 	_append_council(record.get("council", []))
 	_append_plot(record.get("plot", []), record.get("signs", {}))
+	_append_state(state)
 	# Kararlar: hepsi, sondan başa
 	log_page.clear()
 	log_page.append_text("[b][color=#d9b359][font_size=22]KARARLARIN[/font_size][/color][/b]   [color=gray]%d kayıt · en yenisi üstte[/color]\n\n" % hist_log.size())
@@ -239,7 +270,7 @@ func show_record(record: Dictionary) -> String:
 	tabs.current_tab = 0
 	for page in [summary, hist_page, lies_page, log_page]:
 		page.scroll_to_line(0)
-	timeline = record.get("timeline", [])
+	timeline = state.get("timeline", record.get("timeline", []))
 	chart_drawn = false
 	chart.set_data([], false)
 	return bg_path
