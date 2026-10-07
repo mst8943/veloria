@@ -123,6 +123,10 @@ static func edition(sim: Node, outlet: String) -> Dictionary:
 			head = ["Sessiz bir hafta", "Sabır taşıyor mu?", "Başkent tedirgin"][ub]
 			sub = "Saraydan bu hafta da açıklama yok. Sokak ise konuşuyor."
 			art = ["kis_krizi", "gida_protestosu", "gida_protestosu_b"][ub]
+	if outlet == "state" and sim.halden_mood() == "düşmanca":
+		head = _pick(["Saray halktan koptu", "Hükümet sözünü tutmadı", "Kraliyet hesap vermeli"], "halden_manset", w)
+		sub = "Halden'in yayın kurulu bu hafta sarayın kararlarını sert sözlerle sorguluyor."
+		art = "halden_ihale"
 	out["headline"] = head
 	out["lead"] = sub
 	out["art"] = art
@@ -145,6 +149,13 @@ static func edition(sim: Node, outlet: String) -> Dictionary:
 			cols.append({"title": "KULİS", "head": "Koridorlarda konuşulanlar", "body": "Kaynaklarımıza göre: " + "; ".join(rumors.slice(0, 2)) + "."})
 	else:
 		cols.append({"title": "SARAYDAN", "head": "Kraliyet ajandası", "body": _pick(ROYAL_FLUFF, "ajanda", w + 3)})
+		if sim.halden_mood() == "düşmanca":
+			cols = [
+				{"title": "EKONOMİ", "head": "Bakanlığa zor sorular", "body": "Yayın kurulu, sarayın harcamalarına ilişkin hesabın açıklanmasını istiyor."},
+				{"title": "SOKAK", "head": "Halkın sesi duyulmalı", "body": "Halden'in köşe yazarları kararların halka sorulmadığını savunuyor."},
+				{"title": "MECLİS", "head": "Saray meclise dönsün", "body": "Kanaldaki yorumcular kraliyet kararlarının denetlenmesini talep ediyor."},
+				{"title": "SARAYDAN", "head": "Açıklama bekleniyor", "body": "Yayın kurulu saraydan cevap beklediğini duyurdu."},
+			]
 	out["columns"] = cols
 	out["weather"] = _pick(WEATHER, "hava", w)
 	out["ad"] = _pick(ADS, outlet, w)

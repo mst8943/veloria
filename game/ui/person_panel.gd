@@ -583,6 +583,13 @@ func _update_info() -> void:
 	var lvl_name: String = Sim.POWER_TIER_NAMES[level]
 	host._traits.add_child(_trait("Güç · " + lvl_name, UIKit.DANGER if level == 3 else UIKit.GOLD, level, 3,
 		"Güç merkezi olarak ne kadar ağırlığı var. Vazgeçilmez olanlar tehlikelidir."))
+	if id == "halden":
+		var influence := Sim.halden_influence_band()
+		host._traits.add_child(_trait("Nüfuz · " + influence, UIKit.AMBER, -1, 0,
+			"Halden'in anlattığı şirket ağı; gerçek sınırları daha geniş olabilir."))
+		var mood := Sim.halden_mood()
+		host._traits.add_child(_trait("Medya · " + mood, UIKit.DANGER if mood == "düşmanca" else UIKit.GOLD,
+			-1, 0, "Gazete ve kanalının saraya karşı tutumu."))
 	if a.moved:
 		host._traits.add_child(_trait("Düşman", UIKit.DANGER, -1, 0, "Sana karşı fiilen harekete geçti."))
 	elif a.insider:

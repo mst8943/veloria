@@ -65,6 +65,9 @@ const STATE_RALLY_DENOM := [400.0, 400.0, 250.0]
 const INSTITUTION_HEADS := {"kessler": "maliye", "falk": "hukuk", "arden": "ordu", "dorn": "idare"}
 const APPOINT_COOLDOWN := 8
 const TENDER_COOLDOWN := 3
+const HALDEN_MEDIA_UNREST := 0.6
+const HALDEN_MEDIA_KING := 0.25
+const HALDEN_MEDIA_REACH := 71.0  # Yayın etkisi ancak holding ülke çapına erişince kitleselleşir.
 const STATE_ECON_MALIYE := 0.003
 const STATE_ECON_HUKUK := 0.001
 const STATE_DIFF := [0.7, 1.0, 1.2]
@@ -487,6 +490,18 @@ func give_tender(id: String) -> String:
 	_add_fact("ihale_komisyonu_%d" % week, "Halden ihalesinden saraya aktarılan komisyon", "king", 18.0, ["halden", "kessler"], 1)
 	changed.emit()
 	return "İhale Halden'e verildi. Şirketleri işi üstlendi; Kessler sözleşmenin bir kopyasını sakladı."
+
+
+func halden_mood() -> String:
+	var halden: Actor = actors.get("halden")
+	if halden == null or halden.moved or week < halden_hostile_until:
+		return "düşmanca"
+	return "sıcak" if halden.total_loyalty() >= 25.0 else "mesafeli"
+
+
+func halden_influence_band() -> String:
+	var seen := holding - 8.0  # Halden ağının gerçek sınırlarını küçümser.
+	return "sınırlı" if seen < 40.0 else ("yaygın" if seen < 70.0 else "her yerde")
 
 
 ## Huzura çağır: izsiz, parasız bir yoklama. Kişiyi biraz yatıştırır ve gürültülü bir okuma verir:
@@ -1245,7 +1260,7 @@ func _visible_snapshot() -> Dictionary:
 	for p: Dictionary in promises:
 		var nm: String = actors[p["actor"]].display_name if actors.has(p["actor"]) else str(p["actor"])
 		prom[str(p["id"])] = {"state": str(p["state"]), "asked": bool(p.get("asked", false)), "name": nm, "prize": str(p["prize"])}
-	return {"bands": bands, "people": people, "promises": prom}
+	return {"bands": bands, "people": people, "promises": prom, "halden_mood": halden_mood()}
 
 
 ## İki fotoğrafın farkı + bu haftanın kulis/manşet ve kendiliğinden çözülen kararları.
@@ -1264,6 +1279,9 @@ func _diff_visible(b: Dictionary, n: Dictionary) -> Array:
 			out.append({"tone": -1, "actor": "", "text": s.substr(s.find(" ") + 1)})
 	for mv: Dictionary in weekly_moves:
 		out.append(mv.duplicate())
+	if b["halden_mood"] != n["halden_mood"]:
+		out.append({"tone": -1 if n["halden_mood"] == "düşmanca" else 0, "actor": "halden",
+			"text": "Halden'in yayınlarının havası değişti: artık %s." % n["halden_mood"]})
 	for id in b["people"]:
 		var p0: Dictionary = b["people"][id]
 		var name: String = p0["name"]
@@ -1341,6 +1359,7 @@ func _world_tick() -> void:
 	king_strength = clampf(king_strength - unrest * 0.012 - opposition * 0.004 + (economy - 50.0) * 0.01 + 0.4, 0.0, 100.0)
 	private_wealth += _diff("income")  # sivil liste ödeneği
 	_tick_state()
+	_tick_holding()
 
 
 func _tick_state() -> void:
@@ -1357,6 +1376,23 @@ func _tick_state() -> void:
 	unrest = clampf(unrest + maxf(0.0, 55.0 - float(capacity["hukuk"])) * 0.01 - budget_stance * 0.15, 0.0, 100.0)
 	if court_share:
 		private_wealth += 0.6
+
+
+func _tick_holding() -> void:
+	var halden: Actor = actors.get("halden")
+	if halden == null:
+		return
+	holding = clampf(holding + (-0.5 if halden.moved else 0.12 + halden.power / 500.0), 0.0, 100.0)
+	var mood := halden_mood()
+	var sway := holding / 100.0
+	if mood == "sıcak" and holding >= HALDEN_MEDIA_REACH:
+		unrest = clampf(unrest - HALDEN_MEDIA_UNREST * sway, 0.0, 100.0)
+		king_strength = clampf(king_strength + HALDEN_MEDIA_KING * sway, 0.0, 100.0)
+	elif mood == "düşmanca":
+		if holding >= HALDEN_MEDIA_REACH:
+			unrest = clampf(unrest + HALDEN_MEDIA_UNREST * sway, 0.0, 100.0)
+			king_strength = clampf(king_strength - HALDEN_MEDIA_KING * sway, 0.0, 100.0)
+		stats["halden_hostile_weeks"] = int(stats.get("halden_hostile_weeks", 0)) + 1
 
 
 func _state_warnings() -> void:

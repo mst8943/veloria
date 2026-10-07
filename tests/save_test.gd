@@ -25,13 +25,14 @@ func _init() -> void:
 	var wk: int = sim.week
 	var changes: int = sim.week_changes.size()
 	var cap: Dictionary = sim.capacity.duplicate()
+	var holding_before: float = sim.holding
 	_check("kaydet", sim.save_game())
 	var loaded: bool = sim.load_game()
 	var same_cap := true
 	for k in cap:
 		same_cap = same_cap and absf(float(sim.capacity[k]) - float(cap[k])) < 0.001
 	_check("gidiş-dönüş", loaded and sim.week == wk and sim.week_changes.size() == changes and same_cap and sim.capacity_timeline.size() == sim.timeline.size()
-		and sim.holding == 47.0 and sim.halden_hostile_until == 21 and sim.halden_demands == 2 and sim.lena_boost_until == 15 and sim.kadro_log.size() == 1)
+		and absf(sim.holding - holding_before) < 0.001 and sim.halden_hostile_until == 21 and sim.halden_demands == 2 and sim.lena_boost_until == 15 and sim.kadro_log.size() == 1)
 	var f := FileAccess.open(sim.save_path, FileAccess.READ)
 	var d: Dictionary = str_to_var(f.get_as_text())
 	f.close()

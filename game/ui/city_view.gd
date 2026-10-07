@@ -269,6 +269,8 @@ func show_site(id: String) -> void:
 		_drawer_body.add_child(_text("İşleyiş: [b]%s[/b]\nBaşkan: %s" % [Sim.capacity_band(institution), chief_name]))
 		if id == "maliye":
 			_drawer_body.add_child(_text("Kasa: [b]%s[/b]" % Sim.treasury_band()))
+	if id == "holding":
+		_drawer_body.add_child(_text("Nüfuz: [b]%s[/b]\nMedya: [b]%s[/b]" % [Sim.halden_influence_band(), Sim.halden_mood()]))
 	var aid: String = s["actor"]
 	if Sim.actors.has(aid):
 		var a = Sim.actors[aid]

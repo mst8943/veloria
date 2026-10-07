@@ -114,6 +114,29 @@ func _run() -> void:
 		quit(0)
 		return
 	main._city.close_view()
+	if "--patron" in OS.get_cmdline_user_args():
+		sim0.holding = 85.0
+		sim0.halden_hostile_until = sim0.week + 8
+		main._sel.clear()
+		main._sel.append("halden")
+		main._refresh()
+		main._style_cards()
+		main._update_info()
+		main._show_act_cat("DEVLET")
+		var patron_saray: Control = main._tabs.get_node_or_null("Saray")
+		if patron_saray != null:
+			main._select_tab(patron_saray)
+		await _shot("1_halden")
+		main._city.open()
+		main._city.show_site("holding")
+		await _shot("1_holding")
+		main._city.close_view()
+		main._open_media()
+		await _shot("1_dusman_gazete")
+		main._media.show_tab("tv")
+		await _shot("1_dusman_tv")
+		quit(0)
+		return
 	main._open_media()
 	await _shot("1_medya")
 	main._media.show_tab("free")

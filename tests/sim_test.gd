@@ -2,6 +2,8 @@ extends SceneTree
 ## Headless simülasyon + denge testi:
 ##   Godot_console.exe --headless --path . --script res://tests/sim_test.gd
 
+const Press := preload("res://game/core/press.gd")
+
 var sim: Node
 var rngb := RandomNumberGenerator.new()
 var fired_total := 0
@@ -122,6 +124,44 @@ func _init() -> void:
 	sim.give_tender("halden")
 	if sim.holding != held + 10.0:
 		push_error("karşı saftaki Halden'e ihale verildi")
+		ok = false
+	sim.new_game(31, 1)
+	sim.holding = 80.0
+	sim.king_strength = 50.0
+	sim.unrest = 30.0
+	sim.halden_hostile_until = sim.week + 2
+	if sim.halden_mood() != "düşmanca":
+		push_error("Halden düşman yayın durumuna geçmedi")
+		ok = false
+	sim._tick_holding()
+	var hostile_head: String = Press.edition(sim, "state")["headline"]
+	if sim.unrest <= 30.0 or sim.king_strength >= 50.0 or int(sim.stats.get("halden_hostile_weeks", 0)) != 1 or not (hostile_head in ["Saray halktan koptu", "Hükümet sözünü tutmadı", "Kraliyet hesap vermeli"]) or Press.broadcast(sim)["headline"] != hostile_head:
+		push_error("Halden'in düşman yayını veya haftalık etkisi hatalı")
+		ok = false
+	sim.halden_hostile_until = 0
+	for key in sim.actors["halden"].loyalty:
+		sim.actors["halden"].loyalty[key] = 0.0
+	sim.actors["halden"].loyalty["money"] = 30.0
+	if sim.halden_mood() != "sıcak":
+		push_error("Halden sıcak medya durumuna geçmedi")
+		ok = false
+	var before_mood: Dictionary = sim._visible_snapshot()
+	sim.halden_hostile_until = sim.week + 2
+	var mood_changes: Array = sim._diff_visible(before_mood, sim._visible_snapshot())
+	if not mood_changes.any(func(change: Dictionary) -> bool: return "Halden'in yayınlarının havası değişti" in str(change["text"])):
+		push_error("Halden'in değişen havası haftalık özette yok")
+		ok = false
+	sim.holding = 40.0
+	if sim.halden_influence_band() != "sınırlı":
+		push_error("Halden nüfuz bandı hatalı")
+		ok = false
+	sim.holding = 60.0
+	if sim.halden_influence_band() != "yaygın":
+		push_error("Halden orta nüfuz bandı hatalı")
+		ok = false
+	sim.holding = 80.0
+	if sim.halden_influence_band() != "her yerde":
+		push_error("Halden yüksek nüfuz bandı hatalı")
 		ok = false
 	sim.new_game(31, 1)
 	sim.capacity["maliye"] = 20.0
