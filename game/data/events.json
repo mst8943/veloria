@@ -140,7 +140,7 @@
     "ignore": {"text": "Voss çalışmaya devam etti.", "fx": {"actors": {"voss": {"power": 6, "secrets_on_king": 1}}}}
   },
   {
-    "id": "sinir_krizi", "min_week": 22, "title": "Komşu devletle sınır gerilimi",
+    "id": "sinir_krizi", "min_week": 22, "min_cap": {"ordu": 41}, "title": "Komşu devletle sınır gerilimi",
     "text": "Sınır köyünde silahlı bir olay yaşandı. Komşu devletin basını savaş tellalı yapıyor.",
     "choices": [
       {"label": "Seferberlik ilan et", "text": "Halk gündemi değiştirdi. Ordunun ağırlığı arttı.",
@@ -667,7 +667,7 @@
     "ignore": {"text": "Kış sertleşti.", "fx": {"unrest": 10, "economy": -6}}
   },
   {
-    "id": "sinir_ikinci", "min_week": 66, "art": "sinir_krizi_b", "title": "Sınırda ikinci kriz",
+    "id": "sinir_ikinci", "min_week": 66, "min_cap": {"ordu": 41}, "art": "sinir_krizi_b", "title": "Sınırda ikinci kriz",
     "text": "Komşu devlet sınır hattına tank yığıyor. Bu sefer bir köy olayı değil; elçilikler boşaltılıyor.",
     "choices": [
       {"label": "Ordunun tamamını seferber et", "text": "Ülke bayraklarla doldu; ordu ülkenin efendisi gibi yürüyor.", "fx": {"unrest": -10, "economy": -8, "actors": {"arden": {"power": 12}}}},
@@ -2622,5 +2622,658 @@
         "king": -1
       }
     }
+  },
+{
+  "id": "kasa_bos",
+  "min_week": 16,
+  "max_treasury": 15,
+  "max_cap": {
+    "maliye": 40
+  },
+  "art": "butce_acigi",
+  "title": "Maaşlar ödenemiyor",
+  "text": "Kessler maaş defterlerini açtı: 'Gelecek ayı bekleyemeyiz, Majesteleri.' Kışlaların payı da bu sayfada.",
+  "choices": [
+    {
+      "label": "Borç bul",
+      "text": "Kessler bir borç anlaşması getirdi. Kasa nefes aldı, faiz deftere işlendi.",
+      "fx": {
+        "treasury": 15,
+        "economy": -2
+      }
+    },
+    {
+      "label": "Önce ordu maaşını öde",
+      "text": "Asker maaşını aldı. Diğer memurlar sıraya girdi.",
+      "fx": {
+        "treasury": -4,
+        "capacity": {
+          "ordu": 3,
+          "idare": -3
+        },
+        "unrest": 2
+      }
+    },
+    {
+      "label": "Kemer sık",
+      "text": "Ödenekler kesildi. Defter kapandı; koridorlar homurdanıyor.",
+      "fx": {
+        "treasury": 8,
+        "capacity": {
+          "maliye": -2
+        },
+        "unrest": 3
+      }
+    }
+  ],
+  "ignore": {
+    "text": "Maaş sırası dağıldı. Arden hesap sormaya başladı.",
+    "fx": {
+      "capacity": {
+        "ordu": -10
+      },
+      "actors": {
+        "arden": {
+          "ambition": 8
+        }
+      }
+    }
   }
+},
+{
+  "id": "kasa_fazla",
+  "min_week": 23,
+  "min_treasury": 80,
+  "once": false,
+  "cooldown": 20,
+  "art": "butce_acigi",
+  "title": "Kasada beklenmedik fazla",
+  "text": "Kessler, 'Biriken payı kime ayıracağız?' diye sordu. Defterin kenarına kimsenin adını yazmadı.",
+  "choices": [
+    {
+      "label": "Kurumlara yatırım yap",
+      "text": "Eski dosyalar temizlendi, yeni memurlar işe başladı.",
+      "fx": {
+        "treasury": -6,
+        "capacity": {
+          "maliye": 2,
+          "idare": 2
+        }
+      }
+    },
+    {
+      "label": "Halka pay ayır",
+      "text": "Fırın önündeki kuyruk kısaldı.",
+      "fx": {
+        "treasury": -5,
+        "unrest": -3
+      }
+    },
+    {
+      "label": "Saray payını ayır",
+      "text": "Kessler boş satıra bir rakam yazdı; defterin kopyası da var.",
+      "fx": {
+        "treasury": -5,
+        "wealth": 4,
+        "fact": {
+          "id": "kasa_fazla_payi",
+          "text": "Kasadaki fazlanın saraya aktarılması",
+          "subject": "king",
+          "severity": 18,
+          "knowers": [
+            "kessler",
+            "dorn"
+          ]
+        }
+      }
+    }
+  ],
+  "ignore": {
+    "text": "Kessler fazlayı kasada tuttu.",
+    "fx": {}
+  }
+},
+{
+  "id": "maliye_cokus",
+  "min_week": 24,
+  "max_cap": {
+    "maliye": 30
+  },
+  "art": "butce_acigi",
+  "title": "Vergi defterleri kapanmıyor",
+  "text": "Kessler dosyaları masaya dizdi: 'Tahsilat memurları hesap çıkaramıyor. Bana yeni insan verin.'",
+  "choices": [
+    {
+      "label": "Uzman ekip kur",
+      "text": "Yeni memurlar gece yarısına kadar çalıştı.",
+      "fx": {
+        "treasury": -4,
+        "capacity": {
+          "maliye": 5
+        }
+      }
+    },
+    {
+      "label": "Halden’den geçici kaynak iste",
+      "text": "Bir çek geldi. Kessler alacaklının adını iki kez çizdi.",
+      "fx": {
+        "treasury": 7,
+        "capacity": {
+          "maliye": -1
+        },
+        "actors": {
+          "halden": {
+            "obligation": 2
+          }
+        }
+      }
+    }
+  ],
+  "ignore": {
+    "text": "Eksik vergi defterleri raflarda birikti.",
+    "fx": {
+      "treasury": -4
+    }
+  }
+},
+{
+  "id": "adliye_cokus",
+  "min_week": 26,
+  "max_cap": {
+    "hukuk": 30
+  },
+  "art": "yargic_dosya",
+  "title": "Mahkemeler karar yazamıyor",
+  "text": "Falk, 'Dosyalar bekledikçe tanıklar susuyor' dedi. Koridorda dava vekilleri sıraya girmiş.",
+  "choices": [
+    {
+      "label": "Yargıçlara kadro aç",
+      "text": "Falk yeni isimleri tek tek inceledi.",
+      "fx": {
+        "treasury": -3,
+        "capacity": {
+          "hukuk": 5
+        }
+      }
+    },
+    {
+      "label": "Öncelikli dosyaları seç",
+      "text": "Birkaç dosya yürüdü. Arkadakiler yerinde kaldı.",
+      "fx": {
+        "capacity": {
+          "hukuk": 2
+        },
+        "king": -1
+      }
+    }
+  ],
+  "ignore": {
+    "text": "Adliye koridorundaki sıra uzadı.",
+    "fx": {
+      "capacity": {
+        "hukuk": -2
+      }
+    }
+  }
+},
+{
+  "id": "idare_cokus",
+  "min_week": 28,
+  "max_cap": {
+    "idare": 30
+  },
+  "art": "toren",
+  "title": "Valilikler sarayın emrini bekliyor",
+  "text": "Dorn nazikçe eğildi: 'Yazı gitti, Majesteleri. Ulaştığından emin olamıyoruz.'",
+  "choices": [
+    {
+      "label": "Denetçileri gönder",
+      "text": "Valiler mühürleri buldu; Dorn hangisinin eksik olduğunu not etti.",
+      "fx": {
+        "treasury": -3,
+        "capacity": {
+          "idare": 5
+        }
+      }
+    },
+    {
+      "label": "Dorn’a yetki ver",
+      "text": "Kâhyanın ağı sarayın yerine çalışmaya başladı.",
+      "fx": {
+        "capacity": {
+          "idare": 3
+        },
+        "actors": {
+          "dorn": {
+            "obligation": 2
+          }
+        }
+      }
+    }
+  ],
+  "ignore": {
+    "text": "Emirler masalarda bekledi.",
+    "fx": {
+      "capacity": {
+        "idare": -2
+      }
+    }
+  }
+},
+{
+  "id": "ordu_zayif_sinir",
+  "min_week": 22,
+  "max_cap": {
+    "ordu": 40
+  },
+  "art": "sinir_krizi",
+  "title": "Sınır hattı hazırlıksız",
+  "text": "Sınır köyünde silah sesleri duyuldu. Arden, 'Birlikler eksik teçhizatla yürüyor; emir istiyorsanız söyleyin' dedi.",
+  "choices": [
+    {
+      "label": "Seferberlik ilan et",
+      "text": "Birlikler çıktı; eksik mühimmat depolardan yetiştirildi.",
+      "fx": {
+        "unrest": -6,
+        "economy": -6,
+        "capacity": {
+          "ordu": -2
+        },
+        "flag": "sinir_krizi_0"
+      }
+    },
+    {
+      "label": "Diplomasiye başvur",
+      "text": "Elçilikler gece boyunca konuştu; Arden haritayı kapatmadı.",
+      "fx": {
+        "king": 2,
+        "flag": "sinir_krizi_1"
+      }
+    },
+    {
+      "label": "Haber akışını yönet",
+      "text": "Halden sınır görüntülerini döndürdü. Kışlalar hâlâ bekliyor.",
+      "fx": {
+        "unrest": -3,
+        "flag": "sinir_krizi_2"
+      }
+    }
+  ],
+  "ignore": {
+    "text": "Sınırdaki sessizlik yerini kaygıya bıraktı.",
+    "fx": {
+      "unrest": 4
+    }
+  }
+},
+{
+  "id": "ordu_zayif_sinir_ikinci",
+  "min_week": 66,
+  "max_cap": {
+    "ordu": 40
+  },
+  "art": "sinir_krizi_b",
+  "title": "İkinci sınır krizi: eksik birlikler",
+  "text": "Komşu devlet sınır hattına tank yığdı. Arden listelere baktı: 'Kâğıt üzerinde tamız; sahada değil.'",
+  "choices": [
+    {
+      "label": "Eldeki birlikleri seferber et",
+      "text": "Trenler doldu. Arden eksikleri saklamadı.",
+      "fx": {
+        "economy": -5,
+        "capacity": {
+          "ordu": -2
+        },
+        "flag": "sinir_ikinci_0"
+      }
+    },
+    {
+      "label": "Gizli müzakere",
+      "text": "Sınır gecesi konuşularak geçti; meydan bunu duymadı.",
+      "fx": {
+        "king": 2,
+        "flag": "sinir_ikinci_1"
+      }
+    },
+    {
+      "label": "Arabulucu çağır",
+      "text": "Krizin sesi azaldı, kışlalarda memnuniyet yok.",
+      "fx": {
+        "king": -1,
+        "flag": "sinir_ikinci_2"
+      }
+    }
+  ],
+  "ignore": {
+    "text": "Hazırlıksız birlikler sınırda bekledi.",
+    "fx": {
+      "unrest": 4
+    }
+  }
+},
+{
+  "id": "uzman_bakan",
+  "min_week": 24,
+  "min_cap": {
+    "maliye": 75
+  },
+  "art": "kessler_reform",
+  "title": "Maliye defterlerinde yeni düzen",
+  "text": "Kessler, 'Bu kez kalemler birbirini tutuyor' dedi. Yıllardır bekleyen vergi dosyaları kapanıyor.",
+  "choices": [
+    {
+      "label": "Kazancı kasada tut",
+      "text": "Kessler fazla mesaiyi sürdürdü.",
+      "fx": {
+        "treasury": 4
+      }
+    },
+    {
+      "label": "Memurları ödüllendir",
+      "text": "Bakanlıkta ilk kez yüzler güldü.",
+      "fx": {
+        "treasury": -3,
+        "capacity": {
+          "maliye": 3
+        }
+      }
+    }
+  ],
+  "ignore": {
+    "text": "Düzen kendi kendine işledi.",
+    "fx": {
+      "economy": 1
+    }
+  }
+},
+{
+  "id": "sadik_komutan_sinav",
+  "min_week": 26,
+  "min_stat": {
+    "sadik_ordu": 1
+  },
+  "flag_age": {
+    "KADRO_SADIK_ORDU": 3
+  },
+  "art": "general_atamalari",
+  "title": "Sadık komutanın ilk sınavı",
+  "text": "Arden, 'Adamım emir dinler; ama bu haritayı bilmiyor' dedi. Sınır tatbikatı yarıda kaldı.",
+  "choices": [
+    {
+      "label": "Eğitim için zaman ver",
+      "text": "Subaylar yeniden talim gördü. Arden susup izledi.",
+      "fx": {
+        "treasury": -2,
+        "capacity": {
+          "ordu": 3
+        }
+      }
+    },
+    {
+      "label": "Görevi daralt",
+      "text": "Komutanlık küçüldü, Arden bunu kayda geçirdi.",
+      "fx": {
+        "capacity": {
+          "ordu": 2
+        },
+        "actors": {
+          "arden": {
+            "l_career": -2
+          }
+        }
+      }
+    }
+  ],
+  "ignore": {
+    "text": "Tatbikat raporu kapatıldı.",
+    "fx": {
+      "capacity": {
+        "ordu": -3
+      }
+    }
+  }
+},
+{
+  "id": "liyakatli_savci",
+  "min_week": 30,
+  "min_cap": {
+    "hukuk": 70
+  },
+  "min_stat": {
+    "liyakatli_hukuk": 1
+  },
+  "needs_flag": "KADRO_LIYAKATLI_HUKUK",
+  "art": "yargic_dosya",
+  "title": "Savcı sarayın dosyasına yaklaşıyor",
+  "text": "Falk, 'Atadığınız savcı yalnızca suçun izini sürüyor. Kapıyı ben de kapatmam' dedi.",
+  "choices": [
+    {
+      "label": "Savcının işine karışma",
+      "text": "Falk ilk kez başını salladı. Dosya açık kaldı.",
+      "fx": {
+        "capacity": {
+          "hukuk": 2
+        },
+        "king": -1
+      }
+    },
+    {
+      "label": "Saray kayıtlarını gözden geçir",
+      "text": "Kayıtlar düzeldi; Falk nedenini sormadı.",
+      "fx": {
+        "treasury": -2,
+        "king": 1
+      }
+    }
+  ],
+  "ignore": {
+    "text": "Savcı dosyayı kendi başına izledi.",
+    "fx": {
+      "king": -1
+    }
+  }
+},
+{
+  "id": "kadro_ihaneti",
+  "min_week": 38,
+  "min_stat": {
+    "liyakatli_idare": 1
+  },
+  "needs_flag": "KADRO_LIYAKATLI_IDARE",
+  "actor_min": {
+    "dorn": {
+      "ambition": 60
+    }
+  },
+  "art": "skandal_bakan",
+  "title": "Liyakatli kâhya kendi yolunu çiziyor",
+  "text": "Dorn usulca, 'Devletin işi sarayın takvimine sığmıyor, Majesteleri' dedi. Valiler artık önce onu arıyor.",
+  "choices": [
+    {
+      "label": "Yetkisini yazıya bağla",
+      "text": "Dorn mührü aldı; sınırlar da kâğıda geçti.",
+      "fx": {
+        "capacity": {
+          "idare": 2
+        },
+        "actors": {
+          "dorn": {
+            "ambition": -2
+          }
+        }
+      }
+    },
+    {
+      "label": "Onu huzura çağır",
+      "text": "Kibarca gülümsedi; valilik telefonları bir gün sustu.",
+      "fx": {
+        "actors": {
+          "dorn": {
+            "fear": 3
+          }
+        },
+        "king": 1
+      }
+    }
+  ],
+  "ignore": {
+    "text": "Dorn işini bildiği gibi sürdürdü.",
+    "fx": {
+      "actors": {
+        "dorn": {
+          "ambition": 2
+        }
+      }
+    }
+  }
+},
+{
+  "id": "kurum_sessiz_cokus",
+  "min_week": 40,
+  "max_cap": {
+    "maliye": 35,
+    "idare": 35
+  },
+  "art": "butce_acigi",
+  "title": "Devlet sessizce yavaşlıyor",
+  "text": "Maliye ve saray yazışmaları aynı masada birikti. Kessler sayfa çevirdi, Dorn başka bir dosyayı örttü.",
+  "choices": [
+    {
+      "label": "Ortak denetim kur",
+      "text": "İki kurum ilk kez aynı deftere baktı.",
+      "fx": {
+        "treasury": -4,
+        "capacity": {
+          "maliye": 3,
+          "idare": 3
+        }
+      }
+    },
+    {
+      "label": "Önce sarayı çalıştır",
+      "text": "Yazılar saraydan çıktı; vergi masasında kaldı.",
+      "fx": {
+        "capacity": {
+          "idare": 4,
+          "maliye": -1
+        }
+      }
+    }
+  ],
+  "ignore": {
+    "text": "İki makam da ötekinden haber bekledi.",
+    "fx": {
+      "economy": -2
+    }
+  }
+},
+{
+  "id": "vilayet_hesabi",
+  "min_week": 73,
+  "max_week": 90,
+  "once": false,
+  "cooldown": 6,
+  "chance": 0.55,
+  "art": "toren",
+  "title": "Valiliklerin hesap günü",
+  "text": "Dorn taşradan gelen mühürlü yazıları önüne koydu: 'Hepsi cevap bekliyor, Majesteleri. Birini öncelemelisiniz.'",
+  "choices": [
+    {
+      "label": "Vergi defterlerini aç",
+      "text": "Kessler geciken tahsilatı izlemeye başladı.",
+      "fx": {
+        "treasury": 1,
+        "capacity": {
+          "idare": -1
+        }
+      }
+    },
+    {
+      "label": "Valilik yazılarını bitir",
+      "text": "Dorn yazıları çıkardı, kasa hesabı yarına kaldı.",
+      "fx": {
+        "capacity": {
+          "idare": 1
+        },
+        "treasury": -1
+      }
+    }
+  ],
+  "ignore": {
+    "text": "Dorn yazıları sıraya koydu.",
+    "fx": {}
+  }
+},
+{
+  "id": "kadro_defteri",
+  "min_week": 78,
+  "max_week": 96,
+  "once": false,
+  "cooldown": 7,
+  "chance": 0.55,
+  "art": "skandal_bakan",
+  "title": "Kadro defterinin son sayfası",
+  "text": "Kessler dört kurumun boş kadrolarını saydı. 'İsimleri değil, yapılacak işi konuşalım' dedi.",
+  "choices": [
+    {
+      "label": "Açıkları uzmanlarla doldur",
+      "text": "Yeni görevliler işi öğrendi; bütçe payı azaldı.",
+      "fx": {
+        "treasury": -2,
+        "capacity": {
+          "maliye": 1,
+          "hukuk": 1
+        }
+      }
+    },
+    {
+      "label": "Eldeki kadroyla sürdür",
+      "text": "Memurlar mesaiye kaldı, defter kapanmadı.",
+      "fx": {
+        "treasury": 1,
+        "capacity": {
+          "idare": -1
+        }
+      }
+    }
+  ],
+  "ignore": {
+    "text": "Boş kadrolar gelecek haftaya devredildi.",
+    "fx": {}
+  }
+},
+{
+  "id": "son_curek_hesabi",
+  "min_week": 81,
+  "max_week": 96,
+  "art": "butce_acigi",
+  "title": "Son çeyreğin hesabı",
+  "text": "Kessler ve Falk aynı masada bekliyor. Biri kasanın, öteki adliyenin gelecek yıla bırakacağı dosyaları getirdi.",
+  "choices": [
+    {
+      "label": "Kasayı toparla",
+      "text": "Kessler defterleri aldı; Falk kendi dosyasıyla çıktı.",
+      "fx": {
+        "treasury": 2,
+        "capacity": {
+          "hukuk": -1
+        }
+      }
+    },
+    {
+      "label": "Adliyeyi toparla",
+      "text": "Falk dosyaları kapattı; kasadan bir pay gitti.",
+      "fx": {
+        "treasury": -2,
+        "capacity": {
+          "hukuk": 1
+        }
+      }
+    }
+  ],
+  "ignore": {
+    "text": "İki dosya da açık kaldı.",
+    "fx": {}
+  }
+}
 ]

@@ -13,6 +13,9 @@ func _init() -> void:
 	var bad: Dictionary = all["reports"].duplicate(true)
 	bad.erase("phrases")
 	ok = _expect_bad(loader, "reports", bad, "eksik anahtar") and ok
+	bad = all["reports"].duplicate(true)
+	bad["state"]["hukuk"]["aksıyor"][0] = ""
+	ok = _expect_bad(loader, "reports", bad, "eksik/boş kurum raporu") and ok
 	bad = all["achievements"].duplicate(true)
 	bad["ilk_saltanat"][0] = ""
 	ok = _expect_bad(loader, "achievements", bad, "boş başarım") and ok
@@ -35,7 +38,7 @@ func _init() -> void:
 	if not loader.error.contains("JSON bozuk"):
 		push_error("bozuk JSON açık hata vermedi")
 		ok = false
-	print("CONTENT: %s (5 dosya, 6 bozuk örnek)" % ("OK" if ok else "FAIL"))
+	print("CONTENT: %s (5 dosya, 7 bozuk örnek)" % ("OK" if ok else "FAIL"))
 	quit(0 if ok else 1)
 
 

@@ -87,7 +87,7 @@ func _keys(data: Dictionary, expected: Array) -> String:
 
 
 func _reports(data: Dictionary, domains: Dictionary) -> String:
-	var issue := _keys(data, ["phrases", "sign_texts", "echo", "unknown_phrase", "unknown_partner"])
+	var issue := _keys(data, ["phrases", "sign_texts", "state", "echo", "unknown_phrase", "unknown_partner"])
 	if issue != "": return issue
 	for key in ["echo", "unknown_phrase", "unknown_partner"]:
 		if not _text(data[key]): return "boş rapor metni: %s" % key
@@ -102,6 +102,16 @@ func _reports(data: Dictionary, domains: Dictionary) -> String:
 		if not bands is Array or bands.size() != 3: return "%s: üç rapor bandı gerekli" % domain
 		for band in bands:
 			if not _texts(band): return "%s: boş rapor metni" % domain
+	var state: Variant = data["state"]
+	if not state is Dictionary or state.size() != 4: return "dört kurum raporu gerekli"
+	for institution in ["maliye", "hukuk", "ordu", "idare"]:
+		if not state.has(institution) or not state[institution] is Dictionary:
+			return "eksik kurum raporu: %s" % institution
+		var tiers: Dictionary = state[institution]
+		if tiers.size() != 3: return "üç kurum bandı gerekli: %s" % institution
+		for band in ["aksıyor", "yürüyor", "sağlam"]:
+			if not tiers.has(band) or not _texts(tiers[band], 3) or tiers[band].size() != 3:
+				return "eksik/boş kurum raporu: %s/%s" % [institution, band]
 	var signs: Dictionary = data["sign_texts"]
 	for stage in ["0", "1", "2", "3"]:
 		if not signs.has(stage) or not signs[stage] is Dictionary or not _texts(signs[stage].get("_")):

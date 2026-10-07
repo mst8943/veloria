@@ -215,6 +215,28 @@
       ]
     }
   },
+  "state": {
+    "maliye": {
+      "aksıyor": ["Tahsilat defterleri yetişmiyor; maaş günü yaklaşıyor.", "Vergi masasında dosyalar birikiyor; hesabı henüz kapatamadık.", "Kasaya girecek paranın yolu uzadı, Majesteleri."],
+      "yürüyor": ["Tahsilat sürüyor; bazı defterler hâlâ açık.", "Memurlar hesabı çıkarıyor, gecikmeler yönetilebilir.", "Kasada nefes var, fakat gelecek ayın yükü de görünüyor."],
+      "sağlam": ["Vergi tahsilatı zamanında; defterler birbirini tutuyor.", "Maliye masası bu ay açık vermedi, Majesteleri.", "Hazineye giren pay kayda geçti; memurlar işinin başında."]
+    },
+    "hukuk": {
+      "aksıyor": ["Mahkemelerde dosyalar kuruyor; kararlar gecikiyor.", "Savcılık takvimi doldu, tanıklar beklemekten yoruldu.", "Yargıçlar dosyaları sıraya koyamıyor, Majesteleri."],
+      "yürüyor": ["Mahkemeler çalışıyor; ağır dosyalar sırada.", "Savcılık yeni dosyaları açtı, eskilerini kapatmaya uğraşıyor.", "Kararlar yazılıyor, fakat koridor boşalmadı."],
+      "sağlam": ["Savcılık dosyaları takvimine uygun ilerliyor.", "Mahkemeler kararlarını geciktirmiyor, Majesteleri.", "Adliye kayıtları düzenli; hiçbir dosya sahipsiz kalmadı."]
+    },
+    "ordu": {
+      "aksıyor": ["Birliklerin teçhizat listesi birbirini tutmuyor.", "Kışlalarda talim erteleniyor; subaylar ödenek soruyor.", "Sınır emrine hazır görünen birlikler eksik kadroyla bekliyor."],
+      "yürüyor": ["Kışlalarda talim sürüyor; bazı depolar geç açıldı.", "Birlikler hazır, ikmal çizelgesinde boşluklar var.", "Subaylar emir bekliyor; mühimmat sayımı tamamlanıyor."],
+      "sağlam": ["Birlikler yerinde, depoların mührü sağlam.", "Talimler zamanında bitti; sınır karakolları hazır.", "Komutanlar emirleri ve ikmal çizelgesini birlikte imzaladı."]
+    },
+    "idare": {
+      "aksıyor": ["Valiliklere gönderilen emirler masalarda bekliyor.", "Saraydan çıkan yazının taşrada izi kayboldu.", "Mühürler basıldı, fakat emirler yerine ulaşmadı."],
+      "yürüyor": ["Valilikler yanıt verdi; bazı yazılar gecikti.", "Saray emirleri taşraya ulaşıyor, takip defteri açık.", "Kâtipler dosyaları yetiştiriyor; sıra hâlâ uzun."],
+      "sağlam": ["Valilikler emirleri zamanında aldı.", "Saray yazışmaları eksiksiz kayda geçti.", "Kâtipler ve valiler aynı takvime bakıyor, Majesteleri."]
+    }
+  },
   "echo": "Majesteleri, her şey kontrol altında ve sizin liderliğinizde yolunda gidiyor.",
   "unknown_phrase": "…",
   "unknown_partner": "tanınmayan bir heyete"

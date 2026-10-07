@@ -417,12 +417,14 @@ func appoint(id: String, kind: String) -> String:
 	var a: Actor = actors[id]
 	flags["KADRO_" + institution] = week
 	if kind == "loyal":
+		flags["KADRO_SADIK_" + institution.to_upper()] = week
 		a.loyalty["career"] += 8.0
 		a.ambition -= 3.0
 		a.obligation += 3.0
 		capacity[institution] = maxf(5.0, float(capacity[institution]) - 8.0)
 		stats["sadik_" + institution] = int(stats.get("sadik_" + institution, 0)) + 1
 	else:
+		flags["KADRO_LIYAKATLI_" + institution.to_upper()] = week
 		capacity[institution] = minf(100.0, float(capacity[institution]) + 7.0)
 		a.ambition += 3.0
 		a.loyalty["career"] = maxf(0.0, float(a.loyalty["career"]) - 3.0)
@@ -2362,10 +2364,15 @@ func _generate_reports() -> void:
 		var reported := _domain_reported(a) + rng.randf_range(-6.0, 6.0) * (1.0 - a.honesty * 0.5) * (1.0 + (55.0 - float(capacity["idare"])) / STATE_REPORT_NOISE)
 		var rb := _band(a, reported)
 		var tb := _band(a, _domain_truth(a.domain))
+		var line: String = _phrase(a, reported, echo)
+		if echo <= 0.75 and INSTITUTION_HEADS.has(a.id):
+			var institution: String = INSTITUTION_HEADS[a.id]
+			var variants: Array = REPORT_CONTENT["state"][institution][capacity_band(institution)]
+			line += " " + str(variants[absi(("%s%d" % [a.id, week]).hash()) % variants.size()])
 		if rb < tb:
-			truth_log.append({"week": week, "name": a.display_name, "said": _phrase(a, reported, echo),
+			truth_log.append({"week": week, "name": a.display_name, "said": line,
 				"truth": _phrase(a, _domain_truth(a.domain), 0.0), "diff": tb - rb})
-		reports.append({"source": a.id, "name": a.display_name, "title": a.title, "text": _phrase(a, reported, echo), "band": rb})
+		reports.append({"source": a.id, "name": a.display_name, "title": a.title, "text": line, "band": rb})
 		if rb > worst_band and a.id != "dorn":
 			worst_band = rb
 			worst_idx = reports.size() - 1

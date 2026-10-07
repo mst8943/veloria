@@ -200,6 +200,9 @@ func _init() -> void:
 		sim.unrest = clampf(30.0, float(e.get("min_unrest", 0)), float(e.get("max_unrest", 100)))
 		sim.opposition = maxf(20.0, float(e.get("min_opposition", 0)))
 		sim.economy = clampf(55.0, float(e.get("min_economy", 0)), float(e.get("max_economy", 100)))
+		sim.treasury = clampf(55.0, float(e.get("min_treasury", 0)), float(e.get("max_treasury", 100)))
+		for institution in sim.capacity:
+			sim.capacity[institution] = clampf(55.0, float(e.get("min_cap", {}).get(institution, 5)), float(e.get("max_cap", {}).get(institution, 100)))
 		var ok_e: bool = sim._eligible(e)
 		sim.stats = saved_stats
 		print("   ulaşılabilir mi %s: %s" % [e["id"], ok_e])
