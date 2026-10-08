@@ -63,7 +63,7 @@ func _ready() -> void:
 	bar.add_theme_constant_override("separation", 10)
 	band.add_child(bar)
 	var title := Label.new()
-	title.text = "MEDYA MERKEZİ"
+	title.text = tr("MEDYA MERKEZİ")
 	title.add_theme_font_override("font", UIKit.caps())
 	title.add_theme_font_size_override("font_size", 30 if mobile else 26)
 	title.add_theme_color_override("font_color", UIKit.GOLD)
@@ -73,7 +73,7 @@ func _ready() -> void:
 	bar.add_child(sp)
 	for key in ["state", "free", "tv"]:
 		var b := Button.new()
-		b.text = {"state": "Veloria Haber", "free": "Serbest Kalem", "tv": "Sarne TV"}[key]
+		b.text = tr({"state": "Veloria Haber", "free": "Serbest Kalem", "tv": "Sarne TV"}[key])
 		b.toggle_mode = true
 		b.focus_mode = Control.FOCUS_NONE
 		b.custom_minimum_size = Vector2(150, 40)
@@ -84,7 +84,7 @@ func _ready() -> void:
 	sp2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	bar.add_child(sp2)
 	var close := Button.new()
-	close.text = "Masaya dön  (Esc)" if not mobile else "Kapat"
+	close.text = tr("Masaya dön  (Esc)") if not mobile else tr("Kapat")
 	close.focus_mode = Control.FOCUS_NONE
 	close.custom_minimum_size.y = 40
 	close.theme_type_variation = "GhostButton"
@@ -281,16 +281,16 @@ func _build_paper(outlet: String) -> void:
 		mat.set_shader_parameter("contrast", 1.45 if free else 1.3)
 		img.material = mat
 		frame.add_child(img)
-		var cap := _ink_label("Fotoğraf: %s" % ("muhabirimiz, başkent" if free else "Veloria Haber arşivi"), 13, INK_SOFT)
+		var cap := _ink_label(tr("Fotoğraf: %s") % tr("muhabirimiz, başkent" if free else "Veloria Haber arşivi"), 13, INK_SOFT)
 		cap.add_theme_font_override("font", UIKit.serif_italic())
 		photo.add_child(cap)
 	var story := VBoxContainer.new()
 	story.add_theme_constant_override("separation", 8)
 	story.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lead_row.add_child(story)
-	story.add_child(_ink_body("[b]BAŞKENT —[/b] %s" % str(ed["lead"]), 20))
+	story.add_child(_ink_body(tr("[b]BAŞKENT —[/b] %s") % str(ed["lead"]), 20))
 	var pg := 2 + int(ed["week"]) % 6
-	var more := _ink_label("Devamı sayfa %d'%s" % [pg, ["de", "te", "te", "te", "da", "de"][pg - 2]], 15, INK_SOFT)
+	var more := _ink_label(tr("Devamı sayfa %d'%s") % [pg, ["de", "te", "te", "te", "da", "de"][pg - 2]], 15, INK_SOFT)
 	more.add_theme_font_override("font", UIKit.serif_italic())
 	more.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	story.add_child(more)
@@ -318,7 +318,7 @@ func _build_paper(outlet: String) -> void:
 	wx.add_theme_constant_override("separation", 10)
 	wx.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	foot.add_child(wx)
-	var wk := _kicker("HAVA DURUMU", INK)
+	var wk := _kicker(tr("HAVA DURUMU"), INK)
 	wk.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	wx.add_child(wk)
 	var wt := _ink_label(str(ed["weather"]), 16, INK_SOFT, true)
@@ -339,7 +339,7 @@ func _masthead(v: VBoxContainer, ed: Dictionary, free: bool) -> void:
 	v.add_child(row)
 	var week := int(ed["week"])
 	if free:
-		var tag := _ink_label("BAĞIMSIZ\nHAFTALIK", 13, Color("f3ead6"), false, false)
+		var tag := _ink_label(tr("BAĞIMSIZ\nHAFTALIK"), 13, Color("f3ead6"), false, false)
 		tag.add_theme_font_override("font", UIKit.sans(700))
 		tag.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		var tagbox := _boxed(tag, RUBRIC, 0, 10, RUBRIC)
@@ -347,7 +347,7 @@ func _masthead(v: VBoxContainer, ed: Dictionary, free: bool) -> void:
 		tagbox.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		row.add_child(tagbox)
 	else:
-		row.add_child(_ear("HAFTA %d" % week, "Sayı %d" % week))
+		row.add_child(_ear(tr("HAFTA %d") % week, tr("Sayı %d") % week))
 	var title := _ink_label(str(ed["name"]), 70, INK, false, false)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -363,12 +363,12 @@ func _masthead(v: VBoxContainer, ed: Dictionary, free: bool) -> void:
 	else:
 		title.add_theme_font_override("font", UIKit.caps())
 	row.add_child(title)
-	row.add_child(_ear("FİYATI", "1 kuruş" if free else "2 kuruş"))
+	row.add_child(_ear(tr("FİYATI"), tr("1 kuruş" if free else "2 kuruş")))
 	# Tarih satırı: serbest gazetede kırmızı kalın çizgi, resmîde ince çizgi; altında kalın-ince çift çizgi.
 	v.add_child(_rule(4, RUBRIC) if free else _rule(1, INK))
 	var dl := HBoxContainer.new()
 	v.add_child(dl)
-	var parts := ["BAŞKENT", UIKit.tr_upper(str(ed["motto"])), "HAFTA %d BASKISI" % week]
+	var parts := [tr("BAŞKENT"), UIKit.tr_upper(tr(str(ed["motto"]))), tr("HAFTA %d BASKISI") % week]
 	for k in parts.size():
 		var l := _kicker(parts[k], INK_SOFT)
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -414,7 +414,7 @@ func _build_closed(v: VBoxContainer, ed: Dictionary) -> void:
 	ssb.set_corner_radius_all(8)
 	ssb.set_content_margin_all(18)
 	stamp.add_theme_stylebox_override("panel", ssb)
-	var sl := _ink_label("YAYIN DURDURULDU", 64, Color("a3251b"), true, false)
+	var sl := _ink_label(tr("YAYIN DURDURULDU"), 64, Color("a3251b"), true, false)
 	stamp.add_child(sl)
 	holder.add_child(stamp)
 	stamp.position = Vector2(150, 120)
@@ -525,12 +525,12 @@ func _build_tv() -> void:
 	bug.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	screen.add_child(bug)
 	bug.add_child(_boxed(_tv_label(str(b["channel"]), 17, TV_DARK, 760), UIKit.GOLD, 0, 7, UIKit.GOLD))
-	var live := _boxed(_tv_label("CANLI", 13, Color.WHITE, 700), TV_RED, 0, 7, TV_RED)
+	var live := _boxed(_tv_label(tr("CANLI"), 13, Color.WHITE, 700), TV_RED, 0, 7, TV_RED)
 	bug.add_child(live)
 	var blink := live.create_tween().set_loops()
 	blink.tween_property(live, "modulate:a", 0.45, 0.7)
 	blink.tween_property(live, "modulate:a", 1.0, 0.7)
-	var slot := _tv_label("ANA HABER  20:00", 15, Color.WHITE, 600)
+	var slot := _tv_label(tr("ANA HABER  20:00"), 15, Color.WHITE, 600)
 	slot.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.85))
 	slot.add_theme_constant_override("shadow_outline_size", 5)
 	slot.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -549,7 +549,7 @@ func _build_tv() -> void:
 	lower.offset_bottom = -52
 	lower.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	screen.add_child(lower)
-	var tag := _boxed(_tv_label("GÜNDEM", 13, TV_DARK, 720), UIKit.GOLD, 0, 8, UIKit.GOLD)
+	var tag := _boxed(_tv_label(tr("GÜNDEM"), 13, TV_DARK, 720), UIKit.GOLD, 0, 8, UIKit.GOLD)
 	tag.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	lower.add_child(tag)
 	var hl := _tv_label(UIKit.tr_upper(str(b["headline"])), 25 if w > 800 else 21, TV_DARK, 700)
@@ -576,7 +576,7 @@ func _build_tv() -> void:
 	clip.anchor_bottom = 1.0
 	clip.offset_left = 128
 	strip.add_child(clip)
-	var bl := _tv_label("HABERLER", 14, Color.WHITE, 720)
+	var bl := _tv_label(tr("HABERLER"), 14, Color.WHITE, 720)
 	bl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	bl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	var block := _boxed(bl, TV_RED, 0, 4, TV_RED)
@@ -668,7 +668,7 @@ func _draw_tv(tv: Control, sr: Rect2) -> void:
 	tv.draw_line(Vector2(px + 14.0, panel.position.y + 42.0), Vector2(px + pw - 14.0, panel.position.y + 42.0), Color(brass, 0.35), 1.0)
 	var small := UIKit.sans(600)
 	var ky := panel.position.y + 86.0
-	for kn in [["KANAL", -0.6], ["SES", 0.9]]:
+	for kn in [[tr("KANAL"), -0.6], [tr("SES"), 0.9]]:
 		tv.draw_circle(Vector2(cx, ky), 22.0, Color("0b0907"))
 		tv.draw_circle(Vector2(cx, ky), 18.0, Color("2b231b"))
 		tv.draw_arc(Vector2(cx, ky), 18.0, PI * 1.1, PI * 1.6, 12, Color(1, 0.9, 0.7, 0.18), 2.0, true)

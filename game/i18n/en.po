@@ -1306,5 +1306,8 @@ msgstr "Award Contract"
 msgid "Veliahdı Yetiştir"
 msgstr "Prepare Heir"
 
-msgid "ENEMY"
-msgstr "ENEMY"
+msgid "KANAL"
+msgstr "CHANNEL"
+
+msgid "SES"
+msgstr "VOLUME"

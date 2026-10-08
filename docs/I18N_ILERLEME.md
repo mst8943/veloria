@@ -30,7 +30,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S2: L2 — sürmekte olan dosya `media_view.gd`; ardından `end_screen.gd` ve masaüstü/mobil L2 ekran görüntüsü kapısı.
+S2: L2 — sürmekte olan dosya `end_screen.gd`; ardından masaüstü/mobil L2 ekran görüntüsü kapısı.
 
 ## L1 — tamamlandı
 
@@ -74,3 +74,5 @@ S2: L2 — sürmekte olan dosya `media_view.gd`; ardından `end_screen.gd` ve ma
   özetleri `tr()` ile bağlandı; `en.po` karşılıkları eklendi.
 - `city_view.gd`: kurum adları/açıklamaları, çekmece başlıkları ve eylem
   düğmeleri `tr()` ile bağlandı; `en.po` karşılıkları eklendi.
+- `media_view.gd`: gazete künyeleri, medya sekmeleri, yayın durumu ve TV
+  etiketleri `tr()` ile bağlandı; haber içeriği L4 kaplamalarına bırakıldı.
