@@ -30,7 +30,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S2b: `game/data/en/content_labels.json` içindeki kişi kademe/bant kaplaması; sonra S3a `sim.gd` eylem sonuçları, haber/uyarı ve kriz cümleleri.
+S3a: `sim.gd` eylem sonuçları (bölüm commit'i), ardından haber/uyarı cümleleri ve kriz metinleri.
 
 ## L1 — tamamlandı
 
