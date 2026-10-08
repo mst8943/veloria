@@ -2221,5 +2221,175 @@
                               "ignore":  {
                                              "text":  "The proposal went unanswered."
                                          }
-                          }
+                          },
+    "yay_voss_sinav":  {
+                           "title":  "The key to a sealed file",
+                           "text":  "A file bears the name of both a minister and the Palace. Without looking up, Vale asks, “Does the record go to court or into the vault?”",
+                           "choices":  [
+                                           {
+                                               "label":  "Hand it to Renn",
+                                               "text":  "Hand the file to Renn."
+                                           },
+                                           {
+                                               "label":  "Keep it in Vale\u0027s vault",
+                                               "text":  "Keep it in Vale\u0027s vault."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "No decision was made; he took the silence as one."
+                                      }
+                       },
+    "yay_voss_sadakat":  {
+                             "title":  "Vale opens the archive",
+                             "text":  "Remembering that you chose the courts, Vale duly handed over the file. “I have no copy, Your Majesty. This time.”",
+                             "choices":  [
+                                             {
+                                                 "label":  "Sign the receipt",
+                                                 "text":  "Sign the receipt."
+                                             },
+                                             {
+                                                 "label":  "Close the file",
+                                                 "text":  "Close the file."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "The gesture went unanswered."
+                                        }
+                         },
+    "yay_voss_kopus":  {
+                           "title":  "Vale\u0027s second archive",
+                           "text":  "You had let him keep the file in the vault. Vale held out a slim folder. “The original is safe. You needn\u0027t know where—not yet.”",
+                           "choices":  [
+                                           {
+                                               "label":  "Ask for the archive log",
+                                               "text":  "Ask for the archive log."
+                                           },
+                                           {
+                                               "label":  "Keep an eye on him",
+                                               "text":  "Keep an eye on him for now."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "The distance between you grew."
+                                      }
+                       },
+    "yay_kessler_yukselis":  {
+                                 "title":  "Veyra\u0027s ledger",
+                                 "text":  "Veyra has written a note in her own hand along the ledger\u0027s edge: “If every penny has a place, there\u0027s nothing to fear.” The ink on the last line is still wet.",
+                                 "choices":  [
+                                                 {
+                                                     "label":  "Show the ledger to the Assembly",
+                                                     "text":  "Show the ledger to the Assembly as well."
+                                                 },
+                                                 {
+                                                     "label":  "Keep it at the Palace",
+                                                     "text":  "Keep it at the Palace for now."
+                                                 }
+                                             ],
+                                 "ignore":  {
+                                                "text":  "The offer went unanswered."
+                                            }
+                             },
+    "yay_kessler_sinav":  {
+                              "title":  "A missing budget line",
+                              "text":  "An unexplained item appears among the Treasury\u0027s expenses. Veyra whispers, “If I cover this line, we breathe easier today. Not tomorrow.”",
+                              "choices":  [
+                                              {
+                                                  "label":  "Record the shortfall",
+                                                  "text":  "Record the shortfall openly."
+                                              },
+                                              {
+                                                  "label":  "Push it to next year",
+                                                  "text":  "Push the item into next year\u0027s budget."
+                                              }
+                                          ],
+                              "ignore":  {
+                                             "text":  "No decision was made; she took the silence as one."
+                                         }
+                          },
+    "yay_kessler_sadakat":  {
+                                "title":  "Veyra puts her name to it",
+                                "text":  "You had let her disclose the shortfall. Veyra placed her trembling hand beside the signature. “The figures are heavy, but they are ours now.”",
+                                "choices":  [
+                                                {
+                                                    "label":  "Back the minister",
+                                                    "text":  "Stand behind the minister."
+                                                },
+                                                {
+                                                    "label":  "Order an independent audit",
+                                                    "text":  "Ask for an independent audit."
+                                                }
+                                            ],
+                                "ignore":  {
+                                               "text":  "The gesture went unanswered."
+                                           }
+                            },
+    "yay_kessler_kopus":  {
+                              "title":  "A blank line in the ledger",
+                              "text":  "You had asked her to hide the missing item. Veyra left the ledger open. “Your Majesty, the space I left blank grows a little every day.”",
+                              "choices":  [
+                                              {
+                                                  "label":  "Reopen the ledger",
+                                                  "text":  "Reopen the ledger."
+                                              },
+                                              {
+                                                  "label":  "Tell her to stay quiet",
+                                                  "text":  "Ask her to stay quiet."
+                                              }
+                                          ],
+                              "ignore":  {
+                                             "text":  "The distance between you grew."
+                                         }
+                          },
+    "yay_halden_yukselis":  {
+                                "title":  "Sarne\u0027s open mic",
+                                "text":  "Sarne opened the studio doors. “The screen is mine, the voice is yours. Tomorrow the whole country can hear you.” He smiled and held out the advertising ledger.",
+                                "choices":  [
+                                                {
+                                                    "label":  "Keep the broadcast open",
+                                                    "text":  "Keep the broadcast open."
+                                                },
+                                                {
+                                                    "label":  "Hear the terms first",
+                                                    "text":  "Hear the terms first."
+                                                }
+                                            ],
+                                "ignore":  {
+                                               "text":  "The offer went unanswered."
+                                           }
+                            },
+    "yay_halden_sinav":  {
+                             "title":  "The price of airtime",
+                             "text":  "He wants a tender story pulled from the broadcast. Sarne put a hand on your shoulder. “Just one evening of silence, Your Majesty. Then everyone wins.”",
+                             "choices":  [
+                                             {
+                                                 "label":  "Air the story",
+                                                 "text":  "Air the story."
+                                             },
+                                             {
+                                                 "label":  "Silence it tonight",
+                                                 "text":  "Silence it tonight."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "No decision was made; he took the silence as one."
+                                        }
+                         },
+    "yay_halden_sadakat":  {
+                               "title":  "Sarne shows the contract",
+                               "text":  "You had left the story on air. Sarne spread the agreement across the table. “Open business, open books. I\u0027ll have to get used to this much honesty.”",
+                               "choices":  [
+                                               {
+                                                   "label":  "Publish the contract",
+                                                   "text":  "Publish the contract."
+                                               },
+                                               {
+                                                   "label":  "Leave it on the table",
+                                                   "text":  "Leave it on the table."
+                                               }
+                                           ],
+                               "ignore":  {
+                                              "text":  "The gesture went unanswered."
+                                          }
+                           }
 }
