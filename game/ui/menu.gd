@@ -259,7 +259,7 @@ func _build() -> void:
 	set_meta("first", b_first)
 	set_meta("new", b_new)
 	var ver := Label.new()
-	ver.text = "v%s   ·   Esc: menü   Boşluk: haftayı bitir   Ctrl+S: kaydet   F11: tam ekran" % str(ProjectSettings.get_setting("application/config/version", "1.0.0"))
+	ver.text = tr("v%s   ·   Esc: menü   Boşluk: haftayı bitir   Ctrl+S: kaydet   F11: tam ekran") % str(ProjectSettings.get_setting("application/config/version", "1.0.0"))
 	if host._mobile:
 		ver.text = "v%s" % str(ProjectSettings.get_setting("application/config/version", "1.0.0"))
 	ver.add_theme_color_override("font_color", Color(UIKit.TEXT_DIM, 0.7))
