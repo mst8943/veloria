@@ -2571,35 +2571,35 @@ func _end(survived: bool) -> void:
 			var l: Actor = actors[coup_leader]
 			var promo_week: int = flags.get(l.id.to_upper() + "_GUCLENDI", 0)
 			var how := "Askerî darbeyle" if l.military else "Saray darbesiyle"
-			cause = "Saltanatının %d. haftasında %s görevden alındı. Darbenin lideri %s" % [week - 1, how, l.display_name]
 			if promo_week > 0:
-				cause += ", yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti." % (week - promo_week)
+				cause = tr("Saltanatının %d. haftasında %s görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti.") % [week - 1, tr(how), l.display_name, week - promo_week]
 			else:
-				cause += ". Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı."
+				cause = tr("Saltanatının %d. haftasında %s görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı.") % [week - 1, tr(how), l.display_name]
 			if crisis_note != "":
 				cause += " " + crisis_note
 		elif unrest >= 100.0:
-			cause = "Saltanatının %d. haftasında halk ayaklanması sarayı kuşattı." % (week - 1)
+			cause = tr("Saltanatının %d. haftasında halk ayaklanması sarayı kuşattı.") % (week - 1)
 			if crisis_note != "":
 				cause += " " + crisis_note
 		elif legal_pressure() >= 100.0 or flags.has("YETKI_KAYBI"):
-			cause = "Saltanatının %d. haftasında Meclis ve yüksek mahkeme, biriken skandallar nedeniyle seni yetkisiz bıraktı." % (week - 1)
+			cause = tr("Saltanatının %d. haftasında Meclis ve yüksek mahkeme, biriken skandallar nedeniyle seni yetkisiz bıraktı.") % (week - 1)
 			if crisis_note != "":
 				cause += " " + crisis_note
 		else:
-			cause = "Saltanatının %d. haftasında elit koalisyonu desteğini çekti; tahtta kimse seni savunmadı." % (week - 1)
+			cause = tr("Saltanatının %d. haftasında elit koalisyonu desteğini çekti; tahtta kimse seni savunmadı.") % (week - 1)
 	else:
-		cause = "104 haftalık saltanatın sonunda tahtını korudun."
+		cause = tr("104 haftalık saltanatın sonunda tahtını korudun.")
 		var state_title := _survivor_title(top)
 		title = state_title if state_title in ["Harap Devletin Kralı", "Liyakat Kralı"] else str(REGIME_TITLES.get(regime, state_title))
 	record = {"survived": survived, "title": title, "weeks": week - 1, "cause": cause,
 		"top_actor": top.display_name if top else "", "history": history.duplicate(),
 		"lies": _top_lies(), "king": KING_NAME,
 		"regime": regime_name() if regime != "" else "", "threat": regime_threat() if regime != "" else "",
-		"promises": "%d söz verdin: %d tutuldu, %d bozuldu." % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
+		"promises": tr("%d söz verdin: %d tutuldu, %d bozuldu.") % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
 		"historians": historians(survived), "timeline": timeline.duplicate(), "council": council_record(),
 		"plot": plot_log.duplicate(), "signs": sign_record(), "state": _state_record()}
 	record["new_achievements"] = _award_achievements(survived, title, cause) if record_chronicle else []
+	record["title"] = tr(str(record["title"]))
 	if record_chronicle:
 		_append_chronicle(record)
 	# Biten saltanata kayıttan geri dönülmez: tarih tek yönlüdür.
@@ -2631,7 +2631,7 @@ func _state_record() -> Dictionary:
 		if mean < lowest:
 			lowest = mean
 			low_week = int(point["w"])
-	var low_event := "O hafta kayda geçen bir olay yok."
+	var low_event := tr("O hafta kayda geçen bir olay yok.")
 	for entry in history:
 		if str(entry).begins_with("Hafta %d " % low_week):
 			low_event = str(entry)
@@ -2682,11 +2682,11 @@ func _award_achievements(survived: bool, title: String, cause: String) -> Array:
 		if title.contains("Kukla") or title.contains("Tutsağı"):
 			earned.append("kukla")
 	else:
-		if cause.contains("darbe"):
+		if coup_leader != "" and actors.has(coup_leader):
 			earned.append("darbe")
-		elif cause.contains("ayaklanma"):
+		elif unrest >= 100.0:
 			earned.append("ayaklanma")
-		elif cause.contains("yetkisiz"):
+		elif legal_pressure() >= 100.0 or flags.has("YETKI_KAYBI"):
 			earned.append("yetkisiz")
 	if int(stats.get("blackmails", 0)) >= 3:
 		earned.append("sirlar")

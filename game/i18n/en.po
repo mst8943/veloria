@@ -2088,3 +2088,36 @@ msgstr "UPRISING"
 
 msgid "YETKİ KRİZİ"
 msgstr "POWER CRISIS"
+
+msgid "Askerî darbeyle"
+msgstr "In a military coup"
+
+msgid "Saray darbesiyle"
+msgstr "In a palace coup"
+
+msgid "Devrilen Kral"
+msgstr "The Overthrown King"
+
+msgid "Saltanatının %d. haftasında %s görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti."
+msgstr "You were deposed in week %d of your reign. The coup leader was %s, whom you had promoted just %d weeks earlier."
+
+msgid "Saltanatının %d. haftasında %s görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı."
+msgstr "You were deposed in week %d of your reign. The coup leader was %s. You never promoted them; they built their power while you were busy elsewhere."
+
+msgid "Saltanatının %d. haftasında halk ayaklanması sarayı kuşattı."
+msgstr "In week %d of your reign, a popular uprising surrounded the palace."
+
+msgid "Saltanatının %d. haftasında Meclis ve yüksek mahkeme, biriken skandallar nedeniyle seni yetkisiz bıraktı."
+msgstr "In week %d of your reign, the Council and High Court stripped you of power over the mounting scandals."
+
+msgid "Saltanatının %d. haftasında elit koalisyonu desteğini çekti; tahtta kimse seni savunmadı."
+msgstr "In week %d of your reign, the elite coalition withdrew its support; no one defended you on the throne."
+
+msgid "104 haftalık saltanatın sonunda tahtını korudun."
+msgstr "You kept your throne after a 104-week reign."
+
+msgid "%d söz verdin: %d tutuldu, %d bozuldu."
+msgstr "You made %d promises: %d kept, %d broken."
+
+msgid "O hafta kayda geçen bir olay yok."
+msgstr "No event was recorded that week."
