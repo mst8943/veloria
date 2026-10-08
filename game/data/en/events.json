@@ -1670,5 +1670,215 @@
                                 "ignore":  {
                                                "text":  "The sale went through."
                                            }
-                            }
+                            },
+    "kessler_kacis":  {
+                          "title":  "Veyra\u0027s family moved abroad",
+                          "text":  "Prime Minister Selin Veyra\u0027s wife and children have quietly moved abroad. Veyra is still at her desk, but they say her suitcase is packed.",
+                          "choices":  [
+                                          {
+                                              "label":  "Assure her and increase her protection",
+                                              "text":  "Veyra was relieved. You cannot tell whether she thinks the guards are protecting her or watching her."
+                                          },
+                                          {
+                                              "label":  "Let her go with dignity",
+                                              "text":  "Veyra left a farewell letter. The Treasury\u0027s passwords went to the new minister, too; some did not."
+                                          },
+                                          {
+                                              "label":  "Seize her passport",
+                                              "text":  "Veyra stayed. She is no longer a minister, but a hostage."
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "One morning, Veyra did not come to her desk."
+                                     }
+                      },
+    "lena_belgesel":  {
+                          "title":  "Leyla is making a documentary about your reign",
+                          "text":  "Leyla Sarn has made a documentary about the first year of your reign. The trailer sets your speeches beside reports and street footage.",
+                          "choices":  [
+                                          {
+                                              "label":  "Give an interview for the film",
+                                              "text":  "You spoke openly to the camera. The film did not soften you, but it found you honest."
+                                          },
+                                          {
+                                              "label":  "Ban the screening",
+                                              "text":  "The documentary was banned—and everyone watched it."
+                                          },
+                                          {
+                                              "label":  "Have Sarne air another film tonight",
+                                              "text":  "Two documentaries, two truths. The public chose which to believe; you do not know which."
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "The documentary premiered."
+                                     }
+                      },
+    "dorn_anilar":  {
+                        "title":  "The Queen is writing her memoirs",
+                        "text":  "Helena writes for an hour every night. Queens do not write memoirs, Your Majesty; when they do, they know something.",
+                        "choices":  [
+                                        {
+                                            "label":  "Buy the memoirs for the Palace archive",
+                                            "text":  "The notebooks are in the archive. Helena has begun thinking about retirement."
+                                        },
+                                        {
+                                            "label":  "Give Helena full control of the Foundation",
+                                            "text":  "Helena now runs the Foundation alone. Her pen is in the drawer; the key is in her pocket."
+                                        },
+                                        {
+                                            "label":  "Search her room in secret",
+                                            "text":  "The notebooks were found. Helena knows what was found—and who looked."
+                                        }
+                                    ],
+                        "ignore":  {
+                                       "text":  "Helena kept writing."
+                                   }
+                    },
+    "generaller_muhtirasi":  {
+                                 "title":  "The generals\u0027 memorandum",
+                                 "text":  "A signed statement arrived from the General Staff at midnight. It was politely worded: they want people in government who \u0027understand the country\u0027s sensitivities.\u0027 Arden\u0027s name leads the signatures.",
+                                 "choices":  [
+                                                 {
+                                                     "label":  "Give in and reshuffle the Cabinet",
+                                                     "text":  "Three generals are in the Cabinet. There was no coup—because there was no need."
+                                                 },
+                                                 {
+                                                     "label":  "Send Arden away as ambassador",
+                                                     "text":  "Arden was sent to a distant capital. The barracks are quiet. Too quiet."
+                                                 },
+                                                 {
+                                                     "label":  "Publish the memorandum",
+                                                     "text":  "The memorandum made the papers. The squares filled with calls for the Army to return to its barracks; the generals are exposed now."
+                                                 }
+                                             ],
+                                 "ignore":  {
+                                                "text":  "You did not answer the memorandum. The generals are writing the reply themselves."
+                                            }
+                             },
+    "muhtira_sonrasi":  {
+                            "title":  "The generals in the Cabinet",
+                            "text":  "The generals you brought into the Cabinet now run the ministers, not just the ministries. Veyra called the General Staff before signing a budget line.",
+                            "choices":  [
+                                            {
+                                                "label":  "Keep the generals in the Cabinet",
+                                                "text":  "Order was restored. You do not ask whose order."
+                                            },
+                                            {
+                                                "label":  "Bring one down in a bribery scandal",
+                                                "text":  "One general is gone. The others learned a lesson; which lesson is unclear."
+                                            },
+                                            {
+                                                "label":  "Announce the election calendar",
+                                                "text":  "Civilians found hope again; the generals began calculating."
+                                            }
+                                        ],
+                            "ignore":  {
+                                           "text":  "The generals settled in."
+                                       }
+                        },
+    "halden_meclis":  {
+                          "title":  "Sarne is buying the Assembly",
+                          "text":  "Sarne\u0027s coffers opened: eleven MPs changed parties in a single night. The Assembly now debates Sarne\u0027s contracts, not your laws.",
+                          "choices":  [
+                                          {
+                                              "label":  "Partner with Sarne",
+                                              "text":  "The laws pass. None without Sarne\u0027s signature."
+                                          },
+                                          {
+                                              "label":  "Ask Renn to investigate the defections",
+                                              "text":  "The court files are swelling; Sarne\u0027s channels have branded you a \u0027dictator.\u0027"
+                                          },
+                                          {
+                                              "label":  "Dissolve the Assembly",
+                                              "text":  "The Assembly closed. Sarne\u0027s MPs and yours both went home."
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "The MPs are at Sarne\u0027s table."
+                                     }
+                      },
+    "cadir_kent":  {
+                       "title":  "A tent city in the square",
+                       "text":  "The protesters are not going home. Tents have sprung up in the main square: a kitchen, a clinic, a library. A city that is not yours is growing in the heart of the Capital.",
+                       "choices":  [
+                                       {
+                                           "label":  "Put their demands on the table",
+                                           "text":  "Prices were frozen; several ministers left. The tents came down one by one."
+                                       },
+                                       {
+                                           "label":  "Break it up in a night raid",
+                                           "text":  "The square was clear by morning. The photographs had already reached abroad."
+                                       },
+                                       {
+                                           "label":  "Wait for winter",
+                                           "text":  "The cold scattered some tents. Those who remained were more determined."
+                                       }
+                                   ],
+                       "ignore":  {
+                                      "text":  "The tent city grew."
+                                  }
+                   },
+    "soylular_meclisi":  {
+                             "title":  "The Prince summons the Council of Nobles",
+                             "text":  "The Council of Nobles, not convened in a century, gathered at the summer Palace at Prince Marcus\u0027s call. There was one item on the agenda: \u0027the health of the Crown.\u0027",
+                             "choices":  [
+                                             {
+                                                 "label":  "Join and preside over the Council",
+                                                 "text":  "The nobles rose and bowed. The smile on the Prince\u0027s face was not real."
+                                             },
+                                             {
+                                                 "label":  "Declare the meeting illegal",
+                                                 "text":  "The guards shut the doors. The nobles will not forget this."
+                                             },
+                                             {
+                                                 "label":  "Give the Prince a post abroad",
+                                                 "text":  "The Prince is on a long diplomatic tour. His letters arrive every week, each one shorter than the last."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "The nobles decided without you."
+                                        }
+                         },
+    "dosyalar_birlesiyor":  {
+                                "title":  "The High Court joins the cases",
+                                "text":  "Chief Prosecutor Renn has joined every case opened over the past two years into a single investigation. The file has a short name: \u0027The Palace.\u0027",
+                                "choices":  [
+                                                {
+                                                    "label":  "Agree to testify",
+                                                    "text":  "You took the stand. The questions were hard, but the King was seen to obey the law."
+                                                },
+                                                {
+                                                    "label":  "Pass an immunity law",
+                                                    "text":  "The law passed. The Court will wait—for the day you are no longer on the throne."
+                                                },
+                                                {
+                                                    "label":  "Send Renn into retirement",
+                                                    "text":  "Renn is gone; the file is on new judges\u0027 desks. And in the papers."
+                                                }
+                                            ],
+                                "ignore":  {
+                                               "text":  "The investigation is moving forward."
+                                           }
+                            },
+    "derin_devlet":  {
+                         "title":  "Vale\u0027s shadow cabinet",
+                         "text":  "Vale\u0027s people are in the ministries, making decisions the ministers do not know about. This morning, you learned of a governor\u0027s appointment from the paper.",
+                         "choices":  [
+                                         {
+                                             "label":  "Make Vale\u0027s network official",
+                                             "text":  "The shadow cabinet is no longer in the shadows. Vale\u0027s signature sits beside yours."
+                                         },
+                                         {
+                                             "label":  "Turn Vale and Arden against each other",
+                                             "text":  "The Army listens to intelligence; intelligence listens to the Army. Both have forgotten you—for now."
+                                         },
+                                         {
+                                             "label":  "Dismiss the governors one by one",
+                                             "text":  "The appointments were revoked. Vale smiled; he has other lists."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "The shadow cabinet is in session."
+                                    }
+                     }
 }
