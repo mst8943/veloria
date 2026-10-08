@@ -30,7 +30,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S2: L2 — beş arayüz dosyası tamamlandı; sırada masaüstü ve mobil L2 ekran görüntüsü kapısı, tüm testler ve `--full` kanıtı var.
+S3: L3 içerik çevirileri. S2 L2 dosyaları tamamlandı; görsel kapı çekimleri alındı ancak tüm ekranların tamamen İngilizce olduğu doğrulanamadı (aşağıdaki kalan metinler). `unit_tests.gd` de bir mevcut arayüz denetimi başarısız verdi.
 
 ## L1 — tamamlandı
 
@@ -81,3 +81,23 @@ S2: L2 — beş arayüz dosyası tamamlandı; sırada masaüstü ve mobil L2 ekr
   geçirildi.
 - Menü künyesi sabit kaynak metin olarak kalır; Godot sabit ifadede `tr()`
   değerlendirmediğinden çeviri modal açılırken uygulanır.
+- `ui_shots.gd`, autoload ayarları yüklendikten sonra `--lang=en`/varsayılan
+  dili uygular; önceki sırada ayar dosyasındaki Türkçe tercihi test bayrağını
+  eziyordu. Gazete sayfa bilgisinin İngilizce biçimlendirme hatası giderildi;
+  eylem kategori adları kısaltıldı.
+- Görsel kanıtlar: masaüstü ve mobil, TR ve EN; standart ekranlar 17/19 PNG,
+  durum ekranları 14/16 PNG. Çekimler `dist/i18n_s2_*` altında. Eylem
+  kategorileri, masa, şehir çekmecesi, medya ve oyun sonu örnekleri açılarak
+  incelendi; hedef L2 panellerinde taşma görülmedi. Buna rağmen tüm oyun
+  ekranlarının dil saflığı kapısı geçmedi.
+- Kalan Türkçe örnekler: ana oyun başlığındaki `KRAL ADRİAN IV`, `Dosyalar`,
+  `Günlük` ve `ERTELENDİ`; gündem kartı başlığı/gövdesi, seçenekler ve meclis
+  alıntıları; rapor/ticker metinleri; oyun sonu özeti, karar geçmişi ve başarım
+  açıklamaları; gazetenin ikincil sütunları, `KRALLIĞIN SESİ · 1892'DEN BERİ`
+  ve `kuruş`; şehirdeki kişi/unvan ve ilişki verileri. Bunlar S1 artığı veya
+  L3/L4 dinamik içeriktir, henüz tamamen İngilizce değildir.
+- Doğrulama: `TEST: OK`, `EVENTS: OK (195 olay, 0 uyarı)`, `SAVE: OK`,
+  `CONTENT: OK`, `I18N: OK`, `UI INPUT: OK`; tempo en düşük `0.81` ile `0.8`
+  eşiğini geçti. `--full`: `FULLRUN tohum=101 hafta=104 sonuç=TAHTTA
+  ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`. Geniş
+  `unit_tests.gd`: 398 geçti, `audit finds the offscreen control` başarısız.
