@@ -30,7 +30,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S3a: `sim.gd` kriz metinleri.
+S3b: `sim.gd` kalan son/özet metinleri ve `narrative.gd`, `press.gd`, `advice.gd`.
 
 ## L1 — tamamlandı
 
@@ -89,6 +89,12 @@ S3a: `sim.gd` kriz metinleri.
   sinyal İngilizceleştirildi; hafta özeti, masa alt başlığı ve TV şeridi aynı
   görünür metin yardımcısını kullanıyor. `en.po` tam cümle/etiketleri aldı.
   Commitler: `4d8f369`, `4c6ce42`, `cb939f9`, `2bce4ba`, `46a09b2`.
+- S3a krizleri: darbe, ayaklanma ve yetki krizi kartları, sonuçları ve uyarı
+  cümleleri tam cümle `tr()` anahtarlarına bağlandı; Türkçe sonuç akışı korundu.
+  `en.po` karşılıkları eklendi. Commitler: `2121cbc`, `ab40560`.
+- S2b görsel taraması sırasında kalan başlangıç bildirimi de `tr()`'a bağlandı;
+  kişi kademe kaplamasındaki boş yer tutucu `unknown` ile dolduruldu.
+  Commitler: `8257519`, `6cf58f1`, `2dcbbdb`.
 - Menü künyesi sabit kaynak metin olarak kalır; Godot sabit ifadede `tr()`
   değerlendirmediğinden çeviri modal açılırken uygulanır.
 - `ui_shots.gd`, autoload ayarları yüklendikten sonra `--lang=en`/varsayılan
@@ -100,14 +106,23 @@ S3a: `sim.gd` kriz metinleri.
   kategorileri, masa, şehir çekmecesi, medya ve oyun sonu örnekleri açılarak
   incelendi; hedef L2 panellerinde taşma görülmedi. Buna rağmen tüm oyun
   ekranlarının dil saflığı kapısı geçmedi.
-- Kalan Türkçe örnekler: ana oyun başlığındaki `KRAL ADRİAN IV`, `Dosyalar`,
-  `Günlük` ve `ERTELENDİ`; gündem kartı başlığı/gövdesi, seçenekler ve meclis
-  alıntıları; rapor/ticker metinleri; oyun sonu özeti, karar geçmişi ve başarım
-  açıklamaları; gazetenin ikincil sütunları, `KRALLIĞIN SESİ · 1892'DEN BERİ`
-  ve `kuruş`; şehirdeki kişi/unvan ve ilişki verileri. Bunlar S1 artığı veya
-  L3/L4 dinamik içeriktir, henüz tamamen İngilizce değildir.
+- S2b + S3a görsel kapısı: yeni çekimler `dist/i18n_s3b_{tr,en}_{desktop,mobile}`
+  altında (17/19 PNG); kriz örnekleri ayrıca `dist/i18n_s3b_crisis_{tr,en}_{desktop,mobile}`
+  altında (4/6 PNG). Türkçe masaüstü/mobil örnekleri tamamen Türkçe. İngilizce
+  arayüz etiketleri ve kriz kartı İngilizce; incelenen ekranlarda yatay taşma yok.
+- İngilizce modda kalan Türkçe içerik (L4/S3b kapsamı): olay kartı başlığı,
+  gövdesi ve seçenekleri (`Gıda fiyatları protestoya dönüşüyor`, karar metinleri,
+  meclis alıntıları); kişi unvanları ve rapor/hareket/alâmet cümlelerinin gövdesi;
+  oyun sonu başlığı (`Devrilen Kral`), hakikat dosyası ve karar geçmişi; gazetenin
+  ana/ikincil haber metinleri, `KRALLIĞIN SESİ · 1892'DEN BERİ` ve `kuruş`.
+  Haber/kriz kategori etiketleri çevrilmiştir; ham Türkçe oyun içerikleri bu
+  kapsamda çevrilmemiştir.
 - Doğrulama: `TEST: OK`, `EVENTS: OK (195 olay, 0 uyarı)`, `SAVE: OK`,
-  `CONTENT: OK`, `I18N: OK`, `UI INPUT: OK`; tempo en düşük `0.81` ile `0.8`
-  eşiğini geçti. `--full`: `FULLRUN tohum=101 hafta=104 sonuç=TAHTTA
-  ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`. Geniş
-  `unit_tests.gd`: 398 geçti, `audit finds the offscreen control` başarısız.
+  `CONTENT: OK (5 dosya, 8 bozuk örnek)`, `I18N: OK`, `UI INPUT: OK`;
+  tempo en düşük `0.81` (eşiği `0.8`). `--full`: `FULLRUN tohum=101 hafta=104
+  sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`.
+  İngilizce yerel ayarla 80 kampanya (`advice_weighted`, tüm zorluklar) L1 tabanıyla
+  birebir aynı: kazanma `68/80, 36/80, 16/80`; ortalama hafta `97.0, 81.3, 62.3`;
+  kapasite `54.0, 53.2, 53.3`; diğer ölçütler ve rejim sayımları da aynı.
+  `unit_tests.gd`: 398 geçti; mevcut `audit finds the offscreen control` testi
+  1 başarısız (çalışma zamanı değişikliğiyle ilgili değil).
