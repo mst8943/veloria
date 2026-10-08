@@ -8,6 +8,8 @@ Julian Valerius, Elena Varos ve üç dış temsilci oyuna bağlandı. Veliaht e�
 
 `TEST: OK`, `EVENTS: OK (195 olay, 0 uyarı)`, `SAVE: OK`, `CONTENT: OK`, `UI INPUT: OK`; masaüstü/mobil autoplay ve tempo geçti. Tempo en düşük dilimi **0,81**. Masaüstü ve mobil kanıtlar `dist/qa_b3_state_desktop_3` ile `dist/qa_b3_state_mobile_3` altında; elçilik panelleri, Devlet Defteri, yeni grafikler ve başarımlı finaller gözle açıldı.
 
+1.4.0 paketleri: Windows **63.422.780**, Linux **53.642.201**, Web **37.353.305** bayt. Üç zip açılarak kökte yürütücü/`index.html` ve `OYUNCU_REHBERI.md` denetlendi. Web paketi yerel HTTP sunucusunda HTTP 200 verdi; bu çalışma ortamında tarayıcı yüzeyi bulunmadığından WebGL ile görsel kontrol yapılamadı. Windows paketi pencereli açıldı. Linux paketi Windows üzerinde çalıştırılmadı; ses ve gerçek oyuncu testi yapılmadı.
+
 KALAN İŞLER: `events/dorn_*` görselleri kraliçeyle yeniden üretilmeli.
 
 ## Dağıtım 1.3.0 ve Faz 4c
