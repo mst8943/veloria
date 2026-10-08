@@ -81,7 +81,7 @@ func _check_matching_tree(source: Variant, overlay: Variant, file_name: String, 
 			return
 		for key in source:
 			var key_name := str(key)
-			if key_name in ["experts", "regime_order", "stance", "court_share"]:
+			if key_name in ["experts", "prizes", "regime_names", "regime_titles", "regime_threats", "regime_order", "stance", "court_share"]:
 				_expect(not overlay.has(key), "%s mantık alanı içeriyor: %s" % [file_name, key_name])
 				continue
 			_expect(overlay.has(key), "%s kaplama anahtarı eksik: %s/%s" % [file_name, path, key_name])
@@ -105,6 +105,9 @@ func _check_loader_fallback() -> void:
 	Loc.set_lang("en")
 	var translated: Dictionary = loader.load_all()
 	_expect(not translated.is_empty() and str(translated.get("history", {}).get("pro_survived", "")).begins_with("King %s"), "İngilizce içerik kaplaması yüklenmedi")
+	var source_labels: Variant = _json("res://game/data/content_labels.json")
+	for key in ["prizes", "regime_names", "regime_titles", "regime_threats"]:
+		_expect(translated.get("labels", {}).get(key) == source_labels.get(key), "İngilizce yükleme iç anahtarı değiştirdi: " + key)
 	var probe := {"pro_survived": "Türkçe kaynak cümlesi", "untranslated": "Türkçe yedek"}
 	var merged: Variant = loader._translated("res://game/data/content_history.json", probe)
 	_expect(merged.get("untranslated", "") == "Türkçe yedek", "eksik metin Türkçe kaynağa düşmedi")
