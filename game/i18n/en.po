@@ -785,22 +785,22 @@ msgid "Son alametler:\n%s\n\nAlametlerin bir kısmı dedikodudur. Huzura Çağı
 msgstr "Recent signs:\n%s\n\nSome signs are rumours. Summon them to court to test the waters."
 
 msgid "KAZAN"
-msgstr "WIN LOYALTY"
+msgstr "GAIN"
 
 msgid "SÖZ VER"
-msgstr "MAKE A PROMISE"
+msgstr "PROMISE"
 
 msgid "ÖĞREN"
-msgstr "GATHER INTELLIGENCE"
+msgstr "LEARN"
 
 msgid "EMRET"
-msgstr "GIVE ORDERS"
+msgstr "ORDER"
 
 msgid "BASKI"
-msgstr "APPLY PRESSURE"
+msgstr "PRESS"
 
 msgid "OPERASYON"
-msgstr "OPERATION"
+msgstr "OPS"
 
 msgid "Başkent · Kurumlar"
 msgstr "Capital · Institutions"
@@ -816,6 +816,18 @@ msgstr "Agenda"
 
 msgid "Gizli Dosyalar"
 msgstr "Secret Files"
+
+msgid "Gizli Ödeme"
+msgstr "Bribe"
+
+msgid "DEVLET"
+msgstr "STATE"
+
+msgid "Son eylem"
+msgstr "Last action"
+
+msgid "Kararlar"
+msgstr "Decisions"
 
 msgid "HAFTA %d   ·   KRAL ADRİAN IV"
 msgstr "WEEK %d   ·   KING ADRIAN IV"
@@ -1058,6 +1070,9 @@ msgid "[b]BAŞKENT —[/b] %s"
 msgstr "[b]THE CAPITAL —[/b] %s"
 
 msgid "Devamı sayfa %d'%s"
+msgstr "Continued on page %d"
+
+msgid "Devamı sayfa %d"
 msgstr "Continued on page %d"
 
 msgid "HAVA DURUMU"
