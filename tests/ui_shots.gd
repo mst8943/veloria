@@ -17,6 +17,12 @@ func _initialize() -> void:
 	ProjectSettings.set_setting("veloria/dev_autostart", true)
 	# --guide: ilk hafta (yol gösterici görünür); varsayılan: 4. hafta
 	ProjectSettings.set_setting("veloria/dev_skip_weeks", 0 if "--guide" in OS.get_cmdline_user_args() else 3)
+	_boot.call_deferred()
+
+
+func _boot() -> void:
+	await process_frame
+	(get_root().get_node("Sfx")).set_language("en" if "--lang=en" in OS.get_cmdline_user_args() else "tr")
 	main = (load("res://game/ui/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
 	_run.call_deferred()
