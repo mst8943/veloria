@@ -3,12 +3,16 @@ extends SceneTree
 
 const TURKISH := "çğıöşüİÇĞÖŞÜ"
 const LOGIC := {"id": true, "fx": true, "needs_flag": true, "flag": true, "actor": true, "domain": true, "art": true, "min_stat": true, "max_stat": true, "stance": true, "court_share": true}
+const ContentData := preload("res://game/core/content_data.gd")
+const Loc := preload("res://game/core/loc.gd")
 var ok := true
 
 
 func _init() -> void:
 	_check_po()
 	_check_overlays()
+	_check_overlay_shapes()
+	_check_loader_fallback()
 	print("I18N: OK" if ok else "I18N: FAIL")
 	quit(0 if ok else 1)
 
@@ -40,6 +44,81 @@ func _check_overlays() -> void:
 			if parsed != null:
 				_check_tree(parsed, name)
 		name = dir.get_next()
+	dir.list_dir_end()
+
+
+func _check_overlay_shapes() -> void:
+	for file_name in ["content_labels.json", "content_council.json", "content_reports.json", "content_achievements.json", "content_history.json"]:
+		var source: Variant = _json("res://game/data/" + file_name)
+		var overlay: Variant = _json("res://game/data/en/" + file_name)
+		_expect(source is Dictionary and overlay is Dictionary, "kaplama kök yapısı hatalı: " + file_name)
+		if source is Dictionary and overlay is Dictionary:
+			_check_matching_tree(source, overlay, file_name)
+	var actors: Variant = _json("res://game/data/actors.json")
+	var actor_overlay: Variant = _json("res://game/data/en/actors.json")
+	_expect(actors is Array and actor_overlay is Dictionary, "actors kaplama yapısı hatalı")
+	if not actors is Array or not actor_overlay is Dictionary:
+		return
+	for actor in actors:
+		var id := str(actor.get("id", ""))
+		_expect(actor_overlay.has(id), "actors kaplamasında kişi eksik: " + id)
+		if not actor_overlay.has(id):
+			continue
+		var translated: Variant = actor_overlay[id]
+		_expect(translated is Dictionary, "actors girdisi sözlük değil: " + id)
+		if translated is Dictionary:
+			_expect(translated.size() == 4, "actors girdisinde gösterim alanı sayısı hatalı: " + id)
+			for field in ["name", "title", "red_line", "weak_point"]:
+				_expect(translated.has(field) and translated[field] is String and not str(translated[field]).strip_edges().is_empty(), "actors alanı eksik: %s/%s" % [id, field])
+	for id in actor_overlay:
+		_expect(actors.any(func(actor: Dictionary) -> bool: return str(actor.get("id", "")) == str(id)), "actors kaplamasında bilinmeyen kişi: " + str(id))
+
+
+func _check_matching_tree(source: Variant, overlay: Variant, file_name: String, path: String = "") -> void:
+	if source is Dictionary:
+		_expect(overlay is Dictionary, "%s sözlük yapısı uyuşmuyor: %s" % [file_name, path])
+		if not overlay is Dictionary:
+			return
+		for key in source:
+			var key_name := str(key)
+			if key_name in ["experts", "regime_order", "stance", "court_share"]:
+				_expect(not overlay.has(key), "%s mantık alanı içeriyor: %s" % [file_name, key_name])
+				continue
+			_expect(overlay.has(key), "%s kaplama anahtarı eksik: %s/%s" % [file_name, path, key_name])
+			if overlay.has(key):
+				_check_matching_tree(source[key], overlay[key], file_name, path + "/" + key_name)
+		for key in overlay:
+			_expect(source.has(key), "%s kaplamasında bilinmeyen anahtar: %s/%s" % [file_name, path, key])
+	elif source is Array:
+		_expect(overlay is Array and source.size() == overlay.size(), "%s dizi boyutu uyuşmuyor: %s" % [file_name, path])
+		if overlay is Array:
+			for i in mini(source.size(), overlay.size()):
+				_check_matching_tree(source[i], overlay[i], file_name, "%s/%d" % [path, i])
+	elif source is String:
+		_expect(overlay is String and not str(overlay).strip_edges().is_empty(), "%s metin eksik: %s" % [file_name, path])
+	else:
+		_expect(false, "%s kaplamasında metin olmayan alan var: %s" % [file_name, path])
+
+
+func _check_loader_fallback() -> void:
+	var loader: RefCounted = ContentData.new()
+	Loc.set_lang("en")
+	var translated: Dictionary = loader.load_all()
+	_expect(not translated.is_empty() and str(translated.get("history", {}).get("pro_survived", "")).begins_with("King %s"), "İngilizce içerik kaplaması yüklenmedi")
+	var probe := {"pro_survived": "Türkçe kaynak cümlesi", "untranslated": "Türkçe yedek"}
+	var merged: Variant = loader._translated("res://game/data/content_history.json", probe)
+	_expect(merged.get("untranslated", "") == "Türkçe yedek", "eksik metin Türkçe kaynağa düşmedi")
+	var missing := ["Türkçe satır"]
+	_expect(loader._translated("res://game/data/no_overlay.json", missing) == missing, "eksik kaplama Türkçe kaynağa düşmedi")
+	Loc.set_lang("tr")
+	var source: Variant = _json("res://game/data/content_history.json")
+	var turkish: Dictionary = loader.load_all()
+	_expect(turkish.get("history", {}) == source, "Türkçe mod ana içeriği değiştirdi")
+
+
+func _json(path: String) -> Variant:
+	var f := FileAccess.open(path, FileAccess.READ)
+	return JSON.parse_string(f.get_as_text()) if f else null
 
 
 func _check_tree(value: Variant, file_name: String, key: String = "") -> void:
