@@ -185,6 +185,8 @@ func _append_state(state: Dictionary) -> void:
 				institutions.get(str(item["institution"]), str(item["institution"])), "Sadık Ata" if item["kind"] == "loyal" else "Liyakatli Ata"])
 	lies_page.append_text("[color=gray]İhale:[/color] %d kez. [color=gray]Sarne'nin düşman yayını:[/color] %d hafta.\n" % [
 		int(state.get("tenders", 0)), int(state.get("hostile_weeks", 0))])
+	lies_page.append_text("[color=gray]Dış ilişkiler:[/color] %d heyet; en soğuk an %d. hafta. [color=gray]Veliaht:[/color] %s.\n" % [
+		int(state.get("delegations", 0)), int(state.get("foreign_cold_week", 0)), "Hazır" if float(state.get("heir_final", 0.0)) >= 70.0 else ("Gelişiyor" if float(state.get("heir_final", 0.0)) >= 40.0 else "Çocuksu")])
 
 
 ## Kaydı sekmelere yazar (Özet, Tarihçiler, Hakikat Dosyası, Kararlar) ve final görselinin yolunu döndürür.

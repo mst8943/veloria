@@ -9,6 +9,8 @@ const SERIES := [
 	{"key": "plot", "name": "Komplo", "color": Color("9a6ad6")},
 	{"key": "capacity", "name": "Devlet", "color": Color("7fae7a")},
 	{"key": "holding", "name": "Sarne'nin payı", "color": Color("66a9bd")},
+	{"key": "foreign", "name": "Dış ilişkiler", "color": Color("b684d6")},
+	{"key": "heir", "name": "Veliaht", "color": Color("e5a85c")},
 ]
 
 var data: Array = []
@@ -60,7 +62,7 @@ func _draw() -> void:
 		if pts.size() >= 2:
 			draw_polyline(pts, s["color"], 2.0, true)
 	# Lejant
-	var lx := maxf(44.0, r.end.x - 675.0)
+	var lx := maxf(44.0, r.end.x - 930.0)
 	for s in SERIES:
 		draw_rect(Rect2(Vector2(lx, 32), Vector2(12, 4)), s["color"])
 		draw_string(font, Vector2(lx + 16, 38), s["name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 11, UIKit.TEXT)

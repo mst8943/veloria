@@ -1472,7 +1472,8 @@ func _diff_visible(b: Dictionary, n: Dictionary) -> Array:
 ## Hakikat Dosyası grafiği için gerçek (gizli) durumun haftalık kaydı.
 func _record_timeline() -> void:
 	timeline.append({"w": week, "king": snappedf(king_strength, 0.1), "unrest": snappedf(unrest, 0.1),
-		"economy": snappedf(economy, 0.1), "opp": snappedf(opposition, 0.1), "plot": snappedf(_ready_power_share() * 100.0, 0.1)})
+		"economy": snappedf(economy, 0.1), "opp": snappedf(opposition, 0.1), "plot": snappedf(_ready_power_share() * 100.0, 0.1),
+		"foreign": snappedf(_foreign_average(), 0.1), "heir": snappedf(heir_maturity, 0.1)})
 	capacity_timeline.append({"w": week, "maliye": capacity["maliye"], "hukuk": capacity["hukuk"],
 		"ordu": capacity["ordu"], "idare": capacity["idare"], "holding": holding})
 
@@ -2596,9 +2597,16 @@ func _state_record() -> Dictionary:
 		if str(entry).begins_with("Hafta %d " % low_week):
 			low_event = str(entry)
 			break
+	var coldest := 101.0
+	var cold_week := 0
+	for point: Dictionary in chart:
+		if float(point.get("foreign", 50.0)) < coldest:
+			coldest = float(point.get("foreign", 50.0))
+			cold_week = int(point["w"])
 	return {"timeline": chart, "average": _capacity_average(), "lowest": lowest, "low_week": low_week,
 		"low_event": low_event, "appointments": kadro_log.duplicate(true), "tenders": int(stats.get("tenders", 0)),
-		"hostile_weeks": int(stats.get("halden_hostile_weeks", 0)), "holding_peak": peak, "holding_final": holding}
+		"hostile_weeks": int(stats.get("halden_hostile_weeks", 0)), "holding_peak": peak, "holding_final": holding,
+		"delegations": int(stats.get("delegations", 0)), "foreign_coldest": coldest, "foreign_cold_week": cold_week, "heir_final": heir_maturity}
 
 
 func historians(survived: bool) -> Array:
