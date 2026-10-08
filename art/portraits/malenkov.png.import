@@ -10,8 +10,8 @@ metadata={
 
 [deps]
 
-source_file="res://art/portraits/viktor_malenkov.png"
-dest_files=["res://.godot/imported/viktor_malenkov.png-11c7c61cbf0688d3c76aff0fd1a0d1f1.ctex"]
+source_file="res://art/portraits/malenkov.png"
+dest_files=["res://.godot/imported/malenkov.png-11c7c61cbf0688d3c76aff0fd1a0d1f1.ctex"]
 
 [params]
 

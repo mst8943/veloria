@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://db4ooak4xeckp"
-path="res://.godot/imported/lucien_vale.png-74ea7842e08f813cf55d8000f80daf3e.ctex"
+uid="uid://dqsxpb2bohg3c"
+path="res://.godot/imported/claire_duvall.png-be35469e712f7e60d7cc1e6e00cb8e58.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/portraits/lucien_vale.png"
-dest_files=["res://.godot/imported/lucien_vale.png-74ea7842e08f813cf55d8000f80daf3e.ctex"]
+source_file="res://art/portraits/claire.png"
+dest_files=["res://.godot/imported/claire.png-be35469e712f7e60d7cc1e6e00cb8e58.ctex"]
 
 [params]
 

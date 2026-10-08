@@ -64,5 +64,23 @@
     "power": 18, "ambition": 28, "fear": 25, "honesty": 0.7, "threshold": 0.75, "supporting": true,
     "loyalty": {"money": 10, "fear": 15, "ideology": 20, "career": 25, "complicity": 0},
     "red_line": "Elçilik yazışmalarının açılması", "weak_point": "Asteria'daki eski bağlantıları"
+  },
+  {
+    "id": "claire", "name": "Claire Duvall", "title": "Asteria Büyükelçisi", "domain": "foreign",
+    "power": 10, "ambition": 22, "fear": 14, "honesty": 0.75, "threshold": 0.9, "insider": false, "supporting": true,
+    "loyalty": {"money": 0, "fear": 5, "ideology": 20, "career": 25, "complicity": 0},
+    "red_line": "Asteria yurttaşlarının hedef alınması", "weak_point": "Sarayla yapılan eski gizli görüşmeler"
+  },
+  {
+    "id": "malenkov", "name": "Viktor Malenkov", "title": "Drakon Büyükelçisi", "domain": "foreign",
+    "power": 12, "ambition": 30, "fear": 10, "honesty": 0.5, "threshold": 0.9, "insider": false, "supporting": true,
+    "loyalty": {"money": 10, "fear": 5, "ideology": 25, "career": 30, "complicity": 0},
+    "red_line": "Drakon'un açıkça küçük düşürülmesi", "weak_point": "Başkentteki aracılarının listesi"
+  },
+  {
+    "id": "lucien", "name": "Lucien Vale", "title": "Seravia Ekonomik Temsilcisi", "domain": "foreign",
+    "power": 11, "ambition": 26, "fear": 12, "honesty": 0.6, "threshold": 0.9, "insider": false, "supporting": true,
+    "loyalty": {"money": 20, "fear": 5, "ideology": 10, "career": 30, "complicity": 0},
+    "red_line": "Seravia ticaretinin keyfî kesilmesi", "weak_point": "Liman ortaklarının gizli payı"
   }
 ]

@@ -58,6 +58,8 @@ var halden_demands := 0
 var lena_boost_until := 0
 var kadro_log: Array = []
 var heir_maturity := 30.0
+var foreign: Dictionary = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
+var foreign_hint_until := 0
 const ATTRITION := 0.04
 const STANCE_CAP := 0.23
 const TREASURY_COST := 0.15
@@ -147,6 +149,11 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 	var newcomer_rng := RandomNumberGenerator.new()
 	newcomer_rng.seed = rng.seed ^ 0x71E1A
 	heir_maturity = 30.0 + newcomer_rng.randf_range(-5.0, 5.0)
+	var foreign_rng := RandomNumberGenerator.new()
+	foreign_rng.seed = rng.seed ^ 0xF0E19
+	for power in foreign:
+		foreign[power] = 50.0 + foreign_rng.randf_range(-5.0, 5.0)
+	foreign_hint_until = 0
 	actors.clear()
 	facts.clear()
 	flags.clear()
@@ -274,7 +281,7 @@ const SAVE_VERSION := 8
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
-	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity"]
+	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -322,6 +329,22 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 				old_karne[actor_data["id"]] = {"ok": 0, "bad": 0}
 		d["actors"] = old_actors
 		d["karne"] = old_karne
+	if not d.has("foreign"):
+		d["foreign"] = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
+	if not d.has("foreign_hint_until"):
+		d["foreign_hint_until"] = 0
+	# B1'in kısa ömürlü v8 kayıtları dış temsilcileri henüz içermiyordu.
+	if d.get("actors") is Dictionary:
+		var migrated_actors: Dictionary = d["actors"]
+		var migrated_karne: Dictionary = d.get("karne", {})
+		for actor_data: Dictionary in _load_json(ACTORS_PATH):
+			if actor_data.get("supporting", false) and not migrated_actors.has(actor_data["id"]):
+				var newcomer := Actor.new()
+				newcomer.setup(actor_data)
+				migrated_actors[actor_data["id"]] = newcomer.to_save()
+				migrated_karne[actor_data["id"]] = {"ok": 0, "bad": 0}
+		d["actors"] = migrated_actors
+		d["karne"] = migrated_karne
 	d["version"] = SAVE_VERSION
 	return d
 
@@ -342,7 +365,8 @@ func save_game() -> bool:
 		"regime": regime, "capacity": capacity, "treasury": treasury, "budget_stance": budget_stance,
 		"court_share": court_share, "capacity_timeline": capacity_timeline, "holding": holding,
 		"halden_hostile_until": halden_hostile_until, "halden_demands": halden_demands,
-		"lena_boost_until": lena_boost_until, "kadro_log": kadro_log, "heir_maturity": heir_maturity, "version": SAVE_VERSION}
+		"lena_boost_until": lena_boost_until, "kadro_log": kadro_log, "heir_maturity": heir_maturity,
+		"foreign": foreign, "foreign_hint_until": foreign_hint_until, "version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -392,6 +416,8 @@ func load_game() -> bool:
 	lena_boost_until = int(d["lena_boost_until"])
 	kadro_log = d["kadro_log"]
 	heir_maturity = float(d["heir_maturity"])
+	foreign = d["foreign"]
+	foreign_hint_until = int(d["foreign_hint_until"])
 	for id in d["actors"]:
 		if actors.has(id):
 			actors[id].from_save(d["actors"][id])

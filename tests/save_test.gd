@@ -27,6 +27,7 @@ func _init() -> void:
 	var cap: Dictionary = sim.capacity.duplicate()
 	var holding_before: float = sim.holding
 	var heir_before: float = sim.heir_maturity
+	var foreign_before: Dictionary = sim.foreign.duplicate()
 	_check("kaydet", sim.save_game())
 	var loaded: bool = sim.load_game()
 	var same_cap := true
@@ -36,10 +37,21 @@ func _init() -> void:
 		and not sim.capacity_timeline.is_empty() and sim.capacity_timeline[-1].has("holding")
 		and absf(sim.holding - holding_before) < 0.001 and sim.halden_hostile_until == 21 and sim.halden_demands == 2 and sim.lena_boost_until == 15 and sim.kadro_log.size() == 1
 		and absf(sim.heir_maturity - heir_before) < 0.001 and sim.actors.has("julian") and sim.actors.has("elena"))
+	_check("dış ilişkiler gidiş-dönüş", sim.foreign == foreign_before and sim.foreign_hint_until == 0)
 	var f := FileAccess.open(sim.save_path, FileAccess.READ)
 	var d: Dictionary = str_to_var(f.get_as_text())
 	f.close()
 	_check("sürüm yazıldı", int(d.get("version", 0)) == sim.SAVE_VERSION)
+	# B1 v8 kaydı: dış temsilciler ve ilişkiler henüz yoktu.
+	var b1_v8 := d.duplicate(true)
+	for k in ["foreign", "foreign_hint_until"]:
+		b1_v8.erase(k)
+	for id in ["claire", "malenkov", "lucien"]:
+		b1_v8["actors"].erase(id)
+		b1_v8["karne"].erase(id)
+	_write(sim.save_path, b1_v8)
+	_check("v8 dış güç göçü", sim.load_game() and sim.foreign.size() == 3 and sim.foreign_hint_until == 0
+		and sim.actors.has("claire") and sim.actors.has("malenkov") and sim.actors.has("lucien"))
 	# Sürüm 7: yeni kadro ve veliaht olgunluğu yoktu.
 	var v7 := d.duplicate(true)
 	v7["version"] = 7
