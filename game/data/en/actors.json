@@ -1,0 +1,16 @@
+{
+  "arden": {"name": "Marcus Arden", "title": "Chief of General Staff", "red_line": "An order to fire on civilians", "weak_point": "His brother's procurement scandal"},
+  "voss": {"name": "Nadir Vale", "title": "VIA Intelligence Chief", "red_line": "His agents being exposed", "weak_point": "His offshore accounts"},
+  "kessler": {"name": "Selin Veyra", "title": "Prime Minister", "red_line": "Falsifying budget figures", "weak_point": "His sick child"},
+  "halden": {"name": "Victor Sarne", "title": "Chairman of the Sarne Group", "red_line": "The seizure of his companies", "weak_point": "The tax-evasion files"},
+  "lena": {"name": "Leyla Sarn", "title": "Independent Journalist", "red_line": "Her sources being exposed", "weak_point": "Her newspaper's debts"},
+  "dorn": {"name": "Queen Helena", "title": "Queen / Royal Foundation Chair", "red_line": "Discussion of the king's private life", "weak_point": "Improper donations to the Royal Foundation"},
+  "prens": {"name": "Prince Marcus", "title": "The King's Brother", "red_line": "Humiliating the dynasty", "weak_point": "A secret marriage"},
+  "brandt": {"name": "Adrian Voss", "title": "Opposition Leader", "red_line": "The arrest of his supporters", "weak_point": "Secret foreign funding"},
+  "falk": {"name": "Sophia Renn", "title": "Chief Prosecutor", "red_line": "Interference with her independence", "weak_point": "A mistake in an old case"},
+  "julian": {"name": "Julian Valerius", "title": "Crown Prince", "red_line": "Bargaining away the dynasty's future", "weak_point": "Childhood fears"},
+  "elena": {"name": "Elena Varos", "title": "Foreign Minister", "red_line": "Opening embassy correspondence", "weak_point": "Her old ties in Asteria"},
+  "claire": {"name": "Claire Duvall", "title": "Asterian Ambassador", "red_line": "Targeting Asterian citizens", "weak_point": "Her old secret meetings with the Palace"},
+  "malenkov": {"name": "Viktor Malenkov", "title": "Drakonic Ambassador", "red_line": "Publicly humiliating Drakon", "weak_point": "The list of his Capital intermediaries"},
+  "lucien": {"name": "Lucien Vale", "title": "Seravian Trade Representative", "red_line": "Arbitrarily cutting off Seravian trade", "weak_point": "His port partners' hidden stake"}
+}
