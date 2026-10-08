@@ -111,7 +111,7 @@ func _build() -> void:
 	box.add_theme_constant_override("separation", 12)
 	plate.add_child(box)
 	var title := Label.new()
-	title.text = "V E L O R İ A"
+	title.text = tr("V E L O R İ A")
 	var shine := ShaderMaterial.new()
 	shine.shader = SHIMMER_SHADER
 	shine.set_shader_parameter("screen_w", 1067.0 if host._mobile else 1600.0)

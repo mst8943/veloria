@@ -2602,6 +2602,18 @@ msgstr "The Sarne investigation leaked from the Palace"
 msgid "Dosya sızdı; yayınlar sarayı hedef alıyor."
 msgstr "The file leaked; the broadcasts are targeting the Palace."
 
+msgid "V E L O R İ A"
+msgstr "V E L O R I A"
+
+msgid "Defterler açıldı; Sarne geri çekiliyor."
+msgstr "The ledgers are open; Sarne is backing off."
+
+msgid "[b][font_size=%d][color=#d6b25e]HÜKÜMDARLIK ARŞİVİ[/color][/font_size][/b]\n[color=gray]Tarih, krallarını unutmaz.[/color]\n\n"
+msgstr "[b][font_size=%d][color=#d6b25e]ROYAL ARCHIVE[/color][/font_size][/b]\n[color=gray]History never forgets its kings.[/color]\n\n"
+
+msgid "\n[b][font_size=%d][color=#d6b25e]BAŞARIMLAR  ·  %d / %d[/color][/font_size][/b]\n"
+msgstr "\n[b][font_size=%d][color=#d6b25e]ACHIEVEMENTS  ·  %d / %d[/color][/font_size][/b]\n"
+
 msgid "Normal"
 msgstr "Normal"
 

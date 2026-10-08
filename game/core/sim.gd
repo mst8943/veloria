@@ -1982,7 +1982,7 @@ func _resolve_patronage(choice: int, level: int) -> String:
 				halden.fear += 15.0
 				halden.ambition += 6.0
 				flags["HALDEN_SAVCI_BASARILI"] = week
-				return str(option["text"]) + " Defterler açıldı; Sarne geri çekiliyor."
+				return str(option["text"]) + " " + tr("Defterler açıldı; Sarne geri çekiliyor.")
 			halden_hostile_until = week + 8
 			flags["HALDEN_SAVCI_SIZDI"] = week
 			_add_fact("halden_savci_sizinti_%d" % week, "Sarne soruşturmasının saraydan sızması", "king", 25.0, ["halden", "falk"], 1)
