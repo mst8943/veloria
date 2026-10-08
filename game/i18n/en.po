@@ -2437,6 +2437,9 @@ msgstr "Easy"
 msgid "Kraliçe Helena"
 msgstr "Queen Helena"
 
+msgid "(kötü haberi sana iletmedi)"
+msgstr "(she kept the bad news from you)"
+
 msgid "Prens Marcus"
 msgstr "Prince Marcus"
 
