@@ -210,9 +210,9 @@ func show_record(record: Dictionary) -> String:
 	var hist_log: Array = record["history"]
 	# Özet
 	summary.clear()
-	summary.append_text("%s\n\n" % tr(str(record["cause"])))
+	summary.append_text("%s\n\n" % str(record.get("cause_display", tr(str(record["cause"])))) )
 	summary.append_text(tr("[b]Saltanat:[/b] %d hafta  ·  [b]En güçlü isim:[/b] %s\n[b]Söz sicili:[/b] %s\n[b]Karar defteri:[/b] %d kayıt\n") % [
-		int(record["weeks"]), record["top_actor"], tr(str(record.get("promises", ""))), hist_log.size()])
+		int(record["weeks"]), record["top_actor"], str(record.get("promises_display", tr(str(record.get("promises", ""))))), hist_log.size()])
 	if str(record.get("regime", "")) != "":
 		summary.append_text(tr("[b]Rejimin:[/b] %s. [b]Son sınavı:[/b] %s.\n") % [tr(str(record["regime"])), tr(str(record["threat"]))])
 	var state: Dictionary = record.get("state", {})
