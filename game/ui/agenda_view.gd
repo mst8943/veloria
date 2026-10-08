@@ -48,7 +48,7 @@ func _add_guide(animated: Array[Control]) -> void:
 	v.add_theme_constant_override("separation", 6)
 	panel.add_child(v)
 	var head := Label.new()
-	head.text = "BU HAFTA NE YAPMALI?"
+	head.text = tr("BU HAFTA NE YAPMALI?")
 	head.add_theme_font_override("font", UIKit.caps())
 	head.add_theme_font_size_override("font_size", host._fs(12))
 	head.add_theme_color_override("font_color", UIKit.GOLD)
@@ -58,13 +58,13 @@ func _add_guide(animated: Array[Control]) -> void:
 	v.add_child(row)
 	for i in GUIDE_STEPS.size():
 		var b := Button.new()
-		b.text = "%d   %s" % [i + 1, GUIDE_STEPS[i][0]]
+		b.text = tr("%d   %s") % [i + 1, tr(GUIDE_STEPS[i][0])]
 		b.theme_type_variation = "GhostButton"
 		b.toggle_mode = true
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		b.add_theme_font_size_override("font_size", host._fs(13))
-		b.tooltip_text = GUIDE_STEPS[i][1]
+		b.tooltip_text = tr(GUIDE_STEPS[i][1])
 		var col := UIKit.GOLD if i + 1 == step else (UIKit.OK if i + 1 < step else UIKit.TEXT_DIM)
 		for c in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color"]:
 			b.add_theme_color_override(c, col)
@@ -73,7 +73,7 @@ func _add_guide(animated: Array[Control]) -> void:
 		host._wire(b)
 		row.add_child(b)
 	var tip := Label.new()
-	tip.text = GUIDE_STEPS[step - 1][1]
+	tip.text = tr(GUIDE_STEPS[step - 1][1])
 	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	tip.add_theme_font_size_override("font_size", host._fs(13))
 	tip.add_theme_color_override("font_color", Color("d8cba8"))
@@ -91,7 +91,7 @@ func _guide_go(step: int) -> void:
 			var saray := host._tabs.get_node_or_null("Saray") as Control
 			if saray != null:
 				host._select_tab(saray)
-			host._hint("Bir kişiye eylem\n" + str(GUIDE_STEPS[2][1]))
+		host._hint(tr("Bir kişiye eylem\n") + tr(GUIDE_STEPS[2][1]))
 			if host._grid != null and not host._fast():
 				UIKit.pulse(host._grid, 1.02)
 		_:
@@ -120,7 +120,7 @@ func _rebuild_facts() -> void:
 	host._fact_ids.clear()
 	if Sim.facts.is_empty():
 		var empty := Label.new()
-		empty.text = "Henüz dosyada bir şey yok. Gizli işler iz bırakır; izler burada birikir."
+		empty.text = tr("Henüz dosyada bir şey yok. Gizli işler iz bırakır; izler burada birikir.")
 		empty.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 		host._fact_box.add_child(empty)
 		return
@@ -150,21 +150,21 @@ func _rebuild_facts() -> void:
 		t.add_theme_font_size_override("font_size", host._fs(15))
 		top.add_child(t)
 		if mine:
-			top.add_child(_pill("SANA DAİR", UIKit.DANGER))
-		var state_t := "GİZLİ"
+			top.add_child(_pill(tr("SANA DAİR"), UIKit.DANGER))
+		var state_t := tr("GİZLİ")
 		var state_c := UIKit.OK
 		if f.get("public", false):
-			state_t = "KAMUYA AÇIK"
+			state_t = tr("KAMUYA AÇIK")
 			state_c = UIKit.DANGER
 		elif f.get("rumor", false):
-			state_t = "DEDİKODU"
+			state_t = tr("DEDİKODU")
 			state_c = Color("d9963e")
 		top.add_child(_pill(state_t, state_c))
 		var info := HBoxContainer.new()
 		info.add_theme_constant_override("separation", 10)
 		v.add_child(info)
 		var who := Label.new()
-		who.text = "%d kişi biliyor  ·  %d kopya" % [f["knowers"].size(), int(f["copies"])]
+		who.text = tr("%d kişi biliyor  ·  %d kopya") % [f["knowers"].size(), int(f["copies"])]
 		who.add_theme_font_size_override("font_size", host._fs(12))
 		who.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 		info.add_child(who)
@@ -182,7 +182,7 @@ func _rebuild_facts() -> void:
 			var br := HBoxContainer.new()
 			br.add_theme_constant_override("separation", 6)
 			v.add_child(br)
-			for kind in [["leak", "Sızdır"], ["hush", "Bastır"], ["destroy", "Kanıtı Yok Et"]]:
+			for kind in [["leak", tr("Sızdır")], ["hush", tr("Bastır")], ["destroy", tr("Kanıtı Yok Et")]]:
 				var b := Button.new()
 				b.text = kind[1]
 				b.add_theme_font_size_override("font_size", host._fs(13))
@@ -212,7 +212,7 @@ func _rebuild_agenda() -> void:
 		nsb.content_margin_top = 4
 		nsb.content_margin_bottom = 4
 		note.add_theme_stylebox_override("panel", nsb)
-		note.tooltip_text = "Saray kâtibinin notu. İpuçları Ayarlar'dan kapatılabilir."
+		note.tooltip_text = tr("Saray kâtibinin notu. İpuçları Ayarlar'dan kapatılabilir.")
 		note.mouse_filter = Control.MOUSE_FILTER_PASS
 		host._agenda.add_child(note)
 		animated.append(note)
@@ -231,7 +231,7 @@ func _rebuild_agenda() -> void:
 			ic.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			nh.add_child(ic)
 		var nl := Label.new()
-		nl.text = ADVICE[Sim.week]
+		nl.text = tr(ADVICE[Sim.week])
 		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		nl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		nl.add_theme_font_size_override("font_size", host._fs(13))
@@ -240,7 +240,7 @@ func _rebuild_agenda() -> void:
 		nh.add_child(nl)
 	if not Sim.pending.is_empty():
 		# Yardımcı metin yalnızca ilk haftalarda; sonra tekrar etmesin.
-		host._agenda.add_child(host._section("KARAR BEKLEYENLER", "her karar 1 mesai · ertelenen karar 2 hafta sonra kendiliğinden çözülür" if Sim.week <= 4 else ""))
+		host._agenda.add_child(host._section(tr("KARAR BEKLEYENLER"), tr("her karar 1 mesai · ertelenen karar 2 hafta sonra kendiliğinden çözülür") if Sim.week <= 4 else ""))
 	for pi in Sim.pending.size():
 		var p: Dictionary = Sim.pending[pi]
 		var e: Dictionary = p["event"]
@@ -296,7 +296,7 @@ func _rebuild_agenda() -> void:
 		vb.add_child(t)
 		if p["age"] > 0 or crisis:
 			var late := Label.new()
-			late.text = str(e.get("banner", "Bu hafta karar vermezsen saray düşer.")) if crisis else "Karar bekliyor — bu hafta çözülmezse kendi kendine çözülecek."
+			late.text = str(e.get("banner", tr("Bu hafta karar vermezsen saray düşer."))) if crisis else tr("Karar bekliyor — bu hafta çözülmezse kendi kendine çözülecek.")
 			late.add_theme_color_override("font_color", UIKit.DANGER)
 			late.add_theme_font_size_override("font_size", host._fs(13))
 			vb.add_child(late)
@@ -307,7 +307,7 @@ func _rebuild_agenda() -> void:
 		var council := _add_council(vb, pi)
 		if crisis:
 			var hush := Label.new()
-			hush.text = "Meclis susuyor. Bu kararı yalnız vereceksin."
+			hush.text = tr("Meclis susuyor. Bu kararı yalnız vereceksin.")
 			hush.add_theme_font_override("font", UIKit.serif_italic())
 			hush.add_theme_font_size_override("font_size", host._fs(15))
 			hush.add_theme_color_override("font_color", UIKit.TEXT_DIM)
@@ -316,7 +316,7 @@ func _rebuild_agenda() -> void:
 			var b := Button.new()
 			b.text = "  %s   %s" % [["I", "II", "III", "IV"][mini(ci, 3)], str(e["choices"][ci]["label"])]
 			b.disabled = Sim.mesai < 1 or not e["choices"][ci].get("available", true) or (e.get("kind", "") == "patronage" and ci == 2 and Sim.private_wealth < 6.0)
-			b.tooltip_text = "Bu seçenek için gerekli kişi ya da servet yok." if b.disabled and Sim.mesai >= 1 else ("Bu karar 1 mesai harcar." if Sim.mesai >= 1 else "Bu hafta mesain kalmadı. Haftayı bitir; karar bir hafta daha bekleyebilir.")
+			b.tooltip_text = tr("Bu seçenek için gerekli kişi ya da servet yok.") if b.disabled and Sim.mesai >= 1 else (tr("Bu karar 1 mesai harcar.") if Sim.mesai >= 1 else tr("Bu hafta mesain kalmadı. Haftayı bitir; karar bir hafta daha bekleyebilir."))
 			if council.has(ci):
 				b.tooltip_text += "\n\n" + "\n".join(council[ci])
 			b.alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -332,7 +332,7 @@ func _rebuild_agenda() -> void:
 	if host._report_box != null:
 		_fill_reports_compact(animated, texts)
 	else:
-		host._agenda.add_child(host._section("BU HAFTANIN RAPORLARI", "masana ulaşan: %d" % Sim.reports.size()))
+		host._agenda.add_child(host._section(tr("BU HAFTANIN RAPORLARI"), tr("masana ulaşan: %d") % Sim.reports.size()))
 		var rgrid := GridContainer.new()
 		rgrid.columns = 1
 		rgrid.add_theme_constant_override("v_separation", 8)
@@ -376,9 +376,9 @@ func _trend(r: Dictionary) -> int:
 func _trend_tip(r: Dictionary) -> String:
 	match _trend(r):
 		1:
-			return "\nGeçen haftaya göre daha karamsar konuşuyor."
+			return "\n" + tr("Geçen haftaya göre daha karamsar konuşuyor.")
 		-1:
-			return "\nGeçen haftaya göre daha iyimser konuşuyor."
+			return "\n" + tr("Geçen haftaya göre daha iyimser konuşuyor.")
 	return ""
 
 
@@ -406,7 +406,7 @@ func _draw_trend(c: Control, t: int) -> void:
 func _add_changes(animated: Array[Control]) -> void:
 	if Sim.week_changes.is_empty():
 		return
-	host._agenda.add_child(host._section("GEÇEN HAFTADAN BERİ", "görebildiklerinde ne değişti"))
+	host._agenda.add_child(host._section(tr("GEÇEN HAFTADAN BERİ"), tr("görebildiklerinde ne değişti")))
 	for ch: Dictionary in Sim.week_changes:
 		var row := PanelContainer.new()
 		var sb := UIKit.box(Color(UIKit.PANEL_HI, 0.35), Color(0, 0, 0, 0), 2, 8)
@@ -441,11 +441,11 @@ func _add_week_ledger(animated: Array[Control]) -> void:
 	if host._week_log_week != Sim.week:
 		host._week_log.clear()
 		host._week_log_week = Sim.week
-	host._agenda.add_child(host._section("BU HAFTA", "yaptıkların ve sonuçları"))
+	host._agenda.add_child(host._section(tr("BU HAFTA"), tr("yaptıkların ve sonuçları")))
 	if host._week_log.is_empty():
 		var empty := Label.new()
-		empty.text = ("Henüz bir şey yapmadın. Bir güç merkezine tıkla, Eylemler panelinden mesai harca." if Sim.mesai > 0
-			else "Mesain bitti. Raporlara göz at ve haftayı bitir.")
+		empty.text = (tr("Henüz bir şey yapmadın. Bir güç merkezine tıkla, Eylemler panelinden mesai harca.") if Sim.mesai > 0
+			else tr("Mesain bitti. Raporlara göz at ve haftayı bitir."))
 		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		empty.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 		empty.add_theme_font_size_override("font_size", host._fs(13))
@@ -479,7 +479,7 @@ func _add_week_ledger(animated: Array[Control]) -> void:
 func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]) -> void:
 	for c in host._report_box.get_children():
 		c.queue_free()
-	host._report_box.add_child(host._section("BU HAFTANIN RAPORLARI", "masana ulaşan: %d" % Sim.reports.size()))
+	host._report_box.add_child(host._section(tr("BU HAFTANIN RAPORLARI"), tr("masana ulaşan: %d") % Sim.reports.size()))
 	for r: Dictionary in Sim.reports:
 		var panel := PanelContainer.new()
 		panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -546,12 +546,12 @@ func _add_council(parent: VBoxContainer, pending_index: int) -> Dictionary:
 	col.add_theme_constant_override("separation", 6)
 	panel.add_child(col)
 	var head := Label.new()
-	head.text = "MECLİSİN GÖRÜŞÜ"
+	head.text = tr("MECLİSİN GÖRÜŞÜ")
 	head.add_theme_font_override("font", UIKit.caps())
 	head.add_theme_font_size_override("font_size", host._fs(11))
 	head.add_theme_color_override("font_color", UIKit.GOLD_DIM)
 	head.mouse_filter = Control.MOUSE_FILTER_PASS
-	head.tooltip_text = "Danışmanların kararlara dair görüşü. Gerekçeleri doğrudur ama seçicidir:\nherkes işine gelen tarafı anlatır. Kime güveneceğin senin kararın."
+	head.tooltip_text = tr("Danışmanların kararlara dair görüşü. Gerekçeleri doğrudur ama seçicidir:\nherkes işine gelen tarafı anlatır. Kime güveneceğin senin kararın.")
 	col.add_child(head)
 	for it: Dictionary in items:
 		var a = Sim.actors[it["actor"]]
@@ -561,14 +561,14 @@ func _add_council(parent: VBoxContainer, pending_index: int) -> Dictionary:
 		row.mouse_filter = Control.MOUSE_FILTER_PASS
 		row.tooltip_text = "%s · %s" % [a.display_name, a.title]
 		if it["stake"]:
-			row.tooltip_text += "\nSeçeneklerden en az biri onu doğrudan etkiliyor. Önerisi tarafsız olmayabilir."
+			row.tooltip_text += "\n" + tr("Seçeneklerden en az biri onu doğrudan etkiliyor. Önerisi tarafsız olmayabilir.")
 		if Sim.suspicion_level(a.id) >= 2:
-			row.tooltip_text += "\nSon zamanlarda hakkında alametler var."
+			row.tooltip_text += "\n" + tr("Son zamanlarda hakkında alametler var.")
 		match str(it["kind"]):
 			"evasive":
-				row.tooltip_text += "\nKaçamak konuşuyor. Korkan bir meclis kralına gerçeği söylemez."
+			row.tooltip_text += "\n" + tr("Kaçamak konuşuyor. Korkan bir meclis kralına gerçeği söylemez.")
 			"flat":
-				row.tooltip_text += "\nSeçenekler arasında belirgin bir fark görmüyor."
+			row.tooltip_text += "\n" + tr("Seçenekler arasında belirgin bir fark görmüyor.")
 		var por: Control = host._initial_art(a.id, Vector2(30, 30), 15)
 		por.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 		row.add_child(por)
@@ -589,7 +589,7 @@ func _add_council(parent: VBoxContainer, pending_index: int) -> Dictionary:
 		nl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		top.add_child(nl)
 		if it["stake"]:
-			var pill := _pill("ÇIKARI VAR", UIKit.AMBER)
+			var pill := _pill(tr("ÇIKARI VAR"), UIKit.AMBER)
 			pill.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			top.add_child(pill)
 		var q := Label.new()
@@ -602,9 +602,9 @@ func _add_council(parent: VBoxContainer, pending_index: int) -> Dictionary:
 		txt.add_child(q)
 		col.add_child(row)
 		if int(it["rec"]) >= 0:
-			notes[int(it["rec"])] = notes.get(int(it["rec"]), []) + ["%s: öneriyor" % nm]
+			notes[int(it["rec"])] = notes.get(int(it["rec"]), []) + [tr("%s: öneriyor") % nm]
 		if int(it["warn"]) >= 0:
-			notes[int(it["warn"])] = notes.get(int(it["warn"]), []) + ["%s: karşı" % nm]
+			notes[int(it["warn"])] = notes.get(int(it["warn"]), []) + [tr("%s: karşı") % nm]
 	return notes
 
 
@@ -633,4 +633,3 @@ func _short_name(full: String) -> String:
 		if a.display_name == full and a.short != "":
 			return a.short
 	return full.split(" ")[-1]
-
