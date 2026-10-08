@@ -102,7 +102,7 @@ func _ready() -> void:
 	_build_fx()
 	if Sim.content_error != "":
 		_show_menu()
-	_show_modal(tr("[b]İçerik yüklenemedi[/b]\n\n%s") % Sim.content_error)
+		_show_modal(tr("[b]İçerik yüklenemedi[/b]\n\n%s") % Sim.content_error)
 		return
 	var dev_run: bool = "--autoplay" in OS.get_cmdline_user_args() or ProjectSettings.get_setting("veloria/dev_autostart", false)
 	if dev_run:
@@ -854,7 +854,7 @@ func _request_new_game() -> void:
 func _start_new() -> void:
 	Sim.new_game(0, Sfx.difficulty)
 	if Sim.content_error != "":
-		_show_modal("[b]İçerik yüklenemedi[/b]\n\n%s" % Sim.content_error)
+		_show_modal(tr("[b]İçerik yüklenemedi[/b]\n\n%s") % Sim.content_error)
 		return
 	if not _fast() and Sfx.intro:
 		_menu.hide()
