@@ -2076,5 +2076,45 @@
                               "choices":  [
 
                                           ]
-                          }
+                          },
+    "hamle_arden_tatbikat":  {
+                                 "title":  "Drills near the Capital",
+                                 "news":  "Arden held an unannounced drill at the Capital\u0027s entrance. Tanks held the roads all night."
+                             },
+    "hamle_arden_yemin":  {
+                              "title":  "A loyalty oath in the barracks",
+                              "news":  "Arden had his officers renew their oath of loyalty to the king at the barracks."
+                          },
+    "hamle_voss_dosya":  {
+                             "title":  "Vale builds a case against a minister",
+                             "news":  "Vale prepared a new dossier on the Prime Minister; Veyra heard about it."
+                         },
+    "hamle_voss_dinleme":  {
+                               "title":  "Palace lines under surveillance",
+                               "news":  "Vale tapped several Palace phone lines \u0027for security reasons.\u0027"
+                           },
+    "hamle_halden_kanal":  {
+                               "title":  "Sarne\u0027s channels target a minister",
+                               "news":  "Sarne\u0027s channels spent a week targeting Veyra. No one asked why Veyra was the target."
+                           },
+    "hamle_halden_ihale":  {
+                               "title":  "Sarne wins another contract",
+                               "news":  "One of Sarne\u0027s companies won a bridge contract. The economy is growing; so is Sarne."
+                           },
+    "hamle_kessler_kemer":  {
+                                "title":  "Veyra quietly tightens the belt",
+                                "news":  "Without asking you, Veyra froze some social spending. The Treasury breathed easier; the bakery queues grew longer."
+                            },
+    "hamle_kessler_fazla":  {
+                                "title":  "An unexpected budget surplus",
+                                "news":  "Veyra found an unexpected surplus in tax revenue and transferred it to the Treasury."
+                            },
+    "hamle_lena_ifsa":  {
+                            "title":  "Leyla exposes a minister",
+                            "news":  "Leyla\u0027s paper published documented evidence of misconduct in a ministry."
+                        },
+    "hamle_brandt_miting":  {
+                                "title":  "Voss holds a rally in the provinces",
+                                "news":  "Voss held a large rally in the provinces. Your name came up eleven times."
+                            }
 }
