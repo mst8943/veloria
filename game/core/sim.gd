@@ -1468,7 +1468,7 @@ func _diff_visible(b: Dictionary, n: Dictionary) -> Array:
 		var s1 := int(p1["susp"])
 		if s0 >= 0 and s1 != s0:
 			out.append({"tone": -1 if s1 > s0 else 1, "actor": id,
-				"text": tr("%s tavrı %s: artık %s.") % [ek(name, "in"), tr("sertleşti" if s1 > s0 else "yumuşadı"), tr(str(SUSPICION_NAMES[s1]).to_lower())]})
+				"text": tr("%s tavrı %s: artık %s.") % [Loc.poss(name) if Loc.lang == "en" else ek(name, "in"), tr("sertleşti" if s1 > s0 else "yumuşadı"), tr(str(SUSPICION_NAMES[s1]).to_lower())]})
 		var t0 := int(p0["power"])
 		var t1 := int(p1["power"])
 		if t1 != t0:
@@ -1478,8 +1478,13 @@ func _diff_visible(b: Dictionary, n: Dictionary) -> Array:
 		if b["bands"].has(src) and n["people"].has(src):
 			var d := int(n["bands"][src]) - int(b["bands"][src])
 			if d != 0:
+				var report_name := str(n["people"][src]["name"])
+				if Loc.lang == "en":
+					report_name = Loc.poss(report_name)
+				else:
+					report_name = ek(report_name, "in")
 				out.append({"tone": -1 if d > 0 else 1, "actor": src,
-					"text": tr("%s raporu %s: artık %s.") % [ek(str(n["people"][src]["name"]), "in"), tr("kötüleşti" if d > 0 else "iyileşti"), tr(str(REPORT_TONES[int(n["bands"][src])]))]})
+					"text": tr("%s raporu %s: artık %s.") % [report_name, tr("kötüleşti" if d > 0 else "iyileşti"), tr(str(REPORT_TONES[int(n["bands"][src])]))]})
 	for pid in n["promises"]:
 		if not b["promises"].has(pid):
 			continue  # bu hafta verilen sözü oyuncu zaten biliyor
