@@ -71,6 +71,12 @@ Kayma `_world_tick` sonunda ve ayrı RNG çağrısı olmadan uygulanır. Başlan
 
 Eşik etkileri Kolay ×0,7, Normal ×1,0, Zor ×1,1 ile uygulanır. Drakon'un desteği yalnızca mevcut darbe krizi savunma olasılığına eklenir; darbe yaratmaz.
 
+### B2.3 bilgi ve heyet
+
+Elena her hafta üç ilişkiyi **Soğuk / Mesafeli / Yakın** olarak anlatır. Başkanın iyimserliği ve ayrı üreteçten gelen küçük gürültü rapora karışır; Doğrula altı hafta boyunca aynı bantları gürültüsüz gösterir. İlişki ilk kez yakın ya da soğuk eşiğine vardığında gündeme bir `DIŞİŞLERİ:` satırı eklenir. Bu satırlar TV şeridine gitmez.
+
+DEVLET sekmesindeki **Heyet Gönder** seçili Claire, Viktor veya Lucien için çalışır: 1 mesai, 4 hafta bekleme; seçilen ilişki +12, diğer iki ilişki −3. Bu açık takas üç gücü aynı anda yakın tutmayı engeller.
+
 ### 2.3 Sistem değişikliği (küçük)
 - Alanlar: `foreign = {asteria, drakon, seravia}`, `heir_maturity`, `foreign_hint_until`. SAVE_VERSION 8, `_migrate_save` (eski kayıt: ilişkiler 50, olgunluk 30), save_test adımı.
 - Olay koşulları: `min_foreign`/`max_foreign` (güç -> değer sözlüğü), `min_heir`/`max_heir`; `event_check` bilinmeyen güç adını denetler.
