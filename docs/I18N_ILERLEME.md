@@ -30,7 +30,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S2b: `main.gd` kalan statik etiketleri ve `content_labels.json` band kaplaması; sonra S3a `sim.gd` eylem sonuçları, haber/uyarı ve kriz cümleleri.
+S2b: `game/data/en/content_labels.json` içindeki kişi kademe/bant kaplaması; sonra S3a `sim.gd` eylem sonuçları, haber/uyarı ve kriz cümleleri.
 
 ## L1 — tamamlandı
 
