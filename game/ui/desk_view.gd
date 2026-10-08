@@ -143,7 +143,7 @@ func _build() -> void:
 	_sub = Label.new()
 	var news := ""
 	if not Sim.weekly_news.is_empty():
-		news = str(Sim.weekly_news[0])
+		news = Sim.news_for_display(str(Sim.weekly_news[0]))
 	_sub.text = news if news != "" else tr("Masada yeni dosyalar var.")
 	_sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_sub.add_theme_font_size_override("font_size", 17)
