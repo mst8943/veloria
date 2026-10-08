@@ -6,6 +6,7 @@ Bu dosya, ilk oturumun promptunun kalıcı kopyasıdır. Yeni bir oturum başlad
 - Bir oturumda yalnızca ilerleme dosyasındaki "SIRADAKİ ADIM"dan başlayarak BİR KAPSAM bitir (aşağıda "Oturum kapsamları"). Kapsam bitince dur ve rapor ver; rapor yazıp durma kuralı yalnızca kapsam sonunda geçerlidir. Kapsamın ortasında rapor yazma, sıradaki dosyaya geç.
 - Büyük dosyaları (sim.gd, person_panel.gd, main.gd) tek seferde okuma: `tools/i18n_scan.py` çıktısındaki satır numaralarıyla bölümler hâlinde (~150 satır) oku, çevir, commit'le.
 - Çıktıları kısa tut (uzun dosya içeriği ve test çıktısı yapıştırma); yalnızca özet ve OK/FAIL satırları.
+- Başsız testler arayüz metnini DENETLEMEZ. Her kapsam sonunda pencereli `ui_shots.gd`'yi hem varsayılan (Türkçe) hem `--lang=en` ile çek, PNG'leri aç ve Türkçe modda ekranın TAMAMEN Türkçe, İngilizce modda İngilizce olduğunu gözle doğrula (S1'de Godot yedek dili "en" olduğu için Türkçe modda İngilizce görünmesi hatası böyle kaçtı; project.godot `locale/fallback="tr"` olmalı).
 - Her commit sonrası ilerleme dosyasının "SIRADAKİ ADIM" satırını güncelle ve commit'le (bağlam kesilirse yeni oturum oradan devam eder).
 
 ## Oturum kapsamları (sırayla)

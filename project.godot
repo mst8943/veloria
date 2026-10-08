@@ -33,6 +33,7 @@ Sfx="*res://game/core/sfx.gd"
 [internationalization]
 
 locale/translations=PackedStringArray("res://game/i18n/en.po")
+locale/fallback="tr"
 
 [beckett]
 
