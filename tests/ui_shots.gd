@@ -48,6 +48,44 @@ func _run() -> void:
 	main._update_info()
 	main._show_act_cat("DEVLET")
 	await _shot("1_devlet")
+	if "--foreign" in OS.get_cmdline_user_args():
+		var foreign_saray: Control = main._tabs.get_node_or_null("Saray")
+		if foreign_saray != null:
+			main._select_tab(foreign_saray)
+		main._sel.clear()
+		main._sel.append("claire")
+		main._style_cards()
+		main._update_info()
+		main._show_act_cat("DEVLET")
+		await process_frame
+		await process_frame
+		if foreign_saray != null:
+			(foreign_saray as ScrollContainer).scroll_vertical = int((foreign_saray as ScrollContainer).get_v_scroll_bar().max_value)
+		await _shot("1_heyet")
+		sim0.foreign = {"asteria": 74.0, "drakon": 48.0, "seravia": 27.0}
+		sim0.flags["HEYET_GONDER"] = sim0.week
+		sim0._generate_reports()
+		main._refresh()
+		await process_frame
+		await process_frame
+		if foreign_saray != null:
+			main._on_flow("gundem")
+			await process_frame
+			await process_frame
+		if main._report_box != null:
+			(main._report_box.get_parent() as ScrollContainer).scroll_vertical = int((main._report_box.get_parent() as ScrollContainer).get_v_scroll_bar().max_value)
+		else:
+			main._scroll.scroll_vertical = int(main._scroll.get_v_scroll_bar().max_value)
+		await _shot("1_elena_disisleri")
+		for e in sim0._events:
+			if e["id"] == "asteria_kredi_teklifi":
+				sim0.pending.insert(0, {"event": e, "age": 0})
+				break
+		main._refresh()
+		main._on_flow("gundem")
+		await _shot("1_asteria_olay")
+		quit(0)
+		return
 	if "--newcomers" in OS.get_cmdline_user_args():
 		var new_saray: Control = main._tabs.get_node_or_null("Saray")
 		if new_saray != null:
