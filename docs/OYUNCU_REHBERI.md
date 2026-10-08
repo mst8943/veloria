@@ -6,7 +6,7 @@ Veloria'da modern kurumlara sahip hayali bir krallığın yeni kralısın: **Adr
 
 ## Kurulum
 
-Dağıtımdaki son paket **1.3.0**. Devlet kapasitesi, Halden'in patronajı ve Devlet Defteri bu sürümdedir.
+Dağıtımdaki son paket **1.4.0**. Devlet kapasitesi, Sarne'nin patronajı, veliaht ve dış ilişkiler bu sürümdedir.
 
 | Platform | Nasıl açılır |
 |---|---|
@@ -96,6 +96,12 @@ Başkent haritasında Maliye Bakanlığı, Adliye, Genelkurmay ve Saray paneller
 Çeyrek bütçesi geldiğinde sıkı, dengeli, cömert bütçe ya da saray payını seçersin. Kararı ertelersen dengeli bütçe uygulanır. DEVLET sekmesindeki **Sadık Ata**, başkanı sana bağlarken kurumun işini zorlaştırır; **Liyakatli Ata** işi toparlar ama başkana bağımsızlık verir. Aynı kurumda peş peşe atama yapamazsın. Sonuçları kurum panellerinden, başkan raporlarından ve haberlerdeki uyarılardan oku.
 
 **Halden'e İhale Ver** kişisel servetini artırır, ama devlet kasasını ve Maliye'nin işleyişini yıpratır; komisyonun izi Dosyalar'a düşer. Halden'in holdingi büyüdükçe medya nüfuzu da büyür. Kişi kartındaki **Nüfuz** ve **Medya** ifadelerini oku: destekleyici yayın bir gün sarayı hedef alabilir. Halden'in talep kartında pay verebilir, reddedebilir, Lena ile rakip yayın kurabilir ya da Falk'a başvurabilirsin. Her yolun siyasi bedeli vardır; talebi ertelemek de bir tercihtir.
+
+### Veliaht ve dış ilişkiler
+
+DEVLET sekmesindeki **Veliahdı Yetiştir**, Julian'ın hazırlığını zamanla yükseltir. Kartında yalnızca Çocuksu, Gelişiyor ya da Hazır diye görürsün; onu peş peşe öne çıkarmak saraydaki hırslıları tedirgin edebilir.
+
+Elena Varos üç dış gücün havasını **Soğuk / Mesafeli / Yakın** diye anlatır. Başkent haritasındaki Asteria, Drakon ve Seravia temsilcilikleri aynı bilgiyi verir; Elena'nın iyimser anlatımını **Doğrula** ile kısa süreliğine kayıtlardan kontrol edebilirsin. DEVLET sekmesindeki **Heyet Gönder** bir ilişkiyi güçlendirirken öteki ikisini hafifçe geri çeker. Saltanat sonunda Hakikat Dosyası bu ilişkilerin izini ve veliahdın durumunu da gösterir.
 
 **İlk haftalarda** gündemin üstünde "Bu hafta ne yapmalı?" yol göstericisi durur: 1 Kararını ver → 2 Raporları oku → 3 Bir kişiye eylem → 4 Haftayı bitir. Sıradaki adım altınla vurgulanır; bir adıma tıklamak seni ilgili yere götürür. İpuçları Ayarlar'dan kapatılabilir.
 

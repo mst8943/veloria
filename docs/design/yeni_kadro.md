@@ -110,3 +110,11 @@ Tüm testler; ölçüt bot taban ±3 ve bantta; dış ilişkileri/heyeti hiç ku
 ## B1 Sonuç (2026-10-08)
 
 Julian ve Elena oyunda; portreleri, kartları, raporları ve sekiz olayları bağlandı. Julian'ın eğitimi 6 hafta beklemeli, olgunluğu üç bantlı. Ana RNG tüketimi korunuyor: 101 tohumlu tam oyun 104 hafta TAHTTA, Medya Rejimi, 112 olay. Kayıt sürümü 8 ve v7 göçü sınandı. 80 kampanya/zorlukta ölçüt bot %83/%46/%17; veliaht bot %90/%42/%22. Prens Marcus girişimi artışı en fazla 2,5 puan. Tempo alt dilimi 0,81; yeni olay yükü eski stratejide sıfır. Masaüstü ve mobil kart/rapor/olay PNG'leri `dist/qa_yeni_kadro_b1_*` altında incelendi. B2 henüz başlamadı.
+
+## B2 Sonuç (2026-10-08)
+
+Claire Duvall, Viktor Malenkov ve Lucien Vale; üç ilişkili elçilik, Heyet Gönder, Elena'nın üç bantlı raporu ve sekiz dış ilişki olayıyla oyuna bağlandı. Ana RNG akışı korunuyor; 101 tohumu 104 hafta TAHTTA, Medya Rejimi ve 112 olayla bitiyor. Ölçüt %85/%45/%20; heyet %87/%50/%25, blok %87/%45/%27. Tempo alt sınırı 0,81.
+
+## B3 Sonuç (2026-10-08)
+
+Elçilik plakaları, doğrulama çekmeceleri, Hakikat Dosyası'nda dış ilişkiler ve veliaht çizgileri, Devlet Defteri özeti ile Üç Bayrak, Yalnız Kral ve Hazır Veliaht başarımları tamamlandı. 80 kampanya/zorlukta ölçüt %85/%45/%20, tabandan +2/−1/+3; veliaht/heyet/blok botları ölçütü en çok 7 puan aştı. Toplam görünür rejim dağılımında en büyük pay %43 oldu. 1.4.0 paketleri ve web doğrulaması dağıtım kaydında yer alır.

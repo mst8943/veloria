@@ -1,6 +1,6 @@
 # Veloria — Proje Başvuru Kartı (tüm skill'ler bunu kullanır)
 
-Güncel dağıtım sürümü: **1.2.0** (Windows, Linux, Web). Sürüm `project.godot` içindeki `application/config/version` değeridir; paketler `dist/release/Veloria-1.2.0-<platform>.zip` adını taşır.
+Güncel dağıtım sürümü: **1.4.0** (Windows, Linux, Web). Sürüm `project.godot` içindeki `application/config/version` değeridir; paketler `dist/release/Veloria-1.4.0-<platform>.zip` adını taşır.
 
 Bu dosya, skill'lerin projeyi her seferinde baştan keşfetmemesi için tek doğruluk kaynağıdır.
 Bir şey değiştiyse (dosya taşındı, komut değişti) önce burayı güncelle.

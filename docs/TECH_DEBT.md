@@ -1,5 +1,10 @@
 # Teknik borç
 
+## Yeni Kadro sonrası
+
+- Dış ilişki ve veliaht final çizgileri eski kayıtlar için güvenli varsayılan kullanır; geçmiş çizelgelerde ayrıntılı veri yoktur.
+- `ui_shots.gd --state` yapay final durumları kurar; gerçek oyuncu akışını kapsayan tarayıcı testi ayrı bir iş olarak kalır.
+
 Son güncelleme: 2026-10-08. Yöntem: `.claude/skills/tech-debt/SKILL.md`.
 
 ## Ölçüm

@@ -2,6 +2,14 @@
 
 Son güncelleme: 2026-10-08 (dağıtım 1.3.0). Dal: `veloria`.
 
+## Dağıtım 1.4.0 ve Yeni Kadro
+
+Julian Valerius, Elena Varos ve üç dış temsilci oyuna bağlandı. Veliaht eğitimi, Elena'nın üç bantlı dış ilişki raporu, elçilik plakaları, Heyet Gönder, dış ilişki/veliaht grafik çizgileri ve üç yeni başarım tamamlandı. 101 tohumlu tam oyun **104 hafta / TAHTTA / Medya Rejimi / 112 olay** ile korunuyor. Tam 80 kampanya/zorluk ölçümünde `advice_weighted` **%85 / %45 / %20**; tabana göre +2/−1/+3 ve hedef bantta. Yeni botlar veliaht **%88/%42/%23**, heyet **%87/%50/%25**, blok **%87/%45/%27**; ölçütü en çok 7 puan aştı. Toplam görünür rejim dağılımında en yüksek pay Kolay %37, Normal %39, Zor %43 oldu.
+
+`TEST: OK`, `EVENTS: OK (195 olay, 0 uyarı)`, `SAVE: OK`, `CONTENT: OK`, `UI INPUT: OK`; masaüstü/mobil autoplay ve tempo geçti. Tempo en düşük dilimi **0,81**. Masaüstü ve mobil kanıtlar `dist/qa_b3_state_desktop_3` ile `dist/qa_b3_state_mobile_3` altında; elçilik panelleri, Devlet Defteri, yeni grafikler ve başarımlı finaller gözle açıldı.
+
+KALAN İŞLER: `events/dorn_*` görselleri kraliçeyle yeniden üretilmeli.
+
 ## Dağıtım 1.3.0 ve Faz 4c
 
 Faz 4'ün devlet kapasitesi, kasa, kadro, patronaj ve Halden sistemi; rejim hesabı ile oyun sonundaki Devlet Defteri'ne bağlandı. Kayıt sürümü **7**. Hakikat grafiğinde devlet kapasitesi ile Halden payı, finalde iki yeni unvan ve dört başarım var. Windows/Linux/Web export ve zip paketleri üretildi; 1.0.0–1.2.0 arşivleri korundu. Paketler: Windows **60.381.811**, Linux **50.600.754**, Web **34.311.803 bayt**. Üç zip açılarak bütünlük ve rehber varlığı denetlendi.

@@ -71,4 +71,10 @@ Faz 4c'den devreden Zor bot farkı: `advice_soft` ve `advice_lavish` ölçütü 
 
 ## SIRADAKİ ADIM
 
-B3.3: Başarımları, `--state` görüntülerini ve tam B3 doğrulamasını tamamla.
+B3 tamamlandı; sonraki iş yeni bir tasarım fazı seçilene kadar yok.
+
+## B3 kapısı (2026-10-08)
+
+`e228f13` üç başarıma, elçilik/final `--state` görüntülerine ve yeni çizgilerin görünürlüğüne bağlandı; `946d6aa` yalnızca sürümü 1.4.0 yaptı. Masaüstü/mobil `dist/qa_b3_state_{desktop,mobile}_3` PNG'leri açılıp kontrol edildi: Asteria ve Seravia çekmeceleri, iki grafik çizgisi, Devlet Defteri'nde Hazır veliaht ve başarımlı finaller okunuyor; tofu yok.
+
+Tam ölçüm (`b3_probe80.log`, 80 kampanya/zorluk): ölçüt %85/%45/%20; tabana göre +2/−1/+3. Veliaht %88/%42/%23, heyet %87/%50/%25, blok %87/%45/%27; ölçüt farkı en çok +7. Rejimlerin toplam görünür payında üst sınırlar Kolay %37, Normal %39, Zor %43. Kaybın baskın türü tüm tarzlarda askerî darbedir; patron botunda yetkisiz, sadık botta askerî/saray darbesi de görünür. `TEST`, `EVENTS (195/0)`, `SAVE`, `CONTENT`, `UI INPUT`, autoplay, full ve pacing geçti; full 101 / 104 / TAHTTA / Medya Rejimi / 112 olay, tempo alt sınırı 0,81.

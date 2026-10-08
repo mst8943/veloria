@@ -84,6 +84,8 @@ Baştan sona oynanabilir, sağlam bir dikey dilim (erken alfa): 104 hafta, 9 gü
 **Faz 4 — Büyük sistemler:** ✅ tasarım yazıldı (`docs/design/devlet_ve_patronaj.md`; 4a devlet kapasitesi ve kasa, 4b patronaj/oligark, 4c bağlama) · ✅ 4a · ✅ 4b · ✅ 4c (Zor düzeyinde iki tarz bot için denge ince ayarı açık)
 **Faz 5 — Cila ve altyapı:** ⬜ gerçek ses/müzik · ✅ `main.gd` bölmesi · ⬜ artırımlı arayüz güncellemesi · ⬜ yerelleştirme
 
+**Yeni Kadro — B1–B3: ✅** Julian/Elena, üç dış temsilci, veliaht, elçilikler, dış ilişki finalleri ve 1.4.0 dağıtımı tamamlandı.
+
 ## 5. Sıradaki
 1. ✅ Arayüz sadeleştirme turu (ilk ekran kalabalık) — `docs/ux/ana_ekran_sadelestirme.md`
 2. ✅ Faz 1'in kalanı: değişim okları + hafta özeti, eylem önizlemesi
