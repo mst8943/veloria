@@ -41,3 +41,18 @@ Her onuncu İngilizce metin, kaplama dosyalarının sabit sıralı taramasından
 | 350 | Sarne'nin yükselen payını saltanat sonunda geri çek. | Cut Sarne's rising share by the end of your reign. | content_achievements/oligarki_dizginleyen/1 |
 | 360 | Vergi reformu, ondan sonra gelenlerin de övündüğü bir miras oldu. | His tax reform became a legacy praised by those who came after. | content_history/pro_reform |
 | 370 | %d sözünü tutmadı. | He broke %d promises. | content_history/con_broken |
+
+## S6 — olay başlıkları (her beş olayda bir)
+
+| Olay | Türkçe | English | Kaplama yolu |
+|---:|---|---|---|
+| 5 | General kendi subaylarını kritik görevlere getiriyor | The general appoints his own officers to key posts | events/general_atamalari/title |
+| 10 | Yüksek Mahkeme bakan ihalelerini soruşturuyor | The High Court probes ministerial tenders | events/yargic_dosya/title |
+| 15 | Gizli toplantı söylentileri | Rumors of Secret Meetings | events/gizli_toplanti/title |
+| 20 | Kraliyet töreni önerisi | A Royal Ceremony Is Proposed | events/toren/title |
+| 25 | Sarne'nin kanalları saraya saldırıyor | Sarne's channels attack the Palace | events/halden_intikam/title |
+| 30 | Muhalefeti bölen para soruluyor | Questions over money splitting the opposition | events/muhalefet_para/title |
+| 35 | Liman ihalesi gazetelerde | Port Contract Scandal Hits the Papers | events/liman_skandali/title |
+| 40 | Meclis erken seçim tartışıyor | The Assembly Debates an Early Election | events/erken_secim/title |
+| 45 | Yetkilerini genişletecek anayasa değişikliği | A Constitutional Amendment to Expand Your Powers | events/anayasa_degisikligi/title |
+| 50 | Kortejine suikast girişimi | An Attempt on Your Procession | events/suikast/title |

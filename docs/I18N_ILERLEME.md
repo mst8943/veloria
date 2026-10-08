@@ -31,7 +31,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S6: L4 — `events.json` parti 1 (ilk yaklaşık 50 olay).
+S7: L4 — `events.json` parti 2 (olay 51–100).
 
 ## L1 — tamamlandı
 
@@ -189,3 +189,30 @@ S6: L4 — `events.json` parti 1 (ilk yaklaşık 50 olay).
 - S5 dosya commitleri: `09b5192`, `fb0c46d`, `68f362c`, `267cca4`, `d0ef3b0`,
   `89e39b4`, `b36fe87`, `53665c4`, `b8de8d3`, `c1c8ef5`, `4d047af`, `9f21772`,
   `52ec99f`, `4bd1be1`.
+
+## S6 — tamamlandı
+
+- `actors.json` elçi unvanları, `Ambassador of Drakon`, `Ambassador of Asteria`
+  ve `Economic Envoy of Seravia` biçimine getirildi. Commit: `1873c1f`.
+- `events.json` ilk 50 sıra girdisi beş adet 10'luk parti hâlinde çevrildi.
+  Kaplamada yalnızca gösterim metni var; ID sırası, seçenek sayıları, alan
+  yapısı ve yer tutucular kaynağa göre doğrulandı. Her parti sonrası
+  `i18n_check` ve İngilizce `event_check` geçti. Commitler: `e3bf061`,
+  `65feb7c`, `e5c3c28`, `63f819a`, `eeb291b`.
+- Kalite örneklerine her beş olaydan bir başlık (5–50) eklendi.
+- Kapı testleri: `TEST: OK`, `EVENTS: OK (195 olay, 0 uyarı)`, `SAVE: OK`,
+  `CONTENT: OK` Türkçe ve `--lang=en`, `I18N: OK`, `UI INPUT: OK`; pacing en
+  düşük `0.81`, en uzun olaysız seri `2/2` hafta. Genel `unit_tests.gd` sonucu
+  `398 passed, 1 failed` — önceden bilinen, bu kapsamla ilgisiz Beckett
+  `audit finds the offscreen control` testi.
+- `--autoplay --full` iki dilde aynı: `FULLRUN tohum=101 hafta=104
+  sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`.
+  İngilizce `advice_weighted`, 80 kampanyada üç zorluk için tabanla aynı
+  `68/80`, `36/80`, `16/80` sonuçlarını verdi.
+- Görseller: `dist/i18n_s6_{tr,en}_{desktop,mobile}`; masaüstünde 17, mobilde
+  19 PNG/dil. Karar kartı başlık/gövde/seçenekleri iki dilde gözle incelendi;
+  kart metninde taşma yok. Mobil kart dikey kaydırma gerektiriyor. İngilizce
+  haber şeridinde hâlâ olay 51+ kaynaklı Türkçe kayıtlar görünüyor; örnekler:
+  “Vale Başbakan hakkında yeni bir dosya hazırladı; Veyra bunu duydu.” ve
+  “Sarne'nin kanalları bir hafta boyunca Veyra'yı hedef aldı. Hedefin neden
+  Veyra olduğunu kimse sormuyor.” Bunlar sonraki olay partilerinde kapanacak.
