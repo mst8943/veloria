@@ -1250,5 +1250,215 @@
                    "ignore":  {
                                   "text":  "The outbreak ran its course."
                               }
-               }
+               },
+    "ikinci_kis":  {
+                       "title":  "A second harsh winter",
+                       "text":  "Another winter has arrived; the storehouses are emptier than last year. The people remember what you did last year.",
+                       "choices":  [
+                                       {
+                                           "label":  "Open the storehouses to the public",
+                                           "text":  "No one froze. The Treasury did."
+                                       },
+                                       {
+                                           "label":  "Ration energy",
+                                           "text":  "Fair, but a cold winter."
+                                       },
+                                       {
+                                           "label":  "Buy emergency supplies from Sarne",
+                                           "text":  "The gas arrived; the bill was entered as a debt to Sarne."
+                                       }
+                                   ],
+                       "ignore":  {
+                                      "text":  "The winter grew harsher."
+                                  }
+                   },
+    "sinir_ikinci":  {
+                         "title":  "A second border crisis",
+                         "text":  "A neighboring state is massing tanks along the border. This is no village incident; embassies are being evacuated.",
+                         "choices":  [
+                                         {
+                                             "label":  "Mobilize the entire Army",
+                                             "text":  "Flags filled the country; the Army marched as if it owned the place."
+                                         },
+                                         {
+                                             "label":  "Negotiate in secret",
+                                             "text":  "A phone call ended the crisis. No one knows how."
+                                         },
+                                         {
+                                             "label":  "Request international mediation",
+                                             "text":  "The crisis slowly subsided; you looked weak."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "Tensions rose."
+                                    }
+                     },
+    "secim_sonucu":  {
+                         "title":  "Election results",
+                         "text":  "The early election results are in. The opposition did better than expected; the Assembly must form a new government.",
+                         "choices":  [
+                                         {
+                                             "label":  "Accept the result",
+                                             "text":  "Your legitimacy grew; your power was shared."
+                                         },
+                                         {
+                                             "label":  "Challenge the results",
+                                             "text":  "The court rejected the challenge; the streets grew angry."
+                                         },
+                                         {
+                                             "label":  "Arrange defections",
+                                             "text":  "A few members switched sides. The majority is yours; so is the money trail."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "The Assembly deadlocked."
+                                    }
+                     },
+    "halef_karari":  {
+                         "title":  "A legacy for the throne",
+                         "text":  "Two years are nearly up. Every power center is asking one question: what kind of country will Veloria be after you?",
+                         "choices":  [
+                                         {
+                                             "label":  "Declare a constitutional monarchy",
+                                             "text":  "You gave the Assembly real power. History will remember; so will the generals."
+                                         },
+                                         {
+                                             "label":  "Name the Prince as your heir",
+                                             "text":  "The dynasty will continue. The Prince\u0027s fate is now tied to yours."
+                                         },
+                                         {
+                                             "label":  "Make absolute power permanent",
+                                             "text":  "The Crown is now shared with no institution. The silence is profound."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "Sophia\u0027s question went unanswered."
+                                    }
+                     },
+    "yeni_protesto":  {
+                          "title":  "New protests fill the squares",
+                          "text":  "The Capital\u0027s squares filled again. This time, your name was on the banners.",
+                          "choices":  [
+                                          {
+                                              "label":  "Disperse them with police",
+                                              "text":  "The square emptied; the anger did not."
+                                          },
+                                          {
+                                              "label":  "Call the representatives to the Palace",
+                                              "text":  "You talked. Some were persuaded."
+                                          },
+                                          {
+                                              "label":  "Stage a counter-rally",
+                                              "text":  "Two crowds faced each other. The streets grew tense."
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "The protests spread."
+                                     }
+                      },
+    "yolsuzluk_iddiasi":  {
+                              "title":  "A new corruption allegation",
+                              "text":  "A deputy minister\u0027s tender commissions are in the press. The Palace has not been named yet.",
+                              "choices":  [
+                                              {
+                                                  "label":  "Open an investigation",
+                                                  "text":  "The deputy minister fell. The courts did their job."
+                                              },
+                                              {
+                                                  "label":  "Bury the matter",
+                                                  "text":  "The matter was buried; the file was not."
+                                              },
+                                              {
+                                                  "label":  "Blame the opposition",
+                                                  "text":  "The channels blamed the opposition. The public split in two."
+                                              }
+                                          ],
+                              "ignore":  {
+                                             "text":  "The allegations multiplied."
+                                         }
+                          },
+    "soylu_ziyafeti":  {
+                           "title":  "The nobles want a feast",
+                           "text":  "Old noble families want a traditional feast at the Palace. Who gets invited is a message in itself.",
+                           "choices":  [
+                                           {
+                                               "label":  "Hold a grand feast",
+                                               "text":  "The nobles left pleased; your coffers lighter."
+                                           },
+                                           {
+                                               "label":  "Invite only loyal families",
+                                               "text":  "Those left off the list took note."
+                                           },
+                                           {
+                                               "label":  "Cancel the feast",
+                                               "text":  "The public applauded the savings; the nobles did not."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "The request went unanswered."
+                                      }
+                       },
+    "yabanci_basin":  {
+                          "title":  "Foreign press asks for an interview",
+                          "text":  "An international newspaper wants to interview the King about recent events in Veloria.",
+                          "choices":  [
+                                          {
+                                              "label":  "Give a candid interview",
+                                              "text":  "The world listened. Some of your words were discussed at home, too."
+                                          },
+                                          {
+                                              "label":  "Stick to prepared answers",
+                                              "text":  "The interview was dull but harmless."
+                                          },
+                                          {
+                                              "label":  "Refuse",
+                                              "text":  "The paper ran the headline: \u0027Veloria\u0027s silent King.\u0027"
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "The request was dropped."
+                                     }
+                      },
+    "ikinci_yil_butce":  {
+                             "title":  "The second year\u0027s budget",
+                             "text":  "Veyra brought the second year\u0027s budget. No line has been left blank this time, but you\u0027re asked to rank three priorities.",
+                             "choices":  [
+                                             {
+                                                 "label":  "Security first",
+                                                 "text":  "The Army and police grew stronger; schools will have to wait."
+                                             },
+                                             {
+                                                 "label":  "The people first",
+                                                 "text":  "Welfare rose; so did the deficit."
+                                             },
+                                             {
+                                                 "label":  "The Treasury first",
+                                                 "text":  "The deficit closed. Belts tightened."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "The budget passed on Veyra\u0027s proposal."
+                                        }
+                         },
+    "odeme_defteri":  {
+                          "title":  "The ledger of secret payments",
+                          "text":  "Queen Helena left a small, battered ledger on your desk one night: a date-by-date record of the secret payments you made over the past year. \u0027I didn\u0027t keep this, Your Majesty. But I know who did.\u0027",
+                          "choices":  [
+                                          {
+                                              "label":  "Buy the ledger; silence its owner",
+                                              "text":  "The ledger was burned; its owner is now on your payroll. Helena saw everything."
+                                          },
+                                          {
+                                              "label":  "Have Veyra book it as \u0027diplomatic expenses\u0027",
+                                              "text":  "The payments became a line in the budget. Veyra signed, washed her hands—and couldn\u0027t get them clean."
+                                          },
+                                          {
+                                              "label":  "Return it to Helena: \u0027Burn it.\u0027",
+                                              "text":  "Helena took the ledger. You\u0027re not sure she burned it."
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "The ledger sat on your desk for a week, then disappeared."
+                                     }
+                      }
 }
