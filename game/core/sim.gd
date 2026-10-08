@@ -1448,8 +1448,8 @@ func _world_tick() -> void:
 	_tick_state()
 	_tick_holding()
 	if heir_maturity >= 70.0 and actors.has("julian") and not actors["julian"].moved:
-		unrest = maxf(0.0, unrest - 0.12)
-		king_strength = minf(100.0, king_strength + 0.06)
+		unrest = maxf(0.0, unrest - 0.015)
+		king_strength = minf(100.0, king_strength + 0.0075)
 
 
 func _tick_state() -> void:

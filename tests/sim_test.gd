@@ -483,7 +483,7 @@ func _test_heir() -> bool:
 	sim.heir_maturity = 70.0
 	good = good and sim.heir_maturity_band() == "Hazır"
 	sim._world_tick()
-	good = good and is_equal_approx(sim.unrest, base_unrest - 0.12) and is_equal_approx(sim.king_strength, base_king + 0.06)
+	good = good and is_equal_approx(sim.unrest, base_unrest - 0.015) and is_equal_approx(sim.king_strength, base_king + 0.0075)
 	if not good:
 		push_error("veliaht eğitimi, bekleme veya yüksek olgunluk etkisi hatalı")
 	print("Veliaht eğitimi: ", "OK" if good else "HATA")

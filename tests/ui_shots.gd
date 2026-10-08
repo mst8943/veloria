@@ -48,6 +48,37 @@ func _run() -> void:
 	main._update_info()
 	main._show_act_cat("DEVLET")
 	await _shot("1_devlet")
+	if "--newcomers" in OS.get_cmdline_user_args():
+		var new_saray: Control = main._tabs.get_node_or_null("Saray")
+		if new_saray != null:
+			main._select_tab(new_saray)
+		for aid in ["julian", "elena"]:
+			main._sel.clear()
+			main._sel.append(aid)
+			main._style_cards()
+			main._update_info()
+			if new_saray != null:
+				(new_saray as ScrollContainer).scroll_vertical = 190
+			await _shot("1_" + aid + "_kart")
+		if new_saray != null:
+			main._on_flow("gundem")
+		main._refresh()
+		await process_frame
+		if main._report_box != null:
+			var report_scroll: ScrollContainer = main._report_box.get_parent()
+			report_scroll.scroll_vertical = int(report_scroll.get_v_scroll_bar().max_value)
+		else:
+			main._scroll.scroll_vertical = int(main._scroll.get_v_scroll_bar().max_value)
+		await _shot("1_elena_rapor")
+		for e in sim0._events:
+			if e["id"] == "julian_halka_konusma":
+				sim0.pending.insert(0, {"event": e, "age": 0})
+				break
+		main._refresh()
+		main._scroll.scroll_vertical = 0
+		await _shot("1_julian_olay")
+		quit(0)
+		return
 	if "--demand" in OS.get_cmdline_user_args():
 		sim0.week = 18
 		sim0.pending.clear()

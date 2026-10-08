@@ -22,7 +22,7 @@ extends SceneTree
 
 var sim: Node
 var rng := RandomNumberGenerator.new()
-const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "advice_patron", "visible_wise", "omniscient"]
+const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "advice_patron", "advice_veliaht", "visible_wise", "omniscient"]
 var style := ""   # advice_soft / advice_dirty oyun tarzı
 
 
@@ -59,6 +59,7 @@ func _run(bot: String, diff: int, n: int) -> void:
 	var arden_coups := 0
 	var arden_prepared := 0
 	var arden_attempts := 0
+	var prince_attempts := 0
 	var hostile_broadcasts := 0
 	var hostile_weeks := 0
 	var final_wealth := 0.0
@@ -79,13 +80,17 @@ func _run(bot: String, diff: int, n: int) -> void:
 		if str(r["cause"]).contains("Arden") and str(r["cause"]).contains("Askerî darbe"):
 			arden_coups += 1
 		var attempted := false
+		var prince_attempted := false
 		var prepared := false
 		for entry: Dictionary in sim.plot_log:
+			if str(entry["name"]).contains("Prens Marcus") and entry["text"] == "darbe girişimini başlattı":
+				prince_attempted = true
 			if str(entry["name"]).contains("Arden") and entry["text"] == "darbe girişimini başlattı":
 				attempted = true
 			if str(entry["name"]).contains("Arden") and entry["text"] == "darbe hazırlığına geçti":
 				prepared = true
 		arden_attempts += 1 if attempted else 0
+		prince_attempts += 1 if prince_attempted else 0
 		arden_prepared += 1 if prepared else 0
 		weeks += int(r["weeks"])
 		if r["survived"]:
@@ -97,6 +102,7 @@ func _run(bot: String, diff: int, n: int) -> void:
 	print("[%-12s] kazanma %2d/%d (%3d%%)  ort. hafta %5.1f  kayıplar %s  ünvanlar %s" % [
 		bot, wins, n, int(100.0 * wins / n), float(weeks) / n, causes, titles])
 	print("  ort. son kapasite %.1f | Arden girişimi %d/%d | Arden hazırlığı %d/%d | Arden zaferi %d/%d" % [final_cap / n, arden_attempts, n, arden_prepared, n, arden_coups, n])
+	print("  Prens Marcus girişimi %d/%d" % [prince_attempts, n])
 	print("  düşman yayın olayı %.2f/oyun | düşman yayın haftası %.1f/oyun | ort. son servet %.1f" % [float(hostile_broadcasts) / n, float(hostile_weeks) / n, final_wealth / n])
 	print("  rejimler ", regimes)
 
@@ -126,6 +132,8 @@ func _play(bot: String) -> void:
 			_act_omniscient()
 		_:
 			style = "soft" if bot == "advice_soft" else ("dirty" if bot == "advice_dirty" else "")
+			if bot == "advice_veliaht" and sim.week >= 20 and sim.heir_maturity < 70.0 and sim.heir_train_wait() == 0 and sim.mesai > 0:
+				sim.train_heir("julian")
 			if bot == "advice_patron" and sim.week % 3 == 0 and sim.mesai > 0 and sim.tender_wait() == 0 and not sim.actors["halden"].moved:
 				sim.give_tender("halden")
 			if bot == "advice_patron" and sim.private_wealth > 11.0 and sim.mesai > 0 and sim.actors.has("dorn") and not sim.actors["dorn"].moved:
