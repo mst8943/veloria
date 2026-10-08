@@ -417,7 +417,7 @@
               },
     "enflasyon":  {
                       "title":  "Inflation spills into the streets",
-                      "text":  "Prices climb every week in the markets. Finance calls it 'temporary.'",
+                      "text":  "Prices climb every week in the markets. Finance calls it \u0027temporary.\u0027",
                       "choices":  [
                                       {
                                           "label":  "Lean on the central bank",
@@ -2394,7 +2394,7 @@
                            },
     "yay_halden_kopus":  {
                              "title":  "Sarne cuts the broadcast",
-                             "text":  "You let him pull the plug. Sarne slipped the remote into his pocket. “I protected you. One day, you'll remember which button I pressed.”",
+                             "text":  "You let him pull the plug. Sarne slipped the remote into his pocket. “I protected you. One day, you\u0027ll remember which button I pressed.”",
                              "choices":  [
                                              {
                                                  "label":  "Ask for the broadcast schedule",
@@ -2410,8 +2410,8 @@
                                         }
                          },
     "yay_lena_yukselis":  {
-                              "title":  "Leyla's source ledger",
-                              "text":  "Leyla spent the night comparing documents. “Before I print this, I'll ask one more person. One mistake can burn the truth too.”",
+                              "title":  "Leyla\u0027s source ledger",
+                              "text":  "Leyla spent the night comparing documents. “Before I print this, I\u0027ll ask one more person. One mistake can burn the truth too.”",
                               "choices":  [
                                               {
                                                   "label":  "Wait for the documents to be verified",
@@ -2427,8 +2427,8 @@
                                          }
                           },
     "yay_lena_sinav":  {
-                           "title":  "The source's name is demanded",
-                           "text":  "Someone from the Palace wants Leyla's source. She kept hold of the file. “I'll discuss the story. I won't give you the name.”",
+                           "title":  "The source\u0027s name is demanded",
+                           "text":  "Someone from the Palace wants Leyla\u0027s source. She kept hold of the file. “I\u0027ll discuss the story. I won\u0027t give you the name.”",
                            "choices":  [
                                            {
                                                "label":  "Protect the source",
@@ -2445,7 +2445,7 @@
                        },
     "yay_lena_sadakat":  {
                              "title":  "Leyla protects her source",
-                             "text":  "You did not pursue her source. Leyla nodded. “You don't have to trust me. Test what I write.”",
+                             "text":  "You did not pursue her source. Leyla nodded. “You don\u0027t have to trust me. Test what I write.”",
                              "choices":  [
                                              {
                                                  "label":  "Give a straight answer",
@@ -2478,8 +2478,8 @@
                                       }
                        },
     "yay_dorn_yukselis":  {
-                              "title":  "Helena's appointment book",
-                              "text":  "Helena brought the appointment book on a silver tray. “Your Majesty, everyone at the door thinks they're urgent. I only keep the queue in order.”",
+                              "title":  "Helena\u0027s appointment book",
+                              "text":  "Helena brought the appointment book on a silver tray. “Your Majesty, everyone at the door thinks they\u0027re urgent. I only keep the queue in order.”",
                               "choices":  [
                                               {
                                                   "label":  "Open the book to inspection",
@@ -2529,7 +2529,7 @@
                                         }
                          },
     "yay_dorn_kopus":  {
-                           "title":  "Helena's private entrance",
+                           "title":  "Helena\u0027s private entrance",
                            "text":  "You let her hide the queue. Helena smiled again. “The back door is still a Palace door, Your Majesty.”",
                            "choices":  [
                                            {
@@ -2546,7 +2546,7 @@
                                       }
                        },
     "yay_prens_yukselis":  {
-                               "title":  "The Prince's empty chair",
+                               "title":  "The Prince\u0027s empty chair",
                                "text":  "Marcus saw there was no place set for him at the ceremony. “Our father would have set the same table. The crown went to you; my chair did not vanish.”",
                                "choices":  [
                                                {
@@ -2731,5 +2731,183 @@
                              "ignore":  {
                                             "text":  "The gesture went unanswered."
                                         }
-                         }
+                         },
+    "yay_falk_kopus":  {
+                           "title":  "Renn is left alone",
+                           "text":  "You interfered with procedure. Renn was left alone on the bench: “Even alone, a judge must write the ruling.”",
+                           "choices":  [
+                                           {
+                                               "label":  "Hear the judge out",
+                                               "text":  "You hear the judge out."
+                                           },
+                                           {
+                                               "label":  "Hold the file",
+                                               "text":  "You hold the file."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "The distance grew."
+                                      }
+                       },
+    "rejim_guvenlikci_hesap":  {
+                                   "title":  "The command council\u0027s ultimatum",
+                                   "text":  "The defense council requested a closed session. The paper left on the table says the army now speaks before the government. Whether Arden signed it or not, the officers await the Crown\u0027s reply.",
+                                   "choices":  [
+                                                   {
+                                                       "label":  "Hear them before the Assembly",
+                                                       "text":  "The ultimatum reached the open floor; officers and civilians alike heard it."
+                                                   },
+                                                   {
+                                                       "label":  "Meet at headquarters",
+                                                       "text":  "The meeting ended quietly. Outside, everyone wrote their own minutes."
+                                                   }
+                                               ],
+                                   "ignore":  {
+                                                  "text":  "The reckoning went unanswered."
+                                              }
+                               },
+    "rejim_populist_hesap":  {
+                                 "title":  "The square closes in",
+                                 "text":  "You listened to the square for years; now every neighborhood brings its own account. From the lectern, Voss called out: “Rule with answers, not applause.” The Palace gate is open, but the road is crowded.",
+                                 "choices":  [
+                                                 {
+                                                     "label":  "Admit the delegates",
+                                                     "text":  "The Palace gate opened; talks began, and the demands stayed on the table."
+                                                 },
+                                                 {
+                                                     "label":  "Go to the square",
+                                                     "text":  "The King appeared. The square listened, then spoke louder."
+                                                 }
+                                             ],
+                                 "ignore":  {
+                                                "text":  "The reckoning went unanswered."
+                                            }
+                             },
+    "rejim_patronajci_hesap":  {
+                                   "title":  "The price of appointments",
+                                   "text":  "Helena\u0027s ledger lists those who received posts from you, one beside another. Each expects something in return. Helena smiled politely: “Your Majesty, this order did not arrange itself.”",
+                                   "choices":  [
+                                                   {
+                                                       "label":  "Review the appointments openly",
+                                                       "text":  "The favors were questioned; some friends left the hall early."
+                                                   },
+                                                   {
+                                                       "label":  "Ask Helena to lower her voice",
+                                                       "text":  "Helena closed the doors; expectations remained open."
+                                                   }
+                                               ],
+                                   "ignore":  {
+                                                  "text":  "The reckoning went unanswered."
+                                              }
+                               },
+    "rejim_oligark_hesap":  {
+                                "title":  "Capital circles the Assembly",
+                                "text":  "Business leaders gathered at one table before the budget vote. Sarne\u0027s name is on the list; everyone tells a different story about who set the table. The deputies look to the Palace for a decision.",
+                                "choices":  [
+                                                {
+                                                    "label":  "Open the donation books",
+                                                    "text":  "The books opened; markets grew nervous, and deputies grew cautious."
+                                                },
+                                                {
+                                                    "label":  "Bargain over the budget",
+                                                    "text":  "The budget may pass; the Assembly is discussing the price."
+                                                }
+                                            ],
+                                "ignore":  {
+                                               "text":  "The reckoning went unanswered."
+                                           }
+                            },
+    "rejim_medya_hesap":  {
+                              "title":  "Broadcasters withdraw their support",
+                              "text":  "The morning bulletins left the same gap: no mention of the King. Sarne\u0027s channel and the independent papers are silent for different reasons. The country reads the silence as news.",
+                              "choices":  [
+                                              {
+                                                  "label":  "Take questions on camera",
+                                                  "text":  "The questions went on air; some answers were not well received."
+                                              },
+                                              {
+                                                  "label":  "Reply in writing",
+                                                  "text":  "The statement was published; your voice traveled only as far as paper."
+                                              }
+                                          ],
+                              "ignore":  {
+                                             "text":  "The reckoning went unanswered."
+                                         }
+                          },
+    "rejim_istihbarat_hesap":  {
+                                   "title":  "The secret archive\u0027s ultimatum",
+                                   "text":  "Sealed envelopes appeared on the ministers\u0027 desks at once. Only the intelligence service knows what is inside. Vale is nowhere to be seen; the archive he built now speaks in his name.",
+                                   "choices":  [
+                                                   {
+                                                       "label":  "Send the files to Renn",
+                                                       "text":  "The seals were broken in court; the Palace saw its own file too."
+                                                   },
+                                                   {
+                                                       "label":  "Keep the envelopes at the Palace",
+                                                       "text":  "The envelopes were hidden; their senders stayed where they were."
+                                                   }
+                                               ],
+                                   "ignore":  {
+                                                  "text":  "The reckoning went unanswered."
+                                              }
+                               },
+    "kasa_bos":  {
+                     "title":  "Salaries go unpaid",
+                     "text":  "Veyra opened the payroll ledger: “We cannot wait another month, Your Majesty.” The barracks\u0027 share is on this page too.",
+                     "choices":  [
+                                     {
+                                         "label":  "Borrow the money",
+                                         "text":  "Veyra brought a loan agreement. The Treasury could breathe; the interest went into the ledger."
+                                     },
+                                     {
+                                         "label":  "Pay the army first",
+                                         "text":  "The soldiers were paid. The other clerks joined the queue."
+                                     },
+                                     {
+                                         "label":  "Tighten the belt",
+                                         "text":  "Appropriations were cut. The ledger closed; the corridors grumbled."
+                                     }
+                                 ],
+                     "ignore":  {
+                                    "text":  "The pay queue broke up. Arden began asking questions."
+                                }
+                 },
+    "kasa_fazla":  {
+                       "title":  "An unexpected surplus",
+                       "text":  "Veyra asked, “Who should receive the accumulated surplus?” She wrote no one\u0027s name in the ledger\u0027s margin.",
+                       "choices":  [
+                                       {
+                                           "label":  "Invest in institutions",
+                                           "text":  "Old files were cleared, and new clerks were hired."
+                                       },
+                                       {
+                                           "label":  "Set aside a share for the people",
+                                           "text":  "The queue outside the bakery grew shorter."
+                                       },
+                                       {
+                                           "label":  "Set aside the Palace\u0027s share",
+                                           "text":  "Veyra wrote a figure on the blank line; there is a copy of the ledger too."
+                                       }
+                                   ],
+                       "ignore":  {
+                                      "text":  "Veyra kept the surplus in the Treasury."
+                                  }
+                   },
+    "maliye_cokus":  {
+                         "title":  "The tax ledgers won\u0027t close",
+                         "text":  "Veyra spread the files across the table: “The tax clerks cannot make the numbers add up. Give me more staff.”",
+                         "choices":  [
+                                         {
+                                             "label":  "Build an expert team",
+                                             "text":  "The new clerks worked until midnight."
+                                         },
+                                         {
+                                             "label":  "Ask Sarne for a short-term loan",
+                                             "text":  "A cheque arrived. Veyra crossed out the creditor\u0027s name twice."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "The incomplete tax ledgers piled up on the shelves."
+                                    }
+                     }
 }
