@@ -59,7 +59,7 @@
                                             }
                                         ],
                             "ignore":  {
-                                           "text":  "The protests were left to their own devicesÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Âand grew."
+                                           "text":  "The protests were left to their own devicesÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Âand grew."
                                        }
                         },
     "gazeteci_ihale":  {
@@ -417,7 +417,7 @@
               },
     "enflasyon":  {
                       "title":  "Inflation spills into the streets",
-                      "text":  "Prices climb every week in the markets. Finance calls it â€˜temporary.â€™",
+                      "text":  "Prices climb every week in the markets. Finance calls it Ã¢â‚¬Ëœtemporary.Ã¢â‚¬â„¢",
                       "choices":  [
                                       {
                                           "label":  "Lean on the central bank",
@@ -442,7 +442,7 @@
                           "choices":  [
                                           {
                                               "label":  "Sack the minister",
-                                              "text":  "The minister fell. The public is satisfiedâ€”for now."
+                                              "text":  "The minister fell. The public is satisfiedÃ¢â‚¬â€for now."
                                           },
                                           {
                                               "label":  "Bury the scandal",
@@ -459,7 +459,7 @@
                       },
     "arden_bakanlik":  {
                            "title":  "Arden sends the bill",
-                           "text":  "General Arden, who dispersed the protests, now wants the Ministry of Defense under his command too. â€˜You remember who cleared the squares.â€™",
+                           "text":  "General Arden, who dispersed the protests, now wants the Ministry of Defense under his command too. Ã¢â‚¬ËœYou remember who cleared the squares.Ã¢â‚¬â„¢",
                            "choices":  [
                                            {
                                                "label":  "Give him the ministry",
@@ -480,7 +480,7 @@
                        },
     "lena_kitap":  {
                        "title":  "Silenced journalist publishes a book abroad",
-                       "text":  "Leyla Sarn has left the country. Her book, â€˜The Silent Palace of Veloria,â€™ tops the bestseller lists in neighboring countries. Your name appears in it, too.",
+                       "text":  "Leyla Sarn has left the country. Her book, Ã¢â‚¬ËœThe Silent Palace of Veloria,Ã¢â‚¬â„¢ tops the bestseller lists in neighboring countries. Your name appears in it, too.",
                        "choices":  [
                                        {
                                            "label":  "Ban the book",
@@ -492,7 +492,7 @@
                                        },
                                        {
                                            "label":  "Launch a counter-campaign",
-                                           "text":  "Leyla was branded a â€˜foreign agent.â€™ Sarne knows exactly what he wants."
+                                           "text":  "Leyla was branded a Ã¢â‚¬Ëœforeign agent.Ã¢â‚¬â„¢ Sarne knows exactly what he wants."
                                        }
                                    ],
                        "ignore":  {
@@ -522,7 +522,7 @@
                        },
     "voss_hakkinda":  {
                           "title":  "Vale has a file on you, too",
-                          "text":  "Helena whispers: a thick folder marked â€˜Your Majestyâ€™ was spotted in Vale\u0027s archive.",
+                          "text":  "Helena whispers: a thick folder marked Ã¢â‚¬ËœYour MajestyÃ¢â‚¬â„¢ was spotted in Vale\u0027s archive.",
                           "choices":  [
                                           {
                                               "label":  "Give Vale more power",
@@ -543,7 +543,7 @@
                       },
     "prens_kacis":  {
                         "title":  "The Prince escapes surveillance",
-                        "text":  "Prince Marcus vanished from the Palace one night. In a neighboring capital, he speaks of the â€˜rightful dynastyâ€™ before the cameras.",
+                        "text":  "Prince Marcus vanished from the Palace one night. In a neighboring capital, he speaks of the Ã¢â‚¬Ëœrightful dynastyÃ¢â‚¬â„¢ before the cameras.",
                         "choices":  [
                                         {
                                             "label":  "Demand his return",
@@ -551,7 +551,7 @@
                                         },
                                         {
                                             "label":  "Pardon and recall him",
-                                            "text":  "The Prince returned. Gratefulâ€”or merely patient?"
+                                            "text":  "The Prince returned. GratefulÃ¢â‚¬â€or merely patient?"
                                         },
                                         {
                                             "label":  "Leave him in exile",
@@ -624,5 +624,215 @@
                            "ignore":  {
                                           "text":  "The report is passing from hand to hand."
                                       }
-                       }
+                       },
+    "falk_istifa":  {
+                        "title":  "Chief Prosecutor Renn Considers Resigning",
+                        "text":  "Fed up with the pressure, Chief Prosecutor Renn left a letter on your desk: \u0027I am either independent or I am nothing.\u0027",
+                        "choices":  [
+                                        {
+                                            "label":  "Accept and appoint a loyalist",
+                                            "text":  "The courts are yours now. So is the fact that they no longer convince anyone."
+                                        },
+                                        {
+                                            "label":  "Talk him around",
+                                            "text":  "Renn stayed. His independence is sharper than ever."
+                                        },
+                                        {
+                                            "label":  "Turn up the pressure",
+                                            "text":  "Renn fell silent. A copy of the letter, however, is missing."
+                                        }
+                                    ],
+                        "ignore":  {
+                                       "text":  "Renn announced his decision to the press."
+                                   }
+                    },
+    "kessler_istifa":  {
+                           "title":  "The Prime Minister Left a Resignation Letter",
+                           "text":  "Selin Veyra is worn down by fear. Her letter says, \u0027I can no longer give you the right figures.\u0027",
+                           "choices":  [
+                                           {
+                                               "label":  "Accept her resignation",
+                                               "text":  "Veyra is gone. Her replacement always brings you good news."
+                                           },
+                                           {
+                                               "label":  "Offer trust and a raise",
+                                               "text":  "Veyra stayed; she is a little less tense."
+                                           },
+                                           {
+                                               "label":  "Threaten her",
+                                               "text":  "Veyra stayed. Her reports look better than ever."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "Veyra no longer comes to meetings."
+                                      }
+                       },
+    "gercek_kayit":  {
+                         "title":  "This Time, the Recording Is Real",
+                         "text":  "A recording has surfaced: it really is your voice. But the public has heard the word \u0027fake\u0027 from you before.",
+                         "choices":  [
+                                         {
+                                             "label":  "Call it \u0027fake\u0027 again",
+                                             "text":  "This time, no one believed you."
+                                         },
+                                         {
+                                             "label":  "Admit it and apologize",
+                                             "text":  "Honesty salvaged a little of your standing."
+                                         },
+                                         {
+                                             "label":  "Change the subject with Sarne",
+                                             "text":  "The channels moved on to another crisis. The bill will come later."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "The recording is on everyone\u0027s phone."
+                                    }
+                     },
+    "terhis":  {
+                   "title":  "Mobilization Is Over; the Army Won\u0027t Stand Down",
+                   "text":  "The border has quieted. But the mobilized units remain around the Capital.",
+                   "choices":  [
+                                   {
+                                       "label":  "Order them to stand down",
+                                       "text":  "The units dispersed. Some officers are not pleased."
+                                   },
+                                   {
+                                       "label":  "Build a permanent garrison",
+                                       "text":  "There is now a permanent army around the Capital."
+                                   },
+                                   {
+                                       "label":  "Pay the officers a bonus",
+                                       "text":  "The army is pleased. Your coffers are a little lighter."
+                                   }
+                               ],
+                   "ignore":  {
+                                  "text":  "The units remain where they are."
+                              }
+               },
+    "liman_skandali":  {
+                           "title":  "Port Contract Scandal Hits the Papers",
+                           "text":  "A dockworker gave a newspaper the commission papers from the port contract.",
+                           "choices":  [
+                                           {
+                                               "label":  "Sacrifice Sarne",
+                                               "text":  "Sarne was arrested. He is ready to tell them everything he knows."
+                                           },
+                                           {
+                                               "label":  "Shut down the paper",
+                                               "text":  "The paper folded. The story appeared in ten other places."
+                                           },
+                                           {
+                                               "label":  "Blame the ministry",
+                                               "text":  "A minister was accused. Veyra watched the game unfold."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "The documents are everywhere."
+                                      }
+                       },
+    "dorn_rusvet":  {
+                        "title":  "The Royal Foundation Sells Access",
+                        "text":  "It turns out that anyone seeking an audience with you had to make a \u0027donation\u0027 to the Royal Foundation. Helena, apparently, decided who got to see you.",
+                        "choices":  [
+                                        {
+                                            "label":  "Banish Helena from the Palace",
+                                            "text":  "Helena left the Palace, taking all its secrets with her."
+                                        },
+                                        {
+                                            "label":  "Look the other way",
+                                            "text":  "Helena is grateful. Your door is now entirely hers."
+                                        },
+                                        {
+                                            "label":  "Use Helena to stall your rivals",
+                                            "text":  "Your rivals can no longer see you. Remember, you can no longer see them either."
+                                        }
+                                    ],
+                        "ignore":  {
+                                       "text":  "The market at your door is booming."
+                                   }
+                    },
+    "butce_ifsa":  {
+                       "title":  "The Hidden Budget Deficit Is Exposed",
+                       "text":  "An international lender published Veloria\u0027s declared figures beside the real ones.",
+                       "choices":  [
+                                       {
+                                           "label":  "Blame Veyra",
+                                           "text":  "Veyra became the scapegoat. She will never forget it."
+                                       },
+                                       {
+                                           "label":  "Tell the truth",
+                                           "text":  "The markets shook, but more people came to trust you."
+                                       },
+                                       {
+                                           "label":  "Call it \u0027foreign interference\u0027",
+                                           "text":  "The story changed; interest rates rose."
+                                       }
+                                   ],
+                       "ignore":  {
+                                      "text":  "The report is making headlines."
+                                  }
+                   },
+    "arden_posterleri":  {
+                             "title":  "The Public Puts Up Arden\u0027s Posters",
+                             "text":  "General Arden\u0027s posters cover the Capital\u0027s walls. One word beneath them: \u0027Order.\u0027",
+                             "choices":  [
+                                             {
+                                                 "label":  "Honor Arden in a ceremony",
+                                                 "text":  "Some of Arden\u0027s light fell on you. Or the other way around."
+                                             },
+                                             {
+                                                 "label":  "Push him into retirement",
+                                                 "text":  "Arden refused to retire; his units back him."
+                                             },
+                                             {
+                                                 "label":  "Quietly pull down the posters",
+                                                 "text":  "The posters are gone. Their marks remain on the walls."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "The posters are multiplying."
+                                        }
+                         },
+    "yabanci_elci":  {
+                         "title":  "A Foreign Ambassador Requests a Secret Meeting",
+                         "text":  "An ambassador from a powerful neighbor offers generous support in exchange for \u0027stability.\u0027 Off the books.",
+                         "choices":  [
+                                         {
+                                             "label":  "Take the money",
+                                             "text":  "Your coffers are full. Now you owe a foreign power, too."
+                                         },
+                                         {
+                                             "label":  "Refuse",
+                                             "text":  "The ambassador smiled politely and went to meet the opposition."
+                                         },
+                                         {
+                                             "label":  "Leave it to Vale",
+                                             "text":  "Vale is talking to both sides."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "The ambassador is knocking on other doors."
+                                    }
+                     },
+    "erken_secim":  {
+                        "title":  "The Assembly Debates an Early Election",
+                        "text":  "The opposition and some government MPs are gathering signatures for an early election.",
+                        "choices":  [
+                                        {
+                                            "label":  "Dissolve the Assembly",
+                                            "text":  "The Assembly closed. The streets began to fill."
+                                        },
+                                        {
+                                            "label":  "Allow the election",
+                                            "text":  "The election date was announced. Your legitimacy rose; your power was tested."
+                                        },
+                                        {
+                                            "label":  "Offer the opposition a ministry",
+                                            "text":  "Voss\u0027s party joined the government. The opposition split."
+                                        }
+                                    ],
+                        "ignore":  {
+                                       "text":  "The signatures are piling up."
+                                   }
+                    }
 }
