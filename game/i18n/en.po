@@ -910,6 +910,9 @@ msgstr "Palace"
 msgid "Çalışma odası ve taht"
 msgstr "The royal study and throne"
 
+msgid "SARAY"
+msgstr "PALACE"
+
 msgid "ADLİYE"
 msgstr "JUDICIARY"
 
@@ -1027,13 +1030,7 @@ msgstr "If ordered to investigate, it finds weaknesses. But it keeps everything 
 msgid "Sarne'nin kanalları ve Leyla'nın gazetesi aynı haftayı farklı anlatır. Karşılaştır."
 msgstr "Sarne's channels and Leyla's paper tell different stories about the same week. Compare them."
 
-msgid "Sarne sana yaptıklarının karşılığını bekliyor. Borç defterin onun masasından."
-msgstr "Sarne expects something in return for what he has done for you. Your debt ledger is on his desk."
-
-msgid "Sarne sana yaptıklarının karşılığını bekliyor. Borç defterin onun masasındadır."
-msgstr "Sarne expects something in return for what he has done for you. Your debt ledger is on his desk."
-
-msgid "Sarne sana yaptıklarının karşılığını bekliyor. Borç defterin onun masasındaki."
+msgid "Sarne sana yaptıklarının karşılığını bekliyor. Borç defterin onun masasında."
 msgstr "Sarne expects something in return for what he has done for you. Your debt ledger is on his desk."
 
 msgid "Sarne Holding enerji, inşaat ve medyada faaliyet gösteriyor."

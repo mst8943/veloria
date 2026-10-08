@@ -114,7 +114,7 @@ func _build() -> void:
 	top.add_theme_constant_override("separation", 16)
 	band.add_child(top)
 	var title := Label.new()
-	title.text = "BAŞKENT"
+	title.text = tr("BAŞKENT")
 	title.add_theme_font_override("font", UIKit.caps())
 	title.add_theme_font_size_override("font_size", 30)
 	title.add_theme_color_override("font_color", UIKit.GOLD)
@@ -122,7 +122,7 @@ func _build() -> void:
 	title.add_theme_constant_override("shadow_outline_size", 8)
 	top.add_child(title)
 	var hint := Label.new()
-	hint.text = "Bir kuruma tıkla"
+	hint.text = tr("Bir kuruma tıkla")
 	hint.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	hint.add_theme_color_override("font_color", Color("cfc6b0"))
 	top.add_child(hint)
@@ -130,7 +130,7 @@ func _build() -> void:
 	sp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(sp)
 	var back := Button.new()
-	back.text = "Masaya dön  (Esc)" if not mobile else "Masaya dön"
+	back.text = tr("Masaya dön  (Esc)") if not mobile else tr("Masaya dön")
 	back.focus_mode = Control.FOCUS_NONE
 	back.custom_minimum_size = Vector2(170, 42)
 	back.theme_type_variation = "GhostButton"
@@ -168,13 +168,13 @@ func _make_site(id: String) -> void:
 	dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(dot)
 	var t := Label.new()
-	t.text = str(s["title"])
+	t.text = tr(str(s["title"]))
 	t.add_theme_font_override("font", UIKit.serif())
 	t.add_theme_font_size_override("font_size", 22 if not mobile else 26)
 	t.add_theme_color_override("font_color", Color("f1e6c8"))
 	row.add_child(t)
 	var sub := Label.new()
-	sub.text = str(s["sub"])
+	sub.text = tr(str(s["sub"]))
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	sub.add_theme_font_size_override("font_size", 13 if not mobile else 16)
 	sub.add_theme_color_override("font_color", Color("b9b1a0"))
@@ -238,7 +238,7 @@ func _report_of(actor_id: String) -> String:
 	for r: Dictionary in Sim.reports:
 		if r["source"] == actor_id:
 			return str(r["text"])
-	return "Bu hafta bu makamdan rapor gelmedi."
+	return tr("Bu hafta bu makamdan rapor gelmedi.")
 
 
 func show_site(id: String) -> void:
@@ -258,24 +258,24 @@ func show_site(id: String) -> void:
 		img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		frame.add_child(img)
 	var t := Label.new()
-	t.text = str(s["title"])
+	t.text = tr(str(s["title"]))
 	t.add_theme_font_override("font", UIKit.serif())
 	t.add_theme_font_size_override("font_size", 30)
 	t.add_theme_color_override("font_color", UIKit.GOLD)
 	_drawer_body.add_child(t)
-	_drawer_body.add_child(_text("[color=gray]%s[/color]" % s["sub"]))
+	_drawer_body.add_child(_text("[color=gray]%s[/color]" % tr(str(s["sub"]))))
 	var institutions := {"maliye": "maliye", "adliye": "hukuk", "genelkurmay": "ordu", "saray": "idare"}
 	if institutions.has(id):
 		var institution: String = institutions[id]
 		var chief: String = str(_sites[id]["actor"])
-		var chief_name: String = Sim.actors[chief].display_name if Sim.actors.has(chief) else "makam boş"
-		_drawer_body.add_child(_text("İşleyiş: [b]%s[/b]\nBaşkan: %s" % [Sim.capacity_band(institution), chief_name]))
+		var chief_name: String = Sim.actors[chief].display_name if Sim.actors.has(chief) else tr("makam boş")
+		_drawer_body.add_child(_text(tr("İşleyiş: [b]%s[/b]\nBaşkan: %s") % [tr(Sim.capacity_band(institution)), chief_name]))
 		if id == "maliye":
-			_drawer_body.add_child(_text("Kasa: [b]%s[/b]" % Sim.treasury_band()))
+			_drawer_body.add_child(_text(tr("Kasa: [b]%s[/b]") % tr(Sim.treasury_band())))
 	if id == "holding":
-		_drawer_body.add_child(_text("Nüfuz: [b]%s[/b]\nMedya: [b]%s[/b]" % [Sim.halden_influence_band(), Sim.halden_mood()]))
+		_drawer_body.add_child(_text(tr("Nüfuz: [b]%s[/b]\nMedya: [b]%s[/b]") % [tr(Sim.halden_influence_band()), tr(Sim.halden_mood())]))
 	if id in ["asteria", "drakon", "seravia"]:
-		_drawer_body.add_child(_text("İlişki: [b]%s[/b]\n[color=gray]Elena'nın anlatımı iyimser olabilir; Doğrula kayıtları altı hafta açar.[/color]" % Sim.foreign_band(id)))
+		_drawer_body.add_child(_text(tr("İlişki: [b]%s[/b]\n[color=gray]Elena'nın anlatımı iyimser olabilir; Doğrula kayıtları altı hafta açar.[/color]") % tr(Sim.foreign_band(id))))
 	var aid: String = s["actor"]
 	if Sim.actors.has(aid):
 		var a = Sim.actors[aid]
@@ -292,19 +292,19 @@ func show_site(id: String) -> void:
 		info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(info)
 	else:
-		_drawer_body.add_child(_text("[color=#c0504a]Bu makam boş. Sahibi artık sarayda değil.[/color]"))
+		_drawer_body.add_child(_text(tr("[color=#c0504a]Bu makam boş. Sahibi artık sarayda değil.[/color]")))
 	_drawer_body.add_child(_text(_site_details(id)))
 	var actions := HBoxContainer.new()
 	actions.add_theme_constant_override("separation", 10)
 	_drawer_body.add_child(actions)
 	if Sim.actors.has(aid):
-		actions.add_child(_btn("Kişiyle ilgilen", func() -> void: request.emit("actor", aid)))
+		actions.add_child(_btn(tr("Kişiyle ilgilen"), func() -> void: request.emit("actor", aid)))
 	if id == "medya":
-		actions.add_child(_btn("Gazeteleri oku", func() -> void: request.emit("media", "")))
+		actions.add_child(_btn(tr("Gazeteleri oku"), func() -> void: request.emit("media", "")))
 	if id == "adliye" or id == "istihbarat":
-		actions.add_child(_btn("Dosyaları aç", func() -> void: request.emit("files", "")))
+		actions.add_child(_btn(tr("Dosyaları aç"), func() -> void: request.emit("files", "")))
 	if id in ["asteria", "drakon", "seravia"]:
-		actions.add_child(_btn("Doğrula", func() -> void:
+		actions.add_child(_btn(tr("Doğrula"), func() -> void:
 			Sim.cross_check("elena")
 			show_site(id)))
 	actions.add_child(_btn("Kapat", func() -> void: _drawer.hide()))
@@ -324,25 +324,25 @@ func _site_details(id: String) -> String:
 				if f["subject"] == "king":
 					total += 1
 					public += 1 if f.get("public", false) else 0
-			return "Saraya uzanan dosyalar: [b]%d[/b] (kamuya açık: %d).\nHer dosya, yargının sana yaklaşan bir adımıdır." % [total, public]
+			return tr("Saraya uzanan dosyalar: [b]%d[/b] (kamuya açık: %d).\nHer dosya, yargının sana yaklaşan bir adımıdır.") % [total, public]
 		"maliye":
-			return "Veyra bütçe defterlerini tutuyor. Saray harcamalarıyla devlet kasasını karıştırma."
+			return tr("Veyra bütçe defterlerini tutuyor. Saray harcamalarıyla devlet kasasını karıştırma.")
 		"parlamento":
 			var active := 0
 			for p in Sim.promises:
 				if p["state"] == "active":
 					active += 1
-			return "Meclis kulislerinde verilmiş ve henüz tutulmamış sözlerin: [b]%d[/b].\nMuhalefet her sözü sayar." % active
+			return tr("Meclis kulislerinde verilmiş ve henüz tutulmamış sözlerin: [b]%d[/b].\nMuhalefet her sözü sayar.") % active
 		"genelkurmay":
-			return "Ordunun kime sadık olduğu, ne kadar güçlü olduğundan daha önemlidir."
+			return tr("Ordunun kime sadık olduğu, ne kadar güçlü olduğundan daha önemlidir.")
 		"istihbarat":
-			return "Araştırma yaptırırsan zayıf noktaları bulur. Ama öğrendiği her şeyi saklar."
+			return tr("Araştırma yaptırırsan zayıf noktaları bulur. Ama öğrendiği her şeyi saklar.")
 		"medya":
-			return "Sarne'nin kanalları ve Leyla'nın gazetesi aynı haftayı farklı anlatır. Karşılaştır."
+			return tr("Sarne'nin kanalları ve Leyla'nın gazetesi aynı haftayı farklı anlatır. Karşılaştır.")
 		"holding":
 			if Sim.actors.has("halden") and Sim.actors["halden"].obligation >= 8.0:
-				return "Sarne sana yaptıklarının karşılığını bekliyor. Borç defterin onun masasında."
-			return "Sarne Holding enerji, inşaat ve medyada faaliyet gösteriyor."
+				return tr("Sarne sana yaptıklarının karşılığını bekliyor. Borç defterin onun masasında.")
+			return tr("Sarne Holding enerji, inşaat ve medyada faaliyet gösteriyor.")
 	return ""
 
 
@@ -357,7 +357,7 @@ func _text(bb: String) -> RichTextLabel:
 
 func _btn(text: String, cb: Callable) -> Button:
 	var b := Button.new()
-	b.text = text
+	b.text = tr(text)
 	b.focus_mode = Control.FOCUS_NONE
 	b.custom_minimum_size.y = 42
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
