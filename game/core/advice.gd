@@ -238,7 +238,7 @@ func _advise(a: Actor, e: Dictionary, r: RandomNumberGenerator) -> Dictionary:
 			item["stake"] = true
 	if a.fear >= ADVICE_FEAR_EVASIVE or echo_level() > 0.75:
 		item["kind"] = "evasive"
-		item["text"] = content["evasive"][r.randi() % content["evasive"].size()]
+		item["text"] = tr(str(content["evasive"][r.randi() % content["evasive"].size()]))
 		return item
 	var sigma := ADVICE_SIGMA * (1.0 - _advisor_skill(a.id, e)) * _diff("advice_noise")
 	var w := clampf(ADVICE_W0 + a.ambition / 100.0 * (1.0 - a.honesty) * ADVICE_W1, 0.0, ADVICE_W_MAX)
@@ -259,24 +259,24 @@ func _advise(a: Actor, e: Dictionary, r: RandomNumberGenerator) -> Dictionary:
 			worst = i
 	if scores[best] - scores[worst] < ADVICE_FLAT_GAP:
 		item["kind"] = "flat"
-		item["text"] = content["flat"][r.randi() % content["flat"].size()]
+		item["text"] = tr(str(content["flat"][r.randi() % content["flat"].size()]))
 		return item
 	item["rec"] = best
 	var reason := _advice_reason(choices[best].get("fx", {}), true, r, a.id)
 	var text := ""
 	match r.randi() % 3:
 		0:
-			text = content["rec_forms"][0] % content["roman_acc"][mini(best, 3)]
+			text = tr(str(content["rec_forms"][0])) % (content["roman"][mini(best, 3)] if Loc.lang == "en" else content["roman_acc"][mini(best, 3)])
 		1:
-			text = content["rec_forms"][1] % content["roman"][mini(best, 3)]
+			text = tr(str(content["rec_forms"][1])) % content["roman"][mini(best, 3)]
 		_:
-			text = content["rec_forms"][2] % content["roman_acc"][mini(best, 3)]
-	text = "%s: %s." % [text, reason] if reason != "" else "%s. %s" % [text, content["cover"].get(a.id, content["cover_default"])]
+			text = tr(str(content["rec_forms"][2])) % (content["roman"][mini(best, 3)] if Loc.lang == "en" else content["roman_acc"][mini(best, 3)])
+	text = tr("%s: %s.") % [text, reason] if reason != "" else tr("%s. %s") % [text, tr(str(content["cover"].get(a.id, content["cover_default"])))]
 	if scores[best] - scores[worst] >= ADVICE_WARN_GAP:
 		var bad := _advice_reason(choices[worst].get("fx", {}), false, r, a.id)
 		if bad != "":
 			item["warn"] = worst
-			text += " %s ise %s." % [content["roman"][mini(worst, 3)], bad]
+			text = tr("%s %s ise %s.") % [text, content["roman"][mini(worst, 3)], bad]
 	item["text"] = text
 	if e.get("kind", "") == "patronage" and a.id == "dorn":
 		item["text"] += " " + tr("Gazeteler ona bağlı, Majesteleri.")
@@ -306,7 +306,7 @@ func _advice_reason(fx: Dictionary, good: bool, r: RandomNumberGenerator, self_i
 	if key.begins_with("capacity:"):
 		key = "capacity"
 	var opts: Array = content["reasons"][key][0 if good else 1]
-	return opts[r.randi() % opts.size()]
+	return tr(str(opts[r.randi() % opts.size()]))
 
 
 func _log_advice(e: Dictionary, advice: Array, chosen: int) -> void:
