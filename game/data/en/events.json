@@ -2909,5 +2909,183 @@
                          "ignore":  {
                                         "text":  "The incomplete tax ledgers piled up on the shelves."
                                     }
-                     }
+                     },
+    "adliye_cokus":  {
+                         "title":  "The courts can no longer write rulings",
+                         "text":  "Renn said, “As files wait, witnesses fall silent.” Case advocates have formed a queue in the corridor.",
+                         "choices":  [
+                                         {
+                                             "label":  "Open posts for judges",
+                                             "text":  "Renn reviewed the new names one by one."
+                                         },
+                                         {
+                                             "label":  "Choose priority cases",
+                                             "text":  "A few cases moved. The rest stayed put."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "The queue in the courthouse corridor grew longer."
+                                    }
+                     },
+    "idare_cokus":  {
+                        "title":  "Provincial governors await the Palace",
+                        "text":  "Helena bowed politely. “The letter has gone out, Your Majesty. We cannot be sure it arrived.”",
+                        "choices":  [
+                                        {
+                                            "label":  "Send inspectors",
+                                            "text":  "The governors found the seals; Helena noted which one was missing."
+                                        },
+                                        {
+                                            "label":  "Give Helena authority",
+                                            "text":  "The Queen\u0027s network began working in the Palace\u0027s place."
+                                        }
+                                    ],
+                        "ignore":  {
+                                       "text":  "The orders waited on desks."
+                                   }
+                    },
+    "ordu_zayif_sinir":  {
+                             "title":  "The border is unprepared",
+                             "text":  "Gunfire rang out in a border village. Arden said, “Our units lack equipment. If you want orders carried out, say so.”",
+                             "choices":  [
+                                             {
+                                                 "label":  "Declare mobilization",
+                                                 "text":  "The units set out; the depots rushed the missing ammunition to them."
+                                             },
+                                             {
+                                                 "label":  "Turn to diplomacy",
+                                                 "text":  "The embassies talked through the night. Arden kept the map open."
+                                             },
+                                             {
+                                                 "label":  "Manage the news",
+                                                 "text":  "Sarne replayed footage from the border. The barracks were still waiting."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "Anxiety replaced the silence at the border."
+                                        }
+                         },
+    "ordu_zayif_sinir_ikinci":  {
+                                    "title":  "A second border crisis: units are missing",
+                                    "text":  "A neighboring state massed tanks along the border. Arden studied the lists. “On paper, we\u0027re at full strength. In the field, we\u0027re not.”",
+                                    "choices":  [
+                                                    {
+                                                        "label":  "Mobilize the units at hand",
+                                                        "text":  "The trains filled. Arden made no attempt to hide the shortages."
+                                                    },
+                                                    {
+                                                        "label":  "Hold secret talks",
+                                                        "text":  "The border night passed in conversation; the squares heard nothing."
+                                                    },
+                                                    {
+                                                        "label":  "Call a mediator",
+                                                        "text":  "The crisis quieted, but the barracks were not pleased."
+                                                    }
+                                                ],
+                                    "ignore":  {
+                                                   "text":  "Unprepared units waited at the border."
+                                               }
+                                },
+    "uzman_bakan":  {
+                        "title":  "A new order in the Treasury books",
+                        "text":  "Veyra said, “This time, the columns add up.” Tax files that had waited for years are being closed.",
+                        "choices":  [
+                                        {
+                                            "label":  "Keep the gains in reserve",
+                                            "text":  "Veyra kept the staff working overtime."
+                                        },
+                                        {
+                                            "label":  "Reward the clerks",
+                                            "text":  "For the first time, faces brightened at the ministry."
+                                        }
+                                    ],
+                        "ignore":  {
+                                       "text":  "The new order ran on its own."
+                                   }
+                    },
+    "sadik_komutan_sinav":  {
+                                "title":  "The loyal commander faces a first test",
+                                "text":  "Arden said, “My man follows orders, but he doesn\u0027t know this map.” The border exercise was cut short.",
+                                "choices":  [
+                                                {
+                                                    "label":  "Allow time for training",
+                                                    "text":  "The officers drilled again. Arden watched in silence."
+                                                },
+                                                {
+                                                    "label":  "Narrow the assignment",
+                                                    "text":  "The command was reduced, and Arden entered it in the record."
+                                                }
+                                            ],
+                                "ignore":  {
+                                               "text":  "The exercise report was closed."
+                                           }
+                            },
+    "liyakatli_savci":  {
+                            "title":  "The prosecutor nears a Palace file",
+                            "text":  "Renn said, “The prosecutor you appointed is following only the evidence. I won\u0027t close the door either.”",
+                            "choices":  [
+                                            {
+                                                "label":  "Leave the prosecutor alone",
+                                                "text":  "Renn nodded for the first time. The file stayed open."
+                                            },
+                                            {
+                                                "label":  "Review the Palace records",
+                                                "text":  "The records were corrected; Renn did not ask why."
+                                            }
+                                        ],
+                            "ignore":  {
+                                           "text":  "The prosecutor followed the file alone."
+                                       }
+                        },
+    "kadro_ihaneti":  {
+                          "title":  "The meritocratic queen chooses her own path",
+                          "text":  "Helena said softly, “The business of state won\u0027t fit the Palace\u0027s calendar, Your Majesty.” The governors now call her first.",
+                          "choices":  [
+                                          {
+                                              "label":  "Put her authority in writing",
+                                              "text":  "Helena took the seal; its limits went on paper too."
+                                          },
+                                          {
+                                              "label":  "Summon her to court",
+                                              "text":  "She smiled politely; the provincial offices\u0027 phones fell silent for a day."
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "Helena carried on as she saw fit."
+                                     }
+                      },
+    "kurum_sessiz_cokus":  {
+                               "title":  "The state slows in silence",
+                               "text":  "Treasury and Palace correspondence piled up on the same desk. Veyra turned a page; Helena covered another file.",
+                               "choices":  [
+                                               {
+                                                   "label":  "Set up a joint audit",
+                                                   "text":  "For the first time, the two institutions opened the same ledger."
+                                               },
+                                               {
+                                                   "label":  "Get the Palace moving first",
+                                                   "text":  "The letters left the Palace; the tax office kept waiting."
+                                               }
+                                           ],
+                               "ignore":  {
+                                              "text":  "Each office waited to hear from the other."
+                                          }
+                           },
+    "vilayet_hesabi":  {
+                           "title":  "The provinces call in their accounts",
+                           "text":  "Helena set the sealed letters from the provinces before you. “They all await a reply, Your Majesty. You must choose which comes first.”",
+                           "choices":  [
+                                           {
+                                               "label":  "Open the tax ledgers",
+                                               "text":  "Veyra began tracking the overdue collections."
+                                           },
+                                           {
+                                               "label":  "Clear the governors\u0027 letters",
+                                               "text":  "Helena sent the letters out; the Treasury accounts could wait until tomorrow."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "Helena put the letters in a queue."
+                                      }
+                       }
 }
