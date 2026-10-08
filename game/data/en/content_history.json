@@ -1,0 +1,22 @@
+{
+  "pro_survived": "King %s kept his throne through two years of storms without end.",
+  "pro_lost": "King %s tried to hold an impossible kingdom together for %d weeks; treachery brought him down.",
+  "pro_economy": "The Treasury filled and the markets stirred during his reign.",
+  "pro_reform": "His tax reform became a legacy praised by those who came after.",
+  "pro_peace": "The streets were at peace.",
+  "pro_kept": "He kept %d of his promises.",
+  "pro_public": "He was a ruler unafraid to face the people.",
+  "pro_constitution": "At the end of his reign, he gave real power to the Assembly and founded a constitutional monarchy.",
+  "pro_heir": "He secured the dynasty's succession.",
+  "pro_default": "Hard times demanded hard choices.",
+  "con_secrets": "His reign is remembered for %d secrets dragged into the light.",
+  "con_bribes": "He bought loyalty with money; %d secret payments entered the record.",
+  "con_blackmail": "He ruled his inner circle through blackmail.",
+  "con_broken": "He broke %d promises.",
+  "con_press": "He silenced the press.",
+  "con_opposition": "He jailed the opposition leader.",
+  "con_economy": "He left the economy in ruins.",
+  "con_echo": "In his final months, no one told him the truth anymore.",
+  "con_lock": "And before he left, he locked power away from everyone else.",
+  "con_default": "Even the exiled historians struggled to find a charge grave enough for this reign."
+}
