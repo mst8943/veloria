@@ -210,7 +210,7 @@
                                     }
                      },
     "voss_dosyalar":  {
-                         "title":  "Intelligence chief compiles files on politicians",
+                          "title":  "Intelligence chief compiles files on politicians",
                           "text":  "Vale\u0027s archives grow by the day. Some files concern people from your own Palace.",
                           "choices":  [
                                           {
@@ -626,7 +626,7 @@
                                       }
                        },
     "falk_istifa":  {
-                          "title":  "Chief prosecutor Renn considers resigning",
+                        "title":  "Chief prosecutor Renn considers resigning",
                         "text":  "Fed up with the pressure, Chief Prosecutor Renn left a letter on your desk: \u0027I am either independent or I am nothing.\u0027",
                         "choices":  [
                                         {
@@ -1040,5 +1040,215 @@
                     "ignore":  {
                                    "text":  "The assassination inquiry stalled."
                                }
-                }
+                },
+    "dorn_sir":  {
+                     "title":  "The Queen knows your private life",
+                     "text":  "Helena murmured as she poured a drink one evening: \u0027I told no one about your late-night visits last month, Your Majesty.\u0027",
+                     "choices":  [
+                                     {
+                                         "label":  "Expand her foundation\u0027s powers",
+                                         "text":  "Helena is pleased with her new authority. Your secret grew with it."
+                                     },
+                                     {
+                                         "label":  "Buy her silence",
+                                         "text":  "Helena took the envelope and thanked you. It will not be the first."
+                                     },
+                                     {
+                                         "label":  "Threaten her",
+                                         "text":  "Helena went pale and fell silent. Then she began writing something down."
+                                     }
+                                 ],
+                     "ignore":  {
+                                    "text":  "Helena said nothing. That does not mean she never will."
+                                }
+                 },
+    "prens_suikast":  {
+                          "title":  "An attempt on the Prince\u0027s life",
+                          "text":  "Prince Marcus narrowly survived an assassination attempt. Everyone in the Palace is looking at you, quietly.",
+                          "choices":  [
+                                          {
+                                              "label":  "Open an inquiry",
+                                              "text":  "Vale found a culprit. Not everyone was convinced."
+                                          },
+                                          {
+                                              "label":  "Give the Prince a personal guard",
+                                              "text":  "The Prince accepted the guard. He asked who had chosen them."
+                                          },
+                                          {
+                                              "label":  "Say nothing",
+                                              "text":  "Your silence was read like a confession."
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "Rumors spread."
+                                     }
+                      },
+    "dis_borc":  {
+                     "title":  "A foreign loan with harsh terms",
+                     "text":  "An international body offers a loan. In return, it wants austerity and \u0027transparent governance.\u0027",
+                     "choices":  [
+                                     {
+                                         "label":  "Accept the loan",
+                                         "text":  "The Treasury could breathe again. Austerity enraged the streets."
+                                     },
+                                     {
+                                         "label":  "Refuse",
+                                         "text":  "Sovereignty was preserved; the coffers stayed empty."
+                                     },
+                                     {
+                                         "label":  "Borrow from Sarne\u0027s bank",
+                                         "text":  "The money came from home. The debt belonged to Sarne."
+                                     }
+                                 ],
+                     "ignore":  {
+                                    "text":  "The offer was withdrawn."
+                                }
+                 },
+    "veliaht_sorunu":  {
+                           "title":  "The throne has no heir",
+                           "text":  "The nobles and the Assembly began asking the same question: the King has no heir. If you fall, who inherits the crown?",
+                           "choices":  [
+                                           {
+                                               "label":  "Arrange a noble marriage alliance",
+                                               "text":  "The engagement was announced. The nobles were pleased; the Prince saw his place in line grow more distant."
+                                           },
+                                           {
+                                               "label":  "Name the Prince heir",
+                                               "text":  "The uncertainty ended. The Prince no longer has to wait—only to keep waiting."
+                                           },
+                                           {
+                                               "label":  "Close the matter",
+                                               "text":  "The question did not close; it merely became a whisper."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "The succession debate grew."
+                                      }
+                       },
+    "ordu_modernizasyon":  {
+                               "title":  "The Army wants new weapons",
+                               "text":  "The General Staff is demanding a large budget to buy modern armored vehicles from a foreign supplier.",
+                               "choices":  [
+                                               {
+                                                   "label":  "Approve the budget",
+                                                   "text":  "The Army modernized. A stronger Army means a stronger general."
+                                               },
+                                               {
+                                                   "label":  "Approve half",
+                                                   "text":  "The Army was half pleased; the Treasury half empty."
+                                               },
+                                               {
+                                                   "label":  "Refuse and fund the police",
+                                                   "text":  "The police grew stronger; the Army grew jealous."
+                                               }
+                                           ],
+                               "ignore":  {
+                                              "text":  "The request was shelved; the officers grumbled."
+                                          }
+                           },
+    "voss_emeklilik":  {
+                           "title":  "Vale wants to retire",
+                           "text":  "Intelligence Chief Vale says he is tired. But what becomes of his thirty-year archive?",
+                           "choices":  [
+                                           {
+                                               "label":  "Let him go; take the archive",
+                                               "text":  "Vale left quietly. They say a copy of the archive went with him."
+                                           },
+                                           {
+                                               "label":  "Persuade him to stay",
+                                               "text":  "Vale stayed. The price was high."
+                                           },
+                                           {
+                                               "label":  "Take the archive first",
+                                               "text":  "The files are in your safe now. Vale took it as a sign of distrust."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "Vale postponed his resignation, not his impatience."
+                                      }
+                       },
+    "halden_parti":  {
+                         "title":  "Sarne is forming a political party",
+                         "text":  "Victor Sarne announced that, with his channels\u0027 support, he would form a party called \u0027New Veloria.\u0027",
+                         "choices":  [
+                                         {
+                                             "label":  "Back the party and control it",
+                                             "text":  "Sarne\u0027s party entered the Assembly and acts like your man. For now."
+                                         },
+                                         {
+                                             "label":  "Have the election board block it",
+                                             "text":  "The party was never formed. Sarne is now an open enemy."
+                                         },
+                                         {
+                                             "label":  "Set Sarne against the opposition",
+                                             "text":  "Voss and Sarne are tearing at each other. You watch."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "The party was formed."
+                                    }
+                     },
+    "lena_odul":  {
+                      "title":  "A journalist wins an international award",
+                      "text":  "Leyla Sarn won an international press award for her reports on corruption in Veloria. At the ceremony, she remembered to thank you—or to imply as much.",
+                      "choices":  [
+                                      {
+                                          "label":  "Invite her to the Palace",
+                                          "text":  "The photograph spread everywhere. The image of an honest ruler."
+                                      },
+                                      {
+                                          "label":  "Ignore it",
+                                          "text":  "The Palace stayed silent."
+                                      },
+                                      {
+                                          "label":  "Have Sarne\u0027s media smear the award",
+                                          "text":  "The award was branded \u0027foreign interference.\u0027 Leyla will write more sharply now."
+                                      }
+                                  ],
+                      "ignore":  {
+                                     "text":  "The award fell out of the news."
+                                 }
+                  },
+    "prens_ordu":  {
+                       "title":  "The Prince is meeting with generals",
+                       "text":  "Reports say Prince Marcus has had private dinners with three division commanders in the past two weeks.",
+                       "choices":  [
+                                       {
+                                           "label":  "Reassign the commanders",
+                                           "text":  "The commanders were sent to the border. The Prince got the message."
+                                       },
+                                       {
+                                           "label":  "Speak openly with the Prince",
+                                           "text":  "Your brother smiled and denied nothing."
+                                       },
+                                       {
+                                           "label":  "Demand Arden\u0027s oath of loyalty",
+                                           "text":  "Arden swore. The oath will come at a price."
+                                       }
+                                   ],
+                       "ignore":  {
+                                      "text":  "The meetings continue."
+                                  }
+                   },
+    "salgin":  {
+                   "title":  "An outbreak in the Capital",
+                   "text":  "A fast-spreading illness has filled the hospitals. Doctors want a quarantine; merchants do not.",
+                   "choices":  [
+                                   {
+                                       "label":  "Impose a strict quarantine",
+                                       "text":  "The outbreak slowed; the shops closed."
+                                   },
+                                   {
+                                       "label":  "Take mild measures",
+                                       "text":  "The economy kept moving; the hospitals filled."
+                                   },
+                                   {
+                                       "label":  "Do nothing; let Sarne speak",
+                                       "text":  "The channels called it \u0027exaggerated panic.\u0027 The funerals said otherwise."
+                                   }
+                               ],
+                   "ignore":  {
+                                  "text":  "The outbreak ran its course."
+                              }
+               }
 }
