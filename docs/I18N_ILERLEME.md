@@ -30,7 +30,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S3: L3 içerik çevirileri. S2 L2 dosyaları tamamlandı; görsel kapı çekimleri alındı ancak tüm ekranların tamamen İngilizce olduğu doğrulanamadı (aşağıdaki kalan metinler). `unit_tests.gd` de bir mevcut arayüz denetimi başarısız verdi.
+S2b: `main.gd` kalan statik etiketleri ve `content_labels.json` band kaplaması; sonra S3a `sim.gd` eylem sonuçları, haber/uyarı ve kriz cümleleri.
 
 ## L1 — tamamlandı
 
