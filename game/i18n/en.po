@@ -2715,3 +2715,159 @@ msgstr "Distant"
 
 msgid "Asteria %s; Drakon %s; Seravia %s."
 msgstr "Asteria: %s; Drakon: %s; Seravia: %s."
+
+msgid "tahtınızı güçlendirir"
+msgstr "strengthens your hold on the throne"
+
+msgid "otoritenizi pekiştirir"
+msgstr "reinforces your authority"
+
+msgid "otoritenizi zedeler"
+msgstr "undermines your authority"
+
+msgid "sizi zayıf gösterir"
+msgstr "makes you look weak"
+
+msgid "sokağı yatıştırır"
+msgstr "calms the streets"
+
+msgid "meydanları sakinleştirir"
+msgstr "quiets the squares"
+
+msgid "sokağı kızdırır"
+msgstr "angers the streets"
+
+msgid "halkı öfkelendirir"
+msgstr "incites public anger"
+
+msgid "hazineyi rahatlatır"
+msgstr "eases pressure on the treasury"
+
+msgid "piyasaya nefes aldırır"
+msgstr "gives the markets room to breathe"
+
+msgid "hazineyi zorlar"
+msgstr "strains the treasury"
+
+msgid "bütçeyi deler"
+msgstr "punches a hole in the budget"
+
+msgid "muhalefeti susturur"
+msgstr "silences the opposition"
+
+msgid "Voss'un elini zayıflatır"
+msgstr "weakens Voss's hand"
+
+msgid "muhalefete koz verir"
+msgstr "gives the opposition leverage"
+
+msgid "Voss'a malzeme olur"
+msgstr "hands Voss ammunition"
+
+msgid "kişisel kasanızı doldurur"
+msgstr "fills your private coffers"
+
+msgid "kasanıza para koyar"
+msgstr "puts money in your coffers"
+
+msgid "kasanızı boşaltır"
+msgstr "empties your coffers"
+
+msgid "cebinizden çıkar"
+msgstr "comes out of your pocket"
+
+msgid "devlet kasasına nefes aldırır"
+msgstr "gives the state treasury room to breathe"
+
+msgid "devlet kasasını daraltır"
+msgstr "strains the state treasury"
+
+msgid "kurumların işini kolaylaştırır"
+msgstr "makes the institutions' work easier"
+
+msgid "kurumları yıpratır"
+msgstr "wears down the institutions"
+
+msgid "Sarne'nin elini sınırlar"
+msgstr "limits Sarne's reach"
+
+msgid "Sarne'nin nüfuzunu artırır"
+msgstr "increases Sarne's influence"
+
+msgid "iz bırakmaz"
+msgstr "leaves no trace"
+
+msgid "iz bırakır"
+msgstr "leaves a trace"
+
+msgid "bir gün önünüze dosya olarak gelir"
+msgstr "may land on your desk as a case one day"
+
+msgid "sözünüzü korur"
+msgstr "keeps your promise intact"
+
+msgid "verdiğiniz sözü bozar"
+msgstr "breaks the promise you made"
+
+msgid "sözünüzü çiğner"
+msgstr "goes back on your word"
+
+msgid "Ordu güçlüyse taht da güçlüdür."
+msgstr "A strong army makes for a strong throne."
+
+msgid "Bazı şeyleri size anlatamam; bana güvenin."
+msgstr "I cannot tell you everything; you must trust me."
+
+msgid "Hesabı ben tutarım; en az zararlısı bu."
+msgstr "I keep the accounts; this is the least harmful choice."
+
+msgid "Kamuoyunu ben hallederim."
+msgstr "I will handle public opinion."
+
+msgid "Sarayın huzuru için en iyisi bu."
+msgstr "This is best for the palace's peace."
+
+msgid "Hanedanın onuru bunu gerektirir."
+msgstr "The dynasty's honor demands it."
+
+msgid "Hukuka en uygun yol bu."
+msgstr "This is the path most consistent with the law."
+
+msgid "Hanedanın yarını için bunu öğrenmeliyim."
+msgstr "I must learn this for the dynasty's future."
+
+msgid "Elçiliklerin söylediğini değil, niyetini tartıyorum."
+msgstr "I weigh the envoys' intentions, not just their words."
+
+msgid "Takdir sizindir, Majesteleri."
+msgstr "The choice is yours, Your Majesty."
+
+msgid "Hangisini seçerseniz doğru olan odur, Majesteleri."
+msgstr "Whichever you choose will be right, Your Majesty."
+
+msgid "Sizin bileceğiniz iş, Majesteleri."
+msgstr "As you wish, Your Majesty."
+
+msgid "Bence hepsi aynı kapıya çıkar."
+msgstr "I think they all lead to the same outcome."
+
+msgid "Aralarında büyük bir fark görmüyorum, Majesteleri."
+msgstr "I see little difference between them, Your Majesty."
+
+msgid "%s öneririm"
+msgstr "I recommend %s"
+
+msgid "Bence %s, Majesteleri"
+msgstr "I would choose %s, Your Majesty"
+
+msgid "%s seçin"
+msgstr "Choose %s"
+
+msgid "%s: %s."
+msgstr "%s: %s."
+
+msgid "%s. %s"
+msgstr "%s. %s"
+
+msgid "%s %s ise %s."
+msgstr "%s If %s is chosen, it %s."
