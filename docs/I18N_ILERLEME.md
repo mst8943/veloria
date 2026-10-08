@@ -33,6 +33,9 @@ dosyası değiştirilmedi.
 
 S9: L4 — `events.json` parti 4 (olay 151–195, son parti).
 
+S9 ön kontrolü: cinsiyet tutarlılığı düzeltmeleri ve denetleyici uyarısı
+`c154aa5` ile tamamlandı; tırnak normalleştirmesi ve son olay partisi sürüyor.
+
 ## L1 — tamamlandı
 
 - Statik `Loc` yardımcısı ve `en.po` başlığı eklendi. `Loc` sistem yerelini
