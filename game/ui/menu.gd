@@ -176,7 +176,7 @@ func _build() -> void:
 	]
 	for i in Sim.DIFFICULTY.size():
 		var db := Button.new()
-		db.text = "  %s\n  %s" % [Sim.DIFFICULTY[i]["name"], ddesc[i]]
+		db.text = "  %s\n  %s" % [tr(str(Sim.DIFFICULTY[i]["name"])), ddesc[i]]
 		db.theme_type_variation = "ChoiceButton"
 		db.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		db.toggle_mode = true

@@ -2431,6 +2431,15 @@ msgstr "He secured the continuation of the dynasty."
 msgid "Zor zamanlarda, zor kararlar vermek zorunda kaldı."
 msgstr "In difficult times, he had to make difficult choices."
 
+msgid "Kolay"
+msgstr "Easy"
+
+msgid "Normal"
+msgstr "Normal"
+
+msgid "Zor"
+msgstr "Hard"
+
 msgid "Saltanatı, ortaya saçılan %d sırla hatırlanır."
 msgstr "His reign is remembered for the %d secrets that came to light."
 

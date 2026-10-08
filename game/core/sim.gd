@@ -279,7 +279,7 @@ func save_summary() -> String:
 	if not d is Dictionary:
 		return ""
 	var diff_i := clampi(int(d.get("diff", 1)), 0, DIFFICULTY.size() - 1)
-	return "Hafta %d · %s" % [int(d.get("week", 1)), DIFFICULTY[diff_i]["name"]]
+	return "Hafta %d · %s" % [int(d.get("week", 1)), tr(str(DIFFICULTY[diff_i]["name"]))]
 
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.

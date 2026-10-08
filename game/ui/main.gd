@@ -632,7 +632,7 @@ func _show_chronicle() -> void:
 		for i in range(list.size() - 1, -1, -1):
 			var r: Dictionary = list[i]
 			var mark := "[color=#7fae7a]TAHTTA[/color]" if r["survived"] else "[color=#c0504a]DÜŞTÜ[/color]"
-			t += "%s  [b]%s[/b]   [color=gray]%s · %s · %d hafta[/color]\n     %s\n" % [mark, r["title"], r["date"], r["difficulty"], r["weeks"], r["cause"]]
+			t += "%s  [b]%s[/b]   [color=gray]%s · %s · %d hafta[/color]\n     %s\n" % [mark, r["title"], r["date"], tr(str(r["difficulty"])), r["weeks"], r["cause"]]
 	var have: Dictionary = Sim.load_achievements()
 	t += tr("\n[b][font_size=%d][color=#d6b25e]BAŞARIMLAR  ·  %d / %d[/color][/font_size][/b]\n") % [_fs(24), have.size(), Sim.ACHIEVEMENTS.size()]
 	for id in Sim.ACHIEVEMENTS:
