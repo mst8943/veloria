@@ -31,7 +31,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S8: L4 — `events.json` parti 3 (olay 101–150; 101–120 tamamlandı).
+S8: L4 — `events.json` parti 3 (olay 101–150; 101–130 tamamlandı).
 
 ## L1 — tamamlandı
 
