@@ -1561,6 +1561,8 @@ func _eligible(e: Dictionary) -> bool:
 		return false
 	if holding < float(e.get("min_holding", 0)) or holding > float(e.get("max_holding", 100)):
 		return false
+	if heir_maturity < float(e.get("min_heir", 0)) or heir_maturity > float(e.get("max_heir", 100)):
+		return false
 	if e.get("needs_hostile", false) and halden_mood() != "düşmanca":
 		return false
 	for aid in _as_array(e.get("needs_moved", [])):

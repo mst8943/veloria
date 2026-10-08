@@ -11,7 +11,7 @@ const ACTOR := preload("res://game/core/actor.gd")
 
 const TOP_KEYS := ["id", "title", "text", "choices", "ignore", "fx", "art", "crisis", "advisors",
 	"min_week", "max_week", "chance", "once", "cooldown", "min_unrest", "max_unrest", "min_economy", "max_economy",
-	"min_opposition", "min_power", "min_cap", "max_cap", "min_treasury", "max_treasury", "min_holding", "max_holding", "needs_hostile", "needs_moved", "needs_flag", "blocks_flag", "any_flag", "flag_age", "actor_min", "actor_max",
+	"min_opposition", "min_power", "min_cap", "max_cap", "min_treasury", "max_treasury", "min_holding", "max_holding", "min_heir", "max_heir", "needs_hostile", "needs_moved", "needs_flag", "blocks_flag", "any_flag", "flag_age", "actor_min", "actor_max",
 	"alive", "needs_fact", "needs_ready", "min_stat", "max_stat", "news", "actor", "tone"]
 ## Sim.stats anahtarları (min_stat / max_stat koşulları)
 const STAT_KEYS := ["ops", "bribes", "promotes", "leaks", "dismissals", "written", "hints", "checks",
@@ -157,9 +157,11 @@ func _check_conditions(e: Dictionary) -> void:
 		errors.append("%s: needs_hostile doğru/yanlış olmalı" % id)
 	for aid in _arr(e.get("needs_moved", [])):
 		_check_actor(id, "needs_moved", str(aid))
-	for k in ["min_treasury", "max_treasury", "min_holding", "max_holding"]:
+	for k in ["min_treasury", "max_treasury", "min_holding", "max_holding", "min_heir", "max_heir"]:
 		if e.has(k) and (not (e[k] is int or e[k] is float) or float(e[k]) < 0.0 or float(e[k]) > 100.0):
 			errors.append("%s: %s 0–100 arası sayı olmalı" % [id, k])
+	if e.has("min_heir") and e.has("max_heir") and float(e["min_heir"]) > float(e["max_heir"]):
+		errors.append("%s: min_heir > max_heir, hiç tetiklenmez" % id)
 	for k in ["min_cap", "max_cap"]:
 		if not e.has(k):
 			continue

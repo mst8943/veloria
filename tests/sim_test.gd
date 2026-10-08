@@ -443,6 +443,9 @@ func _test_newcomer_rng() -> bool:
 	var heir = sim.actors["julian"]
 	good = good and sim.actors.size() == 11 and heir.insider and not heir.royal and heir.supporting and heir.power <= 15.0
 	good = good and sim.heir_maturity >= 25.0 and sim.heir_maturity <= 35.0
+	good = good and sim._eligible({"id": "heir_ok", "min_heir": 25, "max_heir": 35})
+	good = good and not sim._eligible({"id": "heir_low", "max_heir": 24})
+	good = good and not sim._eligible({"id": "heir_high", "min_heir": 36})
 	if not good:
 		push_error("yeni kadro eski aktörlerin RNG sırasını değiştirdi")
 	print("Yeni kadro RNG: ", "OK" if good else "HATA")
