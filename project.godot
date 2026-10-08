@@ -30,6 +30,10 @@ BeckettRuntime="*uid://do68dqybesb7r"
 Sim="*res://game/core/sim.gd"
 Sfx="*res://game/core/sfx.gd"
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://game/i18n/en.po")
+
 [beckett]
 
 autostart=true

@@ -25,9 +25,22 @@ dosyası değiştirilmedi.
 
 ## Açık sorunlar
 
-- Yok. L1 öncesi L0 dosyaları tek mantıksal commit olarak kaydedilecek.
+- L1 için `event_check` ve `content_check` komut satırından `--lang=en`
+  seçeneğini henüz almıyor. İngilizce kaplamalar L4'te yazılacak; bu nedenle
+  yükleyici bugün güvenli Türkçe geri dönüş kullanır.
 
 ## SIRADAKİ ADIM
 
-L1: `Loc` altyapısı, boş `en.po`, içerik kaplama yükleyicisi, dil ayarı ve
-kayıt göçü. Türkçe varsayılanı ile taban sonuçları korunacak.
+L1 devamı: Türkçe test kilidi ve İngilizce doğrulama parametreleri. Ardından
+L1 kapısı için tam test, `--full`, ölçüt ve menü ekran görüntüsü alınacak.
+
+## L1 — devam ediyor
+
+- Statik `Loc` yardımcısı ve `en.po` başlığı eklendi. `Loc` sistem yerelini
+  kullanmaz; varsayılanı `tr`dir.
+- `Sfx` ayar dosyası dili saklar; menü Ayarlar ekranında `Dil / Language`
+  seçicisi yer alır.
+- Kaydedilen kampanya dili v9 alanıdır; v8 ve öncesi kayıtlar `tr`ye göçer.
+- `content_data.gd`, İngilizce etkinse `game/data/en/` içindeki metin
+  kaplamasını güvenli biçimde birleştirir. Kaplama yoksa Türkçe kaynak kalır.
+- İlk kontroller: `I18N: OK`, `SAVE: OK`, `TEST: OK`.

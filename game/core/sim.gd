@@ -10,6 +10,7 @@ signal game_ended(record: Dictionary)
 const Actor := preload("res://game/core/actor.gd")
 const Advice := preload("res://game/core/advice.gd")
 const ContentData := preload("res://game/core/content_data.gd")
+const Loc := preload("res://game/core/loc.gd")
 const Narrative := preload("res://game/core/narrative.gd")
 const Press := preload("res://game/core/press.gd")
 const MAX_WEEKS := 104
@@ -119,6 +120,7 @@ func _init() -> void:
 
 
 func new_game(seed_value: int = 0, diff: int = -1) -> void:
+	_load_content()
 	if content_error != "":
 		push_error(content_error)
 		return
@@ -186,7 +188,7 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 	ended = false
 	record = {}
 	coup_leader = ""
-	for d in _load_json(ACTORS_PATH):
+	for d in _content_loader.load_actors():
 		var a := Actor.new()
 		a.setup(d)
 		# Her kampanyada gizli özellikler değişir (tekrar oynanabilirlik).
@@ -196,7 +198,7 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 		a.perceived_king = king_strength + actor_rng.randf_range(-5.0, 5.0)
 		actors[a.id] = a
 		karne[a.id] = {"ok": 0, "bad": 0}
-	_events = _load_json(EVENTS_PATH)
+	_events = _content_loader.load_events(EVENTS_PATH)
 	_fire_events()
 	_generate_reports()
 	_record_timeline()
@@ -280,11 +282,11 @@ func save_summary() -> String:
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
 ## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Sarne ve kadro günlüğü
-const SAVE_VERSION := 8
+const SAVE_VERSION := 9
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
-	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until"]
+	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -324,7 +326,7 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 		d["heir_maturity"] = 30.0
 		var old_actors: Dictionary = d.get("actors", {})
 		var old_karne: Dictionary = d.get("karne", {})
-		for actor_data: Dictionary in _load_json(ACTORS_PATH):
+		for actor_data: Dictionary in _content_loader.load_actors():
 			if actor_data.get("supporting", false) and not old_actors.has(actor_data["id"]):
 				var newcomer := Actor.new()
 				newcomer.setup(actor_data)
@@ -332,6 +334,8 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 				old_karne[actor_data["id"]] = {"ok": 0, "bad": 0}
 		d["actors"] = old_actors
 		d["karne"] = old_karne
+	if from < 9:
+		d["lang"] = "tr"
 	if not d.has("foreign"):
 		d["foreign"] = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
 	if not d.has("foreign_hint_until"):
@@ -340,7 +344,7 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 	if d.get("actors") is Dictionary:
 		var migrated_actors: Dictionary = d["actors"]
 		var migrated_karne: Dictionary = d.get("karne", {})
-		for actor_data: Dictionary in _load_json(ACTORS_PATH):
+		for actor_data: Dictionary in _content_loader.load_actors():
 			if actor_data.get("supporting", false) and not migrated_actors.has(actor_data["id"]):
 				var newcomer := Actor.new()
 				newcomer.setup(actor_data)
@@ -369,7 +373,7 @@ func save_game() -> bool:
 		"court_share": court_share, "capacity_timeline": capacity_timeline, "holding": holding,
 		"halden_hostile_until": halden_hostile_until, "halden_demands": halden_demands,
 		"lena_boost_until": lena_boost_until, "kadro_log": kadro_log, "heir_maturity": heir_maturity,
-		"foreign": foreign, "foreign_hint_until": foreign_hint_until, "version": SAVE_VERSION}
+		"foreign": foreign, "foreign_hint_until": foreign_hint_until, "lang": Loc.lang, "version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -395,6 +399,7 @@ func load_game() -> bool:
 		load_error = "Bu kayıt oyunun daha yeni bir sürümüyle yapılmış. Oyunu güncelleyin."
 		return false
 	d = _migrate_save(d, version)
+	Loc.set_lang(str(d.get("lang", "tr")))
 	# Eksik alanlı bir kayıt, oyun yarıya kadar kurulduktan sonra hata vermesin: önce denetle.
 	for k in SAVE_REQUIRED:
 		if not d.has(k):

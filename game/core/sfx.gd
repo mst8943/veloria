@@ -4,6 +4,7 @@ extends Node
 ##   ambient, click, hover, paper, seal, bell, stinger_loss, stinger_win
 
 const RATE := 22050
+const Loc := preload("res://game/core/loc.gd")
 const SETTINGS_PATH := "user://veloria_settings.cfg"
 const NAMES := ["click", "hover", "paper", "seal", "bell", "stinger_loss", "stinger_win"]
 
@@ -15,6 +16,7 @@ var difficulty := 1        # 0 Kolay, 1 Normal, 2 Zor
 var tips := true           # ilk haftalarda danışman ipuçları
 var intro := true          # yeni oyunda açılış sineması
 var desk_start := true     # her haftaya çalışma masasından başla
+var language := "tr"
 
 var _streams: Dictionary = {}
 var _players: Array[AudioStreamPlayer] = []
@@ -26,6 +28,7 @@ var _rng := RandomNumberGenerator.new()
 func _ready() -> void:
 	_rng.seed = 7
 	_load_settings()
+	Loc.set_lang(language)
 	_ensure_bus("Music")
 	_ensure_bus("SFX")
 	for i in 6:
@@ -79,6 +82,7 @@ func save_settings() -> void:
 	c.set_value("game", "tips", tips)
 	c.set_value("game", "intro", intro)
 	c.set_value("game", "desk_start", desk_start)
+	c.set_value("game", "language", language)
 	c.save(SETTINGS_PATH)
 
 
@@ -94,6 +98,12 @@ func _load_settings() -> void:
 	tips = c.get_value("game", "tips", true)
 	intro = c.get_value("game", "intro", true)
 	desk_start = c.get_value("game", "desk_start", true)
+	language = str(c.get_value("game", "language", "tr"))
+
+
+func set_language(value: String) -> void:
+	language = "en" if value == "en" else "tr"
+	Loc.set_lang(language)
 
 
 func play(name: String, volume_db := 0.0, pitch := 1.0) -> void:

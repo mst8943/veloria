@@ -4,6 +4,7 @@ extends Control
 ## Açma/kapama (_show_menu, _hide_menu) başka görünümleri de yönettiği için main.gd'de kalır.
 
 const UIKit := preload("res://game/ui/ui_kit.gd")
+const Loc := preload("res://game/core/loc.gd")
 const SHIMMER_SHADER := preload("res://game/ui/shimmer.gdshader")
 
 ## Emeği geçenler ve lisans bildirimleri (Godot MIT ve EB Garamond OFL bildirimi dağıtımda zorunludur).
@@ -224,6 +225,15 @@ func _build() -> void:
 			apply.call(on)
 			Sfx.save_settings())
 		grid.add_child(cb)
+	grid.add_child(_label_dim("Dil / Language"))
+	var language := OptionButton.new()
+	language.add_item("Türkçe", 0)
+	language.add_item("English", 1)
+	language.select(1 if Loc.lang == "en" else 0)
+	language.item_selected.connect(func(index: int) -> void:
+		Sfx.set_language("en" if index == 1 else "tr")
+		Sfx.save_settings())
+	grid.add_child(language)
 	var vgrid := GridContainer.new()
 	vgrid.columns = 2
 	vgrid.add_theme_constant_override("h_separation", 16)

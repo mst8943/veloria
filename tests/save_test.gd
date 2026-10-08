@@ -4,6 +4,8 @@ extends SceneTree
 ## Sonda "SAVE: OK" ya da "SAVE: FAIL". Oyuncunun kaydına dokunmaz (ayrı dosya, sonda silinir).
 ## Kayıt şeması değişince (Sim.SAVE_VERSION artınca) eski sürümü taklit eden bir adım ekle.
 
+const Loc := preload("res://game/core/loc.gd")
+
 var ok := true
 
 
@@ -45,6 +47,11 @@ func _init() -> void:
 	var d: Dictionary = str_to_var(f.get_as_text())
 	f.close()
 	_check("sürüm yazıldı", int(d.get("version", 0)) == sim.SAVE_VERSION)
+	var v8_i18n := d.duplicate(true)
+	v8_i18n["version"] = 8
+	v8_i18n.erase("lang")
+	_write(sim.save_path, v8_i18n)
+	_check("v8 dil göçü", sim.load_game() and Loc.lang == "tr")
 	# B1 v8 kaydı: dış temsilciler ve ilişkiler henüz yoktu.
 	var b1_v8 := d.duplicate(true)
 	for k in ["foreign", "foreign_hint_until"]:

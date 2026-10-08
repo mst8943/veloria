@@ -1,6 +1,8 @@
 extends RefCounted
 ## İçerik tablolarının tek yükleme ve şema denetimi.
 
+const Loc := preload("res://game/core/loc.gd")
+
 const FILES := {
 	"reports": "res://game/data/content_reports.json",
 	"council": "res://game/data/content_council.json",
@@ -35,6 +37,8 @@ func load_all(overrides: Dictionary = {}) -> Dictionary:
 		var data: Variant = _read(path)
 		if not data is Dictionary:
 			return _fail(path, "JSON bozuk veya kök sözlük değil")
+		if not overrides.has(key):
+			data = _translated(path, data)
 		var issue := ""
 		match key:
 			"reports": issue = _reports(data, domains)
@@ -46,6 +50,57 @@ func load_all(overrides: Dictionary = {}) -> Dictionary:
 			return _fail(path, issue)
 		all[key] = data
 	return all
+
+
+func load_actors() -> Array:
+	var data: Variant = _read(ACTORS)
+	if not data is Array:
+		return []
+	return _translated(ACTORS, data)
+
+
+func load_events(path: String) -> Array:
+	var data: Variant = _read(path)
+	if not data is Array:
+		return []
+	return _translated(path, data)
+
+
+func _translated(base_path: String, source: Variant) -> Variant:
+	if Loc.lang != "en":
+		return source
+	var overlay_path := "res://game/data/en/" + base_path.get_file()
+	if not FileAccess.file_exists(overlay_path):
+		return source
+	var overlay: Variant = _read(overlay_path)
+	if overlay == null:
+		push_error("İngilizce içerik dosyası okunamadı: " + overlay_path)
+		return source
+	if source is Array and overlay is Dictionary:
+		var by_id: Dictionary = overlay
+		var result: Array = []
+		for row in source:
+			var id := str(row.get("id", "")) if row is Dictionary else ""
+			result.append(_merge_text(row, by_id.get(id, {})))
+		return result
+	return _merge_text(source, overlay)
+
+
+func _merge_text(source: Variant, overlay: Variant) -> Variant:
+	if source is Dictionary and overlay is Dictionary:
+		var result: Dictionary = source.duplicate()
+		for key in overlay:
+			if result.has(key):
+				result[key] = _merge_text(result[key], overlay[key])
+		return result
+	if source is Array and overlay is Array:
+		var result: Array = source.duplicate()
+		for i in mini(result.size(), overlay.size()):
+			result[i] = _merge_text(result[i], overlay[i])
+		return result
+	if source is String and overlay is String and not overlay.strip_edges().is_empty():
+		return overlay
+	return source
 
 
 func _read(path: String) -> Variant:
