@@ -15,6 +15,9 @@ const SITES := {
 	"medya": {"pos": Vector2(0.5, 0.62), "title": "MEDYA MERKEZİ", "sub": "Basın ve kamuoyu", "actor": "lena", "art": "halden_kanal"},
 	"istihbarat": {"pos": Vector2(0.85, 0.7), "title": "İSTİHBARAT", "sub": "Arşivler ve dosyalar", "actor": "voss", "art": "voss_dosyalar"},
 	"holding": {"pos": Vector2(0.5, 0.88), "title": "HALDEN HOLDİNG", "sub": "Sermaye, ihaleler, borçlar", "actor": "halden", "art": "halden_ihale"},
+	"asteria": {"pos": Vector2(0.68, 0.17), "title": "ASTERIA ELÇİLİĞİ", "sub": "Kredi ve hukuk diplomasisi", "actor": "claire", "art": "yabanci_elci"},
+	"drakon": {"pos": Vector2(0.32, 0.82), "title": "DRAKON ELÇİLİĞİ", "sub": "Sınır ve güvenlik", "actor": "malenkov", "art": "sinir_krizi"},
+	"seravia": {"pos": Vector2(0.74, 0.85), "title": "SERAVIA TEMSİLCİLİĞİ", "sub": "Ticaret ve limanlar", "actor": "lucien", "art": "yabanci_elci"},
 }
 
 var mobile := false
@@ -271,6 +274,8 @@ func show_site(id: String) -> void:
 			_drawer_body.add_child(_text("Kasa: [b]%s[/b]" % Sim.treasury_band()))
 	if id == "holding":
 		_drawer_body.add_child(_text("Nüfuz: [b]%s[/b]\nMedya: [b]%s[/b]" % [Sim.halden_influence_band(), Sim.halden_mood()]))
+	if id in ["asteria", "drakon", "seravia"]:
+		_drawer_body.add_child(_text("İlişki: [b]%s[/b]\n[color=gray]Elena'nın anlatımı iyimser olabilir; Doğrula kayıtları altı hafta açar.[/color]" % Sim.foreign_band(id)))
 	var aid: String = s["actor"]
 	if Sim.actors.has(aid):
 		var a = Sim.actors[aid]
@@ -298,6 +303,10 @@ func show_site(id: String) -> void:
 		actions.add_child(_btn("Gazeteleri oku", func() -> void: request.emit("media", "")))
 	if id == "adliye" or id == "istihbarat":
 		actions.add_child(_btn("Dosyaları aç", func() -> void: request.emit("files", "")))
+	if id in ["asteria", "drakon", "seravia"]:
+		actions.add_child(_btn("Doğrula", func() -> void:
+			Sim.cross_check("elena")
+			show_site(id)))
 	actions.add_child(_btn("Kapat", func() -> void: _drawer.hide()))
 	_drawer.show()
 	_drawer.modulate.a = 0.0
