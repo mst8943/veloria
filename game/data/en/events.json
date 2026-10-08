@@ -59,7 +59,7 @@
                                             }
                                         ],
                             "ignore":  {
-                                           "text":  "The protests were left to their own devicesÃ¢â‚¬â€and grew."
+                                           "text":  "The protests were left to their own devicesÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Âand grew."
                                        }
                         },
     "gazeteci_ihale":  {
@@ -414,5 +414,215 @@
                   "ignore":  {
                                  "text":  "The ceremony was postponed."
                              }
-              }
+              },
+    "enflasyon":  {
+                      "title":  "Inflation spills into the streets",
+                      "text":  "Prices climb every week in the markets. Finance calls it â€˜temporary.â€™",
+                      "choices":  [
+                                      {
+                                          "label":  "Lean on the central bank",
+                                          "text":  "Rates fell; the markets remain wary."
+                                      },
+                                      {
+                                          "label":  "Impose harsh austerity",
+                                          "text":  "The bitter medicine begins."
+                                      },
+                                      {
+                                          "label":  "Blame foreign media",
+                                          "text":  "The headlines changed. Inflation did not."
+                                      }
+                                  ],
+                      "ignore":  {
+                                     "text":  "Inflation kept advancing."
+                                 }
+                  },
+    "skandal_bakan":  {
+                          "title":  "A minister\u0027s corruption scandal",
+                          "text":  "The press says one of your ministers moved money abroad. Journalists await a statement from the Palace.",
+                          "choices":  [
+                                          {
+                                              "label":  "Sack the minister",
+                                              "text":  "The minister fell. The public is satisfiedâ€”for now."
+                                          },
+                                          {
+                                              "label":  "Bury the scandal",
+                                              "text":  "Sarne\u0027s media found another subject."
+                                          },
+                                          {
+                                              "label":  "Shield the minister",
+                                              "text":  "The minister owes you. The press is on the attack."
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "The scandal grew."
+                                     }
+                      },
+    "arden_bakanlik":  {
+                           "title":  "Arden sends the bill",
+                           "text":  "General Arden, who dispersed the protests, now wants the Ministry of Defense under his command too. â€˜You remember who cleared the squares.â€™",
+                           "choices":  [
+                                           {
+                                               "label":  "Give him the ministry",
+                                               "text":  "Arden is pleased. He now commands the army and controls its budget."
+                                           },
+                                           {
+                                               "label":  "Refuse",
+                                               "text":  "Arden saluted and left. His salute was shorter than usual."
+                                           },
+                                           {
+                                               "label":  "Appoint a loyal nobody",
+                                               "text":  "Your man took the ministry. The army took it as an insult."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "Arden\u0027s request went unanswered."
+                                      }
+                       },
+    "lena_kitap":  {
+                       "title":  "Silenced journalist publishes a book abroad",
+                       "text":  "Leyla Sarn has left the country. Her book, â€˜The Silent Palace of Veloria,â€™ tops the bestseller lists in neighboring countries. Your name appears in it, too.",
+                       "choices":  [
+                                       {
+                                           "label":  "Ban the book",
+                                           "text":  "The ban only made the book more intriguing."
+                                       },
+                                       {
+                                           "label":  "Ignore it",
+                                           "text":  "The Palace fell silent. The book kept talking."
+                                       },
+                                       {
+                                           "label":  "Launch a counter-campaign",
+                                           "text":  "Leyla was branded a â€˜foreign agent.â€™ Sarne knows exactly what he wants."
+                                       }
+                                   ],
+                       "ignore":  {
+                                      "text":  "The book is now circulating at home, hand to hand."
+                                  }
+                   },
+    "halden_intikam":  {
+                           "title":  "Sarne\u0027s channels attack the Palace",
+                           "text":  "Since the contract file was published, all of Sarne\u0027s channels have spent every evening recounting the Palace\u0027s waste.",
+                           "choices":  [
+                                           {
+                                               "label":  "Offer peace",
+                                               "text":  "Sarne halted the attacks. It came out of his own pocket."
+                                           },
+                                           {
+                                               "label":  "Audit his companies",
+                                               "text":  "Sarne\u0027s companies are under audit. He is fuming."
+                                           },
+                                           {
+                                               "label":  "Hit back on state media",
+                                               "text":  "The two sides\u0027 channels devour each other. The public trusts neither."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "The attacks continued."
+                                      }
+                       },
+    "voss_hakkinda":  {
+                          "title":  "Vale has a file on you, too",
+                          "text":  "Helena whispers: a thick folder marked â€˜Your Majestyâ€™ was spotted in Vale\u0027s archive.",
+                          "choices":  [
+                                          {
+                                              "label":  "Give Vale more power",
+                                              "text":  "Vale is pleased. The file remains right where it is."
+                                          },
+                                          {
+                                              "label":  "Burn the archive",
+                                              "text":  "A fire broke out in the archive one night. Vale knows who started it."
+                                          },
+                                          {
+                                              "label":  "Confront Vale",
+                                              "text":  "You both threatened each other without quite making a threat."
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "The file kept getting thicker."
+                                     }
+                      },
+    "prens_kacis":  {
+                        "title":  "The Prince escapes surveillance",
+                        "text":  "Prince Marcus vanished from the Palace one night. In a neighboring capital, he speaks of the â€˜rightful dynastyâ€™ before the cameras.",
+                        "choices":  [
+                                        {
+                                            "label":  "Demand his return",
+                                            "text":  "The neighboring state is stalling. The Prince grows more famous by the day."
+                                        },
+                                        {
+                                            "label":  "Pardon and recall him",
+                                            "text":  "The Prince returned. Gratefulâ€”or merely patient?"
+                                        },
+                                        {
+                                            "label":  "Leave him in exile",
+                                            "text":  "The Prince stayed in exile. His power at court ebbed, but his voice grew louder abroad."
+                                        }
+                                    ],
+                        "ignore":  {
+                                       "text":  "The Prince is gathering supporters abroad."
+                                   }
+                    },
+    "prens_veliaht":  {
+                          "title":  "The Prince wants to be heir",
+                          "text":  "Prince Marcus, successful in the post you gave him, wants to be formally declared heir.",
+                          "choices":  [
+                                          {
+                                              "label":  "Name him heir",
+                                              "text":  "The Prince is now the next king. The only thing he must wait for is you."
+                                          },
+                                          {
+                                              "label":  "Refuse",
+                                              "text":  "The Prince bowed his head. The nobles\u0027 dinners resumed."
+                                          },
+                                          {
+                                              "label":  "Offer a marriage pact",
+                                              "text":  "The Prince became engaged to Sarne\u0027s daughter. Two power centers joined."
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "The Prince is waiting for an answer."
+                                     }
+                      },
+    "brandt_hapis":  {
+                         "title":  "Voss writes from prison",
+                         "text":  "Letters from imprisoned opposition leader Adrian Voss are pasted on walls every week.",
+                         "choices":  [
+                                         {
+                                             "label":  "Release him",
+                                             "text":  "Voss walked free to a crowd. Anger eased a little; the legend grew."
+                                         },
+                                         {
+                                             "label":  "Offer parole",
+                                             "text":  "Voss agreed to leave politics. For now."
+                                         },
+                                         {
+                                             "label":  "Isolate him",
+                                             "text":  "The letters stopped. The streets did not."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "The letters multiplied."
+                                    }
+                     },
+    "muhalefet_para":  {
+                           "title":  "Questions over money splitting the opposition",
+                           "text":  "A civil society report lists the bank accounts of lawmakers who profited from the opposition\u0027s split.",
+                           "choices":  [
+                                           {
+                                               "label":  "Blame intelligence",
+                                               "text":  "Vale\u0027s name came up. Vale will not forget it."
+                                           },
+                                           {
+                                               "label":  "Suppress the report",
+                                               "text":  "The report vanished. The rumors did not."
+                                           },
+                                           {
+                                               "label":  "Deny everything",
+                                               "text":  "The denial made the headlines. So did the documents."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "The report is passing from hand to hand."
+                                      }
+                       }
 }
