@@ -1,19 +1,56 @@
 {
-  "power_tiers": [
-    "unknown",
-    "in the background",
-    "influential",
-    "indispensable"
-  ],
-  "report_tones": [
-    "optimistic",
-    "uneasy",
-    "pessimistic"
-  ],
-  "suspicion_names": [
-    "Calm",
-    "Uneasy",
-    "Suspicious",
-    "Dangerous"
-  ]
+  "prizes": ["Regency", "Port Contract", "Immunity"],
+  "power_tiers": ["unknown", "in the background", "influential", "indispensable"],
+  "report_tones": ["optimistic", "uneasy", "pessimistic"],
+  "suspicion_names": ["Calm", "Uneasy", "Suspicious", "Dangerous"],
+  "regime_names": {
+    "guvenlikci": "security-led",
+    "populist": "populist",
+    "patronajci": "patronage-driven",
+    "oligark": "oligarch-backed",
+    "medya": "media-controlled",
+    "istihbarat": "intelligence-led"
+  },
+  "regime_titles": {
+    "guvenlikci": "Security Regime",
+    "populist": "Populist Regime",
+    "patronajci": "Patronage Regime",
+    "oligark": "Oligarch Regime",
+    "medya": "Media Regime",
+    "istihbarat": "Intelligence Regime"
+  },
+  "regime_threats": {
+    "guvenlikci": "an army command ultimatum",
+    "populist": "the square closing in",
+    "patronajci": "the officeholders' reckoning",
+    "oligark": "the business circles closing in",
+    "medya": "the broadcasts withdrawing their support",
+    "istihbarat": "an ultimatum from the secret archive"
+  },
+  "patronage": {
+    "title": "Sarne's Demand",
+    "text": [
+      "Sarne laid his contract ledger on the table. 'My papers and my channels are both here, Your Majesty. Shall we discuss the price?' Helena murmurs: 'His broadcasts answer to him.'",
+      "This time Sarne is not asking. 'I carry the Palace's voice. I want my new share.' Helena waits by the door, reminding you who owns the papers.",
+      "Sarne spoke without opening the file. 'I am not so easy to do without, Your Majesty.' Helena avoids saying how close the broadcasts have drawn to the Palace."
+    ],
+    "ignore": "Sarne got no answer; the board held its breath.",
+    "choices": [
+      {"label": "Give him what he wants", "text": "Sarne got his share. A commission reached the Palace; Veyra kept a copy of the file."},
+      {"label": "Refuse", "text": "Sarne gathered the contracts. The next day, his broadcasts sounded different."},
+      {"label": "Build a rival network", "text": "Leyla grew her independent network. Sarne will remember this."},
+      {"label": "Go to the prosecutors", "text": "Renn took the holding company's ledgers to court."}
+    ]
+  },
+  "budget": {
+    "title": "Quarterly Budget",
+    "text": "Selin Veyra laid out next quarter's ledger. The ministries' breathing room and the Treasury's remaining days will not fit on the same page.",
+    "ignore": "The Assembly could not meet; the old balance held.",
+    "choices": [
+      {"label": "Austerity", "text": "The Treasury will hold; the institutions will wear down, and the streets will tighten."},
+      {"label": "Balanced budget", "text": "The deficit and the burden will cancel out; no door will open just yet."},
+      {"label": "Generous budget", "text": "Institutions and streets will breathe; the Treasury will bear the cost."},
+      {"label": "Palace allowance", "text": "The books will balance; the Palace's share will slip quietly from the Treasury, leaving a trace."}
+    ]
+  }
 }
