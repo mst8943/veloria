@@ -635,7 +635,7 @@
                                         },
                                         {
                                             "label":  "Talk him around",
-                                            "text":  "Renn stayed. His independence is sharper than ever."
+                                            "text":  "Renn stayed. Her independence is sharper than ever."
                                         },
                                         {
                                             "label":  "Turn up the pressure",
@@ -643,7 +643,7 @@
                                         }
                                     ],
                         "ignore":  {
-                                       "text":  "Renn announced his decision to the press."
+                                       "text":  "Renn announced her decision to the press."
                                    }
                     },
     "kessler_istifa":  {
@@ -2700,7 +2700,7 @@
                           },
     "yay_falk_sinav":  {
                            "title":  "The procedure for the Palace file",
-                           "text":  "A file concerning the Palace landed before you. Renn straightened his robe: “I do not rule on its contents. First, I examine the procedure.”",
+                           "text":  "A file concerning the Palace landed before you. Renn straightened her robe: “I do not rule on its contents. First, I examine the procedure.”",
                            "choices":  [
                                            {
                                                "label":  "Leave the file to procedure",
@@ -2712,12 +2712,12 @@
                                            }
                                        ],
                            "ignore":  {
-                                          "text":  "No decision was made; he took the silence for an answer."
+                                          "text":  "No decision was made; she took the silence for an answer."
                                       }
                        },
     "yay_falk_sadakat":  {
                              "title":  "Renn stays on the bench",
-                             "text":  "You had let him uphold procedure. Renn sealed the file: “This decision is neither yours nor mine. It belongs to the court.”",
+                             "text":  "You had let her uphold procedure. Renn sealed the file: “This decision is neither yours nor mine. It belongs to the court.”",
                              "choices":  [
                                              {
                                                  "label":  "Enforce the court\u0027s ruling",

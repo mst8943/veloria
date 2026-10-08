@@ -1,7 +1,7 @@
 {
   "arden": {"name": "Marcus Arden", "title": "Chief of General Staff", "red_line": "An order to fire on civilians", "weak_point": "His brother's procurement scandal"},
   "voss": {"name": "Nadir Vale", "title": "VIA Intelligence Chief", "red_line": "His agents being exposed", "weak_point": "His offshore accounts"},
-  "kessler": {"name": "Selin Veyra", "title": "Prime Minister", "red_line": "Falsifying budget figures", "weak_point": "His sick child"},
+  "kessler": {"name": "Selin Veyra", "title": "Prime Minister", "red_line": "Falsifying budget figures", "weak_point": "Her sick child"},
   "halden": {"name": "Victor Sarne", "title": "Chairman of the Sarne Group", "red_line": "The seizure of his companies", "weak_point": "The tax-evasion files"},
   "lena": {"name": "Leyla Sarn", "title": "Independent Journalist", "red_line": "Her sources being exposed", "weak_point": "Her newspaper's debts"},
   "dorn": {"name": "Queen Helena", "title": "Queen / Royal Foundation Chair", "red_line": "Discussion of the king's private life", "weak_point": "Improper donations to the Royal Foundation"},

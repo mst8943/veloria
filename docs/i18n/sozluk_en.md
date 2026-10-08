@@ -117,6 +117,17 @@ karşılık kullanılır.
 | Viktor Malenkov | Viktor Malenkov |
 | Lucien Vale | Lucien Vale |
 
+### Cinsiyet ve zamir tutarlılığı
+
+| Grup | Karakterler | Zamir |
+|---|---|---|
+| Kadın | Selin Veyra, Sophia Renn, Queen Helena, Leyla Sarn, Claire Duvall, Elena Varos | she / her / hers / herself |
+| Erkek | Marcus Arden, Nadir Vale, Victor Sarne, Adrian Voss, Prince Marcus, Julian Valerius, Viktor Malenkov, Lucien Vale, King Adrian IV | he / him / his / himself |
+
+Türkçe kaynak zamiri belirtmez; İngilizce metinde bu tabloya uy. `{n}`, `{n_in}`
+gibi kimliği olaydan değişen aktör yer tutucularına cinsiyet zamiri bağlama;
+adı yinele veya zamirsiz bir cümle kur. Bu durumda tekil `their` da tercih edilmez.
+
 Eski adlar çevirilerde kullanılmaz. İngilizce sahiplik için ek birleştirmek
 yerine tam cümle kurulacak; gerekli yerde `Loc.poss(name)` biçimi `Name's`
 üretir.

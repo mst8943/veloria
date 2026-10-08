@@ -292,13 +292,13 @@ msgstr "When you are out of actions or have nothing left to do, press the button
 msgid "Majesteleri, bu masada sayılar yoktur, insanlar vardır. Aşağıdaki kartlar kararınızı bekliyor; her karar, emir ve operasyon sınırlı mesainizden harcar. Raporları da okuyun, ama hepsine inanmayın."
 msgstr "Your Majesty, there are no numbers at this desk, only people. The cards below await your decision; every decision, order, and operation uses your limited actions. Read the reports too, but do not believe all of them."
 msgid "Bir kişiyi seçip 'Doğrula' derseniz raporunu başka kaynaklarla karşılaştırırım. Kimin sizi süslediğini, kimin gerçeği söylediğini zamanla görürsünüz."
-msgstr "If you select someone and use 'Verify', I compare their report with other sources. In time, you will see who flatters you and who tells the truth."
+msgstr "Select someone and use 'Verify', and I compare the report with other sources. In time, you will see who flatters you and who tells the truth."
 msgid "Kararları ertelemek de bir karardır: iki hafta sonra kendi kendine, çoğu zaman en kötü biçimde çözülür."
 msgstr "Deferring decisions is also a decision: after two weeks they resolve themselves, usually in the worst way."
 msgid "Terfi ve gizli ödeme sadakat getirir. Ama terfi ettirdiğiniz kişi güçlenir, para ise iz bırakır. İzler 'Dosyalar' sekmesinde birikir."
 msgstr "Promotion and secret payments bring loyalty. But the person you promote grows stronger, while money leaves traces. The traces gather in the 'Files' tab."
 msgid "Birini gerçekten kontrol etmek istiyorsanız önce 'Araştır' ile zayıf noktasını öğrenin. Şantaj güçlüdür, ama geri tepebilir."
-msgstr "To truly control someone, first use 'Investigate' to learn their weak point. Blackmail is powerful, but can backfire."
+msgstr "To truly control someone, first use 'Investigate' to find a weakness. Blackmail is powerful, but can backfire."
 msgid "Bir güç merkezi fazla büyüyorsa rakibini güçlendirin. Kimse sizi tek başına deviremeyecek kadar zayıf kalmalı."
 msgstr "If a power centre grows too large, strengthen its rival. Everyone must remain too weak to overthrow you alone."
 msgid "İlk haftaların sessizliği bitiyor. Artık bir koalisyon sizi devirebilir. Raporlar birbirine benzemeye başlarsa, kimsenin size gerçeği söylemediğini bilin."
@@ -467,10 +467,10 @@ msgid "Soruşturma (1 mesai)\nİstihbarat gibi güçlü birine verilirse sorunlu
 msgstr "Investigation (1 action)\nGiven to a powerful figure like Intelligence, it may surface suspects as leads."
 
 msgid "Araştır (1 mesai)\nSeçilen kişinin önce zayıf noktasını, sonra kırmızı çizgisini öğrenmeye çalışır. İstihbarat güçlüyse şans artar."
-msgstr "Investigate (1 action)\nTries to uncover the selected person's weakness, then their breaking point. Strong Intelligence improves the odds."
+msgstr "Investigate (1 action)\nTries to uncover the selected person's weakness, then find what could break that person. Strong Intelligence improves the odds."
 
 msgid "Şantaj (1 mesai)\nZayıf noktası bilinen birini korkuyla bağlar, borcunu siler. Ama iz bırakır, hırsını büyütür; dürüst biri ifşa edebilir."
-msgstr "Blackmail (1 action)\nUses a known weakness to bind someone through fear and erase their debt. It leaves traces and fuels ambition; an honest person may expose you."
+msgstr "Blackmail (1 action)\nUses a known weakness to bind the target through fear and erase the debt owed to you. It leaves traces and fuels ambition; an honest person may expose you."
 
 msgid "Söz: Naiplik (1 mesai)\nHemen sadakat getirir. Tutarsan çok güçlenir; senin gücünden de pay alır. Yalnızca bir kişiye verilebilir."
 msgstr "Promise: Regency (1 action)\nWins loyalty at once. Keep it and they grow powerful, drawing on your own strength. Can be promised to one person only."

@@ -6,9 +6,17 @@ const LOGIC := {"id": true, "fx": true, "needs_flag": true, "flag": true, "actor
 const ContentData := preload("res://game/core/content_data.gd")
 const Loc := preload("res://game/core/loc.gd")
 var ok := true
+var _female_refs := RegEx.new()
+var _male_refs := RegEx.new()
+var _male_pronouns := RegEx.new()
+var _female_pronouns := RegEx.new()
 
 
 func _init() -> void:
+	_female_refs.compile("(?i)\\b(Veyra|Sophia|Renn|Queen|Helena|Leyla|Sarn|Claire|Duvall|Elena|Varos|Prime Minister|Prosecutor|Judge)\\b")
+	_male_refs.compile("(?i)\\b(Arden|Nadir|Vale|Victor|Sarne|Adrian|Voss|Marcus|Julian|Valerius|Viktor|Malenkov|Lucien|King|Prince|General|Heir)\\b")
+	_male_pronouns.compile("(?i)\\b(he|him|his|himself)\\b")
+	_female_pronouns.compile("(?i)\\b(she|her|hers|herself)\\b")
 	_check_po()
 	_check_overlays()
 	_check_overlay_shapes()
@@ -23,11 +31,35 @@ func _check_po() -> void:
 	if f == null: return
 	var text := f.get_as_text()
 	_expect(text.contains("\"Language: en\\n\""), "en.po dil başlığı eksik")
+	_check_po_gender(text)
 	var ids := text.split("msgid ")
 	for entry in ids.slice(1):
 		if entry.begins_with("\"\""):
 			continue
 		_expect(entry.contains("msgstr \""), "en.po msgstr eksik")
+
+
+func _check_po_gender(text: String) -> void:
+	var collecting := false
+	var value := ""
+	for line in text.split("\n"):
+		if line.begins_with("msgstr "):
+			if collecting:
+				_check_gender_pronouns(value, "en.po msgstr")
+			collecting = true
+			value = _po_literal(line.trim_prefix("msgstr "))
+		elif collecting and line.begins_with("\""):
+			value += _po_literal(line)
+		elif collecting:
+			_check_gender_pronouns(value, "en.po msgstr")
+			collecting = false
+	if collecting:
+		_check_gender_pronouns(value, "en.po msgstr")
+
+
+func _po_literal(raw: String) -> String:
+	var parsed: Variant = JSON.parse_string(raw)
+	return str(parsed) if parsed is String else ""
 
 
 func _check_overlays() -> void:
@@ -86,7 +118,8 @@ func _check_matching_tree(source: Variant, overlay: Variant, file_name: String, 
 				continue
 			_expect(overlay.has(key), "%s kaplama anahtarı eksik: %s/%s" % [file_name, path, key_name])
 			if overlay.has(key):
-				_check_matching_tree(source[key], overlay[key], file_name, path + "/" + key_name)
+				var child_path := key_name if path.is_empty() else path + "/" + key_name
+				_check_matching_tree(source[key], overlay[key], file_name, child_path)
 		for key in overlay:
 			_expect(source.has(key), "%s kaplamasında bilinmeyen anahtar: %s/%s" % [file_name, path, key])
 	elif source is Array:
@@ -128,14 +161,25 @@ func _check_tree(value: Variant, file_name: String, key: String = "") -> void:
 	if value is Dictionary:
 		for k in value:
 			_expect(not LOGIC.has(str(k)), "%s mantık alanı içeriyor: %s" % [file_name, k])
-			_check_tree(value[k], file_name, str(k))
+			var path := str(k) if key.is_empty() else key + "/" + str(k)
+			_check_tree(value[k], file_name, path)
 	elif value is Array:
-		for item in value:
-			_check_tree(item, file_name, key)
+		for i in value.size():
+			_check_tree(value[i], file_name, key + "/%d" % i)
 	elif value is String:
 		_expect(not value.strip_edges().is_empty(), "%s boş çeviri içeriyor" % file_name)
 		for ch in TURKISH:
 			_expect(not value.contains(ch), "%s Türkçe karakter içeriyor: %s" % [file_name, value])
+		_check_gender_pronouns(value, file_name + "/" + key)
+
+
+func _check_gender_pronouns(value: String, path: String) -> void:
+	var has_female := _female_refs.search(value) != null
+	var has_male := _male_refs.search(value) != null
+	if has_female and not has_male and _male_pronouns.search(value) != null:
+		push_warning("I18N gender warning (%s): female reference with masculine pronoun" % path)
+	if has_male and not has_female and _female_pronouns.search(value) != null:
+		push_warning("I18N gender warning (%s): male reference with feminine pronoun" % path)
 
 
 func _expect(condition: bool, message: String) -> void:
