@@ -2587,6 +2587,21 @@ msgstr "Secret support from a foreign power"
 msgid "Liman ihalesindeki komisyon"
 msgstr "A kickback in the port tender"
 
+msgid "Sarne ihalesinden saraya aktarılan komisyon"
+msgstr "A kickback from a Sarne tender reached the Palace"
+
+msgid "saray payı devlet kasasından ayrılıyor"
+msgstr "The Palace allowance is being siphoned from the State Treasury"
+
+msgid "Prens suikastının arkasında sarayın olduğu söylentisi"
+msgstr "A rumor that the Palace was behind the Prince's assassination"
+
+msgid "Sarne soruşturmasının saraydan sızması"
+msgstr "The Sarne investigation leaked from the Palace"
+
+msgid "Dosya sızdı; yayınlar sarayı hedef alıyor."
+msgstr "The file leaked; the broadcasts are targeting the Palace."
+
 msgid "Normal"
 msgstr "Normal"
 

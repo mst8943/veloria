@@ -997,7 +997,7 @@ func leak_fact(fact_id: String) -> String:
 	stats["leaks"] += 1
 	facts[fact_id]["common"] = minf(1.0, facts[fact_id]["common"] + 0.5)
 	changed.emit()
-	return tr("'%s' basına sızdırıldı.") % facts[fact_id]["text"]
+	return tr("'%s' basına sızdırıldı.") % fact_text_for_display(str(facts[fact_id]["text"]))
 
 
 func suppress_fact(fact_id: String) -> String:
@@ -1006,7 +1006,7 @@ func suppress_fact(fact_id: String) -> String:
 	var f: Dictionary = facts[fact_id]
 	f["common"] = maxf(0.0, f["common"] - 0.3)
 	changed.emit()
-	return tr("'%s' için sessizlik sağlandı. Kanıtın kopyaları hâlâ duruyor.") % f["text"]
+	return tr("'%s' için sessizlik sağlandı. Kanıtın kopyaları hâlâ duruyor.") % fact_text_for_display(str(f["text"]))
 
 
 ## Kanıtı yok et: kopya sayısı kadar zor; yok etme girişimi de iz bırakabilir.
@@ -1021,7 +1021,7 @@ func destroy_evidence(fact_id: String) -> String:
 	if int(f["copies"]) > 1:
 		f["copies"] = int(f["copies"]) - 1
 		changed.emit()
-		return tr("'%s' kanıtının bir kopyası yok edildi; hâlâ kopyaları var.") % f["text"]
+		return tr("'%s' kanıtının bir kopyası yok edildi; hâlâ kopyaları var.") % fact_text_for_display(str(f["text"]))
 	if rng.randf() < 0.7:
 		facts.erase(fact_id)
 		changed.emit()
@@ -1986,7 +1986,7 @@ func _resolve_patronage(choice: int, level: int) -> String:
 			halden_hostile_until = week + 8
 			flags["HALDEN_SAVCI_SIZDI"] = week
 			_add_fact("halden_savci_sizinti_%d" % week, "Sarne soruşturmasının saraydan sızması", "king", 25.0, ["halden", "falk"], 1)
-			return str(option["text"]) + " Dosya sızdı; yayınlar sarayı hedef alıyor."
+			return str(option["text"]) + " " + tr("Dosya sızdı; yayınlar sarayı hedef alıyor.")
 	return str(option["text"])
 
 
