@@ -31,7 +31,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S8: L4 — `events.json` parti 3 (olay 101–150 tamamlandı; kapı doğrulaması sürüyor).
+S9: L4 — `events.json` parti 4 (olay 151–195, son parti).
 
 ## L1 — tamamlandı
 
@@ -245,3 +245,25 @@ S8: L4 — `events.json` parti 3 (olay 101–150 tamamlandı; kapı doğrulamas�
   “Vale Başbakan hakkında yeni bir dosya hazırladı; Veyra bunu duydu.”,
   “Sarne'nin kanalları bir hafta boyunca Veyra'yı hedef aldı. Hedefin neden
   Veyra olduğunu kimse sormuyor.”, “Voss taşrada kalabalık bir miting yaptı.”
+
+## S8 — tamamlandı
+
+- `events.json` olay 101–150 beş adet 10'luk parti olarak çevrildi. Kaplama
+  yalnızca görünen metin alanlarını içerir; olay sırası, seçenek sayıları,
+  yer tutucular ve Türkçe kaynak değişmedi. Her parti sonrası `i18n_check` ve
+  İngilizce `event_check` geçti. Parti commitleri: `e12602e`, `df273ac`,
+  `4b2a0d5`, `38f5cf4`, `5c3c12d`.
+- Kalite örneklerine 105, 110, …, 150 başlıkları eklendi.
+- Kapı testleri: `TEST: OK`, `EVENTS: OK (195 olay, 0 uyarı)` TR/EN,
+  `SAVE: OK`, `CONTENT: OK` TR/EN, `I18N: OK`, `UI INPUT: OK`; tempo testi
+  geçti. Autoplay masaüstü/mobil de tamamlandı. `unit_tests.gd`: 398 geçti,
+  1 başarısız — bilinen, kapsam dışı Beckett `audit finds the offscreen control`.
+- `--autoplay --full` iki dilde birebir: `FULLRUN tohum=101 hafta=104
+  sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`.
+  İngilizce `advice_weighted`, 80 kampanyada kolay/normal/zor `68/80`, `36/80`,
+  `16/80` verdi; önceki taban ölçümüyle aynı.
+- Görseller: `dist/i18n_s8_{tr,en}_{desktop,mobile}`; 17 masaüstü/19 mobil
+  PNG/dil. Ana oyun ve karar kartındaki metin ile haber şeridi açılarak
+  incelendi: Türkçe çekimler Türkçe, İngilizce çekimler İngilizce; taşma ya da
+  mobil bildirim-şerit çakışması görülmedi. Sonraki S9 kapsamındaki 151–195
+  olayları İngilizce kaplamada henüz yok.

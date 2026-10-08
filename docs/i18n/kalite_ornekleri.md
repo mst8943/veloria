@@ -71,3 +71,18 @@ Her onuncu İngilizce metin, kaplama dosyalarının sabit sıralı taramasından
 | 90 | Vale'nin gölge kabinesi | Vale's shadow cabinet | events/derin_devlet/title |
 | 95 | Ulusal bayram | National holiday | events/ulusal_bayram/title |
 | 100 | Arden'in subayları kritik görevlere | Arden's officers take key posts | events/hamle_arden_subay/title |
+
+## S8 — olay başlıkları (her beş olayda bir)
+
+| Olay | Türkçe | English | Kaplama yolu |
+|---:|---|---|---|
+| 105 | Sarne'nin kanalları bir bakanı hedefliyor | Sarne's channels target a minister | events/hamle_halden_kanal/title |
+| 110 | Voss taşrada miting yaptı | Voss holds a rally in the provinces | events/hamle_brandt_miting/title |
+| 115 | Helena randevu listesini daralttı | Helena cuts the appointment list | events/hamle_dorn_liste/title |
+| 120 | Vale'nin bilgi masası | Vale's intelligence desk | events/yay_voss_yukselis/title |
+| 125 | Eksik bütçe satırı | A missing budget line | events/yay_kessler_sinav/title |
+| 130 | Sarne sözleşmeyi gösteriyor | Sarne shows the contract | events/yay_halden_sadakat/title |
+| 135 | Leyla kapıyı kapatıyor | Leyla closes the door | events/yay_lena_kopus/title |
+| 140 | Prens’in boş sandalyesi | The Prince’s empty chair | events/yay_prens_yukselis/title |
+| 145 | Meydanın sesi yükseliyor | The square raises its voice | events/yay_brandt_sinav/title |
+| 150 | Renn kürsüsünde kalıyor | Renn stays on the bench | events/yay_falk_sadakat/title |
