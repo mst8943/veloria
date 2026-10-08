@@ -3087,5 +3087,175 @@
                            "ignore":  {
                                           "text":  "Helena put the letters in a queue."
                                       }
-                       }
+                       },
+    "kadro_defteri":  {
+                          "title":  "The last page of the staffing ledger",
+                          "text":  "Veyra counted vacancies across four institutions. “Let\u0027s talk about the work, not the names,” she said.",
+                          "choices":  [
+                                          {
+                                              "label":  "Fill vacancies with experts",
+                                              "text":  "The new appointees learned the work; the budget share shrank."
+                                          },
+                                          {
+                                              "label":  "Make do with current staff",
+                                              "text":  "The clerks worked late, and the ledger stayed open."
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "The vacancies rolled over to next week."
+                                     }
+                      },
+    "son_curek_hesabi":  {
+                             "title":  "The final quarter\u0027s reckoning",
+                             "text":  "Veyra and Renn waited at the same desk. One brought the Treasury\u0027s files for next year; the other, the Judiciary\u0027s.",
+                             "choices":  [
+                                             {
+                                                 "label":  "Settle the treasury",
+                                                 "text":  "Veyra took the ledgers; Renn left with the file she had brought."
+                                             },
+                                             {
+                                                 "label":  "Settle the courts",
+                                                 "text":  "Renn closed the files; the Treasury lost a share."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "Both files stayed open."
+                                        }
+                         },
+    "halden_yayin_kesti":  {
+                               "title":  "Every channel falls silent",
+                               "text":  "Sarne\u0027s newspaper and television network targeted the government that same morning. “You needn\u0027t give an order, Your Majesty,” Sarne said. “Everyone saw who fell silent.”",
+                               "choices":  [
+                                               {
+                                                   "label":  "Promise Leyla",
+                                                   "text":  "Leyla filled the gaps left on air with her own voice."
+                                               },
+                                               {
+                                                   "label":  "Talk to Sarne",
+                                                   "text":  "Sarne listened, then asked for a larger share of his broadcasts."
+                                               }
+                                           ],
+                               "ignore":  {
+                                              "text":  "The next day\u0027s headlines blamed the Palace again."
+                                          }
+                           },
+    "ihale_sorusturmasi_sizinti":  {
+                                       "title":  "Pages from the inquiry leak",
+                                       "text":  "Before Renn could close the file, Sarne\u0027s paper printed the headline. “The seal stayed at the courthouse, Your Majesty; the pages did not,” Sarne said.",
+                                       "choices":  [
+                                                       {
+                                                           "label":  "Protect Renn",
+                                                           "text":  "Renn kept her post. The Palace took on the burden of the inquiry."
+                                                       },
+                                                       {
+                                                           "label":  "Put the file on hold",
+                                                           "text":  "Renn bowed her head. The paper reported that too."
+                                                       }
+                                                   ],
+                                       "ignore":  {
+                                                      "text":  "The source of the leak remained unknown."
+                                                  }
+                                   },
+    "saray_payi_sizdi":  {
+                             "title":  "The Palace\u0027s share hits the papers",
+                             "text":  "The separate column Veyra had kept for two quarters landed in the paper. “I wrote the figures, Your Majesty,” she said. “Someone else wrote the headline.”",
+                             "choices":  [
+                                             {
+                                                 "label":  "Cut the share",
+                                                 "text":  "Veyra closed the separate column; the Treasury\u0027s trail stayed in the ledger."
+                                             },
+                                             {
+                                                 "label":  "Defend the share",
+                                                 "text":  "Veyra left the ledger open. The paper prepared a second edition."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "The paper wrote that the Palace had offered no reply."
+                                        }
+                         },
+    "holding_devrildi":  {
+                             "title":  "Sarne joins the opposition",
+                             "text":  "Sarne\u0027s companies severed their ties to the Palace. His broadcasts kept talking as the holding slowly eroded. “You can remove me from here, Your Majesty,” he said, “but not my voice.”",
+                             "choices":  [
+                                             {
+                                                 "label":  "Back a rival broadcaster",
+                                                 "text":  "Leyla\u0027s small newsroom grew; Sarne\u0027s channels stayed on the air."
+                                             },
+                                             {
+                                                 "label":  "Wait",
+                                                 "text":  "The holding looked for a new partner. The Palace door stayed shut."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "Sarne\u0027s channels kept broadcasting."
+                                        }
+                         },
+    "son_butce_mektubu":  {
+                              "title":  "The final budget letter",
+                              "text":  "Finance clerks left the first page of next year\u0027s ledger blank. The letter contained one question: whose desk would hold this year\u0027s debt?",
+                              "choices":  [
+                                              {
+                                                  "label":  "Protect the treasury",
+                                                  "text":  "The letter went into the Treasury ledger; the provinces began to wait."
+                                              },
+                                              {
+                                                  "label":  "Send it to the provinces",
+                                                  "text":  "The clerks stamped it. The Treasury had room for one fewer line."
+                                              }
+                                          ],
+                              "ignore":  {
+                                             "text":  "The blank page stayed as it was."
+                                         }
+                          },
+    "son_yayin_kayitlari":  {
+                                "title":  "Broadcast records",
+                                "text":  "A box of broadcast records was left at the Palace gates. The headlines contradicted one another; all told the same two years.",
+                                "choices":  [
+                                                {
+                                                    "label":  "Keep the records",
+                                                    "text":  "The box went into the archives. The broadcasters fell quiet for a while."
+                                                },
+                                                {
+                                                    "label":  "Release them to the public",
+                                                    "text":  "The records were played in the square. Everyone underlined a different passage."
+                                                }
+                                            ],
+                                "ignore":  {
+                                               "text":  "The box sat by the gate and took the rain."
+                                           }
+                            },
+    "son_muhur":  {
+                      "title":  "The final seal",
+                      "text":  "The Palace clerk gathered two years of decisions into one volume. A crown marked the first page; signatures and crossed-out names followed.",
+                      "choices":  [
+                                      {
+                                          "label":  "Seal the ledger",
+                                          "text":  "The seal dried. The missing pages stayed inside the volume."
+                                      },
+                                      {
+                                          "label":  "Leave the ledger open",
+                                          "text":  "The clerk left the last page blank; everyone who came by could read a line."
+                                      }
+                                  ],
+                      "ignore":  {
+                                     "text":  "The clerk returned the ledger to the shelf."
+                                 }
+                  },
+    "julian_halka_konusma":  {
+                                 "title":  "The heir\u0027s first words",
+                                 "text":  "Julian Valerius wants to speak in the square. “The people know my father\u0027s voice,” he said. “One day, they must know mine too.”",
+                                 "choices":  [
+                                                 {
+                                                     "label":  "Take him to the square",
+                                                     "text":  "Julian did not hide his nerves; the square listened anyway."
+                                                 },
+                                                 {
+                                                     "label":  "Start in a small hall",
+                                                     "text":  "The heir spoke to a small audience and learned the weight of his words."
+                                                 }
+                                             ],
+                                 "ignore":  {
+                                                "text":  "Julian put the speech in his desk drawer."
+                                            }
+                             }
 }
