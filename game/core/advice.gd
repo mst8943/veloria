@@ -206,7 +206,7 @@ func _advisor_skill(aid: String, e: Dictionary) -> float:
 func short_name(a: Actor) -> String:
 	if a.short != "":
 		return a.short
-	return "Prens" if a.royal else a.display_name.split(" ")[-1]
+	return tr("Prens") if a.royal else a.display_name.split(" ")[-1]
 
 
 ## Bir kart için meclis görüşleri (tembel üretilir, pending içinde saklanır: kayıtta ve yüklemede değişmez).

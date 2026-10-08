@@ -2473,6 +2473,9 @@ msgstr "Developing"
 msgid "Prens Marcus"
 msgstr "Prince Marcus"
 
+msgid "Prens"
+msgstr "the Prince"
+
 msgid "Normal"
 msgstr "Normal"
 

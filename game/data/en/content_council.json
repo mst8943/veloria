@@ -26,8 +26,8 @@
   "flat": ["I think they all lead to the same door.", "I see little difference between them, Your Majesty."],
   "roman": ["I", "II", "III", "IV"],
   "roman_acc": ["I", "II", "III", "IV"],
-  "actor_good": ["cuts {n_in}'s power", "keeps {n_i} in check"],
-  "actor_bad": ["makes {n_i} too powerful", "strengthens {n_in}'s hand"],
+  "actor_good": ["cuts {n_in} power", "keeps {n_i} in check"],
+  "actor_bad": ["makes {n_i} too powerful", "strengthens {n_in} hand"],
   "rec_forms": ["I recommend %s", "In my view, %s, Your Majesty", "Choose %s"],
   "cover_default": "Trust me."
 }

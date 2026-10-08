@@ -1,6 +1,7 @@
 extends RefCounted
 ## Sabit metinlerden rapor, alamet ve tarihçi anlatısı kurar.
 const Actor := preload("res://game/core/actor.gd")
+const Loc := preload("res://game/core/loc.gd")
 var sim: Node
 var week: int:
 	get: return sim.week
@@ -107,8 +108,10 @@ func _sign_text(a: Actor, st: int) -> String:
 	for o: Actor in actors.values():
 		if o != a and o.ready and o.insider and not o.moved:
 			partner = short_name(o)
-	var p_e := ek(partner, "e") if partner != "" else str(REPORT["unknown_partner"])
-	return t.replace("{n_in}", ek(nm, "in")).replace("{n_e}", ek(nm, "e")).replace("{n_i}", ek(nm, "i")).replace("{p_e}", p_e).replace("{n}", nm)
+	var p_e := partner if Loc.lang == "en" else (ek(partner, "e") if partner != "" else str(REPORT["unknown_partner"]))
+	var n_in := Loc.poss(nm) if Loc.lang == "en" else ek(nm, "in")
+	var n_case := nm if Loc.lang == "en" else ""
+	return t.replace("{n_in}", n_in).replace("{n_e}", n_case if Loc.lang == "en" else ek(nm, "e")).replace("{n_i}", n_case if Loc.lang == "en" else ek(nm, "i")).replace("{p_e}", p_e).replace("{n}", nm)
 
 
 func _phrase(a: Actor, value: float, echo: float) -> String:

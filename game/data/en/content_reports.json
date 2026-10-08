@@ -58,16 +58,16 @@
   },
   "sign_texts": {
     "0": {
-      "_": ["Whispers about {n} drift through the corridors; no one knows their source.", "A servant reports seeing {n_i} by the Palace's back door late at night.", "An unsigned note questioning {n_in}'s loyalty was left on your desk.", "Someone close to {n_in} is talking too freely, but the words are unclear."]
+      "_": ["Whispers about {n} drift through the corridors; no one knows their source.", "A servant reports seeing {n_i} by the Palace's back door late at night.", "An unsigned note questioning {n_in} loyalty was left on your desk.", "Someone close to {n} is talking too freely, but the words are unclear."]
     },
     "1": {
-      "_": ["{n} sighs often in meetings.", "{n} has complained to close associates about the Palace's direction.", "{n} seems displeased with the latest rewards.", "{n_in}'s greeting to you is colder than before."]
+      "_": ["{n} sighs often in meetings.", "{n} has complained to close associates about the Palace's direction.", "{n} seems displeased with the latest rewards.", "{n_in} greeting to you is colder than before."]
     },
     "2": {
-      "_": ["{n} made a long, closed-door visit to {p_e}.", "The lights stay on late at {n_in}'s residence.", "{n} has spoken to some ministers of a 'transition period.'"],
-      "army": ["{n_in}'s officers gather at headquarters late into the night.", "{n} dined alone with some regimental commanders."],
-      "intel": ["{n} had some files moved from the Palace archive to an office.", "Agents loyal to {n_in} are watching your ministers."],
-      "media": ["Your name appears less and less on {n_in}'s channels.", "{n} met foreign bankers in secret."],
+      "_": ["{n} made a long, closed-door visit to {p_e}.", "The lights stay on late at {n_in} residence.", "{n} has spoken to some ministers of a 'transition period.'"],
+      "army": ["{n_in} officers gather at headquarters late into the night.", "{n} dined alone with some regimental commanders."],
+      "intel": ["{n} had some files moved from the Palace archive to an office.", "Agents loyal to {n} are watching your ministers."],
+      "media": ["Your name appears less and less on {n_in} channels.", "{n} met foreign bankers in secret."],
       "royal": ["Cars pull up at the Prince's residence after midnight.", "The Prince is exchanging sealed letters with noble families."]
     },
     "3": {
@@ -75,7 +75,7 @@
       "army": ["{n} placed loyalists in key units across the Capital.", "The commanders at the Capital's gates have changed; all answer to {n}."],
       "royal": ["The Prince's guards have doubled.", "Noble families have begun calling the Prince 'Your Majesty.'"],
       "intel": ["{n} locked the Palace phone-tapping logs in a personal safe."],
-      "media": ["{n_in}'s channels are preparing live crews for 'an extraordinary night.'"]
+      "media": ["{n_in} channels are preparing live crews for 'an extraordinary night.'"]
     }
   },
   "state": {
