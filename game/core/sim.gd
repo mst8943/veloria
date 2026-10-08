@@ -780,6 +780,8 @@ func cross_check(id: String) -> String:
 	var a: Actor = actors[id]
 	if INSTITUTION_HEADS.has(id):
 		flags["DOGRULA_" + INSTITUTION_HEADS[id]] = week
+	if id == "elena":
+		flags["DOGRULA_ELENA"] = week
 	var gap := _domain_truth(a.domain) - _domain_reported(a)
 	var noisy := gap + rng.randf_range(-8.0, 8.0)
 	var worse := (a.domain == "economy" and noisy < -6.0) or (a.domain != "economy" and noisy > 6.0)

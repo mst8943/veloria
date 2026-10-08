@@ -297,9 +297,15 @@ func _init() -> void:
 
 	# Hiç tetiklenmeyen olaylar
 	var never: Array = []
+	var new_event_count := 0
 	for e in sim._events:
+		if str(e["id"]).begins_with("julian_") or str(e["id"]).begins_with("elena_"):
+			new_event_count += 1
 		if not fired_ids.has(e["id"]):
 			never.append(e["id"])
+	if new_event_count != 8:
+		push_error("Julian/Elena olaylarından biri eksik")
+		ok = false
 	print("Hiç tetiklenmeyen olaylar (120 kampanyada): ", never)
 	# Ulaşılabilirlik: gerekli kararları zorla verip uygunluğu kontrol et.
 	sim.new_game(77)
@@ -354,6 +360,7 @@ func _init() -> void:
 		sim.economy = clampf(55.0, float(e.get("min_economy", 0)), float(e.get("max_economy", 100)))
 		sim.treasury = clampf(55.0, float(e.get("min_treasury", 0)), float(e.get("max_treasury", 100)))
 		sim.holding = clampf(55.0, float(e.get("min_holding", 0)), float(e.get("max_holding", 100)))
+		sim.heir_maturity = clampf(75.0, float(e.get("min_heir", 0)), float(e.get("max_heir", 100)))
 		if e.get("needs_hostile", false):
 			sim.halden_hostile_until = sim.week + 1
 		for aid in sim._as_array(e.get("needs_moved", [])):

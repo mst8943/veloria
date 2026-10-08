@@ -3320,5 +3320,85 @@
     {"label": "Defteri açık tut", "text": "Kâtip son sayfayı boş bıraktı; gelen herkes bir satır okuyabildi.", "fx": {"opp": -1}}
   ],
   "ignore": {"text": "Kâtip defteri rafına kaldırdı.", "fx": {}}
+},
+{
+  "id": "julian_halka_konusma", "min_week": 20, "max_week": 52, "min_heir": 40, "needs_flag": "VELIAHT_YETISTI", "art": "prens_veliaht",
+  "title": "Veliahtın ilk sözü",
+  "text": "Julian Valerius meydanda konuşmak istiyor. 'Halk babamın sesini tanıyor,' dedi, 'bir gün benim sesimi de tanımalı.'",
+  "choices": [
+    {"label": "Meydana çıkar", "text": "Julian korkusunu saklamadı; meydan yine de onu dinledi.", "fx": {"unrest": -1}},
+    {"label": "Küçük salonda başlasın", "text": "Veliaht az kişiye konuştu, sözlerinin ağırlığını öğrendi.", "fx": {"king": 1}}
+  ],
+  "ignore": {"text": "Julian konuşma kâğıdını çekmecesine koydu.", "fx": {}}
+},
+{
+  "id": "julian_isyani_reddi", "min_week": 34, "max_week": 68, "min_heir": 50, "needs_flag": "VELIAHT_YETISTI", "any_flag": ["julian_halka_konusma_0", "julian_halka_konusma_1"], "art": "prens_veliaht",
+  "title": "Veliahdın reddi",
+  "text": "Bir soylu Julian'a saray dışında birlik toplamasını önerdi. Veliaht mektubu sana getirdi: 'Tahta giden yol buysa yürümem, baba.'",
+  "choices": [
+    {"label": "Mektubu sakla", "text": "Julian senin yanında kaldı; soylunun adı deftere geçti.", "fx": {"king": 1}},
+    {"label": "Soyluya yanıt yaz", "text": "Cevabı Julian kendi eliyle yazdı; kapalı kapı ardında söylenti büyümedi.", "fx": {"opp": -1}}
+  ],
+  "ignore": {"text": "Mektup cevapsız kaldı. Julian öneriyi reddetti.", "fx": {}}
+},
+{
+  "id": "julian_marcus_oyunu", "min_week": 50, "max_week": 82, "min_heir": 60, "needs_flag": "VELIAHT_YETISTI", "any_flag": ["julian_isyani_reddi_0", "julian_isyani_reddi_1"], "art": "prens_veliaht",
+  "title": "Marcus'un taht oyunu",
+  "text": "Prens Marcus, Julian'ın adını taşıyan bir çağrı hazırlattı. 'Ben imzalamadım,' dedi veliaht. 'Benden beklenen cevabı da vermeyeceğim.'",
+  "choices": [
+    {"label": "Çağrıyı açıkla", "text": "Sahte mühür gösterildi; herkes Prens'in ne denediğini gördü.", "fx": {"opp": -1}},
+    {"label": "Julian konuşsun", "text": "Veliaht kendi adıyla konuştu. Prens'in mektubu sarayda kaldı.", "fx": {"king": 1}}
+  ],
+  "ignore": {"text": "Mektup dolaştı, fakat Julian ona el sürmedi.", "fx": {}}
+},
+{
+  "id": "julian_evlilik_teklifi", "min_week": 66, "max_week": 96, "min_heir": 70, "needs_flag": "VELIAHT_YETISTI", "any_flag": ["julian_marcus_oyunu_0", "julian_marcus_oyunu_1"], "art": "yabanci_elci",
+  "title": "Veliaht için ittifak",
+  "text": "Julian'a bir evlilik teklifi geldi. 'Bana değil, gelecekteki tacıma yazmışlar,' dedi. 'Yine de cevabı ben vermek isterim.'",
+  "choices": [
+    {"label": "Julian karar versin", "text": "Veliaht cevabını kendi yazdı; sarayın sözüne ağırlık kattı.", "fx": {"king": 1}},
+    {"label": "Teklifi beklet", "text": "Elçi bir süre daha kapıda kaldı; veliaht acele etmedi.", "fx": {"treasury": -1}}
+  ],
+  "ignore": {"text": "Teklifin mührü açılmadan saray arşivine kaldırıldı.", "fx": {}}
+},
+{
+  "id": "elena_heyet_daveti", "min_week": 24, "max_week": 60, "needs_flag": "DOGRULA_ELENA", "flag_age": {"DOGRULA_ELENA": 1}, "art": "yabanci_elci",
+  "title": "Elena'nın daveti",
+  "text": "Elena Varos yabancı heyeti saraya çağırdı. 'Söz vermeyelim,' dedi, 'önce ne istediklerini kendi ağızlarından duyalım.'",
+  "choices": [
+    {"label": "Heyeti kabul et", "text": "Elena görüşmeyi yönetti; elçiler saray kapısını açık buldu.", "fx": {"king": 1}},
+    {"label": "Önce yazılı nota iste", "text": "Elçiler taleplerini kâğıda döktü; Veyra masrafı hesapladı.", "fx": {"treasury": 1}}
+  ],
+  "ignore": {"text": "Heyet görüşmesi ertelendi; Elena notlarını sakladı.", "fx": {}}
+},
+{
+  "id": "elena_abartili_rapor", "min_week": 35, "max_week": 72, "needs_flag": "elena_heyet_daveti_0", "flag_age": {"elena_heyet_daveti_0": 4}, "art": "yabanci_elci",
+  "title": "Elçilik notunun öteki yüzü",
+  "text": "Elena'nın 'yakın' dediği elçiler başka bir yazıda mesafeli görünüyor. 'Sözü yumuşattım,' dedi. 'Kapıyı yüzümüze kapatmasınlar istedim.'",
+  "choices": [
+    {"label": "Açık rapor iste", "text": "Elena ikinci notayı çekinmeden masaya koydu.", "fx": {"flag": "ELENA_ACIK_RAPOR"}},
+    {"label": "Üzerini ört", "text": "İlk rapor arşivde kaldı; Elena başka bir yol buldu.", "fx": {"king": -1}}
+  ],
+  "ignore": {"text": "İki nota arasındaki fark sarayın dışında konuşuldu.", "fx": {}}
+},
+{
+  "id": "elena_asteria_sizinti", "min_week": 48, "max_week": 85, "needs_flag": "elena_abartili_rapor_1", "flag_age": {"elena_abartili_rapor_1": 4}, "art": "yabanci_elci",
+  "title": "Asteria'ya giden sayfa",
+  "text": "Elena'nın masasında tutulan görüşme notu Asteria elçiliğinde bulundu. 'Beni saray susturdu,' dedi Elena, 'ben de onların dinleyeceğini sandım.'",
+  "choices": [
+    {"label": "Dosyayı Renn'e ver", "text": "Renn sayfanın izini sürdü; Elena görevde kaldı ama sözleri tartıldı.", "fx": {"capacity": {"hukuk": 1}}},
+    {"label": "Elena'yla yüzleş", "text": "Elena sızıntıyı kabul etti; bundan sonrasını sana bıraktı.", "fx": {"king": -1}}
+  ],
+  "ignore": {"text": "Sızıntı elçilikte kaldı, Elena'nın suskunluğu saraya yayıldı.", "fx": {}}
+},
+{
+  "id": "elena_istifa", "min_week": 60, "max_week": 98, "any_flag": ["elena_asteria_sizinti_0", "elena_asteria_sizinti_1"], "art": "yabanci_elci",
+  "title": "Elena'nın istifası",
+  "text": "Elena mühürlü istifasını getirdi. 'Bir raporum yalan, bir sözüm gerçekti,' dedi. 'Hangisine inanacağınızı ben seçemem.'",
+  "choices": [
+    {"label": "Görevde tut", "text": "Elena kaldı; bundan sonra her notunu ikinci bir kaynakla karşılaştıracağını söyledi.", "fx": {"king": 1}},
+    {"label": "İstifayı kabul et", "text": "Elena saraydan ayrıldı; elçilikler bir süre sessiz kaldı.", "fx": {"remove": ["elena"]}}
+  ],
+  "ignore": {"text": "İstifa masada kaldı. Elena görevine döndü.", "fx": {}}
 }
 ]
