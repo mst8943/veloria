@@ -48,3 +48,8 @@ L2: statik arayüz metinleri, dosya başına ayrı commit ve `en.po` karşılık
 - Tam koşu: 101/104/TAHTTA/Medya Rejimi/112. Ölçüt bot: 85% / 45% / 20%,
   L0 ile birebir aynı. Ayar ekranı görüntüsü: `dist/i18n_l1_menu/`.
 - Altyapı commit'i: `ab56462`; kapı tamamlama commit'i: bekliyor.
+
+## L2 — devam ediyor
+
+- `modal.gd`: Kapat ve Vazgeç düğmeleri `tr()` ile kaynak anahtarına bağlandı;
+  İngilizce karşılıkları `Close` ve `Cancel`. Commit: `db05126`.
