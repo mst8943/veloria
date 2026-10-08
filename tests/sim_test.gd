@@ -418,6 +418,7 @@ func _init() -> void:
 	ok = _test_newcomer_rng() and ok
 	ok = _test_heir() and ok
 	ok = _test_new_reports() and ok
+	ok = _test_foreign() and ok
 	# Meclis görüşleri: deterministik, kayıtta korunur, ana rng'ye dokunmaz, hazır aktör kötü önerir.
 	ok = _test_advice() and ok
 	# Darbe aşamaları: çekilme, kriz kartı, kriz sonuçları, kayıt, huzura çağırma.
@@ -505,6 +506,49 @@ func _test_new_reports() -> bool:
 	if not good:
 		push_error("Julian veya Elena raporu eksik")
 	print("Yeni kadro raporları: ", "OK" if good else "HATA")
+	return good
+
+
+func _test_foreign() -> bool:
+	var good := true
+	sim.new_game(62, 1)
+	sim.foreign = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
+	sim.capacity["hukuk"] = 80.0
+	sim.capacity["ordu"] = 80.0
+	sim.actors["arden"].power = 80.0
+	sim.holding = 70.0
+	sim.treasury = 55.0
+	sim.stats["tenders"] = 3
+	sim._tick_foreign()
+	good = good and float(sim.foreign["asteria"]) > 50.0 and float(sim.foreign["drakon"]) > 50.0 and float(sim.foreign["seravia"]) > 50.0
+	sim.new_game(62, 1)
+	sim.foreign = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
+	sim.actors["lena"].moved = true
+	sim.actors["falk"].moved = true
+	sim.capacity["hukuk"] = 20.0
+	sim.capacity["ordu"] = 20.0
+	sim.actors["arden"].power = 10.0
+	sim.budget_stance = -1
+	sim.holding = 20.0
+	sim.treasury = 20.0
+	sim.court_share = true
+	sim._tick_foreign()
+	good = good and float(sim.foreign["asteria"]) < 50.0 and float(sim.foreign["drakon"]) < 50.0 and float(sim.foreign["seravia"]) < 50.0
+	sim.new_game(62, 0)
+	sim.foreign = {"asteria": 71.0, "drakon": 71.0, "seravia": 71.0}
+	var easy_treasury: float = sim.treasury
+	var easy_defense: float = sim.foreign_defense_bonus()
+	sim._tick_foreign()
+	var easy_gain: float = sim.treasury - easy_treasury
+	sim.new_game(62, 2)
+	sim.foreign = {"asteria": 71.0, "drakon": 71.0, "seravia": 71.0}
+	var hard_treasury: float = sim.treasury
+	var hard_defense: float = sim.foreign_defense_bonus()
+	sim._tick_foreign()
+	good = good and sim.treasury - hard_treasury > easy_gain and hard_defense > easy_defense
+	if not good:
+		push_error("dış ilişki kayması, eşik etkisi veya zorluk çarpanı hatalı")
+	print("Dış ilişkiler: ", "OK" if good else "HATA")
 	return good
 
 

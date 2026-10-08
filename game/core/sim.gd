@@ -77,6 +77,7 @@ const STATE_ECON_MALIYE := 0.003
 const STATE_ECON_HUKUK := 0.001
 const STATE_DIFF := [0.7, 1.0, 1.2]
 const LEGAL_DIFF := [0.5, 1.0, 1.5]
+const FOREIGN_EFFECT_DIFF := [0.7, 1.0, 1.1]
 var actors: Dictionary = {}  # id -> Actor
 var facts: Dictionary = {}   # id -> Dictionary
 var flags: Dictionary = {}
@@ -1473,6 +1474,7 @@ func _world_tick() -> void:
 	private_wealth += _diff("income")  # sivil liste ödeneği
 	_tick_state()
 	_tick_holding()
+	_tick_foreign()
 	if heir_maturity >= 70.0 and actors.has("julian") and not actors["julian"].moved:
 		unrest = maxf(0.0, unrest - 0.015)
 		king_strength = minf(100.0, king_strength + 0.0075)
@@ -1509,6 +1511,40 @@ func _tick_holding() -> void:
 			unrest = clampf(unrest + HALDEN_MEDIA_UNREST * sway, 0.0, 100.0)
 			king_strength = clampf(king_strength - HALDEN_MEDIA_KING * sway, 0.0, 100.0)
 		stats["halden_hostile_weeks"] = int(stats.get("halden_hostile_weeks", 0)) + 1
+
+
+func _tick_foreign() -> void:
+	var lena_free: bool = actors.has("lena") and not actors["lena"].moved and not Press.is_closed(self, "free")
+	var falk_free: bool = actors.has("falk") and not actors["falk"].moved
+	var arden: Actor = actors.get("arden")
+	var asteria := (0.035 if lena_free else -0.07) + (0.025 if falk_free else -0.05)
+	asteria += (float(capacity["hukuk"]) - 55.0) * 0.003
+	foreign["asteria"] = clampf(float(foreign["asteria"]) + asteria, 0.0, 100.0)
+	var drakon := ((arden.power - 45.0) * 0.003 if arden else -0.05) + (float(capacity["ordu"]) - 55.0) * 0.003
+	drakon -= 0.08 if budget_stance < 0 else 0.0
+	drakon -= 0.03 * int(stats.get("liyakatli_ordu", 0))
+	foreign["drakon"] = clampf(float(foreign["drakon"]) + drakon, 0.0, 100.0)
+	var seravia := mini(3, int(stats.get("tenders", 0))) * 0.02 + (holding - 40.0) * 0.002
+	seravia += 0.02 if treasury >= 45.0 and treasury <= 65.0 else -0.06
+	seravia -= 0.04 if court_share else 0.0
+	foreign["seravia"] = clampf(float(foreign["seravia"]) + seravia, 0.0, 100.0)
+	var scale: float = FOREIGN_EFFECT_DIFF[difficulty]
+	if float(foreign["asteria"]) >= 70.0:
+		treasury = minf(100.0, treasury + 0.12 * scale)
+	elif float(foreign["asteria"]) <= 30.0:
+		economy = maxf(0.0, economy - 0.10 * scale)
+	if float(foreign["drakon"]) >= 70.0:
+		capacity["ordu"] = minf(100.0, float(capacity["ordu"]) + 0.08 * scale)
+	elif float(foreign["drakon"]) <= 30.0:
+		unrest = minf(100.0, unrest + 0.10 * scale)
+	if float(foreign["seravia"]) >= 70.0:
+		economy = minf(100.0, economy + 0.08 * scale)
+	elif float(foreign["seravia"]) <= 30.0:
+		holding = minf(100.0, holding + 0.08 * scale)
+
+
+func foreign_defense_bonus() -> float:
+	return 0.03 * FOREIGN_EFFECT_DIFF[difficulty] if float(foreign.get("drakon", 0.0)) >= 70.0 else 0.0
 
 
 func _state_warnings() -> void:
@@ -2049,7 +2085,7 @@ func _crisis_guard() -> float:
 func crisis_chance(action: String) -> float:
 	var share := _ready_power_share()
 	if action == "rally":
-		return clampf((CRISIS_RALLY_BASE + (king_strength - 50.0) / 100.0 + _crisis_guard() * 0.3 + (1.0 - share) * 0.5) * _diff("crisis_odds") + (float(capacity["ordu"]) - 55.0) / STATE_RALLY_DENOM[difficulty], 0.05, 0.85)
+		return clampf((CRISIS_RALLY_BASE + (king_strength - 50.0) / 100.0 + _crisis_guard() * 0.3 + (1.0 - share) * 0.5) * _diff("crisis_odds") + (float(capacity["ordu"]) - 55.0) / STATE_RALLY_DENOM[difficulty] + foreign_defense_bonus(), 0.05, 0.85)
 	if action == "appeal":
 		return clampf((CRISIS_APPEAL_BASE - unrest / 100.0 - opposition / 200.0 + (king_strength - 50.0) / 200.0) * _diff("crisis_odds"), 0.05, 0.8)
 	return float(CRISIS_CONCEDE[mini(int(stats.get("concessions", 0)), CRISIS_CONCEDE.size() - 1)])

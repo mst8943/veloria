@@ -59,6 +59,18 @@ Julian Valerius, Elena Varos, Claire Duvall, Viktor Malenkov, Lucien Vale. Hepsi
 
 - Dengeleme: Asteria ve Drakon birbirine zıt; ikisini birden memnun etmek zor. Üçünü de 70'in üstünde tutmak masrafı kasa ve itibar olarak çıkar (istismar kapısı).
 
+### B2.2 parametreleri
+
+Kayma `_world_tick` sonunda ve ayrı RNG çağrısı olmadan uygulanır. Başlangıçtaki pasif kayma, bir ilişkiyi tek başına eşikten geçirmez; eşikler oyuncunun heyet ve olay kararlarıyla açılır.
+
+| Güç | Haftalık kayma | Yakın (`≥70`) | Soğuk (`≤30`) |
+|---|---|---|---|
+| Asteria | Leyla özgür +0,035; Renn görevde +0,025; hukuk kapasitesi farkı ×0,003; aksi durumda −0,07/−0,05 | kasa +0,12 | ekonomi −0,10 |
+| Drakon | Arden güç farkı ×0,003; ordu kapasite farkı ×0,003; sıkı bütçe −0,08; liyakatli ordu ataması −0,03 | ordu kapasitesi +0,08, kriz savunması +0,03 | huzursuzluk +0,10 |
+| Seravia | ihale başına +0,02 (en çok 3); holding farkı ×0,002; dengeli kasa +0,02; dengesiz kasa −0,06; saray payı −0,04 | ekonomi +0,08 | holding +0,08 |
+
+Eşik etkileri Kolay ×0,7, Normal ×1,0, Zor ×1,1 ile uygulanır. Drakon'un desteği yalnızca mevcut darbe krizi savunma olasılığına eklenir; darbe yaratmaz.
+
 ### 2.3 Sistem değişikliği (küçük)
 - Alanlar: `foreign = {asteria, drakon, seravia}`, `heir_maturity`, `foreign_hint_until`. SAVE_VERSION 8, `_migrate_save` (eski kayıt: ilişkiler 50, olgunluk 30), save_test adımı.
 - Olay koşulları: `min_foreign`/`max_foreign` (güç -> değer sözlüğü), `min_heir`/`max_heir`; `event_check` bilinmeyen güç adını denetler.

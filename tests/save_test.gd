@@ -37,7 +37,10 @@ func _init() -> void:
 		and not sim.capacity_timeline.is_empty() and sim.capacity_timeline[-1].has("holding")
 		and absf(sim.holding - holding_before) < 0.001 and sim.halden_hostile_until == 21 and sim.halden_demands == 2 and sim.lena_boost_until == 15 and sim.kadro_log.size() == 1
 		and absf(sim.heir_maturity - heir_before) < 0.001 and sim.actors.has("julian") and sim.actors.has("elena"))
-	_check("dış ilişkiler gidiş-dönüş", sim.foreign == foreign_before and sim.foreign_hint_until == 0)
+	var same_foreign: bool = sim.foreign.size() == foreign_before.size()
+	for power in foreign_before:
+		same_foreign = same_foreign and sim.foreign.has(power) and is_equal_approx(float(sim.foreign[power]), float(foreign_before[power]))
+	_check("dış ilişkiler gidiş-dönüş", same_foreign and sim.foreign_hint_until == 0)
 	var f := FileAccess.open(sim.save_path, FileAccess.READ)
 	var d: Dictionary = str_to_var(f.get_as_text())
 	f.close()
