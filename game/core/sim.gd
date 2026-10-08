@@ -473,7 +473,7 @@ func spend_mesai(cost: int = 1) -> bool:
 
 
 func _no_mesai() -> String:
-	return "Bu hafta mesain kalmadı."
+	return tr("Bu hafta mesain kalmadı.")
 
 
 ## Terfi: güç ve minnet verir, ama borç ve hırs da büyür.
@@ -490,7 +490,7 @@ func promote(id: String) -> String:
 		capacity[INSTITUTION_HEADS[id]] = maxf(5.0, float(capacity[INSTITUTION_HEADS[id]]) - 1.0)
 	flags[id.to_upper() + "_GUCLENDI"] = week
 	changed.emit()
-	return "%s terfi etti. Sana minnettar, ama artık daha güçlü." % a.display_name
+	return tr("%s terfi etti. Sana minnettar, ama artık daha güçlü.") % a.display_name
 
 
 func appoint_wait(id: String) -> int:
@@ -509,9 +509,9 @@ func heir_train_wait() -> int:
 
 func train_heir(id: String) -> String:
 	if id != "julian" or not actors.has(id) or actors[id].moved:
-		return "Veliaht için bu kararname çıkarılamaz."
+		return tr("Veliaht için bu kararname çıkarılamaz.")
 	if heir_train_wait() > 0:
-		return "Julian'ın yeni dersleri için beklemelisin."
+		return tr("Julian'ın yeni dersleri için beklemelisin.")
 	if not spend_mesai():
 		return _no_mesai()
 	var last := int(flags.get("VELIAHT_YETISTI", -100))
@@ -525,9 +525,9 @@ func train_heir(id: String) -> String:
 			if actors.has(aid):
 				actors[aid].ambition += 3.0
 		changed.emit()
-		return "Julian derslerini ilerletti. Prens Marcus ile Marcus Arden, veliahdın sarayda fazla öne çıktığını konuşuyor."
+		return tr("Julian derslerini ilerletti. Prens Marcus ile Marcus Arden, veliahdın sarayda fazla öne çıktığını konuşuyor.")
 	changed.emit()
-	return "Julian derslerini ilerletti. Ne öğrendiğini halkın önünde göreceksin."
+	return tr("Julian derslerini ilerletti. Ne öğrendiğini halkın önünde göreceksin.")
 
 
 func delegation_wait() -> int:
@@ -536,9 +536,9 @@ func delegation_wait() -> int:
 
 func send_delegation(id: String) -> String:
 	if not FOREIGN_ENVOYS.has(id) or not actors.has(id) or actors[id].moved:
-		return "Heyet gönderilecek elçiyi seçmelisin."
+		return tr("Heyet gönderilecek elçiyi seçmelisin.")
 	if delegation_wait() > 0:
-		return "Elçilikler önceki heyetin cevabını bekliyor."
+		return tr("Elçilikler önceki heyetin cevabını bekliyor.")
 	if not spend_mesai():
 		return _no_mesai()
 	var target: String = FOREIGN_ENVOYS[id]
@@ -547,14 +547,14 @@ func send_delegation(id: String) -> String:
 	flags["HEYET_GONDER"] = week
 	stats["delegations"] = int(stats.get("delegations", 0)) + 1
 	changed.emit()
-	return "%s heyeti kabul etti. Öteki elçilikler bu yakınlığı dikkatle not etti." % actors[id].display_name
+	return tr("%s heyeti kabul etti. Öteki elçilikler bu yakınlığı dikkatle not etti.") % actors[id].display_name
 
 
 func appoint(id: String, kind: String) -> String:
 	if not INSTITUTION_HEADS.has(id) or not actors.has(id) or actors[id].moved or not kind in ["loyal", "merit"]:
-		return "Bu kadro kararnamesi çıkarılamaz."
+		return tr("Bu kadro kararnamesi çıkarılamaz.")
 	if appoint_wait(id) > 0:
-		return "Bu kurumda yeni bir atama için beklemelisin."
+		return tr("Bu kurumda yeni bir atama için beklemelisin.")
 	if not spend_mesai():
 		return _no_mesai()
 	var institution: String = INSTITUTION_HEADS[id]
@@ -576,7 +576,7 @@ func appoint(id: String, kind: String) -> String:
 		a.obligation = maxf(0.0, a.obligation - 2.0)
 		stats["liyakatli_" + institution] = int(stats.get("liyakatli_" + institution, 0)) + 1
 	changed.emit()
-	return "%s için %s kadro kararnamesi imzalandı. Sonucu kurumun işinde göreceksin." % [a.display_name, "sadık" if kind == "loyal" else "liyakatli"]
+	return tr("%s için %s kadro kararnamesi imzalandı. Sonucu kurumun işinde göreceksin.") % [a.display_name, "sadık" if kind == "loyal" else "liyakatli"]
 
 
 func tender_wait() -> int:
@@ -585,9 +585,9 @@ func tender_wait() -> int:
 
 func give_tender(id: String) -> String:
 	if id != "halden" or not actors.has(id) or actors[id].moved:
-		return "Bu ihale Sarne'ye verilemez."
+		return tr("Bu ihale Sarne'ye verilemez.")
 	if tender_wait() > 0:
-		return "İhale komisyonu yeni dosyayı henüz açmıyor."
+		return tr("İhale komisyonu yeni dosyayı henüz açmıyor.")
 	if not spend_mesai():
 		return _no_mesai()
 	flags["IHALE_VER"] = week
@@ -601,7 +601,7 @@ func give_tender(id: String) -> String:
 	actors[id].loyalty["money"] += 6.0
 	_add_fact("ihale_komisyonu_%d" % week, "Sarne ihalesinden saraya aktarılan komisyon", "king", 18.0, ["halden", "kessler"], 1)
 	changed.emit()
-	return "İhale Sarne'ye verildi. Şirketleri işi üstlendi; Veyra sözleşmenin bir kopyasını sakladı."
+	return tr("İhale Sarne'ye verildi. Şirketleri işi üstlendi; Veyra sözleşmenin bir kopyasını sakladı.")
 
 
 func halden_mood() -> String:
@@ -641,9 +641,9 @@ func summon_wait(id: String) -> int:
 func summon(id: String) -> String:
 	var a: Actor = actors[id]
 	if a.moved:
-		return "%s artık çağrına gelmiyor." % a.display_name
+		return tr("%s artık çağrına gelmiyor.") % a.display_name
 	if summon_wait(id) > 0:
-		return "%s yakın zamanda huzura çağırdın; tekrar çağırmak telaş gibi görünür." % ek(a.display_name, "i")
+		return tr("%s yakın zamanda huzura çağırdın; tekrar çağırmak telaş gibi görünür.") % ek(a.display_name, "i")
 	if not spend_mesai():
 		return _no_mesai()
 	stats["summons"] = int(stats.get("summons", 0)) + 1
@@ -655,19 +655,19 @@ func summon(id: String) -> String:
 		if rng.randf() < SUMMON_TELL:
 			a.loyalty["fear"] = float(a.loyalty["fear"]) + SUMMON_CAUGHT_FEAR
 			_add_sign(a, "%s huzurda kaçamak cevaplar verdi; gözlerini kaçırdı." % short_name(a), 2, true)
-			return "%s huzurunda gergindi. Sorularına kaçamak cevaplar verdi ve erken ayrılmak için izin istedi." % a.display_name
-		return "%s sakin ve saygılıydı. Hiçbir şey sezmedin." % a.display_name
+			return tr("%s huzurunda gergindi. Sorularına kaçamak cevaplar verdi ve erken ayrılmak için izin istedi.") % a.display_name
+		return tr("%s sakin ve saygılıydı. Hiçbir şey sezmedin.") % a.display_name
 	if rng.randf() < SUMMON_FALSE:
 		_add_sign(a, "%s huzurda tedirgin görünüyordu." % short_name(a), 1, false)
-		return "%s tedirgindi; neden olduğunu söylemedi." % a.display_name
+		return tr("%s tedirgindi; neden olduğunu söylemedi.") % a.display_name
 	var before := a.signs.size()
 	a.signs = a.signs.filter(func(g: Dictionary) -> bool: return g["real"])
 	var cleared := before - a.signs.size()
-	var out := "%s içtenlikle konuştu." % a.display_name
+	var out := tr("%s içtenlikle konuştu.") % a.display_name
 	if cleared > 0:
-		out += " Hakkındaki fısıltıların dedikodu olduğuna kanaat getirdin."
+		out += tr(" Hakkındaki fısıltıların dedikodu olduğuna kanaat getirdin.")
 	if a.plot_stage == 1:
-		out += " Yine de saraydan bazı şikâyetleri olduğu belli."
+		out += tr(" Yine de saraydan bazı şikâyetleri olduğu belli.")
 	return out
 
 
@@ -678,7 +678,7 @@ const BRIBE_COST := 5.0
 func bribe(id: String) -> String:
 	var a: Actor = actors[id]
 	if private_wealth < BRIBE_COST:
-		return "Kişisel servetin yetersiz."
+		return tr("Kişisel servetin yetersiz.")
 	if not spend_mesai():
 		return _no_mesai()
 	private_wealth -= BRIBE_COST
@@ -687,7 +687,7 @@ func bribe(id: String) -> String:
 	stats["bribes"] += 1
 	_add_fact("transfer_%s_%d" % [id, week], "%s yapılan gizli ödeme" % ek(a.display_name, "e"), "king", 18, [id, "dorn"], 2)
 	changed.emit()
-	return "%s gizli ödeme yapıldı. Sadakati arttı; ama bir iz kaldı." % ek(a.display_name, "e")
+	return tr("%s gizli ödeme yapıldı. Sadakati arttı; ama bir iz kaldı.") % ek(a.display_name, "e")
 
 
 ## Emir: kanal seçimi sonucu ve inkâr edilebilirliği belirler.
@@ -734,22 +734,22 @@ func order(id: String, task: String, channel: String) -> String:
 			a.obligation += 5.0 * fidelity
 			if fidelity > 1.1:
 				unrest += 6.0
-				text = "%s emri fazla sert yorumladı; bastırma kontrolden çıkıyor." % a.display_name
+				text = tr("%s emri fazla sert yorumladı; bastırma kontrolden çıkıyor.") % a.display_name
 			elif fidelity < 0.4:
-				text = "%s emri anlamadı ya da uygulamadı. Hiçbir şey olmadı." % a.display_name
+				text = tr("%s emri anlamadı ya da uygulamadı. Hiçbir şey olmadı.") % a.display_name
 			else:
-				text = "%s harekete geçti." % a.display_name
+				text = tr("%s harekete geçti.") % a.display_name
 		"sorustur":
 			a.power += 3.0 * fidelity
 			a.secrets_on_king += 1 if a.domain == "intel" else 0
 			_reveal_hint(a, fidelity)
-			text = "%s soruşturmayı başlattı." % a.display_name
+			text = tr("%s soruşturmayı başlattı.") % a.display_name
 		_:
-			text = "%s emri aldı." % a.display_name
+			text = tr("%s emri aldı.") % a.display_name
 	if crossed:
-		text = "%s emri kırmızı çizgisini aştığı için gönülsüzce, yarım yamalak uyguladı. Bunu sana yazdı. (Kırmızı çizgisi: %s)" % [a.display_name, a.red_line]
+		text = tr("%s emri kırmızı çizgisini aştığı için gönülsüzce, yarım yamalak uyguladı. Bunu sana yazdı. (Kırmızı çizgisi: %s)") % [a.display_name, a.red_line]
 	if delayed:
-		text += " Ama acele etmedi; emri günlerce bekletti."
+		text += tr(" Ama acele etmedi; emri günlerce bekletti.")
 	changed.emit()
 	return text
 
@@ -759,7 +759,7 @@ func order(id: String, task: String, channel: String) -> String:
 func investigate(id: String) -> String:
 	var a: Actor = actors[id]
 	if a.known_weak and a.known_red:
-		return "%s hakkında öğrenilecek yeni bir şey kalmadı." % a.display_name
+		return tr("%s hakkında öğrenilecek yeni bir şey kalmadı.") % a.display_name
 	if not spend_mesai():
 		return _no_mesai()
 	stats["investigations"] = int(stats.get("investigations", 0)) + 1
@@ -770,14 +770,14 @@ func investigate(id: String) -> String:
 		voss.power += 1.5
 	if rng.randf() > chance:
 		changed.emit()
-		return "%s hakkındaki araştırma sonuç vermedi. İzler soğuk." % a.display_name
+		return tr("%s hakkındaki araştırma sonuç vermedi. İzler soğuk.") % a.display_name
 	if not a.known_weak:
 		a.known_weak = true
 		changed.emit()
-		return "%s zayıf noktası bulundu: %s. Artık şantaj mümkün." % [ek(a.display_name, "in"), a.weak_point]
+		return tr("%s zayıf noktası bulundu: %s. Artık şantaj mümkün.") % [ek(a.display_name, "in"), a.weak_point]
 	a.known_red = true
 	changed.emit()
-	return "%s asla geçmeyeceği çizgi: %s." % [ek(a.display_name, "in"), a.red_line]
+	return tr("%s asla geçmeyeceği çizgi: %s.") % [ek(a.display_name, "in"), a.red_line]
 
 
 ## Şantaj: zayıf noktası bilinen birini korkuyla bağlar. Borcunu siler ama hırsını büyütür ve iz bırakır.
@@ -785,7 +785,7 @@ func investigate(id: String) -> String:
 func blackmail(id: String) -> String:
 	var a: Actor = actors[id]
 	if not a.known_weak:
-		return "Önce %s zayıf noktasını bulmalısın (Araştır)." % ek(a.display_name, "in")
+		return tr("Önce %s zayıf noktasını bulmalısın (Araştır).") % ek(a.display_name, "in")
 	if not spend_mesai():
 		return _no_mesai()
 	stats["blackmails"] = int(stats.get("blackmails", 0)) + 1
@@ -798,13 +798,13 @@ func blackmail(id: String) -> String:
 		a.ambition += 10.0
 		a.fear = maxf(0.0, a.fear - 5.0)
 		changed.emit()
-		return "%s boyun eğmedi; şantajı ifşa etmekle tehdit ediyor. Konuşulmaya başlandı bile." % a.display_name
+		return tr("%s boyun eğmedi; şantajı ifşa etmekle tehdit ediyor. Konuşulmaya başlandı bile.") % a.display_name
 	a.fear += 25.0
 	a.loyalty["fear"] = float(a.loyalty["fear"]) + 15.0
 	a.obligation = maxf(0.0, a.obligation - 10.0)
 	a.ambition += 6.0
 	changed.emit()
-	return "%s ne demek istediğini anladı. Artık senden korkuyor; korku ise sadakatin en kırılgan biçimi." % a.display_name
+	return tr("%s ne demek istediğini anladı. Artık senden korkuyor; korku ise sadakatin en kırılgan biçimi.") % a.display_name
 
 
 func _reveal_hint(investigator: Actor, fidelity: float) -> void:
@@ -839,27 +839,27 @@ func cross_check(id: String) -> String:
 		foreign_hint_until = week + 6
 		karne[id]["ok"] += 1
 		changed.emit()
-		return "Elçilik kayıtları altı hafta için açık: " + foreign_report(true)
+		return tr("Elçilik kayıtları altı hafta için açık: ") + foreign_report(true)
 	var gap := _domain_truth(a.domain) - _domain_reported(a)
 	var noisy := gap + rng.randf_range(-8.0, 8.0)
 	var worse := (a.domain == "economy" and noisy < -6.0) or (a.domain != "economy" and noisy > 6.0)
 	changed.emit()
 	if absf(noisy) < 6.0:
 		karne[id]["ok"] += 1
-		return "%s raporu diğer kaynaklarla büyük ölçüde örtüşüyor.%s" % [ek(a.display_name, "in"), " Kurum defterleri bir süreliğine açıldı." if INSTITUTION_HEADS.has(id) else ""]
+		return tr("%s raporu diğer kaynaklarla büyük ölçüde örtüşüyor.%s") % [ek(a.display_name, "in"), tr(" Kurum defterleri bir süreliğine açıldı.") if INSTITUTION_HEADS.has(id) else ""]
 	if worse:
 		karne[id]["bad"] += 1
-		return "Başka kaynaklar durumun %s anlattığından DAHA KÖTÜ olduğunu söylüyor.%s" % [ek(a.display_name, "in"), " Kurum defterleri bir süreliğine açıldı." if INSTITUTION_HEADS.has(id) else ""]
+		return tr("Başka kaynaklar durumun %s anlattığından DAHA KÖTÜ olduğunu söylüyor.%s") % [ek(a.display_name, "in"), tr(" Kurum defterleri bir süreliğine açıldı.") if INSTITUTION_HEADS.has(id) else ""]
 	karne[id]["ok"] += 1
-	return "Başka kaynaklar durumu %s anlattığından biraz daha iyi görüyor.%s" % [ek(a.display_name, "in"), " Kurum defterleri bir süreliğine açıldı." if INSTITUTION_HEADS.has(id) else ""]
+	return tr("Başka kaynaklar durumu %s anlattığından biraz daha iyi görüyor.%s") % [ek(a.display_name, "in"), tr(" Kurum defterleri bir süreliğine açıldı.") if INSTITUTION_HEADS.has(id) else ""]
 
 
 ## Gizli operasyon: katılan her kişi sırrı bilir; çember büyüdükçe başarı ve sızıntı riski artar.
 func operation(kind: String, ids: Array) -> String:
 	if ids.is_empty() or ids.size() > 3:
-		return "Operasyon için 1–3 kişi seç (Ctrl ile çoklu seçim)."
+		return tr("Operasyon için 1–3 kişi seç (Ctrl ile çoklu seçim).")
 	if mesai < 2:
-		return "Operasyon 2 mesai ister."
+		return tr("Operasyon 2 mesai ister.")
 	spend_mesai(2)
 	stats["ops"] += 1
 	var success_chance := 0.45 + 0.1 * ids.size()
@@ -877,18 +877,18 @@ func operation(kind: String, ids: Array) -> String:
 		"dikkat":
 			if ok:
 				unrest = maxf(0.0, unrest - 12.0)
-				text = "Sahte kriz işe yaradı; gündem değişti."
+				text = tr("Sahte kriz işe yaradı; gündem değişti.")
 			else:
 				unrest += 3.0
 				king_strength -= 2.0
-				text = "Operasyon amatörce kaldı; kimse inanmadı."
+				text = tr("Operasyon amatörce kaldı; kimse inanmadı.")
 		"bol":
 			if ok:
 				opposition = maxf(0.0, opposition - 15.0)
-				text = "Muhalefet kanatları birbirine düştü."
+				text = tr("Muhalefet kanatları birbirine düştü.")
 			else:
 				opposition += 5.0
-				text = "Muhalefet planı fark etti ve birleşme hızlandı."
+				text = tr("Muhalefet planı fark etti ve birleşme hızlandı.")
 		"zayiflat":
 			var target: Actor = null
 			for a: Actor in actors.values():
@@ -897,19 +897,19 @@ func operation(kind: String, ids: Array) -> String:
 				if target == null or a.power > target.power:
 					target = a
 			if target == null:
-				text = "Zayıflatılacak kimse yok."
+				text = tr("Zayıflatılacak kimse yok.")
 			elif ok:
 				target.power = maxf(5.0, target.power - 12.0)
 				target.ambition += 5.0
-				text = "%s itibarı sarsıldı. Kim yaptığını tahmin etmesi zor değil." % ek(target.display_name, "in")
+				text = tr("%s itibarı sarsıldı. Kim yaptığını tahmin etmesi zor değil.") % ek(target.display_name, "in")
 			else:
-				text = "Operasyon boşa gitti; %s şüphelendi." % target.display_name
+				text = tr("Operasyon boşa gitti; %s şüphelendi.") % target.display_name
 				target.ambition += 5.0
-	text += " (Çember: %s)" % ", ".join(names)
+	text += tr(" (Çember: %s)") % ", ".join(names)
 	if rng.randf() < leak_chance:
 		_add_fact("operasyon_%d_%d" % [stats["ops"], week], "Gizli operasyon (%s)" % kind, "king", 45, ids.duplicate(), 1, 0.9)
 		facts["operasyon_%d_%d" % [stats["ops"], week]]["common"] = 0.3
-		text += " Ama bir şey sızmış gibi."
+		text += tr(" Ama bir şey sızmış gibi.")
 	changed.emit()
 	return text
 
@@ -935,18 +935,18 @@ func _rival_key(ids: Array) -> String:
 
 func divide_rivals(ids: Array) -> String:
 	if ids.size() != 2:
-		return "Birbirine düşürmek için tam iki kişi seç (Çoklu seçim)."
+		return tr("Birbirine düşürmek için tam iki kişi seç (Çoklu seçim).")
 	var a: Actor = actors.get(ids[0])
 	var b: Actor = actors.get(ids[1])
 	if a == null or b == null:
-		return "Seçilen kişilerden biri artık sarayda değil."
+		return tr("Seçilen kişilerden biri artık sarayda değil.")
 	if a.moved or b.moved:
-		return "Sana karşı harekete geçmiş biriyle oyun oynamak işe yaramaz."
+		return tr("Sana karşı harekete geçmiş biriyle oyun oynamak işe yaramaz.")
 	var wait := rival_wait(ids)
 	if wait > 0:
-		return "%s ile %s'i yakın zamanda birbirine düşürmeyi denedin; %d hafta bekle." % [a.display_name, b.display_name, wait]
+		return tr("%s ile %s'i yakın zamanda birbirine düşürmeyi denedin; %d hafta bekle.") % [a.display_name, b.display_name, wait]
 	if mesai < 2:
-		return "Birbirine düşürmek 2 mesai ister."
+		return tr("Birbirine düşürmek 2 mesai ister.")
 	spend_mesai(2)
 	stats["rivalries"] = int(stats.get("rivalries", 0)) + 1
 	flags[_rival_key(ids)] = week
@@ -957,16 +957,16 @@ func divide_rivals(ids: Array) -> String:
 			x.power = maxf(5.0, x.power - 4.0)
 			x.ambition = maxf(0.0, x.ambition - 3.0)
 			x.fear += 4.0
-		text = "%s ile %s birbirine girdi. İkisi de artık birbirini izliyor; sana ayıracak zamanları az." % [a.display_name, b.display_name]
+		text = tr("%s ile %s birbirine girdi. İkisi de artık birbirini izliyor; sana ayıracak zamanları az.") % [a.display_name, b.display_name]
 	else:
 		for x: Actor in [a, b]:
 			x.ambition += 6.0
 			x.loyalty["money"] = maxf(0.0, float(x.loyalty["money"]) - 4.0)
 		_add_fact("dusurme_%d_%d" % [stats["rivalries"], week], "Kralın danışmanlarını birbirine düşürme girişimi", "king", 30, [a.id, b.id], 1, 0.7)
-		text = "%s ile %s oyunu anladı: iki taraf da bunun arkasında kimin olduğunu biliyor." % [a.display_name, b.display_name]
+		text = tr("%s ile %s oyunu anladı: iki taraf da bunun arkasında kimin olduğunu biliyor.") % [a.display_name, b.display_name]
 	if rng.randf() < RIVAL_LEAK:
 		_add_fact("dusurme_sizinti_%d_%d" % [stats["rivalries"], week], "Saray içi rekabetin kralca kışkırtılması", "king", 20, [a.id, b.id], 1, 0.6)
-		text += " Bir şey sızmış gibi."
+		text += tr(" Bir şey sızmış gibi.")
 	changed.emit()
 	return text
 
@@ -974,42 +974,42 @@ func divide_rivals(ids: Array) -> String:
 ## Bir olguyu yay (ortak bilgi artar) ya da bastır.
 func leak_fact(fact_id: String) -> String:
 	if not facts.has(fact_id) or not spend_mesai():
-		return "Olmadı (mesai ya da dosya yok)."
+		return tr("Olmadı (mesai ya da dosya yok).")
 	stats["leaks"] += 1
 	facts[fact_id]["common"] = minf(1.0, facts[fact_id]["common"] + 0.5)
 	changed.emit()
-	return "'%s' basına sızdırıldı." % facts[fact_id]["text"]
+	return tr("'%s' basına sızdırıldı.") % facts[fact_id]["text"]
 
 
 func suppress_fact(fact_id: String) -> String:
 	if not facts.has(fact_id) or not spend_mesai():
-		return "Olmadı (mesai ya da dosya yok)."
+		return tr("Olmadı (mesai ya da dosya yok).")
 	var f: Dictionary = facts[fact_id]
 	f["common"] = maxf(0.0, f["common"] - 0.3)
 	changed.emit()
-	return "'%s' için sessizlik sağlandı. Kanıtın kopyaları hâlâ duruyor." % f["text"]
+	return tr("'%s' için sessizlik sağlandı. Kanıtın kopyaları hâlâ duruyor.") % f["text"]
 
 
 ## Kanıtı yok et: kopya sayısı kadar zor; yok etme girişimi de iz bırakabilir.
 func destroy_evidence(fact_id: String) -> String:
 	if not facts.has(fact_id):
-		return "Dosya yok."
+		return tr("Dosya yok.")
 	if not spend_mesai():
 		return _no_mesai()
 	var f: Dictionary = facts[fact_id]
 	if f.get("public", false):
-		return "Bu artık herkesin bildiği bir şey; kanıtı yok etmek işe yaramaz."
+		return tr("Bu artık herkesin bildiği bir şey; kanıtı yok etmek işe yaramaz.")
 	if int(f["copies"]) > 1:
 		f["copies"] = int(f["copies"]) - 1
 		changed.emit()
-		return "'%s' kanıtının bir kopyası yok edildi; hâlâ kopyaları var." % f["text"]
+		return tr("'%s' kanıtının bir kopyası yok edildi; hâlâ kopyaları var.") % f["text"]
 	if rng.randf() < 0.7:
 		facts.erase(fact_id)
 		changed.emit()
-		return "Kanıt yok edildi."
+		return tr("Kanıt yok edildi.")
 	f["common"] = minf(1.0, float(f["common"]) + 0.2)
 	changed.emit()
-	return "Girişim fark edildi; dosya hakkında dedikodu arttı."
+	return tr("Girişim fark edildi; dosya hakkında dedikodu arttı.")
 
 
 # ---------------------------------------------------------------- Söz defteri
@@ -1033,10 +1033,10 @@ func active_promises_of(id: String) -> Array:
 func promise(id: String, prize: String) -> String:
 	var a: Actor = actors[id]
 	if prize_taken(prize):
-		return "%s artık verilemez; zaten birine verildi." % prize
+		return tr("%s artık verilemez; zaten birine verildi.") % prize
 	for p in active_promises_of(id):
 		if p["prize"] == prize:
-			return "%s bunu zaten vaat ettin." % ek(a.display_name, "e")
+			return tr("%s bunu zaten vaat ettin.") % ek(a.display_name, "e")
 	if not spend_mesai():
 		return _no_mesai()
 	stats["promises"] = int(stats.get("promises", 0)) + 1
@@ -1046,7 +1046,7 @@ func promise(id: String, prize: String) -> String:
 	a.loyalty["career"] = float(a.loyalty["career"]) + 12.0
 	a.ambition += 2.0
 	changed.emit()
-	return "%s %s sözü verdin. Gözleri parladı; vadesi geldiğinde hatırlatacak." % [ek(a.display_name, "e"), prize]
+	return tr("%s %s sözü verdin. Gözleri parladı; vadesi geldiğinde hatırlatacak.") % [ek(a.display_name, "e"), prize]
 
 
 func _find_promise(pid: String) -> Dictionary:
@@ -1094,15 +1094,15 @@ func _tick_promises() -> void:
 		for q in promises:
 			if q != p and q["prize"] == p["prize"] and q["state"] == "active" and actors.has(q["actor"]):
 				rival = actors[q["actor"]].display_name
-		var text := "%s, %d. haftada verdiğin '%s' sözünü hatırlatıyor. Bekleyişi sabırlı, ama sonsuz değil." % [a.display_name, p["made"], p["prize"]]
+		var text := tr("%s, %d. haftada verdiğin '%s' sözünü hatırlatıyor. Bekleyişi sabırlı, ama sonsuz değil.") % [a.display_name, p["made"], p["prize"]]
 		if rival != "":
-			text += " Aynı sözü %s de vermiştin." % ek(rival, "e")
+			text += tr(" Aynı sözü %s de vermiştin.") % ek(rival, "e")
 		pending.append({"age": 0, "event": {"id": "soz_" + str(p["id"]), "title": "%s sözünü hatırlatıyor" % a.display_name, "text": text,
 			"choices": [
-				{"label": "Sözü tut: %s" % p["prize"], "text": "%s sözünü aldı. Bunu unutmayacak." % a.display_name, "fx": {"promise_keep": p["id"]}},
-				{"label": "Biraz daha zaman iste", "text": "%s bekleyecek. Ama hevesi azaldı." % a.display_name, "fx": {"promise_delay": p["id"]}},
-				{"label": "Sözden dön", "text": "%s yüzüne bakmadan çıktı. Saray bunu konuşacak." % a.display_name, "fx": {"promise_break": p["id"]}}],
-			"ignore": {"text": "Söz cevapsız kaldı; bozulmuş sayıldı.", "fx": {"promise_break": p["id"]}}}})
+				{"label": tr("Sözü tut: %s") % p["prize"], "text": tr("%s sözünü aldı. Bunu unutmayacak.") % a.display_name, "fx": {"promise_keep": p["id"]}},
+				{"label": tr("Biraz daha zaman iste"), "text": tr("%s bekleyecek. Ama hevesi azaldı.") % a.display_name, "fx": {"promise_delay": p["id"]}},
+				{"label": tr("Sözden dön"), "text": tr("%s yüzüne bakmadan çıktı. Saray bunu konuşacak.") % a.display_name, "fx": {"promise_break": p["id"]}}],
+			"ignore": {"text": tr("Söz cevapsız kaldı; bozulmuş sayıldı."), "fx": {"promise_break": p["id"]}}}})
 		weekly_news.append("SÖZ: %s karşılığını istiyor." % a.display_name)
 
 
@@ -1166,14 +1166,14 @@ func dismiss(id: String) -> String:
 		king_strength -= 12.0
 		_add_fact("sizinti_%s" % id, "%s kralın sırlarını sızdırıyor" % a.display_name, "king", 60, [id], 1, 0.9)
 		changed.emit()
-		return "%s görevden alındı ama kralın sırlarını biliyordu ve konuşmaya başladı!" % a.display_name
+		return tr("%s görevden alındı ama kralın sırlarını biliyordu ve konuşmaya başladı!") % a.display_name
 	actors.erase(id)
 	if coup_crisis.get("leader", "") == id:
 		_close_crisis()
 		plot_log.append({"w": week, "name": a.display_name, "text": "darbe gecesi görevden alındı; komplo başsız kaldı"})
 	king_strength += 2.0
 	changed.emit()
-	return "%s görevden alındı. Sessizce gitti." % a.display_name
+	return tr("%s görevden alındı. Sessizce gitti.") % a.display_name
 
 
 # ---------------------------------------------------------------- Kararlar

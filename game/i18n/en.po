@@ -1404,3 +1404,258 @@ msgstr "CHANNEL"
 
 msgid "SES"
 msgstr "VOLUME"
+
+msgid "Bu hafta mesain kalmadı."
+msgstr "You have no work left this week."
+
+msgid "%s terfi etti. Sana minnettar, ama artık daha güçlü."
+msgstr "%s was promoted. They are grateful to you, but more powerful now."
+
+msgid "Veliaht için bu kararname çıkarılamaz."
+msgstr "This decree cannot be issued for the heir."
+
+msgid "Julian'ın yeni dersleri için beklemelisin."
+msgstr "You must wait before arranging Julian's next lessons."
+
+msgid "Julian derslerini ilerletti. Prens Marcus ile Marcus Arden, veliahdın sarayda fazla öne çıktığını konuşuyor."
+msgstr "Julian advanced in his lessons. Prince Marcus and Marcus Arden are talking about how the heir is becoming too prominent at court."
+
+msgid "Julian derslerini ilerletti. Ne öğrendiğini halkın önünde göreceksin."
+msgstr "Julian advanced in his lessons. You'll see what he has learned before the people."
+
+msgid "Heyet gönderilecek elçiyi seçmelisin."
+msgstr "Choose an envoy to send with the delegation."
+
+msgid "Elçilikler önceki heyetin cevabını bekliyor."
+msgstr "The embassies are awaiting the previous delegation's reply."
+
+msgid "%s heyeti kabul etti. Öteki elçilikler bu yakınlığı dikkatle not etti."
+msgstr "%s accepted the delegation. The other embassies took careful note of this closeness."
+
+msgid "Bu kadro kararnamesi çıkarılamaz."
+msgstr "This appointment decree cannot be issued."
+
+msgid "Bu kurumda yeni bir atama için beklemelisin."
+msgstr "You must wait before making another appointment at this institution."
+
+msgid "%s için %s kadro kararnamesi imzalandı. Sonucu kurumun işinde göreceksin."
+msgstr "A staffing decree was signed for %s as %s. You'll see the result in the institution's work."
+
+msgid "Bu ihale Sarne'ye verilemez."
+msgstr "This contract cannot be awarded to Sarne."
+
+msgid "İhale komisyonu yeni dosyayı henüz açmıyor."
+msgstr "The contract committee isn't opening a new file yet."
+
+msgid "İhale Sarne'ye verildi. Şirketleri işi üstlendi; Veyra sözleşmenin bir kopyasını sakladı."
+msgstr "The contract was awarded to Sarne. His companies took the job; Veyra kept a copy of the agreement."
+
+msgid "%s artık çağrına gelmiyor."
+msgstr "%s no longer answers your summons."
+
+msgid "%s yakın zamanda huzura çağırdın; tekrar çağırmak telaş gibi görünür."
+msgstr "You summoned %s recently; summoning them again would look like panic."
+
+msgid "%s huzurunda gergindi. Sorularına kaçamak cevaplar verdi ve erken ayrılmak için izin istedi."
+msgstr "%s was tense in your presence. They gave evasive answers and asked to leave early."
+
+msgid "%s sakin ve saygılıydı. Hiçbir şey sezmedin."
+msgstr "%s was calm and respectful. You sensed nothing."
+
+msgid "%s tedirgindi; neden olduğunu söylemedi."
+msgstr "%s seemed uneasy, but didn't say why."
+
+msgid "%s içtenlikle konuştu."
+msgstr "%s spoke sincerely."
+
+msgid " Hakkındaki fısıltıların dedikodu olduğuna kanaat getirdin."
+msgstr " You concluded that the whispers about them were only gossip."
+
+msgid " Yine de saraydan bazı şikâyetleri olduğu belli."
+msgstr " Still, it was clear they had some complaints about the court."
+
+msgid "Kişisel servetin yetersiz."
+msgstr "You don't have enough personal wealth."
+
+msgid "%s gizli ödeme yapıldı. Sadakati arttı; ama bir iz kaldı."
+msgstr "A secret payment was made to %s. Their loyalty rose, but it left a trace."
+
+msgid "%s emri fazla sert yorumladı; bastırma kontrolden çıkıyor."
+msgstr "%s took the order too far; the crackdown is getting out of control."
+
+msgid "%s emri anlamadı ya da uygulamadı. Hiçbir şey olmadı."
+msgstr "%s misunderstood or ignored the order. Nothing happened."
+
+msgid "%s harekete geçti."
+msgstr "%s took action."
+
+msgid "%s soruşturmayı başlattı."
+msgstr "%s began the investigation."
+
+msgid "%s emri aldı."
+msgstr "%s received the order."
+
+msgid "%s emri kırmızı çizgisini aştığı için gönülsüzce, yarım yamalak uyguladı. Bunu sana yazdı. (Kırmızı çizgisi: %s)"
+msgstr "%s reluctantly carried out the order half-heartedly because it crossed their red line. They put it in writing. (Red line: %s)"
+
+msgid " Ama acele etmedi; emri günlerce bekletti."
+msgstr " But they didn't hurry; they let the order sit for days."
+
+msgid "%s hakkında öğrenilecek yeni bir şey kalmadı."
+msgstr "There's nothing new left to learn about %s."
+
+msgid "%s hakkındaki araştırma sonuç vermedi. İzler soğuk."
+msgstr "The investigation into %s turned up nothing. The trail is cold."
+
+msgid "%s zayıf noktası bulundu: %s. Artık şantaj mümkün."
+msgstr "A weakness of %s has been found: %s. Blackmail is now possible."
+
+msgid "%s asla geçmeyeceği çizgi: %s."
+msgstr "%s's red line: %s."
+
+msgid "Önce %s zayıf noktasını bulmalısın (Araştır)."
+msgstr "First you need to find %s's weakness (Investigate)."
+
+msgid "%s boyun eğmedi; şantajı ifşa etmekle tehdit ediyor. Konuşulmaya başlandı bile."
+msgstr "%s refused to yield and threatens to expose your blackmail. People are already talking."
+
+msgid "%s ne demek istediğini anladı. Artık senden korkuyor; korku ise sadakatin en kırılgan biçimi."
+msgstr "%s understood your meaning. They fear you now—and fear is the most fragile form of loyalty."
+
+msgid "Elçilik kayıtları altı hafta için açık: "
+msgstr "Embassy records are open for six weeks: "
+
+msgid "%s raporu diğer kaynaklarla büyük ölçüde örtüşüyor.%s"
+msgstr "%s's report largely matches other sources.%s"
+
+msgid "Başka kaynaklar durumun %s anlattığından DAHA KÖTÜ olduğunu söylüyor.%s"
+msgstr "Other sources say things are MUCH WORSE than %s described.%s"
+
+msgid "Başka kaynaklar durumu %s anlattığından biraz daha iyi görüyor.%s"
+msgstr "Other sources see things as somewhat better than %s described.%s"
+
+msgid " Kurum defterleri bir süreliğine açıldı."
+msgstr " The institution's ledgers have been opened for a while."
+
+msgid "Operasyon için 1–3 kişi seç (Ctrl ile çoklu seçim)."
+msgstr "Choose 1–3 people for the operation (Ctrl-click to select multiple)."
+
+msgid "Operasyon 2 mesai ister."
+msgstr "The operation costs 2 work actions."
+
+msgid "Sahte kriz işe yaradı; gündem değişti."
+msgstr "The fabricated crisis worked; attention shifted."
+
+msgid "Operasyon amatörce kaldı; kimse inanmadı."
+msgstr "The operation looked amateurish; no one believed it."
+
+msgid "Muhalefet kanatları birbirine düştü."
+msgstr "The opposition's factions turned against each other."
+
+msgid "Muhalefet planı fark etti ve birleşme hızlandı."
+msgstr "The opposition spotted the plan and united faster."
+
+msgid "Zayıflatılacak kimse yok."
+msgstr "There's no one to weaken."
+
+msgid "%s itibarı sarsıldı. Kim yaptığını tahmin etmesi zor değil."
+msgstr "%s's reputation was shaken. It won't be hard to guess who did it."
+
+msgid "Operasyon boşa gitti; %s şüphelendi."
+msgstr "The operation failed; %s grew suspicious."
+
+msgid " (Çember: %s)"
+msgstr " (Circle: %s)"
+
+msgid " Ama bir şey sızmış gibi."
+msgstr " But something seems to have leaked."
+
+msgid "Birbirine düşürmek için tam iki kişi seç (Çoklu seçim)."
+msgstr "Choose exactly two people to set against each other (multi-select)."
+
+msgid "Seçilen kişilerden biri artık sarayda değil."
+msgstr "One of the selected people is no longer at court."
+
+msgid "Sana karşı harekete geçmiş biriyle oyun oynamak işe yaramaz."
+msgstr "Playing games with someone who has already moved against you won't work."
+
+msgid "%s ile %s'i yakın zamanda birbirine düşürmeyi denedin; %d hafta bekle."
+msgstr "You recently tried to set %s and %s against each other; wait %d weeks."
+
+msgid "Birbirine düşürmek 2 mesai ister."
+msgstr "Setting them against each other costs 2 work actions."
+
+msgid "%s ile %s birbirine girdi. İkisi de artık birbirini izliyor; sana ayıracak zamanları az."
+msgstr "%s and %s turned on each other. They're watching one another now and have little time for you."
+
+msgid "%s ile %s oyunu anladı: iki taraf da bunun arkasında kimin olduğunu biliyor."
+msgstr "%s and %s saw through the game: both know who's behind it."
+
+msgid " Bir şey sızmış gibi."
+msgstr " Something seems to have leaked."
+
+msgid "Olmadı (mesai ya da dosya yok)."
+msgstr "That didn't work (no work actions or no file)."
+
+msgid "'%s' basına sızdırıldı."
+msgstr "'%s' was leaked to the press."
+
+msgid "'%s' için sessizlik sağlandı. Kanıtın kopyaları hâlâ duruyor."
+msgstr "Silence was secured over '%s'. Copies of the evidence still exist."
+
+msgid "Dosya yok."
+msgstr "No file exists."
+
+msgid "Bu artık herkesin bildiği bir şey; kanıtı yok etmek işe yaramaz."
+msgstr "Everyone already knows this; destroying the evidence won't help."
+
+msgid "'%s' kanıtının bir kopyası yok edildi; hâlâ kopyaları var."
+msgstr "One copy of the evidence for '%s' was destroyed; others remain."
+
+msgid "Kanıt yok edildi."
+msgstr "The evidence was destroyed."
+
+msgid "Girişim fark edildi; dosya hakkında dedikodu arttı."
+msgstr "The attempt was noticed; rumors about the file spread."
+
+msgid "%s artık verilemez; zaten birine verildi."
+msgstr "%s can no longer be granted; it has already been given to someone."
+
+msgid "%s bunu zaten vaat ettin."
+msgstr "You already promised this to %s."
+
+msgid "%s %s sözü verdin. Gözleri parladı; vadesi geldiğinde hatırlatacak."
+msgstr "You promised %s to %s. Their eyes lit up; they'll remind you when it's due."
+
+msgid "%s, %d. haftada verdiğin '%s' sözünü hatırlatıyor. Bekleyişi sabırlı, ama sonsuz değil."
+msgstr "%s reminds you of the promise you made in week %d: '%s'. They've waited patiently, but not forever."
+
+msgid " Aynı sözü %s de vermiştin."
+msgstr " You also made the same promise to %s."
+
+msgid "Sözü tut: %s"
+msgstr "Keep your promise: %s"
+
+msgid "%s sözünü aldı. Bunu unutmayacak."
+msgstr "%s received what you promised. They won't forget it."
+
+msgid "Biraz daha zaman iste"
+msgstr "Ask for more time"
+
+msgid "%s bekleyecek. Ama hevesi azaldı."
+msgstr "%s will wait. But their enthusiasm has faded."
+
+msgid "Sözden dön"
+msgstr "Break your promise"
+
+msgid "%s yüzüne bakmadan çıktı. Saray bunu konuşacak."
+msgstr "%s left without looking you in the eye. The court will talk."
+
+msgid "Söz cevapsız kaldı; bozulmuş sayıldı."
+msgstr "The promise went unanswered and was considered broken."
+
+msgid "%s görevden alındı ama kralın sırlarını biliyordu ve konuşmaya başladı!"
+msgstr "%s was dismissed, but knew the king's secrets and has started talking!"
+
+msgid "%s görevden alındı. Sessizce gitti."
+msgstr "%s was dismissed. They left quietly."
