@@ -1659,3 +1659,183 @@ msgstr "%s was dismissed, but knew the king's secrets and has started talking!"
 
 msgid "%s görevden alındı. Sessizce gitti."
 msgstr "%s was dismissed. They left quietly."
+
+msgid "Bu kararın gerektirdiği kişi artık sarayda değil."
+msgstr "The person required for this decision is no longer at court."
+
+msgid "Leyla artık bağımsız yayın kuramıyor."
+msgstr "Leyla can no longer run an independent publication."
+
+msgid "Renn artık savcılığa başvuramıyor."
+msgstr "Renn can no longer appeal to the prosecutor's office."
+
+msgid "Soruşturma notu: %s hakkında endişe verici bir ipucu bulundu."
+msgstr "Investigation note: a troubling clue about %s has surfaced."
+
+msgid "KULİS: %s aynı sözü aldıklarını öğrendi: %s."
+msgstr "BACKROOM: %s learned they were promised the same thing: %s."
+
+msgid "SÖZ: %s karşılığını istiyor."
+msgstr "PROMISE: %s is asking you to make good on it."
+
+msgid "ERTELENDİ — %s: %s"
+msgstr "POSTPONED — %s: %s"
+
+msgid "REJİM: Saray artık %s bir düzen olarak anılıyor."
+msgstr "REGIME: The court is now known as a %s order."
+
+msgid "MALİYE: Meclis bütçeyi görüşemedi; eski dengeli düzen sürdü."
+msgstr "FINANCE: The council couldn't debate the budget; the previous balanced policy remains."
+
+msgid "DIŞİŞLERİ: %s ile ilişki yakınlaştı; elçilik kapıları açık."
+msgstr "FOREIGN AFFAIRS: Relations with %s have warmed; the embassy doors are open."
+
+msgid "DIŞİŞLERİ: %s ile ilişki soğudu; elçilikten sert bir nota geldi."
+msgstr "FOREIGN AFFAIRS: Relations with %s have cooled; a stern note arrived from the embassy."
+
+msgid "MALİYE: Kasa daralıyor; maaş defterleri yeniden açıldı."
+msgstr "FINANCE: The treasury is running low; the payroll ledgers have been reopened."
+
+msgid "MALİYE: Vergi defterleri masalarda birikiyor."
+msgstr "FINANCE: Tax ledgers are piling up on desks."
+
+msgid "ADLİYE: Dosyalar takviminden düşüyor; savcılar yetişemiyor."
+msgstr "JUSTICE: Cases are falling off the calendar; prosecutors can't keep up."
+
+msgid "ORDU: Sınır birliklerinde hazırlık gecikiyor."
+msgstr "ARMY: Preparations are running late in the border units."
+
+msgid "İDARE: Saray emirleri valiliklere geç ulaşıyor."
+msgstr "ADMINISTRATION: Palace orders are reaching the governors late."
+
+msgid "KULİS: '%s' konuşulmaya başladı."
+msgstr "BACKROOM: '%s' has started circulating."
+
+msgid "MANŞET: %s herkesin bildiği bir şey oldu."
+msgstr "HEADLINE: %s has become public knowledge."
+
+msgid "Kendiliğinden çözüldü: %s."
+msgstr "Resolved on its own: %s."
+
+msgid "Sarne'nin yayınlarının havası değişti: artık %s."
+msgstr "The tone of Sarne's broadcasts shifted: now %s."
+
+msgid "%s artık sarayda değil."
+msgstr "%s is no longer at court."
+
+msgid "%s sana karşı açıkça harekete geçti."
+msgstr "%s has openly moved against you."
+
+msgid "%s tavrı %s: artık %s."
+msgstr "%s's manner has %s: now they are %s."
+
+msgid "%s %s: artık %s."
+msgstr "%s has %s: now %s."
+
+msgid "%s raporu %s: artık %s."
+msgstr "%s's report has %s: now %s."
+
+msgid "%s verdiğin %s sözü tutuldu."
+msgstr "The promise of %s to grant %s was kept."
+
+msgid "%s verdiğin %s sözü bozuldu."
+msgstr "The promise of %s to grant %s was broken."
+
+msgid "%s verdiğin %s sözü geçersiz kaldı."
+msgstr "The promise of %s to grant %s became void."
+
+msgid "%s %s sözünün karşılığını istiyor."
+msgstr "%s is asking you to make good on your promise of %s."
+
+msgid "KRİZ: "
+msgstr "CRISIS: "
+
+msgid "ALAMET: "
+msgstr "SIGN: "
+
+msgid "SOKAK: "
+msgstr "STREET: "
+
+msgid "MAHKEME: "
+msgstr "COURT: "
+
+msgid "MALİYE: "
+msgstr "FINANCE: "
+
+msgid "ADLİYE: "
+msgstr "JUSTICE: "
+
+msgid "İDARE: "
+msgstr "ADMINISTRATION: "
+
+msgid "ORDU: "
+msgstr "ARMY: "
+
+msgid "DIŞİŞLERİ: "
+msgstr "FOREIGN AFFAIRS: "
+
+msgid "MANŞET: "
+msgstr "HEADLINE: "
+
+msgid "ERTELENDİ — "
+msgstr "POSTPONED — "
+
+msgid "KULİS: "
+msgstr "BACKROOM: "
+
+msgid "OLAY: "
+msgstr "EVENT: "
+
+msgid "SÖZ: "
+msgstr "PROMISE: "
+
+msgid "HAMLE: "
+msgstr "MOVE: "
+
+msgid "güvenlikçi"
+msgstr "security-led"
+
+msgid "popülist"
+msgstr "populist"
+
+msgid "patronajcı"
+msgstr "patronage-driven"
+
+msgid "oligarklara dayanan"
+msgstr "oligarch-backed"
+
+msgid "medya kontrollü"
+msgstr "media-controlled"
+
+msgid "istihbarat merkezli"
+msgstr "intelligence-led"
+
+msgid "henüz şekillenmemiş"
+msgstr "not yet defined"
+
+msgid "sıcak"
+msgstr "warm"
+
+msgid "düşmanca"
+msgstr "hostile"
+
+msgid "güçlendi"
+msgstr "grew stronger"
+
+msgid "güç kaybetti"
+msgstr "lost power"
+
+msgid "sertleşti"
+msgstr "hardened"
+
+msgid "yumuşadı"
+msgstr "softened"
+
+msgid "kötüleşti"
+msgstr "worsened"
+
+msgid "iyileşti"
+msgstr "improved"
+
+msgid "Yönetimin %s bir rejim olarak anılmaya başladı."
+msgstr "Your rule began to be known as a %s regime."
