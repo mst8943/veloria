@@ -30,7 +30,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S3a: `sim.gd` haber/uyarı cümleleri, ardından kriz metinleri.
+S3a: `sim.gd` kriz metinleri.
 
 ## L1 — tamamlandı
 
@@ -85,6 +85,10 @@ S3a: `sim.gd` haber/uyarı cümleleri, ardından kriz metinleri.
 - S3a eylem sonuçları: `sim.gd` eylem sonuçları ve vaat karar kartı cümleleri
   tam cümle `tr()` anahtarlarına bağlandı; Türkçe kaynaklar değişmeden kaldı.
   Commit: `55d6c2d`.
+- S3a haber/uyarıları: Türkçe `weekly_news` anahtarları korunarak gösterim ve
+  sinyal İngilizceleştirildi; hafta özeti, masa alt başlığı ve TV şeridi aynı
+  görünür metin yardımcısını kullanıyor. `en.po` tam cümle/etiketleri aldı.
+  Commitler: `4d8f369`, `4c6ce42`, `cb939f9`, `2bce4ba`, `46a09b2`.
 - Menü künyesi sabit kaynak metin olarak kalır; Godot sabit ifadede `tr()`
   değerlendirmediğinden çeviri modal açılırken uygulanır.
 - `ui_shots.gd`, autoload ayarları yüklendikten sonra `--lang=en`/varsayılan
