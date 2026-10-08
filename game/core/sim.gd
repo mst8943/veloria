@@ -94,6 +94,7 @@ var advice_log: Array = []   # meclis görüşlerinin sicili (oyun sonunda açı
 var stats: Dictionary = {}
 var regime := ""              # 60. haftadan sonra bir kez biçimlenir; oyuncunun geçmişinin yorumu
 var weekly_news: Array = []
+var weekly_news_localized: Dictionary = {}
 var report_prev: Dictionary = {}   # kaynak -> geçen haftaki raporun SÖYLEDİĞİ band (gerçek değil)
 var week_changes: Array = []       # {tone, text, actor}: görünür göstergelerin geçen haftaya göre farkı
 var weekly_moves: Array = []       # bu haftanın aktör hamleleri {tone, text, actor} (docs/design/aktor_hamleleri.md)
@@ -174,6 +175,7 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 	coup_crisis = {}
 	crisis_cooldown = 0
 	weekly_news.clear()
+	weekly_news_localized.clear()
 	report_prev.clear()
 	week_changes.clear()
 	street_anger = 0.0
@@ -474,6 +476,21 @@ func spend_mesai(cost: int = 1) -> bool:
 
 func _no_mesai() -> String:
 	return tr("Bu hafta mesain kalmadı.")
+
+
+func news_for_display(source: String) -> String:
+	if weekly_news_localized.has(source):
+		return str(weekly_news_localized[source])
+	for prefix in ["KRİZ: ", "ALAMET: ", "SOKAK: ", "MAHKEME: ", "MALİYE: ", "ADLİYE: ", "İDARE: ", "ORDU: ", "DIŞİŞLERİ: ", "MANŞET: ", "ERTELENDİ — ", "KULİS: ", "OLAY: ", "SÖZ: ", "HAMLE: "]:
+		if source.begins_with(prefix):
+			return tr(prefix) + source.substr(prefix.length())
+	return tr(source)
+
+
+func _add_news(source: String, localized: String = "") -> void:
+	weekly_news.append(source)
+	if localized != "":
+		weekly_news_localized[source] = localized
 
 
 ## Terfi: güç ve minnet verir, ama borç ve hırs da büyür.
@@ -819,11 +836,13 @@ func _reveal_hint(investigator: Actor, fidelity: float) -> void:
 		return
 	var s: Actor = suspects[rng.randi() % suspects.size()]
 	if rng.randf() < 0.5 + investigator.honesty * 0.3:
-		weekly_news.append("Soruşturma notu: %s hakkında endişe verici bir ipucu bulundu." % s.display_name)
+		_add_news("Soruşturma notu: %s hakkında endişe verici bir ipucu bulundu." % s.display_name,
+			tr("Soruşturma notu: %s hakkında endişe verici bir ipucu bulundu.") % s.display_name)
 	else:
 		var others: Array = actors.values()
 		var w: Actor = others[rng.randi() % others.size()]
-		weekly_news.append("Soruşturma notu: %s hakkında endişe verici bir ipucu bulundu." % w.display_name)
+		_add_news("Soruşturma notu: %s hakkında endişe verici bir ipucu bulundu." % w.display_name,
+			tr("Soruşturma notu: %s hakkında endişe verici bir ipucu bulundu.") % w.display_name)
 
 
 ## Çapraz doğrulama: bir kaynağın raporunu gerçek durumla kıyaslayan gürültülü ipucu.
@@ -1080,7 +1099,8 @@ func _tick_promises() -> void:
 			a.ambition += 5.0
 		_add_fact("celiski_%s_%d" % [PRIZES.find(prize), week], "Aynı makamın birden çok kişiye vaat edilmesi (%s)" % prize,
 			"king", 20, group.map(func(p: Dictionary) -> String: return p["actor"]), 1)
-		weekly_news.append("KULİS: %s aynı sözü aldıklarını öğrendi: %s." % [" ve ".join(names), prize])
+		_add_news("KULİS: %s aynı sözü aldıklarını öğrendi: %s." % [" ve ".join(names), prize],
+			tr("KULİS: %s aynı sözü aldıklarını öğrendi: %s.") % [" ve ".join(names), prize])
 	# Vadesi gelen sözler karar kartına dönüşür.
 	for p in promises:
 		if p["state"] != "active" or p["asked"] or week < int(p["due"]):
@@ -1103,7 +1123,8 @@ func _tick_promises() -> void:
 				{"label": tr("Biraz daha zaman iste"), "text": tr("%s bekleyecek. Ama hevesi azaldı.") % a.display_name, "fx": {"promise_delay": p["id"]}},
 				{"label": tr("Sözden dön"), "text": tr("%s yüzüne bakmadan çıktı. Saray bunu konuşacak.") % a.display_name, "fx": {"promise_break": p["id"]}}],
 			"ignore": {"text": tr("Söz cevapsız kaldı; bozulmuş sayıldı."), "fx": {"promise_break": p["id"]}}}})
-		weekly_news.append("SÖZ: %s karşılığını istiyor." % a.display_name)
+		_add_news("SÖZ: %s karşılığını istiyor." % a.display_name,
+			tr("SÖZ: %s karşılığını istiyor.") % a.display_name)
 
 
 func _keep_promise(p: Dictionary) -> void:
@@ -1184,15 +1205,15 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 	var e: Dictionary = pending[pending_index]["event"]
 	var ch: Dictionary = e["choices"][choice_index]
 	if not ch.get("available", true):
-		return "Bu kararın gerektirdiği kişi artık sarayda değil."
+		return tr("Bu kararın gerektirdiği kişi artık sarayda değil.")
 	if e.get("kind", "") == "patronage":
 		if choice_index == 2 and (not actors.has("lena") or actors["lena"].moved or Press.is_closed(self, "free")):
-			return "Leyla artık bağımsız yayın kuramıyor."
+			return tr("Leyla artık bağımsız yayın kuramıyor.")
 		if choice_index == 3 and (not actors.has("falk") or actors["falk"].moved):
-			return "Renn artık savcılığa başvuramıyor."
+			return tr("Renn artık savcılığa başvuramıyor.")
 	var fx: Dictionary = ch.get("fx", {})
 	if float(fx.get("wealth", 0)) + private_wealth < 0.0:
-		return "Kişisel servetin yetersiz."
+		return tr("Kişisel servetin yetersiz.")
 	if not spend_mesai():
 		return _no_mesai()
 	if e.get("crisis", false):
@@ -1334,6 +1355,7 @@ func end_week() -> void:
 	# Haftanın haberleri burada sıfırlanır: ertelenen kararların haberi de oyuncuya ulaşsın
 	# (eskiden aşağıda ekleniyor, hemen ardından siliniyordu).
 	weekly_news.clear()
+	weekly_news_localized.clear()
 	weekly_moves.clear()
 	# Ertelenen kararlar kendi kendine çözülür (olgunlaşır).
 	var keep: Array = []
@@ -1346,7 +1368,7 @@ func end_week() -> void:
 			_apply_effects(ig.get("fx", {}))
 			var line := "ERTELENDİ — %s: %s" % [e["title"], ig.get("text", "")]
 			history.append("Hafta %d — %s » (ertelendi)" % [week, e["title"]])
-			weekly_news.append(line)
+			_add_news(line, tr("ERTELENDİ — %s: %s") % [e["title"], ig.get("text", "")])
 		else:
 			keep.append(p)
 	pending = keep
@@ -1361,7 +1383,8 @@ func end_week() -> void:
 	if regime == "" and week >= 60:
 		regime = _choose_regime()
 		flags["REJIM_" + regime.to_upper()] = week
-		weekly_news.append("REJİM: Saray artık %s bir düzen olarak anılıyor." % regime_name())
+		_add_news("REJİM: Saray artık %s bir düzen olarak anılıyor." % regime_name(),
+			tr("REJİM: Saray artık %s bir düzen olarak anılıyor.") % tr(regime_name()))
 	_tick_promises()
 	_run_cascade()
 	_check_crises()
@@ -1372,12 +1395,12 @@ func end_week() -> void:
 	if week == 60 and regime != "":
 		if week_changes.size() >= CHANGES_MAX:
 			week_changes.pop_back()
-		week_changes.append({"tone": 0, "actor": "", "text": "Yönetimin %s bir rejim olarak anılmaya başladı." % regime_name()})
+		week_changes.append({"tone": 0, "actor": "", "text": tr("Yönetimin %s bir rejim olarak anılmaya başladı.") % tr(regime_name())})
 	_check_end()
 	if autosave and not ended:
 		save_game()
 	for n in weekly_news:
-		news.emit(n)
+		news.emit(news_for_display(n))
 	week_advanced.emit(week)
 	changed.emit()
 
@@ -1416,44 +1439,47 @@ func _diff_visible(b: Dictionary, n: Dictionary) -> Array:
 	for line in weekly_news:
 		var s := str(line)
 		if s.begins_with("ERTELENDİ — "):
-			out.append({"tone": 0, "actor": "", "text": "Kendiliğinden çözüldü: " + s.substr(12).split(":")[0] + "."})
+			out.append({"tone": 0, "actor": "", "text": tr("Kendiliğinden çözüldü: %s.") % s.substr(12).split(":")[0]})
 		elif s.begins_with("MANŞET: "):
-			out.append({"tone": -1, "actor": "", "text": s.substr(8)})
+			var headline_shown := news_for_display(s)
+			out.append({"tone": -1, "actor": "", "text": headline_shown.substr(headline_shown.find(": ") + 2)})
 		elif s.begins_with("KULİS: "):
-			out.append({"tone": 0, "actor": "", "text": s.substr(7)})
+			var backroom_shown := news_for_display(s)
+			out.append({"tone": 0, "actor": "", "text": backroom_shown.substr(backroom_shown.find(": ") + 2)})
 		elif s.begins_with("SOKAK: ") or s.begins_with("MAHKEME: ") or s.begins_with("MALİYE: ") or s.begins_with("ADLİYE: ") or s.begins_with("İDARE: ") or s.begins_with("ORDU: ") or s.begins_with("DIŞİŞLERİ: "):
-			out.append({"tone": -1, "actor": "", "text": s.substr(s.find(" ") + 1)})
+			var warning_shown := news_for_display(s)
+			out.append({"tone": -1, "actor": "", "text": warning_shown.substr(warning_shown.find(": ") + 2)})
 	for mv: Dictionary in weekly_moves:
 		out.append(mv.duplicate())
 	if b["halden_mood"] != n["halden_mood"]:
 		out.append({"tone": -1 if n["halden_mood"] == "düşmanca" else 0, "actor": "halden",
-			"text": "Sarne'nin yayınlarının havası değişti: artık %s." % n["halden_mood"]})
+			"text": tr("Sarne'nin yayınlarının havası değişti: artık %s.") % tr(str(n["halden_mood"]))})
 	for id in b["people"]:
 		var p0: Dictionary = b["people"][id]
 		var name: String = p0["name"]
 		if not n["people"].has(id):
-			out.append({"tone": 0, "actor": "", "text": "%s artık sarayda değil." % name})
+			out.append({"tone": 0, "actor": "", "text": tr("%s artık sarayda değil.") % name})
 			continue
 		var p1: Dictionary = n["people"][id]
 		if p1["moved"] and not p0["moved"]:
-			out.append({"tone": -1, "actor": id, "text": "%s sana karşı açıkça harekete geçti." % name})
+			out.append({"tone": -1, "actor": id, "text": tr("%s sana karşı açıkça harekete geçti.") % name})
 			continue
 		var s0 := int(p0["susp"])
 		var s1 := int(p1["susp"])
 		if s0 >= 0 and s1 != s0:
 			out.append({"tone": -1 if s1 > s0 else 1, "actor": id,
-				"text": "%s tavrı %s: artık %s." % [ek(name, "in"), "sertleşti" if s1 > s0 else "yumuşadı", str(SUSPICION_NAMES[s1]).to_lower()]})
+				"text": tr("%s tavrı %s: artık %s.") % [ek(name, "in"), tr("sertleşti" if s1 > s0 else "yumuşadı"), tr(str(SUSPICION_NAMES[s1]).to_lower())]})
 		var t0 := int(p0["power"])
 		var t1 := int(p1["power"])
 		if t1 != t0:
 			out.append({"tone": 0, "actor": id,
-				"text": "%s %s: artık %s." % [name, "güçlendi" if t1 > t0 else "güç kaybetti", POWER_TIER_NAMES[t1]]})
+				"text": tr("%s %s: artık %s.") % [name, tr("güçlendi" if t1 > t0 else "güç kaybetti"), tr(str(POWER_TIER_NAMES[t1]))]})
 	for src in n["bands"]:
 		if b["bands"].has(src) and n["people"].has(src):
 			var d := int(n["bands"][src]) - int(b["bands"][src])
 			if d != 0:
 				out.append({"tone": -1 if d > 0 else 1, "actor": src,
-					"text": "%s raporu %s: artık %s." % [ek(str(n["people"][src]["name"]), "in"), "kötüleşti" if d > 0 else "iyileşti", REPORT_TONES[int(n["bands"][src])]]})
+					"text": tr("%s raporu %s: artık %s.") % [ek(str(n["people"][src]["name"]), "in"), tr("kötüleşti" if d > 0 else "iyileşti"), tr(str(REPORT_TONES[int(n["bands"][src])]))]})
 	for pid in n["promises"]:
 		if not b["promises"].has(pid):
 			continue  # bu hafta verilen sözü oyuncu zaten biliyor
@@ -1463,13 +1489,13 @@ func _diff_visible(b: Dictionary, n: Dictionary) -> Array:
 		if q1["state"] != q0["state"]:
 			match str(q1["state"]):
 				"kept":
-					out.append({"tone": 1, "actor": "", "text": "%s verdiğin %s sözü tutuldu." % [who, q1["prize"]]})
+					out.append({"tone": 1, "actor": "", "text": tr("%s verdiğin %s sözü tutuldu.") % [who, q1["prize"]]})
 				"broken":
-					out.append({"tone": -1, "actor": "", "text": "%s verdiğin %s sözü bozuldu." % [who, q1["prize"]]})
+					out.append({"tone": -1, "actor": "", "text": tr("%s verdiğin %s sözü bozuldu.") % [who, q1["prize"]]})
 				_:
-					out.append({"tone": 0, "actor": "", "text": "%s verdiğin %s sözü geçersiz kaldı." % [who, q1["prize"]]})
+					out.append({"tone": 0, "actor": "", "text": tr("%s verdiğin %s sözü geçersiz kaldı.") % [who, q1["prize"]]})
 		elif q1["asked"] and not q0["asked"]:
-			out.append({"tone": 0, "actor": "", "text": "%s %s sözünün karşılığını istiyor." % [q1["name"], q1["prize"]]})
+			out.append({"tone": 0, "actor": "", "text": tr("%s %s sözünün karşılığını istiyor.") % [q1["name"], q1["prize"]]})
 	out.sort_custom(func(x: Dictionary, y: Dictionary) -> bool: return int(x["tone"]) < int(y["tone"]))
 	return out.slice(0, CHANGES_MAX)
 
@@ -1585,10 +1611,12 @@ func _foreign_warnings() -> void:
 		var value: float = foreign[power]
 		if value >= 70.0 and not warned.get("foreign_" + power + "_near", false):
 			warned["foreign_" + power + "_near"] = true
-			weekly_news.append("DIŞİŞLERİ: %s ile ilişki yakınlaştı; elçilik kapıları açık." % name)
+			_add_news("DIŞİŞLERİ: %s ile ilişki yakınlaştı; elçilik kapıları açık." % name,
+			tr("DIŞİŞLERİ: %s ile ilişki yakınlaştı; elçilik kapıları açık.") % name)
 		elif value <= 30.0 and not warned.get("foreign_" + power + "_cold", false):
 			warned["foreign_" + power + "_cold"] = true
-			weekly_news.append("DIŞİŞLERİ: %s ile ilişki soğudu; elçilikten sert bir nota geldi." % name)
+			_add_news("DIŞİŞLERİ: %s ile ilişki soğudu; elçilikten sert bir nota geldi." % name,
+			tr("DIŞİŞLERİ: %s ile ilişki soğudu; elçilikten sert bir nota geldi.") % name)
 
 
 func foreign_defense_bonus() -> float:
@@ -1605,7 +1633,7 @@ func _state_warnings() -> void:
 	for key in messages:
 		if messages[key][0] and not warned.get("state_" + key, false):
 			warned["state_" + key] = true
-			weekly_news.append(messages[key][1])
+			_add_news(messages[key][1], tr(messages[key][1]))
 
 
 func _state_noise(institution: String) -> float:
@@ -1640,7 +1668,8 @@ func _decay_facts() -> void:
 		f["common"] = minf(1.0, f["common"] + 0.0065 * f["knowers"].size() * f.get("leakiness", 0.5))
 		if f["common"] >= 0.25 and f["common"] < 0.5 and not f.get("rumor", false):
 			f["rumor"] = true
-			weekly_news.append("KULİS: '%s' konuşulmaya başladı." % f["text"])
+			_add_news("KULİS: '%s' konuşulmaya başladı." % f["text"],
+				tr("KULİS: '%s' konuşulmaya başladı.") % f["text"])
 		if f["common"] >= 0.5 and not f.get("public", false):
 			f["public"] = true
 			f["public_week"] = week
@@ -1652,7 +1681,8 @@ func _decay_facts() -> void:
 				var s: Actor = actors[f["subject"]]
 				s.power = maxf(5.0, s.power - f["severity"] * 0.25)
 				s.fear += 8.0
-			weekly_news.append("MANŞET: %s herkesin bildiği bir şey oldu." % f["text"])
+			_add_news("MANŞET: %s herkesin bildiği bir şey oldu." % f["text"],
+				tr("MANŞET: %s herkesin bildiği bir şey oldu.") % f["text"])
 
 
 func _eligible(e: Dictionary) -> bool:
@@ -1850,7 +1880,8 @@ func _fire_budget() -> void:
 	if pending.size() >= 3:
 		budget_stance = 0
 		court_share = false
-		weekly_news.append("MALİYE: Meclis bütçeyi görüşemedi; eski dengeli düzen sürdü.")
+		_add_news("MALİYE: Meclis bütçeyi görüşemedi; eski dengeli düzen sürdü.",
+			tr("FINANCE: The council couldn't debate the budget; the previous balanced policy remains."))
 		return
 	var note := ""
 	for report: Dictionary in reports:
