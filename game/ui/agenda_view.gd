@@ -144,7 +144,7 @@ func _rebuild_facts() -> void:
 		top.add_theme_constant_override("separation", 8)
 		v.add_child(top)
 		var t := Label.new()
-		t.text = str(f["text"])
+		t.text = Sim.fact_text_for_display(str(f["text"]))
 		t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		t.add_theme_font_size_override("font_size", host._fs(15))

@@ -1669,12 +1669,13 @@ func treasury_band() -> String:
 
 func _decay_facts() -> void:
 	for f: Dictionary in facts.values():
+		var fact_text := fact_text_for_display(str(f["text"]))
 		# Dosyalar sızar: bilen sayısı arttıkça ortak bilgi yavaş yavaş yükselir.
 		f["common"] = minf(1.0, f["common"] + 0.0065 * f["knowers"].size() * f.get("leakiness", 0.5))
 		if f["common"] >= 0.25 and f["common"] < 0.5 and not f.get("rumor", false):
 			f["rumor"] = true
 			_add_news("KULİS: '%s' konuşulmaya başladı." % f["text"],
-				tr("KULİS: '%s' konuşulmaya başladı.") % f["text"])
+				tr("KULİS: '%s' konuşulmaya başladı.") % fact_text)
 		if f["common"] >= 0.5 and not f.get("public", false):
 			f["public"] = true
 			f["public_week"] = week
@@ -1687,7 +1688,7 @@ func _decay_facts() -> void:
 				s.power = maxf(5.0, s.power - f["severity"] * 0.25)
 				s.fear += 8.0
 			_add_news("MANŞET: %s herkesin bildiği bir şey oldu." % f["text"],
-				tr("MANŞET: %s herkesin bildiği bir şey oldu.") % f["text"])
+				tr("MANŞET: %s herkesin bildiği bir şey oldu.") % fact_text)
 
 
 func _eligible(e: Dictionary) -> bool:
@@ -2960,3 +2961,16 @@ func _phrase(a: Actor, value: float, echo: float) -> String:
 func _add_fact(id: String, text: String, subject: String, severity: float, knowers: Array, copies: int, leakiness: float = 0.5) -> void:
 	facts[id] = {"id": id, "text": text, "subject": subject, "severity": severity,
 		"knowers": knowers.duplicate(), "common": 0.0, "copies": copies, "leakiness": leakiness}
+
+
+func fact_text_for_display(text: String) -> String:
+	if Loc.lang != "en":
+		return text
+	if text.ends_with(" yapılan gizli ödeme"):
+		var apostrophe := text.find("'")
+		if apostrophe > 0:
+			return tr("Gizli ödeme %s") % text.substr(0, apostrophe)
+	if text.begins_with("Aynı makamın birden çok kişiye vaat edilmesi (") and text.ends_with(")"):
+		var start := text.rfind("(") + 1
+		return tr("Aynı makamın birden çok kişiye vaat edilmesi (%s)") % tr(text.substr(start, text.length() - start - 1))
+	return tr(text)

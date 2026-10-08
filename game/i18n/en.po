@@ -1979,10 +1979,10 @@ msgid "Karar verilmedi. Barikatlar sarayın kapısına ulaştı."
 msgstr "No decision was made. The barricades reached the palace gates."
 
 msgid "Başsavcı Renn"
-msgstr "Prosecutor General Renn"
+msgstr "Chief Prosecutor Renn"
 
 msgid "Başsavcı"
-msgstr "Prosecutor General"
+msgstr "Chief Prosecutor"
 
 msgid "Mahkemenin arkasında meclis ve sokak var; tasfiyeye kimse seyirci kalmaz."
 msgstr "The council and the streets stand behind the court; no one will watch a purge from the sidelines."
@@ -2556,6 +2556,36 @@ msgstr "not yet established"
 
 msgid "belirsiz"
 msgstr "unclear"
+
+msgid "Naiplik"
+msgstr "Regency"
+
+msgid "Liman İhalesi"
+msgstr "Port contract"
+
+msgid "Dokunulmazlık"
+msgstr "Immunity"
+
+msgid "Gizli ödeme %s"
+msgstr "Secret payment to %s"
+
+msgid "Aynı makamın birden çok kişiye vaat edilmesi (%s)"
+msgstr "The same office was promised to several people (%s)"
+
+msgid "Protestoculara yönelik sert müdahale"
+msgstr "A harsh crackdown on protesters"
+
+msgid "Sarne'ye verilen gizli ihale dosyası"
+msgstr "A secret tender file granted to Sarne"
+
+msgid "Sarne'ye verilen yeni yayın ve ihale payı"
+msgstr "A new media and tender share granted to Sarne"
+
+msgid "Yabancı bir devletten alınan gizli destek"
+msgstr "Secret support from a foreign power"
+
+msgid "Liman ihalesindeki komisyon"
+msgstr "A kickback in the port tender"
 
 msgid "Normal"
 msgstr "Normal"
