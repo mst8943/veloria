@@ -1,6 +1,6 @@
 # İngilizce içerik kalite örnekleri — S5
 
-Her onuncu İngilizce metin, kaplama dosyalarının sabit sıralı taramasından örneklendi (397 metinden 39 örnek). Anahtarlar Türkçe kalır; kişi adları korunur, rol/unvan ve oyuncuya gösterilen metin çevrilir. Yer tutucular aynen bırakılır.
+Her onuncu İngilizce metin, kaplama dosyalarının sabit sıralı taramasından örneklendi (376 metinden 37 örnek). Anahtarlar Türkçe kalır; kişi adları korunur, rol/unvan ve oyuncuya gösterilen metin çevrilir. Yer tutucular aynen bırakılır. Ödül/rejim kimlikleri overlay'e alınmaz; Türkçe iç anahtar olarak korunur.
 
 | # | Kaynak | English | Kaynak dosya/yol |
 |---:|---|---|---|
@@ -9,37 +9,35 @@ Her onuncu İngilizce metin, kaplama dosyalarının sabit sıralı taramasından
 | 30 | Ana Muhalefet Lideri | Opposition Leader | actors/brandt/title |
 | 40 | Çocukluk korkuları | Childhood fears | actors/julian/weak_point |
 | 50 | Drakon Büyükelçisi | Drakonic Ambassador | actors/malenkov/title |
-| 60 | (boş kademe) | unknown | content_labels/power_tiers/0 |
-| 70 | Tehlikeli | Dangerous | content_labels/suspicion_names/3 |
-| 80 | Oligark Rejimi | Oligarch Regime | content_labels/regime_titles/oligark |
-| 90 | Sarne sözleşme defterini masaya bıraktı. 'Gazetelerim de kanalım da burada, Majesteleri. Karşılığını konuşalım.' Helena fısıldıyor: 'Yayınları ona bağlı.' | Sarne laid his contract ledger on the table. 'My papers and my channels are both here, Your Majesty. Shall we discuss the price?' Helena murmurs: 'His broadcasts answer to him.' | content_labels/patronage/text/0 |
-| 100 | Savcılığa başvur | Go to the prosecutors | content_labels/patronage/choices/3/label |
-| 110 | Kurumlar ve sokak nefes alacak; kasa bunun bedelini taşıyacak. | Institutions and streets will breathe; the Treasury will bear the cost. | content_labels/budget/choices/2/text |
-| 120 | halkı öfkelendirir | angers the public | content_council/reasons/unrest/1/1 |
-| 130 | kasanıza para koyar | puts money in your pocket | content_council/reasons/wealth/0/1 |
-| 140 | iz bırakır | leaves a trace | content_council/reasons/fact/1/0 |
-| 150 | Hanedanın onuru bunu gerektirir. | The dynasty's honor demands it. | content_council/cover/prens |
-| 160 | II | II | content_council/roman/1 |
-| 170 | {n_in} elini güçlendirir | strengthens {n_in}'s hand | content_council/actor_bad/1 |
-| 180 | Ordu emir bekliyor; ama neden beklediğini soranlar çoğalıyor. | The army awaits its orders; more are asking why. | content_reports/phrases/army/1/2 |
-| 190 | Gizli görüşmeler artıyor. Tehdit gerçek olabilir. | Secret meetings are multiplying. The threat may be real. | content_reports/phrases/intel/2/0 |
-| 200 | Maaşları gelecek ay nasıl ödeyeceğimizi hesaplıyorum. | I am calculating how we will pay wages next month. | content_reports/phrases/economy/2/1 |
-| 210 | Sokağın sesi ekranlarımızdan daha yüksek çıkıyor. | The street is louder than our screens now. | content_reports/phrases/media/2/2 |
-| 220 | Saray sakin; kimse sizi rahatsız etmek istemiyor. | The Palace is quiet; no one wants to trouble you. | content_reports/phrases/gate/0/0 |
-| 230 | Kardeşiniz bu hafta av ve resimle meşguldü. | Your brother spent the week hunting and painting. | content_reports/phrases/royal/0/1 |
-| 240 | Voss'un mitingleri yarı boş. | Voss's rallies are half empty. | content_reports/phrases/opposition/0/2 |
-| 250 | Bazı dosyalar yargıda beklenenden hızlı ilerliyor. | Some files are moving through the courts faster than expected. | content_reports/phrases/court/1/0 |
-| 260 | Julian'a yaklaşan ailelerin sayısı arttı; hepsinin bir hesabı var. | More families are drawing close to Julian; every one has an interest. | content_reports/phrases/heir/2/0 |
-| 270 | Masana {n_in} sadakatini sorgulayan imzasız bir not bırakılmış. | An unsigned note questioning {n_in}'s loyalty was left on your desk. | content_reports/sign_texts/0/_/2 |
-| 280 | {n} bazı alay komutanlarıyla baş başa yemek yedi. | {n} dined alone with some regimental commanders. | content_reports/sign_texts/2/army/1 |
-| 290 | Başkentin girişlerindeki birliklerin komutanları değişti; hepsi {n_in} adamı. | The commanders at the Capital's gates have changed; all answer to {n}. | content_reports/sign_texts/3/army/1 |
-| 300 | Kasada nefes var, fakat gelecek ayın yükü de görünüyor. | The Treasury can breathe, though next month's burden is already visible. | content_reports/state/maliye/yürüyor/2 |
-| 310 | Savcılık dosyaları takvimine uygun ilerliyor. | Prosecutors' files are moving on schedule. | content_reports/state/hukuk/sağlam/0 |
-| 320 | Talimler zamanında bitti; sınır karakolları hazır. | Drills ended on time; the border posts are ready. | content_reports/state/ordu/sağlam/1 |
-| 330 | Kâtipler ve valiler aynı takvime bakıyor, Majesteleri. | Clerks and governors are following the same calendar, Your Majesty. | content_reports/state/idare/sağlam/2 |
-| 340 | Temiz Eller | Clean Hands | content_achievements/temiz_eller/0 |
-| 350 | Reformcu | Reformer | content_achievements/reformcu/0 |
-| 360 | Meydanların Öfkesi | The Square's Fury | content_achievements/ayaklanma/0 |
-| 370 | Oligarkı Dizginleyen | The Oligarch Tamed | content_achievements/oligarki_dizginleyen/0 |
-| 380 | Saltanatında hazine doldu, pazarlar canlandı. | The Treasury filled and the markets stirred during his reign. | content_history/pro_economy |
-| 390 | Yakın çevresini şantajla yönetti. | He ruled his inner circle through blackmail. | content_history/con_blackmail |
+| 60 | vazgeçilmez | indispensable | content_labels/power_tiers/3 |
+| 70 | Sarne bu kez ricada bulunmuyor. 'Sarayın sesini taşıyan benim. Yeni payımı istiyorum.' Helena kapıda bekliyor; gazetelerin kime bağlı olduğunu hatırlatıyor. | This time Sarne is not asking. 'I carry the Palace's voice. I want my new share.' Helena waits by the door, reminding you who owns the papers. | content_labels/patronage/text/1 |
+| 80 | Renn holdingin defterlerini mahkemeye taşıdı. | Renn took the holding company's ledgers to court. | content_labels/patronage/choices/3/text |
+| 90 | Saray payı | Palace allowance | content_labels/budget/choices/3/label |
+| 100 | hazineyi rahatlatır | eases the Treasury | content_council/reasons/economy/0/0 |
+| 110 | kasanızı boşaltır | empties your purse | content_council/reasons/wealth/1/0 |
+| 120 | bir gün önünüze dosya olarak gelir | will land on your desk as a file one day | content_council/reasons/fact/1/1 |
+| 130 | Hukuka en uygun yol bu. | This is the soundest course under the law. | content_council/cover/falk |
+| 140 | III | III | content_council/roman/2 |
+| 150 | %s öneririm | I recommend %s | content_council/rec_forms/0 |
+| 160 | Bazı birlikler emirleri geciktiriyor. Gençler konuşuyor. | Some units are delaying orders. The younger ranks are talking. | content_reports/phrases/army/2/0 |
+| 170 | Sarayın çevresinde, sizi değil birbirlerini arayan insanlar var. | Around the Palace, people are calling one another—not you. | content_reports/phrases/intel/2/1 |
+| 180 | Rakamları güzelleştirebilirim. Ama gerçeği bilmeniz gerekiyor. | I could make the figures look better. But you need the truth. | content_reports/phrases/economy/2/2 |
+| 190 | Sokakta sakin bir hava var. | The streets are calm. | content_reports/phrases/press/0/0 |
+| 200 | Randevu defteriniz düzenli; her şey yolunda. | Your appointment book is in order; all is well. | content_reports/phrases/gate/0/1 |
+| 210 | Prens size selamlarını gönderiyor. | The Prince sends you his regards. | content_reports/phrases/royal/0/2 |
+| 220 | Muhalefet kanatları arasında gizli görüşmeler sürüyor. | Secret talks continue between opposition factions. | content_reports/phrases/opposition/1/0 |
+| 230 | Savcılar bazı eski dosyaları yeniden açıyor. | Prosecutors are reopening some old cases. | content_reports/phrases/court/1/1 |
+| 240 | Veliahdın adı saray dışındaki pazarlıklarda geçiyor. | The Crown Prince's name is being traded beyond the Palace walls. | content_reports/phrases/heir/2/1 |
+| 250 | {n_in} yakın çevresinden biri fazla konuşuyormuş; ne dediği belli değil. | Someone close to {n_in} is talking too freely. No one knows what they said. | content_reports/sign_texts/0/_/3 |
+| 260 | {n} bazı dosyaları sarayın arşivinden kendi ofisine taşıttı. | {n} had some files moved from the Palace archive to his own office. | content_reports/sign_texts/2/intel/0 |
+| 270 | Prens'in muhafızları iki katına çıktı. | The Prince's guards have doubled. | content_reports/sign_texts/3/royal/0 |
+| 280 | Vergi tahsilatı zamanında; defterler birbirini tutuyor. | Taxes arrived on time; the ledgers agree. | content_reports/state/maliye/sağlam/0 |
+| 290 | Mahkemeler kararlarını geciktirmiyor, Majesteleri. | The courts are not delaying their rulings, Your Majesty. | content_reports/state/hukuk/sağlam/1 |
+| 300 | Komutanlar emirleri ve ikmal çizelgesini birlikte imzaladı. | Commanders signed the orders and supply sheets together. | content_reports/state/ordu/sağlam/2 |
+| 310 | Majesteleri, her şey kontrol altında ve sizin liderliğinizde yolunda gidiyor. | Your Majesty, all is under control and well under your leadership. | content_reports/echo |
+| 320 | Hiç gizli ödeme, şantaj ya da yazılı emir kullanmadan tahtta kal. | Stay on the throne without a secret payment, blackmail, or written order. | content_achievements/temiz_eller/1 |
+| 330 | Veyra'nın reformunun meyvelerini gör. | See Veyra's reform bear fruit. | content_achievements/reformcu/1 |
+| 340 | Halk ayaklanmasıyla devril. | Be overthrown by a popular uprising. | content_achievements/ayaklanma/1 |
+| 350 | Sarne'nin yükselen payını saltanat sonunda geri çek. | Cut Sarne's rising share by the end of your reign. | content_achievements/oligarki_dizginleyen/1 |
+| 360 | Vergi reformu, ondan sonra gelenlerin de övündüğü bir miras oldu. | His tax reform became a legacy praised by those who came after. | content_history/pro_reform |
+| 370 | %d sözünü tutmadı. | He broke %d promises. | content_history/con_broken |
