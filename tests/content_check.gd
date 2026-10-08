@@ -31,7 +31,8 @@ func _init() -> void:
 	bad["patronage"]["choices"][3]["text"] = ""
 	ok = _expect_bad(loader, "labels", bad, "Sarne talep seçeneği hatalı") and ok
 	loader.load_all({"reports": "res://game/data/olmayan_icerik.json"})
-	if not loader.error.contains("İçerik dosyası hatalı"):
+	var file_error := "Content file error:" if Loc.lang == "en" else "İçerik dosyası hatalı:"
+	if not loader.error.contains(file_error):
 		push_error("eksik içerik dosyası açık hata vermedi")
 		ok = false
 	var broken := "user://veloria_content_check_bad.json"
@@ -40,7 +41,8 @@ func _init() -> void:
 	f.close()
 	loader.load_all({"reports": broken})
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(broken))
-	if not loader.error.contains("JSON bozuk"):
+	var json_error := "JSON is malformed" if Loc.lang == "en" else "JSON bozuk"
+	if not loader.error.contains(json_error):
 		push_error("bozuk JSON açık hata vermedi")
 		ok = false
 	print("CONTENT: %s (5 dosya, 8 bozuk örnek)" % ("OK" if ok else "FAIL"))
@@ -57,7 +59,17 @@ func _expect_bad(loader: RefCounted, section: String, data: Dictionary, expected
 	f.close()
 	loader.load_all({section: path})
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
-	if not loader.error.contains(expected):
+	var translated_expected := expected
+	if Loc.lang == "en":
+		translated_expected = {
+			"eksik anahtar": "missing key",
+			"eksik/boş kurum raporu": "missing or empty institutional report",
+			"boş başarım": "missing or empty achievement",
+			"bilinmeyen uzman aktör": "unknown expert actor",
+			"bütçe seçeneği hatalı": "budget choice is invalid",
+			"Sarne talep seçeneği hatalı": "Sarne demand choice is invalid"
+		}.get(expected, expected)
+	if not loader.error.contains(translated_expected):
 		push_error("%s hatası yakalanmadı: %s" % [section, loader.error])
 		return false
 	return true
