@@ -102,7 +102,7 @@ func _ready() -> void:
 	_build_fx()
 	if Sim.content_error != "":
 		_show_menu()
-		_show_modal("[b]İçerik yüklenemedi[/b]\n\n%s" % Sim.content_error)
+	_show_modal(tr("[b]İçerik yüklenemedi[/b]\n\n%s") % Sim.content_error)
 		return
 	var dev_run: bool = "--autoplay" in OS.get_cmdline_user_args() or ProjectSettings.get_setting("veloria/dev_autostart", false)
 	if dev_run:
@@ -300,7 +300,7 @@ func _build_ui() -> void:
 	_tabs.add_child(files)
 	_files_tab = files
 	files.add_theme_constant_override("separation", 8)
-	files.add_child(_section("SIRLAR VE KANITLAR", "çubuk: sırrın ne kadar yayıldığı · yarısında manşete çıkar"))
+	files.add_child(_section(tr("SIRLAR VE KANITLAR"), tr("çubuk: sırrın ne kadar yayıldığı · yarısında manşete çıkar")))
 	var fscroll := ScrollContainer.new()
 	fscroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	fscroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -309,7 +309,7 @@ func _build_ui() -> void:
 	_fact_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_fact_box.add_theme_constant_override("separation", 6)
 	fscroll.add_child(_fact_box)
-	files.add_child(_section("SÖZ DEFTERİ"))
+	files.add_child(_section(tr("SÖZ DEFTERİ")))
 	var ppanel := PanelContainer.new()
 	ppanel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL_HI, 0.5), Color(UIKit.GOLD_DIM, 0.2), 6, 10))
 	files.add_child(ppanel)
@@ -346,7 +346,7 @@ func _build_ui() -> void:
 	_flow.alignment = BoxContainer.ALIGNMENT_BEGIN
 	flow_panel.add_child(_flow)
 	_end_btn = Button.new()
-	_end_btn.text = "HAFTAYI BİTİR   »"
+	_end_btn.text = tr("HAFTAYI BİTİR   »")
 	_end_btn.theme_type_variation = "PrimaryButton"
 	_end_btn.custom_minimum_size = Vector2(300 if _mobile else 360, 52)
 	_wire(_end_btn)
@@ -433,7 +433,7 @@ func _build_header(parent: Control) -> void:
 	_header_mesai = Label.new()
 	_header_mesai.add_theme_font_size_override("font_size", _fs(20))
 	_header_mesai.add_theme_color_override("font_color", UIKit.GOLD)
-	_header_mesai.tooltip_text = "Mesai: bu hafta kalan eylem hakkın."
+	_header_mesai.tooltip_text = tr("Mesai: bu hafta kalan eylem hakkın.")
 	_header_mesai.mouse_filter = Control.MOUSE_FILTER_STOP
 	var mesai_row := _stat("res://art/icons/mesai.png", _header_mesai)
 	_header_mesai.visible = false
@@ -447,20 +447,20 @@ func _build_header(parent: Control) -> void:
 	top.add_child(mesai_row)
 	_header_wealth = Label.new()
 	_header_wealth.add_theme_font_size_override("font_size", _fs(19))
-	_header_wealth.tooltip_text = "Kişisel servet: devlet bütçesinden ayrı, gizli işlerin için."
+	_header_wealth.tooltip_text = tr("Kişisel servet: devlet bütçesinden ayrı, gizli işlerin için.")
 	_header_wealth.mouse_filter = Control.MOUSE_FILTER_STOP
 	top.add_child(_stat("res://art/icons/servet.png", _header_wealth))
 	var sp := Control.new()
 	sp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(sp)
-	_add_btn(top, "desk", "Masa", _show_desk)
-	(_buttons["desk"] as Button).tooltip_text = "Çalışma masası: gündem, gazete, kişiler, günlük, dosyalar, hanedan ve başkent haritası."
+	_add_btn(top, "desk", tr("Masa"), _show_desk)
+	(_buttons["desk"] as Button).tooltip_text = tr("Çalışma masası: gündem, gazete, kişiler, günlük, dosyalar, hanedan ve başkent haritası.")
 	(_buttons["desk"] as Button).size_flags_horizontal = Control.SIZE_SHRINK_END
 	(_buttons["desk"] as Button).custom_minimum_size.x = 96
-	_add_btn(top, "media", "Medya", _open_media)
-	(_buttons["media"] as Button).tooltip_text = "Medya Merkezi: Sarne'nin gazetesi, Leyla'nın bağımsız gazetesi ve Sarne TV. İkisini karşılaştır; biri yalan söylüyor olabilir."
-	_add_btn(top, "save", "Kaydet", _on_save)
-	_add_btn(top, "menu", "Menü", _show_menu)
+	_add_btn(top, "media", tr("Medya"), _open_media)
+	(_buttons["media"] as Button).tooltip_text = tr("Medya Merkezi: Sarne'nin gazetesi, Leyla'nın bağımsız gazetesi ve Sarne TV. İkisini karşılaştır; biri yalan söylüyor olabilir.")
+	_add_btn(top, "save", tr("Kaydet"), _on_save)
+	_add_btn(top, "menu", tr("Menü"), _show_menu)
 	(_buttons["media"] as Button).size_flags_horizontal = Control.SIZE_SHRINK_END
 	(_buttons["media"] as Button).custom_minimum_size.x = 150
 	for k in ["save", "menu"]:
@@ -614,22 +614,22 @@ func _menu_show_page(page_name: String) -> void:
 
 func _show_chronicle() -> void:
 	var list: Array = Sim.load_chronicle()
-	var t := "[b][font_size=%d][color=#d6b25e]HÜKÜMDARLIK ARŞİVİ[/color][/font_size][/b]\n[color=gray]Tarih, krallarını unutmaz.[/color]\n\n" % _fs(30)
+	var t := tr("[b][font_size=%d][color=#d6b25e]HÜKÜMDARLIK ARŞİVİ[/color][/font_size][/b]\n[color=gray]Tarih, krallarını unutmaz.[/color]\n\n") % _fs(30)
 	if list.is_empty():
-		t += "Henüz tamamlanmış bir saltanat yok. İlk hükümdarlığın burada anılacak."
+		t += tr("Henüz tamamlanmış bir saltanat yok. İlk hükümdarlığın burada anılacak.")
 	else:
 		var wins := 0
 		var best := 0
 		for r in list:
 			wins += 1 if r["survived"] else 0
 			best = maxi(best, int(r["weeks"]))
-		t += "Saltanat sayısı: %d   ·   Tahtta kalan: %d   ·   En uzun saltanat: %d hafta\n\n" % [list.size(), wins, best]
+		t += tr("Saltanat sayısı: %d   ·   Tahtta kalan: %d   ·   En uzun saltanat: %d hafta\n\n") % [list.size(), wins, best]
 		for i in range(list.size() - 1, -1, -1):
 			var r: Dictionary = list[i]
 			var mark := "[color=#7fae7a]TAHTTA[/color]" if r["survived"] else "[color=#c0504a]DÜŞTÜ[/color]"
 			t += "%s  [b]%s[/b]   [color=gray]%s · %s · %d hafta[/color]\n     %s\n" % [mark, r["title"], r["date"], r["difficulty"], r["weeks"], r["cause"]]
 	var have: Dictionary = Sim.load_achievements()
-	t += "\n[b][font_size=%d][color=#d6b25e]BAŞARIMLAR  ·  %d / %d[/color][/font_size][/b]\n" % [_fs(24), have.size(), Sim.ACHIEVEMENTS.size()]
+	t += tr("\n[b][font_size=%d][color=#d6b25e]BAŞARIMLAR  ·  %d / %d[/color][/font_size][/b]\n") % [_fs(24), have.size(), Sim.ACHIEVEMENTS.size()]
 	for id in Sim.ACHIEVEMENTS:
 		var info: Array = Sim.ACHIEVEMENTS[id]
 		if have.has(id):
@@ -812,11 +812,11 @@ func _show_menu() -> void:
 	var b_new := _menu.get_meta("new") as Button
 	var in_game := not Sim.ended and not Sim.actors.is_empty()
 	if in_game:
-		b_first.text = "Oyuna Dön"
+		b_first.text = tr("Oyuna Dön")
 		b_first.disabled = false
 	else:
 		b_first.disabled = not Sim.has_save()
-		b_first.text = "Devam Et" if not Sim.has_save() else "Devam Et  ·  %s" % Sim.save_summary()
+		b_first.text = tr("Devam Et") if not Sim.has_save() else tr("Devam Et  ·  %s") % Sim.save_summary()
 	var first_primary := in_game or Sim.has_save()
 	b_first.theme_type_variation = "PrimaryButton" if first_primary else ""
 	b_new.theme_type_variation = "" if first_primary else "PrimaryButton"
@@ -845,8 +845,8 @@ func _hide_menu() -> void:
 func _request_new_game() -> void:
 	var in_progress := not Sim.actors.is_empty() and not Sim.ended and Sim.week > 1
 	if in_progress or (Sim.actors.is_empty() and Sim.has_save()):
-		_show_modal("[b][font_size=%d][color=#d6b25e]Yeni saltanat[/color][/font_size][/b]\n\nSüren ya da kayıtlı bir saltanat var. Yeni bir oyuna başlarsan otomatik kayıt da üzerine yazılacak.\n\nDevam etmek istiyor musun?" % _fs(26),
-			"Yeni oyuna başla", _start_new)
+		_show_modal(tr("[b][font_size=%d][color=#d6b25e]Yeni saltanat[/color][/font_size][/b]\n\nSüren ya da kayıtlı bir saltanat var. Yeni bir oyuna başlarsan otomatik kayıt da üzerine yazılacak.\n\nDevam etmek istiyor musun?") % _fs(26),
+			tr("Yeni oyuna başla"), _start_new)
 	else:
 		_start_new()
 
@@ -882,9 +882,9 @@ func _intro_shots() -> Array:
 
 func _continue() -> void:
 	if Sim.load_game():
-		_after_load("Kayıtlı oyun yüklendi (hafta %d)." % Sim.week)
+		_after_load(tr("Kayıtlı oyun yüklendi (hafta %d).") % Sim.week)
 	else:
-		_show_modal("[b]Kayıt yüklenemedi[/b]\n\n%s\n\nYeni bir saltanat başlatabilirsin." % Sim.load_error)
+		_show_modal(tr("[b]Kayıt yüklenemedi[/b]\n\n%s\n\nYeni bir saltanat başlatabilirsin.") % Sim.load_error)
 
 
 func _after_load(message: String) -> void:
@@ -973,7 +973,7 @@ func _open_media() -> void:
 
 
 func _on_save() -> void:
-	_toast_msg("Oyun kaydedildi." if Sim.save_game() else "Kaydedilemedi.")
+	_toast_msg(tr("Oyun kaydedildi.") if Sim.save_game() else tr("Kaydedilemedi."))
 
 
 func _end_week_pressed() -> void:
@@ -996,11 +996,11 @@ func _end_week_pressed() -> void:
 	var old_week := Sim.week
 	Sim.end_week()
 	if not Sim.ended:
-		_curtain_title.text = "HAFTA %d" % Sim.week
+		_curtain_title.text = tr("HAFTA %d") % Sim.week
 		var headline := ""
 		if not Sim.weekly_news.is_empty():
 			headline = str(Sim.weekly_news[0])
-		_curtain_sub.text = headline if headline != "" else "Hafta %d sessiz geçti." % old_week
+		_curtain_sub.text = headline if headline != "" else tr("Hafta %d sessiz geçti.") % old_week
 		# Haftanın yeni olayının görseli arkada belirip yavaşça yakınlaşır.
 		var tex: Texture2D = null
 		for p in Sim.pending:
@@ -1099,7 +1099,7 @@ func _selected_primary() -> String:
 func _act(fn: Callable) -> void:
 	var id := _selected_primary()
 	if id == "":
-		_toast_msg("Önce bir kişi seç.")
+		_toast_msg(tr("Önce bir kişi seç."))
 		return
 	_acted_week = Sim.week
 	_log(fn.call(id))
@@ -1147,7 +1147,7 @@ func _choose(pending_index: int, choice_index: int) -> void:
 func _refresh() -> void:
 	if _header_week == null or Sim.actors.is_empty():
 		return
-	_header_week.text = "HAFTA %d / %d" % [Sim.week, Sim.MAX_WEEKS]
+	_header_week.text = tr("HAFTA %d / %d") % [Sim.week, Sim.MAX_WEEKS]
 	if _fast() or _header_progress.value > Sim.week:
 		_header_progress.value = Sim.week
 	elif _header_progress.value < Sim.week:
@@ -1156,7 +1156,7 @@ func _refresh() -> void:
 	var mb := _buttons.get("media") as Button
 	if mb:
 		var fresh_issue := _media_seen_week != Sim.week
-		mb.text = ("Medya •" if _mobile else "Medya  ·  yeni sayı") if fresh_issue else "Medya"
+		mb.text = (tr("Medya •") if _mobile else tr("Medya  ·  yeni sayı")) if fresh_issue else tr("Medya")
 	_header_wealth.text = str(int(Sim.private_wealth))
 	if _last_mesai != Sim.mesai and _last_mesai != -1 and not _fast():
 		UIKit.pulse(_mesai_box, 1.2)
@@ -1329,8 +1329,8 @@ func _on_end(record: Dictionary) -> void:
 		return
 	# Final sineması: sonuç görseli tam ekran, bantlı; ardından hakikat paneli.
 	Sfx.play("stinger_win" if record["survived"] else "stinger_loss", -2.0)
-	var big := "TAHTINI KORUDUN" if record["survived"] else "TAHTINI KAYBETTİN"
-	await _cinema.play([{"tex": _art(bg_path), "line": big, "sub": "Ünvanın: %s" % record["title"], "hold": 4.2, "zoom_from": 1.0, "zoom_to": 1.14}])
+	var big := tr("TAHTINI KORUDUN") if record["survived"] else tr("TAHTINI KAYBETTİN")
+	await _cinema.play([{"tex": _art(bg_path), "line": big, "sub": tr("Ünvanın: %s") % record["title"], "hold": 4.2, "zoom_from": 1.0, "zoom_to": 1.14}])
 	_end_overlay.show()
 	UIKit.fade_in(_end_overlay, 1.0)
 	if not record["survived"]:

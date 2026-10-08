@@ -110,6 +110,99 @@ msgstr "Sound effects"
 msgid "v%s   ·   Esc: menü   Boşluk: haftayı bitir   Ctrl+S: kaydet   F11: tam ekran"
 msgstr "v%s   ·   Esc: menu   Space: end week   Ctrl+S: save   F11: fullscreen"
 
+msgid "[b]İçerik yüklenemedi[/b]\n\n%s"
+msgstr "[b]Content could not be loaded[/b]\n\n%s"
+
+msgid "SIRLAR VE KANITLAR"
+msgstr "SECRETS AND EVIDENCE"
+
+msgid "çubuk: sırrın ne kadar yayıldığı · yarısında manşete çıkar"
+msgstr "bar: how widely the secret has spread · it becomes a headline halfway through"
+
+msgid "SÖZ DEFTERİ"
+msgstr "LEDGER OF PROMISES"
+
+msgid "HAFTAYI BİTİR   »"
+msgstr "END WEEK   »"
+
+msgid "Mesai: bu hafta kalan eylem hakkın."
+msgstr "Actions: what remains to you this week."
+
+msgid "Kişisel servet: devlet bütçesinden ayrı, gizli işlerin için."
+msgstr "Personal wealth: separate from the state budget, for your covert affairs."
+
+msgid "Masa"
+msgstr "Desk"
+
+msgid "Çalışma masası: gündem, gazete, kişiler, günlük, dosyalar, hanedan ve başkent haritası."
+msgstr "Desk: agenda, newspaper, people, journal, files, dynasty, and the capital map."
+
+msgid "Medya"
+msgstr "Media"
+
+msgid "Medya Merkezi: Sarne'nin gazetesi, Leyla'nın bağımsız gazetesi ve Sarne TV. İkisini karşılaştır; biri yalan söylüyor olabilir."
+msgstr "Media Centre: Sarne's paper, Leyla's independent paper, and Sarne TV. Compare them; one may be lying."
+
+msgid "Kaydet"
+msgstr "Save"
+
+msgid "Menü"
+msgstr "Menu"
+
+msgid "Henüz tamamlanmış bir saltanat yok. İlk hükümdarlığın burada anılacak."
+msgstr "There is no completed reign yet. Your first will be remembered here."
+
+msgid "Saltanat sayısı: %d   ·   Tahtta kalan: %d   ·   En uzun saltanat: %d hafta\n\n"
+msgstr "Reigns: %d   ·   Stayed on the throne: %d   ·   Longest reign: %d weeks\n\n"
+
+msgid "Oyuna Dön"
+msgstr "Return to Game"
+
+msgid "Devam Et  ·  %s"
+msgstr "Continue  ·  %s"
+
+msgid "Yeni oyuna başla"
+msgstr "Start new game"
+
+msgid "Kayıtlı oyun yüklendi (hafta %d)."
+msgstr "Saved game loaded (week %d)."
+
+msgid "[b]Kayıt yüklenemedi[/b]\n\n%s\n\nYeni bir saltanat başlatabilirsin."
+msgstr "[b]Save could not be loaded[/b]\n\n%s\n\nYou can start a new reign."
+
+msgid "Oyun kaydedildi."
+msgstr "Game saved."
+
+msgid "Kaydedilemedi."
+msgstr "Could not save."
+
+msgid "HAFTA %d"
+msgstr "WEEK %d"
+
+msgid "Hafta %d sessiz geçti."
+msgstr "Week %d passed quietly."
+
+msgid "Önce bir kişi seç."
+msgstr "Select a person first."
+
+msgid "HAFTA %d / %d"
+msgstr "WEEK %d / %d"
+
+msgid "Medya •"
+msgstr "Media •"
+
+msgid "Medya  ·  yeni sayı"
+msgstr "Media  ·  new issue"
+
+msgid "TAHTINI KORUDUN"
+msgstr "YOU KEPT THE THRONE"
+
+msgid "TAHTINI KAYBETTİN"
+msgstr "YOU LOST THE THRONE"
+
+msgid "Ünvanın: %s"
+msgstr "Your title: %s"
+
 msgid """
 "[b][font_size=26][color=#d6b25e]Nasıl oynanır[/color][/font_size][/b]\\n"
 "\\n"
