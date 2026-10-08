@@ -176,6 +176,12 @@ func _run() -> void:
 	main._city.open()
 	await _shot("1_harita")
 	if "--state" in OS.get_cmdline_user_args():
+		sim0.foreign = {"asteria": 74.0, "drakon": 48.0, "seravia": 27.0}
+		sim0.flags["DOGRULA_elena"] = sim0.week
+		main._city.show_site("asteria")
+		await _shot("1_asteria_elcilik")
+		main._city.show_site("seravia")
+		await _shot("1_seravia_elcilik")
 		sim0.capacity["maliye"] = 20.0
 		sim0.capacity["hukuk"] = 80.0
 		sim0.flags["DOGRULA_maliye"] = sim0.week
@@ -200,16 +206,19 @@ func _run() -> void:
 			var cap := 25.0 if w == 50 else 78.0
 			sim0.capacity_timeline.append({"w": w, "maliye": cap, "hukuk": cap, "ordu": cap, "idare": cap,
 				"holding": 80.0 if w == 50 else 35.0})
-			sim0.timeline.append({"w": w, "king": 70.0, "unrest": 30.0, "plot": 20.0})
+			sim0.timeline.append({"w": w, "king": 70.0, "unrest": 30.0, "plot": 20.0,
+				"foreign": 24.0 if w == 50 else 72.0, "heir": 75.0})
 		sim0.kadro_log = [{"week": 31, "institution": "hukuk", "kind": "merit"}]
 		sim0.stats["tenders"] = 3
 		sim0.stats["halden_hostile_weeks"] = 8
 		sim0.holding = 35.0
+		sim0.heir_maturity = 75.0
+		sim0.foreign = {"asteria": 74.0, "drakon": 72.0, "seravia": 71.0}
 		sim0.week = 105
 		sim0._end(true)
 		await process_frame
 		# Geliştirici kipi başarımları kalıcı yazmaz; yalnızca görüntü için göster.
-		sim0.record["new_achievements"] = ["liyakat_krali", "oligarki_dizginleyen"]
+		sim0.record["new_achievements"] = ["liyakat_krali", "oligarki_dizginleyen", "uc_bayrak", "hazir_veliaht"]
 		main._end_overlay.show_record(sim0.record)
 		var state_tabs: TabContainer = main._end_overlay.tabs
 		state_tabs.current_tab = 0
@@ -224,11 +233,14 @@ func _run() -> void:
 		sim0.timeline.clear()
 		for w in range(1, 105):
 			sim0.capacity_timeline.append({"w": w, "maliye": 25.0, "hukuk": 25.0, "ordu": 25.0, "idare": 25.0, "holding": 40.0})
-			sim0.timeline.append({"w": w, "king": 70.0, "unrest": 30.0, "plot": 20.0})
+			sim0.timeline.append({"w": w, "king": 70.0, "unrest": 30.0, "plot": 20.0,
+				"foreign": 24.0, "heir": 25.0})
+		sim0.heir_maturity = 25.0
+		sim0.foreign = {"asteria": 24.0, "drakon": 24.0, "seravia": 24.0}
 		sim0.week = 105
 		sim0._end(true)
 		await process_frame
-		sim0.record["new_achievements"] = ["harap_devlet"]
+		sim0.record["new_achievements"] = ["harap_devlet", "yalniz_kral"]
 		main._end_overlay.show_record(sim0.record)
 		await _shot("5_harap_son")
 		quit(0)

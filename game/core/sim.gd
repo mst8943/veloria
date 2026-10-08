@@ -2665,6 +2665,17 @@ func _award_achievements(survived: bool, title: String, cause: String) -> Array:
 		earned.append("oligarkin_esiri")
 	if float(record["state"]["holding_peak"]) >= 70.0 and holding < 40.0:
 		earned.append("oligarki_dizginleyen")
+	var all_near := true
+	var all_cold := true
+	for power in ["asteria", "drakon", "seravia"]:
+		all_near = all_near and float(foreign.get(power, 0.0)) >= 70.0
+		all_cold = all_cold and float(foreign.get(power, 100.0)) <= 30.0
+	if all_near:
+		earned.append("uc_bayrak")
+	if survived and all_cold:
+		earned.append("yalniz_kral")
+	if heir_maturity >= 70.0:
+		earned.append("hazir_veliaht")
 	var have := load_achievements()
 	var fresh: Array = []
 	for id in earned:
