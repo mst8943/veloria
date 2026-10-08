@@ -259,6 +259,9 @@ func _build_ui() -> void:
 	_headline.add_theme_color_override("font_color", UIKit.AMBER.lightened(0.35))
 	_headline.add_theme_font_size_override("font_size", _fs(14))
 	_headline.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	if _mobile:
+		_headline.max_lines_visible = 2
+		_headline.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	var hl_sb := UIKit.box(Color(UIKit.PLATE, 0.78), Color(0, 0, 0, 0), 2, 12)
 	hl_sb.border_color = UIKit.AMBER
 	hl_sb.border_width_left = 3
@@ -266,15 +269,14 @@ func _build_ui() -> void:
 	hl_sb.content_margin_bottom = 5
 	_headline.add_theme_stylebox_override("normal", hl_sb)
 	_headline.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	# Şerit sağ üstteki bildirimlerin altına girmesin: masaüstünde bildirim sütunu kadar boşluk.
+	# Şerit sağ üstteki bildirimlerin altına girmesin.
 	var hl_row := HBoxContainer.new()
 	hl_row.visible = false
 	hl_row.add_child(_headline)
-	if not _mobile:
-		var hl_gap := Control.new()
-		hl_gap.custom_minimum_size.x = 436
-		hl_gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		hl_row.add_child(hl_gap)
+	var hl_gap := Control.new()
+	hl_gap.custom_minimum_size.x = 520 if _mobile else 436
+	hl_gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hl_row.add_child(hl_gap)
 	root.add_child(hl_row)
 
 	var cols := HBoxContainer.new()
