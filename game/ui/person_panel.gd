@@ -70,18 +70,18 @@ func _build_ui(cols: HBoxContainer) -> void:
 		cols.add_child(right)
 	var cap_row := HBoxContainer.new()
 	right.add_child(cap_row)
-	var cap: Control = host._section("GÜÇ MERKEZLERİ")
+	var cap: Control = host._section(tr("GÜÇ MERKEZLERİ"))
 	cap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cap.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	cap_row.add_child(cap)
 	host._multi_btn = Button.new()
-	host._multi_btn.text = "Çoklu seçim"
+	host._multi_btn.text = tr("Çoklu seçim")
 	host._multi_btn.toggle_mode = true
 	host._multi_btn.add_theme_font_size_override("font_size", host._fs(13))
-	host._multi_btn.tooltip_text = "Açıkken kartlara dokunmak seçime ekler/çıkarır (Ctrl ile aynı). Operasyon çemberi için."
+	host._multi_btn.tooltip_text = tr("Açıkken kartlara dokunmak seçime ekler/çıkarır (Ctrl ile aynı). Operasyon çemberi için.")
 	host._wire(host._multi_btn)
 	host._multi_btn.toggled.connect(func(on: bool) -> void:
-		_hint("Çoklu seçim %s. Operasyon için 1–3 kişi seç." % ("açık" if on else "kapalı")))
+		_hint(tr("Çoklu seçim %s. Operasyon için 1–3 kişi seç.") % tr("açık" if on else "kapalı")))
 	host._grid = GridContainer.new()
 	host._grid.columns = 5
 	host._grid.add_theme_constant_override("h_separation", 6)
@@ -170,7 +170,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 	var cat_group := ButtonGroup.new()
 	for g in groups:
 		var cb := Button.new()
-		cb.text = g[0]
+		cb.text = tr(str(g[0]))
 		cb.toggle_mode = true
 		cb.button_group = cat_group
 		cb.theme_type_variation = "GhostButton"
@@ -180,7 +180,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		if g[0] == "BASKI":
 			for c in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color"]:
 				cb.add_theme_color_override(c, UIKit.DANGER.lightened(0.15))
-		var ctip: String = CAT_TIPS[g[0]]
+		var ctip: String = tr(CAT_TIPS[g[0]])
 		cb.tooltip_text = ctip
 		cb.mouse_entered.connect(func() -> void: _hint(ctip))
 		cb.pressed.connect(_show_act_cat.bind(str(g[0])))
@@ -215,7 +215,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 	host._hint_label.add_theme_font_size_override("bold_font_size", host._fs(13))
 	host._hint_label.clip_contents = true
 	host._hint_label.custom_minimum_size.y = 40 if not host._mobile else 54
-	host._hint_label.text = HINT_DEFAULT
+	host._hint_label.text = tr(HINT_DEFAULT)
 	av.add_child(host._hint_label)
 	if not host._mobile:
 		# Masaüstü: raporlar kaynaklarının (güç merkezlerinin) altında, kompakt liste.
@@ -239,11 +239,11 @@ func _show_act_cat(cat: String) -> void:
 
 func _add_btn(parent: Node, key: String, text: String, cb: Callable) -> void:
 	var b := Button.new()
-	b.text = text
+	b.text = tr(text)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	b.pressed.connect(cb)
 	if TIPS.has(key):
-		var tip: String = TIPS[key]
+		var tip: String = tr(TIPS[key])
 		b.tooltip_text = tip
 		if ACTION_META.has(key):
 			b.mouse_entered.connect(_preview.bind(key))
@@ -297,88 +297,88 @@ func _preview(key: String) -> void:
 	if key == "op_dus":
 		var n: int = host._sel.size()
 		if n != 2:
-			note = "Çoklu seçimi aç ve tam iki kişi seç."
+			note = tr("Çoklu seçimi aç ve tam iki kişi seç.")
 		elif Sim.rival_wait(host._sel) > 0:
-			note = "Bu çifti yakın zamanda denedin; %d hafta bekle." % Sim.rival_wait(host._sel)
+			note = tr("Bu çifti yakın zamanda denedin; %d hafta bekle.") % Sim.rival_wait(host._sel)
 		else:
-			note = "İkisi de güçlü ve hırslıysa daha çok kapışırlar. Başarısız olursa kimin yaptığını anlarlar."
+			note = tr("İkisi de güçlü ve hırslıysa daha çok kapışırlar. Başarısız olursa kimin yaptığını anlarlar.")
 	elif key.begins_with("op_"):
 		var n: int = host._sel.size()
 		risk = clampi(risk + maxi(0, n - 2), 0, 2)
-		note = "Önce çemberi kur: 1–3 kişi seç." if n == 0 else "Çember büyüdükçe başarı da, sızıntı riski de artar."
+		note = tr("Önce çemberi kur: 1–3 kişi seç.") if n == 0 else tr("Çember büyüdükçe başarı da, sızıntı riski de artar.")
 	elif id == "":
-		note = "Önce bir kişi seç."
+		note = tr("Önce bir kişi seç.")
 	else:
 		var a = Sim.actors[id]
 		var tier := Sim.power_tier(a.power)
 		match key:
 			"tender":
 				if id != "halden":
-					note = "Yalnızca Sarne'ye ihale verilebilir."
+					note = tr("Yalnızca Sarne'ye ihale verilebilir.")
 				elif Sim.tender_wait() > 0:
-					note = "İhale komisyonu yeni dosyayı henüz açmıyor."
+					note = tr("İhale komisyonu yeni dosyayı henüz açmıyor.")
 			"train_heir":
 				if id != "julian":
-					note = "Yalnızca Julian için kullanılabilir."
+					note = tr("Yalnızca Julian için kullanılabilir.")
 				elif Sim.heir_train_wait() > 0:
-					note = "Julian yeni derslerine hazırlanıyor."
+					note = tr("Julian yeni derslerine hazırlanıyor.")
 			"delegation":
 				if not Sim.FOREIGN_ENVOYS.has(id):
-					note = "Claire, Viktor ya da Lucien seçilmeli."
+					note = tr("Claire, Viktor ya da Lucien seçilmeli.")
 				elif Sim.delegation_wait() > 0:
-					note = "Elçilikler önceki heyetin cevabını bekliyor."
+					note = tr("Elçilikler önceki heyetin cevabını bekliyor.")
 			"appoint_loyal", "appoint_merit":
 				if not Sim.INSTITUTION_HEADS.has(id):
-					note = "Yalnızca kurum başkanları için kullanılabilir."
+					note = tr("Yalnızca kurum başkanları için kullanılabilir.")
 				elif Sim.appoint_wait(id) > 0:
-					note = "Bu kurumda yeni atama için beklemelisin."
+					note = tr("Bu kurumda yeni atama için beklemelisin.")
 			"summon":
 				var wait := Sim.summon_wait(id)
 				if wait > 0:
-					note = "%s yeniden çağırmak için %d hafta beklemelisin." % [Sim.ek(a.display_name, "i"), wait]
+					note = tr("%s yeniden çağırmak için %d hafta beklemelisin.") % [Sim.ek(a.display_name, "i"), wait]
 			"promote":
 				if tier == 3:
 					risk = 2
-					note = "%s zaten vazgeçilmez; terfi onu daha da tehlikeli yapar." % a.display_name
+					note = tr("%s zaten vazgeçilmez; terfi onu daha da tehlikeli yapar.") % a.display_name
 			"bribe":
 				if Sim.private_wealth < Sim.BRIBE_COST:
-					note = "Servetin yetmiyor."
+					note = tr("Servetin yetmiyor.")
 			"investigate":
 				if a.known_weak and a.known_red:
-					note = "Onun hakkında öğrenilecek bir şey kalmadı."
+					note = tr("Onun hakkında öğrenilecek bir şey kalmadı.")
 			"blackmail":
 				if not a.known_weak:
-					note = "Önce zayıf noktasını öğren (Araştır)."
+					note = tr("Önce zayıf noktasını öğren (Araştır).")
 			"o_yaz", "o_soz", "o_ima":
 				if Sim.street_anger >= 40.0:
 					risk = maxi(risk, 2)
-					note = "Sokak bastırmaya alışıyor: her emir daha az işe yarıyor, öfke birikiyor."
+					note = tr("Sokak bastırmaya alışıyor: her emir daha az işe yarıyor, öfke birikiyor.")
 			"dismiss":
 				risk = tier - 1
-				note = ["", "Sessizce gidebilir.", "Gücü var; karşılık verebilir.", "Vazgeçilmez birini düşürmek ağır bir karşı saldırı getirebilir."][tier]
+				note = ["", tr("Sessizce gidebilir."), tr("Gücü var; karşılık verebilir."), tr("Vazgeçilmez birini düşürmek ağır bir karşı saldırı getirebilir.")][tier]
 			"p_0", "p_1", "p_2":
 				if Sim.prize_taken(Sim.PRIZES[int(key.substr(2))]):
-					note = "Bu ödül zaten birine verildi."
+					note = tr("Bu ödül zaten birine verildi.")
 		if a.moved:
-			note = "%s artık sana karşı; eylemlerin işe yaramayabilir." % a.display_name
+			note = tr("%s artık sana karşı; eylemlerin işe yaramayabilir.") % a.display_name
 	if Sim.mesai < int(m[1]):
-		note = "Mesain yetmiyor."
+		note = tr("Mesain yetmiyor.")
 	if note == "":
 		# Bağlam yoksa uzun açıklamanın ilk cümlesi (tamamı ipucu balonunda).
-		var desc: String = str(TIPS[key]).split("\n")[1]
+		var desc: String = str(tr(TIPS[key])).split("\n")[1]
 		note = desc.split(". ")[0].trim_suffix(".") + "."
 	if key in ["appoint_loyal", "appoint_merit", "tender", "train_heir", "delegation"]:
-		host._hint_label.text = "[color=#d6b25e][b]%s[/b][/color]   [color=#9a958a]1 mesai[/color]\n%s" % [m[0], note]
+		host._hint_label.text = "[color=#d6b25e][b]%s[/b][/color]   [color=#9a958a]%s[/color]\n%s" % [tr(str(m[0])), tr("1 mesai"), note]
 		return
-	var cost := "%d mesai" % int(m[1])
+	var cost := tr("%d mesai") % int(m[1])
 	var wealth: float = Sim.BRIBE_COST if float(m[2]) < 0.0 else float(m[2])
 	if wealth > 0.0:
-		cost += " · %d servet" % int(wealth)
+		cost += " · " + (tr("%d servet") % int(wealth))
 	var trace := int(m[3])
 	var tc: String = [UIKit.OK, UIKit.GOLD, UIKit.AMBER, UIKit.DANGER][trace].to_html(false)
 	var rc: String = [UIKit.OK, UIKit.AMBER, UIKit.DANGER][risk].to_html(false)
-	host._hint_label.text = "[color=#d6b25e][b]%s[/b][/color]   [color=#9a958a]%s  ·  [/color][color=#%s]%s[/color][color=#9a958a]  ·  tahmini risk [/color][color=#%s]%s[/color]\n%s" % [
-		m[0], cost, tc, TRACE_NAMES[trace], rc, RISK_NAMES[risk], note]
+	host._hint_label.text = "[color=#d6b25e][b]%s[/b][/color]   [color=#9a958a]%s  ·  [/color][color=#%s]%s[/color][color=#9a958a]  ·  %s [/color][color=#%s]%s[/color]\n%s" % [
+		tr(str(m[0])), cost, tc, tr(TRACE_NAMES[trace]), tr("tahmini risk"), rc, tr(RISK_NAMES[risk]), note]
 
 
 func _hint(text: String) -> void:
@@ -467,7 +467,7 @@ func _make_card(a) -> PanelContainer:
 	n.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(n)
 	var r := Label.new()
-	r.text = UIKit.tr_upper("Düşman" if a.moved else str(ROLE.get(a.domain, "")))
+	r.text = UIKit.tr_upper(tr("Düşman") if a.moved else tr(str(ROLE.get(a.domain, ""))))
 	r.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	r.add_theme_font_override("font", UIKit.caps())
 	r.add_theme_font_size_override("font_size", host._fs(10))
@@ -522,7 +522,7 @@ func _style_cards(hover_id := "") -> void:
 			var lvl := Sim.suspicion_level(id)
 			var rl := card.get_meta("role", null) as Label
 			if rl != null:
-				var role := str(ROLE.get(a.domain, ""))
+				var role := tr(str(ROLE.get(a.domain, "")))
 				rl.text = UIKit.tr_upper(role if lvl < 2 else "%s · %s" % [role, Sim.SUSPICION_NAMES[lvl]])
 				rl.add_theme_color_override("font_color", [Color(UIKit.GOLD, 0.85), Color(UIKit.GOLD, 0.85), UIKit.AMBER.lightened(0.15), Color("ff8a7a")][lvl])
 			if lvl >= 2:
@@ -547,11 +547,11 @@ func _update_action_states() -> void:
 	var id: String = host._selected_primary()
 	var busy := Sim.ended or Sim.actors.is_empty()
 	if id == "":
-		host._act_title.text = "EYLEMLER   ·   önce bir kişi seç"
+		host._act_title.text = tr("EYLEMLER   ·   önce bir kişi seç")
 	else:
-		host._act_title.text = "EYLEMLER   ·   %s" % Sim.actors[id].display_name
+		host._act_title.text = tr("EYLEMLER   ·   %s") % Sim.actors[id].display_name
 		if host._sel.size() > 1:
-			host._act_title.text += "  +%d kişi" % (host._sel.size() - 1)
+			host._act_title.text += tr("  +%d kişi") % (host._sel.size() - 1)
 	for k in PERSON_ACTIONS:
 		var b := host._buttons.get(k) as Button
 		if b:
@@ -592,7 +592,7 @@ func _update_info() -> void:
 	var id: String = host._selected_primary()
 	host._portrait_box.visible = id != ""
 	if id == "":
-		host._info.append_text("[color=gray]Bir kişi seç. Sayıları göremezsin; yalnızca davranışlarından tahmin edebilirsin.[/color]")
+		host._info.append_text(tr("[color=gray]Bir kişi seç. Sayıları göremezsin; yalnızca davranışlarından tahmin edebilirsin.[/color]"))
 		return
 	var a = Sim.actors[id]
 	var art: Control = host._initial_art(a.id, Vector2(62, 62), 32)
@@ -601,39 +601,39 @@ func _update_info() -> void:
 	# Güç: üç kademe (eskiden metinle verilen bilgi; fazlası değil).
 	var level := Sim.power_tier(a.power)
 	var lvl_name: String = Sim.POWER_TIER_NAMES[level]
-	host._traits.add_child(_trait("Güç · " + lvl_name, UIKit.DANGER if level == 3 else UIKit.GOLD, level, 3,
-		"Güç merkezi olarak ne kadar ağırlığı var. Vazgeçilmez olanlar tehlikelidir."))
+	host._traits.add_child(_trait(tr("Güç · ") + tr(lvl_name), UIKit.DANGER if level == 3 else UIKit.GOLD, level, 3,
+		tr("Güç merkezi olarak ne kadar ağırlığı var. Vazgeçilmez olanlar tehlikelidir.")))
 	if id == "halden":
 		var influence := Sim.halden_influence_band()
-		host._traits.add_child(_trait("Nüfuz · " + influence, UIKit.AMBER, -1, 0,
-			"Sarne'nin anlattığı şirket ağı; gerçek sınırları daha geniş olabilir."))
+		host._traits.add_child(_trait(tr("Nüfuz · ") + tr(influence), UIKit.AMBER, -1, 0,
+			tr("Sarne'nin anlattığı şirket ağı; gerçek sınırları daha geniş olabilir.")))
 		var mood := Sim.halden_mood()
-		host._traits.add_child(_trait("Medya · " + mood, UIKit.DANGER if mood == "düşmanca" else UIKit.GOLD,
-			-1, 0, "Gazete ve kanalının saraya karşı tutumu."))
+		host._traits.add_child(_trait(tr("Medya · ") + tr(mood), UIKit.DANGER if mood == "düşmanca" else UIKit.GOLD,
+			-1, 0, tr("Gazete ve kanalının saraya karşı tutumu.")))
 	if id == "julian":
-		host._traits.add_child(_trait("Olgunluk · " + Sim.heir_maturity_band(), UIKit.GOLD, -1, 0,
-			"Veliahdın sarayda ve halkın önünde kendine yer bulma hâli."))
+		host._traits.add_child(_trait(tr("Olgunluk · ") + tr(Sim.heir_maturity_band()), UIKit.GOLD, -1, 0,
+			tr("Veliahdın sarayda ve halkın önünde kendine yer bulma hâli.")))
 	if a.moved:
-		host._traits.add_child(_trait("Düşman", UIKit.DANGER, -1, 0, "Sana karşı fiilen harekete geçti."))
+		host._traits.add_child(_trait(tr("Düşman"), UIKit.DANGER, -1, 0, tr("Sana karşı fiilen harekete geçti.")))
 	elif a.insider:
 		var sl := Sim.suspicion_level(a.id)
-		host._traits.add_child(_trait("Tavır · " + str(Sim.SUSPICION_NAMES[sl]), [UIKit.OK, UIKit.GOLD, UIKit.AMBER, UIKit.DANGER][sl], sl, 3, _signs_tip(a)))
+		host._traits.add_child(_trait(tr("Tavır · ") + tr(str(Sim.SUSPICION_NAMES[sl])), [UIKit.OK, UIKit.GOLD, UIKit.AMBER, UIKit.DANGER][sl], sl, 3, _signs_tip(a)))
 	if a.obligation >= 8.0:
-		host._traits.add_child(_trait("Karşılık bekliyor", Color("d9963e"), -1, 0, "Ona verdiklerinin karşılığını bekliyor."))
+		host._traits.add_child(_trait(tr("Karşılık bekliyor"), Color("d9963e"), -1, 0, tr("Ona verdiklerinin karşılığını bekliyor.")))
 	var dim := Color(UIKit.TEXT_DIM, 0.8)
-	host._traits.add_child(_trait("Zayıf nokta: " + (a.weak_point if a.known_weak else "?"), UIKit.DANGER if a.known_weak else dim, -1, 0,
-		"Biliniyorsa şantaj mümkün. 'Araştır' ile öğrenilebilir." if not a.known_weak else "Şantaj için kullanılabilir."))
-	host._traits.add_child(_trait("Kırmızı çizgi: " + (a.red_line if a.known_red else "?"), Color("d9963e") if a.known_red else dim, -1, 0,
-		"Bu çizgiyi aşarsan affetmez."))
+	host._traits.add_child(_trait(tr("Zayıf nokta: ") + (a.weak_point if a.known_weak else "?"), UIKit.DANGER if a.known_weak else dim, -1, 0,
+		tr("Biliniyorsa şantaj mümkün. 'Araştır' ile öğrenilebilir.") if not a.known_weak else tr("Şantaj için kullanılabilir.")))
+	host._traits.add_child(_trait(tr("Kırmızı çizgi: ") + (a.red_line if a.known_red else "?"), Color("d9963e") if a.known_red else dim, -1, 0,
+		tr("Bu çizgiyi aşarsan affetmez.")))
 	var k: Dictionary = Sim.karne.get(a.id, {"ok": 0, "bad": 0})
 	if int(k["ok"]) + int(k["bad"]) > 0:
 		var trust_col := UIKit.OK if int(k["ok"]) >= int(k["bad"]) else UIKit.DANGER
-		host._traits.add_child(_trait("Doğrulama: %d örtüştü · %d çelişti" % [k["ok"], k["bad"]], trust_col, -1, 0,
-			"Raporlarının başka kaynaklarla karşılaştırılması."))
+		host._traits.add_child(_trait(tr("Doğrulama: %d örtüştü · %d çelişti") % [k["ok"], k["bad"]], trust_col, -1, 0,
+			tr("Raporlarının başka kaynaklarla karşılaştırılması.")))
 	for p in Sim.active_promises_of(a.id):
-		host._traits.add_child(_trait("Söz: %s · hafta %d" % [p["prize"], p["due"]], Color("d9b359"), -1, 0, "Ona verdiğin söz ve vadesi."))
+		host._traits.add_child(_trait(tr("Söz: %s · hafta %d") % [tr(str(p["prize"])), p["due"]], Color("d9b359"), -1, 0, tr("Ona verdiğin söz ve vadesi.")))
 	if host._sel.size() > 1:
-		host._traits.add_child(_trait("%d kişi seçili · operasyon çemberi" % host._sel.size(), UIKit.GOLD, -1, 0, ""))
+		host._traits.add_child(_trait(tr("%d kişi seçili · operasyon çemberi") % host._sel.size(), UIKit.GOLD, -1, 0, ""))
 
 
 ## Tavır göstergesinin ipucu: son haftalarda görülen alametler.
@@ -641,11 +641,11 @@ func _signs_tip(a) -> String:
 	var lines: Array[String] = []
 	for g: Dictionary in a.signs:
 		if int(g["w"]) > Sim.week - Sim.PLOT_SUS_WINDOW:
-			lines.append("Hafta %d — %s" % [int(g["w"]), g["text"]])
+			lines.append(tr("Hafta %d — %s") % [int(g["w"]), tr(str(g["text"]))])
 	if lines.is_empty():
-		return "Son haftalarda hakkında bir alamet görülmedi.\nDarbeyi yalnızca ordu ya da hanedan başlatabilir; ama herkes komploya katılabilir."
+		return tr("Son haftalarda hakkında bir alamet görülmedi.\nDarbeyi yalnızca ordu ya da hanedan başlatabilir; ama herkes komploya katılabilir.")
 	lines.reverse()
-	return "Son alametler:\n%s\n\nAlametlerin bir kısmı dedikodudur. Huzura Çağır ile yoklayabilirsin." % "\n".join(lines.slice(0, 5))
+	return tr("Son alametler:\n%s\n\nAlametlerin bir kısmı dedikodudur. Huzura Çağır ile yoklayabilirsin.") % "\n".join(lines.slice(0, 5))
 
 
 ## Kişi göstergesi: renkli nokta ya da kademe noktaları + kısa metin.
@@ -686,4 +686,4 @@ func _trait(text: String, col: Color, filled := -1, total := 0, tip := "") -> Co
 
 
 func _action_tip(key: String) -> String:
-	return TIPS[key]
+	return tr(TIPS[key])

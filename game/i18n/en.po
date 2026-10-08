@@ -393,3 +393,921 @@ msgstr ""
 "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
 "\n"
 "Portions of this software are copyright © The FreeType Project (www.freetype.org). All rights reserved.[/font_size][/color]"
+
+msgid "Ordu"
+msgstr "Army"
+
+msgid "İstihbarat"
+msgstr "Intelligence"
+
+msgid "Maliye"
+msgstr "Finance"
+
+msgid "Basın"
+msgstr "Press"
+
+msgid "Saray"
+msgstr "Palace"
+
+msgid "Hanedan"
+msgstr "Dynasty"
+
+msgid "Dışişleri"
+msgstr "Foreign Affairs"
+
+msgid "Muhalefet"
+msgstr "Opposition"
+
+msgid "Yargı"
+msgstr "Judiciary"
+
+msgid "GÜÇ MERKEZLERİ"
+msgstr "POWER CENTERS"
+
+msgid "Çoklu seçim"
+msgstr "Multi-select"
+
+msgid "Açıkken kartlara dokunmak seçime ekler/çıkarır (Ctrl ile aynı). Operasyon çemberi için."
+msgstr "When enabled, clicking cards adds or removes them from the selection (same as Ctrl). For operations."
+
+msgid "Çoklu seçim %s. Operasyon için 1–3 kişi seç."
+msgstr "Multi-select %s. Select 1–3 people for an operation."
+
+msgid "açık"
+msgstr "on"
+
+msgid "kapalı"
+msgstr "off"
+
+msgid "Huzura Çağır (1 mesai)\nİz bırakmaz, para istemez. Kişiyi biraz yatıştırır. Komplo kuran çoğu zaman kaçamak konuşur; temiz çıkan birinin hakkındaki dedikodular dağılır. Aynı kişi 4 haftada bir çağrılabilir."
+msgstr "Summon to Court (1 action)\nLeaves no trace and costs no money. Calms the person a little. Plotters often evade your questions; rumours about the innocent fade. The same person can be summoned once every 4 weeks."
+
+msgid "Terfi Ettir (1 mesai)\nGüç ve minnet verir; ama onun gücü, hırsı ve sana olan borcu da büyür."
+msgstr "Promote (1 action)\nGrants power and gratitude, but their power, ambition, and debt to you all grow."
+
+msgid "Gizli Ödeme (1 mesai, 5 servet)\nSadakat satın alır, zamanla aşınır. Bir iz bırakır; iz dosyalara düşer."
+msgstr "Secret Payment (1 action, 5 wealth)\nBuys loyalty, which fades over time. It leaves a trace, and traces end up in the files."
+
+msgid "Raporu Doğrula (1 mesai)\nBir kaynağın raporunu başka kaynaklarla kıyaslar. Sonuç gürültülüdür; kaynak karnesine işlenir."
+msgstr "Verify Report (1 action)\nCross-checks one source's report against others. The result is noisy; it goes on the source's record."
+
+msgid "Görevden Al (1 mesai)\nSırlarını çok bilen ya da çok güçlü biri karşı saldırıya geçer. Sessizce gidenler az olur."
+msgstr "Dismiss (1 action)\nSomeone who knows too many secrets or holds too much power will strike back. Few leave quietly."
+
+msgid "Yazılı Emir: Bastır (1 mesai)\nKesin uygulanır ama kanıt bırakır."
+msgstr "Written Order: Suppress (1 action)\nIt will be carried out, but leaves evidence."
+
+msgid "Sözlü Emir: Bastır (1 mesai)\nYarı kesin uygulanır, iz bırakmaz."
+msgstr "Verbal Order: Suppress (1 action)\nIt may be carried out, and leaves no trace."
+
+msgid "İma: 'Halledilsin' (1 mesai)\nİnkâr edilebilir; ama hırslı biri aşırı yorumlar, korkak biri hiç uygulamaz."
+msgstr "Hint: 'Take care of it' (1 action)\nPlausibly deniable; an ambitious aide may overreach, while a coward does nothing."
+
+msgid "Soruşturma (1 mesai)\nİstihbarat gibi güçlü birine verilirse sorunlu isimleri ipucu olarak getirebilir."
+msgstr "Investigation (1 action)\nGiven to a powerful figure like Intelligence, it may surface suspects as leads."
+
+msgid "Araştır (1 mesai)\nSeçilen kişinin önce zayıf noktasını, sonra kırmızı çizgisini öğrenmeye çalışır. İstihbarat güçlüyse şans artar."
+msgstr "Investigate (1 action)\nTries to uncover the selected person's weakness, then their breaking point. Strong Intelligence improves the odds."
+
+msgid "Şantaj (1 mesai)\nZayıf noktası bilinen birini korkuyla bağlar, borcunu siler. Ama iz bırakır, hırsını büyütür; dürüst biri ifşa edebilir."
+msgstr "Blackmail (1 action)\nUses a known weakness to bind someone through fear and erase their debt. It leaves traces and fuels ambition; an honest person may expose you."
+
+msgid "Söz: Naiplik (1 mesai)\nHemen sadakat getirir. Tutarsan çok güçlenir; senin gücünden de pay alır. Yalnızca bir kişiye verilebilir."
+msgstr "Promise: Regency (1 action)\nWins loyalty at once. Keep it and they grow powerful, drawing on your own strength. Can be promised to one person only."
+
+msgid "Söz: Liman İhalesi (1 mesai)\nHemen sadakat getirir. Tutarsan zenginleşir, sana da komisyon düşer. Yalnızca bir kişiye verilebilir."
+msgstr "Promise: Port Contract (1 action)\nWins loyalty at once. Keep it and they grow rich, with a commission for you. Can be promised to one person only."
+
+msgid "Söz: Dokunulmazlık (1 mesai)\nHemen sadakat getirir. Tutarsan korkusu azalır. Aynı sözü iki kişiye vermek er geç duyulur."
+msgstr "Promise: Immunity (1 action)\nWins loyalty at once. Keep it and their fear subsides. Promise it to two people and word will get out."
+
+msgid "Dikkat Dağıt (2 mesai)\nSahte bir kriz yaratıp huzursuzluğu azaltır. Çember büyüdükçe başarı da, sızıntı riski de artar."
+msgstr "Create a Distraction (2 actions)\nA manufactured crisis eases unrest. A wider circle improves the odds, but raises the risk of a leak."
+
+msgid "Muhalefeti Böl (2 mesai)\nMuhalefet kanatlarını birbirine düşürür."
+msgstr "Divide the Opposition (2 actions)\nTurns the opposition's factions against each other."
+
+msgid "Rakibi Zayıflat (2 mesai)\nEn güçlü kişinin itibarını kırar. Kim yaptığını tahmin eder."
+msgstr "Weaken a Rival (2 actions)\nDamages the most powerful person's standing. They may guess who did it."
+
+msgid "Birbirine Düşür (2 mesai)\nÇoklu seçimle tam iki kişi seç. Başarırsan ikisi de birbiriyle uğraşırken güç ve hırs kaybeder; başarısız olursan kimin yaptığını anlarlar ve bir sır doğar. Aynı çift için 6 hafta bekle."
+msgstr "Set Them Against Each Other (2 actions)\nSelect exactly two people with multi-select. If it works, both lose power and ambition as they feud; if it fails, they learn who caused it and a secret is born. Wait 6 weeks before targeting the same pair."
+
+msgid "Sızdır (1 mesai)\nBir dosyayı basına verir; ortak bilgi artar. Herkesin bildiği şey en tehlikelisidir."
+msgstr "Leak (1 action)\nGives a file to the press and spreads common knowledge. What everyone knows is the most dangerous."
+
+msgid "Bastır (1 mesai)\nDedikoduyu düşürür ama kanıtın kopyaları durur."
+msgstr "Suppress (1 action)\nReduces rumours, but copies of the evidence remain."
+
+msgid "Kanıtı Yok Et (1 mesai)\nKopyalar bitince gerçekten silinir; girişim fark edilebilir."
+msgstr "Destroy Evidence (1 action)\nOnce every copy is gone, the evidence is truly erased. The attempt may be noticed."
+
+msgid "Sadık Ata (1 mesai)\nBir kurum başkanı için sadık kadro kararnamesi çıkar. Sonucunu zamanla raporlardan öğrenirsin."
+msgstr "Appoint Loyalist (1 action)\nIssue a loyalist staffing decree for an institution. Reports will reveal the results over time."
+
+msgid "Liyakatli Ata (1 mesai)\nBir kurum başkanı için liyakatli kadro kararnamesi çıkar. Sonucunu zamanla raporlardan öğrenirsin."
+msgstr "Appoint Meritocrat (1 action)\nIssue a merit-based staffing decree for an institution. Reports will reveal the results over time."
+
+msgid "İhale Ver (1 mesai)\nSarne'nin şirketlerine yeni bir devlet işi ver. Sözleşmenin sonuçları zamanla ortaya çıkar."
+msgstr "Award Contract (1 action)\nGive Sarne's companies a new state contract. Its consequences will emerge over time."
+
+msgid "Veliahdı Yetiştir (1 mesai)\nJulian için eğitim ve halkla buluşma programı hazırla. Sürekli öne çıkarmak saraydaki başka isimleri rahatsız edebilir."
+msgstr "Prepare the Heir (1 action)\nArrange lessons and public appearances for Julian. Keeping him in the spotlight may unsettle others at court."
+
+msgid "Heyet Gönder (1 mesai)\nSeçili elçiyi başkente davet et. Yakınlık diğer iki elçiliği tedirgin eder."
+msgstr "Send Delegation (1 action)\nInvite the selected envoy to the capital. Closeness may unsettle the other two embassies."
+
+msgid "Kazan\nSadakat kazanmanın yolları: Huzura Çağır iz bırakmaz, terfi güç verir, gizli ödeme iz bırakır."
+msgstr "WIN LOYALTY\nSummoning leaves no trace, promotion grants power, and secret payments leave a mark."
+
+msgid "Söz Ver\nHemen sadakat getirir; vadesi gelince ya tutarsın ya bedelini ödersin. Her ödül yalnızca bir kişiye verilebilir."
+msgstr "MAKE A PROMISE\nWins loyalty at once. When it falls due, keep it or pay the price. Each reward can be promised to one person only."
+
+msgid "Öğren\nRaporları doğrula, zayıf noktayı ve kırmızı çizgiyi araştır, soruşturma aç."
+msgstr "GATHER INTELLIGENCE\nVerify reports, investigate weaknesses and breaking points, or open an investigation."
+
+msgid "Emret\nHuzursuzluğu bastırma emri. Kanal seçimi sonucu ve inkâr edilebilirliği belirler."
+msgstr "GIVE ORDERS\nSuppress unrest. The channel determines the result and how deniable it is."
+
+msgid "Baskı\nŞantaj ve görevden alma. Güçlü araçlar, ama geri tepebilirler."
+msgstr "APPLY PRESSURE\nBlackmail and dismissal are powerful tools, but they can backfire."
+
+msgid "Operasyon (2 mesai)\n1–3 kişiyle gizli iş. Çemberi kurmak için Çoklu seçim'i aç ya da Ctrl ile kişi ekle."
+msgstr "OPERATION (2 actions)\nA covert job with 1–3 people. Turn on Multi-select or hold Ctrl to build your circle."
+
+msgid "Devlet\nKadro kararnameleri, ihale, veliaht eğitimi ve elçilik heyetleri."
+msgstr "STATE\nStaffing decrees, contracts, heir training, and embassy delegations."
+
+msgid "Bir eylemin üzerine gel ya da dokun: ne yaptığını ve bedelini burada görürsün."
+msgstr "Hover over or tap an action to see what it does and what it costs."
+
+msgid "Huzura Çağır"
+msgstr "Summon to Court"
+
+msgid "Terfi"
+msgstr "Promote"
+
+msgid "Raporu Doğrula"
+msgstr "Verify Report"
+
+msgid "Soruşturma"
+msgstr "Investigation"
+
+msgid "Yazılı Emir"
+msgstr "Written Order"
+
+msgid "Sözlü Emir"
+msgstr "Verbal Order"
+
+msgid "İma"
+msgstr "Hint"
+
+msgid "Dikkat Dağıt"
+msgstr "Create Distraction"
+
+msgid "Muhalefeti Böl"
+msgstr "Divide Opposition"
+
+msgid "Rakibi Zayıflat"
+msgstr "Weaken Rival"
+
+msgid "Birbirine Düşür"
+msgstr "Set Against Each Other"
+
+msgid "Liyakatli Ata"
+msgstr "Appoint Meritocrat"
+
+msgid "Heyet Gönder"
+msgstr "Send Delegation"
+
+msgid "iz yok"
+msgstr "no trace"
+
+msgid "inkâr edilebilir"
+msgstr "deniable"
+
+msgid "iz bırakır"
+msgstr "leaves a trace"
+
+msgid "kanıt bırakır"
+msgstr "leaves evidence"
+
+msgid "düşük"
+msgstr "low"
+
+msgid "orta"
+msgstr "moderate"
+
+msgid "yüksek"
+msgstr "high"
+
+msgid "Çoklu seçimi aç ve tam iki kişi seç."
+msgstr "Enable multi-select and choose exactly two people."
+
+msgid "Bu çifti yakın zamanda denedin; %d hafta bekle."
+msgstr "You tried this pair recently; wait %d weeks."
+
+msgid "İkisi de güçlü ve hırslıysa daha çok kapışırlar. Başarısız olursa kimin yaptığını anlarlar."
+msgstr "If both are powerful and ambitious, they will feud harder. If it fails, they will know who caused it."
+
+msgid "Önce çemberi kur: 1–3 kişi seç."
+msgstr "Build your circle first: choose 1–3 people."
+
+msgid "Çember büyüdükçe başarı da, sızıntı riski de artar."
+msgstr "A larger circle improves the odds, but raises the risk of a leak."
+
+msgid "Önce bir kişi seç."
+msgstr "Choose someone first."
+
+msgid "Yalnızca Sarne'ye ihale verilebilir."
+msgstr "Contracts can only be awarded to Sarne."
+
+msgid "İhale komisyonu yeni dosyayı henüz açmıyor."
+msgstr "The contract committee has not opened a new file yet."
+
+msgid "Yalnızca Julian için kullanılabilir."
+msgstr "Only available for Julian."
+
+msgid "Julian yeni derslerine hazırlanıyor."
+msgstr "Julian is preparing for his next lessons."
+
+msgid "Claire, Viktor ya da Lucien seçilmeli."
+msgstr "Choose Claire, Viktor, or Lucien."
+
+msgid "Elçilikler önceki heyetin cevabını bekliyor."
+msgstr "The embassies are waiting for the previous delegation's reply."
+
+msgid "Yalnızca kurum başkanları için kullanılabilir."
+msgstr "Only available for heads of institutions."
+
+msgid "Bu kurumda yeni atama için beklemelisin."
+msgstr "You must wait before making another appointment to this institution."
+
+msgid "%s yeniden çağırmak için %d hafta beklemelisin."
+msgstr "Wait %d weeks before summoning %s again."
+
+msgid "%s zaten vazgeçilmez; terfi onu daha da tehlikeli yapar."
+msgstr "%s is already indispensable; promoting them would make them even more dangerous."
+
+msgid "Servetin yetmiyor."
+msgstr "You do not have enough wealth."
+
+msgid "Onun hakkında öğrenilecek bir şey kalmadı."
+msgstr "There is nothing more to learn about them."
+
+msgid "Önce zayıf noktasını öğren (Araştır)."
+msgstr "Learn their weakness first (Investigate)."
+
+msgid "Sokak bastırmaya alışıyor: her emir daha az işe yarıyor, öfke birikiyor."
+msgstr "The streets are growing used to suppression: each order works less, and anger builds."
+
+msgid "Sessizce gidebilir."
+msgstr "They may leave quietly."
+
+msgid "Gücü var; karşılık verebilir."
+msgstr "They have power and may retaliate."
+
+msgid "Vazgeçilmez birini düşürmek ağır bir karşı saldırı getirebilir."
+msgstr "Bringing down someone indispensable may provoke a fierce reprisal."
+
+msgid "Bu ödül zaten birine verildi."
+msgstr "This reward has already been promised to someone."
+
+msgid "%s artık sana karşı; eylemlerin işe yaramayabilir."
+msgstr "%s is now against you; your actions may no longer work."
+
+msgid "Mesain yetmiyor."
+msgstr "You do not have enough actions."
+
+msgid "1 mesai"
+msgstr "1 action"
+
+msgid "%d mesai"
+msgstr "%d actions"
+
+msgid "%d servet"
+msgstr "%d wealth"
+
+msgid "tahmini risk"
+msgstr "estimated risk"
+
+msgid "Düşman"
+msgstr "Enemy"
+
+msgid "EYLEMLER   ·   önce bir kişi seç"
+msgstr "ACTIONS   ·   choose someone first"
+
+msgid "EYLEMLER   ·   %s"
+msgstr "ACTIONS   ·   %s"
+
+msgid "  +%d kişi"
+msgstr "  +%d more"
+
+msgid "[color=gray]Bir kişi seç. Sayıları göremezsin; yalnızca davranışlarından tahmin edebilirsin.[/color]"
+msgstr "[color=gray]Choose someone. You cannot see the numbers; infer them from behaviour.[/color]"
+
+msgid "Güç · "
+msgstr "Power · "
+
+msgid "Güç merkezi olarak ne kadar ağırlığı var. Vazgeçilmez olanlar tehlikelidir."
+msgstr "How much weight they carry as a power center. The indispensable are dangerous."
+
+msgid "Nüfuz · "
+msgstr "Influence · "
+
+msgid "Sarne'nin anlattığı şirket ağı; gerçek sınırları daha geniş olabilir."
+msgstr "The corporate network as Sarne describes it; its true reach may be wider."
+
+msgid "düşmanca"
+msgstr "hostile"
+
+msgid "Medya · "
+msgstr "Media · "
+
+msgid "Gazete ve kanalının saraya karşı tutumu."
+msgstr "The stance of their newspaper and channel toward the palace."
+
+msgid "Olgunluk · "
+msgstr "Maturity · "
+
+msgid "Veliahdın sarayda ve halkın önünde kendine yer bulma hâli."
+msgstr "How well the heir is finding his place at court and before the public."
+
+msgid "Sana karşı fiilen harekete geçti."
+msgstr "They have taken direct action against you."
+
+msgid "Tavır · "
+msgstr "Disposition · "
+
+msgid "Karşılık bekliyor"
+msgstr "Expects repayment"
+
+msgid "Ona verdiklerinin karşılığını bekliyor."
+msgstr "They expect something in return for what you gave them."
+
+msgid "Zayıf nokta: "
+msgstr "Weakness: "
+
+msgid "Biliniyorsa şantaj mümkün. 'Araştır' ile öğrenilebilir."
+msgstr "If known, it can be used for blackmail. Uncover it with 'Investigate'."
+
+msgid "Şantaj için kullanılabilir."
+msgstr "Can be used for blackmail."
+
+msgid "Kırmızı çizgi: "
+msgstr "Breaking point: "
+
+msgid "Bu çizgiyi aşarsan affetmez."
+msgstr "Cross this line and they will not forgive you."
+
+msgid "Doğrulama: %d örtüştü · %d çelişti"
+msgstr "Verification: %d matched · %d conflicted"
+
+msgid "Raporlarının başka kaynaklarla karşılaştırılması."
+msgstr "A comparison of their reports with other sources."
+
+msgid "Söz: %s · hafta %d"
+msgstr "Promise: %s · week %d"
+
+msgid "Ona verdiğin söz ve vadesi."
+msgstr "Your promise to them and when it falls due."
+
+msgid "%d kişi seçili · operasyon çemberi"
+msgstr "%d selected · operation circle"
+
+msgid "Hafta %d — %s"
+msgstr "Week %d — %s"
+
+msgid "Son haftalarda hakkında bir alamet görülmedi.\nDarbeyi yalnızca ordu ya da hanedan başlatabilir; ama herkes komploya katılabilir."
+msgstr "No signs about them have appeared in recent weeks.\nOnly the army or dynasty can start a coup, but anyone can join a plot."
+
+msgid "Son alametler:\n%s\n\nAlametlerin bir kısmı dedikodudur. Huzura Çağır ile yoklayabilirsin."
+msgstr "Recent signs:\n%s\n\nSome signs are rumours. Summon them to court to test the waters."
+
+msgid "KAZAN"
+msgstr "WIN LOYALTY"
+
+msgid "SÖZ VER"
+msgstr "MAKE A PROMISE"
+
+msgid "ÖĞREN"
+msgstr "GATHER INTELLIGENCE"
+
+msgid "EMRET"
+msgstr "GIVE ORDERS"
+
+msgid "BASKI"
+msgstr "APPLY PRESSURE"
+
+msgid "OPERASYON"
+msgstr "OPERATION"
+
+msgid "Başkent · Kurumlar"
+msgstr "Capital · Institutions"
+
+msgid "Kişiler"
+msgstr "People"
+
+msgid "Saltanat Günlüğü"
+msgstr "Reign Chronicle"
+
+msgid "Gündem"
+msgstr "Agenda"
+
+msgid "Gizli Dosyalar"
+msgstr "Secret Files"
+
+msgid "HAFTA %d   ·   KRAL ADRİAN IV"
+msgstr "WEEK %d   ·   KING ADRIAN IV"
+
+msgid "Masada yeni dosyalar var."
+msgstr "New files are waiting on the desk."
+
+msgid "%d KARAR BEKLİYOR   ·   GÜNDEMİ AÇ   »"
+msgstr "%d DECISIONS WAITING   ·   OPEN AGENDA   »"
+
+msgid "GÜNDEMİ AÇ   »"
+msgstr "OPEN AGENDA   »"
+
+msgid "YENİ"
+msgstr "NEW"
+
+msgid "%d söz"
+msgstr "%d promises"
+
+msgid "Bekleyen karar yok"
+msgstr "No pending decisions"
+
+msgid "%d karar"
+msgstr "%d decisions"
+
+msgid "en acil"
+msgstr "most urgent"
+
+msgid "ilki"
+msgstr "first"
+
+msgid "%s · %s: %s"
+msgstr "%s · %s: %s"
+
+msgid "Bu haftanın gazeteleri"
+msgstr "This week's papers"
+
+msgid "%d mesai"
+msgstr "%d actions"
+
+msgid "Mesai bitti"
+msgstr "No actions left"
+
+msgid "%d düşman"
+msgstr "%d enemies"
+
+msgid "%d şüpheli"
+msgstr "%d suspects"
+
+msgid "%d sözün vadesi yaklaşıyor"
+msgstr "%d promises are coming due"
+
+msgid "Hafta %d · saltanatın kaydı"
+msgstr "Week %d · reign record"
+
+msgid "Dosya şimdilik boş"
+msgstr "The file is empty for now"
+
+msgid "%d kayıt"
+msgstr "%d entries"
+
+msgid "%d tanesi sana dair"
+msgstr "%d concern you"
+
+msgid "%d dedikodu"
+msgstr "%d rumours"
+
+msgid "Kurumlar ve sokaklar"
+msgstr "Institutions and streets"
+
+msgid "%d saltanat · %d / %d başarım"
+msgstr "%d reigns · %d / %d achievements"
+
+msgid "VELORİA HABER"
+msgstr "VELORIA NEWS"
+
+msgid "GİZLİ"
+msgstr "CONFIDENTIAL"
+
+msgid "BAŞKENT"
+msgstr "CAPITAL"
+
+msgid "Medya Merkezi"
+msgstr "Media Center"
+
+msgid "MEDYA MERKEZİ"
+msgstr "MEDIA CENTER"
+
+msgid "Saray"
+msgstr "Palace"
+
+msgid "Çalışma odası ve taht"
+msgstr "The royal study and throne"
+
+msgid "ADLİYE"
+msgstr "JUDICIARY"
+
+msgid "Soruşturmalar ve hukuk"
+msgstr "Investigations and law"
+
+msgid "MALİYE BAKANLIĞI"
+msgstr "MINISTRY OF FINANCE"
+
+msgid "Kasa ve vergi defterleri"
+msgstr "Treasury and tax ledgers"
+
+msgid "PARLAMENTO"
+msgstr "PARLIAMENT"
+
+msgid "Yasalar ve siyasi bloklar"
+msgstr "Laws and political blocs"
+
+msgid "GENELKURMAY"
+msgstr "GENERAL STAFF"
+
+msgid "Ordu ve komuta"
+msgstr "Army and command"
+
+msgid "Basın ve kamuoyu"
+msgstr "Press and public opinion"
+
+msgid "İSTİHBARAT"
+msgstr "INTELLIGENCE"
+
+msgid "Arşivler ve dosyalar"
+msgstr "Archives and files"
+
+msgid "HALDEN HOLDİNG"
+msgstr "SARNE HOLDING"
+
+msgid "Sermaye, ihaleler, borçlar"
+msgstr "Capital, contracts, debts"
+
+msgid "ASTERIA ELÇİLİĞİ"
+msgstr "ASTERIA EMBASSY"
+
+msgid "Kredi ve hukuk diplomasisi"
+msgstr "Credit and legal diplomacy"
+
+msgid "DRAKON ELÇİLİĞİ"
+msgstr "DRAKON EMBASSY"
+
+msgid "Sınır ve güvenlik"
+msgstr "Borders and security"
+
+msgid "SERAVIA TEMSİLCİLİĞİ"
+msgstr "SERAVIA MISSION"
+
+msgid "Ticaret ve limanlar"
+msgstr "Trade and ports"
+
+msgid "Bir kuruma tıkla"
+msgstr "Select an institution"
+
+msgid "Masaya dön  (Esc)"
+msgstr "Return to desk  (Esc)"
+
+msgid "Masaya dön"
+msgstr "Return to desk"
+
+msgid "Bu hafta bu makamdan rapor gelmedi."
+msgstr "No report came from this office this week."
+
+msgid "makam boş"
+msgstr "office vacant"
+
+msgid "İşleyiş: [b]%s[/b]\nBaşkan: %s"
+msgstr "Functioning: [b]%s[/b]\nHead: %s"
+
+msgid "Kasa: [b]%s[/b]"
+msgstr "Treasury: [b]%s[/b]"
+
+msgid "Nüfuz: [b]%s[/b]\nMedya: [b]%s[/b]"
+msgstr "Influence: [b]%s[/b]\nMedia: [b]%s[/b]"
+
+msgid "İlişki: [b]%s[/b]\n[color=gray]Elena'nın anlatımı iyimser olabilir; Doğrula kayıtları altı hafta açar.[/color]"
+msgstr "Relations: [b]%s[/b]\n[color=gray]Elena may put an optimistic spin on things; Verify reveals records from six weeks ago.[/color]"
+
+msgid "[color=#c0504a]Bu makam boş. Sahibi artık sarayda değil.[/color]"
+msgstr "[color=#c0504a]This office is vacant. Its former holder is no longer at court.[/color]"
+
+msgid "Kişiyle ilgilen"
+msgstr "Deal with this person"
+
+msgid "Gazeteleri oku"
+msgstr "Read the papers"
+
+msgid "Dosyaları aç"
+msgstr "Open the files"
+
+msgid "Doğrula"
+msgstr "Verify"
+
+msgid "Saraya uzanan dosyalar: [b]%d[/b] (kamuya açık: %d).\nHer dosya, yargının sana yaklaşan bir adımıdır."
+msgstr "Files reaching the palace: [b]%d[/b] (%d public).\nEach one brings the judiciary a step closer to you."
+
+msgid "Veyra bütçe defterlerini tutuyor. Saray harcamalarıyla devlet kasasını karıştırma."
+msgstr "Veyra keeps the budget ledgers. Do not confuse palace spending with the state treasury."
+
+msgid "Meclis kulislerinde verilmiş ve henüz tutulmamış sözlerin: [b]%d[/b].\nMuhalefet her sözü sayar."
+msgstr "Promises made in the Assembly corridors and not yet kept: [b]%d[/b].\nThe opposition counts every one."
+
+msgid "Ordunun kime sadık olduğu, ne kadar güçlü olduğundan daha önemlidir."
+msgstr "Whom the army is loyal to matters more than how strong it is."
+
+msgid "Araştırma yaptırırsan zayıf noktaları bulur. Ama öğrendiği her şeyi saklar."
+msgstr "If ordered to investigate, it finds weaknesses. But it keeps everything it learns."
+
+msgid "Sarne'nin kanalları ve Leyla'nın gazetesi aynı haftayı farklı anlatır. Karşılaştır."
+msgstr "Sarne's channels and Leyla's paper tell different stories about the same week. Compare them."
+
+msgid "Sarne sana yaptıklarının karşılığını bekliyor. Borç defterin onun masasından."
+msgstr "Sarne expects something in return for what he has done for you. Your debt ledger is on his desk."
+
+msgid "Sarne sana yaptıklarının karşılığını bekliyor. Borç defterin onun masasındadır."
+msgstr "Sarne expects something in return for what he has done for you. Your debt ledger is on his desk."
+
+msgid "Sarne sana yaptıklarının karşılığını bekliyor. Borç defterin onun masasındaki."
+msgstr "Sarne expects something in return for what he has done for you. Your debt ledger is on his desk."
+
+msgid "Sarne Holding enerji, inşaat ve medyada faaliyet gösteriyor."
+msgstr "Sarne Holding operates in energy, construction, and media."
+
+msgid "Veloria Haber"
+msgstr "Veloria News"
+
+msgid "Serbest Kalem"
+msgstr "Free Press"
+
+msgid "Sarne TV"
+msgstr "Sarne TV"
+
+msgid "Fotoğraf: %s"
+msgstr "Photo: %s"
+
+msgid "muhabirimiz, başkent"
+msgstr "our correspondent, the capital"
+
+msgid "Veloria Haber arşivi"
+msgstr "Veloria News archive"
+
+msgid "[b]BAŞKENT —[/b] %s"
+msgstr "[b]THE CAPITAL —[/b] %s"
+
+msgid "Devamı sayfa %d'%s"
+msgstr "Continued on page %d"
+
+msgid "HAVA DURUMU"
+msgstr "WEATHER"
+
+msgid "BAĞIMSIZ\nHAFTALIK"
+msgstr "INDEPENDENT\nWEEKLY"
+
+msgid "HAFTA %d"
+msgstr "WEEK %d"
+
+msgid "Sayı %d"
+msgstr "Issue %d"
+
+msgid "FİYATI"
+msgstr "PRICE"
+
+msgid "1 kuruş"
+msgstr "1 kurush"
+
+msgid "2 kuruş"
+msgstr "2 kurush"
+
+msgid "HAFTA %d BASKISI"
+msgstr "WEEK %d EDITION"
+
+msgid "YAYIN DURDURULDU"
+msgstr "PUBLICATION SUSPENDED"
+
+msgid "CANLI"
+msgstr "LIVE"
+
+msgid "ANA HABER  20:00"
+msgstr "EVENING NEWS  20:00"
+
+msgid "GÜNDEM"
+msgstr "HEADLINES"
+
+msgid "HABERLER"
+msgstr "NEWS"
+
+msgid "Grafik"
+msgstr "Chart"
+
+msgid "Tarihçiler"
+msgstr "Historians"
+
+msgid "Özet"
+msgstr "Summary"
+
+msgid "Bu çizgileri oyun boyunca hiç görmedin. Gördüğün yalnızca raporlardı; aradaki fark, sana söylenmeyenlerdir."
+msgstr "You never saw these lines during your reign. You saw only reports; the gap between them is what you were not told."
+
+msgid "YENİDEN OYNA"
+msgstr "PLAY AGAIN"
+
+msgid "Ana Menü"
+msgstr "Main Menu"
+
+msgid "çökmüş"
+msgstr "collapsed"
+
+msgid "zorlanan"
+msgstr "strained"
+
+msgid "sağlam"
+msgstr "sound"
+
+msgid "KOMPLO DEFTERİ — perde arkasında ne oldu"
+msgstr "PLOT LEDGER — what happened behind the scenes"
+
+msgid "[color=gray]Son gördüğün alametlerin %d'i gerçekti, %d'i dedikoduydu.[/color]\n\n"
+msgstr "[color=gray]Of the signs you saw, %d were real and %d were rumours.[/color]\n\n"
+
+msgid "Sarayda kimse sana karşı örgütlenmedi.\n"
+msgstr "No one at court conspired against you.\n"
+
+msgid "• Hafta %d — [b]%s[/b] [color=%s]%s[/color]\n"
+msgstr "• Week %d — [b]%s[/b] [color=%s]%s[/color]\n"
+
+msgid "MECLİS SİCİLİ — kim seni nereye yönlendirdi"
+msgstr "ASSEMBLY RECORD — who steered you where"
+
+msgid "[color=gray]Öneri · dinlediğin · seni yanılttığı (önerisi en iyi seçenekten belirgin biçimde kötüydü)[/color]\n\n"
+msgstr "[color=gray]Advice · followed · misled you (their advice was clearly worse than the best option)[/color]\n\n"
+
+msgid "Meclis bu saltanatta hiç öneride bulunmadı.\n"
+msgstr "The Assembly offered no advice during this reign.\n"
+
+msgid "[b]%s[/b]   %d öneri · %d kez dinledin · [color=%s]%s[/color]\n"
+msgstr "[b]%s[/b]   %d suggestions · followed %d times · [color=%s]%s[/color]\n"
+
+msgid "%d kez yanılttı"
+msgstr "misled you %d times"
+
+msgid "hiç yanıltmadı"
+msgstr "never misled you"
+
+msgid "   [color=gray]En pahalısı, hafta %d — %s:[/color] \"%s\" dedi; en iyisi \"%s\" idi.%s\n"
+msgstr "   [color=gray]Costliest, week %d — %s:[/color] they said \"%s\"; the best choice was \"%s\".%s\n"
+
+msgid "  [color=#c0504a](dinledin)[/color]"
+msgstr "  [color=#c0504a](you followed it)[/color]"
+
+msgid "DEVLET DEFTERİ — ne pahasına"
+msgstr "STATE LEDGER — at what cost"
+
+msgid "[color=gray]Kurumların ortalama hâli:[/color] %s. En zayıf an: %d. hafta, %s.\n"
+msgstr "[color=gray]Average condition of institutions:[/color] %s. Lowest point: week %d, %s.\n"
+
+msgid "[color=gray]O haftanın kaydı:[/color] %s\n"
+msgstr "[color=gray]That week's record:[/color] %s\n"
+
+msgid "Maliye"
+msgstr "Finance"
+
+msgid "Adliye"
+msgstr "Judiciary"
+
+msgid "İdare"
+msgstr "Civil Administration"
+
+msgid "Kadroda yeni bir atama yapmadın.\n"
+msgstr "You made no new appointments.\n"
+
+msgid "• %d. hafta — %s: %s\n"
+msgstr "• Week %d — %s: %s\n"
+
+msgid "[color=gray]İhale:[/color] %d kez. [color=gray]Sarne'nin düşman yayını:[/color] %d hafta.\n"
+msgstr "[color=gray]Contracts:[/color] %d. [color=gray]Weeks of hostile coverage from Sarne:[/color] %d.\n"
+
+msgid "[color=gray]Dış ilişkiler:[/color] %d heyet; en soğuk an %d. hafta. [color=gray]Veliaht:[/color] %s.\n"
+msgstr "[color=gray]Foreign relations:[/color] %d delegations; coldest point in week %d. [color=gray]Heir:[/color] %s.\n"
+
+msgid "Tahtını korudun."
+msgstr "You kept your throne."
+
+msgid "Tahtını kaybettin."
+msgstr "You lost your throne."
+
+msgid "[b][font_size=%d]Kral %s[/font_size][/b]   [font_size=%d][color=%s]%s[/color][/font_size]\n[font_size=%d][color=gray]Ünvanın:[/color] [color=#d9b359]%s[/color][/font_size]"
+msgstr "[b][font_size=%d]King %s[/font_size][/b]   [font_size=%d][color=%s]%s[/color][/font_size]\n[font_size=%d][color=gray]Title:[/color] [color=#d9b359]%s[/color][/font_size]"
+
+msgid "[b]Saltanat:[/b] %d hafta  ·  [b]En güçlü isim:[/b] %s\n[b]Söz sicili:[/b] %s\n[b]Karar defteri:[/b] %d kayıt\n"
+msgstr "[b]Reign:[/b] %d weeks  ·  [b]Most powerful:[/b] %s\n[b]Promise record:[/b] %s\n[b]Decision ledger:[/b] %d entries\n"
+
+msgid "[b]Rejimin:[/b] %s. [b]Son sınavı:[/b] %s.\n"
+msgstr "[b]Your regime:[/b] %s. [b]Final test:[/b] %s.\n"
+
+msgid "[b]Devletin:[/b] %s. Bedeli Hakikat Dosyası'ndaki Devlet Defteri'nde.\n"
+msgstr "[b]Your state:[/b] %s. Its cost is in the State Ledger in the Truth File.\n"
+
+msgid "[b]Hakikat Dosyası:[/b] kimse sana belirgin biçimde yalan söylemedi.\n"
+msgstr "[b]Truth File:[/b] no one clearly lied to you.\n"
+
+msgid "[b]Hakikat Dosyası:[/b] [color=#c0504a]%d kişi sana yalan söyledi.[/color] Kim olduklarını Hakikat Dosyası sekmesinde gör.\n"
+msgstr "[b]Truth File:[/b] [color=#c0504a]%d people lied to you.[/color] See who in the Truth File tab.\n"
+
+msgid "[b]Meclis:[/b] seni en çok [color=#d08a3d]%s[/color] yanılttı (%d kez). Ayrıntısı Hakikat Dosyası'nda.\n"
+msgstr "[b]Assembly:[/b] [color=#d08a3d]%s[/color] misled you most (%d times). Details are in the Truth File.\n"
+
+msgid "[b]Komplo:[/b] ilk kıvılcım %d. haftada, [color=#c0504a]%s[/color]. Kronolojisi Hakikat Dosyası'nda.\n"
+msgstr "[b]Plot:[/b] the first spark came in week %d, [color=#c0504a]%s[/color]. Its timeline is in the Truth File.\n"
+
+msgid "\n[b][color=#d9b359][font_size=22]YENİ BAŞARIM[/font_size][/color][/b]\n"
+msgstr "\n[b][color=#d9b359][font_size=22]NEW ACHIEVEMENT[/font_size][/color][/b]\n"
+
+msgid "[color=#d6b25e]»[/color]  [b]%s[/b] — %s\n"
+msgstr "[color=#d6b25e]»[/color]  [b]%s[/b] — %s\n"
+
+msgid "\n[b][color=#d9b359][font_size=22]Son kararların[/font_size][/color][/b]   [color=gray]tamamı Kararlar sekmesinde[/color]\n"
+msgstr "\n[b][color=#d9b359][font_size=22]Your recent decisions[/font_size][/color][/b]   [color=gray]all are in the Decisions tab[/color]\n"
+
+msgid "TARİH NE YAZACAK?[/font_size][/color][/b]\n[color=gray]Aynı saltanat, iki ayrı kalemden.[/color]\n\n"
+msgstr "WHAT WILL HISTORY SAY?[/font_size][/color][/b]\n[color=gray]One reign, two pens.[/color]\n\n"
+
+msgid "[color=#d6b25e][b]Saray tarihçisi[/b][/color]\n[i]\"%s\"[/i]\n\n"
+msgstr "[color=#d6b25e][b]Court historian[/b][/color]\n[i]\"%s\"[/i]\n\n"
+
+msgid "[color=#c0504a][b]Sürgündeki tarihçi[/b][/color]\n[i]\"%s\"[/i]\n"
+msgstr "[color=#c0504a][b]Historian in exile[/b][/color]\n[i]\"%s\"[/i]\n"
+
+msgid "Tarihçiler bu saltanat hakkında sessiz kaldı."
+msgstr "The historians had nothing to say about this reign."
+
+msgid "HAKİKAT DOSYASI — sana söylenmeyenler[/font_size][/color][/b]\n\n"
+msgstr "TRUTH FILE — what they did not tell you[/font_size][/color][/b]\n\n"
+
+msgid "Kimse sana belirgin biçimde yalan söylemedi. Ya da hepsini fark ettin.\n"
+msgstr "No one clearly lied to you. Or you caught every lie.\n"
+
+msgid "• Hafta %d — [b]%s[/b] sana şunu söyledi: \"%s\"\n   [color=gray]Gerçekte:[/color] %s\n\n"
+msgstr "• Week %d — [b]%s[/b] told you: \"%s\"\n   [color=gray]In truth:[/color] %s\n\n"
+
+msgid "KARARLARIN[/font_size][/color][/b]   [color=gray]%d kayıt · en yenisi üstte[/color]\n\n"
+msgstr "YOUR DECISIONS[/font_size][/color][/b]   [color=gray]%d entries · newest first[/color]\n\n"
+
+msgid "Hiç karar vermedin. Tarih bunu da yazar."
+msgstr "You made no decisions. History will record that too."
+
+msgid "Hakikat Dosyası (%d)"
+msgstr "Truth File (%d)"
+
+msgid "\n[b][color=#d9b359][font_size=22]KOMPLO DEFTERİ — perde arkasında ne oldu[/font_size][/color][/b]\n"
+msgstr "\n[b][color=#d9b359][font_size=22]PLOT LEDGER — what happened behind the scenes[/font_size][/color][/b]\n"
+
+msgid "\n[b][color=#d9b359][font_size=22]MECLİS SİCİLİ — kim seni nereye yönlendirdi[/font_size][/color][/b]\n"
+msgstr "\n[b][color=#d9b359][font_size=22]ASSEMBLY RECORD — who steered you where[/font_size][/color][/b]\n"
+
+msgid "\n[b][color=#d9b359][font_size=22]DEVLET DEFTERİ — ne pahasına[/font_size][/color][/b]\n"
+msgstr "\n[b][color=#d9b359][font_size=22]STATE LEDGER — at what cost[/font_size][/color][/b]\n"
+
+msgid "[b][color=#d9b359][font_size=22]TARİH NE YAZACAK?[/font_size][/color][/b]\n[color=gray]Aynı saltanat, iki ayrı kalemden.[/color]\n\n"
+msgstr "[b][color=#d9b359][font_size=22]WHAT WILL HISTORY SAY?[/font_size][/color][/b]\n[color=gray]One reign, two pens.[/color]\n\n"
+
+msgid "[b][color=#d9b359][font_size=22]HAKİKAT DOSYASI — sana söylenmeyenler[/font_size][/color][/b]\n\n"
+msgstr "[b][color=#d9b359][font_size=22]TRUTH FILE — what they did not tell you[/font_size][/color][/b]\n\n"
+
+msgid "[b][color=#d9b359][font_size=22]KARARLARIN[/font_size][/color][/b]   [color=gray]%d kayıt · en yenisi üstte[/color]\n\n"
+msgstr "[b][color=#d9b359][font_size=22]YOUR DECISIONS[/font_size][/color][/b]   [color=gray]%d entries · newest first[/color]\n\n"
+
+msgid "Naiplik"
+msgstr "Regency"
+
+msgid "Liman İhalesi"
+msgstr "Port Contract"
+
+msgid "Dokunulmazlık"
+msgstr "Immunity"
+
+msgid "Doğrula"
+msgstr "Verify"
+
+msgid "Araştır"
+msgstr "Investigate"
+
+msgid "Şantaj"
+msgstr "Blackmail"
+
+msgid "Sadık Ata"
+msgstr "Appoint Loyalist"
+
+msgid "İhale Ver"
+msgstr "Award Contract"
+
+msgid "Veliahdı Yetiştir"
+msgstr "Prepare Heir"
+
+msgid "ENEMY"
+msgstr "ENEMY"
