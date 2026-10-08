@@ -133,10 +133,11 @@ S5: L4 — `content_*.json` ve `actors.json` çevirisi.
   gösterim çevirileri eklendi. Ham `record.title`, `record.cause`, söz sicili,
   başarımlar ve kronik anahtarları Türkçe kaldı; ekran için ayrı gösterim
   alanları kullanıldı. `narrative.gd` tarihçi metinleri, `press.gd` gazete/TV
-  statik manşet ve sütunları, `advice.gd` kişi gerekçeleri, `content_data.gd`
+  statik manşet ve sütunları, `advice.gd` meclis kalıpları ve kişi gerekçeleri,
+  `content_data.gd`
   doğrulama hataları yerelleştirildi. Dosya başına commitler: `938c66c`,
   `f8ae226`, `9d8d5c9`, `60a5972`, `3437659`, `599f1e1`, `4b3c178`, `f33d39f`,
-  `f726948`, `634fa36`, `70c1aa5`, `e1e2f76`, `f0a7b94`.
+  `f726948`, `634fa36`, `70c1aa5`, `e1e2f76`, `f0a7b94`, `38ac822`, `8ed3501`.
 - Kapı testleri: `TEST: OK`; `EVENTS: OK (195 olay, 0 uyarı)`; `SAVE: OK`;
   `CONTENT: OK (5 dosya, 8 bozuk örnek)`; `I18N: OK`; `UI INPUT: OK`;
   pacing en uzun olaysız seri medyan/en kötü `2/2` hafta (en kötü olay hızı
@@ -153,8 +154,7 @@ S5: L4 — `content_*.json` ve `actors.json` çevirisi.
   incelendi. Türkçe örnekler tamamen Türkçe; incelenen sayfalarda kırpılma/
   taşma görülmedi. İngilizce basın şablonları ve tarihçi/oyun sonu özeti İngilizce.
 - İngilizce ekranda kalan Türkçe örnekler L4 veri kapsamındadır: olay başlıkları,
-  gövdeleri ve seçenekleri (`events.json`); meclis görüşü kalıpları
-  (`content_council.json`); kişi unvanları ve rapor/alamet gövdeleri
+  gövdeleri ve seçenekleri (`events.json`); kişi unvanları ve rapor/alamet gövdeleri
   (`actors.json`, `content_reports.json`); oyun sonu karar geçmişindeki olay ve
   seçenek metinleri. Basının olaydan aldığı ana manşet/gövde de `events.json`
   kaynağında kaldı. Sabit gazete/TV etiketleri, ikincil sütunlar, motto, para
