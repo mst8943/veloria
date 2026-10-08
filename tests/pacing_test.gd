@@ -3,9 +3,11 @@ extends SceneTree
 ##   Godot_console.exe --headless --path . --script res://tests/pacing_test.gd
 
 const BUCKET := 8
+const Loc := preload("res://game/core/loc.gd")
 
 
 func _init() -> void:
+	Loc.set_lang("tr")
 	var sim: Node = load("res://game/core/sim.gd").new()
 	sim.save_path = "user://test_save.txt"
 	sim.record_chronicle = false

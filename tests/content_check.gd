@@ -1,8 +1,10 @@
 extends SceneTree
 ## İçerik JSON şeması ve çökmeden hata bildirme denetimi.
 const ContentData := preload("res://game/core/content_data.gd")
+const Loc := preload("res://game/core/loc.gd")
 
 func _init() -> void:
+	Loc.set_lang("en" if "--lang=en" in OS.get_cmdline_user_args() else "tr")
 	var loader: RefCounted = ContentData.new()
 	var all: Dictionary = loader.load_all()
 	if loader.error != "":

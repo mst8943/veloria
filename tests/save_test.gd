@@ -10,6 +10,7 @@ var ok := true
 
 
 func _init() -> void:
+	Loc.set_lang("tr")
 	var sim: Node = load("res://game/core/sim.gd").new()
 	sim.save_path = "user://save_version_test.txt"
 	sim.record_chronicle = false

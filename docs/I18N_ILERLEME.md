@@ -25,16 +25,14 @@ dosyası değiştirilmedi.
 
 ## Açık sorunlar
 
-- L1 için `event_check` ve `content_check` komut satırından `--lang=en`
-  seçeneğini henüz almıyor. İngilizce kaplamalar L4'te yazılacak; bu nedenle
-  yükleyici bugün güvenli Türkçe geri dönüş kullanır.
+- İngilizce içerik kaplamaları L4'te yazılacak. O zamana kadar İngilizce dil
+  seçimi, eksik içerikte güvenli Türkçe geri dönüş kullanır.
 
 ## SIRADAKİ ADIM
 
-L1 devamı: Türkçe test kilidi ve İngilizce doğrulama parametreleri. Ardından
-L1 kapısı için tam test, `--full`, ölçüt ve menü ekran görüntüsü alınacak.
+L2: statik arayüz metinleri, dosya başına ayrı commit ve `en.po` karşılıkları.
 
-## L1 — devam ediyor
+## L1 — tamamlandı
 
 - Statik `Loc` yardımcısı ve `en.po` başlığı eklendi. `Loc` sistem yerelini
   kullanmaz; varsayılanı `tr`dir.
@@ -43,5 +41,10 @@ L1 kapısı için tam test, `--full`, ölçüt ve menü ekran görüntüsü alı
 - Kaydedilen kampanya dili v9 alanıdır; v8 ve öncesi kayıtlar `tr`ye göçer.
 - `content_data.gd`, İngilizce etkinse `game/data/en/` içindeki metin
   kaplamasını güvenli biçimde birleştirir. Kaplama yoksa Türkçe kaynak kalır.
-- İlk kontroller: `I18N: OK`, `SAVE: OK`, `TEST: OK`.
-- Altyapı commit'i: `ab56462`.
+- Türkçe test kilidi eklendi; `event_check` ve `content_check` `--lang=en`
+  yolunu doğrular.
+- Kapı: `I18N: OK`, `EVENTS: OK`, `CONTENT: OK`, `SAVE: OK`, `TEST: OK`,
+  pencereli giriş testi, autoplay masaüstü/mobil ve tempo testi geçti.
+- Tam koşu: 101/104/TAHTTA/Medya Rejimi/112. Ölçüt bot: 85% / 45% / 20%,
+  L0 ile birebir aynı. Ayar ekranı görüntüsü: `dist/i18n_l1_menu/`.
+- Altyapı commit'i: `ab56462`; kapı tamamlama commit'i: bekliyor.

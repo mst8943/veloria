@@ -8,6 +8,8 @@ extends SceneTree
 const EVENTS_PATH := "res://game/data/events.json"
 const ACTORS_PATH := "res://game/data/actors.json"
 const ACTOR := preload("res://game/core/actor.gd")
+const ContentData := preload("res://game/core/content_data.gd")
+const Loc := preload("res://game/core/loc.gd")
 
 const TOP_KEYS := ["id", "title", "text", "choices", "ignore", "fx", "art", "crisis", "advisors",
 	"min_week", "max_week", "chance", "once", "cooldown", "min_unrest", "max_unrest", "min_economy", "max_economy",
@@ -41,11 +43,16 @@ var fact_ids := {"liman_komisyonu": true}  # bu sır artık talep kartında üre
 
 func _init() -> void:
 	var events_path := EVENTS_PATH
+	var language := "tr"
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--file="):
 			events_path = arg.substr(7)   # doğrulayıcının kendisini sınamak için başka bir dosya
-	var actors: Variant = _load(ACTORS_PATH)
-	var events: Variant = _load(events_path)
+		elif arg == "--lang=en":
+			language = "en"
+	Loc.set_lang(language)
+	var loader := ContentData.new()
+	var actors: Variant = loader.load_actors()
+	var events: Variant = loader.load_events(events_path) if events_path == EVENTS_PATH else _load(events_path)
 	if not actors is Array or not events is Array:
 		print("EVENTS: FAIL (dosya okunamadı ya da dizi değil)")
 		quit(1)

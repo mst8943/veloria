@@ -2,6 +2,7 @@ extends Control
 ## Saray Masası: kararlar, raporlar, kişiler, eylemler. Ham sayılar bilerek gösterilmez.
 
 const UIKit := preload("res://game/ui/ui_kit.gd")
+const Loc := preload("res://game/core/loc.gd")
 const ATMOS_SHADER := preload("res://game/ui/atmosphere.gdshader")
 const CINEMA := preload("res://game/ui/cinema.gd")
 const MEDIA_VIEW := preload("res://game/ui/media_view.gd")
@@ -82,6 +83,8 @@ var _last_wealth := -1
 
 
 func _ready() -> void:
+	if OS.has_feature("headless"):
+		Loc.set_lang("en" if "--lang=en" in OS.get_cmdline_user_args() else "tr")
 	# Telefon: yerel mobil, telefon tarayıcısındaki web sürümü, ya da masaüstünde test bayrağı.
 	_mobile = OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios") \
 		or ProjectSettings.get_setting("veloria/dev_mobile", false) or "--mobile" in OS.get_cmdline_user_args()

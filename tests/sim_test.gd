@@ -3,6 +3,7 @@ extends SceneTree
 ##   Godot_console.exe --headless --path . --script res://tests/sim_test.gd
 
 const Press := preload("res://game/core/press.gd")
+const Loc := preload("res://game/core/loc.gd")
 
 var sim: Node
 var rngb := RandomNumberGenerator.new()
@@ -11,6 +12,7 @@ var fired_ids := {}
 
 
 func _init() -> void:
+	Loc.set_lang("tr")
 	sim = load("res://game/core/sim.gd").new()
 	sim.save_path = "user://test_save.txt"   # oyuncunun kaydına dokunma
 	sim.record_chronicle = false
