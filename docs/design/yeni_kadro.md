@@ -84,3 +84,7 @@ Tüm testler; ölçüt bot taban ±3 ve bantta; dış ilişkileri/heyeti hiç ku
 ## 4. Görsel işler (sizde)
 - Olay görsellerinden kâhya içerenler (`events/dorn_*`, `dorn_sir`, `dorn_filtre`) kraliçeyle yeniden üretilmeli; referans: `art/portraits/dorn.png` (Kraliçe Helena).
 - Julian, Elena, Claire, Malenkov, Lucien portreleri hazır (`art/portraits/`).
+
+## B1 Sonuç (2026-10-08)
+
+Julian ve Elena oyunda; portreleri, kartları, raporları ve sekiz olayları bağlandı. Julian'ın eğitimi 6 hafta beklemeli, olgunluğu üç bantlı. Ana RNG tüketimi korunuyor: 101 tohumlu tam oyun 104 hafta TAHTTA, Medya Rejimi, 112 olay. Kayıt sürümü 8 ve v7 göçü sınandı. 80 kampanya/zorlukta ölçüt bot %83/%46/%17; veliaht bot %90/%42/%22. Prens Marcus girişimi artışı en fazla 2,5 puan. Tempo alt dilimi 0,81; yeni olay yükü eski stratejide sıfır. Masaüstü ve mobil kart/rapor/olay PNG'leri `dist/qa_yeni_kadro_b1_*` altında incelendi. B2 henüz başlamadı.
