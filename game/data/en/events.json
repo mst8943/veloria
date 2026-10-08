@@ -210,7 +210,7 @@
                                     }
                      },
     "voss_dosyalar":  {
-                          "title":  "Intelligence Chief Compiles Files on Politicians",
+                         "title":  "Intelligence chief compiles files on politicians",
                           "text":  "Vale\u0027s archives grow by the day. Some files concern people from your own Palace.",
                           "choices":  [
                                           {
@@ -231,7 +231,7 @@
                                      }
                       },
     "sinir_krizi":  {
-                        "title":  "Border Tensions with a Neighboring State",
+                        "title":  "Border tensions with a neighboring state",
                         "text":  "An armed incident took place in a border village. The neighboring country\u0027s press is beating the drums of war.",
                         "choices":  [
                                         {
@@ -252,7 +252,7 @@
                                    }
                     },
     "butce_acigi":  {
-                        "title":  "The Budget Deficit Is Growing",
+                        "title":  "The budget deficit is growing",
                         "text":  "Prime Minister Veyra says salaries cannot be paid without cuts.",
                         "choices":  [
                                         {
@@ -273,7 +273,7 @@
                                    }
                     },
     "deepfake":  {
-                     "title":  "A Fake Video of the King Is Spreading",
+                     "title":  "A fake video of the King is spreading",
                      "text":  "A video of the King making insulting remarks is spreading on social media. No one knows what is real.",
                      "choices":  [
                                      {
@@ -294,7 +294,7 @@
                                 }
                  },
     "gizli_toplanti":  {
-                           "title":  "Rumors of Secret Meetings",
+                           "title":  "Rumors of secret meetings",
                            "text":  "They say several powerful figures met in secret at a villa in the Capital.",
                            "choices":  [
                                            {
@@ -315,7 +315,7 @@
                                       }
                        },
     "ogrenci_eylem":  {
-                          "title":  "Student Protests Spread to the Universities",
+                          "title":  "Student protests spread to the universities",
                           "text":  "University squares are packed. Student representatives want to march to the city square.",
                           "choices":  [
                                           {
@@ -336,7 +336,7 @@
                                      }
                       },
     "milletvekili_satin":  {
-                               "title":  "Assembly Budget Vote",
+                               "title":  "Assembly budget vote",
                                "text":  "The crucial budget bill looks set to pass the Assembly by only a handful of votes.",
                                "choices":  [
                                                {
@@ -357,7 +357,7 @@
                                           }
                            },
     "cenaze":  {
-                   "title":  "Funeral of a Former General",
+                   "title":  "Funeral of a former general",
                    "text":  "The country\u0027s most beloved retired general has died. The entire elite will gather at the funeral; everyone will see everyone in the same room.",
                    "choices":  [
                                    {
@@ -378,7 +378,7 @@
                               }
                },
     "dorn_filtre":  {
-                        "title":  "The Queen Narrows the Appointment List",
+                        "title":  "The Queen narrows the appointment list",
                         "text":  "Queen Helena now decides who gets to see you. Some reports may no longer be reaching you.",
                         "choices":  [
                                         {
@@ -399,7 +399,7 @@
                                    }
                     },
     "toren":  {
-                  "title":  "A Royal Ceremony Is Proposed",
+                  "title":  "A royal ceremony is proposed",
                   "text":  "Palace protocol proposes a grand dynastic ceremony. It is expensive, but it will dazzle the public.",
                   "choices":  [
                                   {
@@ -626,7 +626,7 @@
                                       }
                        },
     "falk_istifa":  {
-                        "title":  "Chief Prosecutor Renn Considers Resigning",
+                          "title":  "Chief prosecutor Renn considers resigning",
                         "text":  "Fed up with the pressure, Chief Prosecutor Renn left a letter on your desk: \u0027I am either independent or I am nothing.\u0027",
                         "choices":  [
                                         {
@@ -647,7 +647,7 @@
                                    }
                     },
     "kessler_istifa":  {
-                           "title":  "The Prime Minister Left a Resignation Letter",
+                           "title":  "The prime minister left a resignation letter",
                            "text":  "Selin Veyra is worn down by fear. Her letter says, \u0027I can no longer give you the right figures.\u0027",
                            "choices":  [
                                            {
@@ -668,7 +668,7 @@
                                       }
                        },
     "gercek_kayit":  {
-                         "title":  "This Time, the Recording Is Real",
+                         "title":  "This time, the recording is real",
                          "text":  "A recording has surfaced: it really is your voice. But the public has heard the word \u0027fake\u0027 from you before.",
                          "choices":  [
                                          {
@@ -689,7 +689,7 @@
                                     }
                      },
     "terhis":  {
-                   "title":  "Mobilization Is Over; the Army Won\u0027t Stand Down",
+                   "title":  "Mobilization is over; the Army won\u0027t stand down",
                    "text":  "The border has quieted. But the mobilized units remain around the Capital.",
                    "choices":  [
                                    {
@@ -710,7 +710,7 @@
                               }
                },
     "liman_skandali":  {
-                           "title":  "Port Contract Scandal Hits the Papers",
+                           "title":  "Port contract scandal hits the papers",
                            "text":  "A dockworker gave a newspaper the commission papers from the port contract.",
                            "choices":  [
                                            {
@@ -731,7 +731,7 @@
                                       }
                        },
     "dorn_rusvet":  {
-                        "title":  "The Royal Foundation Sells Access",
+                        "title":  "The Royal Foundation sells access",
                         "text":  "It turns out that anyone seeking an audience with you had to make a \u0027donation\u0027 to the Royal Foundation. Helena, apparently, decided who got to see you.",
                         "choices":  [
                                         {
@@ -752,7 +752,7 @@
                                    }
                     },
     "butce_ifsa":  {
-                       "title":  "The Hidden Budget Deficit Is Exposed",
+                       "title":  "The hidden budget deficit is exposed",
                        "text":  "An international lender published Veloria\u0027s declared figures beside the real ones.",
                        "choices":  [
                                        {
@@ -773,7 +773,7 @@
                                   }
                    },
     "arden_posterleri":  {
-                             "title":  "The Public Puts Up Arden\u0027s Posters",
+                             "title":  "The public puts up Arden\u0027s posters",
                              "text":  "General Arden\u0027s posters cover the Capital\u0027s walls. One word beneath them: \u0027Order.\u0027",
                              "choices":  [
                                              {
@@ -794,7 +794,7 @@
                                         }
                          },
     "yabanci_elci":  {
-                         "title":  "A Foreign Ambassador Requests a Secret Meeting",
+                         "title":  "A foreign ambassador requests a secret meeting",
                          "text":  "An ambassador from a powerful neighbor offers generous support in exchange for \u0027stability.\u0027 Off the books.",
                          "choices":  [
                                          {
@@ -815,7 +815,7 @@
                                     }
                      },
     "erken_secim":  {
-                        "title":  "The Assembly Debates an Early Election",
+                        "title":  "The Assembly debates an early election",
                         "text":  "The opposition and some government MPs are gathering signatures for an early election.",
                         "choices":  [
                                         {
@@ -857,7 +857,7 @@
                                  }
                   },
     "voss_arden_catisma":  {
-                               "title":  "Intelligence Is Listening to the Army",
+                               "title":  "Intelligence is listening to the Army",
                                "text":  "Arden has learned that Vale had the General Staff\u0027s phones tapped. Both want to see you today.",
                                "choices":  [
                                                {
@@ -878,7 +878,7 @@
                                           }
                            },
     "lena_roportaj":  {
-                          "title":  "A Reporter Asks for an Interview",
+                          "title":  "A reporter asks for an interview",
                           "text":  "Leyla Sarn wants an interview without censorship. \u0027The people want to hear from you directly.\u0027",
                           "choices":  [
                                           {
@@ -899,7 +899,7 @@
                                      }
                       },
     "brandt_koalisyon":  {
-                             "title":  "Voss Offers a Coalition",
+                             "title":  "Voss offers a coalition",
                              "text":  "The opposition is strong. Voss offers to join the government in exchange for calming the streets.",
                              "choices":  [
                                              {
@@ -920,7 +920,7 @@
                                         }
                          },
     "anayasa_degisikligi":  {
-                                "title":  "A Constitutional Amendment to Expand Your Powers",
+                                "title":  "A constitutional amendment to expand your powers",
                                 "text":  "Your advisers have drafted a constitutional amendment granting the King emergency powers.",
                                 "choices":  [
                                                 {
@@ -941,7 +941,7 @@
                                            }
                             },
     "halden_kanal":  {
-                         "title":  "Sarne Moves to Buy the Last Independent Channel",
+                         "title":  "Sarne moves to buy the last independent channel",
                          "text":  "Sarne has bid for the country\u0027s last independent television channel. If it sells, every news bulletin will come from one hand.",
                          "choices":  [
                                          {
@@ -962,7 +962,7 @@
                                     }
                      },
     "kessler_reform":  {
-                           "title":  "Veyra Proposes a Bold Reform",
+                           "title":  "Veyra proposes a bold reform",
                            "text":  "The Prime Minister wants to rewrite the tax system. \u0027It will hurt today, save us a year from now.\u0027",
                            "choices":  [
                                            {
@@ -983,7 +983,7 @@
                                       }
                        },
     "reform_meyve":  {
-                         "title":  "The Reform Bears Fruit",
+                         "title":  "The reform bears fruit",
                          "text":  "A year after Veyra\u0027s tax reform, the Treasury is filling and investors are returning.",
                          "choices":  [
                                          {
@@ -1000,7 +1000,7 @@
                                     }
                      },
     "genel_grev":  {
-                       "title":  "A General Strike",
+                       "title":  "A general strike",
                        "text":  "The unions have called a nationwide general strike. Ports, factories, and buses have stopped.",
                        "choices":  [
                                        {
@@ -1021,7 +1021,7 @@
                                   }
                    },
     "suikast":  {
-                    "title":  "An Attempt on Your Procession",
+                    "title":  "An attempt on your procession",
                     "text":  "Gunfire struck your procession on the way back from a ceremony. You survived. You wonder less who pulled the trigger than who gave the order.",
                     "choices":  [
                                     {

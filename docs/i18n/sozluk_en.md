@@ -10,6 +10,8 @@ gösterilen metindir.
 - Kral doğrudan ikinci tekil kişiyle anlatılır: **you / Your Majesty**.
 - Gizli değerler sayı ile açıklanmaz; band, tavır veya sonuçla anlatılır.
 - Düğme ve sekme etiketleri Türkçeden yaklaşık yüzde otuzdan fazla uzamaz.
+- Olay başlıkları ve seçenek etiketleri sentence case kullanır: ilk sözcük ve
+  özel adlar büyük, diğer sözcükler küçük harfle başlar.
 - `action` tekil, `actions` çoğul olarak `mesai` karşılığıdır.
 - Kişi ve yer adları aşağıdaki istisnalar dışında değişmez.
 
