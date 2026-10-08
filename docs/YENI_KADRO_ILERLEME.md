@@ -32,6 +32,7 @@ Yeni aktörlerin başlangıç gürültüsü ve yeni durum değerleri ayrı tohum
 - **B2.2** `1f698d7`: Asteria, Drakon ve Seravia'nın haftalık kayması; yakın/soğuk küçük etkileri ve Drakon'un sadece mevcut darbe krizi savunmasına eklenen desteği. Parametre tablosu tasarım belgesinde. Yön, eşik ve zorluk katsayısı birim testte sınandı. `TEST/EVENTS/SAVE/CONTENT/UI INPUT: OK`, masaüstü/mobil autoplay, pacing ve tam oyun geçti. Tam oyun 101 / 104 / TAHTTA / Medya Rejimi / 112 olay. Ölçüt **%85/%45/%20** (tabandan +2/−1/+3, ±3 içinde).
 - **B2.3** `c330cbf`: Elena raporu artık Asteria, Drakon ve Seravia için yalnızca Soğuk/Mesafeli/Yakın bantlarını veriyor; iyimserlik ve ayrı üreteç gürültüsü korunuyor. Doğrula altı hafta gürültüsüz bant açıyor. DIŞİŞLERİ eşik haberleri bir kez gündeme düşüyor; TV şeridine aktarılmıyor. DEVLET sekmesindeki Heyet Gönder seçili elçiliği güçlendirip diğer ikisini hafifçe geri çekiyor ve dört hafta bekliyor. Birim testi hedef yönünü, beklemeyi ve Doğrula sonucunu kapsıyor. `TEST/EVENTS/SAVE/CONTENT/UI INPUT: OK`; masaüstü/mobil autoplay, tempo ve tam oyun geçti. Tam oyun 101 / 104 / TAHTTA / Medya Rejimi / 112 olay; tempo alt sınırı **0,81**.
 - **B2.4** `d05fd38`: Olay şemasına `min_foreign/max_foreign{asteria|drakon|seravia: değer}` eklendi; motor koşulu uygular, denetleyici bilinmeyen güç ve 0–100 dışı değeri reddeder. Birim testi olumlu ve olumsuz uygunluk durumunu kapsıyor. `TEST/EVENTS/SAVE/CONTENT/UI INPUT: OK`; masaüstü/mobil autoplay, tempo ve tam oyun geçti. Tam oyun 101 / 104 / TAHTTA / Medya Rejimi / 112 olay.
+- **B2.5** `519bb33`: Asteria kredi/özgürlük notası, Drakon silah/sınır/darbe desteği ve Seravia yatırım/ambargo/Sarne kredisi için sekiz olay eklendi. Olaylar Heyet Gönder bayrağıyla açılır; bu kapı yeni sistemi kullanmayan kampanyaların içerik akışını değiştirmez. `fx.foreign` etkisi ve doğrulaması eklendi. `TEST: OK`, `EVENTS: OK (195 olay, 0 uyarı)`, `SAVE/CONTENT/UI INPUT: OK`; masaüstü/mobil autoplay, tempo ve tam oyun geçti. Tam oyun 101 / 104 / TAHTTA / Medya Rejimi / 112 olay; tempo alt sınırı 0,81.
 
 ## Ölçüm tablosu
 
@@ -48,6 +49,7 @@ Yeni aktörlerin başlangıç gürültüsü ve yeni durum değerleri ayrı tohum
 | B2.2 `1f698d7` | %85 | %45 | %20 | 101 / 104 / TAHTTA / Medya Rejimi / 112 olay |
 | B2.3 `c330cbf` | Ölçülmedi | Ölçülmedi | Ölçülmedi | 101 / 104 / TAHTTA / Medya Rejimi / 112 olay |
 | B2.4 `d05fd38` | Ölçülmedi | Ölçülmedi | Ölçülmedi | 101 / 104 / TAHTTA / Medya Rejimi / 112 olay |
+| B2.5 `519bb33` | Ölçülmedi | Ölçülmedi | Ölçülmedi | 101 / 104 / TAHTTA / Medya Rejimi / 112 olay |
 
 ## B1 kapısı
 
@@ -59,4 +61,4 @@ Faz 4c'den devreden Zor bot farkı: `advice_soft` ve `advice_lavish` ölçütü 
 
 ## SIRADAKİ ADIM
 
-B2.5: Sekiz dış ilişki olayını ekle; mevcut yabancı elçi olayının koşullarıyla çakışmadığını denetle.
+B2.6: `advice_heyet` ve `advice_bloc` sondaj botlarını ekle; dış ilişki olayları için denge ve darbe payını ölç.

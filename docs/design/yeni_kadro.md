@@ -77,6 +77,10 @@ Elena her hafta üç ilişkiyi **Soğuk / Mesafeli / Yakın** olarak anlatır. B
 
 DEVLET sekmesindeki **Heyet Gönder** seçili Claire, Viktor veya Lucien için çalışır: 1 mesai, 4 hafta bekleme; seçilen ilişki +12, diğer iki ilişki −3. Bu açık takas üç gücü aynı anda yakın tutmayı engeller.
 
+### B2.5 olaylar
+
+Sekiz ilişki olayı yalnızca en az bir **Heyet Gönder** kararından sonra açılır; böylece dış ilişki sistemini kullanmayan kampanyanın olay havuzu değişmez. Asteria kredi ve basın notasıyla, Drakon silah anlaşması, sınır notası ve güvenlik teklifiyle, Seravia yatırım, ambargo ve Sarne kredisiyle temsil edilir. İlişki etkileri `fx.foreign` altında tanımlanır; olay doğrulayıcısı güç adını ve sayı tipini denetler. Eski `yabanci_elci` olayı genel dış politika kartı olarak kalır; yeni kartlar ilişki eşiklerine bağlıdır.
+
 ### 2.3 Sistem değişikliği (küçük)
 - Alanlar: `foreign = {asteria, drakon, seravia}`, `heir_maturity`, `foreign_hint_until`. SAVE_VERSION 8, `_migrate_save` (eski kayıt: ilişkiler 50, olgunluk 30), save_test adımı.
 - Olay koşulları: `min_foreign`/`max_foreign` (güç -> değer sözlüğü), `min_heir`/`max_heir`; `event_check` bilinmeyen güç adını denetler.
