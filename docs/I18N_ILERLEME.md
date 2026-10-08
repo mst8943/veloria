@@ -30,7 +30,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S3b: `sim.gd` kalan son/özet metinleri ve `narrative.gd`, `press.gd`, `advice.gd`.
+S5: L4 — `content_*.json` ve `actors.json` çevirisi.
 
 ## L1 — tamamlandı
 
@@ -126,3 +126,36 @@ S3b: `sim.gd` kalan son/özet metinleri ve `narrative.gd`, `press.gd`, `advice.g
   kapasite `54.0, 53.2, 53.3`; diğer ölçütler ve rejim sayımları da aynı.
   `unit_tests.gd`: 398 geçti; mevcut `audit finds the offscreen control` testi
   1 başarısız (çalışma zamanı değişikliğiyle ilgili değil).
+
+## S3b — tamamlandı
+
+- `sim.gd`: oyun sonu nedenleri/özetleri, ünvanlar ve dış ilişki raporlarının
+  gösterim çevirileri eklendi. Ham `record.title`, `record.cause`, söz sicili,
+  başarımlar ve kronik anahtarları Türkçe kaldı; ekran için ayrı gösterim
+  alanları kullanıldı. `narrative.gd` tarihçi metinleri, `press.gd` gazete/TV
+  statik manşet ve sütunları, `advice.gd` kişi gerekçeleri, `content_data.gd`
+  doğrulama hataları yerelleştirildi. Dosya başına commitler: `938c66c`,
+  `f8ae226`, `9d8d5c9`, `60a5972`, `3437659`, `599f1e1`, `4b3c178`, `f33d39f`,
+  `f726948`, `634fa36`, `70c1aa5`, `e1e2f76`, `f0a7b94`.
+- Kapı testleri: `TEST: OK`; `EVENTS: OK (195 olay, 0 uyarı)`; `SAVE: OK`;
+  `CONTENT: OK (5 dosya, 8 bozuk örnek)`; `I18N: OK`; `UI INPUT: OK`;
+  pacing en uzun olaysız seri medyan/en kötü `2/2` hafta (en kötü olay hızı
+  `0.81`). `unit_tests.gd`: `398 passed, 1 failed` — mevcut, Beckett'e ait
+  `audit finds the offscreen control`.
+- `--autoplay --full` iki dilde aynı satır verdi: `FULLRUN tohum=101 hafta=104
+  sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`.
+  `advice_weighted`, 80 kampanya × üç zorluk, TR/EN birebir eşit: kazanma
+  `68/80, 36/80, 16/80`; ortalama hafta `97.0, 81.3, 62.3`; son kapasite
+  `54.0, 53.2, 53.3`; Arden girişimi `25, 52, 70`; Arden hazırlığı `51, 61, 52`;
+  Arden darbe zaferi `11, 34, 57`; diğer rejim ve yayın ölçütleri de eşit.
+- Görsel kapısı: `dist/i18n_s3b2_{tr,en}_{desktop,mobile}`; her dilde masaüstü
+  17, mobil 19 PNG. Gazete, TV, ana oyun ve oyun sonu görüntüleri açılarak
+  incelendi. Türkçe örnekler tamamen Türkçe; incelenen sayfalarda kırpılma/
+  taşma görülmedi. İngilizce basın şablonları ve tarihçi/oyun sonu özeti İngilizce.
+- İngilizce ekranda kalan Türkçe örnekler L4 veri kapsamındadır: olay başlıkları,
+  gövdeleri ve seçenekleri (`events.json`); meclis görüşü kalıpları
+  (`content_council.json`); kişi unvanları ve rapor/alamet gövdeleri
+  (`actors.json`, `content_reports.json`); oyun sonu karar geçmişindeki olay ve
+  seçenek metinleri. Basının olaydan aldığı ana manşet/gövde de `events.json`
+  kaynağında kaldı. Sabit gazete/TV etiketleri, ikincil sütunlar, motto, para
+  birimi gösterimi, oyun sonu nedenleri ve tarihçi anlatısı çevrildi.
