@@ -1460,5 +1460,215 @@
                           "ignore":  {
                                          "text":  "The ledger sat on your desk for a week, then disappeared."
                                      }
-                      }
+                      },
+    "defter_kopya":  {
+                         "title":  "A second copy of the ledger",
+                         "text":  "Copies of the ledger you thought you had burned turned up in a lawyer\u0027s safe. The lawyer names no price, only a name: Helena.",
+                         "choices":  [
+                                         {
+                                             "label":  "Send Helena away",
+                                             "text":  "Helena left quietly. The copies went with her; you have no idea where."
+                                         },
+                                         {
+                                             "label":  "Strike a new deal with Helena",
+                                             "text":  "Helena\u0027s powers grew. The copies stayed in the safe."
+                                         },
+                                         {
+                                             "label":  "Leave the lawyer to Vale",
+                                             "text":  "The lawyer left the country. Vale opened another file."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "The copies are waiting in the safe."
+                                    }
+                     },
+    "yazili_emirler":  {
+                           "title":  "Copies of the written orders reach court",
+                           "text":  "Chief Prosecutor Renn\u0027s prosecutors want the originals of the written suppression orders you issued last year. They already have the copies; now they ask whether the signature is yours.",
+                           "choices":  [
+                                           {
+                                               "label":  "Hand over the originals",
+                                               "text":  "Your signature entered the court record. Renn looked at you with respect for the first time; the generals looked worried for the first time."
+                                           },
+                                           {
+                                               "label":  "Call the signatures forged",
+                                               "text":  "The Palace issued a stern denial. The prosecutors called in a handwriting expert."
+                                           },
+                                           {
+                                               "label":  "Have Vale clear the archive",
+                                               "text":  "The originals vanished from the archive. Vale will ask for payment later."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "The prosecutors settled for the copies; the case file keeps growing."
+                                      }
+                       },
+    "santaj_kurbani":  {
+                           "title":  "Someone you blackmailed is ready to talk",
+                           "text":  "The person you bound with fear last year is afraid no longer. Word is they met with a publisher and are writing a book about \u0027the king\u0027s methods.\u0027",
+                           "choices":  [
+                                           {
+                                               "label":  "Make a generous offer",
+                                               "text":  "The book was never written. The bill was enormous."
+                                           },
+                                           {
+                                               "label":  "Have Vale build a case",
+                                               "text":  "The book stalled halfway. Another file went into Vale\u0027s drawer."
+                                           },
+                                           {
+                                               "label":  "Apologize in person",
+                                               "text":  "A king\u0027s apology is a rare sight. The book never appeared; the rumor did."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "The book is with the publisher."
+                                      }
+                       },
+    "terfi_rekabet":  {
+                          "title":  "Your appointees turn on each other",
+                          "text":  "The people you promoted now want the same seat. Arden\u0027s and Vale\u0027s men are openly blaming each other over a ministry post.",
+                          "choices":  [
+                                          {
+                                              "label":  "Back Arden",
+                                              "text":  "The Army won. Vale will not forget the loss."
+                                          },
+                                          {
+                                              "label":  "Back Vale",
+                                              "text":  "The intelligence service won. The barracks are grumbling."
+                                          },
+                                          {
+                                              "label":  "Give neither the post",
+                                              "text":  "A civilian got the post. They both blame you, not each other."
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "The quarrel reached the papers."
+                                     }
+                      },
+    "bozulan_sozler":  {
+                           "title":  "The king who breaks his word",
+                           "text":  "At a noble\u0027s banquet, someone raised a glass: \u0027To His Majesty\u0027s promises!\u0027 Laughter followed. Your broken promise has become a joke.",
+                           "choices":  [
+                                           {
+                                               "label":  "Pay back the old promise",
+                                               "text":  "Generosity, long overdue. The joke was forgotten; the Treasury remembered."
+                                           },
+                                           {
+                                               "label":  "Send the toastsman away",
+                                               "text":  "The banquets grew quiet. No one raises a glass to your word anymore—or to your health."
+                                           },
+                                           {
+                                               "label":  "Laugh it off",
+                                               "text":  "You smiled. No one will believe your next promise."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "The joke spread."
+                                      }
+                       },
+    "operasyon_sizdi":  {
+                            "title":  "A member of the operations team is writing a memoir",
+                            "text":  "A former agent from one of your secret operations has signed with a publisher abroad. The first chapter is titled \u0027In the Palace\u0027s Name.\u0027",
+                            "choices":  [
+                                            {
+                                                "label":  "Bring the agent back",
+                                                "text":  "The agent returned. The new assignment: keep quiet."
+                                            },
+                                            {
+                                                "label":  "Sue the publisher",
+                                                "text":  "The lawsuit stopped the book and made sure everyone read it."
+                                            },
+                                            {
+                                                "label":  "Smear the draft through Sarne",
+                                                "text":  "Sarne called the agent a \u0027foreign agent.\u0027 The book faded into the shadows; now you owe Sarne again."
+                                            }
+                                        ],
+                            "ignore":  {
+                                           "text":  "The draft is moving through the publisher."
+                                       }
+                        },
+    "iyi_kral_ani":  {
+                         "title":  "A letter from an old teacher",
+                         "text":  "A letter arrived from the provinces. An old man who taught you history as a child writes: \u0027I hear you rule without fear. Can you keep it up?\u0027",
+                         "choices":  [
+                                         {
+                                             "label":  "Share the letter",
+                                             "text":  "The papers printed the letter. For a moment, people loved their king."
+                                         },
+                                         {
+                                             "label":  "Invite him to the Palace",
+                                             "text":  "The old man stayed for an afternoon. He left you one piece of advice: \u0027Fear those who lie to themselves.\u0027"
+                                         },
+                                         {
+                                             "label":  "Leave it unanswered",
+                                             "text":  "The letter went into a drawer."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "The letter went unanswered."
+                                    }
+                     },
+    "arden_halef":  {
+                        "title":  "Arden is grooming his successor",
+                        "text":  "General Arden has chosen his successor at the General Staff: his own nephew. At military academy ceremonies, Arden\u0027s name is now read before yours.",
+                        "choices":  [
+                                        {
+                                            "label":  "Approve the appointment",
+                                            "text":  "The Army\u0027s future belongs to the Arden family. So does its present."
+                                        },
+                                        {
+                                            "label":  "Block it; appoint a civilian",
+                                            "text":  "The barracks made the civilian minister\u0027s name a joke. But the seal is yours."
+                                        },
+                                        {
+                                            "label":  "Send him to the border",
+                                            "text":  "His nephew is far away. Arden is angry, but quiet."
+                                        }
+                                    ],
+                        "ignore":  {
+                                       "text":  "The appointment is a done deal."
+                                   }
+                    },
+    "voss_sigorta":  {
+                         "title":  "Vale\u0027s insurance policy",
+                         "text":  "Over tea one evening, Vale said calmly: \u0027If anything happens to me, my files go to a foreign paper. This is no threat, Your Majesty. It\u0027s insurance.\u0027",
+                         "choices":  [
+                                         {
+                                             "label":  "Accept it; protect Vale",
+                                             "text":  "Vale is untouchable now. So are you—in his files."
+                                         },
+                                         {
+                                             "label":  "Collect his files too",
+                                             "text":  "A race began. Whose files will be thicker?"
+                                         },
+                                         {
+                                             "label":  "Force Vale to retire",
+                                             "text":  "Vale left. So did the files; you\u0027ll soon learn where."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "Vale finished his tea and left."
+                                    }
+                     },
+    "halden_imparatorluk":  {
+                                "title":  "Sarne is buying the papers too",
+                                "text":  "Sarne\u0027s company bought the last two major papers and their distribution network. Now every headline at your breakfast table comes from his pen.",
+                                "choices":  [
+                                                {
+                                                    "label":  "Block the sale",
+                                                    "text":  "The sale was canceled. Sarne\u0027s channels criticized you for the first time."
+                                                },
+                                                {
+                                                    "label":  "Approve it; demand a line",
+                                                    "text":  "The headlines are yours. So is your debt to Sarne."
+                                                },
+                                                {
+                                                    "label":  "Have Leyla buy one paper",
+                                                    "text":  "One more independent paper survives. Sarne knows who arranged it."
+                                                }
+                                            ],
+                                "ignore":  {
+                                               "text":  "The sale went through."
+                                           }
+                            }
 }
