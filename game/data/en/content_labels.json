@@ -1,0 +1,19 @@
+{
+  "power_tiers": [
+    "",
+    "in the background",
+    "influential",
+    "indispensable"
+  ],
+  "report_tones": [
+    "optimistic",
+    "uneasy",
+    "pessimistic"
+  ],
+  "suspicion_names": [
+    "Calm",
+    "Uneasy",
+    "Suspicious",
+    "Dangerous"
+  ]
+}
