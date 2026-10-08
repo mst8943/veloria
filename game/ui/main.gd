@@ -174,7 +174,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	var k := event as InputEventKey
 	if k == null or not k.pressed or k.echo:
 		return
-	var in_game := not Sim.actors.is_empty() and not Sim.ended
+	var in_game: bool = not Sim.actors.is_empty() and not Sim.ended
 	match k.keycode:
 		KEY_F11:
 			Sfx.set_fullscreen(not Sfx.fullscreen)
@@ -507,7 +507,7 @@ func _stat(icon_path: String, label: Label) -> Control:
 func _update_mesai_pips() -> void:
 	if _mesai_box == null:
 		return
-	var want := Sim.mesai_max
+	var want: int = Sim.mesai_max
 	while _mesai_box.get_child_count() < want:
 		# Kapsayıcılar çocuklarının dönüşünü sıfırlar; elması kapsayıcı olmayan bir tutucuya koy.
 		var s := 13 if not _mobile else 16
@@ -813,14 +813,14 @@ func _show_menu() -> void:
 	# İlk düğme duruma göre: oyun sürüyorsa "Oyuna Dön", yoksa kayıttan "Devam Et".
 	var b_first := _menu.get_meta("first") as Button
 	var b_new := _menu.get_meta("new") as Button
-	var in_game := not Sim.ended and not Sim.actors.is_empty()
+	var in_game: bool = not Sim.ended and not Sim.actors.is_empty()
 	if in_game:
 		b_first.text = tr("Oyuna Dön")
 		b_first.disabled = false
 	else:
 		b_first.disabled = not Sim.has_save()
 		b_first.text = tr("Devam Et") if not Sim.has_save() else tr("Devam Et  ·  %s") % Sim.save_summary()
-	var first_primary := in_game or Sim.has_save()
+	var first_primary: bool = in_game or Sim.has_save()
 	b_first.theme_type_variation = "PrimaryButton" if first_primary else ""
 	b_new.theme_type_variation = "" if first_primary else "PrimaryButton"
 	if not _instant:
@@ -846,7 +846,7 @@ func _hide_menu() -> void:
 
 
 func _request_new_game() -> void:
-	var in_progress := not Sim.actors.is_empty() and not Sim.ended and Sim.week > 1
+	var in_progress: bool = not Sim.actors.is_empty() and not Sim.ended and Sim.week > 1
 	if in_progress or (Sim.actors.is_empty() and Sim.has_save()):
 		_show_modal(tr("[b][font_size=%d][color=#d6b25e]Yeni saltanat[/color][/font_size][/b]\n\nSüren ya da kayıtlı bir saltanat var. Yeni bir oyuna başlarsan otomatik kayıt da üzerine yazılacak.\n\nDevam etmek istiyor musun?") % _fs(26),
 			tr("Yeni oyuna başla"), _start_new)
@@ -996,7 +996,7 @@ func _end_week_pressed() -> void:
 	_curtain.mouse_filter = Control.MOUSE_FILTER_STOP
 	_curtain_img.modulate.a = 0.0
 	await create_tween().tween_property(_curtain, "modulate:a", 1.0, 0.2 if short else 0.4).finished
-	var old_week := Sim.week
+	var old_week: int = Sim.week
 	Sim.end_week()
 	if not Sim.ended:
 		_curtain_title.text = tr("HAFTA %d") % Sim.week
@@ -1137,7 +1137,7 @@ func _choose(pending_index: int, choice_index: int) -> void:
 		await get_tree().create_timer(0.55).timeout
 		await create_tween().tween_property(card, "modulate:a", 0.0, 0.22).finished
 		_busy = false
-	var text := Sim.resolve_decision(pending_index, choice_index)
+	var text: String = Sim.resolve_decision(pending_index, choice_index)
 	if text != "":
 		_log(text)
 	if _queued_end:
@@ -1158,7 +1158,7 @@ func _refresh() -> void:
 	_update_mesai_pips()
 	var mb := _buttons.get("media") as Button
 	if mb:
-		var fresh_issue := _media_seen_week != Sim.week
+		var fresh_issue: bool = _media_seen_week != Sim.week
 		mb.text = (tr("Medya •") if _mobile else tr("Medya  ·  yeni sayı")) if fresh_issue else tr("Medya")
 	_header_wealth.text = str(int(Sim.private_wealth))
 	if _last_mesai != Sim.mesai and _last_mesai != -1 and not _fast():
@@ -1200,7 +1200,7 @@ func _rebuild_flow() -> void:
 		items.append([tr("Mesai %d / %d") % [Sim.mesai, Sim.mesai_max], UIKit.GOLD, ""])
 	else:
 		items.append([tr("Mesai bitti"), UIKit.TEXT_DIM, ""])
-	var crisis_label := Sim.active_crisis_label()
+	var crisis_label: String = Sim.active_crisis_label()
 	if crisis_label != "":
 		items.append([tr(crisis_label if not _mobile else crisis_label.split(" ")[0]), UIKit.DANGER, "gundem"])
 	var late := 0
