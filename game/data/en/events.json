@@ -59,7 +59,7 @@
                                             }
                                         ],
                             "ignore":  {
-                                           "text":  "The protests were left to their own devicesâ€”and grew."
+                                           "text":  "The protests were left to their own devicesÃ¢â‚¬â€and grew."
                                        }
                         },
     "gazeteci_ihale":  {
@@ -208,5 +208,211 @@
                          "ignore":  {
                                         "text":  "The case moved through the courts."
                                     }
-                     }
+                     },
+    "voss_dosyalar":  {
+                          "title":  "Intelligence Chief Compiles Files on Politicians",
+                          "text":  "Vale\u0027s archives grow by the day. Some files concern people from your own Palace.",
+                          "choices":  [
+                                          {
+                                              "label":  "Demand the files",
+                                              "text":  "Vale handed them over. He may have kept a copy."
+                                          },
+                                          {
+                                              "label":  "Expand his authority",
+                                              "text":  "Vale now knows something about everyone. Including you."
+                                          },
+                                          {
+                                              "label":  "Pit him against the Army",
+                                              "text":  "Arden and Vale are watching each other."
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "Vale carried on with his work."
+                                     }
+                      },
+    "sinir_krizi":  {
+                        "title":  "Border Tensions with a Neighboring State",
+                        "text":  "An armed incident took place in a border village. The neighboring country\u0027s press is beating the drums of war.",
+                        "choices":  [
+                                        {
+                                            "label":  "Declare mobilization",
+                                            "text":  "The public changed the subject. The Army gained weight."
+                                        },
+                                        {
+                                            "label":  "Choose diplomacy",
+                                            "text":  "Tensions cooled; the Army is displeased."
+                                        },
+                                        {
+                                            "label":  "Feed the press",
+                                            "text":  "Sarne filled the headlines. The bill can wait."
+                                        }
+                                    ],
+                        "ignore":  {
+                                       "text":  "Tensions at the border escalated."
+                                   }
+                    },
+    "butce_acigi":  {
+                        "title":  "The Budget Deficit Is Growing",
+                        "text":  "Prime Minister Veyra says salaries cannot be paid without cuts.",
+                        "choices":  [
+                                        {
+                                            "label":  "Approve the cuts",
+                                            "text":  "Austerity began. The public will pin it on you."
+                                        },
+                                        {
+                                            "label":  "Borrow from Sarne",
+                                            "text":  "The Treasury is full. The debt bears your name."
+                                        },
+                                        {
+                                            "label":  "Hide the figures",
+                                            "text":  "The honest Veyra did not like that request."
+                                        }
+                                    ],
+                        "ignore":  {
+                                       "text":  "The deficit grew all by itself."
+                                   }
+                    },
+    "deepfake":  {
+                     "title":  "A Fake Video of the King Is Spreading",
+                     "text":  "A video of the King making insulting remarks is spreading on social media. No one knows what is real.",
+                     "choices":  [
+                                     {
+                                         "label":  "Call it \u0027fake\u0027",
+                                         "text":  "Things settled down. Your next denial will be less convincing."
+                                     },
+                                     {
+                                         "label":  "Apologize",
+                                         "text":  "You looked honest, but weak."
+                                     },
+                                     {
+                                         "label":  "Have Vale find the source",
+                                         "text":  "Vale found a source. Whether it is real remains unclear."
+                                     }
+                                 ],
+                     "ignore":  {
+                                    "text":  "The video was watched millions of times."
+                                }
+                 },
+    "gizli_toplanti":  {
+                           "title":  "Rumors of Secret Meetings",
+                           "text":  "They say several powerful figures met in secret at a villa in the Capital.",
+                           "choices":  [
+                                           {
+                                               "label":  "Have Vale watch them",
+                                               "text":  "Vale confirmed the meetings, but not who attended."
+                                           },
+                                           {
+                                               "label":  "Call in each suspect",
+                                               "text":  "Everyone you summoned lied to you."
+                                           },
+                                           {
+                                               "label":  "Feast for the elite",
+                                               "text":  "Power became a spectacle."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "The rumors spread."
+                                      }
+                       },
+    "ogrenci_eylem":  {
+                          "title":  "Student Protests Spread to the Universities",
+                          "text":  "University squares are packed. Student representatives want to march to the city square.",
+                          "choices":  [
+                                          {
+                                              "label":  "Bargain with rectors",
+                                              "text":  "Some of the young people went home."
+                                          },
+                                          {
+                                              "label":  "Send in the police",
+                                              "text":  "The campuses were closed. The memory stayed open."
+                                          },
+                                          {
+                                              "label":  "Let Sarne smear them",
+                                              "text":  "The students were branded \u0027foreign agents.\u0027"
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "The protests grew."
+                                     }
+                      },
+    "milletvekili_satin":  {
+                               "title":  "Assembly Budget Vote",
+                               "text":  "The crucial budget bill looks set to pass the Assembly by only a handful of votes.",
+                               "choices":  [
+                                               {
+                                                   "label":  "Buy the votes",
+                                                   "text":  "The bill passed. A paper trail remained."
+                                               },
+                                               {
+                                                   "label":  "Concede to the opposition",
+                                                   "text":  "The bill was softened."
+                                               },
+                                               {
+                                                   "label":  "Let it fail",
+                                                   "text":  "The budget crisis is growing."
+                                               }
+                                           ],
+                               "ignore":  {
+                                              "text":  "The bill did not pass."
+                                          }
+                           },
+    "cenaze":  {
+                   "title":  "Funeral of a Former General",
+                   "text":  "The country\u0027s most beloved retired general has died. The entire elite will gather at the funeral; everyone will see everyone in the same room.",
+                   "choices":  [
+                                   {
+                                       "label":  "Attend and speak to all",
+                                       "text":  "You held a year\u0027s worth of meetings in one day."
+                                   },
+                                   {
+                                       "label":  "Hold a state funeral",
+                                       "text":  "The Army\u0027s weight rose in symbolic terms."
+                                   },
+                                   {
+                                       "label":  "Stay away",
+                                       "text":  "Everyone talked about your absence."
+                                   }
+                               ],
+                   "ignore":  {
+                                  "text":  "Your absence was the talk of the funeral."
+                              }
+               },
+    "dorn_filtre":  {
+                        "title":  "The Queen Narrows the Appointment List",
+                        "text":  "Queen Helena now decides who gets to see you. Some reports may no longer be reaching you.",
+                        "choices":  [
+                                        {
+                                            "label":  "Trust Helena",
+                                            "text":  "Helena is pleased. You now see only through her eyes."
+                                        },
+                                        {
+                                            "label":  "Warn Helena",
+                                            "text":  "Helena was surprised, and a little afraid."
+                                        },
+                                        {
+                                            "label":  "Open a secret channel",
+                                            "text":  "Information flows unseen. That, too, has been recorded."
+                                        }
+                                    ],
+                        "ignore":  {
+                                       "text":  "Helena narrowed the list."
+                                   }
+                    },
+    "toren":  {
+                  "title":  "A Royal Ceremony Is Proposed",
+                  "text":  "Palace protocol proposes a grand dynastic ceremony. It is expensive, but it will dazzle the public.",
+                  "choices":  [
+                                  {
+                                      "label":  "A grand ceremony",
+                                      "text":  "The Capital applauded."
+                                  },
+                                  {
+                                      "label":  "A modest ceremony",
+                                      "text":  "It passed as if no one had said a thing."
+                                  }
+                              ],
+                  "ignore":  {
+                                 "text":  "The ceremony was postponed."
+                             }
+              }
 }
