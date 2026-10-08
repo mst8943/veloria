@@ -1727,13 +1727,13 @@ msgid "%s sana karşı açıkça harekete geçti."
 msgstr "%s has openly moved against you."
 
 msgid "%s tavrı %s: artık %s."
-msgstr "%s's manner has %s: now they are %s."
+msgstr "%s manner has %s: now they are %s."
 
 msgid "%s %s: artık %s."
 msgstr "%s has %s: now %s."
 
 msgid "%s raporu %s: artık %s."
-msgstr "%s's report has %s: now %s."
+msgstr "%s report has %s: now %s."
 
 msgid "%s verdiğin %s sözü tutuldu."
 msgstr "The promise of %s to grant %s was kept."
