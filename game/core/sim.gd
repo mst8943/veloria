@@ -593,7 +593,7 @@ func appoint(id: String, kind: String) -> String:
 		a.obligation = maxf(0.0, a.obligation - 2.0)
 		stats["liyakatli_" + institution] = int(stats.get("liyakatli_" + institution, 0)) + 1
 	changed.emit()
-	return tr("%s için %s kadro kararnamesi imzalandı. Sonucu kurumun işinde göreceksin.") % [a.display_name, "sadık" if kind == "loyal" else "liyakatli"]
+	return tr("%s için %s kadro kararnamesi imzalandı. Sonucu kurumun işinde göreceksin.") % [a.display_name, tr("sadık") if kind == "loyal" else tr("liyakatli")]
 
 
 func tender_wait() -> int:
@@ -865,12 +865,12 @@ func cross_check(id: String) -> String:
 	changed.emit()
 	if absf(noisy) < 6.0:
 		karne[id]["ok"] += 1
-		return tr("%s raporu diğer kaynaklarla büyük ölçüde örtüşüyor.%s") % [ek(a.display_name, "in"), tr(" Kurum defterleri bir süreliğine açıldı.") if INSTITUTION_HEADS.has(id) else ""]
+		return tr("%s raporu diğer kaynaklarla büyük ölçüde örtüşüyor.%s") % [a.display_name if Loc.lang == "en" else ek(a.display_name, "in"), tr(" Kurum defterleri bir süreliğine açıldı.") if INSTITUTION_HEADS.has(id) else ""]
 	if worse:
 		karne[id]["bad"] += 1
-		return tr("Başka kaynaklar durumun %s anlattığından DAHA KÖTÜ olduğunu söylüyor.%s") % [ek(a.display_name, "in"), tr(" Kurum defterleri bir süreliğine açıldı.") if INSTITUTION_HEADS.has(id) else ""]
+		return tr("Başka kaynaklar durumun %s anlattığından DAHA KÖTÜ olduğunu söylüyor.%s") % [a.display_name if Loc.lang == "en" else ek(a.display_name, "in"), tr(" Kurum defterleri bir süreliğine açıldı.") if INSTITUTION_HEADS.has(id) else ""]
 	karne[id]["ok"] += 1
-	return tr("Başka kaynaklar durumu %s anlattığından biraz daha iyi görüyor.%s") % [ek(a.display_name, "in"), tr(" Kurum defterleri bir süreliğine açıldı.") if INSTITUTION_HEADS.has(id) else ""]
+	return tr("Başka kaynaklar durumu %s anlattığından biraz daha iyi görüyor.%s") % [a.display_name if Loc.lang == "en" else ek(a.display_name, "in"), tr(" Kurum defterleri bir süreliğine açıldı.") if INSTITUTION_HEADS.has(id) else ""]
 
 
 ## Gizli operasyon: katılan her kişi sırrı bilir; çember büyüdükçe başarı ve sızıntı riski artar.
@@ -1807,11 +1807,11 @@ var REGIME_ORDER: Array = []
 
 
 func regime_name() -> String:
-	return str(REGIME_NAMES.get(regime, "henüz şekillenmemiş"))
+	return tr(str(REGIME_NAMES.get(regime, "henüz şekillenmemiş")))
 
 
 func regime_threat() -> String:
-	return str(REGIME_THREATS.get(regime, "belirsiz"))
+	return tr(str(REGIME_THREATS.get(regime, "belirsiz")))
 
 
 func _regime_tier(id: String) -> int:
@@ -1891,7 +1891,7 @@ func _fire_budget() -> void:
 	var note := ""
 	for report: Dictionary in reports:
 		if report["source"] == "kessler":
-			note = " Veyra'nın son raporu: " + str(report["text"])
+			note = tr(" Veyra'nın son raporu: ") + str(report["text"])
 			break
 	var choices: Array = []
 	for option: Dictionary in STATE_CONTENT["choices"]:
@@ -2402,7 +2402,7 @@ func _street_event() -> Dictionary:
 func _legal_event() -> Dictionary:
 	var purge_b := _band3(other_chance("purge"), 0.45, 0.25)
 	var bargain_b := _band3(other_chance("bargain"), 0.45, 0.25)
-	var judge := "Başsavcı Renn" if actors.has("falk") else "Başsavcı"
+	var judge := tr("Başsavcı Renn") if actors.has("falk") else tr("Başsavcı")
 	var court_t: String = tr(["Mahkemenin arkasında meclis ve sokak var; tasfiyeye kimse seyirci kalmaz.", "Mahkeme bölünmüş; bazı yargıçlar senden bir işaret bekliyor.", "Mahkeme yalnız; arkasında duran pek kimse yok."][purge_b])
 	var house_t: String = tr(["Muhalefet meclisi elinde tutuyor; pazarlığa ihtiyacı yok.", "Mecliste kararsız sıralar var.", "Meclis bölünmüş; bir dokunulmazlık yasası geçebilir."][bargain_b])
 	return {"id": "yetki_krizi", "art": "yargic_dosya", "crisis": true, "crisis_kind": "legal", "advisors": [],
@@ -2604,7 +2604,7 @@ func _end(survived: bool) -> void:
 		cause = "104 haftalık saltanatın sonunda tahtını korudun."
 		cause_display = tr("104 haftalık saltanatın sonunda tahtını korudun.")
 		var state_title := _survivor_title(top)
-		title = state_title if state_title in ["Harap Devletin Kralı", "Liyakat Kralı"] else str(REGIME_TITLES.get(regime, state_title))
+		title = state_title if state_title in ["Harap Devletin Kralı", "Liyakat Kralı"] else tr(str(REGIME_TITLES.get(regime, state_title)))
 	record = {"survived": survived, "title": title, "weeks": week - 1, "cause": cause,
 		"top_actor": top.display_name if top else "", "history": history.duplicate(), "cause_display": cause_display,
 		"lies": _top_lies(), "king": KING_NAME,

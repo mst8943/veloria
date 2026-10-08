@@ -943,7 +943,7 @@ func _on_desk_request(target: String) -> void:
 			if _mobile:
 				_tabs.current_tab = 1
 			else:
-				_hint("[color=#d6b25e][b]Kişiler[/b][/color]\nSağdaki portrelerden birini seç; eylemler ve sözler altta.")
+				_hint(tr("[color=#d6b25e][b]Kişiler[/b][/color]\nSağdaki portrelerden birini seç; eylemler ve sözler altta."))
 				UIKit.pulse(_grid, 1.03)
 		"gunluk":
 			_select_tab(_journal)

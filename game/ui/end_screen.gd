@@ -4,6 +4,7 @@ extends Control
 
 const UIKit := preload("res://game/ui/ui_kit.gd")
 const TRUTH_CHART := preload("res://game/ui/truth_chart.gd")
+const Loc := preload("res://game/core/loc.gd")
 
 var host: Control   # main.gd: _fs, _fast, _art, _wire, _start_new, _show_menu, _mobile
 var bg: TextureRect
@@ -16,6 +17,23 @@ var lies_page: RichTextLabel
 var log_page: RichTextLabel
 var timeline: Array = []
 var chart_drawn := false
+
+
+func _history_text(value: String) -> String:
+	if Loc.lang != "en" or not value.begins_with("Hafta "):
+		return tr(value)
+	var divider := value.find(" — ")
+	if divider < 0:
+		return tr(value)
+	var week := value.substr(6, divider - 6)
+	var entry := value.substr(divider + 3)
+	var choice_at := entry.find(" » ")
+	if choice_at >= 0:
+		var choice := entry.substr(choice_at + 3)
+		entry = "%s » %s" % [tr(entry.substr(0, choice_at)), tr("(ertelendi)") if choice == "(ertelendi)" else tr(choice)]
+	else:
+		entry = tr(entry)
+	return tr("Hafta %s — %s") % [week, entry]
 
 
 func _init(main: Control) -> void:
@@ -242,7 +260,7 @@ func show_record(record: Dictionary) -> String:
 	if not hist_log.is_empty():
 		summary.append_text(tr("\n[b][color=#d9b359][font_size=22]Son kararların[/font_size][/color][/b]   [color=gray]tamamı Kararlar sekmesinde[/color]\n"))
 		for h in hist_log.slice(maxi(0, hist_log.size() - 6)):
-			summary.append_text("• %s\n" % tr(str(h)))
+			summary.append_text("• %s\n" % _history_text(str(h)))
 	# Tarihçiler
 	hist_page.clear()
 	hist_page.append_text(tr("[b][color=#d9b359][font_size=22]TARİH NE YAZACAK?[/font_size][/color][/b]\n[color=gray]Aynı saltanat, iki ayrı kalemden.[/color]\n\n"))
@@ -268,7 +286,7 @@ func show_record(record: Dictionary) -> String:
 	if hist_log.is_empty():
 		log_page.append_text(tr("Hiç karar vermedin. Tarih bunu da yazar."))
 	for i in range(hist_log.size() - 1, -1, -1):
-		log_page.append_text("• %s\n" % tr(str(hist_log[i])))
+		log_page.append_text("• %s\n" % _history_text(str(hist_log[i])))
 	tabs.set_tab_title(3, tr("Hakikat Dosyası (%d)") % lies.size() if not lies.is_empty() else tr("Hakikat Dosyası"))
 	tabs.current_tab = 0
 	for page in [summary, hist_page, lies_page, log_page]:

@@ -2476,6 +2476,87 @@ msgstr "Prince Marcus"
 msgid "Prens"
 msgstr "the Prince"
 
+msgid "[color=#d6b25e][b]Kişiler[/b][/color]\nSağdaki portrelerden birini seç; eylemler ve sözler altta."
+msgstr "[color=#d6b25e][b]People[/b][/color]\nSelect a portrait on the right to see actions and dialogue below."
+
+msgid "sadık"
+msgstr "loyal"
+
+msgid "liyakatli"
+msgstr "merit-based"
+
+msgid " Veyra'nın son raporu: "
+msgstr " Veyra's latest report: "
+
+msgid "Hafta %s — %s"
+msgstr "Week %s — %s"
+
+msgid "(ertelendi)"
+msgstr "(deferred)"
+
+msgid "KRİZ: %s harekete geçti. Saray kuşatılmak üzere."
+msgstr "CRISIS: %s has moved. The Palace is about to be surrounded."
+
+msgid "güvenlikçi"
+msgstr "security-minded"
+
+msgid "popülist"
+msgstr "populist"
+
+msgid "patronajcı"
+msgstr "patronage-driven"
+
+msgid "oligarklara dayanan"
+msgstr "oligarchic"
+
+msgid "medya kontrollü"
+msgstr "media-controlled"
+
+msgid "istihbarat merkezli"
+msgstr "intelligence-led"
+
+msgid "Güvenlikçi Rejimi"
+msgstr "Security Regime"
+
+msgid "Popülist Rejimi"
+msgstr "Populist Regime"
+
+msgid "Patronaj Rejimi"
+msgstr "Patronage Regime"
+
+msgid "Oligark Rejimi"
+msgstr "Oligarchic Regime"
+
+msgid "Medya Rejimi"
+msgstr "Media Regime"
+
+msgid "İstihbarat Rejimi"
+msgstr "Intelligence Regime"
+
+msgid "ordu komutasının muhtırası"
+msgstr "a memorandum from the army command"
+
+msgid "meydanın kuşatması"
+msgstr "a siege by the streets"
+
+msgid "makam sahiplerinin hesabı"
+msgstr "the reckoning of officeholders"
+
+msgid "sermaye çevrelerinin kuşatması"
+msgstr "a siege by the business elite"
+
+msgid "yayınların desteği çekmesi"
+msgstr "the media withdrawing its support"
+
+msgid "gizli arşivin muhtırası"
+msgstr "a memorandum from the secret archive"
+
+msgid "henüz şekillenmemiş"
+msgstr "not yet established"
+
+msgid "belirsiz"
+msgstr "unclear"
+
 msgid "Normal"
 msgstr "Normal"
 
