@@ -30,7 +30,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-L2: statik arayüz metinleri, dosya başına ayrı commit ve `en.po` karşılıkları.
+S2: L2 — `person_panel.gd` (ACTION_META dahil) + `desk_view.gd` + `city_view.gd` + `media_view.gd` + `end_screen.gd`; ardından masaüstü ve mobil L2 ekran görüntüsü kapısı.
 
 ## L1 — tamamlandı
 
@@ -60,3 +60,9 @@ L2: statik arayüz metinleri, dosya başına ayrı commit ve `en.po` karşılık
 - `menu.gd`: Ana menü, yeni oyun ve ayarlar etiketleri ile açıklamaları
   çevrildi. Uzun Nasıl Oynanır ve Hakkında metinleri sonraki L2 adımında
   tamamlanacak. Commit: `39044fa`.
+- S1: `menu.gd` yardım metni ve sürüm kısayolları, `main.gd` statik ana arayüz
+  metinleri ve `agenda_view.gd` gündem/yol gösterici metinleri `tr()` ile
+  bağlandı; `en.po` karşılıkları eklendi. Önceki L2 commitleri `ui_kit.gd`
+  (`2948d4b`) ve `truth_chart.gd` (`e17e796`) için zaten tamamlanmıştı;
+  `autoplay.gd` oyuncuya gösterilen sabit metin içermedi. Commitler:
+  `621eff8`, `e1b4848`, `f9a1123`, `5061966`, `b3b4539`.
