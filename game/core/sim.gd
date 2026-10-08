@@ -2019,7 +2019,7 @@ func _run_cascade() -> void:
 		_close_crisis()
 		if lead != null:
 			if crisis_note == "":
-				crisis_note = "Darbe kapına dayandığında karar veremedin."
+				crisis_note = tr("Darbe kapına dayandığında karar veremedin.")
 			_coup_now(lead)
 			return
 	var drop := _public_weakness()
@@ -2128,7 +2128,7 @@ func _add_sign(a: Actor, text: String, weight: int, real: bool) -> void:
 	a.signs.append({"w": week, "text": text, "weight": weight, "real": real})
 	if a.signs.size() > 12:
 		a.signs.pop_front()
-	weekly_news.append("ALAMET: " + text)
+	_add_news("ALAMET: " + text, tr("ALAMET: ") + tr(text))
 
 
 func _sign_text(a: Actor, st: int) -> String:
@@ -2186,31 +2186,32 @@ func _open_crisis() -> void:
 	coup_crisis = {"leader": lead.id, "week": week}
 	plot_log.append({"w": week, "name": lead.display_name, "text": "darbe girişimini başlattı"})
 	pending.insert(0, {"event": _crisis_event(lead), "age": 0})
-	weekly_news.append("KRİZ: %s harekete geçti. Saray kuşatılmak üzere." % lead.display_name)
+	_add_news("KRİZ: %s harekete geçti. Saray kuşatılmak üzere." % lead.display_name,
+		tr("KRİZ: %s harekete geçti. Saray kuşatılmak üzere.") % lead.display_name)
 
 
 func _crisis_event(lead: Actor) -> Dictionary:
 	var nm := short_name(lead)
-	var opening := "Prens'in muhafızları sarayın doğu kanadını tuttu. Soylular taht salonunda toplanıyor; kimse seni çağırmadı."
+	var opening := tr("Prens'in muhafızları sarayın doğu kanadını tuttu. Soylular taht salonunda toplanıyor; kimse seni çağırmadı.")
 	if lead.military:
-		opening = "%s birlikleri başkentin girişlerini tuttu. Saraya mühürlü bir mektup geldi: 'Majestelerinin istirahati için.'" % ek(nm, "in")
+		opening = tr("%s birlikleri başkentin girişlerini tuttu. Saraya mühürlü bir mektup geldi: 'Majestelerinin istirahati için.'") % ek(nm, "in")
 	var rally := crisis_chance("rally")
 	var appeal := crisis_chance("appeal")
 	var guard_b := 2 if rally >= 0.5 else (1 if rally >= 0.3 else 0)
 	var street_b := 2 if appeal >= 0.45 else (1 if appeal >= 0.25 else 0)
-	var guard_t: String = ["Muhafız komutanı çağrılarına cevap vermiyor.", "Muhafızların bir kısmı tereddütte.", "Saray muhafızları sana bağlı görünüyor."][guard_b]
-	var street_t: String = ["Sokak öfkeli; meydanlar senin için dolmayabilir.", "Sokak tedirgin; kimse kimin kazanacağını bilmiyor.", "Sokaklar sakin; halk sana hâlâ kulak verir."][street_b]
+	var guard_t: String = tr(["Muhafız komutanı çağrılarına cevap vermiyor.", "Muhafızların bir kısmı tereddütte.", "Saray muhafızları sana bağlı görünüyor."][guard_b])
+	var street_t: String = tr(["Sokak öfkeli; meydanlar senin için dolmayabilir.", "Sokak tedirgin; kimse kimin kazanacağını bilmiyor.", "Sokaklar sakin; halk sana hâlâ kulak verir."][street_b])
 	return {"id": "darbe_krizi", "art": "general_atamalari" if lead.military else "gizli_toplanti", "crisis": true, "advisors": [],
-		"crisis_kind": "coup", "banner": "DARBE GİRİŞİMİ — bu hafta karar vermezsen saray düşer.",
-		"title": "Darbe kapıda",
-		"text": "%s\n%s %s%s" % [opening, guard_t, street_t,
-			"" if int(stats.get("concessions", 0)) == 0 else " Bir kez boyun eğdin; bu kez sözüne inanmayabilirler."],
+		"crisis_kind": "coup", "banner": tr("DARBE GİRİŞİMİ — bu hafta karar vermezsen saray düşer."),
+		"title": tr("Darbe kapıda"),
+		"text": tr("%s\n%s %s%s") % [opening, guard_t, street_t,
+			"" if int(stats.get("concessions", 0)) == 0 else tr(" Bir kez boyun eğdin; bu kez sözüne inanmayabilirler.")],
 		"cues": {"guard": guard_b, "street": street_b},
 		"choices": [
-			{"label": "Sadık birlikleri topla, liderleri tutuklat", "crisis": "rally", "fx": {}},
-			{"label": "%s istediğini ver" % ek(nm, "e"), "crisis": "concede", "fx": {}},
-			{"label": "Balkona çık, halka seslen", "crisis": "appeal", "fx": {}}],
-		"ignore": {"text": "Karar verilmedi. Kapılar açıldı.", "fx": {}}}
+			{"label": tr("Sadık birlikleri topla, liderleri tutuklat"), "crisis": "rally", "fx": {}},
+			{"label": tr("%s istediğini ver") % ek(nm, "e"), "crisis": "concede", "fx": {}},
+			{"label": tr("Balkona çık, halka seslen"), "crisis": "appeal", "fx": {}}],
+		"ignore": {"text": tr("Karar verilmedi. Kapılar açıldı."), "fx": {}}}
 
 
 func _close_crisis() -> void:
@@ -2229,7 +2230,7 @@ func _resolve_crisis(action: String) -> String:
 	crisis_cooldown = week + CRISIS_COOLDOWN
 	if lead == null:
 		_close_crisis()
-		return "Darbenin lideri ortada yok; komplo dağıldı."
+		return tr("Darbenin lideri ortada yok; komplo dağıldı.")
 	var nm := short_name(lead)
 	match action:
 		"rally":
@@ -2249,15 +2250,15 @@ func _resolve_crisis(action: String) -> String:
 				king_strength = clampf(king_strength + 5.0, 0.0, 100.0)
 				unrest = clampf(unrest + 8.0, 0.0, 100.0)
 				_add_fact("darbe_bastirma_%d" % week, "Darbe girişiminin gece yarısı sert biçimde bastırılması", "king", 25, knowers, 1)
-				return "Sadık birlikler gece yarısı karargâhı bastı. %s tutuklandı. Komplocular sindi; ama bu gecenin izi kalacak." % nm
+				return tr("Sadık birlikler gece yarısı karargâhı bastı. %s tutuklandı. Komplocular sindi; ama bu gecenin izi kalacak.") % nm
 			coup_crisis["failed"] = true
-			crisis_note = "Darbe gecesi sadık birlikleri toplamaya çalıştın; muhafızlar silahlarını indirdi."
-			return "Muhafızlar silahlarını indirdi. %s kapıdan girdiğinde salonda senden başka kimse yoktu." % nm
+			crisis_note = tr("Darbe gecesi sadık birlikleri toplamaya çalıştın; muhafızlar silahlarını indirdi.")
+			return tr("Muhafızlar silahlarını indirdi. %s kapıdan girdiğinde salonda senden başka kimse yoktu.") % nm
 		"concede":
 			if rng.randf() >= crisis_chance("concede"):
 				coup_crisis["failed"] = true
-				crisis_note = "Darbe gecesi bir kez daha taviz vermeyi denedin; bu kez kimse sözüne inanmadı."
-				return "%s teklifini dinledi, sonra güldü: 'Bunu geçen sefer de söylemiştiniz, Majesteleri.'" % nm
+				crisis_note = tr("Darbe gecesi bir kez daha taviz vermeyi denedin; bu kez kimse sözüne inanmadı.")
+				return tr("%s teklifini dinledi, sonra güldü: 'Bunu geçen sefer de söylemiştiniz, Majesteleri.'") % nm
 			stats["concessions"] = int(stats.get("concessions", 0)) + 1
 			_close_crisis()
 			flags["DARBE_TAVIZ"] = week
@@ -2273,7 +2274,7 @@ func _resolve_crisis(action: String) -> String:
 				a.perceived_king -= 5.0
 			king_strength = clampf(king_strength - 15.0, 0.0, 100.0)
 			plot_log.append({"w": week, "name": lead.display_name, "text": "taviz koparıp geri çekildi"})
-			return "%s istediğini aldı. Tanklar kışlaya döndü; ama artık herkes bu ülkeyi gerçekte kimin yönettiğini biliyor." % nm
+			return tr("%s istediğini aldı. Tanklar kışlaya döndü; ama artık herkes bu ülkeyi gerçekte kimin yönettiğini biliyor.") % nm
 		_:
 			if rng.randf() < crisis_chance("appeal"):
 				_close_crisis()
@@ -2285,11 +2286,11 @@ func _resolve_crisis(action: String) -> String:
 				king_strength = clampf(king_strength + 3.0, 0.0, 100.0)
 				unrest = clampf(unrest - 5.0, 0.0, 100.0)
 				plot_log.append({"w": week, "name": lead.display_name, "text": "halk sarayın önüne dolunca yalnız kaldı"})
-				return "Meydan doldu. Kalabalık adını haykırırken %s yanındakilerin birer birer telefonu kapattığını gördü." % nm
+				return tr("Meydan doldu. Kalabalık adını haykırırken %s yanındakilerin birer birer telefonu kapattığını gördü.") % nm
 			unrest = clampf(unrest + 15.0, 0.0, 100.0)
 			coup_crisis["failed"] = true
-			crisis_note = "Darbe gecesi halka seslendin; meydan boş kaldı."
-			return "Balkona çıktığında meydan yarı boştu. Gelenler de senin için değil, ne olacağını görmek için gelmişti."
+			crisis_note = tr("Darbe gecesi halka seslendin; meydan boş kaldı.")
+			return tr("Balkona çıktığında meydan yarı boştu. Gelenler de senin için değil, ne olacağını görmek için gelmişti.")
 
 
 # ---------------------------------------------------------------- Sokak ve mahkeme krizleri (docs/design/kayip_cesitliligi.md)
@@ -2317,7 +2318,7 @@ func _check_crises() -> void:
 		var kind := str(other_crisis["kind"])
 		_close_other()
 		if crisis_note == "":
-			crisis_note = "Kriz kapına dayandığında karar veremedin."
+			crisis_note = tr("Kriz kapına dayandığında karar veremedin.")
 		if kind == "street":
 			unrest = 100.0
 		else:
@@ -2327,12 +2328,14 @@ func _check_crises() -> void:
 	var lp := legal_pressure()
 	if unrest >= STREET_WARN_AT and not warned.get("street", false):
 		warned["street"] = true
-		weekly_news.append("SOKAK: Meydanlardaki kalabalık her gün büyüyor; artık dağılmıyorlar.")
+		_add_news("SOKAK: Meydanlardaki kalabalık her gün büyüyor; artık dağılmıyorlar.",
+			tr("SOKAK: Meydanlardaki kalabalık her gün büyüyor; artık dağılmıyorlar."))
 	elif unrest < STREET_WARN_AT - 10.0:
 		warned.erase("street")
 	if lp >= LEGAL_WARN_AT and not warned.get("legal", false):
 		warned["legal"] = true
-		weekly_news.append("MAHKEME: Savcılar saraya dair dosyaları tek bir soruşturmada topluyor.")
+		_add_news("MAHKEME: Savcılar saraya dair dosyaları tek bir soruşturmada topluyor.",
+			tr("MAHKEME: Savcılar saraya dair dosyaları tek bir soruşturmada topluyor."))
 	elif lp < LEGAL_WARN_AT - 10.0:
 		warned.erase("legal")
 	if not other_crisis.is_empty() or not coup_crisis.is_empty():
@@ -2365,8 +2368,8 @@ func _open_other(kind: String) -> void:
 	other_crisis = {"kind": kind, "week": week}
 	var e := _street_event() if kind == "street" else _legal_event()
 	pending.insert(0, {"event": e, "age": 0})
-	weekly_news.append("KRİZ: Meydanlar ayakta; sokak sarayın kapısında." if kind == "street"
-		else "KRİZ: Mahkeme kralın yetkilerini askıya almayı görüşüyor.")
+	var crisis_news := "KRİZ: Meydanlar ayakta; sokak sarayın kapısında." if kind == "street" else "KRİZ: Mahkeme kralın yetkilerini askıya almayı görüşüyor."
+	_add_news(crisis_news, tr(crisis_news))
 
 
 func _band3(p: float, hi: float, mid: float) -> int:
@@ -2376,38 +2379,38 @@ func _band3(p: float, hi: float, mid: float) -> int:
 func _street_event() -> Dictionary:
 	var force_b := _band3(other_chance("force"), 0.5, 0.3)
 	var appeal_b := _band3(other_chance("appeal"), 0.45, 0.25)
-	var army_t: String = ["Komutanlar halka ateş açma emrini tartışıyor; kimse ilk adımı atmak istemiyor.", "Ordu emir bekliyor, ama emri kimin vereceğini merak ediyor.", "Birlikler hazır; sana bağlı görünüyorlar."][force_b]
-	var street_t: String = ["Kalabalık artık senin adını değil, sloganlarını haykırıyor.", "Kalabalık öfkeli ama dinlemeye hazır görünenler var.", "Kalabalığın çoğu hâlâ senden bir söz bekliyor."][appeal_b]
+	var army_t: String = tr(["Komutanlar halka ateş açma emrini tartışıyor; kimse ilk adımı atmak istemiyor.", "Ordu emir bekliyor, ama emri kimin vereceğini merak ediyor.", "Birlikler hazır; sana bağlı görünüyorlar."][force_b])
+	var street_t: String = tr(["Kalabalık artık senin adını değil, sloganlarını haykırıyor.", "Kalabalık öfkeli ama dinlemeye hazır görünenler var.", "Kalabalığın çoğu hâlâ senden bir söz bekliyor."][appeal_b])
 	return {"id": "ayaklanma_krizi", "art": "genel_grev", "crisis": true, "crisis_kind": "street", "advisors": [],
-		"banner": "AYAKLANMA — bu hafta karar vermezsen saray düşer.",
-		"title": "Sokaklar ayakta",
-		"text": "Başkentin bütün meydanları dolu. Barikatlar sarayın üç sokak ötesinde. Leyla'nın gazetesi tek kelimelik bir manşet attı: 'Yeter.'\n%s %s%s" % [army_t, street_t,
-			"" if int(stats.get("street_concessions", 0)) == 0 else " Daha önce taleplerini kabul ettiğini söylemiştin; bu kez sözüne inanmayabilirler."],
+		"banner": tr("AYAKLANMA — bu hafta karar vermezsen saray düşer."),
+		"title": tr("Sokaklar ayakta"),
+		"text": tr("Başkentin bütün meydanları dolu. Barikatlar sarayın üç sokak ötesinde. Leyla'nın gazetesi tek kelimelik bir manşet attı: 'Yeter.'\n%s %s%s") % [army_t, street_t,
+			"" if int(stats.get("street_concessions", 0)) == 0 else tr(" Daha önce taleplerini kabul ettiğini söylemiştin; bu kez sözüne inanmayabilirler.")],
 		"cues": {"guard": force_b, "street": appeal_b},
 		"choices": [
-			{"label": "Orduyu sokağa sür", "crisis": "force", "fx": {}},
-			{"label": "Taleplerini kabul et", "crisis": "concede", "fx": {}},
-			{"label": "Meydana in, halkla konuş", "crisis": "appeal", "fx": {}}],
-		"ignore": {"text": "Karar verilmedi. Barikatlar sarayın kapısına ulaştı.", "fx": {}}}
+			{"label": tr("Orduyu sokağa sür"), "crisis": "force", "fx": {}},
+			{"label": tr("Taleplerini kabul et"), "crisis": "concede", "fx": {}},
+			{"label": tr("Meydana in, halkla konuş"), "crisis": "appeal", "fx": {}}],
+		"ignore": {"text": tr("Karar verilmedi. Barikatlar sarayın kapısına ulaştı."), "fx": {}}}
 
 
 func _legal_event() -> Dictionary:
 	var purge_b := _band3(other_chance("purge"), 0.45, 0.25)
 	var bargain_b := _band3(other_chance("bargain"), 0.45, 0.25)
 	var judge := "Başsavcı Renn" if actors.has("falk") else "Başsavcı"
-	var court_t: String = ["Mahkemenin arkasında meclis ve sokak var; tasfiyeye kimse seyirci kalmaz.", "Mahkeme bölünmüş; bazı yargıçlar senden bir işaret bekliyor.", "Mahkeme yalnız; arkasında duran pek kimse yok."][purge_b]
-	var house_t: String = ["Muhalefet meclisi elinde tutuyor; pazarlığa ihtiyacı yok.", "Mecliste kararsız sıralar var.", "Meclis bölünmüş; bir dokunulmazlık yasası geçebilir."][bargain_b]
+	var court_t: String = tr(["Mahkemenin arkasında meclis ve sokak var; tasfiyeye kimse seyirci kalmaz.", "Mahkeme bölünmüş; bazı yargıçlar senden bir işaret bekliyor.", "Mahkeme yalnız; arkasında duran pek kimse yok."][purge_b])
+	var house_t: String = tr(["Muhalefet meclisi elinde tutuyor; pazarlığa ihtiyacı yok.", "Mecliste kararsız sıralar var.", "Meclis bölünmüş; bir dokunulmazlık yasası geçebilir."][bargain_b])
 	return {"id": "yetki_krizi", "art": "yargic_dosya", "crisis": true, "crisis_kind": "legal", "advisors": [],
-		"banner": "YETKİ KRİZİ — bu hafta karar vermezsen yetkilerin elinden alınır.",
-		"title": "Mahkeme yetkilerini askıya almayı görüşüyor",
-		"text": "%s biriken dosyaları tek bir kararla birleştirdi: kralın yetkileri, soruşturma bitene kadar meclise devredilecek. Karar yarın okunacak.\n%s %s%s" % [judge, court_t, house_t,
-			"" if int(stats.get("legal_concessions", 0)) == 0 else " Daha önce mahkemeyle uzlaştın; bu kez yalnızca sözünle yetinmeyebilirler."],
+		"banner": tr("YETKİ KRİZİ — bu hafta karar vermezsen yetkilerin elinden alınır."),
+		"title": tr("Mahkeme yetkilerini askıya almayı görüşüyor"),
+		"text": tr("%s biriken dosyaları tek bir kararla birleştirdi: kralın yetkileri, soruşturma bitene kadar meclise devredilecek. Karar yarın okunacak.\n%s %s%s") % [judge, court_t, house_t,
+			"" if int(stats.get("legal_concessions", 0)) == 0 else tr(" Daha önce mahkemeyle uzlaştın; bu kez yalnızca sözünle yetinmeyebilirler.")],
 		"cues": {"guard": purge_b, "street": bargain_b},
 		"choices": [
-			{"label": "Mahkemeyi tasfiye et", "crisis": "purge", "fx": {}},
-			{"label": "İfade ver, mahkemeyle uzlaş", "crisis": "testify", "fx": {}},
-			{"label": "Meclisle dokunulmazlık pazarlığı yap", "crisis": "bargain", "fx": {}}],
-		"ignore": {"text": "Karar verilmedi. Mahkeme kararını okudu.", "fx": {}}}
+			{"label": tr("Mahkemeyi tasfiye et"), "crisis": "purge", "fx": {}},
+			{"label": tr("İfade ver, mahkemeyle uzlaş"), "crisis": "testify", "fx": {}},
+			{"label": tr("Meclisle dokunulmazlık pazarlığı yap"), "crisis": "bargain", "fx": {}}],
+		"ignore": {"text": tr("Karar verilmedi. Mahkeme kararını okudu."), "fx": {}}}
 
 
 func _close_other() -> void:
@@ -2430,19 +2433,19 @@ func _resolve_other(action: String) -> String:
 	match action:
 		"force":
 			if not ok:
-				_fail_other("Ayaklanma gecesi orduyu sokağa sürdün; askerler kalabalığa katıldı.")
-				return "Askerler barikata vardı ve durdu. Biri miğferini çıkardı; sonra hepsi."
+				_fail_other(tr("Ayaklanma gecesi orduyu sokağa sürdün; askerler kalabalığa katıldı."))
+				return tr("Askerler barikata vardı ve durdu. Biri miğferini çıkardı; sonra hepsi.")
 			_close_other()
 			unrest = clampf(unrest - 30.0, 0.0, 100.0)
 			street_anger = minf(100.0, street_anger + 20.0)
 			if actors.has("arden"):
 				actors["arden"].power += 8.0
 			_add_fact("kanli_gece_%d" % week, "Ayaklanmanın ordu eliyle kanlı bastırılması", "king", 45, ["arden", "lena", "brandt"], 1)
-			return "Meydanlar sabaha temizlendi. Kimse sayıyı söylemiyor; herkes biliyor."
+			return tr("Meydanlar sabaha temizlendi. Kimse sayıyı söylemiyor; herkes biliyor.")
 		"concede":
 			if not ok:
-				_fail_other("Ayaklanma gecesi yine söz verdin; kimse inanmadı.")
-				return "Talepleri kabul ettiğini duyurdun. Meydandan gelen cevap bir kahkahaydı."
+				_fail_other(tr("Ayaklanma gecesi yine söz verdin; kimse inanmadı."))
+				return tr("Talepleri kabul ettiğini duyurdun. Meydandan gelen cevap bir kahkahaydı.")
 			_close_other()
 			stats["street_concessions"] = int(stats.get("street_concessions", 0)) + 1
 			unrest = clampf(unrest - 25.0, 0.0, 100.0)
@@ -2450,20 +2453,20 @@ func _resolve_other(action: String) -> String:
 			economy = clampf(economy - 10.0, 0.0, 100.0)
 			king_strength = clampf(king_strength - 6.0, 0.0, 100.0)
 			opposition = clampf(opposition + 6.0, 0.0, 100.0)
-			return "Fiyatlar donduruldu, iki bakan istifa etti. Barikatlar söküldü; muhalefet bu geceyi zafer sayıyor."
+			return tr("Fiyatlar donduruldu, iki bakan istifa etti. Barikatlar söküldü; muhalefet bu geceyi zafer sayıyor.")
 		"appeal":
 			if not ok:
-				_fail_other("Ayaklanma gecesi meydana indin; kalabalık seni dinlemedi.")
-				return "Meydana indiğinde sesin uğultuda kayboldu. Muhafızların seni geri çekmesi gerekti."
+				_fail_other(tr("Ayaklanma gecesi meydana indin; kalabalık seni dinlemedi."))
+				return tr("Meydana indiğinde sesin uğultuda kayboldu. Muhafızların seni geri çekmesi gerekti.")
 			_close_other()
 			unrest = clampf(unrest - 18.0, 0.0, 100.0)
 			street_anger = maxf(0.0, street_anger - 10.0)
 			king_strength = clampf(king_strength + 3.0, 0.0, 100.0)
-			return "Meydanda konuştun. Kalabalık önce sustu, sonra dağıldı. Bu gece kimse kazanmadı; kimse de kaybetmedi."
+			return tr("Meydanda konuştun. Kalabalık önce sustu, sonra dağıldı. Bu gece kimse kazanmadı; kimse de kaybetmedi.")
 		"purge":
 			if not ok:
-				_fail_other("Yetki krizinde mahkemeyi tasfiye etmeye kalktın; meclis ve sokak mahkemenin arkasında durdu.")
-				return "Tasfiye kararnamesini meclis bir saat içinde iptal etti. Yargıçlar kürsüde, sen saraydasın; ama ne kadar?"
+				_fail_other(tr("Yetki krizinde mahkemeyi tasfiye etmeye kalktın; meclis ve sokak mahkemenin arkasında durdu."))
+				return tr("Tasfiye kararnamesini meclis bir saat içinde iptal etti. Yargıçlar kürsüde, sen saraydasın; ama ne kadar?")
 			_close_other()
 			legal_relief += 45.0
 			if actors.has("falk"):
@@ -2472,37 +2475,37 @@ func _resolve_other(action: String) -> String:
 			opposition = clampf(opposition + 8.0, 0.0, 100.0)
 			unrest = clampf(unrest + 6.0, 0.0, 100.0)
 			_add_fact("yargi_tasfiyesi_%d" % week, "Yüksek Mahkemenin tasfiye edilmesi", "king", 40, ["brandt", "lena"], 1)
-			return "Yeni yargıçlar yemin etti. Dosyalar rafa kalktı; ama rafın nerede olduğunu herkes biliyor."
+			return tr("Yeni yargıçlar yemin etti. Dosyalar rafa kalktı; ama rafın nerede olduğunu herkes biliyor.")
 		"testify":
 			if not ok:
-				_fail_other("Yetki krizinde mahkemeyle yeniden uzlaşmaya çalıştın; bu kez sözüne itibar edilmedi.")
-				return "İfade verdin. Yargıçlar dinledi, not aldı ve kararı yine de okudu."
+				_fail_other(tr("Yetki krizinde mahkemeyle yeniden uzlaşmaya çalıştın; bu kez sözüne itibar edilmedi."))
+				return tr("İfade verdin. Yargıçlar dinledi, not aldı ve kararı yine de okudu.")
 			_close_other()
 			stats["legal_concessions"] = int(stats.get("legal_concessions", 0)) + 1
 			legal_relief += 30.0
 			king_strength = clampf(king_strength - 12.0, 0.0, 100.0)
-			return "Mahkemede saatlerce ifade verdin. Karar ertelendi; tacın ağırlığı bir parça hafifledi, bir parça da azaldı."
+			return tr("Mahkemede saatlerce ifade verdin. Karar ertelendi; tacın ağırlığı bir parça hafifledi, bir parça da azaldı.")
 		_:  # bargain
 			if not ok:
-				_fail_other("Yetki krizinde meclisle dokunulmazlık pazarlığına girdin; meclis pazarlığı reddetti.")
-				return "Dokunulmazlık yasası oylamada düştü. Muhalefet sıralarında alkış vardı."
+				_fail_other(tr("Yetki krizinde meclisle dokunulmazlık pazarlığına girdin; meclis pazarlığı reddetti."))
+				return tr("Dokunulmazlık yasası oylamada düştü. Muhalefet sıralarında alkış vardı.")
 			_close_other()
 			legal_relief += 35.0
 			private_wealth = maxf(0.0, private_wealth - 5.0)
 			opposition = clampf(opposition + 5.0, 0.0, 100.0)
-			return "Dokunulmazlık yasası birkaç oy farkla geçti. Bazı vekiller bu hafta yeni arabalarla geldi."
+			return tr("Dokunulmazlık yasası birkaç oy farkla geçti. Bazı vekiller bu hafta yeni arabalarla geldi.")
 	return ""
 
 
 ## Ekranda gösterilecek açık kriz şeridi ("" yoksa).
 func active_crisis_label() -> String:
 	if not coup_crisis.is_empty():
-		return "DARBE GİRİŞİMİ"
+		return tr("DARBE GİRİŞİMİ")
 	match str(other_crisis.get("kind", "")):
 		"street":
-			return "AYAKLANMA"
+			return tr("AYAKLANMA")
 		"legal":
-			return "YETKİ KRİZİ"
+			return tr("YETKİ KRİZİ")
 	return ""
 
 
