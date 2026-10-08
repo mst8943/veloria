@@ -2121,3 +2121,531 @@ msgstr "You made %d promises: %d kept, %d broken."
 
 msgid "O hafta kayda geçen bir olay yok."
 msgstr "No event was recorded that week."
+
+msgid "VELORİA HABER"
+msgstr "VELORIA NEWS"
+
+msgid "SERBEST KALEM"
+msgstr "THE FREE QUILL"
+
+msgid "Krallığın sesi · 1892'den beri"
+msgstr "The voice of the kingdom · Since 1892"
+
+msgid "Bağımsız · Korkusuz · Haftalık"
+msgstr "Independent · Fearless · Weekly"
+
+msgid "Ekonomide altın dönem"
+msgstr "A golden age for the economy"
+
+msgid "Hazine güçlü, pazarlar canlı. Uzmanlar krallığın istikrarını övüyor."
+msgstr "The treasury is strong and markets are lively. Experts praise the kingdom's stability."
+
+msgid "Ekonomi sağlam zeminde"
+msgstr "The economy stands on solid ground"
+
+msgid "Bazı fiyat dalgalanmalarına rağmen hükümet kontrolü elinde tutuyor."
+msgstr "Despite some price fluctuations, the government remains in control."
+
+msgid "Geçici zorluklar aşılacak"
+msgstr "Temporary difficulties will pass"
+
+msgid "Bakanlık, dış etkenlerden kaynaklanan sıkıntının kısa sürede biteceğini açıkladı."
+msgstr "The ministry says difficulties caused by outside factors will soon end."
+
+msgid "Pazarda nefes alınıyor"
+msgstr "Markets get some breathing room"
+
+msgid "Fiyatlar bu hafta durdu. Esnaf temkinli ama umutlu."
+msgstr "Prices held steady this week. Shopkeepers are cautious but hopeful."
+
+msgid "Fiyatlar cebi yakıyor"
+msgstr "Prices are burning a hole in people's pockets"
+
+msgid "Ekmek ve yakıt fiyatları yine arttı. Maaşlar aynı yerde duruyor."
+msgstr "Bread and fuel prices rose again. Wages remain unchanged."
+
+msgid "Hazine alarm veriyor"
+msgstr "The treasury sounds the alarm"
+
+msgid "Kulislere göre maaşlar için borç aranıyor. Resmî rakamlar ise başka bir şey söylüyor."
+msgstr "Rumors say loans are being sought to cover wages. The official figures tell another story."
+
+msgid "Başkentte huzur"
+msgstr "Calm in the capital"
+
+msgid "Vatandaşlar günlük hayatına devam ediyor; meydanlarda bayram havası."
+msgstr "Citizens go about their daily lives; the squares are almost festive."
+
+msgid "Bazı gruplar tahrik peşinde"
+msgstr "Some groups are seeking to provoke"
+
+msgid "Polis, az sayıdaki provokatörün kamu düzenini bozmasına izin vermeyeceğini açıkladı."
+msgstr "Police say they will not let a few provocateurs disrupt public order."
+
+msgid "Yabancı parmağı"
+msgstr "Foreign hands at work"
+
+msgid "Uzmanlara göre son olayların arkasında dış güçler var."
+msgstr "Experts say foreign powers are behind recent events."
+
+msgid "Sokaklar sakin"
+msgstr "The streets are quiet"
+
+msgid "Bu hafta meydanlarda kimse yoktu. Sessizlik mi, yorgunluk mu?"
+msgstr "The squares were empty this week. Silence, or exhaustion?"
+
+msgid "Öfke büyüyor"
+msgstr "Anger is growing"
+
+msgid "Fırın kuyruklarında konuşulanlar artık fiyatlar değil, saray."
+msgstr "People in bakery lines are no longer talking about prices, but the palace."
+
+msgid "Meydanlar doldu"
+msgstr "The squares are full"
+
+msgid "Binlerce kişi sokakta. Polisin bazı birimlerinin müdahaleden kaçındığı görüldü."
+msgstr "Thousands are in the streets. Some police units appear to have held back."
+
+msgid "Muhalefet dağınık"
+msgstr "The opposition is divided"
+
+msgid "Voss'un partisi iç kavgalarla uğraşıyor."
+msgstr "Voss's party is consumed by infighting."
+
+msgid "Muhalefet sorumsuz"
+msgstr "The opposition is irresponsible"
+
+msgid "Meclisteki bazı vekillerin söylemleri istikrarı tehdit ediyor."
+msgstr "Some members of the Council are making statements that threaten stability."
+
+msgid "Muhalefete sert uyarı"
+msgstr "A stern warning to the opposition"
+
+msgid "Hükümet, sokağı kışkırtanların hesap vereceğini açıkladı."
+msgstr "The government says those inciting the streets will be held accountable."
+
+msgid "Muhalefet sessiz"
+msgstr "The opposition is silent"
+
+msgid "Voss bu hafta kürsüye çıkmadı."
+msgstr "Voss did not take the floor this week."
+
+msgid "Muhalefet örgütleniyor"
+msgstr "The opposition is organizing"
+
+msgid "Kapalı kapılar ardında iki kanadın birleşme görüşmesi sürüyor."
+msgstr "Talks to unite the two factions continue behind closed doors."
+
+msgid "Muhalefet sokağa çağırıyor"
+msgstr "The opposition calls people into the streets"
+
+msgid "Voss: 'Bu saray halkın sesini artık duymak zorunda.'"
+msgstr "Voss: 'This palace must listen to the people now.'"
+
+msgid "Kral, saray bahçelerini halka açtı."
+msgstr "The King opened the palace gardens to the public."
+
+msgid "Kraliyet orkestrası hafta sonu konser verecek."
+msgstr "The royal orchestra will perform this weekend."
+
+msgid "Kral, yetimhaneye bağışta bulundu."
+msgstr "The King donated to an orphanage."
+
+msgid "Saray protokolü yeni törenler hazırlıyor."
+msgstr "The palace protocol office is preparing new ceremonies."
+
+msgid "Kral'ın sabah yürüyüşü halkı mutlu etti."
+msgstr "The King's morning walk delighted the public."
+
+msgid "Başkentte yağmur, gece sis."
+msgstr "Rain in the capital, fog overnight."
+
+msgid "Açık ve soğuk; sabah kırağı."
+msgstr "Clear and cold, with morning frost."
+
+msgid "Bulutlu, akşama doğru fırtına."
+msgstr "Cloudy, with a storm toward evening."
+
+msgid "Güneşli ama rüzgârlı."
+msgstr "Sunny but windy."
+
+msgid "Kar bekleniyor; yollar kayganlaşabilir."
+msgstr "Snow is expected; roads may become slippery."
+
+msgid "Ilık bir hafta, gece serin."
+msgstr "A mild week, cool at night."
+
+msgid "KRALİYET PİYANGOSU · Büyük ikramiye bu cumartesi!"
+msgstr "ROYAL LOTTERY · The grand prize is this Saturday!"
+
+msgid "SARNE ENERJİ · Kışa hazır mısınız?"
+msgstr "SARNE ENERGY · Are you ready for winter?"
+
+msgid "Saat tamiri ve altın alım satımı · Eski Çarşı No: 12"
+msgstr "Watch repairs and gold trading · Old Bazaar, No. 12"
+
+msgid "Grand Otel Veloria · Balo salonu kiralanır."
+msgstr "Grand Hotel Veloria · Ballroom for hire."
+
+msgid "Kayıp: Gri kedi, adı Baron. Bulana ödül."
+msgstr "Lost: Gray cat named Baron. Reward for its return."
+
+msgid "Tercüme bürosu · Gizlilik garantili."
+msgstr "Translation bureau · Confidentiality guaranteed."
+
+msgid "YAYIN DURDURULDU"
+msgstr "PUBLICATION SUSPENDED"
+
+msgid "Serbest Kalem bu hafta da basılamadı. Matbaanın kapısında mühür var. Muhabirlerin bir kısmı yurtdışında."
+msgstr "The Free Quill could not be printed this week either. The press is sealed, and some reporters are abroad."
+
+msgid "Saraydan sert yalanlama"
+msgstr "Palace issues a forceful denial"
+
+msgid "Saray, son günlerde yayılan iddiaların 'krallığı yıpratmaya yönelik bir karalama' olduğunu açıkladı."
+msgstr "The palace called recent allegations 'a smear campaign aimed at weakening the kingdom.'"
+
+msgid "SKANDAL: %s"
+msgstr "SCANDAL: %s"
+
+msgid "Belgeler artık herkesin elinde. Saray sessiz."
+msgstr "The documents are now in everyone's hands. The palace is silent."
+
+msgid "%s gündemde"
+msgstr "%s in the spotlight"
+
+msgid "Kulislerde konuşulan iddia bu hafta kamuoyuna yansıdı."
+msgstr "A rumor circulating in the corridors reached the public this week."
+
+msgid "Yetkililer durumun kontrol altında olduğunu vurguladı."
+msgstr "Officials stressed that the situation is under control."
+
+msgid "Krallıkta huzur ve istikrar"
+msgstr "Peace and stability in the kingdom"
+
+msgid "Sessiz bir hafta"
+msgstr "A quiet week"
+
+msgid "Sabır taşıyor mu?"
+msgstr "Is patience running out?"
+
+msgid "Başkent tedirgin"
+msgstr "The capital is uneasy"
+
+msgid "Saraydan bu hafta da açıklama yok. Sokak ise konuşuyor."
+msgstr "No word from the palace this week either. The streets, however, are talking."
+
+msgid "Saray halktan koptu"
+msgstr "The palace has lost touch with the people"
+
+msgid "Hükümet sözünü tutmadı"
+msgstr "The government broke its promise"
+
+msgid "Kraliyet hesap vermeli"
+msgstr "The Crown must answer"
+
+msgid "Sarne'nin yayın kurulu bu hafta sarayın kararlarını sert sözlerle sorguluyor."
+msgstr "Sarne's editorial board is sharply questioning the palace's decisions this week."
+
+msgid "EKONOMİ"
+msgstr "ECONOMY"
+
+msgid "SOKAK"
+msgstr "STREETS"
+
+msgid "MECLİS"
+msgstr "COUNCIL"
+
+msgid "KULİS"
+msgstr "INSIDE"
+
+msgid "Saray koridorları sessiz"
+msgstr "The palace corridors are quiet"
+
+msgid "Bu hafta kulağımıza bir şey çalınmadı. Ya da çalınmasına izin verilmedi."
+msgstr "We heard nothing this week. Or perhaps we were not allowed to hear."
+
+msgid "Koridorlarda konuşulanlar"
+msgstr "Talk in the corridors"
+
+msgid "Kaynaklarımıza göre: %s."
+msgstr "According to our sources: %s."
+
+msgid "SARAYDAN"
+msgstr "FROM THE PALACE"
+
+msgid "Kraliyet ajandası"
+msgstr "The royal agenda"
+
+msgid "Bakanlığa zor sorular"
+msgstr "Tough questions for the ministry"
+
+msgid "Yayın kurulu, sarayın harcamalarına ilişkin hesabın açıklanmasını istiyor."
+msgstr "The editorial board wants an accounting of the palace's spending."
+
+msgid "Halkın sesi duyulmalı"
+msgstr "The people must be heard"
+
+msgid "Sarne'nin köşe yazarları kararların halka sorulmadığını savunuyor."
+msgstr "Sarne's columnists argue that the people were not consulted on these decisions."
+
+msgid "Saray meclise dönsün"
+msgstr "The palace must return to the Council"
+
+msgid "Kanaldaki yorumcular kraliyet kararlarının denetlenmesini talep ediyor."
+msgstr "The channel's commentators demand oversight of royal decisions."
+
+msgid "Açıklama bekleniyor"
+msgstr "A statement is expected"
+
+msgid "Yayın kurulu saraydan cevap beklediğini duyurdu."
+msgstr "The editorial board says it is awaiting an answer from the palace."
+
+msgid "HAVA: %s"
+msgstr "WEATHER: %s"
+
+msgid "DEVLET TELEVİZYONU"
+msgstr "STATE TELEVISION"
+
+msgid "Kral %s, iki yıl boyunca sayısız fırtınaya rağmen tahtını korudu."
+msgstr "King %s kept his throne through countless storms over two years."
+
+msgid "Kral %s, %d hafta boyunca imkânsız bir krallığı ayakta tutmaya çalıştı; düşüşü, ihanetin eseriydi."
+msgstr "King %s tried to hold an impossible kingdom together for %d weeks; betrayal brought his downfall."
+
+msgid "Saltanatında hazine doldu, pazarlar canlandı."
+msgstr "The treasury filled and markets flourished during his reign."
+
+msgid "Vergi reformu, ondan sonra gelenlerin de övündüğü bir miras oldu."
+msgstr "His tax reform became a legacy praised by those who came after him."
+
+msgid "Sokaklarda huzur vardı."
+msgstr "The streets were at peace."
+
+msgid "Verdiği sözlerin %d tanesini tuttu."
+msgstr "He kept %d of his promises."
+
+msgid "Halkın karşısına çıkmaktan çekinmeyen bir hükümdardı."
+msgstr "He was a ruler unafraid to appear before his people."
+
+msgid "Saltanatının sonunda Meclise gerçek yetki vererek anayasal monarşinin kurucusu oldu."
+msgstr "By granting the Council real power at the end of his reign, he founded a constitutional monarchy."
+
+msgid "Hanedanın devamını güvence altına aldı."
+msgstr "He secured the continuation of the dynasty."
+
+msgid "Zor zamanlarda, zor kararlar vermek zorunda kaldı."
+msgstr "In difficult times, he had to make difficult choices."
+
+msgid "Saltanatı, ortaya saçılan %d sırla hatırlanır."
+msgstr "His reign is remembered for the %d secrets that came to light."
+
+msgid "Sadakati parayla satın aldı; %d gizli ödeme kayıtlara geçti."
+msgstr "He bought loyalty with money; %d secret payments were recorded."
+
+msgid "Yakın çevresini şantajla yönetti."
+msgstr "He ruled his inner circle through blackmail."
+
+msgid "%d sözünü tutmadı."
+msgstr "He broke %d promises."
+
+msgid "Basını susturdu."
+msgstr "He silenced the press."
+
+msgid "Muhalefet liderini hapse attı."
+msgstr "He imprisoned the opposition leader."
+
+msgid "Ekonomiyi harabeye çevirdi."
+msgstr "He left the economy in ruins."
+
+msgid "Son aylarında artık kimse ona gerçeği söylemiyordu."
+msgstr "In his final months, no one told him the truth anymore."
+
+msgid "Ve gitmeden önce yetkiyi kimseyle paylaşmayacak biçimde kilitledi."
+msgstr "And before he left, he locked power away from everyone else."
+
+msgid "Sürgündeki tarihçiler bile bu saltanata ağır bir suçlama bulmakta zorlandı."
+msgstr "Even historians in exile struggled to find a harsh accusation for this reign."
+
+msgid "Gazeteler ona bağlı, Majesteleri."
+msgstr "The newspapers are beholden to him, Your Majesty."
+
+msgid "{n_in} gücünü kırpar"
+msgstr "weakens {n_in}"
+
+msgid "{n_i} dizginler"
+msgstr "restrains {n_i}"
+
+msgid "{n_i} fazla güçlendirir"
+msgstr "strengthens {n_i} too much"
+
+msgid "{n_in} elini güçlendirir"
+msgstr "strengthens {n_in}"
+
+msgid "dosya bulunamadı"
+msgstr "file not found"
+
+msgid "JSON bozuk veya aktör listesi dizi değil"
+msgstr "JSON is malformed or the actor list is not an array"
+
+msgid "aktör kimliği veya alanı eksik"
+msgstr "actor ID or domain is missing"
+
+msgid "JSON bozuk veya kök sözlük değil"
+msgstr "JSON is malformed or the root value is not a dictionary"
+
+msgid "İngilizce içerik dosyası okunamadı: %s"
+msgstr "Could not read English content file: %s"
+
+msgid "İçerik dosyası hatalı: %s (%s). Oyunu başlatmadan dosyayı düzeltin."
+msgstr "Content file error: %s (%s). Fix the file before starting the game."
+
+msgid "eksik anahtar: %s"
+msgstr "missing key: %s"
+
+msgid "bilinmeyen anahtar: %s"
+msgstr "unknown key: %s"
+
+msgid "boş rapor metni: %s"
+msgstr "empty report text: %s"
+
+msgid "phrases/sign_texts sözlük olmalı"
+msgstr "phrases/sign_texts must be dictionaries"
+
+msgid "eksik rapor alanı: %s"
+msgstr "missing report domain: %s"
+
+msgid "bilinmeyen rapor alanı: %s"
+msgstr "unknown report domain: %s"
+
+msgid "%s: üç rapor bandı gerekli"
+msgstr "%s: three report tiers are required"
+
+msgid "%s: boş rapor metni"
+msgstr "%s: report text is empty"
+
+msgid "dört kurum raporu gerekli"
+msgstr "four institutional reports are required"
+
+msgid "eksik kurum raporu: %s"
+msgstr "missing institutional report: %s"
+
+msgid "üç kurum bandı gerekli: %s"
+msgstr "three institutional tiers are required: %s"
+
+msgid "eksik/boş kurum raporu: %s/%s"
+msgstr "missing or empty institutional report: %s/%s"
+
+msgid "eksik/boş alamet aşaması: %s"
+msgstr "missing or empty sign stage: %s"
+
+msgid "bilinmeyen alamet aşaması: %s"
+msgstr "unknown sign stage: %s"
+
+msgid "bilinmeyen alamet alanı: %s"
+msgstr "unknown sign domain: %s"
+
+msgid "boş alamet metni: %s/%s"
+msgstr "empty sign text: %s/%s"
+
+msgid "boş tarihçi metni: %s"
+msgstr "empty historian text: %s"
+
+msgid "tarihçi biçim alanı eksik: %s"
+msgstr "missing historian format placeholder: %s"
+
+msgid "%s sözlük olmalı"
+msgstr "%s must be a dictionary"
+
+msgid "eksik/boş metin dizisi: %s"
+msgstr "missing or empty text array: %s"
+
+msgid "üç öneri kalıbı gerekli"
+msgstr "three recommendation forms are required"
+
+msgid "cover_default boş"
+msgstr "cover_default is empty"
+
+msgid "Roma seçim etiketleri eşleşmiyor"
+msgstr "Roman choice labels do not match"
+
+msgid "öneri kalıbında bir %s gerekli"
+msgstr "a recommendation form must contain one %s"
+
+msgid "aktör gerekçesinde ad eki eksik: %s"
+msgstr "actor reason is missing a name-case placeholder: %s"
+
+msgid "uzman çifti eksik: %s"
+msgstr "missing expert pair: %s"
+
+msgid "bilinmeyen uzman aktör: %s"
+msgstr "unknown expert actor: %s"
+
+msgid "bilinmeyen kılıf aktörü: %s"
+msgstr "unknown cover actor: %s"
+
+msgid "boş kılıf: %s"
+msgstr "empty cover text: %s"
+
+msgid "eksik/boş gerekçe: %s"
+msgstr "missing or empty reason: %s"
+
+msgid "eksik gerekçe: %s"
+msgstr "missing reason: %s"
+
+msgid "başarım listesi boş"
+msgstr "achievement list is empty"
+
+msgid "eksik/boş başarım: %s"
+msgstr "missing or empty achievement: %s"
+
+msgid "eksik/boş etiket: %s"
+msgstr "missing or empty label: %s"
+
+msgid "üç söz ödülü gerekli"
+msgstr "three promise prizes are required"
+
+msgid "güç kademeleri eksik"
+msgstr "power tiers are missing"
+
+msgid "boş güç kademesi"
+msgstr "power tier is empty"
+
+msgid "rapor/tavır kademeleri eksik"
+msgstr "report/stance tiers are missing"
+
+msgid "rejim sırası/kimlikleri değişmiş"
+msgstr "regime order or IDs have changed"
+
+msgid "bütçe kartı anahtarları eksik"
+msgstr "budget card keys are missing"
+
+msgid "boş bütçe metni: %s"
+msgstr "empty budget text: %s"
+
+msgid "bütçe kartında dört seçenek gerekli"
+msgstr "the budget card needs four choices"
+
+msgid "bütçe seçeneği eksik"
+msgstr "budget choice is incomplete"
+
+msgid "bütçe seçeneği hatalı"
+msgstr "budget choice is invalid"
+
+msgid "Sarne talep kartı anahtarları eksik"
+msgstr "Sarne demand card keys are missing"
+
+msgid "Sarne talep metni eksik"
+msgstr "Sarne demand text is missing"
+
+msgid "Sarne talebinde dört seçenek gerekli"
+msgstr "Sarne's demand needs four choices"
+
+msgid "Sarne talep seçeneği hatalı"
+msgstr "Sarne demand choice is invalid"
+
+msgid "%s: %s"
+msgstr "%s: %s"
+
+msgid "%s: %s boş"
+msgstr "%s: %s is empty"
