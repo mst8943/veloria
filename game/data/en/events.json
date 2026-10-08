@@ -2561,5 +2561,175 @@
                                "ignore":  {
                                               "text":  "The offer went unanswered."
                                           }
-                           }
+                           },
+    "yay_prens_sinav":  {
+                            "title":  "The seal at the family table",
+                            "text":  "The dynasty\u0027s joint statement awaits a seal. Marcus pauses: “Am I signing as a brother—or as a shadow?”",
+                            "choices":  [
+                                            {
+                                                "label":  "Sign the statement together",
+                                                "text":  "Sign the statement together."
+                                            },
+                                            {
+                                                "label":  "Seal it alone",
+                                                "text":  "Seal it alone."
+                                            }
+                                        ],
+                            "ignore":  {
+                                           "text":  "No decision was made; he took the silence for an answer."
+                                       }
+                        },
+    "yay_prens_sadakat":  {
+                              "title":  "The prince stands with you",
+                              "text":  "You had named him an equal member of the family in the statement. Marcus turned to the crowd: “I, too, will defend my brother\u0027s crown.”",
+                              "choices":  [
+                                              {
+                                                  "label":  "Accept his word",
+                                                  "text":  "Accept his word."
+                                              },
+                                              {
+                                                  "label":  "Let him choose his own path",
+                                                  "text":  "Let him choose his own path."
+                                              }
+                                          ],
+                              "ignore":  {
+                                             "text":  "The gesture went unanswered."
+                                         }
+                          },
+    "yay_prens_kopus":  {
+                            "title":  "The prince sets another table",
+                            "text":  "You had denied him the seal. Marcus made no effort to hide his hurt: “There is a family table beyond your Palace, too.”",
+                            "choices":  [
+                                            {
+                                                "label":  "Meet with the family",
+                                                "text":  "Meet with the family."
+                                            },
+                                            {
+                                                "label":  "Leave some distance",
+                                                "text":  "Leave some distance."
+                                            }
+                                        ],
+                            "ignore":  {
+                                           "text":  "The distance between you grew."
+                                       }
+                        },
+    "yay_brandt_yukselis":  {
+                                "title":  "Voss in the neighborhoods",
+                                "text":  "Voss spoke at the factory gate: “People shouldn\u0027t have to choose between bread and a ballot.” Then he listened to those who came, one by one.",
+                                "choices":  [
+                                                {
+                                                    "label":  "Hear the representatives",
+                                                    "text":  "Hear the representatives."
+                                                },
+                                                {
+                                                    "label":  "Postpone the meeting",
+                                                    "text":  "Postpone the meeting."
+                                                }
+                                            ],
+                                "ignore":  {
+                                               "text":  "The offer went unanswered."
+                                           }
+                            },
+    "yay_brandt_sinav":  {
+                             "title":  "The square raises its voice",
+                             "text":  "An angry crowd filled the square. Voss brought his fist down: “If we don\u0027t make promises today, stones will speak tomorrow.”",
+                             "choices":  [
+                                             {
+                                                 "label":  "Call them to the table",
+                                                 "text":  "Call them to the table."
+                                             },
+                                             {
+                                                 "label":  "Close the door",
+                                                 "text":  "Close the door."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "No decision was made; he took the silence for an answer."
+                                        }
+                         },
+    "yay_brandt_sadakat":  {
+                               "title":  "Voss points to the ballot box",
+                               "text":  "He remembered your invitation to the table. In the square, Voss said, “We\u0027ll settle the score at the ballot box.” There were whistles amid the applause.",
+                               "choices":  [
+                                               {
+                                                   "label":  "Discuss the election calendar",
+                                                   "text":  "Discuss the election calendar."
+                                               },
+                                               {
+                                                   "label":  "Make a note of his words",
+                                                   "text":  "Make a note of his words."
+                                               }
+                                           ],
+                               "ignore":  {
+                                              "text":  "The gesture went unanswered."
+                                          }
+                           },
+    "yay_brandt_kopus":  {
+                             "title":  "Voss won\u0027t leave the square",
+                             "text":  "You had shut the doors. Voss spoke in anger: “A square will answer a Palace that refuses to listen.”",
+                             "choices":  [
+                                             {
+                                                 "label":  "Offer an open meeting",
+                                                 "text":  "Offer an open meeting."
+                                             },
+                                             {
+                                                 "label":  "Watch the square from afar",
+                                                 "text":  "Watch the square from afar."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "The distance between you grew."
+                                        }
+                         },
+    "yay_falk_yukselis":  {
+                              "title":  "Renn\u0027s statement of independence",
+                              "text":  "Renn read a brief statement: “The law is written for kings too. Anything else is no law at all.” The silence in the hall lasted longer than the applause.",
+                              "choices":  [
+                                              {
+                                                  "label":  "Enter the statement into the record",
+                                                  "text":  "Enter the statement into the record."
+                                              },
+                                              {
+                                                  "label":  "Cut the ceremony short",
+                                                  "text":  "Cut the ceremony short."
+                                              }
+                                          ],
+                              "ignore":  {
+                                             "text":  "The offer went unanswered."
+                                         }
+                          },
+    "yay_falk_sinav":  {
+                           "title":  "The procedure for the Palace file",
+                           "text":  "A file concerning the Palace landed before you. Renn straightened his robe: “I do not rule on its contents. First, I examine the procedure.”",
+                           "choices":  [
+                                           {
+                                               "label":  "Leave the file to procedure",
+                                               "text":  "Leave the file to procedure."
+                                           },
+                                           {
+                                               "label":  "Ask the Palace for its view",
+                                               "text":  "Ask the Palace for its view."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "No decision was made; he took the silence for an answer."
+                                      }
+                       },
+    "yay_falk_sadakat":  {
+                             "title":  "Renn stays on the bench",
+                             "text":  "You had let him uphold procedure. Renn sealed the file: “This decision is neither yours nor mine. It belongs to the court.”",
+                             "choices":  [
+                                             {
+                                                 "label":  "Enforce the court\u0027s ruling",
+                                                 "text":  "Enforce the court\u0027s ruling."
+                                             },
+                                             {
+                                                 "label":  "Wait for an appeal",
+                                                 "text":  "Wait for an appeal."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "The gesture went unanswered."
+                                        }
+                         }
 }
