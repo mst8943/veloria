@@ -28,6 +28,7 @@ Yeni aktörlerin başlangıç gürültüsü ve yeni durum değerleri ayrı tohum
 - **B1.4** `fd374f5`: `min_heir/max_heir` olay koşulları, doğrulayıcı, birim sınaması ve şema belgesi. Tüm testler geçti; ölçüt %83/%46/%17, tam oyun değişmedi.
 - **B1.5** `577ab07`: Julian için dört, Elena için dört olay; Elena'nın doğrulanması kendi olay zincirini açar. Olaylar mevcut görselleri kullanır. `EVENTS: OK (187 olay, 0 uyarı)`; ulaşılabilirlik sınaması, tam oyun ve tempo geçti. Ölçüt %83/%46/%17, tabanla aynı.
 - **B1.6** `20a70af`: `advice_veliaht` sondajı, ölçülen dengeye göre veliahtın haftalık etkisinin tek grup olarak küçültülmesi, masaüstü/mobil ekran görüntüsü kipi. Tüm testler (`TEST/EVENTS/SAVE/CONTENT/UI INPUT: OK`, iki autoplay, pacing, full) geçti. `dist/qa_yeni_kadro_b1_desktop` ve `_mobile` içindeki Julian/Elena kartı, Elena raporu ve Julian olay kartı PNG'leri açılıp incelendi. UI glif taraması temiz; iki port 8770.
+- **B2.1** `e9311c3`: Claire Duvall, Viktor Malenkov ve Lucien Vale dosyanın sonunda dışarıdan/supporting aktörler olarak eklendi. Portreleri iç kimliklerine taşındı; baştaki üç ilişki 50±5 ayrı üreteçten geliyor. B1 v8 kayıtları dış ilişkiler ve yeni aktörler yoksa göçte tamamlanıyor; bozuk kayıt reddi korunuyor. `TEST/EVENTS/SAVE/CONTENT/UI INPUT: OK`, masaüstü/mobil autoplay, pacing ve tam oyun geçti. Tam oyun 101 / 104 / TAHTTA / Medya Rejimi / 112 olay. Ölçüt %83/%46/%17.
 
 ## Ölçüm tablosu
 
@@ -40,6 +41,7 @@ Yeni aktörlerin başlangıç gürültüsü ve yeni durum değerleri ayrı tohum
 | B1.4 `fd374f5` | %83 | %46 | %17 | 101 / 104 / TAHTTA / Medya Rejimi / 112 olay |
 | B1.5 `577ab07` | %83 | %46 | %17 | 101 / 104 / TAHTTA / Medya Rejimi / 112 olay |
 | B1 kapısı | %83 | %46 | %17 | 101 / 104 / TAHTTA / Medya Rejimi / 112 olay |
+| B2.1 `e9311c3` | %83 | %46 | %17 | 101 / 104 / TAHTTA / Medya Rejimi / 112 olay |
 
 ## B1 kapısı
 
@@ -51,4 +53,4 @@ Faz 4c'den devreden Zor bot farkı: `advice_soft` ve `advice_lavish` ölçütü 
 
 ## SIRADAKİ ADIM
 
-B2.1: Claire, Malenkov ve Lucien'i aktör dosyasının sonuna ekle; portrelerini iç kimliklerine taşı; ayrı üreteçten ilişkiler ve yeni aktör gürültüsünü kur; kayıt/göç sınamalarını tamamla. B1 kapısı geçtiği için B2'ye bu adımdan başlanabilir. Kullanıcının durma isteği üzerine burada duruldu.
+B2.2: Dış ilişkilerin haftalık kaymasını ve küçük yakın/soğuk etkilerini ekle; parametre tablosunu belgeye yaz; yalnızca bu etki grubunu ölçerek kalibre et.
