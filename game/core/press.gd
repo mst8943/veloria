@@ -47,7 +47,7 @@ static func _pick(arr: Array, salt: String, week: int) -> Variant:
 
 static func _localized(value: Variant) -> Variant:
 	if value is String:
-		return tr(value)
+		return TranslationServer.translate(value)
 	if value is Array:
 		var result: Array = []
 		for item in value:
@@ -110,10 +110,10 @@ static func edition(sim: Node, outlet: String) -> Dictionary:
 					head = "Saraydan sert yalanlama"
 					sub = "Saray, son günlerde yayılan iddiaların 'krallığı yıpratmaya yönelik bir karalama' olduğunu açıkladı."
 				else:
-					head = tr("SKANDAL: %s") % str(fact["text"])
+					head = TranslationServer.translate("SKANDAL: %s") % str(fact["text"])
 					sub = "Belgeler artık herkesin elinde. Saray sessiz."
 			else:
-				head = tr("%s gündemde") % str(fact["text"])
+				head = TranslationServer.translate("%s gündemde") % str(fact["text"])
 				sub = "Kulislerde konuşulan iddia bu hafta kamuoyuna yansıdı."
 				if outlet == "state" and fact["subject"] == "halden":
 					head = ""
@@ -127,7 +127,7 @@ static func edition(sim: Node, outlet: String) -> Dictionary:
 				sub = str(e["text"])
 				art = str(e.get("art", e["id"]))
 				if outlet == "state" and float(sim.unrest) > 40.0:
-					sub = tr("Yetkililer durumun kontrol altında olduğunu vurguladı.") + " " + sub
+					sub = TranslationServer.translate("Yetkililer durumun kontrol altında olduğunu vurguladı.") + " " + sub
 				break
 	if head == "":
 		if outlet == "state":
@@ -162,7 +162,7 @@ static func edition(sim: Node, outlet: String) -> Dictionary:
 		if rumors.is_empty():
 			cols.append({"title": "KULİS", "head": "Saray koridorları sessiz", "body": "Bu hafta kulağımıza bir şey çalınmadı. Ya da çalınmasına izin verilmedi."})
 		else:
-			cols.append({"title": "KULİS", "head": "Koridorlarda konuşulanlar", "body": tr("Kaynaklarımıza göre: %s.") % "; ".join(rumors.slice(0, 2))})
+			cols.append({"title": "KULİS", "head": "Koridorlarda konuşulanlar", "body": TranslationServer.translate("Kaynaklarımıza göre: %s.") % "; ".join(rumors.slice(0, 2))})
 	else:
 		cols.append({"title": "SARAYDAN", "head": "Kraliyet ajandası", "body": _pick(ROYAL_FLUFF, "ajanda", w + 3)})
 		if sim.halden_mood() == "düşmanca":
@@ -190,6 +190,6 @@ static func broadcast(sim: Node) -> Dictionary:
 			ticker.append(sim.news_for_display(s).substr(6))
 	for c in ed["columns"]:
 		ticker.append("%s: %s" % [c["title"], c["head"]])
-	ticker.append(tr("HAVA: %s") % str(ed["weather"]))
+	ticker.append(TranslationServer.translate("HAVA: %s") % str(ed["weather"]))
 	var name := "SARNE TV" if sim.actors.has("halden") else "DEVLET TELEVİZYONU"
 	return _localized({"channel": name, "headline": ed["headline"], "sub": ed["lead"], "ticker": ticker, "art": ed.get("art", "")})
