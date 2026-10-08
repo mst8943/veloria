@@ -1880,5 +1880,201 @@
                          "ignore":  {
                                         "text":  "The shadow cabinet is in session."
                                     }
-                     }
+                     },
+    "kuraklik":  {
+                     "title":  "Drought",
+                     "text":  "There has been no rain for three months. Grain reserves are halved, and farmers are moving to the cities. Veyra says \u0027foreign grain\u0027; Arden says \u0027troops at the granaries.\u0027",
+                     "choices":  [
+                                     {
+                                         "label":  "Buy grain abroad",
+                                         "text":  "Bread prices held steady; the Treasury melted away."
+                                     },
+                                     {
+                                         "label":  "Hand the granaries to the Army",
+                                         "text":  "Distribution is orderly; the queues are long and quiet."
+                                     },
+                                     {
+                                         "label":  "Open the Palace pantries",
+                                         "text":  "The Palace pantries opened to the public. Good photographs; empty shelves."
+                                     }
+                                 ],
+                     "ignore":  {
+                                    "text":  "The drought continues."
+                                }
+                 },
+    "maden_faciasi":  {
+                          "title":  "A mine disaster",
+                          "text":  "A mine in the north has collapsed, trapping forty-two workers. The mine belongs to one of Sarne\u0027s companies; its safety reports have gone unsigned for two years.",
+                          "choices":  [
+                                          {
+                                              "label":  "Hold Sarne responsible",
+                                              "text":  "Sarne paid compensation and never forgave you."
+                                          },
+                                          {
+                                              "label":  "Declare national mourning; slow the inquiry",
+                                              "text":  "The flags flew at half-mast. The reports went into a cabinet."
+                                          },
+                                          {
+                                              "label":  "Attend the funerals yourself",
+                                              "text":  "A king among miners\u0027 widows. No one knew what to say—not even you."
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "The funerals were crowded and angry."
+                                     }
+                      },
+    "yabanci_yatirimci":  {
+                              "title":  "A foreign fund wants the port",
+                              "text":  "A sovereign wealth fund from a distant country wants to lease the Capital\u0027s port for forty years. The offer is generous; the terms are in the fine print.",
+                              "choices":  [
+                                              {
+                                                  "label":  "Accept",
+                                                  "text":  "The Treasury filled. Another flag flew over the port."
+                                              },
+                                              {
+                                                  "label":  "Accept only if Sarne joins",
+                                                  "text":  "Sarne joined, too. Everyone won—except the public."
+                                              },
+                                              {
+                                                  "label":  "Refuse",
+                                                  "text":  "The port is yours. The Treasury is empty."
+                                              }
+                                          ],
+                              "ignore":  {
+                                             "text":  "The fund moved on to another port."
+                                         }
+                          },
+    "multeciler":  {
+                       "title":  "Refugees at the border",
+                       "text":  "Thousands fleeing the civil war in a neighboring country are waiting at the border. Arden wants the gates closed; Voss wants them open.",
+                       "choices":  [
+                                       {
+                                           "label":  "Open the gates",
+                                           "text":  "Camps went up. The world applauded; the provinces grumbled."
+                                       },
+                                       {
+                                           "label":  "Close the gates",
+                                           "text":  "The border is quiet. The photographs are not."
+                                       },
+                                       {
+                                           "label":  "Admit them in exchange for aid",
+                                           "text":  "The aid arrived, and so did the camps. No one is happy; everyone accepts it."
+                                       }
+                                   ],
+                       "ignore":  {
+                                      "text":  "The people at the border keep waiting."
+                                  }
+                   },
+    "ulusal_bayram":  {
+                          "title":  "National holiday",
+                          "text":  "Preparations are under way for the holiday parade. One question has split the Palace: who will march at the front?",
+                          "choices":  [
+                                          {
+                                              "label":  "Put the Army at the front",
+                                              "text":  "Tanks rolled down the boulevard. Arden thought the crowd was saluting him, not you."
+                                          },
+                                          {
+                                              "label":  "Put students and workers at the front",
+                                              "text":  "The parade was colorful. The generals looked bored in the stands."
+                                          },
+                                          {
+                                              "label":  "Cancel the parade; fund hospitals",
+                                              "text":  "The boulevard was empty. The hospitals have new beds."
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "The parade organized itself."
+                                     }
+                      },
+    "saray_tarihcisi":  {
+                            "title":  "The Palace historian wants access to the archives",
+                            "text":  "The official historian has begun a book about your reign and wants access to the entire archive. \u0027History will be written, Your Majesty. If I write it, at least the spelling will be right.\u0027",
+                            "choices":  [
+                                            {
+                                                "label":  "Open the entire archive",
+                                                "text":  "The historian read everything. The book will be honest, and you will be in it."
+                                            },
+                                            {
+                                                "label":  "Allow selected documents only",
+                                                "text":  "The book will be beautiful. No one will believe it."
+                                            },
+                                            {
+                                                "label":  "Dictate the book yourself",
+                                                "text":  "The historian took notes; his eyes said something else."
+                                            }
+                                        ],
+                            "ignore":  {
+                                           "text":  "The historian found sources of his own."
+                                       }
+                        },
+    "halef_spekulasyonu":  {
+                               "title":  "Foreign papers speculate about your successor",
+                               "text":  "Foreign newspapers are writing about what comes after you: a Prince, a general, an Assembly? Everyone in the Capital reads the stories; no one admits it.",
+                               "choices":  [
+                                               {
+                                                   "label":  "Call it a lie; promise a long reign",
+                                                   "text":  "The Palace said, \u0027His Majesty will reign for many more years.\u0027 The generals checked their calendars."
+                                               },
+                                               {
+                                                   "label":  "Put the Prince forward at ceremonies",
+                                                   "text":  "The Prince is beside you in every photograph. The nobles do not know whom to salute."
+                                               },
+                                               {
+                                                   "label":  "Say nothing",
+                                                   "text":  "Silence is open to every interpretation."
+                                               }
+                                           ],
+                               "ignore":  {
+                                              "text":  "The stories continue."
+                                          }
+                           },
+    "anayasa_taslagi":  {
+                            "title":  "The opposition\u0027s draft constitution",
+                            "text":  "Voss and a group of lawyers have published a draft constitution that transfers the Crown\u0027s powers to the Assembly. They say Chief Prosecutor Renn has read it.",
+                            "choices":  [
+                                            {
+                                                "label":  "Open the draft to debate",
+                                                "text":  "The table was set. The generals noted they had not been invited."
+                                            },
+                                            {
+                                                "label":  "Ban it and investigate its authors",
+                                                "text":  "The draft was banned and multiplied on photocopiers."
+                                            },
+                                            {
+                                                "label":  "Write your own draft; have Sarne air it",
+                                                "text":  "Two drafts, two television channels. The public confused which belonged to whom; that was the point."
+                                            }
+                                        ],
+                            "ignore":  {
+                                           "text":  "The draft is gathering signatures."
+                                       }
+                        },
+    "ikinci_yildonumu":  {
+                             "title":  "As the second anniversary approaches",
+                             "text":  "Two years are nearly up. No one at the Palace talks about celebrating; everyone is counting. How many are still with you, and how many are only waiting?",
+                             "choices":  [
+                                             {
+                                                 "label":  "Invite every power center to dinner",
+                                                 "text":  "Everyone came. No one raised the first glass; you did."
+                                             },
+                                             {
+                                                 "label":  "Address the people",
+                                                 "text":  "The balcony speech was short. So was the applause."
+                                             },
+                                             {
+                                                 "label":  "Keep working in silence",
+                                                 "text":  "One more file on your desk. The anniversary was the next one."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "The anniversary passed."
+                                        }
+                         },
+    "hamle_arden_subay":  {
+                              "title":  "Arden\u0027s officers take key posts",
+                              "news":  "Arden placed his own officers in command of two regiments in the Capital.",
+                              "choices":  [
+
+                                          ]
+                          }
 }
