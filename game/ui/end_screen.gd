@@ -61,12 +61,12 @@ func _build() -> void:
 	tabs = TabContainer.new()
 	tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	v.add_child(tabs)
-	summary = _page("Özet")
+	summary = _page(tr("Özet"))
 	summary.gui_input.connect(func(ev: InputEvent) -> void:
 		if ev is InputEventMouseButton and ev.pressed:
 			summary.visible_ratio = 1.0)
 	var gbox := VBoxContainer.new()
-	gbox.name = "Grafik"
+	gbox.name = tr("Grafik")
 	gbox.add_theme_constant_override("separation", 10)
 	tabs.add_child(gbox)
 	chart = TRUTH_CHART.new()
@@ -74,14 +74,14 @@ func _build() -> void:
 	chart.custom_minimum_size = Vector2(0, 150 if host._mobile else 200)
 	gbox.add_child(chart)
 	var gnote := Label.new()
-	gnote.text = "Bu çizgileri oyun boyunca hiç görmedin. Gördüğün yalnızca raporlardı; aradaki fark, sana söylenmeyenlerdir."
+	gnote.text = tr("Bu çizgileri oyun boyunca hiç görmedin. Gördüğün yalnızca raporlardı; aradaki fark, sana söylenmeyenlerdir.")
 	gnote.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	gnote.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 	gnote.add_theme_font_size_override("font_size", host._fs(14))
 	gbox.add_child(gnote)
-	hist_page = _page("Tarihçiler")
-	lies_page = _page("Hakikat Dosyası")
-	log_page = _page("Kararlar")
+	hist_page = _page(tr("Tarihçiler"))
+	lies_page = _page(tr("Hakikat Dosyası"))
+	log_page = _page(tr("Kararlar"))
 	tabs.tab_changed.connect(func(i: int) -> void:
 		Sfx.play("paper", -10.0)
 		# Grafik ilk açıldığında çizilir (görünmezken boşa oynamasın).
@@ -92,7 +92,7 @@ func _build() -> void:
 	brow.add_theme_constant_override("separation", 12)
 	v.add_child(brow)
 	var again := Button.new()
-	again.text = "YENİDEN OYNA"
+	again.text = tr("YENİDEN OYNA")
 	again.theme_type_variation = "PrimaryButton"
 	again.custom_minimum_size.y = 50
 	again.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -100,7 +100,7 @@ func _build() -> void:
 	again.pressed.connect(host._start_new)
 	brow.add_child(again)
 	var to_menu := Button.new()
-	to_menu.text = "Ana Menü"
+	to_menu.text = tr("Ana Menü")
 	to_menu.theme_type_variation = "GhostButton"
 	to_menu.custom_minimum_size = Vector2(220, 50)
 	host._wire(to_menu)
@@ -127,66 +127,67 @@ func _page(title: String) -> RichTextLabel:
 
 ## Hakikat Dosyası'nın sonu: komplonun gerçek kronolojisi ve alametlerin kaçının doğru olduğu.
 func _append_plot(plot: Array, signs: Dictionary) -> void:
-	lies_page.append_text("\n[b][color=#d9b359][font_size=22]KOMPLO DEFTERİ — perde arkasında ne oldu[/font_size][/color][/b]\n")
+	lies_page.append_text(tr("\n[b][color=#d9b359][font_size=22]KOMPLO DEFTERİ — perde arkasında ne oldu[/font_size][/color][/b]\n"))
 	var real := int(signs.get("real", 0))
 	var rumor := int(signs.get("rumor", 0))
 	if real + rumor > 0:
-		lies_page.append_text("[color=gray]Son gördüğün alametlerin %d'i gerçekti, %d'i dedikoduydu.[/color]\n\n" % [real, rumor])
+		lies_page.append_text(tr("[color=gray]Son gördüğün alametlerin %d'i gerçekti, %d'i dedikoduydu.[/color]\n\n") % [real, rumor])
 	if plot.is_empty():
-		lies_page.append_text("Sarayda kimse sana karşı örgütlenmedi.\n")
+		lies_page.append_text(tr("Sarayda kimse sana karşı örgütlenmedi.\n"))
 		return
 	for l: Dictionary in plot:
-		var t: String = l["text"]
-		var col := "#c0504a" if t.contains("komploya") or t.contains("hazırlığına") or t.contains("darbe girişimini") else ("#7fae7a" if t.contains("çekildi") or t.contains("tutuklandı") or t.contains("halk") else "#d08a3d")
-		lies_page.append_text("• Hafta %d — [b]%s[/b] [color=%s]%s[/color]\n" % [int(l["w"]), l["name"], col, t])
+		var source: String = l["text"]
+		var t := tr(source)
+		var col := "#c0504a" if source.contains("komploya") or source.contains("hazırlığına") or source.contains("darbe girişimini") else ("#7fae7a" if source.contains("çekildi") or source.contains("tutuklandı") or source.contains("halk") else "#d08a3d")
+		lies_page.append_text(tr("• Hafta %d — [b]%s[/b] [color=%s]%s[/color]\n") % [int(l["w"]), l["name"], col, t])
 
 
 ## Hakikat Dosyası'nın ikinci yarısı: danışmanların önerileri gerçekte ne kadar iyiydi?
 func _append_council(council: Array) -> void:
-	lies_page.append_text("\n[b][color=#d9b359][font_size=22]MECLİS SİCİLİ — kim seni nereye yönlendirdi[/font_size][/color][/b]\n")
-	lies_page.append_text("[color=gray]Öneri · dinlediğin · seni yanılttığı (önerisi en iyi seçenekten belirgin biçimde kötüydü)[/color]\n\n")
+	lies_page.append_text(tr("\n[b][color=#d9b359][font_size=22]MECLİS SİCİLİ — kim seni nereye yönlendirdi[/font_size][/color][/b]\n"))
+	lies_page.append_text(tr("[color=gray]Öneri · dinlediğin · seni yanılttığı (önerisi en iyi seçenekten belirgin biçimde kötüydü)[/color]\n\n"))
 	if council.is_empty():
-		lies_page.append_text("Meclis bu saltanatta hiç öneride bulunmadı.\n")
+		lies_page.append_text(tr("Meclis bu saltanatta hiç öneride bulunmadı.\n"))
 		return
 	for c: Dictionary in council:
 		var misled := int(c["misled"])
 		var col := "#c0504a" if misled * 3 >= int(c["given"]) and misled > 0 else ("#d08a3d" if misled > 0 else "#7fae7a")
-		lies_page.append_text("[b]%s[/b]   %d öneri · %d kez dinledin · [color=%s]%s[/color]\n" % [
-			c["name"], int(c["given"]), int(c["followed"]), col, "%d kez yanılttı" % misled if misled > 0 else "hiç yanıltmadı"])
+		lies_page.append_text(tr("[b]%s[/b]   %d öneri · %d kez dinledin · [color=%s]%s[/color]\n") % [
+			c["name"], int(c["given"]), int(c["followed"]), col, tr("%d kez yanılttı") % misled if misled > 0 else tr("hiç yanıltmadı")])
 		var w: Dictionary = c["worst"]
 		if not w.is_empty():
-			lies_page.append_text("   [color=gray]En pahalısı, hafta %d — %s:[/color] \"%s\" dedi; en iyisi \"%s\" idi.%s\n" % [
-				int(w["w"]), w["event"], w["rec"], w["best"], "  [color=#c0504a](dinledin)[/color]" if w["followed"] else ""])
+			lies_page.append_text(tr("   [color=gray]En pahalısı, hafta %d — %s:[/color] \"%s\" dedi; en iyisi \"%s\" idi.%s\n") % [
+				int(w["w"]), tr(str(w["event"])), tr(str(w["rec"])), tr(str(w["best"])), tr("  [color=#c0504a](dinledin)[/color]") if w["followed"] else ""])
 		lies_page.append_text("\n")
 
 
 func _state_band(value: float) -> String:
 	if value < 35.0:
-		return "çökmüş"
+		return tr("çökmüş")
 	if value < 70.0:
-		return "zorlanan"
-	return "sağlam"
+		return tr("zorlanan")
+	return tr("sağlam")
 
 
 func _append_state(state: Dictionary) -> void:
 	if state.is_empty():
 		return
-	lies_page.append_text("\n[b][color=#d9b359][font_size=22]DEVLET DEFTERİ — ne pahasına[/font_size][/color][/b]\n")
-	lies_page.append_text("[color=gray]Kurumların ortalama hâli:[/color] %s. En zayıf an: %d. hafta, %s.\n" % [
+	lies_page.append_text(tr("\n[b][color=#d9b359][font_size=22]DEVLET DEFTERİ — ne pahasına[/font_size][/color][/b]\n"))
+	lies_page.append_text(tr("[color=gray]Kurumların ortalama hâli:[/color] %s. En zayıf an: %d. hafta, %s.\n") % [
 		_state_band(float(state.get("average", 55.0))), int(state.get("low_week", 0)), _state_band(float(state.get("lowest", 55.0)))])
-	lies_page.append_text("[color=gray]O haftanın kaydı:[/color] %s\n" % state.get("low_event", ""))
+	lies_page.append_text(tr("[color=gray]O haftanın kaydı:[/color] %s\n") % tr(str(state.get("low_event", ""))))
 	var appointments: Array = state.get("appointments", [])
 	var institutions := {"maliye": "Maliye", "hukuk": "Adliye", "ordu": "Ordu", "idare": "İdare"}
 	if appointments.is_empty():
-		lies_page.append_text("Kadroda yeni bir atama yapmadın.\n")
+			lies_page.append_text(tr("Kadroda yeni bir atama yapmadın.\n"))
 	else:
 		for item: Dictionary in appointments:
-			lies_page.append_text("• %d. hafta — %s: %s\n" % [int(item["week"]),
-				institutions.get(str(item["institution"]), str(item["institution"])), "Sadık Ata" if item["kind"] == "loyal" else "Liyakatli Ata"])
-	lies_page.append_text("[color=gray]İhale:[/color] %d kez. [color=gray]Sarne'nin düşman yayını:[/color] %d hafta.\n" % [
+			lies_page.append_text(tr("• %d. hafta — %s: %s\n") % [int(item["week"]),
+				tr(str(institutions.get(str(item["institution"]), str(item["institution"])))), tr("Sadık Ata") if item["kind"] == "loyal" else tr("Liyakatli Ata")])
+	lies_page.append_text(tr("[color=gray]İhale:[/color] %d kez. [color=gray]Sarne'nin düşman yayını:[/color] %d hafta.\n") % [
 		int(state.get("tenders", 0)), int(state.get("hostile_weeks", 0))])
-	lies_page.append_text("[color=gray]Dış ilişkiler:[/color] %d heyet; en soğuk an %d. hafta. [color=gray]Veliaht:[/color] %s.\n" % [
-		int(state.get("delegations", 0)), int(state.get("foreign_cold_week", 0)), "Hazır" if float(state.get("heir_final", 0.0)) >= 70.0 else ("Gelişiyor" if float(state.get("heir_final", 0.0)) >= 40.0 else "Çocuksu")])
+	lies_page.append_text(tr("[color=gray]Dış ilişkiler:[/color] %d heyet; en soğuk an %d. hafta. [color=gray]Veliaht:[/color] %s.\n") % [
+		int(state.get("delegations", 0)), int(state.get("foreign_cold_week", 0)), tr("Hazır") if float(state.get("heir_final", 0.0)) >= 70.0 else (tr("Gelişiyor") if float(state.get("heir_final", 0.0)) >= 40.0 else tr("Çocuksu"))])
 
 
 ## Kaydı sekmelere yazar (Özet, Tarihçiler, Hakikat Dosyası, Kararlar) ve final görselinin yolunu döndürür.
@@ -201,74 +202,74 @@ func show_record(record: Dictionary) -> String:
 		elif c.contains("yetkisiz"):
 			bg_path = "res://art/end_scandal.png"
 	bg.texture = host._art(bg_path)
-	var verdict := "Tahtını korudun." if record["survived"] else "Tahtını kaybettin."
+	var verdict := tr("Tahtını korudun.") if record["survived"] else tr("Tahtını kaybettin.")
 	head.clear()
-	head.append_text("[b][font_size=%d]Kral %s[/font_size][/b]   [font_size=%d][color=%s]%s[/color][/font_size]\n[font_size=%d][color=gray]Ünvanın:[/color] [color=#d9b359]%s[/color][/font_size]" % [
-		host._fs(34), record["king"], host._fs(22), "#7fae7a" if record["survived"] else "#c0504a", verdict, host._fs(19), record["title"]])
+	head.append_text(tr("[b][font_size=%d]Kral %s[/font_size][/b]   [font_size=%d][color=%s]%s[/color][/font_size]\n[font_size=%d][color=gray]Ünvanın:[/color] [color=#d9b359]%s[/color][/font_size]") % [
+		host._fs(34), record["king"], host._fs(22), "#7fae7a" if record["survived"] else "#c0504a", verdict, host._fs(19), tr(str(record["title"]))])
 	var lies: Array = record["lies"]
 	var hist_log: Array = record["history"]
 	# Özet
 	summary.clear()
-	summary.append_text("%s\n\n" % record["cause"])
-	summary.append_text("[b]Saltanat:[/b] %d hafta  ·  [b]En güçlü isim:[/b] %s\n[b]Söz sicili:[/b] %s\n[b]Karar defteri:[/b] %d kayıt\n" % [
-		int(record["weeks"]), record["top_actor"], record.get("promises", ""), hist_log.size()])
+	summary.append_text("%s\n\n" % tr(str(record["cause"])))
+	summary.append_text(tr("[b]Saltanat:[/b] %d hafta  ·  [b]En güçlü isim:[/b] %s\n[b]Söz sicili:[/b] %s\n[b]Karar defteri:[/b] %d kayıt\n") % [
+		int(record["weeks"]), record["top_actor"], tr(str(record.get("promises", ""))), hist_log.size()])
 	if str(record.get("regime", "")) != "":
-		summary.append_text("[b]Rejimin:[/b] %s. [b]Son sınavı:[/b] %s.\n" % [record["regime"], record["threat"]])
+		summary.append_text(tr("[b]Rejimin:[/b] %s. [b]Son sınavı:[/b] %s.\n") % [tr(str(record["regime"])), tr(str(record["threat"]))])
 	var state: Dictionary = record.get("state", {})
 	if not state.is_empty():
-		summary.append_text("[b]Devletin:[/b] %s. Bedeli Hakikat Dosyası'ndaki Devlet Defteri'nde.\n" % _state_band(float(state.get("average", 55.0))))
+		summary.append_text(tr("[b]Devletin:[/b] %s. Bedeli Hakikat Dosyası'ndaki Devlet Defteri'nde.\n") % _state_band(float(state.get("average", 55.0))))
 	if lies.is_empty():
-		summary.append_text("[b]Hakikat Dosyası:[/b] kimse sana belirgin biçimde yalan söylemedi.\n")
+		summary.append_text(tr("[b]Hakikat Dosyası:[/b] kimse sana belirgin biçimde yalan söylemedi.\n"))
 	else:
 		var liars: Dictionary = {}
 		for l: Dictionary in lies:
 			liars[l["name"]] = true
-		summary.append_text("[b]Hakikat Dosyası:[/b] [color=#c0504a]%d kişi sana yalan söyledi.[/color] Kim olduklarını Hakikat Dosyası sekmesinde gör.\n" % liars.size())
+		summary.append_text(tr("[b]Hakikat Dosyası:[/b] [color=#c0504a]%d kişi sana yalan söyledi.[/color] Kim olduklarını Hakikat Dosyası sekmesinde gör.\n") % liars.size())
 	var council: Array = record.get("council", [])
 	if not council.is_empty() and int(council[0]["misled"]) > 0:
-		summary.append_text("[b]Meclis:[/b] seni en çok [color=#d08a3d]%s[/color] yanılttı (%d kez). Ayrıntısı Hakikat Dosyası'nda.\n" % [
+		summary.append_text(tr("[b]Meclis:[/b] seni en çok [color=#d08a3d]%s[/color] yanılttı (%d kez). Ayrıntısı Hakikat Dosyası'nda.\n") % [
 			council[0]["name"], int(council[0]["misled"])])
 	for l: Dictionary in record.get("plot", []):
 		if l["text"] == "komploya katıldı":
-			summary.append_text("[b]Komplo:[/b] ilk kıvılcım %d. haftada, [color=#c0504a]%s[/color]. Kronolojisi Hakikat Dosyası'nda.\n" % [int(l["w"]), l["name"]])
+			summary.append_text(tr("[b]Komplo:[/b] ilk kıvılcım %d. haftada, [color=#c0504a]%s[/color]. Kronolojisi Hakikat Dosyası'nda.\n") % [int(l["w"]), l["name"]])
 			break
 	var fresh: Array = record.get("new_achievements", [])
 	if not fresh.is_empty():
-		summary.append_text("\n[b][color=#d9b359][font_size=22]YENİ BAŞARIM[/font_size][/color][/b]\n")
+		summary.append_text(tr("\n[b][color=#d9b359][font_size=22]YENİ BAŞARIM[/font_size][/color][/b]\n"))
 		for id in fresh:
 			var info: Array = Sim.ACHIEVEMENTS.get(id, [id, ""])
-			summary.append_text("[color=#d6b25e]»[/color]  [b]%s[/b] — %s\n" % [info[0], info[1]])
+			summary.append_text(tr("[color=#d6b25e]»[/color]  [b]%s[/b] — %s\n") % [tr(str(info[0])), tr(str(info[1]))])
 	if not hist_log.is_empty():
-		summary.append_text("\n[b][color=#d9b359][font_size=22]Son kararların[/font_size][/color][/b]   [color=gray]tamamı Kararlar sekmesinde[/color]\n")
+		summary.append_text(tr("\n[b][color=#d9b359][font_size=22]Son kararların[/font_size][/color][/b]   [color=gray]tamamı Kararlar sekmesinde[/color]\n"))
 		for h in hist_log.slice(maxi(0, hist_log.size() - 6)):
-			summary.append_text("• %s\n" % h)
+			summary.append_text("• %s\n" % tr(str(h)))
 	# Tarihçiler
 	hist_page.clear()
-	hist_page.append_text("[b][color=#d9b359][font_size=22]TARİH NE YAZACAK?[/font_size][/color][/b]\n[color=gray]Aynı saltanat, iki ayrı kalemden.[/color]\n\n")
+	hist_page.append_text(tr("[b][color=#d9b359][font_size=22]TARİH NE YAZACAK?[/font_size][/color][/b]\n[color=gray]Aynı saltanat, iki ayrı kalemden.[/color]\n\n"))
 	var hist: Array = record.get("historians", [])
 	if hist.size() == 2:
-		hist_page.append_text("[color=#d6b25e][b]Saray tarihçisi[/b][/color]\n[i]\"%s\"[/i]\n\n" % hist[0])
-		hist_page.append_text("[color=#c0504a][b]Sürgündeki tarihçi[/b][/color]\n[i]\"%s\"[/i]\n" % hist[1])
+		hist_page.append_text(tr("[color=#d6b25e][b]Saray tarihçisi[/b][/color]\n[i]\"%s\"[/i]\n\n") % tr(str(hist[0])))
+		hist_page.append_text(tr("[color=#c0504a][b]Sürgündeki tarihçi[/b][/color]\n[i]\"%s\"[/i]\n") % tr(str(hist[1])))
 	else:
-		hist_page.append_text("Tarihçiler bu saltanat hakkında sessiz kaldı.")
+		hist_page.append_text(tr("Tarihçiler bu saltanat hakkında sessiz kaldı."))
 	# Hakikat Dosyası
 	lies_page.clear()
-	lies_page.append_text("[b][color=#d9b359][font_size=22]HAKİKAT DOSYASI — sana söylenmeyenler[/font_size][/color][/b]\n\n")
+	lies_page.append_text(tr("[b][color=#d9b359][font_size=22]HAKİKAT DOSYASI — sana söylenmeyenler[/font_size][/color][/b]\n\n"))
 	if lies.is_empty():
-		lies_page.append_text("Kimse sana belirgin biçimde yalan söylemedi. Ya da hepsini fark ettin.\n")
+		lies_page.append_text(tr("Kimse sana belirgin biçimde yalan söylemedi. Ya da hepsini fark ettin.\n"))
 	for l: Dictionary in lies:
-		lies_page.append_text("• Hafta %d — [b]%s[/b] sana şunu söyledi: \"%s\"\n   [color=gray]Gerçekte:[/color] %s\n\n" % [l["week"], l["name"], l["said"], l["truth"]])
+		lies_page.append_text(tr("• Hafta %d — [b]%s[/b] sana şunu söyledi: \"%s\"\n   [color=gray]Gerçekte:[/color] %s\n\n") % [l["week"], l["name"], tr(str(l["said"])), tr(str(l["truth"]))])
 	_append_council(record.get("council", []))
 	_append_plot(record.get("plot", []), record.get("signs", {}))
 	_append_state(state)
 	# Kararlar: hepsi, sondan başa
 	log_page.clear()
-	log_page.append_text("[b][color=#d9b359][font_size=22]KARARLARIN[/font_size][/color][/b]   [color=gray]%d kayıt · en yenisi üstte[/color]\n\n" % hist_log.size())
+	log_page.append_text(tr("[b][color=#d9b359][font_size=22]KARARLARIN[/font_size][/color][/b]   [color=gray]%d kayıt · en yenisi üstte[/color]\n\n") % hist_log.size())
 	if hist_log.is_empty():
-		log_page.append_text("Hiç karar vermedin. Tarih bunu da yazar.")
+		log_page.append_text(tr("Hiç karar vermedin. Tarih bunu da yazar."))
 	for i in range(hist_log.size() - 1, -1, -1):
-		log_page.append_text("• %s\n" % hist_log[i])
-	tabs.set_tab_title(3, "Hakikat Dosyası (%d)" % lies.size() if not lies.is_empty() else "Hakikat Dosyası")
+		log_page.append_text("• %s\n" % tr(str(hist_log[i])))
+	tabs.set_tab_title(3, tr("Hakikat Dosyası (%d)") % lies.size() if not lies.is_empty() else tr("Hakikat Dosyası"))
 	tabs.current_tab = 0
 	for page in [summary, hist_page, lies_page, log_page]:
 		page.scroll_to_line(0)

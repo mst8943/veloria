@@ -30,7 +30,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S2: L2 — sürmekte olan dosya `end_screen.gd`; ardından masaüstü/mobil L2 ekran görüntüsü kapısı.
+S2: L2 — beş arayüz dosyası tamamlandı; sırada masaüstü ve mobil L2 ekran görüntüsü kapısı, tüm testler ve `--full` kanıtı var.
 
 ## L1 — tamamlandı
 
@@ -76,3 +76,6 @@ S2: L2 — sürmekte olan dosya `end_screen.gd`; ardından masaüstü/mobil L2 e
   düğmeleri `tr()` ile bağlandı; `en.po` karşılıkları eklendi.
 - `media_view.gd`: gazete künyeleri, medya sekmeleri, yayın durumu ve TV
   etiketleri `tr()` ile bağlandı; haber içeriği L4 kaplamalarına bırakıldı.
+- `end_screen.gd`: sonuç sekmeleri, hakikat dosyası, tarihçi ve devlet özeti
+  etiketleri `tr()` ile bağlandı; dinamik anlatı metinleri çeviri anahtarından
+  geçirildi.
