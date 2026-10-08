@@ -56,3 +56,18 @@ Her onuncu İngilizce metin, kaplama dosyalarının sabit sıralı taramasından
 | 40 | Meclis erken seçim tartışıyor | The Assembly Debates an Early Election | events/erken_secim/title |
 | 45 | Yetkilerini genişletecek anayasa değişikliği | A Constitutional Amendment to Expand Your Powers | events/anayasa_degisikligi/title |
 | 50 | Kortejine suikast girişimi | An Attempt on Your Procession | events/suikast/title |
+
+## S7 — olay başlıkları (her beş olayda bir)
+
+| Olay | Türkçe | English | Kaplama yolu |
+|---:|---|---|---|
+| 55 | Ordu yeni silahlar istiyor | The Army wants new weapons | events/ordu_modernizasyon/title |
+| 60 | Başkentte salgın | An outbreak in the Capital | events/salgin/title |
+| 65 | Meydanlarda yeni protesto | New protests fill the squares | events/yeni_protesto/title |
+| 70 | Gizli ödemelerin defteri | The ledger of secret payments | events/odeme_defteri/title |
+| 75 | Sözünü tutmayan kral | The king who breaks his word | events/bozulan_sozler/title |
+| 80 | Sarne gazeteleri de satın alıyor | Sarne is buying the papers too | events/halden_imparatorluk/title |
+| 85 | Kabinedeki generaller | The generals in the Cabinet | events/muhtira_sonrasi/title |
+| 90 | Vale'nin gölge kabinesi | Vale's shadow cabinet | events/derin_devlet/title |
+| 95 | Ulusal bayram | National holiday | events/ulusal_bayram/title |
+| 100 | Arden'in subayları kritik görevlere | Arden's officers take key posts | events/hamle_arden_subay/title |

@@ -31,7 +31,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S7: L4 — `events.json` parti 2 (olay 51–100).
+S8: L4 — `events.json` parti 3 (olay 101–150).
 
 ## L1 — tamamlandı
 
@@ -216,3 +216,32 @@ S7: L4 — `events.json` parti 2 (olay 51–100).
   “Vale Başbakan hakkında yeni bir dosya hazırladı; Veyra bunu duydu.” ve
   “Sarne'nin kanalları bir hafta boyunca Veyra'yı hedef aldı. Hedefin neden
   Veyra olduğunu kimse sormuyor.” Bunlar sonraki olay partilerinde kapanacak.
+
+## S7 — tamamlandı
+
+- `sozluk_en.md` olay başlıkları ve seçenek etiketleri için sentence-case
+  kuralını aldı. `events.json` içindeki ilk 50 başlık bu biçime getirildi.
+  Commit: `98ea0b7`.
+- Olaylar 51–100, beş adet 10'luk parti olarak kaplamaya eklendi. Haber odaklı
+  100. girdinin kaynakta seçenekleri olmadığından `choices: []` korundu. Her
+  partiden sonra `i18n_check` ve İngilizce `event_check` geçti. Commitler:
+  `ea12ffe`, `2b7df7e`, `5494b43`, `7df8a6f`, `7437ac5`.
+- Mobil şeritte bildirim kutusu Türkçe ve İngilizce ekranlarda metni örtüyordu;
+  yalnızca İngilizce uzunluğundan kaynaklanmadığı karşılaştırmayla doğrulandı.
+  Mobilde bildirim sütunu kadar boşluk ayrıldı ve şerit iki satırda kısaltıldı;
+  iki dilde yeniden çekimde çakışma kalmadı. Commit: `b47ea2a`.
+- Kalite örneklerine her beş olaydan bir başlık (55–100) eklendi.
+- Testler: `TEST: OK`, `EVENTS: OK (195 olay, 0 uyarı)` TR/EN,
+  `SAVE: OK`, `CONTENT: OK` TR/EN, `I18N: OK`, `UI INPUT: OK`; pacing en
+  düşük `0.81`, en uzun olaysız seri `2/2` hafta. `unit_tests.gd`:
+  `398 passed, 1 failed` — bilinen Beckett `audit finds the offscreen control`.
+- `--autoplay --full` TR/EN birebir: `FULLRUN tohum=101 hafta=104
+  sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`.
+  İngilizce `advice_weighted` 80 kampanya tabanıyla aynı `68/80`, `36/80`,
+  `16/80` sonuçlarını verdi.
+- Görseller: `dist/i18n_s7_{tr,en}_{desktop,mobile}`; 17 masaüstü ve 19 mobil
+  PNG/dil. Ana oyun/karar kartları açılarak incelendi; mobil haber şeridi
+  bildirimle çakışmıyor. İngilizce şeritte sonraki partilerden kalan örnekler:
+  “Vale Başbakan hakkında yeni bir dosya hazırladı; Veyra bunu duydu.”,
+  “Sarne'nin kanalları bir hafta boyunca Veyra'yı hedef aldı. Hedefin neden
+  Veyra olduğunu kimse sormuyor.”, “Voss taşrada kalabalık bir miting yaptı.”
