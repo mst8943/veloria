@@ -1,32 +1,7 @@
 {
-  "prizes": ["Regency", "Port Contract", "Immunity"],
   "power_tiers": ["unknown", "in the background", "influential", "indispensable"],
   "report_tones": ["optimistic", "uneasy", "pessimistic"],
   "suspicion_names": ["Calm", "Uneasy", "Suspicious", "Dangerous"],
-  "regime_names": {
-    "guvenlikci": "security-led",
-    "populist": "populist",
-    "patronajci": "patronage-driven",
-    "oligark": "oligarch-backed",
-    "medya": "media-controlled",
-    "istihbarat": "intelligence-led"
-  },
-  "regime_titles": {
-    "guvenlikci": "Security Regime",
-    "populist": "Populist Regime",
-    "patronajci": "Patronage Regime",
-    "oligark": "Oligarch Regime",
-    "medya": "Media Regime",
-    "istihbarat": "Intelligence Regime"
-  },
-  "regime_threats": {
-    "guvenlikci": "an army command ultimatum",
-    "populist": "the square closing in",
-    "patronajci": "the officeholders' reckoning",
-    "oligark": "the business circles closing in",
-    "medya": "the broadcasts withdrawing their support",
-    "istihbarat": "an ultimatum from the secret archive"
-  },
   "patronage": {
     "title": "Sarne's Demand",
     "text": [
