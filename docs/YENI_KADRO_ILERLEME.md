@@ -35,6 +35,7 @@ Yeni aktörlerin başlangıç gürültüsü ve yeni durum değerleri ayrı tohum
 - **B2.5** `519bb33`: Asteria kredi/özgürlük notası, Drakon silah/sınır/darbe desteği ve Seravia yatırım/ambargo/Sarne kredisi için sekiz olay eklendi. Olaylar Heyet Gönder bayrağıyla açılır; bu kapı yeni sistemi kullanmayan kampanyaların içerik akışını değiştirmez. `fx.foreign` etkisi ve doğrulaması eklendi. `TEST: OK`, `EVENTS: OK (195 olay, 0 uyarı)`, `SAVE/CONTENT/UI INPUT: OK`; masaüstü/mobil autoplay, tempo ve tam oyun geçti. Tam oyun 101 / 104 / TAHTTA / Medya Rejimi / 112 olay; tempo alt sınırı 0,81.
 - **B2.6** `10d34f7`: Sondaja dönüşümlü elçilik kullanan `advice_heyet` ve yalnız Drakon'a yaslanan `advice_bloc` eklendi. 80 kampanya/zorluk ölçümünde ölçüt **%85/%45/%20**, heyet **%87/%50/%25**, blok **%87/%45/%27** çıktı. Ölçüt tabandan +2/−1/+3; heyet/blok farkları sırasıyla en çok +5/+7 puan, kapı sınırları içinde.
 - **B3.1** `cb2e15c`: Başkent haritasına mevcut zemin üzerinde Asteria, Drakon ve Seravia plakaları eklendi. Elçilik çekmecesi ilişki bandını, Elena'nın iyimserlik uyarısını ve altı haftalık kayıt açan Doğrula düğmesini gösteriyor. `UI INPUT: OK`.
+- **B3.2** `9c02a05`: Hakikat Dosyası grafiğine dış ilişkiler ve veliaht çizgileri, Devlet Defteri'ne heyet/en soğuk dönem/veliaht satırı eklendi. Eski çizelgeler dış ilişki alanı taşımadığında güvenli varsayılan kullanılır. `TEST: OK`.
 
 ## Ölçüm tablosu
 
@@ -70,4 +71,4 @@ Faz 4c'den devreden Zor bot farkı: `advice_soft` ve `advice_lavish` ölçütü 
 
 ## SIRADAKİ ADIM
 
-B3.2: Oyun sonu hakikat çizgilerine dış ilişkiler ve veliaht olgunluğunu, Devlet Defteri'ne iki satırı ekle.
+B3.3: Başarımları, `--state` görüntülerini ve tam B3 doğrulamasını tamamla.
