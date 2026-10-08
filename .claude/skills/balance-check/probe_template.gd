@@ -22,7 +22,7 @@ extends SceneTree
 
 var sim: Node
 var rng := RandomNumberGenerator.new()
-const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "advice_patron", "advice_veliaht", "visible_wise", "omniscient"]
+const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "advice_patron", "advice_veliaht", "advice_heyet", "advice_bloc", "visible_wise", "omniscient"]
 var style := ""   # advice_soft / advice_dirty oyun tarzı
 
 
@@ -134,6 +134,9 @@ func _play(bot: String) -> void:
 			style = "soft" if bot == "advice_soft" else ("dirty" if bot == "advice_dirty" else "")
 			if bot == "advice_veliaht" and sim.week >= 20 and sim.heir_maturity < 70.0 and sim.heir_train_wait() == 0 and sim.mesai > 0:
 				sim.train_heir("julian")
+			if bot in ["advice_heyet", "advice_bloc"] and sim.week >= 20 and sim.delegation_wait() == 0 and sim.mesai > 0:
+				var envoy: String = "malenkov" if bot == "advice_bloc" else ["claire", "malenkov", "lucien"][(sim.week / 4) % 3]
+				sim.send_delegation(envoy)
 			if bot == "advice_patron" and sim.week % 3 == 0 and sim.mesai > 0 and sim.tender_wait() == 0 and not sim.actors["halden"].moved:
 				sim.give_tender("halden")
 			if bot == "advice_patron" and sim.private_wealth > 11.0 and sim.mesai > 0 and sim.actors.has("dorn") and not sim.actors["dorn"].moved:
