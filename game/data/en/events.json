@@ -2391,5 +2391,175 @@
                                "ignore":  {
                                               "text":  "The gesture went unanswered."
                                           }
+                           },
+    "yay_halden_kopus":  {
+                             "title":  "Sarne cuts the broadcast",
+                             "text":  "You let him pull the plug. Sarne slipped the remote into his pocket. “I protected you. One day, you’ll remember which button I pressed.”",
+                             "choices":  [
+                                             {
+                                                 "label":  "Ask for the broadcast schedule",
+                                                 "text":  "Ask for the broadcast schedule."
+                                             },
+                                             {
+                                                 "label":  "Accept the price",
+                                                 "text":  "Accept the price."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "The distance between you grew."
+                                        }
+                         },
+    "yay_lena_yukselis":  {
+                              "title":  "Leyla’s source ledger",
+                              "text":  "Leyla spent the night comparing documents. “Before I print this, I’ll ask one more person. One mistake can burn the truth too.”",
+                              "choices":  [
+                                              {
+                                                  "label":  "Wait for the documents to be verified",
+                                                  "text":  "Wait for the documents to be verified."
+                                              },
+                                              {
+                                                  "label":  "Ask for the story early",
+                                                  "text":  "Ask for the story early."
+                                              }
+                                          ],
+                              "ignore":  {
+                                             "text":  "The offer went unanswered."
+                                         }
+                          },
+    "yay_lena_sinav":  {
+                           "title":  "The source’s name is demanded",
+                           "text":  "Someone from the Palace wants Leyla’s source. She kept hold of the file. “I’ll discuss the story. I won’t give you the name.”",
+                           "choices":  [
+                                           {
+                                               "label":  "Protect the source",
+                                               "text":  "Protect the source."
+                                           },
+                                           {
+                                               "label":  "Demand the name for the Palace",
+                                               "text":  "Demand the name for the Palace."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "No decision was made; they took it as silence."
+                                      }
+                       },
+    "yay_lena_sadakat":  {
+                             "title":  "Leyla protects her source",
+                             "text":  "You did not pursue her source. Leyla nodded. “You don’t have to trust me. Test what I write.”",
+                             "choices":  [
+                                             {
+                                                 "label":  "Give a straight answer",
+                                                 "text":  "Give a straight answer."
+                                             },
+                                             {
+                                                 "label":  "Just keep watch",
+                                                 "text":  "Just keep watch."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "The closeness went unreturned."
+                                        }
+                         },
+    "yay_lena_kopus":  {
+                           "title":  "Leyla closes the door",
+                           "text":  "You asked for her source. As Leyla shut the door, she said, “Next time, answer what I publish, not me.”",
+                           "choices":  [
+                                           {
+                                               "label":  "Send the press a right of reply",
+                                               "text":  "Send the press a right of reply."
+                                           },
+                                           {
+                                               "label":  "Leave the door shut",
+                                               "text":  "Leave the door shut."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "The distance between you grew."
+                                      }
+                       },
+    "yay_dorn_yukselis":  {
+                              "title":  "Helena’s appointment book",
+                              "text":  "Helena brought the appointment book on a silver tray. “Your Majesty, everyone at the door thinks they’re urgent. I only keep the queue in order.”",
+                              "choices":  [
+                                              {
+                                                  "label":  "Open the book to inspection",
+                                                  "text":  "Open the book to inspection."
+                                              },
+                                              {
+                                                  "label":  "Leave it to Helena",
+                                                  "text":  "Leave it to Helena."
+                                              }
+                                          ],
+                              "ignore":  {
+                                             "text":  "The offer went unanswered."
+                                         }
+                          },
+    "yay_dorn_sinav":  {
+                           "title":  "The queue at the Palace gate",
+                           "text":  "Two delegations were booked for the same hour. Helena smiled faintly. “Who goes in first decides who matters more.”",
+                           "choices":  [
+                                           {
+                                               "label":  "Publish the queue",
+                                               "text":  "Publish the queue."
+                                           },
+                                           {
+                                               "label":  "Use the private entrance",
+                                               "text":  "Use the private entrance."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "No decision was made; they took it as silence."
+                                      }
+                       },
+    "yay_dorn_sadakat":  {
+                             "title":  "Helena opens the book",
+                             "text":  "You asked her to keep the queue public. Helena handed you the pen. “Today, the record—not I—opened the door.”",
+                             "choices":  [
+                                             {
+                                                 "label":  "Keep the minutes",
+                                                 "text":  "Keep the minutes."
+                                             },
+                                             {
+                                                 "label":  "Write a new rule",
+                                                 "text":  "Write a new rule."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "The closeness went unreturned."
+                                        }
+                         },
+    "yay_dorn_kopus":  {
+                           "title":  "Helena’s private entrance",
+                           "text":  "You let her hide the queue. Helena smiled again. “The back door is still a Palace door, Your Majesty.”",
+                           "choices":  [
+                                           {
+                                               "label":  "Count the doors again",
+                                               "text":  "Count the doors again."
+                                           },
+                                           {
+                                               "label":  "Look the other way",
+                                               "text":  "Look the other way."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "The distance between you grew."
+                                      }
+                       },
+    "yay_prens_yukselis":  {
+                               "title":  "The Prince’s empty chair",
+                               "text":  "Marcus saw there was no place set for him at the ceremony. “Our father would have set the same table. The crown went to you; my chair did not vanish.”",
+                               "choices":  [
+                                               {
+                                                   "label":  "Make room at the ceremony",
+                                                   "text":  "Make room at the ceremony."
+                                               },
+                                               {
+                                                   "label":  "Leave the ceremony as it is",
+                                                   "text":  "Leave the ceremony as it is."
+                                               }
+                                           ],
+                               "ignore":  {
+                                              "text":  "The offer went unanswered."
+                                          }
                            }
 }
