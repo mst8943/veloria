@@ -409,6 +409,7 @@ func _init() -> void:
 	ok = _test_regimes() and ok
 	ok = _test_state_end() and ok
 	ok = _test_newcomer_rng() and ok
+	ok = _test_heir() and ok
 	# Meclis görüşleri: deterministik, kayıtta korunur, ana rng'ye dokunmaz, hazır aktör kötü önerir.
 	ok = _test_advice() and ok
 	# Darbe aşamaları: çekilme, kriz kartı, kriz sonuçları, kayıt, huzura çağırma.
@@ -444,6 +445,37 @@ func _test_newcomer_rng() -> bool:
 	if not good:
 		push_error("yeni kadro eski aktörlerin RNG sırasını değiştirdi")
 	print("Yeni kadro RNG: ", "OK" if good else "HATA")
+	return good
+
+
+func _test_heir() -> bool:
+	sim.new_game(41, 0)
+	var good: bool = sim.heir_maturity_band() == "Çocuksu"
+	var first: float = sim.heir_maturity
+	var prince: float = sim.actors["prens"].ambition
+	var general: float = sim.actors["arden"].ambition
+	good = good and sim.train_heir("elena").contains("çıkarılamaz") and sim.mesai == sim.mesai_max
+	good = good and sim.train_heir("julian").contains("derslerini ilerletti") and sim.heir_train_wait() == 6
+	good = good and sim.train_heir("julian").contains("beklemelisin") and is_equal_approx(sim.heir_maturity, first + 10.0)
+	for w in [7, 13]:
+		sim.week = w
+		sim.mesai = sim.mesai_max
+		sim.train_heir("julian")
+	good = good and is_equal_approx(sim.heir_maturity, first + 30.0)
+	good = good and is_equal_approx(sim.actors["prens"].ambition, prince + 3.0) and is_equal_approx(sim.actors["arden"].ambition, general + 3.0)
+	sim.new_game(41, 0)
+	sim.heir_maturity = 30.0
+	sim._world_tick()
+	var base_unrest: float = sim.unrest
+	var base_king: float = sim.king_strength
+	sim.new_game(41, 0)
+	sim.heir_maturity = 70.0
+	good = good and sim.heir_maturity_band() == "Hazır"
+	sim._world_tick()
+	good = good and is_equal_approx(sim.unrest, base_unrest - 0.12) and is_equal_approx(sim.king_strength, base_king + 0.06)
+	if not good:
+		push_error("veliaht eğitimi, bekleme veya yüksek olgunluk etkisi hatalı")
+	print("Veliaht eğitimi: ", "OK" if good else "HATA")
 	return good
 
 

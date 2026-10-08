@@ -67,6 +67,7 @@ const STATE_RALLY_DENOM := [400.0, 400.0, 250.0]
 const INSTITUTION_HEADS := {"kessler": "maliye", "falk": "hukuk", "arden": "ordu", "dorn": "idare"}
 const APPOINT_COOLDOWN := 8
 const TENDER_COOLDOWN := 3
+const HEIR_COOLDOWN := 6
 const HALDEN_MEDIA_UNREST := 0.6
 const HALDEN_MEDIA_KING := 0.25
 const HALDEN_MEDIA_REACH := [71.0, 71.0, 50.0]  # Yayın etkisinin ülke çapına eriştiği holding eşiği.
@@ -462,6 +463,37 @@ func appoint_wait(id: String) -> int:
 	if not INSTITUTION_HEADS.has(id):
 		return -1
 	return maxi(0, APPOINT_COOLDOWN - (week - int(flags.get("KADRO_" + INSTITUTION_HEADS[id], -100))))
+
+
+func heir_maturity_band() -> String:
+	return "Çocuksu" if heir_maturity < 40.0 else ("Gelişiyor" if heir_maturity < 70.0 else "Hazır")
+
+
+func heir_train_wait() -> int:
+	return maxi(0, HEIR_COOLDOWN - (week - int(flags.get("VELIAHT_YETISTI", -100))))
+
+
+func train_heir(id: String) -> String:
+	if id != "julian" or not actors.has(id) or actors[id].moved:
+		return "Veliaht için bu kararname çıkarılamaz."
+	if heir_train_wait() > 0:
+		return "Julian'ın yeni dersleri için beklemelisin."
+	if not spend_mesai():
+		return _no_mesai()
+	var last := int(flags.get("VELIAHT_YETISTI", -100))
+	var streak := int(stats.get("heir_streak", 0)) + 1 if week - last <= 8 else 1
+	stats["heir_trainings"] = int(stats.get("heir_trainings", 0)) + 1
+	stats["heir_streak"] = streak % 3
+	flags["VELIAHT_YETISTI"] = week
+	heir_maturity = minf(100.0, heir_maturity + 10.0)
+	if streak == 3:
+		for aid in ["prens", "arden"]:
+			if actors.has(aid):
+				actors[aid].ambition += 3.0
+		changed.emit()
+		return "Julian derslerini ilerletti. Prens Marcus ile Marcus Arden, veliahdın sarayda fazla öne çıktığını konuşuyor."
+	changed.emit()
+	return "Julian derslerini ilerletti. Ne öğrendiğini halkın önünde göreceksin."
 
 
 func appoint(id: String, kind: String) -> String:
@@ -1413,6 +1445,9 @@ func _world_tick() -> void:
 	private_wealth += _diff("income")  # sivil liste ödeneği
 	_tick_state()
 	_tick_holding()
+	if heir_maturity >= 70.0 and actors.has("julian") and not actors["julian"].moved:
+		unrest = maxf(0.0, unrest - 0.12)
+		king_strength = minf(100.0, king_strength + 0.06)
 
 
 func _tick_state() -> void:
@@ -1663,7 +1698,10 @@ func _choose_regime() -> String:
 func _fire_events() -> void:
 	var pool: Array = []
 	for e: Dictionary in _events:
-		if _eligible(e) and rng.randf() <= float(e.get("chance", 1.0)):
+		var chance: float = e.get("chance", 1.0)
+		if e["id"] == "prens_veliaht" and heir_maturity >= 70.0:
+			chance *= 0.5
+		if _eligible(e) and rng.randf() <= chance:
 			pool.append([rng.randf(), e])
 	pool.sort_custom(func(x: Array, y: Array) -> bool: return x[0] < y[0])
 	var added := 0

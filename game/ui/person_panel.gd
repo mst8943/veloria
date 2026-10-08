@@ -5,7 +5,7 @@ const UIKit := preload("res://game/ui/ui_kit.gd")
 var host: Control
 
 const ROLE := {"army": "Ordu", "intel": "İstihbarat", "economy": "Maliye", "media": "Medya", "press": "Basın",
-	"gate": "Saray", "royal": "Hanedan", "opposition": "Muhalefet", "court": "Yargı"}
+	"gate": "Saray", "royal": "Hanedan", "heir": "Veliaht", "foreign": "Dışişleri", "opposition": "Muhalefet", "court": "Yargı"}
 
 const TIPS := {
 	"summon": "Huzura Çağır (1 mesai)\nİz bırakmaz, para istemez. Kişiyi biraz yatıştırır. Komplo kuran çoğu zaman kaçamak konuşur; temiz çıkan birinin hakkındaki dedikodular dağılır. Aynı kişi 4 haftada bir çağrılabilir.",
@@ -31,7 +31,8 @@ const TIPS := {
 	"destroy": "Kanıtı Yok Et (1 mesai)\nKopyalar bitince gerçekten silinir; girişim fark edilebilir.",
 	"appoint_loyal": "Sadık Ata (1 mesai)\nBir kurum başkanı için sadık kadro kararnamesi çıkar. Sonucunu zamanla raporlardan öğrenirsin.",
 	"appoint_merit": "Liyakatli Ata (1 mesai)\nBir kurum başkanı için liyakatli kadro kararnamesi çıkar. Sonucunu zamanla raporlardan öğrenirsin.",
-	"tender": "İhale Ver (1 mesai)\nHalden'in şirketlerine yeni bir devlet işi ver. Sözleşmenin sonuçları zamanla ortaya çıkar.",
+	"tender": "İhale Ver (1 mesai)\nSarne'nin şirketlerine yeni bir devlet işi ver. Sözleşmenin sonuçları zamanla ortaya çıkar.",
+	"train_heir": "Veliahdı Yetiştir (1 mesai)\nJulian için eğitim ve halkla buluşma programı hazırla. Sürekli öne çıkarmak saraydaki başka isimleri rahatsız edebilir.",
 }
 
 ## Eylem kategorileri (eylem panelindeki sekmeler).
@@ -42,7 +43,7 @@ const CAT_TIPS := {
 	"EMRET": "Emret\nHuzursuzluğu bastırma emri. Kanal seçimi sonucu ve inkâr edilebilirliği belirler.",
 	"BASKI": "Baskı\nŞantaj ve görevden alma. Güçlü araçlar, ama geri tepebilirler.",
 	"OPERASYON": "Operasyon (2 mesai)\n1–3 kişiyle gizli iş. Çemberi kurmak için Çoklu seçim'i aç ya da Ctrl ile kişi ekle.",
-	"DEVLET": "Devlet\nKurum başkanları için kadro kararnameleri ve Sarne için ihale.",
+	"DEVLET": "Devlet\nKurum başkanları için kadro kararnameleri, Sarne için ihale ve veliaht eğitimi.",
 }
 
 const HINT_DEFAULT := "[color=#8f7a45]Bir eylemin üzerine gel ya da dokun: ne yaptığını ve bedelini burada görürsün.[/color]"
@@ -134,7 +135,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		["EMRET", [["o_yaz", "Yazılı Emir"], ["o_soz", "Sözlü Emir"], ["o_ima", "İma"]]],
 		["BASKI", [["blackmail", "Şantaj"], ["dismiss", "Görevden Al"]]],
 		["OPERASYON", [["op_dikkat", "Dikkat Dağıt"], ["op_bol", "Muhalefeti Böl"], ["op_zayif", "Rakibi Zayıflat"], ["op_dus", "Birbirine Düşür"]]],
-		["DEVLET", [["appoint_loyal", "Sadık Ata"], ["appoint_merit", "Liyakatli Ata"], ["tender", "İhale Ver"]]],
+		["DEVLET", [["appoint_loyal", "Sadık Ata"], ["appoint_merit", "Liyakatli Ata"], ["tender", "İhale Ver"], ["train_heir", "Veliahdı Yetiştir"]]],
 	]
 	var actions := {
 		"summon": func() -> void: host._act(func(id: String) -> String: return Sim.summon(id)),
@@ -155,6 +156,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		"appoint_loyal": func() -> void: host._act(func(id: String) -> String: return Sim.appoint(id, "loyal")),
 		"appoint_merit": func() -> void: host._act(func(id: String) -> String: return Sim.appoint(id, "merit")),
 		"tender": func() -> void: host._act(func(id: String) -> String: return Sim.give_tender(id)),
+		"train_heir": func() -> void: host._act(func(id: String) -> String: return Sim.train_heir(id)),
 	}
 	for i in Sim.PRIZES.size():
 		var prize: String = Sim.PRIZES[i]
@@ -276,6 +278,7 @@ const ACTION_META := {
 	"appoint_loyal": ["Sadık Ata", 1, 0.0, 0, 0],
 	"appoint_merit": ["Liyakatli Ata", 1, 0.0, 0, 0],
 	"tender": ["İhale Ver", 1, 0.0, 0, 0],
+	"train_heir": ["Veliahdı Yetiştir", 1, 0.0, 0, 0],
 }
 const TRACE_NAMES := ["iz yok", "inkâr edilebilir", "iz bırakır", "kanıt bırakır"]
 const RISK_NAMES := ["düşük", "orta", "yüksek"]
@@ -311,6 +314,11 @@ func _preview(key: String) -> void:
 					note = "Yalnızca Sarne'ye ihale verilebilir."
 				elif Sim.tender_wait() > 0:
 					note = "İhale komisyonu yeni dosyayı henüz açmıyor."
+			"train_heir":
+				if id != "julian":
+					note = "Yalnızca Julian için kullanılabilir."
+				elif Sim.heir_train_wait() > 0:
+					note = "Julian yeni derslerine hazırlanıyor."
 			"appoint_loyal", "appoint_merit":
 				if not Sim.INSTITUTION_HEADS.has(id):
 					note = "Yalnızca kurum başkanları için kullanılabilir."
@@ -351,7 +359,7 @@ func _preview(key: String) -> void:
 		# Bağlam yoksa uzun açıklamanın ilk cümlesi (tamamı ipucu balonunda).
 		var desc: String = str(TIPS[key]).split("\n")[1]
 		note = desc.split(". ")[0].trim_suffix(".") + "."
-	if key in ["appoint_loyal", "appoint_merit", "tender"]:
+	if key in ["appoint_loyal", "appoint_merit", "tender", "train_heir"]:
 		host._hint_label.text = "[color=#d6b25e][b]%s[/b][/color]   [color=#9a958a]1 mesai[/color]\n%s" % [m[0], note]
 		return
 	var cost := "%d mesai" % int(m[1])
@@ -520,7 +528,7 @@ func _style_cards(hover_id := "") -> void:
 		card.add_theme_stylebox_override("panel", UIKit.box(bg, border, 6, 3, 2 if selected else 1))
 
 
-const PERSON_ACTIONS := ["summon", "promote", "bribe", "p_0", "p_1", "p_2", "cross", "investigate", "o_sor", "o_yaz", "o_soz", "o_ima", "blackmail", "dismiss", "appoint_loyal", "appoint_merit", "tender"]
+const PERSON_ACTIONS := ["summon", "promote", "bribe", "p_0", "p_1", "p_2", "cross", "investigate", "o_sor", "o_yaz", "o_soz", "o_ima", "blackmail", "dismiss", "appoint_loyal", "appoint_merit", "tender", "train_heir"]
 const OP_ACTIONS := ["op_dikkat", "op_bol", "op_zayif", "op_dus"]
 
 
@@ -551,6 +559,8 @@ func _update_action_states() -> void:
 			if k.begins_with("appoint_") and id != "" and (not Sim.INSTITUTION_HEADS.has(id) or Sim.actors[id].moved or Sim.appoint_wait(id) > 0):
 				off = true
 			if k == "tender" and id != "" and (id != "halden" or Sim.actors[id].moved or Sim.tender_wait() > 0):
+				off = true
+			if k == "train_heir" and id != "" and (id != "julian" or Sim.actors[id].moved or Sim.heir_train_wait() > 0):
 				off = true
 			b.disabled = off
 	for k in OP_ACTIONS:
@@ -590,6 +600,9 @@ func _update_info() -> void:
 		var mood := Sim.halden_mood()
 		host._traits.add_child(_trait("Medya · " + mood, UIKit.DANGER if mood == "düşmanca" else UIKit.GOLD,
 			-1, 0, "Gazete ve kanalının saraya karşı tutumu."))
+	if id == "julian":
+		host._traits.add_child(_trait("Olgunluk · " + Sim.heir_maturity_band(), UIKit.GOLD, -1, 0,
+			"Veliahdın sarayda ve halkın önünde kendine yer bulma hâli."))
 	if a.moved:
 		host._traits.add_child(_trait("Düşman", UIKit.DANGER, -1, 0, "Sana karşı fiilen harekete geçti."))
 	elif a.insider:

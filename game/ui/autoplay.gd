@@ -91,10 +91,12 @@ func run() -> void:
 			if rng.randf() < 0.3:
 				m._sel.append(ids[rng.randi() % ids.size()])
 			m._update_info()
-		var keys := ["promote", "bribe", "cross", "o_soz", "o_ima", "o_sor", "op_dikkat", "op_bol", "appoint_loyal", "appoint_merit", "tender"]
+		var keys := ["promote", "bribe", "cross", "o_soz", "o_ima", "o_sor", "op_dikkat", "op_bol", "appoint_loyal", "appoint_merit", "tender", "train_heir"]
 		while Sim.mesai > 0 and not Sim.ended:
 			var k: String = keys[rng.randi() % keys.size()]
 			if k == "tender" and (m._sel.is_empty() or m._sel[0] != "halden"):
+				k = "cross"
+			if k == "train_heir" and (m._sel.is_empty() or m._sel[0] != "julian"):
 				k = "cross"
 			(m._buttons[k] as Button).pressed.emit()
 			pressed += 1
