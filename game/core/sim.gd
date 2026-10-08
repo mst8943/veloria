@@ -2885,11 +2885,11 @@ func _foreign_report_value(power: String, verified: bool) -> float:
 
 func foreign_band(power: String, verified: bool = false) -> String:
 	var value := _foreign_report_value(power, verified)
-	return "Soğuk" if value < 40.0 else ("Mesafeli" if value < 65.0 else "Yakın")
+	return tr("Soğuk") if value < 40.0 else (tr("Mesafeli") if value < 65.0 else tr("Yakın"))
 
 
 func foreign_report(verified: bool = false) -> String:
-	return "Asteria %s; Drakon %s; Seravia %s." % [foreign_band("asteria", verified), foreign_band("drakon", verified), foreign_band("seravia", verified)]
+	return tr("Asteria %s; Drakon %s; Seravia %s.") % [foreign_band("asteria", verified), foreign_band("drakon", verified), foreign_band("seravia", verified)]
 
 
 func _generate_reports() -> void:
