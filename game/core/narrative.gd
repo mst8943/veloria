@@ -50,49 +50,49 @@ func historians(survived: bool) -> Array:
 	var pro: Array[String] = []
 	var con: Array[String] = []
 	if survived:
-		pro.append(HISTORY["pro_survived"] % KING_NAME)
+		pro.append(tr(str(HISTORY["pro_survived"])) % KING_NAME)
 	else:
-		pro.append(HISTORY["pro_lost"] % [KING_NAME, weeks])
+		pro.append(tr(str(HISTORY["pro_lost"])) % [KING_NAME, weeks])
 	if economy >= 55.0:
-		pro.append(HISTORY["pro_economy"])
+		pro.append(tr(str(HISTORY["pro_economy"])))
 	if flags.has("kessler_reform_0"):
-		pro.append(HISTORY["pro_reform"])
+		pro.append(tr(str(HISTORY["pro_reform"])))
 	if unrest < 35.0:
-		pro.append(HISTORY["pro_peace"])
+		pro.append(tr(str(HISTORY["pro_peace"])))
 	if int(stats.get("kept", 0)) > 0:
-		pro.append(HISTORY["pro_kept"] % int(stats.get("kept", 0)))
+		pro.append(tr(str(HISTORY["pro_kept"])) % int(stats.get("kept", 0)))
 	if flags.has("tac_giyme_2") or flags.has("yildonumu_0"):
-		pro.append(HISTORY["pro_public"])
+		pro.append(tr(str(HISTORY["pro_public"])))
 	if flags.has("halef_karari_0"):
-		pro.append(HISTORY["pro_constitution"])
+		pro.append(tr(str(HISTORY["pro_constitution"])))
 	elif flags.has("halef_karari_1"):
-		pro.append(HISTORY["pro_heir"])
+		pro.append(tr(str(HISTORY["pro_heir"])))
 	if pro.size() == 1:
-		pro.append(HISTORY["pro_default"])
+		pro.append(tr(str(HISTORY["pro_default"])))
 	var public_secrets := 0
 	for f: Dictionary in facts.values():
 		if f["subject"] == "king" and f.get("public", false):
 			public_secrets += 1
 	if public_secrets > 0:
-		con.append(HISTORY["con_secrets"] % public_secrets)
+		con.append(tr(str(HISTORY["con_secrets"])) % public_secrets)
 	if int(stats.get("bribes", 0)) >= 2:
-		con.append(HISTORY["con_bribes"] % int(stats.get("bribes", 0)))
+		con.append(tr(str(HISTORY["con_bribes"])) % int(stats.get("bribes", 0)))
 	if int(stats.get("blackmails", 0)) > 0:
-		con.append(HISTORY["con_blackmail"])
+		con.append(tr(str(HISTORY["con_blackmail"])))
 	if int(stats.get("broken", 0)) > 0:
-		con.append(HISTORY["con_broken"] % int(stats.get("broken", 0)))
+		con.append(tr(str(HISTORY["con_broken"])) % int(stats.get("broken", 0)))
 	if flags.has("GAZETECI_SUSTURULDU") or flags.has("gazeteci_ihale_1"):
-		con.append(HISTORY["con_press"])
+		con.append(tr(str(HISTORY["con_press"])))
 	if flags.has("muhalefet_birlesme_2"):
-		con.append(HISTORY["con_opposition"])
+		con.append(tr(str(HISTORY["con_opposition"])))
 	if economy < 35.0:
-		con.append(HISTORY["con_economy"])
+		con.append(tr(str(HISTORY["con_economy"])))
 	if echo_level() > 0.7:
-		con.append(HISTORY["con_echo"])
+		con.append(tr(str(HISTORY["con_echo"])))
 	if flags.has("halef_karari_2"):
-		con.append(HISTORY["con_lock"])
+		con.append(tr(str(HISTORY["con_lock"])))
 	if con.is_empty():
-		con.append(HISTORY["con_default"])
+		con.append(tr(str(HISTORY["con_default"])))
 	return [" ".join(pro), " ".join(con)]
 
 
