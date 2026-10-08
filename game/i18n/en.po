@@ -2440,6 +2440,36 @@ msgstr "Queen Helena"
 msgid "(kötü haberi sana iletmedi)"
 msgstr "(she kept the bad news from you)"
 
+msgid "huzursuzlanmaya başladı"
+msgstr "began to grow restless"
+
+msgid "komploya katıldı"
+msgstr "joined the conspiracy"
+
+msgid "darbe hazırlığına geçti"
+msgstr "began preparing a coup"
+
+msgid "darbe girişimini başlattı"
+msgstr "launched the coup attempt"
+
+msgid "darbe gecesi görevden alındı; komplo başsız kaldı"
+msgstr "was dismissed on coup night, leaving the plot leaderless"
+
+msgid "tutuklandı (darbe bastırıldı)"
+msgstr "was arrested (the coup was crushed)"
+
+msgid "taviz koparıp geri çekildi"
+msgstr "won concessions and withdrew"
+
+msgid "halk sarayın önüne dolunca yalnız kaldı"
+msgstr "was left alone when the people gathered outside the palace"
+
+msgid "Çocuksu"
+msgstr "Childish"
+
+msgid "Gelişiyor"
+msgstr "Developing"
+
 msgid "Prens Marcus"
 msgstr "Prince Marcus"
 
