@@ -1,0 +1,106 @@
+{
+  "phrases": {
+    "army": [
+      ["The troops are ready, and morale is high.", "Order holds in the barracks; the officers send you their loyalty.", "The army is sound. I see no cause for concern."],
+      ["Uneasy murmurs among the officers, but discipline holds.", "Some regiments complain about pay and promotion.", "The army awaits its orders; more are asking why."],
+      ["Some units are delaying orders. The younger ranks are talking.", "Some commanders no longer return my calls promptly.", "Politics is being discussed in the barracks. That is no good sign."]
+    ],
+    "intel": [
+      ["Nothing out of the ordinary in the files.", "Our watchlist is quiet. Silence is information too—but for now, good news.", "A routine week. My reports are on your desk."],
+      ["We are seeing movement in the streets and the opposition.", "Several names have seen a rise in calls. We are watching.", "The opposition is meeting more often; we have ears in the room."],
+      ["Secret meetings are multiplying. The threat may be real.", "Around the Palace, people are calling one another—not you.", "Some files are closed even to me now. That worries me."]
+    ],
+    "economy": [
+      ["Growth is healthy; inflation is under control.", "The Treasury is balanced; the markets are calm.", "Tax receipts are ahead of expectations, Your Majesty."],
+      ["Prices are rising; some sectors are under strain.", "The books add up, but the market prices do not.", "Some factories are cutting shifts. Not an alarm—yet."],
+      ["The budget deficit is growing. We may need to act.", "I am calculating how we will pay wages next month.", "I could make the figures look better. But you need the truth."]
+    ],
+    "media": [
+      ["The public is pleased with you; the headlines are kind.", "My channels like you, and the public likes my channels.", "The headlines belonged to you this week. You're welcome."],
+      ["Public opinion is undecided; the right news flow matters.", "The public has yet to choose whose story to believe.", "With a little help, we can save this week."],
+      ["We are losing the narrative. You need to trust me.", "Even my channels can no longer hold the news back.", "The street is louder than our screens now."]
+    ],
+    "press": [
+      ["The streets are calm.", "They talk football, not politics, in the coffeehouses.", "People are getting on with their lives; I see no anger."],
+      ["People are asking more questions.", "My readers' letters are growing sharper.", "Voices are rising in the bakery queues."],
+      ["The public is angry and no longer afraid.", "You should read what they write on the walls, Your Majesty.", "People are speaking without hiding their names now."]
+    ],
+    "gate": [
+      ["The Palace is quiet; no one wants to trouble you.", "Your appointment book is in order; all is well.", "The corridors are peaceful, Your Majesty."],
+      ["Some delegations asked for an audience. I chose to delay them.", "I kept a few visitors in the waiting room so they would not tire you.", "There are whispers in the Palace; nothing important, I'm sure."],
+      ["I thought it best not to bring some news to you.", "I manage the visitor book now; do not worry.", "I no longer know exactly who is meeting whom in the Palace."]
+    ],
+    "royal": [
+      ["The Prince is quiet and dutiful at ceremonies.", "Your brother spent the week hunting and painting.", "The Prince sends you his regards."],
+      ["The Prince is dining often with the nobility; we do not know why.", "The Prince has been photographed with foreign envoys of late.", "They say your brother has been reading old dynastic letters."],
+      ["There is preparation around the Prince. They are speaking of the throne.", "Noble families have begun calling the Prince 'Your Majesty.'", "The Prince's guards have multiplied. One should ask whom they fear."]
+    ],
+    "opposition": [
+      ["The opposition is scattered and barely heard.", "The opposition is fighting among itself; they have no time for you.", "Voss's rallies are half empty."],
+      ["Secret talks continue between opposition factions.", "Voss's speeches are sharper, and the crowds are growing.", "The opposition is organizing at the universities."],
+      ["The opposition is uniting; it has begun coordinating with the streets.", "The squares could fill at the opposition's call.", "Voss now speaks of a 'transitional government.'"]
+    ],
+    "court": [
+      ["The courts are functioning normally.", "The Palace is nowhere on the judiciary's agenda.", "Cases are moving on schedule."],
+      ["Some files are moving through the courts faster than expected.", "Prosecutors are reopening some old cases.", "Your name has not yet come up in court. Not yet."],
+      ["The judiciary is closing in on the Palace; prosecutors are impatient.", "Some judges have begun writing that the constitution stands above the king.", "The Palace address is on the cover of an investigation file."]
+    ],
+    "heir": [
+      ["Julian has finished his lessons and is preparing to meet the public.", "The Crown Prince spoke with restraint at the Palace ceremony."],
+      ["Julian is taking some nobles' words too seriously.", "His tutors have proposed a different path for the Crown Prince."],
+      ["More families are drawing close to Julian; every one has an interest.", "The Crown Prince's name is being traded beyond the Palace walls."]
+    ],
+    "foreign": [
+      ["Notes from the embassies are calm; talks continue.", "Foreign delegations have not shut our door, Your Majesty."],
+      ["The embassies await a reply; they are reconsidering their promises.", "Conflicting reports are arriving from foreign capitals."],
+      ["The envoys have hardened their correspondence; a few doors may close.", "Our friends abroad were unusually quiet this week."]
+    ]
+  },
+  "sign_texts": {
+    "0": {
+      "_": ["Whispers about {n} drift through the corridors; no one knows their source.", "A servant says they saw {n_i} by the Palace's back door late at night.", "An unsigned note questioning {n_in}'s loyalty was left on your desk.", "Someone close to {n_in} is talking too freely. No one knows what they said."]
+    },
+    "1": {
+      "_": ["{n} sighs often in meetings.", "{n} has complained to close associates about the Palace's direction.", "{n} seems displeased with the latest rewards.", "{n_in}'s greeting to you is colder than before."]
+    },
+    "2": {
+      "_": ["{n} made a long, closed-door visit to {p_e}.", "The lights stay on late at {n_in}'s residence.", "{n} has spoken to some ministers of a 'transition period.'"],
+      "army": ["{n_in}'s officers gather at headquarters late into the night.", "{n} dined alone with some regimental commanders."],
+      "intel": ["{n} had some files moved from the Palace archive to his own office.", "{n_in}'s men are watching your ministers."],
+      "media": ["Your name appears less and less on {n_in}'s channels.", "{n} met foreign bankers in secret."],
+      "royal": ["Cars pull up at the Prince's residence after midnight.", "The Prince is exchanging sealed letters with noble families."]
+    },
+    "3": {
+      "_": ["{n} now returns your calls late; those nearby await his orders, not yours.", "The list of ministers meeting with {n} grows by the day."],
+      "army": ["{n} placed his own men in key units across the Capital.", "The commanders at the Capital's gates have changed; all answer to {n}."],
+      "royal": ["The Prince's guards have doubled.", "Noble families have begun calling the Prince 'Your Majesty.'"],
+      "intel": ["{n} locked the Palace phone-tapping logs in his own safe."],
+      "media": ["{n_in}'s channels are preparing live crews for 'an extraordinary night.'"]
+    }
+  },
+  "state": {
+    "maliye": {
+      "aksıyor": ["Collection ledgers are falling behind; payday is near.", "Files are piling up at the tax desk; we have not closed the books yet.", "The road for money into the Treasury has grown longer, Your Majesty."],
+      "yürüyor": ["Collections continue; some ledgers remain open.", "The clerks are doing the sums; delays are manageable.", "The Treasury can breathe, though next month's burden is already visible."],
+      "sağlam": ["Taxes arrived on time; the ledgers agree.", "The Finance desk closed the month without a deficit, Your Majesty.", "The Treasury's receipts are recorded; the clerks are at their posts."]
+    },
+    "hukuk": {
+      "aksıyor": ["Files are gathering dust in court; rulings are late.", "The prosecutors' calendar is full, and witnesses are tired of waiting.", "The judges cannot keep the files in order, Your Majesty."],
+      "yürüyor": ["The courts are working; the heavier cases are in line.", "The prosecutors have opened new files and are trying to close old ones.", "Rulings are being written, but the corridors have not emptied."],
+      "sağlam": ["Prosecutors' files are moving on schedule.", "The courts are not delaying their rulings, Your Majesty.", "The Judiciary's records are in order; no file has been abandoned."]
+    },
+    "ordu": {
+      "aksıyor": ["The units' equipment lists do not agree.", "Drills are postponed in the barracks; officers are asking for funds.", "Units listed as ready for the border are waiting below strength."],
+      "yürüyor": ["Drills continue in the barracks; some depots opened late.", "The units are ready, but the supply schedule has gaps.", "Officers await orders while the ammunition count is completed."],
+      "sağlam": ["The units are in place, and the depot seals are intact.", "Drills ended on time; the border posts are ready.", "Commanders signed the orders and supply sheets together."]
+    },
+    "idare": {
+      "aksıyor": ["Orders sent to the provincial governors are still on their desks.", "The Palace's letter has vanished somewhere in the provinces.", "The seals were set, but the orders never arrived."],
+      "yürüyor": ["The governorates have replied; some letters were late.", "Palace orders are reaching the provinces; the tracking ledger is open.", "The clerks are keeping up with the files, but the queue is still long."],
+      "sağlam": ["The governorates received their orders on time.", "Palace correspondence was recorded in full.", "Clerks and governors are following the same calendar, Your Majesty."]
+    }
+  },
+  "echo": "Your Majesty, all is under control and well under your leadership.",
+  "unknown_phrase": "…",
+  "unknown_partner": "an unknown delegation"
+}
