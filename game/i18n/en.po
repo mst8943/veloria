@@ -1840,6 +1840,9 @@ msgstr "improved"
 msgid "Yönetimin %s bir rejim olarak anılmaya başladı."
 msgstr "Your rule began to be known as a %s regime."
 
+msgid "Taç sana emanet edildi. Güç merkezleri seni test edecek."
+msgstr "The crown is in your hands. The centers of power will test you."
+
 msgid "Prens'in muhafızları sarayın doğu kanadını tuttu. Soylular taht salonunda toplanıyor; kimse seni çağırmadı."
 msgstr "The Prince's guards have taken the east wing of the palace. The nobles are gathering in the throne room; no one has summoned you."
 
