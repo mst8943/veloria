@@ -410,6 +410,7 @@ func _init() -> void:
 	ok = _test_state_end() and ok
 	ok = _test_newcomer_rng() and ok
 	ok = _test_heir() and ok
+	ok = _test_new_reports() and ok
 	# Meclis görüşleri: deterministik, kayıtta korunur, ana rng'ye dokunmaz, hazır aktör kötü önerir.
 	ok = _test_advice() and ok
 	# Darbe aşamaları: çekilme, kriz kartı, kriz sonuçları, kayıt, huzura çağırma.
@@ -476,6 +477,21 @@ func _test_heir() -> bool:
 	if not good:
 		push_error("veliaht eğitimi, bekleme veya yüksek olgunluk etkisi hatalı")
 	print("Veliaht eğitimi: ", "OK" if good else "HATA")
+	return good
+
+
+func _test_new_reports() -> bool:
+	sim.new_game(101, 0)
+	var good := true
+	for aid in ["julian", "elena"]:
+		var found := false
+		for report: Dictionary in sim.reports:
+			if report["source"] == aid:
+				found = not str(report["text"]).is_empty() and int(report["band"]) in [0, 1, 2]
+		good = good and found
+	if not good:
+		push_error("Julian veya Elena raporu eksik")
+	print("Yeni kadro raporları: ", "OK" if good else "HATA")
 	return good
 
 

@@ -262,6 +262,8 @@ func _act_visible(alert := false) -> void:
 		# 2) En kötü raporu veren (bant 2) kişiye yönel: ordu kötü → Arden'i gönlünü al; sokak kötü → bastır.
 		var worst: Dictionary = {}
 		for r: Dictionary in sim.reports:
+			if sim.actors.has(str(r["source"])) and sim.actors[str(r["source"])].supporting:
+				continue  # eski strateji yeni kadro raporlarını karar girdisi yapmaz
 			if worst.is_empty() or int(r["band"]) > int(worst["band"]):
 				worst = r
 		var src: String = worst.get("source", "")
@@ -291,7 +293,7 @@ func _act_visible(alert := false) -> void:
 			if sus != "" and sim.suspicion_level(sus) >= 3 and sim.private_wealth >= 5.0:
 				sim.bribe(sus)
 				continue
-		var ids: Array = sim.actors.keys()
+		var ids: Array = sim.actors.keys().filter(func(id: String) -> bool: return not sim.actors[id].supporting)
 		if ids.is_empty():
 			return
 		sim.cross_check(ids[(sim.week + guard) % ids.size()])

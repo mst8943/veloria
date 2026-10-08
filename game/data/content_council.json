@@ -11,6 +11,8 @@
     "treasury": ["kessler", "dorn"],
     "capacity": ["falk", "kessler"],
     "holding": ["halden", "dorn"],
+	"heir": ["julian", "prens"],
+	"foreign": ["elena", "dorn"],
     "unrest": [
       "arden",
       "halden"
@@ -121,7 +123,9 @@
     "halden": "Kamuoyunu ben hallederim.",
     "dorn": "Sarayın huzuru için en iyisi bu.",
     "prens": "Hanedanın onuru bunu gerektirir.",
-    "falk": "Hukuka en uygun yol bu."
+    "falk": "Hukuka en uygun yol bu.",
+    "julian": "Hanedanın yarını için bunu öğrenmeliyim.",
+    "elena": "Elçiliklerin söylediğini değil, niyetini tartıyorum."
   },
   "evasive": [
     "Takdir sizindir, Majesteleri.",

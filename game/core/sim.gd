@@ -2659,6 +2659,10 @@ func _domain_truth(domain: String) -> float:
 		"royal":
 			var p: Actor = actors.get("prens")
 			return clampf(p.ambition + (100.0 - king_strength) * 0.3, 0.0, 100.0) if p else 0.0
+		"heir":
+			return 100.0 - heir_maturity
+		"foreign":
+			return clampf(60.0 + unrest * 0.3 - (economy - 50.0) * 0.4 - (treasury - 50.0) * 0.2, 0.0, 100.0)
 		_:
 			return unrest
 
@@ -2715,6 +2719,21 @@ func _generate_reports() -> void:
 			reports.remove_at(worst_idx)
 			truth_log.append({"week": week, "name": "Kraliçe Helena", "said": "(kötü haberi sana iletmedi)",
 				"truth": "%s: %s" % [dropped["name"], dropped["text"]], "diff": 2})
+	# Yeni kadro kendi raporunu ayrı üreteçle hazırlar; eski dokuz kaynağın ana RNG çekilişleri sabit kalır.
+	for aid in ["julian", "elena"]:
+		var a: Actor = actors.get(aid)
+		if a == null or a.moved:
+			continue
+		var report_rng := RandomNumberGenerator.new()
+		report_rng.seed = rng.seed ^ (week * 11939) ^ aid.hash()
+		var reported := _domain_reported(a) + report_rng.randf_range(-6.0, 6.0) * (1.0 - a.honesty * 0.5)
+		var line: String = _phrase(a, reported, echo)
+		var rb := _band(a, reported)
+		var tb := _band(a, _domain_truth(a.domain))
+		if rb < tb:
+			truth_log.append({"week": week, "name": a.display_name, "said": line,
+				"truth": _phrase(a, _domain_truth(a.domain), 0.0), "diff": tb - rb})
+		reports.append({"source": a.id, "name": a.display_name, "title": a.title, "text": line, "band": rb})
 
 
 
