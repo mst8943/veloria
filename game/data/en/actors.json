@@ -10,7 +10,7 @@
   "falk": {"name": "Sophia Renn", "title": "Chief Prosecutor", "red_line": "Interference with her independence", "weak_point": "A mistake in an old case"},
   "julian": {"name": "Julian Valerius", "title": "Crown Prince", "red_line": "Bargaining away the dynasty's future", "weak_point": "Childhood fears"},
   "elena": {"name": "Elena Varos", "title": "Foreign Minister", "red_line": "Opening embassy correspondence", "weak_point": "Her old ties in Asteria"},
-  "claire": {"name": "Claire Duvall", "title": "Asterian Ambassador", "red_line": "Targeting Asterian citizens", "weak_point": "Her old secret meetings with the Palace"},
-  "malenkov": {"name": "Viktor Malenkov", "title": "Drakonic Ambassador", "red_line": "Publicly humiliating Drakon", "weak_point": "The list of his Capital intermediaries"},
-  "lucien": {"name": "Lucien Vale", "title": "Seravian Trade Representative", "red_line": "Arbitrarily cutting off Seravian trade", "weak_point": "His port partners' hidden stake"}
+  "claire": {"name": "Claire Duvall", "title": "Ambassador of Asteria", "red_line": "Targeting Asterian citizens", "weak_point": "Her old secret meetings with the Palace"},
+  "malenkov": {"name": "Viktor Malenkov", "title": "Ambassador of Drakon", "red_line": "Publicly humiliating Drakon", "weak_point": "The list of his Capital intermediaries"},
+  "lucien": {"name": "Lucien Vale", "title": "Economic Envoy of Seravia", "red_line": "Arbitrarily cutting off Seravian trade", "weak_point": "His port partners' hidden stake"}
 }
