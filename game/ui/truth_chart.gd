@@ -36,13 +36,13 @@ func _draw() -> void:
 	var font := get_theme_default_font()
 	var r := Rect2(Vector2(44, 48), size - Vector2(60, 72))
 	draw_rect(Rect2(Vector2.ZERO, size), Color(0, 0, 0, 0.35))
-	draw_string(UIKit.serif(), Vector2(10, 18), "GERÇEKTE NE OLDU", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, UIKit.GOLD)
+	draw_string(UIKit.serif(), Vector2(10, 18), tr("GERÇEKTE NE OLDU"), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, UIKit.GOLD)
 	# Yatay kılavuz çizgileri
 	for i in 5:
 		var y := r.position.y + r.size.y * i / 4.0
 		draw_line(Vector2(r.position.x, y), Vector2(r.end.x, y), Color(1, 1, 1, 0.06), 1.0)
 	if data.size() < 2:
-		draw_string(font, r.position + Vector2(10, 30), "Yeterli veri yok.", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, UIKit.TEXT_DIM)
+		draw_string(font, r.position + Vector2(10, 30), tr("Yeterli veri yok."), HORIZONTAL_ALIGNMENT_LEFT, -1, 14, UIKit.TEXT_DIM)
 		return
 	var last_w := float(data[-1]["w"])
 	var first_w := float(data[0]["w"])
@@ -65,5 +65,5 @@ func _draw() -> void:
 	var lx := maxf(44.0, r.end.x - 930.0)
 	for s in SERIES:
 		draw_rect(Rect2(Vector2(lx, 32), Vector2(12, 4)), s["color"])
-		draw_string(font, Vector2(lx + 16, 38), s["name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 11, UIKit.TEXT)
+		draw_string(font, Vector2(lx + 16, 38), tr(str(s["name"])), HORIZONTAL_ALIGNMENT_LEFT, -1, 11, UIKit.TEXT)
 		lx += 135.0

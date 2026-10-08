@@ -10,3 +10,30 @@ msgstr "Close"
 
 msgid "Vazgeç"
 msgstr "Cancel"
+
+msgid "Tahtın gücü"
+msgstr "Strength of the Throne"
+
+msgid "Halkın öfkesi"
+msgstr "Public Anger"
+
+msgid "Komplo"
+msgstr "Plot"
+
+msgid "Devlet"
+msgstr "State"
+
+msgid "Sarne'nin payı"
+msgstr "Sarne's Share"
+
+msgid "Dış ilişkiler"
+msgstr "Foreign Relations"
+
+msgid "Veliaht"
+msgstr "Heir"
+
+msgid "GERÇEKTE NE OLDU"
+msgstr "WHAT REALLY HAPPENED"
+
+msgid "Yeterli veri yok."
+msgstr "Not enough data."
