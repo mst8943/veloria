@@ -2855,16 +2855,16 @@ msgid "Aralarında büyük bir fark görmüyorum, Majesteleri."
 msgstr "I see little difference between them, Your Majesty."
 
 msgid "%s öneririm"
-msgstr "I recommend %s"
+msgstr "I recommend option %s"
 
 msgid "Bence %s, Majesteleri"
-msgstr "I would choose %s, Your Majesty"
+msgstr "I would choose option %s, Your Majesty"
 
 msgid "%s seçin"
-msgstr "Choose %s"
+msgstr "Choose option %s"
 
 msgid "%s: %s."
-msgstr "%s: %s."
+msgstr "%s: it %s."
 
 msgid "%s. %s"
 msgstr "%s. %s"
