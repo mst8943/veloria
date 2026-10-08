@@ -33,7 +33,8 @@ dosyası değiştirilmedi.
 
 S9: L4 — `events.json` parti 4 (olay 151–195, son parti).
 
-S9 olay kontrol noktası: 151–160 `9d8f816`, 161–170 `c48566d` ile kaplandı
+S9 olay kontrol noktası: 151–160 `9d8f816`, 161–170 `c48566d`, 171–180
+`108ad68` ile kaplandı
 ve her partiden sonra `i18n_check` ile `event_check --lang=en` geçti.
 
 S9 ön kontrolleri: cinsiyet tutarlılığı ve sezgisel uyarı `c154aa5`, İngilizce
