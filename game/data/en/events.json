@@ -59,7 +59,7 @@
                                             }
                                         ],
                             "ignore":  {
-                                           "text":  "The protests were left to their own devicesÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Âand grew."
+                                           "text":  "The protests were left to their own devicesÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Âand grew."
                                        }
                         },
     "gazeteci_ihale":  {
@@ -417,7 +417,7 @@
               },
     "enflasyon":  {
                       "title":  "Inflation spills into the streets",
-                      "text":  "Prices climb every week in the markets. Finance calls it Ã¢â‚¬Ëœtemporary.Ã¢â‚¬â„¢",
+                      "text":  "Prices climb every week in the markets. Finance calls it ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“temporary.ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€Â¢",
                       "choices":  [
                                       {
                                           "label":  "Lean on the central bank",
@@ -442,7 +442,7 @@
                           "choices":  [
                                           {
                                               "label":  "Sack the minister",
-                                              "text":  "The minister fell. The public is satisfiedÃ¢â‚¬â€for now."
+                                              "text":  "The minister fell. The public is satisfiedÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Âfor now."
                                           },
                                           {
                                               "label":  "Bury the scandal",
@@ -459,7 +459,7 @@
                       },
     "arden_bakanlik":  {
                            "title":  "Arden sends the bill",
-                           "text":  "General Arden, who dispersed the protests, now wants the Ministry of Defense under his command too. Ã¢â‚¬ËœYou remember who cleared the squares.Ã¢â‚¬â„¢",
+                           "text":  "General Arden, who dispersed the protests, now wants the Ministry of Defense under his command too. ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“You remember who cleared the squares.ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€Â¢",
                            "choices":  [
                                            {
                                                "label":  "Give him the ministry",
@@ -480,7 +480,7 @@
                        },
     "lena_kitap":  {
                        "title":  "Silenced journalist publishes a book abroad",
-                       "text":  "Leyla Sarn has left the country. Her book, Ã¢â‚¬ËœThe Silent Palace of Veloria,Ã¢â‚¬â„¢ tops the bestseller lists in neighboring countries. Your name appears in it, too.",
+                       "text":  "Leyla Sarn has left the country. Her book, ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“The Silent Palace of Veloria,ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€Â¢ tops the bestseller lists in neighboring countries. Your name appears in it, too.",
                        "choices":  [
                                        {
                                            "label":  "Ban the book",
@@ -492,7 +492,7 @@
                                        },
                                        {
                                            "label":  "Launch a counter-campaign",
-                                           "text":  "Leyla was branded a Ã¢â‚¬Ëœforeign agent.Ã¢â‚¬â„¢ Sarne knows exactly what he wants."
+                                           "text":  "Leyla was branded a ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“foreign agent.ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€Â¢ Sarne knows exactly what he wants."
                                        }
                                    ],
                        "ignore":  {
@@ -522,7 +522,7 @@
                        },
     "voss_hakkinda":  {
                           "title":  "Vale has a file on you, too",
-                          "text":  "Helena whispers: a thick folder marked Ã¢â‚¬ËœYour MajestyÃ¢â‚¬â„¢ was spotted in Vale\u0027s archive.",
+                          "text":  "Helena whispers: a thick folder marked ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“Your MajestyÃƒÂ¢Ã¢â€šÂ¬Ã¢â€Â¢ was spotted in Vale\u0027s archive.",
                           "choices":  [
                                           {
                                               "label":  "Give Vale more power",
@@ -543,7 +543,7 @@
                       },
     "prens_kacis":  {
                         "title":  "The Prince escapes surveillance",
-                        "text":  "Prince Marcus vanished from the Palace one night. In a neighboring capital, he speaks of the Ã¢â‚¬Ëœrightful dynastyÃ¢â‚¬â„¢ before the cameras.",
+                        "text":  "Prince Marcus vanished from the Palace one night. In a neighboring capital, he speaks of the ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“rightful dynastyÃƒÂ¢Ã¢â€šÂ¬Ã¢â€Â¢ before the cameras.",
                         "choices":  [
                                         {
                                             "label":  "Demand his return",
@@ -551,7 +551,7 @@
                                         },
                                         {
                                             "label":  "Pardon and recall him",
-                                            "text":  "The Prince returned. GratefulÃ¢â‚¬â€or merely patient?"
+                                            "text":  "The Prince returned. GratefulÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Âor merely patient?"
                                         },
                                         {
                                             "label":  "Leave him in exile",
@@ -834,5 +834,211 @@
                         "ignore":  {
                                        "text":  "The signatures are piling up."
                                    }
-                    }
+                    },
+    "yildonumu":  {
+                      "title":  "The first anniversary of your coronation",
+                      "text":  "Palace protocol has offered three ways to mark the anniversary. Every power center is watching how you celebrate.",
+                      "choices":  [
+                                      {
+                                          "label":  "Hold a grand celebration",
+                                          "text":  "The Capital lit up. The Treasury dimmed a little."
+                                      },
+                                      {
+                                          "label":  "Declare a general amnesty",
+                                          "text":  "The prisoners went free. Even the opposition applauded."
+                                      },
+                                      {
+                                          "label":  "Let it pass quietly",
+                                          "text":  "No one celebrated. No one forgot, either."
+                                      }
+                                  ],
+                      "ignore":  {
+                                     "text":  "The anniversary went unmarked."
+                                 }
+                  },
+    "voss_arden_catisma":  {
+                               "title":  "Intelligence Is Listening to the Army",
+                               "text":  "Arden has learned that Vale had the General Staff\u0027s phones tapped. Both want to see you today.",
+                               "choices":  [
+                                               {
+                                                   "label":  "Back Vale",
+                                                   "text":  "Vale is pleased. Arden shut the door a little harder."
+                                               },
+                                               {
+                                                   "label":  "Back Arden",
+                                                   "text":  "The tapping stopped. Vale made sure to keep the recordings."
+                                               },
+                                               {
+                                                   "label":  "Reprimand them both",
+                                                   "text":  "Both backed down. Their distrust of each other worked in your favor."
+                                               }
+                                           ],
+                               "ignore":  {
+                                              "text":  "The feud grew on its own."
+                                          }
+                           },
+    "lena_roportaj":  {
+                          "title":  "A Reporter Asks for an Interview",
+                          "text":  "Leyla Sarn wants an interview without censorship. \u0027The people want to hear from you directly.\u0027",
+                          "choices":  [
+                                          {
+                                              "label":  "Give an honest interview",
+                                              "text":  "People talked about the interview. Some believed you for the first time."
+                                          },
+                                          {
+                                              "label":  "Demand the questions in advance",
+                                              "text":  "Leyla sent the questionsâ€”and mentioned that in the interview."
+                                          },
+                                          {
+                                              "label":  "Refuse",
+                                              "text":  "The next day\u0027s paper had a blank page: \u0027The King Did Not Speak.\u0027"
+                                          }
+                                      ],
+                          "ignore":  {
+                                         "text":  "The request went unanswered."
+                                     }
+                      },
+    "brandt_koalisyon":  {
+                             "title":  "Voss Offers a Coalition",
+                             "text":  "The opposition is strong. Voss offers to join the government in exchange for calming the streets.",
+                             "choices":  [
+                                             {
+                                                 "label":  "Accept",
+                                                 "text":  "The opposition entered government. The streets calmed; Voss\u0027s power moved into the Palace."
+                                             },
+                                             {
+                                                 "label":  "Refuse",
+                                                 "text":  "Voss returned to the rallies."
+                                             },
+                                             {
+                                                 "label":  "Accept, then undermine them",
+                                                 "text":  "A coalition formed. Vale has been watching the opposition ministers from day one."
+                                             }
+                                         ],
+                             "ignore":  {
+                                            "text":  "The offer waits on the table; the opposition is growing impatient."
+                                        }
+                         },
+    "anayasa_degisikligi":  {
+                                "title":  "A Constitutional Amendment to Expand Your Powers",
+                                "text":  "Your advisers have drafted a constitutional amendment granting the King emergency powers.",
+                                "choices":  [
+                                                {
+                                                    "label":  "Put it to a referendum",
+                                                    "text":  "The people voted. Whatever the result, your legitimacy grew."
+                                                },
+                                                {
+                                                    "label":  "Pass it by decree",
+                                                    "text":  "The powers are yours. The High Court\u0027s silence is deafening."
+                                                },
+                                                {
+                                                    "label":  "Drop it",
+                                                    "text":  "The draft stayed in a drawer."
+                                                }
+                                            ],
+                                "ignore":  {
+                                               "text":  "The draft was leaked."
+                                           }
+                            },
+    "halden_kanal":  {
+                         "title":  "Sarne Moves to Buy the Last Independent Channel",
+                         "text":  "Sarne has bid for the country\u0027s last independent television channel. If it sells, every news bulletin will come from one hand.",
+                         "choices":  [
+                                         {
+                                             "label":  "Allow the sale",
+                                             "text":  "Every screen belongs to Sarne now. And, in a way, to you."
+                                         },
+                                         {
+                                             "label":  "Block it through regulators",
+                                             "text":  "The sale was halted. Sarne took it personally."
+                                         },
+                                         {
+                                             "label":  "Have the state buy it",
+                                             "text":  "The channel now belongs to the state. We will see how much the public trusts state television."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "The sale went through."
+                                    }
+                     },
+    "kessler_reform":  {
+                           "title":  "Veyra Proposes a Bold Reform",
+                           "text":  "The Prime Minister wants to rewrite the tax system. \u0027It will hurt today, save us a year from now.\u0027",
+                           "choices":  [
+                                           {
+                                               "label":  "Enact the reform",
+                                               "text":  "The reform began. The first months will be hard."
+                                           },
+                                           {
+                                               "label":  "Water it down",
+                                               "text":  "Half the reform remainedâ€”and half the effect."
+                                           },
+                                           {
+                                               "label":  "Reject it",
+                                               "text":  "Veyra put the report in a drawer. The light in her eyes dimmed a little."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "The reform draft was forgotten."
+                                      }
+                       },
+    "reform_meyve":  {
+                         "title":  "The Reform Bears Fruit",
+                         "text":  "A year after Veyra\u0027s tax reform, the Treasury is filling and investors are returning.",
+                         "choices":  [
+                                         {
+                                             "label":  "Claim the credit",
+                                             "text":  "The headlines speak of \u0027the King\u0027s reform.\u0027 Veyra is silent."
+                                         },
+                                         {
+                                             "label":  "Thank Veyra",
+                                             "text":  "Veyra received the praise. Her loyalty deepened."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "The reform quietly did its work."
+                                    }
+                     },
+    "genel_grev":  {
+                       "title":  "A General Strike",
+                       "text":  "The unions have called a nationwide general strike. Ports, factories, and buses have stopped.",
+                       "choices":  [
+                                       {
+                                           "label":  "Reach a deal with the unions",
+                                           "text":  "Wages rose; the strike ended. The Treasury felt it."
+                                       },
+                                       {
+                                           "label":  "Ban the strike",
+                                           "text":  "The strike was banned. The anger was not."
+                                       },
+                                       {
+                                           "label":  "Wait them out",
+                                           "text":  "The strike dragged on for weeks."
+                                       }
+                                   ],
+                       "ignore":  {
+                                      "text":  "The strike dragged on."
+                                  }
+                   },
+    "suikast":  {
+                    "title":  "An Attempt on Your Procession",
+                    "text":  "Gunfire struck your procession on the way back from a ceremony. You survived. You wonder less who pulled the trigger than who gave the order.",
+                    "choices":  [
+                                    {
+                                        "label":  "Purge the security detail",
+                                        "text":  "The guards were replaced. Vale is leading the investigation; he knows everything."
+                                    },
+                                    {
+                                        "label":  "Declare martial law",
+                                        "text":  "Tanks filled the streets. Order returned, along with the Army\u0027s power."
+                                    },
+                                    {
+                                        "label":  "Face the people",
+                                        "text":  "You stepped onto the balcony with an injured arm. The crowd applauded."
+                                    }
+                                ],
+                    "ignore":  {
+                                   "text":  "The assassination inquiry stalled."
+                               }
+                }
 }
