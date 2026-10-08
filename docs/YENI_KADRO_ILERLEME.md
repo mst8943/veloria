@@ -57,10 +57,16 @@ Yeni aktörlerin başlangıç gürültüsü ve yeni durum değerleri ayrı tohum
 
 80 kampanya/zorluk, aynı tohumlar: `advice_veliaht` kazanma Kolay **72/80 (%90)**, Normal **34/80 (%42)**, Zor **18/80 (%22)**. Ölçütle fark +7/−4/+5 puan; +8/−20 sınırları içinde. Prens Marcus darbe girişimi ölçütte 0/1/2, veliaht botunda 0/2/4 (80 oyunda); artış 0/1,25/2,5 puan ve +3 sınırının altında. Tempo en düşük dilim **0,81 olay/hafta**; tabanla tüm dilimler aynı, yeni olay yükü **+0,00/hafta** (eski sistemi kullanan 40 tohumluk tempo sondajında). 101 tohumu 104 hafta TAHTTA, Medya Rejimi, 112 olay. Ekran görüntülerinde mobil üçüncü sıradaki Elena kartı ve raporu kaydırılarak görüldü. Kapı geçti; B2'ye henüz başlanmadı.
 
+## B2 kapısı
+
+Ölçüt bot 80 kampanya/zorlukta **%85/%45/%20**: tabana göre +2/−1/+3 ve hedef bantlarda. Dönüşümlü heyet botu **%87/%50/%25**, Drakon blok botu **%87/%45/%27**; ölçütü hiçbir zorlukta 8 puandan fazla aşmadı, 20 puandan fazla altına inmedi. Ölçütte Prens Marcus girişimi 2/80, 1/80, 2/80; B2.2 öncesi tabanla kıyaslandığında +3 puan sınırını aşan bir artış yok.
+
+`TEST: OK`, `EVENTS: OK (195 olay, 0 uyarı)`, `SAVE: OK`, `CONTENT: OK`, `UI INPUT: OK`; masaüstü/mobil autoplay, tempo ve `--full` geçti. Tam oyun 101 / 104 / TAHTTA / Medya Rejimi / 112 olay. Tempo en düşük dilimi 0,81 olay/hafta. `dist/qa_b2_desktop2` ve `dist/qa_b2_mobile2` içinde Heyet Gönder, Elena'nın üç bant raporu ve Asteria olay kartı gözle incelendi; glif taraması temiz. **B2 kapısı geçti.**
+
 ## Açık sorunlar
 
 Faz 4c'den devreden Zor bot farkı: `advice_soft` ve `advice_lavish` ölçütü +9/+11 puan aşıyor. Yeni kadro kapılarının ölçümü bu eski farktan bağımsız kaydedilecek.
 
 ## SIRADAKİ ADIM
 
-B2.7: Masaüstü ve mobil ekran görüntülerinde DEVLET/Heyet, Elena raporu ve DIŞİŞLERİ haberini doğrula; ardından B2 kapısını belgeleyip B3'e geç.
+B3.1: Başkent haritasına üç mevcut zemin üzerinde elçilik plakası ve üç bant/Doğrula panelini ekle.
