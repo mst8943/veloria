@@ -171,7 +171,7 @@ static func broadcast(sim: Node) -> Dictionary:
 		# ve ertelenen kararlar kralın masasındaki özel bilgilerdir.
 		var s := str(n)
 		if s.begins_with("OLAY: "):
-			ticker.append(s.substr(6))
+			ticker.append(sim.news_for_display(s).substr(6))
 	for c in ed["columns"]:
 		ticker.append("%s: %s" % [c["title"], c["head"]])
 	ticker.append("HAVA: " + str(ed["weather"]))
