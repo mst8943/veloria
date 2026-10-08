@@ -721,6 +721,30 @@ msgstr "The corporate network as Sarne describes it; its true reach may be wider
 msgid "düşmanca"
 msgstr "hostile"
 
+msgid "sınırlı"
+msgstr "limited"
+
+msgid "yaygın"
+msgstr "widespread"
+
+msgid "her yerde"
+msgstr "everywhere"
+
+msgid "sıcak"
+msgstr "hot"
+
+msgid "mesafeli"
+msgstr "distant"
+
+msgid "Sakin"
+msgstr "Calm"
+
+msgid "Soğuk"
+msgstr "Cold"
+
+msgid "Yakın"
+msgstr "Close"
+
 msgid "Medya · "
 msgstr "Media · "
 
@@ -814,6 +838,15 @@ msgstr "Reign Chronicle"
 msgid "Gündem"
 msgstr "Agenda"
 
+msgid "KRAL ADRİAN IV"
+msgstr "KING ADRIAN IV"
+
+msgid "Dosyalar"
+msgstr "Files"
+
+msgid "Günlük"
+msgstr "Journal"
+
 msgid "Gizli Dosyalar"
 msgstr "Secret Files"
 
@@ -870,6 +903,51 @@ msgstr "%d actions"
 
 msgid "Mesai bitti"
 msgstr "No actions left"
+
+msgid "Mesai %d / %d"
+msgstr "Actions %d / %d"
+
+msgid "%d karar bekliyor"
+msgstr "%d decisions waiting"
+
+msgid "  ·  %d tanesi bu hafta düşer"
+msgstr "  ·  %d due this week"
+
+msgid " · %d acil"
+msgstr " · %d urgent"
+
+msgid "Medya okunmadı"
+msgstr "Press unread"
+
+msgid "%d sözün vadesi geldi"
+msgstr "%d promises due"
+
+msgid "Söz vadesi"
+msgstr "Promise due"
+
+msgid "Sırrın yayılıyor"
+msgstr "Your secret is spreading"
+
+msgid "%d sırrın yayılıyor"
+msgstr "%d of your secrets are spreading"
+
+msgid "Hazırsın: haftayı bitir"
+msgstr "Ready to end the week"
+
+msgid "Hazır"
+msgstr "Ready"
+
+msgid "Gündeme git"
+msgstr "Go to Agenda"
+
+msgid "Medya Merkezi'ni aç"
+msgstr "Open the Press Center"
+
+msgid "Dosyalar sekmesine git"
+msgstr "Go to Files"
+
+msgid "[color=orange]Hafta %d: %s[/color]\n"
+msgstr "[color=orange]Week %d: %s[/color]\n"
 
 msgid "%d düşman"
 msgstr "%d enemies"

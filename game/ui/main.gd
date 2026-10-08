@@ -291,6 +291,7 @@ func _build_ui() -> void:
 	_scroll.name = "Gündem"
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_tabs.add_child(_scroll)
+	_tabs.set_tab_title(0, tr("Gündem"))
 	_agenda = VBoxContainer.new()
 	_agenda.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_agenda.add_theme_constant_override("separation", 10)
@@ -298,6 +299,7 @@ func _build_ui() -> void:
 	var files := VBoxContainer.new()
 	files.name = "Dosyalar"
 	_tabs.add_child(files)
+	_tabs.set_tab_title(1, tr("Dosyalar"))
 	_files_tab = files
 	files.add_theme_constant_override("separation", 8)
 	files.add_child(_section(tr("SIRLAR VE KANITLAR"), tr("çubuk: sırrın ne kadar yayıldığı · yarısında manşete çıkar")))
@@ -322,6 +324,7 @@ func _build_ui() -> void:
 	_journal.bbcode_enabled = true
 	_journal.scroll_following = true
 	_tabs.add_child(_journal)
+	_tabs.set_tab_title(2, tr("Günlük"))
 	_tabs.tab_changed.connect(func(_i: int) -> void: Sfx.play("paper", -10.0))
 	var tab_icons := ["rapor", "dosya", "gunluk"]
 	for i in tab_icons.size():
@@ -412,7 +415,7 @@ func _build_header(parent: Control) -> void:
 	frame.add_child(_initial_art("king", Vector2(46, 46), 24))
 	top.add_child(frame)
 	var king := Label.new()
-	king.text = "KRAL ADRİAN IV"
+	king.text = tr("KRAL ADRİAN IV")
 	king.add_theme_font_override("font", UIKit.serif())
 	king.add_theme_font_size_override("font_size", _fs(26))
 	king.add_theme_color_override("font_color", UIKit.GOLD)
@@ -756,7 +759,7 @@ func _toast_msg(text: String) -> void:
 func _log(text: String) -> void:
 	_journal.append_text("• %s\n" % text)
 	_toast_msg(text)
-	_hint("Son eylem\n" + text)  # sonuç bildirim kaybolsa da burada kalır
+	_hint(tr("Son eylem") + "\n" + text)  # sonuç bildirim kaybolsa da burada kalır
 	if _week_log_week != Sim.week:
 		_week_log.clear()
 		_week_log_week = Sim.week
@@ -999,7 +1002,7 @@ func _end_week_pressed() -> void:
 		_curtain_title.text = tr("HAFTA %d") % Sim.week
 		var headline := ""
 		if not Sim.weekly_news.is_empty():
-			headline = str(Sim.weekly_news[0])
+			headline = tr(str(Sim.weekly_news[0]))
 		_curtain_sub.text = headline if headline != "" else tr("Hafta %d sessiz geçti.") % old_week
 		# Haftanın yeni olayının görseli arkada belirip yavaşça yakınlaşır.
 		var tex: Texture2D = null
@@ -1194,37 +1197,37 @@ func _rebuild_flow() -> void:
 		return
 	var items: Array = []   # [metin, renk, hedef]
 	if Sim.mesai > 0:
-		items.append(["Mesai %d / %d" % [Sim.mesai, Sim.mesai_max], UIKit.GOLD, ""])
+		items.append([tr("Mesai %d / %d") % [Sim.mesai, Sim.mesai_max], UIKit.GOLD, ""])
 	else:
-		items.append(["Mesai bitti", UIKit.TEXT_DIM, ""])
+		items.append([tr("Mesai bitti"), UIKit.TEXT_DIM, ""])
 	var crisis_label := Sim.active_crisis_label()
 	if crisis_label != "":
-		items.append([crisis_label if not _mobile else crisis_label.split(" ")[0], UIKit.DANGER, "gundem"])
+		items.append([tr(crisis_label if not _mobile else crisis_label.split(" ")[0]), UIKit.DANGER, "gundem"])
 	var late := 0
 	for p in Sim.pending:
 		if int(p["age"]) > 0:
 			late += 1
 	if not Sim.pending.is_empty():
-		var t := "%d karar bekliyor" % Sim.pending.size()
+		var t := tr("%d karar bekliyor") % Sim.pending.size()
 		if late > 0:
-			t += (" · %d acil" if _mobile else "  ·  %d tanesi bu hafta düşer") % late
+			t += (tr(" · %d acil") if _mobile else tr("  ·  %d tanesi bu hafta düşer")) % late
 		items.append([t, UIKit.DANGER if late > 0 else UIKit.GOLD, "gundem"])
 	if _media_seen_week != Sim.week:
-		items.append(["Medya okunmadı" if not _mobile else "Medya", Color("d9963e"), "medya"])
+		items.append([tr("Medya okunmadı") if not _mobile else tr("Medya"), Color("d9963e"), "medya"])
 	var due := 0
 	for p in Sim.promises:
 		if str(p["state"]) == "active" and int(p["due"]) <= Sim.week + 1:
 			due += 1
 	if due > 0:
-		items.append(["%d sözün vadesi geldi" % due if not _mobile else "Söz vadesi", Color("d9b359"), "dosyalar"])
+		items.append([tr("%d sözün vadesi geldi") % due if not _mobile else tr("Söz vadesi"), Color("d9b359"), "dosyalar"])
 	var spreading := 0
 	for f: Dictionary in Sim.facts.values():
 		if f["subject"] == "king" and not f.get("public", false) and float(f["common"]) >= 0.3:
 			spreading += 1
 	if spreading > 0:
-		items.append(["Sırrın yayılıyor" if spreading == 1 else "%d sırrın yayılıyor" % spreading, UIKit.DANGER, "dosyalar"])
+		items.append([tr("Sırrın yayılıyor") if spreading == 1 else tr("%d sırrın yayılıyor") % spreading, UIKit.DANGER, "dosyalar"])
 	if Sim.mesai == 0 and Sim.pending.is_empty():
-		items.append(["Hazırsın: haftayı bitir" if not _mobile else "Hazır", UIKit.OK, ""])
+		items.append([tr("Hazırsın: haftayı bitir") if not _mobile else tr("Hazır"), UIKit.OK, ""])
 	var sig := str(items)
 	if sig == _flow_sig:
 		return
@@ -1268,7 +1271,7 @@ func _flow_chip(text: String, col: Color, target: String) -> Control:
 		b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		return b
 	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	b.tooltip_text = {"gundem": "Gündeme git", "medya": "Medya Merkezi'ni aç", "dosyalar": "Dosyalar sekmesine git"}.get(target, "")
+	b.tooltip_text = tr({"gundem": "Gündeme git", "medya": "Medya Merkezi'ni aç", "dosyalar": "Dosyalar sekmesine git"}.get(target, ""))
 	_wire(b)
 	b.pressed.connect(_on_flow.bind(target))
 	return b
@@ -1305,10 +1308,16 @@ func _headline_items() -> Array:
 
 
 func _on_week(_w: int) -> void:
-	_headline.text = "  ·  ".join(_headline_items().slice(0, 3))
+	var headline_text: Array[String] = []
+	for item in _headline_items().slice(0, 3):
+		headline_text.append(tr(str(item)))
+	_headline.text = "  ·  ".join(headline_text)
 	_headline.get_parent().visible = _headline.text != ""
 	if not Sim.weekly_news.is_empty():
-		_journal.append_text("[color=orange]Hafta %d: %s[/color]\n" % [Sim.week, "; ".join(Sim.weekly_news)])
+		var news_text: Array[String] = []
+		for item in Sim.weekly_news:
+			news_text.append(tr(str(item)))
+		_journal.append_text(tr("[color=orange]Hafta %d: %s[/color]\n") % [Sim.week, "; ".join(news_text)])
 		for n in Sim.weekly_news:
 			if str(n).begins_with("MANŞET"):
 				if not _fast():
