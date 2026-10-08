@@ -2122,9 +2122,6 @@ msgstr "You made %d promises: %d kept, %d broken."
 msgid "O hafta kayda geçen bir olay yok."
 msgstr "No event was recorded that week."
 
-msgid "VELORİA HABER"
-msgstr "VELORIA NEWS"
-
 msgid "SERBEST KALEM"
 msgstr "THE FREE QUILL"
 
@@ -2292,9 +2289,6 @@ msgstr "Lost: Gray cat named Baron. Reward for its return."
 
 msgid "Tercüme bürosu · Gizlilik garantili."
 msgstr "Translation bureau · Confidentiality guaranteed."
-
-msgid "YAYIN DURDURULDU"
-msgstr "PUBLICATION SUSPENDED"
 
 msgid "Serbest Kalem bu hafta da basılamadı. Matbaanın kapısında mühür var. Muhabirlerin bir kısmı yurtdışında."
 msgstr "The Free Quill could not be printed this week either. The press is sealed, and some reporters are abroad."
@@ -2649,3 +2643,75 @@ msgstr "%s: %s"
 
 msgid "%s: %s boş"
 msgstr "%s: %s is empty"
+
+msgid "Harap Devletin Kralı"
+msgstr "King of a Ruined State"
+
+msgid "Liyakat Kralı"
+msgstr "Meritocratic King"
+
+msgid "Generallerin Kuklası"
+msgstr "Puppet of the Generals"
+
+msgid "Medya İmparatorunun Kuklası"
+msgstr "Puppet of the Media Emperor"
+
+msgid "Gölge Devletin Tutsağı"
+msgstr "Captive of the Shadow State"
+
+msgid "%s Kuklası"
+msgstr "Puppet of %s"
+
+msgid "Altın Kral"
+msgstr "The Golden King"
+
+msgid "Devleti Tüketen"
+msgstr "The State-Devourer"
+
+msgid "Vaatler Kralı"
+msgstr "King of Broken Promises"
+
+msgid "Sözünün Eri"
+msgstr "A Man of His Word"
+
+msgid "Sırların Efendisi"
+msgstr "Master of Secrets"
+
+msgid "Büyük Manipülatör"
+msgstr "The Master Manipulator"
+
+msgid "Sessiz Otokrat"
+msgstr "The Silent Autocrat"
+
+msgid "Hanedanı Kurtaran"
+msgstr "Savior of the Dynasty"
+
+msgid "Demir Taç"
+msgstr "The Iron Crown"
+
+msgid "Sarayın Tilkisi"
+msgstr "The Palace Fox"
+
+msgid "Güvenlikçi Rejimi"
+msgstr "Security Regime"
+
+msgid "Popülist Rejimi"
+msgstr "Populist Regime"
+
+msgid "Patronaj Rejimi"
+msgstr "Patronage Regime"
+
+msgid "Oligark Rejimi"
+msgstr "Oligarchic Regime"
+
+msgid "Medya Rejimi"
+msgstr "Media Regime"
+
+msgid "İstihbarat Rejimi"
+msgstr "Intelligence Regime"
+
+msgid "Mesafeli"
+msgstr "Distant"
+
+msgid "Asteria %s; Drakon %s; Seravia %s."
+msgstr "Asteria: %s; Drakon: %s; Seravia: %s."
