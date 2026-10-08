@@ -30,7 +30,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S3a: `sim.gd` eylem sonuçları (bölüm commit'i), ardından haber/uyarı cümleleri ve kriz metinleri.
+S3a: `sim.gd` haber/uyarı cümleleri, ardından kriz metinleri.
 
 ## L1 — tamamlandı
 
@@ -79,6 +79,12 @@ S3a: `sim.gd` eylem sonuçları (bölüm commit'i), ardından haber/uyarı cüml
 - `end_screen.gd`: sonuç sekmeleri, hakikat dosyası, tarihçi ve devlet özeti
   etiketleri `tr()` ile bağlandı; dinamik anlatı metinleri çeviri anahtarından
   geçirildi.
+- S2b: `main.gd` statik sekme/alt çubuk/son eylem metinleri ve görünen haber
+  etiketleri kaynak metin anahtarları korunarak çevrildi; `content_labels.json`
+  İngilizce kişi-kademe kaplaması eklendi. `en.po` tamamlandı.
+- S3a eylem sonuçları: `sim.gd` eylem sonuçları ve vaat karar kartı cümleleri
+  tam cümle `tr()` anahtarlarına bağlandı; Türkçe kaynaklar değişmeden kaldı.
+  Commit: `55d6c2d`.
 - Menü künyesi sabit kaynak metin olarak kalır; Godot sabit ifadede `tr()`
   değerlendirmediğinden çeviri modal açılırken uygulanır.
 - `ui_shots.gd`, autoload ayarları yüklendikten sonra `--lang=en`/varsayılan
