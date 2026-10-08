@@ -3427,5 +3427,90 @@
                                    "ignore":  {
                                                   "text":  "The crate lists remained unsigned."
                                               }
-                               }
+                               },
+    "drakon_sinir_notasi":  {
+                                "title":  "A sharp note from across the border",
+                                "text":  "Drakon has increased patrols along the border. Malenkov called it not a threat but a precaution against “misunderstanding.”",
+                                "choices":  [
+                                                {
+                                                    "label":  "Call the envoy to the table",
+                                                    "text":  "They talked through the night; the border grew a little quieter."
+                                                },
+                                                {
+                                                    "label":  "Make the troops visible",
+                                                    "text":  "More flags appeared at the border; Malenkov closed his notebook."
+                                                }
+                                            ],
+                                "ignore":  {
+                                               "text":  "The note was left unanswered; rumors at the border grew."
+                                           }
+                            },
+    "seravia_yatirim_teklifi":  {
+                                    "title":  "Seravia\u0027s investment offer",
+                                    "text":  "Lucien Vale opened a quiet investment package around the port. Victor Sarne spotted the partnership stake at once.",
+                                    "choices":  [
+                                                    {
+                                                        "label":  "Accept the investment",
+                                                        "text":  "Work began on the piers; Lucien folded the signature page with care."
+                                                    },
+                                                    {
+                                                        "label":  "Refuse the Palace\u0027s share",
+                                                        "text":  "The package shrank, but the port\u0027s key stayed in your hands."
+                                                    }
+                                                ],
+                                    "ignore":  {
+                                                   "text":  "The package went to another desk."
+                                               }
+                                },
+    "seravia_ambargo":  {
+                            "title":  "Seravia\u0027s embargo",
+                            "text":  "Seravia raised its port fees. Lucien said it was no punishment; the merchants disagreed.",
+                            "choices":  [
+                                            {
+                                                "label":  "Form a trade delegation",
+                                                "text":  "The losses stopped; Lucien made a concession openly for the first time."
+                                            },
+                                            {
+                                                "label":  "Find a new market",
+                                                "text":  "Markets did not open at once; the Palace chose its own route."
+                                            }
+                                        ],
+                            "ignore":  {
+                                           "text":  "The embargo stayed in the port ledgers."
+                                       }
+                        },
+    "seravia_sarne_destegi":  {
+                                  "title":  "Credit for Sarne",
+                                  "text":  "A Seravian bank extended a loan to the Sarne Group. Victor Sarne called it the market\u0027s decision; Lucien looked away.",
+                                  "choices":  [
+                                                  {
+                                                      "label":  "Demand transparency",
+                                                      "text":  "The loan file was reviewed; Lucien made a note of the request."
+                                                  },
+                                                  {
+                                                      "label":  "Ignore the loan",
+                                                      "text":  "Sarne\u0027s circle grew; the Palace kept quiet."
+                                                  }
+                                              ],
+                                  "ignore":  {
+                                                 "text":  "The loan stayed a rumor in the corridors."
+                                             }
+                              },
+    "drakon_darbe_destegi":  {
+                                 "title":  "Drakon\u0027s security offer",
+                                 "text":  "Malenkov said he had seen the activity around the Palace. “We help those who want order,” he said, without naming the price of that help.",
+                                 "choices":  [
+                                                 {
+                                                     "label":  "Accept border support",
+                                                     "text":  "Malenkov watched the phones; rumors at the Palace gate subsided."
+                                                 },
+                                                 {
+                                                     "label":  "Keep domestic affairs at home",
+                                                     "text":  "The Drakon envoy bowed; the decision remained yours."
+                                                 }
+                                             ],
+                                 "ignore":  {
+                                                "text":  "The offer went unanswered."
+                                            }
+                             }
 }
