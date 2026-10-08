@@ -3257,5 +3257,175 @@
                                  "ignore":  {
                                                 "text":  "Julian put the speech in his desk drawer."
                                             }
-                             }
+                             },
+    "julian_isyani_reddi":  {
+                                "title":  "The heir\u0027s refusal",
+                                "text":  "A noble urged Julian to gather support beyond the Palace. The Crown Prince brought you the letter: “If this is the road to the throne, I won\u0027t take it, Father.”",
+                                "choices":  [
+                                                {
+                                                    "label":  "Keep the letter",
+                                                    "text":  "Julian stayed by your side; the noble\u0027s name went into the ledger."
+                                                },
+                                                {
+                                                    "label":  "Reply to the noble",
+                                                    "text":  "Julian wrote the reply himself; the rumor never grew behind closed doors."
+                                                }
+                                            ],
+                                "ignore":  {
+                                               "text":  "The letter went unanswered. Julian refused the proposal."
+                                           }
+                            },
+    "julian_marcus_oyunu":  {
+                                "title":  "Marcus\u0027s bid for the throne",
+                                "text":  "Prince Marcus had a call to arms prepared in Julian\u0027s name. “I didn\u0027t sign it,” the heir said. “And I won\u0027t give the answer expected of me.”",
+                                "choices":  [
+                                                {
+                                                    "label":  "Expose the call to arms",
+                                                    "text":  "The forged seal was shown; everyone saw what the Prince had tried."
+                                                },
+                                                {
+                                                    "label":  "Let Julian speak",
+                                                    "text":  "The heir spoke in his own name. The Prince\u0027s letter stayed in the Palace."
+                                                }
+                                            ],
+                                "ignore":  {
+                                               "text":  "The letter made the rounds, but Julian left it untouched."
+                                           }
+                            },
+    "julian_evlilik_teklifi":  {
+                                   "title":  "An alliance for the heir",
+                                   "text":  "A marriage proposal arrived for Julian. “They wrote to my future crown, not to me,” he said. “Still, I want to give the answer myself.”",
+                                   "choices":  [
+                                                   {
+                                                       "label":  "Let Julian decide",
+                                                       "text":  "The heir wrote the reply himself; the Palace\u0027s word carried more weight."
+                                                   },
+                                                   {
+                                                       "label":  "Put the proposal on hold",
+                                                       "text":  "The envoy waited at the door a little longer; the heir did not hurry."
+                                                   }
+                                               ],
+                                   "ignore":  {
+                                                  "text":  "The proposal went into the Palace archive, seal unbroken."
+                                              }
+                               },
+    "elena_heyet_daveti":  {
+                               "title":  "Elena\u0027s invitation",
+                               "text":  "Elena Varos invited the foreign delegation to the Palace. “Let\u0027s make no promises,” she said. “First, let\u0027s hear what they want in their own words.”",
+                               "choices":  [
+                                               {
+                                                   "label":  "Receive the delegation",
+                                                   "text":  "Elena led the meeting; the envoys found the Palace gates open."
+                                               },
+                                               {
+                                                   "label":  "Ask for a written note first",
+                                                   "text":  "The envoys put their demands on paper; Veyra counted the cost."
+                                               }
+                                           ],
+                               "ignore":  {
+                                              "text":  "The meeting was postponed; Elena kept her notes."
+                                          }
+                           },
+    "elena_abartili_rapor":  {
+                                 "title":  "The other side of the embassy note",
+                                 "text":  "The envoys Elena called \u0027close\u0027 seem distant in another note. “I softened the wording,” she said. “I didn\u0027t want them to shut the door in our faces.”",
+                                 "choices":  [
+                                                 {
+                                                     "label":  "Ask for an open report",
+                                                     "text":  "Elena placed the second note on the table without hesitation."
+                                                 },
+                                                 {
+                                                     "label":  "Cover it up",
+                                                     "text":  "The first report stayed in the archive; Elena found another way."
+                                                 }
+                                             ],
+                                 "ignore":  {
+                                                "text":  "The difference between the two notes was discussed beyond the Palace."
+                                            }
+                             },
+    "elena_asteria_sizinti":  {
+                                  "title":  "A page bound for Asteria",
+                                  "text":  "Meeting notes kept on Elena\u0027s desk turned up at the Asterian embassy. “The Palace silenced me,” Elena said. “I thought they would listen.”",
+                                  "choices":  [
+                                                  {
+                                                      "label":  "Give the file to Renn",
+                                                      "text":  "Renn traced the page; Elena kept her post, but her words came under scrutiny."
+                                                  },
+                                                  {
+                                                      "label":  "Confront Elena",
+                                                      "text":  "Elena admitted the leak and left the rest to you."
+                                                  }
+                                              ],
+                                  "ignore":  {
+                                                 "text":  "The leak stayed at the embassy; Elena\u0027s silence spread through the Palace."
+                                             }
+                              },
+    "elena_istifa":  {
+                         "title":  "Elena\u0027s resignation",
+                         "text":  "Elena brought her sealed resignation. “One report of mine was false; one promise was true,” she said. “I can\u0027t choose which one you\u0027ll believe.”",
+                         "choices":  [
+                                         {
+                                             "label":  "Keep her in office",
+                                             "text":  "Elena stayed and promised to check every note against a second source."
+                                         },
+                                         {
+                                             "label":  "Accept the resignation",
+                                             "text":  "Elena left the Palace; the embassies fell quiet for a while."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "The resignation stayed on the desk. Elena returned to work."
+                                    }
+                     },
+    "asteria_kredi_teklifi":  {
+                                  "title":  "Asteria\u0027s loan file",
+                                  "text":  "Claire Duvall opened a low-interest loan file. “Your signature, our trust,” she said; the fine print stressed the rule of law.",
+                                  "choices":  [
+                                                  {
+                                                      "label":  "Take the loan",
+                                                      "text":  "The Treasury could breathe; Claire noted that the door remained open."
+                                                  },
+                                                  {
+                                                      "label":  "Put the terms on hold",
+                                                      "text":  "The file stayed open, but Asteria\u0027s patience wore thin."
+                                                  }
+                                              ],
+                                  "ignore":  {
+                                                 "text":  "The loan file went into the archive."
+                                             }
+                              },
+    "asteria_ozgurluk_notasi":  {
+                                    "title":  "Asteria\u0027s press note",
+                                    "text":  "Claire delivered a sharp note about the treatment of journalists. Leyla Sarn read it from the end of the table.",
+                                    "choices":  [
+                                                    {
+                                                        "label":  "Give an open reply",
+                                                        "text":  "Your words went on record; Claire asked for another meeting instead of a note."
+                                                    },
+                                                    {
+                                                        "label":  "Reject the note",
+                                                        "text":  "The embassy flag stayed up, but the door grew heavier."
+                                                    }
+                                                ],
+                                    "ignore":  {
+                                                   "text":  "The note went unanswered; another text circulated in the Capital."
+                                               }
+                                },
+    "drakon_silah_anlasmasi":  {
+                                   "title":  "Drakon\u0027s arms deal",
+                                   "text":  "Viktor Malenkov brought an arms deal for the border units, with one piece conspicuously missing. Marcus Arden turned the pages in silence.",
+                                   "choices":  [
+                                                   {
+                                                       "label":  "Sign the deal",
+                                                       "text":  "New crates reached the depots; Malenkov took it for friendship."
+                                                   },
+                                                   {
+                                                       "label":  "Ask for local suppliers",
+                                                       "text":  "The deal was postponed; the Drakonic envoy kept smiling."
+                                                   }
+                                               ],
+                                   "ignore":  {
+                                                  "text":  "The crate lists remained unsigned."
+                                              }
+                               }
 }
