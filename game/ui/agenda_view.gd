@@ -91,7 +91,7 @@ func _guide_go(step: int) -> void:
 			var saray := host._tabs.get_node_or_null("Saray") as Control
 			if saray != null:
 				host._select_tab(saray)
-		host._hint(tr("Bir kişiye eylem\n") + tr(GUIDE_STEPS[2][1]))
+			host._hint(tr("Bir kişiye eylem\n") + tr(GUIDE_STEPS[2][1]))
 			if host._grid != null and not host._fast():
 				UIKit.pulse(host._grid, 1.02)
 		_:
@@ -566,9 +566,9 @@ func _add_council(parent: VBoxContainer, pending_index: int) -> Dictionary:
 			row.tooltip_text += "\n" + tr("Son zamanlarda hakkında alametler var.")
 		match str(it["kind"]):
 			"evasive":
-			row.tooltip_text += "\n" + tr("Kaçamak konuşuyor. Korkan bir meclis kralına gerçeği söylemez.")
+				row.tooltip_text += "\n" + tr("Kaçamak konuşuyor. Korkan bir meclis kralına gerçeği söylemez.")
 			"flat":
-			row.tooltip_text += "\n" + tr("Seçenekler arasında belirgin bir fark görmüyor.")
+				row.tooltip_text += "\n" + tr("Seçenekler arasında belirgin bir fark görmüyor.")
 		var por: Control = host._initial_art(a.id, Vector2(30, 30), 15)
 		por.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 		row.add_child(por)
