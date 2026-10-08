@@ -2434,6 +2434,12 @@ msgstr "In difficult times, he had to make difficult choices."
 msgid "Kolay"
 msgstr "Easy"
 
+msgid "Kraliçe Helena"
+msgstr "Queen Helena"
+
+msgid "Prens Marcus"
+msgstr "Prince Marcus"
+
 msgid "Normal"
 msgstr "Normal"
 

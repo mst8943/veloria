@@ -139,7 +139,7 @@ func _append_plot(plot: Array, signs: Dictionary) -> void:
 		var source: String = l["text"]
 		var t := tr(source)
 		var col := "#c0504a" if source.contains("komploya") or source.contains("hazırlığına") or source.contains("darbe girişimini") else ("#7fae7a" if source.contains("çekildi") or source.contains("tutuklandı") or source.contains("halk") else "#d08a3d")
-		lies_page.append_text(tr("• Hafta %d — [b]%s[/b] [color=%s]%s[/color]\n") % [int(l["w"]), l["name"], col, t])
+		lies_page.append_text(tr("• Hafta %d — [b]%s[/b] [color=%s]%s[/color]\n") % [int(l["w"]), tr(str(l["name"])), col, t])
 
 
 ## Hakikat Dosyası'nın ikinci yarısı: danışmanların önerileri gerçekte ne kadar iyiydi?
@@ -153,7 +153,7 @@ func _append_council(council: Array) -> void:
 		var misled := int(c["misled"])
 		var col := "#c0504a" if misled * 3 >= int(c["given"]) and misled > 0 else ("#d08a3d" if misled > 0 else "#7fae7a")
 		lies_page.append_text(tr("[b]%s[/b]   %d öneri · %d kez dinledin · [color=%s]%s[/color]\n") % [
-			c["name"], int(c["given"]), int(c["followed"]), col, tr("%d kez yanılttı") % misled if misled > 0 else tr("hiç yanıltmadı")])
+			tr(str(c["name"])), int(c["given"]), int(c["followed"]), col, tr("%d kez yanılttı") % misled if misled > 0 else tr("hiç yanıltmadı")])
 		var w: Dictionary = c["worst"]
 		if not w.is_empty():
 			lies_page.append_text(tr("   [color=gray]En pahalısı, hafta %d — %s:[/color] \"%s\" dedi; en iyisi \"%s\" idi.%s\n") % [
@@ -228,10 +228,10 @@ func show_record(record: Dictionary) -> String:
 	var council: Array = record.get("council", [])
 	if not council.is_empty() and int(council[0]["misled"]) > 0:
 		summary.append_text(tr("[b]Meclis:[/b] seni en çok [color=#d08a3d]%s[/color] yanılttı (%d kez). Ayrıntısı Hakikat Dosyası'nda.\n") % [
-			council[0]["name"], int(council[0]["misled"])])
+			tr(str(council[0]["name"])), int(council[0]["misled"])])
 	for l: Dictionary in record.get("plot", []):
 		if l["text"] == "komploya katıldı":
-			summary.append_text(tr("[b]Komplo:[/b] ilk kıvılcım %d. haftada, [color=#c0504a]%s[/color]. Kronolojisi Hakikat Dosyası'nda.\n") % [int(l["w"]), l["name"]])
+			summary.append_text(tr("[b]Komplo:[/b] ilk kıvılcım %d. haftada, [color=#c0504a]%s[/color]. Kronolojisi Hakikat Dosyası'nda.\n") % [int(l["w"]), tr(str(l["name"]))])
 			break
 	var fresh: Array = record.get("new_achievements", [])
 	if not fresh.is_empty():
@@ -258,7 +258,7 @@ func show_record(record: Dictionary) -> String:
 	if lies.is_empty():
 		lies_page.append_text(tr("Kimse sana belirgin biçimde yalan söylemedi. Ya da hepsini fark ettin.\n"))
 	for l: Dictionary in lies:
-		lies_page.append_text(tr("• Hafta %d — [b]%s[/b] sana şunu söyledi: \"%s\"\n   [color=gray]Gerçekte:[/color] %s\n\n") % [l["week"], l["name"], tr(str(l["said"])), tr(str(l["truth"]))])
+		lies_page.append_text(tr("• Hafta %d — [b]%s[/b] sana şunu söyledi: \"%s\"\n   [color=gray]Gerçekte:[/color] %s\n\n") % [l["week"], tr(str(l["name"])), tr(str(l["said"])), tr(str(l["truth"]))])
 	_append_council(record.get("council", []))
 	_append_plot(record.get("plot", []), record.get("signs", {}))
 	_append_state(state)
