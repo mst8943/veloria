@@ -1002,7 +1002,7 @@ func _end_week_pressed() -> void:
 		_curtain_title.text = tr("HAFTA %d") % Sim.week
 		var headline := ""
 		if not Sim.weekly_news.is_empty():
-			headline = tr(str(Sim.weekly_news[0]))
+			headline = Sim.news_for_display(str(Sim.weekly_news[0]))
 		_curtain_sub.text = headline if headline != "" else tr("Hafta %d sessiz geçti.") % old_week
 		# Haftanın yeni olayının görseli arkada belirip yavaşça yakınlaşır.
 		var tex: Texture2D = null
@@ -1310,13 +1310,13 @@ func _headline_items() -> Array:
 func _on_week(_w: int) -> void:
 	var headline_text: Array[String] = []
 	for item in _headline_items().slice(0, 3):
-		headline_text.append(tr(str(item)))
+		headline_text.append(Sim.news_for_display(str(item)))
 	_headline.text = "  ·  ".join(headline_text)
 	_headline.get_parent().visible = _headline.text != ""
 	if not Sim.weekly_news.is_empty():
 		var news_text: Array[String] = []
 		for item in Sim.weekly_news:
-			news_text.append(tr(str(item)))
+			news_text.append(Sim.news_for_display(str(item)))
 		_journal.append_text(tr("[color=orange]Hafta %d: %s[/color]\n") % [Sim.week, "; ".join(news_text)])
 		for n in Sim.weekly_news:
 			if str(n).begins_with("MANŞET"):
