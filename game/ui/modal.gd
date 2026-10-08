@@ -57,7 +57,7 @@ func _build() -> void:
 			cb.call())
 	brow.add_child(yes)
 	close = Button.new()
-	close.text = "Kapat"
+	close.text = tr("Kapat")
 	close.custom_minimum_size.y = 44
 	close.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	host._wire(close)
@@ -74,7 +74,7 @@ func show_text(bbcode: String, yes_label := "", yes_cb := Callable()) -> void:
 	yes.visible = yes_label != ""
 	yes.text = yes_label
 	cb = yes_cb
-	close.text = "Vazgeç" if yes_label != "" else "Kapat"
+	close.text = tr("Vazgeç") if yes_label != "" else tr("Kapat")
 	show()
 	if not host._fast():
 		UIKit.fade_in(self, 0.25)
