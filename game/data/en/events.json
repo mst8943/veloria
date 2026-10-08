@@ -2116,5 +2116,110 @@
     "hamle_brandt_miting":  {
                                 "title":  "Voss holds a rally in the provinces",
                                 "news":  "Voss held a large rally in the provinces. Your name came up eleven times."
-                            }
+                            },
+    "hamle_brandt_sendika":  {
+                                 "title":  "Voss reaches an agreement with the unions",
+                                 "news":  "Voss signed a joint statement with the major unions. Meetings have grown more frequent in the factories."
+                             },
+    "hamle_prens_soylular":  {
+                                 "title":  "The Prince dines with noble families",
+                                 "news":  "The Prince dined with three noble families this week. The future of the throne was reportedly discussed at the table."
+                             },
+    "hamle_prens_vakif":  {
+                              "title":  "The Prince founds a charity",
+                              "news":  "The Prince founded a charity for poor children. The people love him; the nobles are watching him."
+                          },
+    "hamle_falk_dava":  {
+                            "title":  "Renn files suit against a minister",
+                            "news":  "Chief Prosecutor Renn reopened a minister\u0027s tender file. The courthouse corridors are crowded."
+                        },
+    "hamle_dorn_liste":  {
+                             "title":  "Helena cuts the appointment list",
+                             "news":  "Helena canceled appointments with three ministers this week, citing \u0027Your Majesty\u0027s fatigue.\u0027"
+                         },
+    "yay_arden_yukselis":  {
+                               "title":  "Arden\u0027s officer list",
+                               "text":  "Arden left an appointment list. \u0027The army runs on orders, Your Majesty. No officer moves without your signature.\u0027 The seal line at the bottom is blank.",
+                               "choices":  [
+                                               {
+                                                   "label":  "Review the list in open session",
+                                                   "text":  "Review the list in open session."
+                                               },
+                                               {
+                                                   "label":  "Leave appointments to Arden",
+                                                   "text":  "Leave the appointments to Arden."
+                                               }
+                                           ],
+                               "ignore":  {
+                                              "text":  "The proposal went unanswered."
+                                          }
+                           },
+    "yay_arden_sinav":  {
+                            "title":  "Two orders at headquarters",
+                            "text":  "A border unit received two different orders. Arden set the file on your desk: \u0027If politics enters headquarters, the sentry won\u0027t know whom to obey.\u0027",
+                            "choices":  [
+                                            {
+                                                "label":  "Settle it with your signature",
+                                                "text":  "Settle the order with your signature."
+                                            },
+                                            {
+                                                "label":  "Let headquarters decide",
+                                                "text":  "Let headquarters find its own way."
+                                            }
+                                        ],
+                            "ignore":  {
+                                           "text":  "No decision was made; he took the silence as an answer."
+                                       }
+                        },
+    "yay_arden_sadakat":  {
+                              "title":  "Arden protects the chain of command",
+                              "text":  "You had upheld Arden\u0027s procedure in the border order. Now, before his officers, the general points to your signature: \u0027In this army, the final word belongs to the Crown.\u0027",
+                              "choices":  [
+                                              {
+                                                  "label":  "Speak with the commanders",
+                                                  "text":  "Speak alongside the commanders."
+                                              },
+                                              {
+                                                  "label":  "Send Arden back to duty",
+                                                  "text":  "Send Arden back to his post."
+                                              }
+                                          ],
+                              "ignore":  {
+                                             "text":  "Your gesture went unanswered."
+                                         }
+                          },
+    "yay_arden_kopus":  {
+                            "title":  "The officers wait for Arden",
+                            "text":  "You had left headquarters alone to handle the border order. Arden spoke sharply: \u0027The officers can\u0027t wait. When no order came, I gave one myself.\u0027",
+                            "choices":  [
+                                            {
+                                                "label":  "Restate the chain of command",
+                                                "text":  "Restate the chain of command in writing."
+                                            },
+                                            {
+                                                "label":  "Stay silent this time",
+                                                "text":  "Stay silent this time."
+                                            }
+                                        ],
+                            "ignore":  {
+                                           "text":  "The distance between you grew."
+                                       }
+                        },
+    "yay_voss_yukselis":  {
+                              "title":  "Vale\u0027s intelligence desk",
+                              "text":  "Vale proposed gathering every report sent to the Palace at a single desk. \u0027Scattered information is unprocessed information. Let\u0027s put it in order.\u0027",
+                              "choices":  [
+                                              {
+                                                  "label":  "Enter the records in one ledger",
+                                                  "text":  "Enter the records in a shared ledger."
+                                              },
+                                              {
+                                                  "label":  "Leave the desk to Vale",
+                                                  "text":  "Leave the desk to Vale."
+                                              }
+                                          ],
+                              "ignore":  {
+                                             "text":  "The proposal went unanswered."
+                                         }
+                          }
 }
