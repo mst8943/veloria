@@ -3400,5 +3400,85 @@
     {"label": "İstifayı kabul et", "text": "Elena saraydan ayrıldı; elçilikler bir süre sessiz kaldı.", "fx": {"remove": ["elena"]}}
   ],
   "ignore": {"text": "İstifa masada kaldı. Elena görevine döndü.", "fx": {}}
+},
+{
+  "id": "asteria_kredi_teklifi", "min_week": 30, "max_week": 82, "needs_flag": "HEYET_GONDER", "min_foreign": {"asteria": 68}, "art": "yabanci_elci",
+  "title": "Asteria'nın kredi dosyası",
+  "text": "Claire Duvall, düşük faizli bir kredi dosyasını açtı. 'İmza sizden, güven bizden,' dedi; dipnotlarda hukuk düzeni vurgulanıyordu.",
+  "choices": [
+    {"label": "Krediyi al", "text": "Kasa nefes aldı; Claire kapının açık kaldığını not etti.", "fx": {"treasury": 4, "foreign": {"asteria": 3}}},
+    {"label": "Şartları beklet", "text": "Dosya kapanmadı, fakat Asteria'nın sabrı inceldi.", "fx": {"foreign": {"asteria": -4}}}
+  ],
+  "ignore": {"text": "Kredi dosyası arşive kaldırıldı.", "fx": {"foreign": {"asteria": -2}}}
+},
+{
+  "id": "asteria_ozgurluk_notasi", "min_week": 28, "max_week": 90, "needs_flag": "HEYET_GONDER", "max_foreign": {"asteria": 32}, "art": "lena_roportaj",
+  "title": "Asteria'nın basın notası",
+  "text": "Claire, gazetecilere yönelik muamele hakkında sert bir nota sundu. Leyla Sarn notayı masanın ucundan okudu.",
+  "choices": [
+    {"label": "Açık yanıt ver", "text": "Sözlerin kayda geçti; Claire nota yerine yeni bir görüşme istedi.", "fx": {"capacity": {"hukuk": 2}, "foreign": {"asteria": 6}}},
+    {"label": "Notayı reddet", "text": "Elçilik bayrağı inmedi, fakat kapı ağırlaştı.", "fx": {"king": 1, "foreign": {"asteria": -3}}}
+  ],
+  "ignore": {"text": "Nota cevapsız kaldı; başkentte başka bir yazı dolaştı.", "fx": {"foreign": {"asteria": -2}}}
+},
+{
+  "id": "drakon_silah_anlasmasi", "min_week": 34, "max_week": 88, "needs_flag": "HEYET_GONDER", "min_foreign": {"drakon": 68}, "art": "sinir_krizi",
+  "title": "Drakon'un silah anlaşması",
+  "text": "Viktor Malenkov, sınır birlikleri için parçası eksik bırakılmış bir silah anlaşması getirdi. Marcus Arden sayfaları sessizce çevirdi.",
+  "choices": [
+    {"label": "Anlaşmayı imzala", "text": "Depolara yeni sandıklar indi; Malenkov bunu dostluk saydı.", "fx": {"capacity": {"ordu": 3}, "foreign": {"drakon": 2}}},
+    {"label": "Yerel tedarik iste", "text": "Anlaşma ertelendi; Drakon temsilcisi tebessümünü korudu.", "fx": {"treasury": -1, "foreign": {"drakon": -3}}}
+  ],
+  "ignore": {"text": "Sandık listeleri imzasız kaldı.", "fx": {"foreign": {"drakon": -1}}}
+},
+{
+  "id": "drakon_sinir_notasi", "min_week": 34, "max_week": 90, "needs_flag": "HEYET_GONDER", "max_foreign": {"drakon": 32}, "art": "sinir_krizi",
+  "title": "Sınırdan sert nota",
+  "text": "Drakon sınır hattındaki devriyeleri artırdı. Malenkov, bunun bir tehdit değil 'yanlış anlamaya karşı tedbir' olduğunu söyledi.",
+  "choices": [
+    {"label": "Elçiyi masaya çağır", "text": "Gece boyu konuşuldu; sınırdaki sesler biraz azaldı.", "fx": {"unrest": -2, "foreign": {"drakon": 6}}},
+    {"label": "Birlikleri görünür kıl", "text": "Sınırdaki bayraklar çoğaldı; Malenkov not defterini kapattı.", "fx": {"foreign": {"drakon": -3}}}
+  ],
+  "ignore": {"text": "Nota bekletildi; sınırdaki söylenti büyüdü.", "fx": {"unrest": 2}}
+},
+{
+  "id": "seravia_yatirim_teklifi", "min_week": 36, "max_week": 88, "needs_flag": "HEYET_GONDER", "min_foreign": {"seravia": 68}, "art": "yabanci_elci",
+  "title": "Seravia'nın yatırım teklifi",
+  "text": "Lucien Vale, liman çevresinde sessiz bir yatırım paketi açtı. Victor Sarne, dosyadaki ortaklık payını hemen fark etti.",
+  "choices": [
+    {"label": "Yatırımı kabul et", "text": "İskelelerde iş başladı; Lucien imzayı dikkatle katladı.", "fx": {"economy": 3, "foreign": {"seravia": 2}}},
+    {"label": "Saray payını reddet", "text": "Paket küçüldü, fakat limanın anahtarı sende kaldı.", "fx": {"foreign": {"seravia": -3}}}
+  ],
+  "ignore": {"text": "Paket başka bir masaya gitti.", "fx": {"foreign": {"seravia": -2}}}
+},
+{
+  "id": "seravia_ambargo", "min_week": 38, "max_week": 94, "needs_flag": "HEYET_GONDER", "max_foreign": {"seravia": 32}, "art": "yabanci_elci",
+  "title": "Seravia ambargosu",
+  "text": "Seravia liman ücretlerini yükseltti. Lucien bunun bir ceza olmadığını söyledi; tüccarlar aynı fikri paylaşmadı.",
+  "choices": [
+    {"label": "Ticaret heyeti kur", "text": "Kayıplar durdu; Lucien ilk kez açıkça taviz verdi.", "fx": {"treasury": -2, "foreign": {"seravia": 6}}},
+    {"label": "Yeni pazar ara", "text": "Pazarlar hemen açılmadı; saray kendi yolunu seçti.", "fx": {"economy": -2, "foreign": {"seravia": -2}}}
+  ],
+  "ignore": {"text": "Ambargo liman defterlerinde kaldı.", "fx": {"economy": -2}}
+},
+{
+  "id": "seravia_sarne_destegi", "min_week": 46, "max_week": 96, "needs_flag": "HEYET_GONDER", "max_foreign": {"seravia": 40}, "art": "halden_ihale",
+  "title": "Sarne'ye uzanan kredi",
+  "text": "Seravialı bir banka Sarne Grubu'na kredi açtı. Victor Sarne bunun piyasanın kararı olduğunu söyledi; Lucien bakışlarını kaçırdı.",
+  "choices": [
+    {"label": "Şeffaflık iste", "text": "Kredi dosyası incelendi; Lucien bu isteği not etti.", "fx": {"holding": -2, "foreign": {"seravia": -2}}},
+    {"label": "Krediyi görmezden gel", "text": "Sarne'nin çevresi genişledi; saray sessiz kaldı.", "fx": {"holding": 4, "foreign": {"seravia": 1}}}
+  ],
+  "ignore": {"text": "Kredi haberi kulislerde kaldı.", "fx": {"holding": 2}}
+},
+{
+  "id": "drakon_darbe_destegi", "min_week": 58, "max_week": 98, "needs_flag": "HEYET_GONDER", "min_foreign": {"drakon": 72}, "needs_ready": true, "art": "sinir_krizi_b",
+  "title": "Drakon'un güvenlik teklifi",
+  "text": "Malenkov, saray çevresindeki hareketliliği gördüğünü söyledi. 'Düzeni isteyenlere yardım ederiz,' dedi; yardımın bedelini söylemedi.",
+  "choices": [
+    {"label": "Sınır desteğini kabul et", "text": "Malenkov telefonlara baktı; saray kapısındaki söylenti azaldı.", "fx": {"king": 2, "foreign": {"drakon": 2}}},
+    {"label": "İç işi içeride bırak", "text": "Drakon temsilcisi başını eğdi; karar senin olarak kaldı.", "fx": {"foreign": {"drakon": -3}}}
+  ],
+  "ignore": {"text": "Teklif cevapsız kaldı.", "fx": {}}
 }
 ]

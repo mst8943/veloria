@@ -19,14 +19,14 @@ const STAT_KEYS := ["ops", "bribes", "promotes", "leaks", "dismissals", "written
 	"sadik_maliye", "sadik_hukuk", "sadik_ordu", "sadik_idare", "liyakatli_maliye", "liyakatli_hukuk", "liyakatli_ordu", "liyakatli_idare"]
 const CAP_KEYS := ["maliye", "hukuk", "ordu", "idare"]
 const FOREIGN_KEYS := ["asteria", "drakon", "seravia"]
-const FX_KEYS := ["king", "unrest", "economy", "opp", "wealth", "treasury", "holding", "capacity", "budget_stance", "court_share", "actors", "fact", "flag", "leak", "remove",
+const FX_KEYS := ["king", "unrest", "economy", "opp", "wealth", "treasury", "holding", "foreign", "capacity", "budget_stance", "court_share", "actors", "fact", "flag", "leak", "remove",
 	"promise_keep", "promise_break", "promise_delay"]
 const FX_NUMBERS := ["king", "unrest", "economy", "opp", "wealth", "treasury", "holding"]
 const FACT_KEYS := ["id", "text", "subject", "severity", "knowers"]
 ## Oyun kodunun (sim.gd) kendisinin koyduğu bayraklar; <AKTÖR>_GITTI, _GUCLENDI, HUZUR_<AKTÖR> kalıpları ayrıca.
 const CODE_FLAGS := ["DARBE_BASTIRILDI", "DARBE_HALK", "DARBE_TAVIZ",
 	"REJIM_GUVENLIKCI", "REJIM_POPULIST", "REJIM_PATRONAJCI", "REJIM_OLIGARK", "REJIM_MEDYA", "REJIM_ISTIHBARAT",
-	"KADRO_SADIK_ORDU", "KADRO_LIYAKATLI_HUKUK", "KADRO_LIYAKATLI_IDARE", "HALDEN_SAVCI_SIZDI", "SARAY_PAYI_BASLADI", "VELIAHT_YETISTI", "DOGRULA_ELENA"]
+	"KADRO_SADIK_ORDU", "KADRO_LIYAKATLI_HUKUK", "KADRO_LIYAKATLI_IDARE", "HALDEN_SAVCI_SIZDI", "SARAY_PAYI_BASLADI", "VELIAHT_YETISTI", "DOGRULA_ELENA", "HEYET_GONDER"]
 const PATRONAGE_FLAGS := ["halden_ihale_0", "halden_ihale_1", "halden_ihale_2", "halden_fatura_0", "halden_fatura_1", "halden_fatura_2"]
 
 var errors: Array[String] = []
@@ -227,6 +227,13 @@ func _check_fx(id: String, fx: Dictionary) -> void:
 			for institution in fx["capacity"]:
 				if not institution in CAP_KEYS or not (fx["capacity"][institution] is int or fx["capacity"][institution] is float):
 					errors.append("%s: bilinmeyen kapasite etkisi '%s'" % [id, institution])
+	if fx.has("foreign"):
+		if not fx["foreign"] is Dictionary:
+			errors.append("%s: foreign dış güç sözlüğü olmalı" % id)
+		else:
+			for power in fx["foreign"]:
+				if not power in FOREIGN_KEYS or not (fx["foreign"][power] is int or fx["foreign"][power] is float):
+					errors.append("%s: bilinmeyen dış ilişki etkisi '%s'" % [id, power])
 	for aid in fx.get("actors", {}):
 		_check_actor(id, "fx.actors", str(aid))
 		for prop in fx["actors"][aid]:

@@ -1225,6 +1225,9 @@ func _apply_effects(fx: Dictionary) -> void:
 	private_wealth = maxf(0.0, private_wealth + float(fx.get("wealth", 0)))
 	treasury = clampf(treasury + float(fx.get("treasury", 0)), 0.0, 100.0)
 	holding = clampf(holding + float(fx.get("holding", 0)), 0.0, 100.0)
+	for power in fx.get("foreign", {}):
+		if foreign.has(power):
+			foreign[power] = clampf(float(foreign[power]) + float(fx["foreign"][power]), 0.0, 100.0)
 	for institution in fx.get("capacity", {}):
 		if capacity.has(institution):
 			capacity[institution] = clampf(float(capacity[institution]) + float(fx["capacity"][institution]), 5.0, 100.0)

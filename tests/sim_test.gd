@@ -361,8 +361,12 @@ func _init() -> void:
 		sim.treasury = clampf(55.0, float(e.get("min_treasury", 0)), float(e.get("max_treasury", 100)))
 		sim.holding = clampf(55.0, float(e.get("min_holding", 0)), float(e.get("max_holding", 100)))
 		sim.heir_maturity = clampf(75.0, float(e.get("min_heir", 0)), float(e.get("max_heir", 100)))
+		for power in sim.foreign:
+			sim.foreign[power] = clampf(50.0, float(e.get("min_foreign", {}).get(power, 0)), float(e.get("max_foreign", {}).get(power, 100)))
 		if e.get("needs_hostile", false):
 			sim.halden_hostile_until = sim.week + 1
+		if e.get("needs_ready", false):
+			sim.actors["arden"].ready = true
 		for aid in sim._as_array(e.get("needs_moved", [])):
 			sim.actors[aid].moved = true
 		for institution in sim.capacity:
@@ -558,6 +562,9 @@ func _test_foreign() -> bool:
 	good = good and verified.contains("Asteria") and sim.foreign_hint_until == sim.week + 6 and sim.foreign_report(true).contains("Seravia")
 	good = good and sim._eligible({"id": "foreign_ok", "min_foreign": {"asteria": 55}, "max_foreign": {"drakon": 50}})
 	good = good and not sim._eligible({"id": "foreign_low", "min_foreign": {"asteria": 90}})
+	var effect_before: float = sim.foreign["asteria"]
+	sim._apply_effects({"foreign": {"asteria": -7}})
+	good = good and is_equal_approx(float(sim.foreign["asteria"]), effect_before - 7.0)
 	if not good:
 		push_error("dış ilişki kayması, eşik etkisi, heyet veya doğrulama hatalı")
 	print("Dış ilişkiler: ", "OK" if good else "HATA")
