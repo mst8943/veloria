@@ -22,13 +22,14 @@ Yeni aktörlerin başlangıç gürültüsü ve yeni durum değerleri ayrı tohum
 
 ## Tamamlanan adımlar
 
-Henüz yok.
+- **B1.1** `5a18c3f`: Julian ve Elena aktörleri dosyanın sonunda; `supporting` işaretiyle eski dokuz kişinin ana RNG, haftalık büyüme, darbe payı, alamet ve rapor çekilişlerine girmezler. Başlangıç gürültüsü ile veliaht olgunluğu ayrı üreteçten gelir. Kayıt sürümü 8, v7→v8 göçü ve iki portre içe aktarması yapıldı. Yeni rapor alanlarının şeması tamamlandı; rapor üretimi B1.3'te açılacak. `TEST: OK` (eski dokuz aktörün RNG değerleri ayrıca denetlendi), `EVENTS: OK (179, 0)`, `SAVE: OK`, `CONTENT: OK`, `UI INPUT: OK`, masaüstü/mobil `AUTOPLAY DONE`; tempo görülen dilimler ≥0,81. Tam oyun **101 / 104 / TAHTTA / Medya Rejimi / 112 olay** ile tabanla birebir aynı. Ölçüt 80 kampanya/zorlukta **%83/%46/%17**, tabanla aynı.
 
 ## Ölçüm tablosu
 
 | Aşama | Kolay | Normal | Zor | Tam oyun |
 |---|---:|---:|---:|---|
 | Taban | %83 | %46 | %17 | 101 / 104 / TAHTTA / Medya Rejimi / 112 olay |
+| B1.1 `5a18c3f` | %83 | %46 | %17 | 101 / 104 / TAHTTA / Medya Rejimi / 112 olay |
 
 ## Açık sorunlar
 
@@ -36,4 +37,4 @@ Faz 4c'den devreden Zor bot farkı: `advice_soft` ve `advice_lavish` ölçütü 
 
 ## SIRADAKİ ADIM
 
-B1.1: Julian ve Elena'yı ana RNG'yi ve darbe payını koruyarak ekle; kayıt sürümünü 8'e yükselt, v7 göçünü ve kaydet/yükle testini ekle. Sonra bütün işlev testlerini ve tohum 101 tam oyunu çalıştır.
+B1.2: Julian için Veliahdı Yetiştir eylemi, altı hafta bekleme ve üç kademeli kişi göstergesi; etkiler ve fazla öne çıkarma sınaması. Her test ve 80 kampanyalık denge ölçümü geçince commit'le.
