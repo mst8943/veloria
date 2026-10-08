@@ -79,3 +79,5 @@ S2: L2 — beş arayüz dosyası tamamlandı; sırada masaüstü ve mobil L2 ekr
 - `end_screen.gd`: sonuç sekmeleri, hakikat dosyası, tarihçi ve devlet özeti
   etiketleri `tr()` ile bağlandı; dinamik anlatı metinleri çeviri anahtarından
   geçirildi.
+- Menü künyesi sabit kaynak metin olarak kalır; Godot sabit ifadede `tr()`
+  değerlendirmediğinden çeviri modal açılırken uygulanır.

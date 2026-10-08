@@ -8,7 +8,7 @@ const Loc := preload("res://game/core/loc.gd")
 const SHIMMER_SHADER := preload("res://game/ui/shimmer.gdshader")
 
 ## Emeği geçenler ve lisans bildirimleri (Godot MIT ve EB Garamond OFL bildirimi dağıtımda zorunludur).
-const CREDITS := tr("""[b][font_size=30][color=#d6b25e]VELORIA[/color][/font_size][/b]
+const CREDITS := """[b][font_size=30][color=#d6b25e]VELORIA[/color][/font_size][/b]
 [color=gray]Reaktif bir siyaset ve iktidar simülasyonu[/color]
 
 [b]Yapım[/b]
@@ -156,7 +156,7 @@ func _build() -> void:
 	links.alignment = BoxContainer.ALIGNMENT_CENTER
 	links.add_theme_constant_override("separation", 6)
 	main_page.add_child(links)
-	for l in [[tr("Nasıl Oynanır"), func() -> void: host._show_modal(tr(HOW_TO))], [tr("Hükümdarlık Arşivi"), host._show_chronicle], [tr("Hakkında"), func() -> void: host._show_modal(CREDITS)]]:
+	for l in [[tr("Nasıl Oynanır"), func() -> void: host._show_modal(tr(HOW_TO))], [tr("Hükümdarlık Arşivi"), host._show_chronicle], [tr("Hakkında"), func() -> void: host._show_modal(tr(CREDITS))]]:
 		var lb := Button.new()
 		lb.text = l[0]
 		lb.theme_type_variation = "GhostButton"
