@@ -1,0 +1,33 @@
+{
+  "reasons": {
+    "king": [["strengthens your throne", "bolsters your authority"], ["undermines your authority", "makes you look weak"]],
+    "unrest": [["calms the streets", "quiets the squares"], ["stirs the streets", "angers the public"]],
+    "economy": [["eases the Treasury", "gives the markets room to breathe"], ["strains the Treasury", "punches a hole in the budget"]],
+    "opp": [["silences the opposition", "weakens Voss's hand"], ["arms the opposition", "gives Voss ammunition"]],
+    "wealth": [["fills your private purse", "puts money in your pocket"], ["empties your purse", "comes out of your own pocket"]],
+    "treasury": [["gives the State Treasury breathing room"], ["squeezes the State Treasury"]],
+    "capacity": [["makes the institutions' work easier"], ["wears down the institutions"]],
+    "holding": [["checks Sarne's reach"], ["grows Sarne's influence"]],
+    "fact": [["leaves no trace"], ["leaves a trace", "will land on your desk as a file one day"]],
+    "promise": [["keeps your word"], ["breaks your promise", "goes back on your word"]]
+  },
+  "cover": {
+    "arden": "A strong army makes for a strong throne.",
+    "voss": "Some things I cannot tell you. Trust me.",
+    "kessler": "I keep the books; this is the least damaging option.",
+    "halden": "I will handle public opinion.",
+    "dorn": "This is best for the Palace's peace.",
+    "prens": "The dynasty's honor demands it.",
+    "falk": "This is the soundest course under the law.",
+    "julian": "I need to learn this for the dynasty's future.",
+    "elena": "I weigh what the embassies intend, not what they say."
+  },
+  "evasive": ["As you wish, Your Majesty.", "Whichever you choose will be right, Your Majesty.", "You know best, Your Majesty."],
+  "flat": ["I think they all lead to the same door.", "I see little difference between them, Your Majesty."],
+  "roman": ["I", "II", "III", "IV"],
+  "roman_acc": ["I", "II", "III", "IV"],
+  "actor_good": ["cuts {n_in}'s power", "keeps {n_i} in check"],
+  "actor_bad": ["makes {n_i} too powerful", "strengthens {n_in}'s hand"],
+  "rec_forms": ["I recommend %s", "In my view, %s, Your Majesty", "Choose %s"],
+  "cover_default": "Trust me."
+}
