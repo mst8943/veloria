@@ -863,7 +863,7 @@ func _start_new() -> void:
 		_menu.hide()
 		_end_overlay.hide()
 		await _cinema.play(_intro_shots())
-	_after_load("Taç sana emanet edildi. Güç merkezleri seni test edecek.")
+	_after_load(tr("Taç sana emanet edildi. Güç merkezleri seni test edecek."))
 	if Sfx.desk_start:
 		_show_desk()
 
