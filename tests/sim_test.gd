@@ -546,8 +546,18 @@ func _test_foreign() -> bool:
 	var hard_defense: float = sim.foreign_defense_bonus()
 	sim._tick_foreign()
 	good = good and sim.treasury - hard_treasury > easy_gain and hard_defense > easy_defense
+	sim.new_game(62, 1)
+	sim.mesai = 2
+	var before_asteria: float = sim.foreign["asteria"]
+	var before_drakon: float = sim.foreign["drakon"]
+	good = good and sim.send_delegation("claire").contains("Claire")
+	good = good and float(sim.foreign["asteria"]) == before_asteria + 12.0 and float(sim.foreign["drakon"]) == before_drakon - 3.0
+	good = good and sim.delegation_wait() > 0 and sim.send_delegation("malenkov").contains("bekliyor")
+	sim.mesai = 2
+	var verified: String = sim.cross_check("elena")
+	good = good and verified.contains("Asteria") and sim.foreign_hint_until == sim.week + 6 and sim.foreign_report(true).contains("Seravia")
 	if not good:
-		push_error("dış ilişki kayması, eşik etkisi veya zorluk çarpanı hatalı")
+		push_error("dış ilişki kayması, eşik etkisi, heyet veya doğrulama hatalı")
 	print("Dış ilişkiler: ", "OK" if good else "HATA")
 	return good
 

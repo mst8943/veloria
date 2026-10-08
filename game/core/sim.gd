@@ -70,6 +70,8 @@ const INSTITUTION_HEADS := {"kessler": "maliye", "falk": "hukuk", "arden": "ordu
 const APPOINT_COOLDOWN := 8
 const TENDER_COOLDOWN := 3
 const HEIR_COOLDOWN := 6
+const DELEGATION_COOLDOWN := 4
+const FOREIGN_ENVOYS := {"claire": "asteria", "malenkov": "drakon", "lucien": "seravia"}
 const HALDEN_MEDIA_UNREST := 0.6
 const HALDEN_MEDIA_KING := 0.25
 const HALDEN_MEDIA_REACH := [71.0, 71.0, 50.0]  # Yayın etkisinin ülke çapına eriştiği holding eşiği.
@@ -523,6 +525,26 @@ func train_heir(id: String) -> String:
 	return "Julian derslerini ilerletti. Ne öğrendiğini halkın önünde göreceksin."
 
 
+func delegation_wait() -> int:
+	return maxi(0, DELEGATION_COOLDOWN - (week - int(flags.get("HEYET_GONDER", -100))))
+
+
+func send_delegation(id: String) -> String:
+	if not FOREIGN_ENVOYS.has(id) or not actors.has(id) or actors[id].moved:
+		return "Heyet gönderilecek elçiyi seçmelisin."
+	if delegation_wait() > 0:
+		return "Elçilikler önceki heyetin cevabını bekliyor."
+	if not spend_mesai():
+		return _no_mesai()
+	var target: String = FOREIGN_ENVOYS[id]
+	for power in foreign:
+		foreign[power] = clampf(float(foreign[power]) + (12.0 if power == target else -3.0), 0.0, 100.0)
+	flags["HEYET_GONDER"] = week
+	stats["delegations"] = int(stats.get("delegations", 0)) + 1
+	changed.emit()
+	return "%s heyeti kabul etti. Öteki elçilikler bu yakınlığı dikkatle not etti." % actors[id].display_name
+
+
 func appoint(id: String, kind: String) -> String:
 	if not INSTITUTION_HEADS.has(id) or not actors.has(id) or actors[id].moved or not kind in ["loyal", "merit"]:
 		return "Bu kadro kararnamesi çıkarılamaz."
@@ -809,6 +831,10 @@ func cross_check(id: String) -> String:
 		flags["DOGRULA_" + INSTITUTION_HEADS[id]] = week
 	if id == "elena":
 		flags["DOGRULA_ELENA"] = week
+		foreign_hint_until = week + 6
+		karne[id]["ok"] += 1
+		changed.emit()
+		return "Elçilik kayıtları altı hafta için açık: " + foreign_report(true)
 	var gap := _domain_truth(a.domain) - _domain_reported(a)
 	var noisy := gap + rng.randf_range(-8.0, 8.0)
 	var worse := (a.domain == "economy" and noisy < -6.0) or (a.domain != "economy" and noisy > 6.0)
@@ -1387,7 +1413,7 @@ func _diff_visible(b: Dictionary, n: Dictionary) -> Array:
 			out.append({"tone": -1, "actor": "", "text": s.substr(8)})
 		elif s.begins_with("KULİS: "):
 			out.append({"tone": 0, "actor": "", "text": s.substr(7)})
-		elif s.begins_with("SOKAK: ") or s.begins_with("MAHKEME: ") or s.begins_with("MALİYE: ") or s.begins_with("ADLİYE: ") or s.begins_with("İDARE: ") or s.begins_with("ORDU: "):
+		elif s.begins_with("SOKAK: ") or s.begins_with("MAHKEME: ") or s.begins_with("MALİYE: ") or s.begins_with("ADLİYE: ") or s.begins_with("İDARE: ") or s.begins_with("ORDU: ") or s.begins_with("DIŞİŞLERİ: "):
 			out.append({"tone": -1, "actor": "", "text": s.substr(s.find(" ") + 1)})
 	for mv: Dictionary in weekly_moves:
 		out.append(mv.duplicate())
@@ -1541,6 +1567,19 @@ func _tick_foreign() -> void:
 		economy = minf(100.0, economy + 0.08 * scale)
 	elif float(foreign["seravia"]) <= 30.0:
 		holding = minf(100.0, holding + 0.08 * scale)
+	_foreign_warnings()
+
+
+func _foreign_warnings() -> void:
+	for power in ["asteria", "drakon", "seravia"]:
+		var name: String = {"asteria": "Asteria", "drakon": "Drakon", "seravia": "Seravia"}[power]
+		var value: float = foreign[power]
+		if value >= 70.0 and not warned.get("foreign_" + power + "_near", false):
+			warned["foreign_" + power + "_near"] = true
+			weekly_news.append("DIŞİŞLERİ: %s ile ilişki yakınlaştı; elçilik kapıları açık." % name)
+		elif value <= 30.0 and not warned.get("foreign_" + power + "_cold", false):
+			warned["foreign_" + power + "_cold"] = true
+			weekly_news.append("DIŞİŞLERİ: %s ile ilişki soğudu; elçilikten sert bir nota geldi." % name)
 
 
 func foreign_defense_bonus() -> float:
@@ -2728,7 +2767,7 @@ func _domain_truth(domain: String) -> float:
 		"heir":
 			return 100.0 - heir_maturity
 		"foreign":
-			return clampf(60.0 + unrest * 0.3 - (economy - 50.0) * 0.4 - (treasury - 50.0) * 0.2, 0.0, 100.0)
+			return 100.0 - _foreign_average()
 		_:
 			return unrest
 
@@ -2749,6 +2788,32 @@ func _band(a: Actor, value: float) -> int:
 	if a.domain in GOOD_DOMAINS_HIGH:
 		return 0 if value > 62.0 else (1 if value > 40.0 else 2)
 	return 0 if value < 30.0 else (1 if value < 55.0 else 2)
+
+
+func _foreign_average() -> float:
+	var total := 0.0
+	for power in ["asteria", "drakon", "seravia"]:
+		total += float(foreign.get(power, 50.0))
+	return total / 3.0
+
+
+func _foreign_report_value(power: String, verified: bool) -> float:
+	var value: float = foreign.get(power, 50.0)
+	if not verified:
+		var elena: Actor = actors.get("elena")
+		var noise := RandomNumberGenerator.new()
+		noise.seed = rng.seed ^ (week * 11939) ^ power.hash()
+		value += (elena.flattery() * 20.0 if elena else 0.0) + noise.randf_range(-4.0, 4.0)
+	return clampf(value, 0.0, 100.0)
+
+
+func foreign_band(power: String, verified: bool = false) -> String:
+	var value := _foreign_report_value(power, verified)
+	return "Soğuk" if value < 40.0 else ("Mesafeli" if value < 65.0 else "Yakın")
+
+
+func foreign_report(verified: bool = false) -> String:
+	return "Asteria %s; Drakon %s; Seravia %s." % [foreign_band("asteria", verified), foreign_band("drakon", verified), foreign_band("seravia", verified)]
 
 
 func _generate_reports() -> void:
@@ -2794,6 +2859,9 @@ func _generate_reports() -> void:
 		report_rng.seed = rng.seed ^ (week * 11939) ^ aid.hash()
 		var reported := _domain_reported(a) + report_rng.randf_range(-6.0, 6.0) * (1.0 - a.honesty * 0.5)
 		var line: String = _phrase(a, reported, echo)
+		if aid == "elena":
+			reported = 100.0 - (_foreign_report_value("asteria", week <= foreign_hint_until) + _foreign_report_value("drakon", week <= foreign_hint_until) + _foreign_report_value("seravia", week <= foreign_hint_until)) / 3.0
+			line = foreign_report(week <= foreign_hint_until)
 		var rb := _band(a, reported)
 		var tb := _band(a, _domain_truth(a.domain))
 		if rb < tb:

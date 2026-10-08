@@ -33,6 +33,7 @@ const TIPS := {
 	"appoint_merit": "Liyakatli Ata (1 mesai)\nBir kurum başkanı için liyakatli kadro kararnamesi çıkar. Sonucunu zamanla raporlardan öğrenirsin.",
 	"tender": "İhale Ver (1 mesai)\nSarne'nin şirketlerine yeni bir devlet işi ver. Sözleşmenin sonuçları zamanla ortaya çıkar.",
 	"train_heir": "Veliahdı Yetiştir (1 mesai)\nJulian için eğitim ve halkla buluşma programı hazırla. Sürekli öne çıkarmak saraydaki başka isimleri rahatsız edebilir.",
+	"delegation": "Heyet Gönder (1 mesai)\nSeçili elçiyi başkente davet et. Yakınlık diğer iki elçiliği tedirgin eder.",
 }
 
 ## Eylem kategorileri (eylem panelindeki sekmeler).
@@ -43,7 +44,7 @@ const CAT_TIPS := {
 	"EMRET": "Emret\nHuzursuzluğu bastırma emri. Kanal seçimi sonucu ve inkâr edilebilirliği belirler.",
 	"BASKI": "Baskı\nŞantaj ve görevden alma. Güçlü araçlar, ama geri tepebilirler.",
 	"OPERASYON": "Operasyon (2 mesai)\n1–3 kişiyle gizli iş. Çemberi kurmak için Çoklu seçim'i aç ya da Ctrl ile kişi ekle.",
-	"DEVLET": "Devlet\nKurum başkanları için kadro kararnameleri, Sarne için ihale ve veliaht eğitimi.",
+	"DEVLET": "Devlet\nKadro kararnameleri, ihale, veliaht eğitimi ve elçilik heyetleri.",
 }
 
 const HINT_DEFAULT := "[color=#8f7a45]Bir eylemin üzerine gel ya da dokun: ne yaptığını ve bedelini burada görürsün.[/color]"
@@ -135,7 +136,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		["EMRET", [["o_yaz", "Yazılı Emir"], ["o_soz", "Sözlü Emir"], ["o_ima", "İma"]]],
 		["BASKI", [["blackmail", "Şantaj"], ["dismiss", "Görevden Al"]]],
 		["OPERASYON", [["op_dikkat", "Dikkat Dağıt"], ["op_bol", "Muhalefeti Böl"], ["op_zayif", "Rakibi Zayıflat"], ["op_dus", "Birbirine Düşür"]]],
-		["DEVLET", [["appoint_loyal", "Sadık Ata"], ["appoint_merit", "Liyakatli Ata"], ["tender", "İhale Ver"], ["train_heir", "Veliahdı Yetiştir"]]],
+		["DEVLET", [["appoint_loyal", "Sadık Ata"], ["appoint_merit", "Liyakatli Ata"], ["tender", "İhale Ver"], ["train_heir", "Veliahdı Yetiştir"], ["delegation", "Heyet Gönder"]]],
 	]
 	var actions := {
 		"summon": func() -> void: host._act(func(id: String) -> String: return Sim.summon(id)),
@@ -157,6 +158,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		"appoint_merit": func() -> void: host._act(func(id: String) -> String: return Sim.appoint(id, "merit")),
 		"tender": func() -> void: host._act(func(id: String) -> String: return Sim.give_tender(id)),
 		"train_heir": func() -> void: host._act(func(id: String) -> String: return Sim.train_heir(id)),
+		"delegation": func() -> void: host._act(func(id: String) -> String: return Sim.send_delegation(id)),
 	}
 	for i in Sim.PRIZES.size():
 		var prize: String = Sim.PRIZES[i]
@@ -279,6 +281,7 @@ const ACTION_META := {
 	"appoint_merit": ["Liyakatli Ata", 1, 0.0, 0, 0],
 	"tender": ["İhale Ver", 1, 0.0, 0, 0],
 	"train_heir": ["Veliahdı Yetiştir", 1, 0.0, 0, 0],
+	"delegation": ["Heyet Gönder", 1, 0.0, 0, 0],
 }
 const TRACE_NAMES := ["iz yok", "inkâr edilebilir", "iz bırakır", "kanıt bırakır"]
 const RISK_NAMES := ["düşük", "orta", "yüksek"]
@@ -319,6 +322,11 @@ func _preview(key: String) -> void:
 					note = "Yalnızca Julian için kullanılabilir."
 				elif Sim.heir_train_wait() > 0:
 					note = "Julian yeni derslerine hazırlanıyor."
+			"delegation":
+				if not Sim.FOREIGN_ENVOYS.has(id):
+					note = "Claire, Viktor ya da Lucien seçilmeli."
+				elif Sim.delegation_wait() > 0:
+					note = "Elçilikler önceki heyetin cevabını bekliyor."
 			"appoint_loyal", "appoint_merit":
 				if not Sim.INSTITUTION_HEADS.has(id):
 					note = "Yalnızca kurum başkanları için kullanılabilir."
@@ -359,7 +367,7 @@ func _preview(key: String) -> void:
 		# Bağlam yoksa uzun açıklamanın ilk cümlesi (tamamı ipucu balonunda).
 		var desc: String = str(TIPS[key]).split("\n")[1]
 		note = desc.split(". ")[0].trim_suffix(".") + "."
-	if key in ["appoint_loyal", "appoint_merit", "tender", "train_heir"]:
+	if key in ["appoint_loyal", "appoint_merit", "tender", "train_heir", "delegation"]:
 		host._hint_label.text = "[color=#d6b25e][b]%s[/b][/color]   [color=#9a958a]1 mesai[/color]\n%s" % [m[0], note]
 		return
 	var cost := "%d mesai" % int(m[1])
@@ -528,7 +536,7 @@ func _style_cards(hover_id := "") -> void:
 		card.add_theme_stylebox_override("panel", UIKit.box(bg, border, 6, 3, 2 if selected else 1))
 
 
-const PERSON_ACTIONS := ["summon", "promote", "bribe", "p_0", "p_1", "p_2", "cross", "investigate", "o_sor", "o_yaz", "o_soz", "o_ima", "blackmail", "dismiss", "appoint_loyal", "appoint_merit", "tender", "train_heir"]
+const PERSON_ACTIONS := ["summon", "promote", "bribe", "p_0", "p_1", "p_2", "cross", "investigate", "o_sor", "o_yaz", "o_soz", "o_ima", "blackmail", "dismiss", "appoint_loyal", "appoint_merit", "tender", "train_heir", "delegation"]
 const OP_ACTIONS := ["op_dikkat", "op_bol", "op_zayif", "op_dus"]
 
 
@@ -561,6 +569,8 @@ func _update_action_states() -> void:
 			if k == "tender" and id != "" and (id != "halden" or Sim.actors[id].moved or Sim.tender_wait() > 0):
 				off = true
 			if k == "train_heir" and id != "" and (id != "julian" or Sim.actors[id].moved or Sim.heir_train_wait() > 0):
+				off = true
+			if k == "delegation" and id != "" and (not Sim.FOREIGN_ENVOYS.has(id) or Sim.actors[id].moved or Sim.delegation_wait() > 0):
 				off = true
 			b.disabled = off
 	for k in OP_ACTIONS:
