@@ -2564,6 +2564,7 @@ func _end(survived: bool) -> void:
 		if top == null or a.power > top.power:
 			top = a
 	var cause := ""
+	var cause_display := ""
 	var title := ""
 	if not survived:
 		title = "Devrilen Kral"
@@ -2571,30 +2572,40 @@ func _end(survived: bool) -> void:
 			var l: Actor = actors[coup_leader]
 			var promo_week: int = flags.get(l.id.to_upper() + "_GUCLENDI", 0)
 			if promo_week > 0:
-				cause = tr("Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti.") % [week - 1, l.display_name, week - promo_week] if l.military else tr("Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti.") % [week - 1, l.display_name, week - promo_week]
+				cause = "Saltanatının %d. haftasında %s görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti." % [week - 1, "Askerî darbeyle" if l.military else "Saray darbesiyle", l.display_name, week - promo_week]
+				cause_display = tr("Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti.") % [week - 1, l.display_name, week - promo_week] if l.military else tr("Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti.") % [week - 1, l.display_name, week - promo_week]
 			else:
-				cause = tr("Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı.") % [week - 1, l.display_name] if l.military else tr("Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı.") % [week - 1, l.display_name]
+				cause = "Saltanatının %d. haftasında %s görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı." % [week - 1, "Askerî darbeyle" if l.military else "Saray darbesiyle", l.display_name]
+				cause_display = tr("Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı.") % [week - 1, l.display_name] if l.military else tr("Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı.") % [week - 1, l.display_name]
 			if crisis_note != "":
 				cause += " " + crisis_note
+				cause_display += " " + crisis_note
 		elif unrest >= 100.0:
-			cause = tr("Saltanatının %d. haftasında halk ayaklanması sarayı kuşattı.") % (week - 1)
+			cause = "Saltanatının %d. haftasında halk ayaklanması sarayı kuşattı." % (week - 1)
+			cause_display = tr("Saltanatının %d. haftasında halk ayaklanması sarayı kuşattı.") % (week - 1)
 			if crisis_note != "":
 				cause += " " + crisis_note
+				cause_display += " " + crisis_note
 		elif legal_pressure() >= 100.0 or flags.has("YETKI_KAYBI"):
-			cause = tr("Saltanatının %d. haftasında Meclis ve yüksek mahkeme, biriken skandallar nedeniyle seni yetkisiz bıraktı.") % (week - 1)
+			cause = "Saltanatının %d. haftasında Meclis ve yüksek mahkeme, biriken skandallar nedeniyle seni yetkisiz bıraktı." % (week - 1)
+			cause_display = tr("Saltanatının %d. haftasında Meclis ve yüksek mahkeme, biriken skandallar nedeniyle seni yetkisiz bıraktı.") % (week - 1)
 			if crisis_note != "":
 				cause += " " + crisis_note
+				cause_display += " " + crisis_note
 		else:
-			cause = tr("Saltanatının %d. haftasında elit koalisyonu desteğini çekti; tahtta kimse seni savunmadı.") % (week - 1)
+			cause = "Saltanatının %d. haftasında elit koalisyonu desteğini çekti; tahtta kimse seni savunmadı." % (week - 1)
+			cause_display = tr("Saltanatının %d. haftasında elit koalisyonu desteğini çekti; tahtta kimse seni savunmadı.") % (week - 1)
 	else:
-		cause = tr("104 haftalık saltanatın sonunda tahtını korudun.")
+		cause = "104 haftalık saltanatın sonunda tahtını korudun."
+		cause_display = tr("104 haftalık saltanatın sonunda tahtını korudun.")
 		var state_title := _survivor_title(top)
 		title = state_title if state_title in ["Harap Devletin Kralı", "Liyakat Kralı"] else str(REGIME_TITLES.get(regime, state_title))
 	record = {"survived": survived, "title": title, "weeks": week - 1, "cause": cause,
-		"top_actor": top.display_name if top else "", "history": history.duplicate(),
+		"top_actor": top.display_name if top else "", "history": history.duplicate(), "cause_display": cause_display,
 		"lies": _top_lies(), "king": KING_NAME,
 		"regime": regime_name() if regime != "" else "", "threat": regime_threat() if regime != "" else "",
-		"promises": tr("%d söz verdin: %d tutuldu, %d bozuldu.") % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
+		"promises": "%d söz verdin: %d tutuldu, %d bozuldu." % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
+		"promises_display": tr("%d söz verdin: %d tutuldu, %d bozuldu.") % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
 		"historians": historians(survived), "timeline": timeline.duplicate(), "council": council_record(),
 		"plot": plot_log.duplicate(), "signs": sign_record(), "state": _state_record()}
 	record["new_achievements"] = _award_achievements(survived, title, cause) if record_chronicle else []
