@@ -37,3 +37,72 @@ msgstr "WHAT REALLY HAPPENED"
 
 msgid "Yeterli veri yok."
 msgstr "Not enough data."
+
+msgid "Tahtta kalmak, ülkeyi yönetmekten daha zordur."
+msgstr "Staying on the throne is harder than ruling the country."
+
+msgid "Devam Et"
+msgstr "Continue"
+
+msgid "Yeni Oyun"
+msgstr "New Game"
+
+msgid "Ayarlar"
+msgstr "Settings"
+
+msgid "Çıkış"
+msgstr "Exit"
+
+msgid "Nasıl Oynanır"
+msgstr "How to Play"
+
+msgid "Hükümdarlık Arşivi"
+msgstr "Royal Archive"
+
+msgid "Hakkında"
+msgstr "About"
+
+msgid "YENİ SALTANAT"
+msgstr "NEW REIGN"
+
+msgid "5 mesai, daha uzun koruma süresi ve bol gelir. İlk saltanat için."
+msgstr "5 actions, longer protection and ample income. For a first reign."
+
+msgid "4 mesai. Dengeli: hatalarını affeder ama unutmaz."
+msgstr "4 actions. Balanced: it forgives mistakes but does not forget them."
+
+msgid "4 mesai, kısa koruma, az gelir. Darbeler daha erken ve kolay gelir."
+msgstr "4 actions, brief protection, little income. Coups come earlier and more easily."
+
+msgid "Geri"
+msgstr "Back"
+
+msgid "Tahta Çık"
+msgstr "Ascend the Throne"
+
+msgid "AYARLAR"
+msgstr "SETTINGS"
+
+msgid "Tam ekran (F11)"
+msgstr "Fullscreen (F11)"
+
+msgid "Kısa geçişler"
+msgstr "Short transitions"
+
+msgid "Danışman ipuçları"
+msgstr "Advisor hints"
+
+msgid "Açılış sineması"
+msgstr "Opening cinematic"
+
+msgid "Haftaya masadan başla"
+msgstr "Start each week at the desk"
+
+msgid "Dil / Language"
+msgstr "Language / Dil"
+
+msgid "Müzik"
+msgstr "Music"
+
+msgid "Ses efekti"
+msgstr "Sound effects"

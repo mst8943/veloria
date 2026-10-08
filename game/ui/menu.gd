@@ -124,7 +124,7 @@ func _build() -> void:
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(title)
 	var sub := Label.new()
-	sub.text = "Tahtta kalmak, ülkeyi yönetmekten daha zordur."
+	sub.text = tr("Tahtta kalmak, ülkeyi yönetmekten daha zordur.")
 	sub.add_theme_font_override("font", UIKit.serif())
 	sub.add_theme_font_size_override("font_size", host._fs(20))
 	sub.add_theme_color_override("font_color", Color(UIKit.TEXT, 0.85))
@@ -139,14 +139,14 @@ func _build() -> void:
 
 	# --- Ana sayfa: dört büyük düğme, altında küçük bağlantılar
 	var main_page := _page("main", box)
-	var b_first := _btn(main_page, "Devam Et", func() -> void:
+	var b_first := _btn(main_page, tr("Devam Et"), func() -> void:
 		if not Sim.actors.is_empty() and not Sim.ended:
 			host._hide_menu()
 		else:
 			host._continue())
-	var b_new := _btn(main_page, "Yeni Oyun", func() -> void: show_page("new"))
-	var b_set := _btn(main_page, "Ayarlar", func() -> void: show_page("settings"))
-	var b_quit := _btn(main_page, "Çıkış", func() -> void: get_tree().quit())
+	var b_new := _btn(main_page, tr("Yeni Oyun"), func() -> void: show_page("new"))
+	var b_set := _btn(main_page, tr("Ayarlar"), func() -> void: show_page("settings"))
+	var b_quit := _btn(main_page, tr("Çıkış"), func() -> void: get_tree().quit())
 	b_quit.visible = not OS.has_feature("web")   # tarayıcıda çıkış anlamsız
 	for b in [b_first, b_new, b_set, b_quit]:
 		b.custom_minimum_size.y = 50 if host._mobile else 58
@@ -156,7 +156,7 @@ func _build() -> void:
 	links.alignment = BoxContainer.ALIGNMENT_CENTER
 	links.add_theme_constant_override("separation", 6)
 	main_page.add_child(links)
-	for l in [["Nasıl Oynanır", func() -> void: host._show_modal(HOW_TO)], ["Hükümdarlık Arşivi", host._show_chronicle], ["Hakkında", func() -> void: host._show_modal(CREDITS)]]:
+	for l in [[tr("Nasıl Oynanır"), func() -> void: host._show_modal(tr(HOW_TO))], [tr("Hükümdarlık Arşivi"), host._show_chronicle], [tr("Hakkında"), func() -> void: host._show_modal(tr(CREDITS))]]:
 		var lb := Button.new()
 		lb.text = l[0]
 		lb.theme_type_variation = "GhostButton"
@@ -167,12 +167,12 @@ func _build() -> void:
 
 	# --- Yeni oyun: zorluk seçimi
 	var new_page := _page("new", box)
-	new_page.add_child(_heading("YENİ SALTANAT"))
+	new_page.add_child(_heading(tr("YENİ SALTANAT")))
 	var dgroup := ButtonGroup.new()
 	var ddesc := [
-		"5 mesai, daha uzun koruma süresi ve bol gelir. İlk saltanat için.",
-		"4 mesai. Dengeli: hatalarını affeder ama unutmaz.",
-		"4 mesai, kısa koruma, az gelir. Darbeler daha erken ve kolay gelir.",
+		tr("5 mesai, daha uzun koruma süresi ve bol gelir. İlk saltanat için."),
+		tr("4 mesai. Dengeli: hatalarını affeder ama unutmaz."),
+		tr("4 mesai, kısa koruma, az gelir. Darbeler daha erken ve kolay gelir."),
 	]
 	for i in Sim.DIFFICULTY.size():
 		var db := Button.new()
@@ -192,27 +192,27 @@ func _build() -> void:
 	var nrow := HBoxContainer.new()
 	nrow.add_theme_constant_override("separation", 10)
 	new_page.add_child(nrow)
-	var b_back1 := _btn(nrow, "Geri", func() -> void: show_page("main"))
+	var b_back1 := _btn(nrow, tr("Geri"), func() -> void: show_page("main"))
 	b_back1.theme_type_variation = "GhostButton"
 	b_back1.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var b_go := _btn(nrow, "Tahta Çık", host._request_new_game, true)
+	var b_go := _btn(nrow, tr("Tahta Çık"), host._request_new_game, true)
 	b_go.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	b_go.size_flags_stretch_ratio = 2.0
 
 	# --- Ayarlar
 	var set_page := _page("settings", box)
-	set_page.add_child(_heading("AYARLAR"))
+	set_page.add_child(_heading(tr("AYARLAR")))
 	var grid := GridContainer.new()
 	grid.columns = 2
 	grid.add_theme_constant_override("h_separation", 24)
 	grid.add_theme_constant_override("v_separation", 6)
 	set_page.add_child(grid)
 	var checks := [
-		["Tam ekran (F11)", Sfx.fullscreen, func(on: bool) -> void: Sfx.set_fullscreen(on), not host._mobile],
-		["Kısa geçişler", Sfx.short_fx, func(on: bool) -> void: Sfx.short_fx = on, true],
-		["Danışman ipuçları", Sfx.tips, func(on: bool) -> void: Sfx.tips = on, true],
-		["Açılış sineması", Sfx.intro, func(on: bool) -> void: Sfx.intro = on, true],
-		["Haftaya masadan başla", Sfx.desk_start, func(on: bool) -> void: Sfx.desk_start = on, true],
+		[tr("Tam ekran (F11)"), Sfx.fullscreen, func(on: bool) -> void: Sfx.set_fullscreen(on), not host._mobile],
+		[tr("Kısa geçişler"), Sfx.short_fx, func(on: bool) -> void: Sfx.short_fx = on, true],
+		[tr("Danışman ipuçları"), Sfx.tips, func(on: bool) -> void: Sfx.tips = on, true],
+		[tr("Açılış sineması"), Sfx.intro, func(on: bool) -> void: Sfx.intro = on, true],
+		[tr("Haftaya masadan başla"), Sfx.desk_start, func(on: bool) -> void: Sfx.desk_start = on, true],
 	]
 	for c in checks:
 		if not c[3]:
@@ -225,7 +225,7 @@ func _build() -> void:
 			apply.call(on)
 			Sfx.save_settings())
 		grid.add_child(cb)
-	grid.add_child(_label_dim("Dil / Language"))
+	grid.add_child(_label_dim(tr("Dil / Language")))
 	var language := OptionButton.new()
 	language.add_item("Türkçe", 0)
 	language.add_item("English", 1)
@@ -239,20 +239,20 @@ func _build() -> void:
 	vgrid.add_theme_constant_override("h_separation", 16)
 	vgrid.add_theme_constant_override("v_separation", 10)
 	set_page.add_child(vgrid)
-	vgrid.add_child(_label_dim("Müzik"))
+	vgrid.add_child(_label_dim(tr("Müzik")))
 	var s_music := _slider(Sfx.music_volume, func(v: float) -> void:
 		Sfx.set_music(v)
 		Sfx.save_settings())
 	s_music.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	vgrid.add_child(s_music)
-	vgrid.add_child(_label_dim("Ses efekti"))
+	vgrid.add_child(_label_dim(tr("Ses efekti")))
 	var s_sfx := _slider(Sfx.sfx_volume, func(v: float) -> void:
 		Sfx.set_sfx(v)
 		Sfx.play("click")
 		Sfx.save_settings())
 	s_sfx.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	vgrid.add_child(s_sfx)
-	var b_back2 := _btn(set_page, "Geri", func() -> void: show_page("main"))
+	var b_back2 := _btn(set_page, tr("Geri"), func() -> void: show_page("main"))
 	b_back2.theme_type_variation = "GhostButton"
 
 	items = [title, mdiv, sub, b_first, b_new, b_set, b_quit, links]
