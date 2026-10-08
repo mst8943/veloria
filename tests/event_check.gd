@@ -11,13 +11,14 @@ const ACTOR := preload("res://game/core/actor.gd")
 
 const TOP_KEYS := ["id", "title", "text", "choices", "ignore", "fx", "art", "crisis", "advisors",
 	"min_week", "max_week", "chance", "once", "cooldown", "min_unrest", "max_unrest", "min_economy", "max_economy",
-	"min_opposition", "min_power", "min_cap", "max_cap", "min_treasury", "max_treasury", "min_holding", "max_holding", "min_heir", "max_heir", "needs_hostile", "needs_moved", "needs_flag", "blocks_flag", "any_flag", "flag_age", "actor_min", "actor_max",
+	"min_opposition", "min_power", "min_cap", "max_cap", "min_treasury", "max_treasury", "min_holding", "max_holding", "min_heir", "max_heir", "min_foreign", "max_foreign", "needs_hostile", "needs_moved", "needs_flag", "blocks_flag", "any_flag", "flag_age", "actor_min", "actor_max",
 	"alive", "needs_fact", "needs_ready", "min_stat", "max_stat", "news", "actor", "tone"]
 ## Sim.stats anahtarları (min_stat / max_stat koşulları)
 const STAT_KEYS := ["ops", "bribes", "promotes", "leaks", "dismissals", "written", "hints", "checks",
 	"investigations", "blackmails", "promises", "kept", "broken", "summons", "concessions", "street_concessions", "legal_concessions", "rivalries",
 	"sadik_maliye", "sadik_hukuk", "sadik_ordu", "sadik_idare", "liyakatli_maliye", "liyakatli_hukuk", "liyakatli_ordu", "liyakatli_idare"]
 const CAP_KEYS := ["maliye", "hukuk", "ordu", "idare"]
+const FOREIGN_KEYS := ["asteria", "drakon", "seravia"]
 const FX_KEYS := ["king", "unrest", "economy", "opp", "wealth", "treasury", "holding", "capacity", "budget_stance", "court_share", "actors", "fact", "flag", "leak", "remove",
 	"promise_keep", "promise_break", "promise_delay"]
 const FX_NUMBERS := ["king", "unrest", "economy", "opp", "wealth", "treasury", "holding"]
@@ -162,6 +163,17 @@ func _check_conditions(e: Dictionary) -> void:
 			errors.append("%s: %s 0–100 arası sayı olmalı" % [id, k])
 	if e.has("min_heir") and e.has("max_heir") and float(e["min_heir"]) > float(e["max_heir"]):
 		errors.append("%s: min_heir > max_heir, hiç tetiklenmez" % id)
+	for k in ["min_foreign", "max_foreign"]:
+		if not e.has(k):
+			continue
+		if not e[k] is Dictionary:
+			errors.append("%s: %s dış güç sözlüğü olmalı" % [id, k])
+			continue
+		for power in e[k]:
+			if not power in FOREIGN_KEYS:
+				errors.append("%s: %s bilinmeyen dış güç '%s'" % [id, k, power])
+			if not (e[k][power] is int or e[k][power] is float) or float(e[k][power]) < 0.0 or float(e[k][power]) > 100.0:
+				errors.append("%s: %s.%s 0–100 arası sayı olmalı" % [id, k, power])
 	for k in ["min_cap", "max_cap"]:
 		if not e.has(k):
 			continue

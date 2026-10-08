@@ -556,6 +556,8 @@ func _test_foreign() -> bool:
 	sim.mesai = 2
 	var verified: String = sim.cross_check("elena")
 	good = good and verified.contains("Asteria") and sim.foreign_hint_until == sim.week + 6 and sim.foreign_report(true).contains("Seravia")
+	good = good and sim._eligible({"id": "foreign_ok", "min_foreign": {"asteria": 55}, "max_foreign": {"drakon": 50}})
+	good = good and not sim._eligible({"id": "foreign_low", "min_foreign": {"asteria": 90}})
 	if not good:
 		push_error("dış ilişki kayması, eşik etkisi, heyet veya doğrulama hatalı")
 	print("Dış ilişkiler: ", "OK" if good else "HATA")

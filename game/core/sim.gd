@@ -1666,6 +1666,12 @@ func _eligible(e: Dictionary) -> bool:
 		return false
 	if heir_maturity < float(e.get("min_heir", 0)) or heir_maturity > float(e.get("max_heir", 100)):
 		return false
+	for power in e.get("min_foreign", {}):
+		if not foreign.has(power) or float(foreign[power]) < float(e["min_foreign"][power]):
+			return false
+	for power in e.get("max_foreign", {}):
+		if not foreign.has(power) or float(foreign[power]) > float(e["max_foreign"][power]):
+			return false
 	if e.get("needs_hostile", false) and halden_mood() != "düşmanca":
 		return false
 	for aid in _as_array(e.get("needs_moved", [])):
