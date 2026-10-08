@@ -1,6 +1,8 @@
 extends RefCounted
 ## Tema ve animasyon yardımcıları (tüm arayüz buradaki palete ve hareket diline bağlı).
 
+const Loc := preload("res://game/core/loc.gd")
+
 # Nötrler sıcak kömür tonunda (kırmızı >= yeşil >= mavi): altın ve parşömenle çatışmaz (docs/ux/gorsel_dil_v2.md).
 const BG := Color("0e0c0a")
 const PANEL := Color("171511")
@@ -142,6 +144,8 @@ static func _draw_divider(c: Control, width: float, col: Color) -> void:
 
 ## Türkçe büyük harf: i -> İ, ı -> I (Godot'un to_upper'ı bu kuralı bilmez).
 static func tr_upper(s: String) -> String:
+	if Loc.lang == "en":
+		return s.to_upper()
 	return s.replace("i", "İ").replace("ı", "I").to_upper()
 
 
