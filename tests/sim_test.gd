@@ -408,6 +408,7 @@ func _init() -> void:
 	ok = _test_arcs() and ok
 	ok = _test_regimes() and ok
 	ok = _test_state_end() and ok
+	ok = _test_newcomer_rng() and ok
 	# Meclis görüşleri: deterministik, kayıtta korunur, ana rng'ye dokunmaz, hazır aktör kötü önerir.
 	ok = _test_advice() and ok
 	# Darbe aşamaları: çekilme, kriz kartı, kriz sonuçları, kayıt, huzura çağırma.
@@ -422,6 +423,28 @@ func _init() -> void:
 		print("  H%d %s: '%s' -> gerçekte '%s'" % [l["week"], l["name"], l["said"], l["truth"]])
 	print("TEST: ", "OK" if ok else "FAIL")
 	quit(0 if ok else 1)
+
+
+func _test_newcomer_rng() -> bool:
+	sim.new_game(101, 0)
+	var data: Array = JSON.parse_string(FileAccess.open("res://game/data/actors.json", FileAccess.READ).get_as_text())
+	var old_rng := RandomNumberGenerator.new()
+	old_rng.seed = 101
+	var good := true
+	for i in 9:
+		var d: Dictionary = data[i]
+		var a = sim.actors[d["id"]]
+		var ambition: float = float(d["ambition"]) + old_rng.randf_range(-12.0, 12.0)
+		var honesty: float = clampf(float(d["honesty"]) + old_rng.randf_range(-0.15, 0.15), 0.05, 1.0)
+		var perceived: float = 60.0 + old_rng.randf_range(-5.0, 5.0)
+		good = good and is_equal_approx(a.ambition, ambition) and is_equal_approx(a.honesty, honesty) and is_equal_approx(a.perceived_king, perceived)
+	var heir = sim.actors["julian"]
+	good = good and sim.actors.size() == 11 and heir.insider and not heir.royal and heir.supporting and heir.power <= 15.0
+	good = good and sim.heir_maturity >= 25.0 and sim.heir_maturity <= 35.0
+	if not good:
+		push_error("yeni kadro eski aktörlerin RNG sırasını değiştirdi")
+	print("Yeni kadro RNG: ", "OK" if good else "HATA")
+	return good
 
 
 func _test_arcs() -> bool:

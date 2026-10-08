@@ -12,6 +12,7 @@ var threshold: float
 var military := false
 var royal := false
 var insider := true            # darbe/kaskad hesabına katılır mı
+var supporting := false        # yeni kadro: eski dokuz aktörün RNG ve darbe hesabına girmez
 var loyalty: Dictionary
 var red_line: String
 var weak_point: String
@@ -46,6 +47,7 @@ func setup(d: Dictionary) -> void:
 	military = d.get("military", false)
 	royal = d.get("royal", false)
 	insider = d.get("insider", true)
+	supporting = d.get("supporting", false)
 	loyalty = (d["loyalty"] as Dictionary).duplicate()
 	red_line = d.get("red_line", "")
 	weak_point = d.get("weak_point", "")

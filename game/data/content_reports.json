@@ -152,6 +152,16 @@
         "Bazı hâkimler anayasanın kraldan üstün olduğunu yazmaya başladı.",
         "Bir soruşturma dosyasının kapağında sarayın adresi var."
       ]
+    ],
+    "heir": [
+      ["Julian derslerini bitirdi; halkın önüne çıkmaya hazırlanıyor.", "Veliaht saray töreninde ölçülü konuştu."],
+      ["Julian bazı soyluların sözlerini fazla ciddiye alıyor.", "Veliaht için öğretmenler farklı bir yol öneriyor."],
+      ["Julian'a yaklaşan ailelerin sayısı arttı; hepsinin bir hesabı var.", "Veliahdın adı saray dışındaki pazarlıklarda geçiyor."]
+    ],
+    "foreign": [
+      ["Elçiliklerden gelen notalar sakin; görüşmeler sürüyor.", "Dış heyetler kapımızı kapatmıyor, Majesteleri."],
+      ["Elçilikler yanıt bekliyor; verdikleri sözleri yeniden tartıyorlar.", "Yabancı başkentlerden birbirini tutmayan haberler geliyor."],
+      ["Elçiler yazışmalarını sertleştirdi; birkaç kapı kapanabilir.", "Dışarıdaki dostlarımızın sesi bu hafta kısıldı."]
     ]
   },
   "sign_texts": {

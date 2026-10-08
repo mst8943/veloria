@@ -26,6 +26,7 @@ func _init() -> void:
 	var changes: int = sim.week_changes.size()
 	var cap: Dictionary = sim.capacity.duplicate()
 	var holding_before: float = sim.holding
+	var heir_before: float = sim.heir_maturity
 	_check("kaydet", sim.save_game())
 	var loaded: bool = sim.load_game()
 	var same_cap := true
@@ -33,11 +34,22 @@ func _init() -> void:
 		same_cap = same_cap and absf(float(sim.capacity[k]) - float(cap[k])) < 0.001
 	_check("gidiş-dönüş", loaded and sim.week == wk and sim.week_changes.size() == changes and same_cap and sim.capacity_timeline.size() == sim.timeline.size()
 		and not sim.capacity_timeline.is_empty() and sim.capacity_timeline[-1].has("holding")
-		and absf(sim.holding - holding_before) < 0.001 and sim.halden_hostile_until == 21 and sim.halden_demands == 2 and sim.lena_boost_until == 15 and sim.kadro_log.size() == 1)
+		and absf(sim.holding - holding_before) < 0.001 and sim.halden_hostile_until == 21 and sim.halden_demands == 2 and sim.lena_boost_until == 15 and sim.kadro_log.size() == 1
+		and absf(sim.heir_maturity - heir_before) < 0.001 and sim.actors.has("julian") and sim.actors.has("elena"))
 	var f := FileAccess.open(sim.save_path, FileAccess.READ)
 	var d: Dictionary = str_to_var(f.get_as_text())
 	f.close()
 	_check("sürüm yazıldı", int(d.get("version", 0)) == sim.SAVE_VERSION)
+	# Sürüm 7: yeni kadro ve veliaht olgunluğu yoktu.
+	var v7 := d.duplicate(true)
+	v7["version"] = 7
+	v7.erase("heir_maturity")
+	for id in ["julian", "elena"]:
+		v7["actors"].erase(id)
+		v7["karne"].erase(id)
+	_write(sim.save_path, v7)
+	_check("v7 yeni kadro göçü", sim.load_game() and sim.actors.has("julian") and sim.actors.has("elena")
+		and sim.heir_maturity == 30.0 and sim.karne.has("julian") and sim.karne.has("elena"))
 	# Sürüm 6: kurum çizelgesinde Sarne'nin haftalık payı tutulmuyordu.
 	var v6 := d.duplicate(true)
 	v6["version"] = 6

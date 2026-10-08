@@ -57,6 +57,7 @@ var halden_hostile_until := 0
 var halden_demands := 0
 var lena_boost_until := 0
 var kadro_log: Array = []
+var heir_maturity := 30.0
 const ATTRITION := 0.04
 const STANCE_CAP := 0.23
 const TREASURY_COST := 0.15
@@ -142,6 +143,9 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 	halden_demands = 0
 	lena_boost_until = 0
 	kadro_log.clear()
+	var newcomer_rng := RandomNumberGenerator.new()
+	newcomer_rng.seed = rng.seed ^ 0x71E1A
+	heir_maturity = 30.0 + newcomer_rng.randf_range(-5.0, 5.0)
 	actors.clear()
 	facts.clear()
 	flags.clear()
@@ -175,9 +179,10 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 		var a := Actor.new()
 		a.setup(d)
 		# Her kampanyada gizli özellikler değişir (tekrar oynanabilirlik).
-		a.ambition += rng.randf_range(-12.0, 12.0)
-		a.honesty = clampf(a.honesty + rng.randf_range(-0.15, 0.15), 0.05, 1.0)
-		a.perceived_king = king_strength + rng.randf_range(-5.0, 5.0)
+		var actor_rng: RandomNumberGenerator = newcomer_rng if a.supporting else rng
+		a.ambition += actor_rng.randf_range(-12.0, 12.0)
+		a.honesty = clampf(a.honesty + actor_rng.randf_range(-0.15, 0.15), 0.05, 1.0)
+		a.perceived_king = king_strength + actor_rng.randf_range(-5.0, 5.0)
 		actors[a.id] = a
 		karne[a.id] = {"ok": 0, "bad": 0}
 	_events = _load_json(EVENTS_PATH)
@@ -264,11 +269,11 @@ func save_summary() -> String:
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
 ## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Sarne ve kadro günlüğü
-const SAVE_VERSION := 7
+const SAVE_VERSION := 8
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
-	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log"]
+	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -304,6 +309,18 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 		# Eski çizelgede holding yoktu; eldeki değer geçmiş için en dürüst yaklaşık değerdir.
 		for point: Dictionary in d.get("capacity_timeline", []):
 			point["holding"] = float(d.get("holding", 40.0))
+	if from < 8:
+		d["heir_maturity"] = 30.0
+		var old_actors: Dictionary = d.get("actors", {})
+		var old_karne: Dictionary = d.get("karne", {})
+		for actor_data: Dictionary in _load_json(ACTORS_PATH):
+			if actor_data.get("supporting", false) and not old_actors.has(actor_data["id"]):
+				var newcomer := Actor.new()
+				newcomer.setup(actor_data)
+				old_actors[actor_data["id"]] = newcomer.to_save()
+				old_karne[actor_data["id"]] = {"ok": 0, "bad": 0}
+		d["actors"] = old_actors
+		d["karne"] = old_karne
 	d["version"] = SAVE_VERSION
 	return d
 
@@ -324,7 +341,7 @@ func save_game() -> bool:
 		"regime": regime, "capacity": capacity, "treasury": treasury, "budget_stance": budget_stance,
 		"court_share": court_share, "capacity_timeline": capacity_timeline, "holding": holding,
 		"halden_hostile_until": halden_hostile_until, "halden_demands": halden_demands,
-		"lena_boost_until": lena_boost_until, "kadro_log": kadro_log, "version": SAVE_VERSION}
+		"lena_boost_until": lena_boost_until, "kadro_log": kadro_log, "heir_maturity": heir_maturity, "version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -373,6 +390,7 @@ func load_game() -> bool:
 	halden_demands = int(d["halden_demands"])
 	lena_boost_until = int(d["lena_boost_until"])
 	kadro_log = d["kadro_log"]
+	heir_maturity = float(d["heir_maturity"])
 	for id in d["actors"]:
 		if actors.has(id):
 			actors[id].from_save(d["actors"][id])
@@ -1372,6 +1390,8 @@ func _record_timeline() -> void:
 func _world_tick() -> void:
 	var brandt: Actor = actors.get("brandt")
 	for a: Actor in actors.values():
+		if a.supporting:
+			continue
 		a.power += a.ambition * 0.03 + rng.randf_range(-0.4, 1.0)
 		a.ambition += 0.03
 		a.perceived_king += (king_strength - a.perceived_king) * 0.2
@@ -1816,19 +1836,19 @@ func _run_cascade() -> void:
 	var drop := _public_weakness()
 	var rd := _diff("ready_drive")
 	for a: Actor in actors.values():
-		if a.insider and not a.ready and a.rebellion_drive() > rd:
+		if a.insider and not a.supporting and not a.ready and a.rebellion_drive() > rd:
 			a.ready = true
 	var changed_any := true
 	while changed_any:
 		changed_any = false
 		var share := _ready_power_share()
 		for a: Actor in actors.values():
-			if a.insider and not a.ready and share >= maxf(0.05, a.threshold - drop) and a.rebellion_drive() > 12.0:
+			if a.insider and not a.supporting and not a.ready and share >= maxf(0.05, a.threshold - drop) and a.rebellion_drive() > 12.0:
 				a.ready = true
 				changed_any = true
 	# Çekilme: ne kendi öfkesi ne de kaskadın çekimi tutuyorsa komplocu birkaç hafta içinde geri çekilir.
 	for a: Actor in actors.values():
-		if not a.ready or a.moved or not a.insider:
+		if not a.ready or a.moved or not a.insider or a.supporting:
 			continue
 		var d := a.rebellion_drive()
 		var held := d > rd - _diff("leave_gap") or (_ready_share_without(a) >= maxf(0.05, a.threshold - drop) and d > PLOT_CASCADE_MIN)
@@ -1842,7 +1862,7 @@ func _run_cascade() -> void:
 	# Aşamalar: sakin -> huzursuz -> komplocu -> hazırlıkta
 	var share_now := _ready_power_share()
 	for a: Actor in actors.values():
-		if a.moved or not a.insider:
+		if a.moved or not a.insider or a.supporting:
 			continue
 		var st := 0
 		if a.ready:
@@ -1866,7 +1886,7 @@ func _ready_share_without(x: Actor) -> float:
 	var total := 0.0
 	var ready_p := 0.0
 	for a: Actor in actors.values():
-		if not a.insider:
+		if not a.insider or a.supporting:
 			continue
 		total += a.power
 		if a.ready and a != x:
@@ -1908,7 +1928,7 @@ func _plot_seen(a: Actor, text: String) -> bool:
 ## Komplo görünür izler bırakır; sakin aktörler hakkında da dedikodu çıkar (alametlerin bir kısmı yanlıştır).
 func _plot_signs() -> void:
 	for a: Actor in actors.values():
-		if a.moved or not a.insider:
+		if a.moved or not a.insider or a.supporting:
 			continue
 		var st := clampi(a.plot_stage, 0, 3)
 		if rng.randf() < float(PLOT_SIGN_P[st]):
@@ -2309,7 +2329,7 @@ func _ready_power_share() -> float:
 	var total := 0.0
 	var ready_p := 0.0
 	for a: Actor in actors.values():
-		if not a.insider:
+		if not a.insider or a.supporting:
 			continue
 		total += a.power
 		if a.ready:
@@ -2575,9 +2595,12 @@ func _top_lies() -> Array:
 
 func echo_level() -> float:
 	var s := 0.0
+	var count := 0
 	for a: Actor in actors.values():
-		s += a.fear
-	return clampf(s / maxf(actors.size(), 1) / 60.0, 0.0, 1.0)
+		if not a.supporting:
+			s += a.fear
+			count += 1
+	return clampf(s / maxf(count, 1) / 60.0, 0.0, 1.0)
 
 
 func _domain_truth(domain: String) -> float:
@@ -2630,7 +2653,7 @@ func _generate_reports() -> void:
 	var worst_idx := -1
 	var worst_band := -1
 	for a: Actor in actors.values():
-		if a.moved:
+		if a.moved or a.supporting:
 			continue
 		var reported := _domain_reported(a) + rng.randf_range(-6.0, 6.0) * (1.0 - a.honesty * 0.5) * (1.0 + (55.0 - float(capacity["idare"])) / STATE_REPORT_NOISE)
 		var rb := _band(a, reported)

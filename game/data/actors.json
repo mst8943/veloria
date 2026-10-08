@@ -52,5 +52,17 @@
     "power": 30, "ambition": 20, "fear": 10, "honesty": 0.9, "threshold": 0.7,
     "loyalty": {"money": 0, "fear": 10, "ideology": 35, "career": 15, "complicity": 0},
     "red_line": "Bağımsızlığına müdahale", "weak_point": "Eski bir davadaki hata"
+  },
+  {
+    "id": "julian", "name": "Julian Valerius", "title": "Veliaht Prens", "domain": "heir",
+    "power": 12, "ambition": 16, "fear": 12, "honesty": 0.85, "threshold": 0.9, "supporting": true,
+    "loyalty": {"money": 5, "fear": 10, "ideology": 45, "career": 35, "complicity": 0},
+    "red_line": "Hanedanın geleceğinin pazarlık konusu yapılması", "weak_point": "Çocukluk korkuları"
+  },
+  {
+    "id": "elena", "name": "Elena Varos", "title": "Dışişleri Bakanı", "domain": "foreign",
+    "power": 18, "ambition": 28, "fear": 25, "honesty": 0.7, "threshold": 0.75, "supporting": true,
+    "loyalty": {"money": 10, "fear": 15, "ideology": 20, "career": 25, "complicity": 0},
+    "red_line": "Elçilik yazışmalarının açılması", "weak_point": "Asteria'daki eski bağlantıları"
   }
 ]

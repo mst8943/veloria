@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ibwvuvovsrci"
-path="res://.godot/imported/julian_valerius.png-62a211952806d83358766e75822f2d6a.ctex"
+uid="uid://dvt1h4dvpxdpy"
+path="res://.godot/imported/julian.png-a02ef0cec142e9d67022e7dfa2a6b51b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/portraits/julian_valerius.png"
-dest_files=["res://.godot/imported/julian_valerius.png-62a211952806d83358766e75822f2d6a.ctex"]
+source_file="res://art/portraits/julian.png"
+dest_files=["res://.godot/imported/julian.png-a02ef0cec142e9d67022e7dfa2a6b51b.ctex"]
 
 [params]
 
