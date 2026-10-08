@@ -629,5 +629,8 @@ func _play_reveal(animated: Array[Control], texts: Array[RichTextLabel]) -> void
 
 
 func _short_name(full: String) -> String:
+	for a in Sim.actors.values():
+		if a.display_name == full and a.short != "":
+			return a.short
 	return full.split(" ")[-1]
 

@@ -2,6 +2,7 @@ extends RefCounted
 
 var id: String
 var display_name: String
+var short := ""   # kart ve meclis kısa adı; boşsa soyadı (aynı soyadlı iki kişiyi ayırmak için)
 var title: String
 var domain: String
 var power: float
@@ -37,6 +38,7 @@ const SAVE_PROPS := ["power", "ambition", "fear", "honesty", "threshold", "loyal
 func setup(d: Dictionary) -> void:
 	id = d["id"]
 	display_name = d["name"]
+	short = d.get("short", "")
 	title = d["title"]
 	domain = d["domain"]
 	power = d["power"]

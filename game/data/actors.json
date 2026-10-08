@@ -78,7 +78,7 @@
     "red_line": "Drakon'un açıkça küçük düşürülmesi", "weak_point": "Başkentteki aracılarının listesi"
   },
   {
-    "id": "lucien", "name": "Lucien Vale", "title": "Seravia Ekonomik Temsilcisi", "domain": "foreign",
+    "id": "lucien", "name": "Lucien Vale", "short": "Lucien", "title": "Seravia Ekonomik Temsilcisi", "domain": "foreign",
     "power": 11, "ambition": 26, "fear": 12, "honesty": 0.6, "threshold": 0.9, "insider": false, "supporting": true,
     "loyalty": {"money": 20, "fear": 5, "ideology": 10, "career": 30, "complicity": 0},
     "red_line": "Seravia ticaretinin keyfî kesilmesi", "weak_point": "Liman ortaklarının gizli payı"

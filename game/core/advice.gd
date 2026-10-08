@@ -203,6 +203,8 @@ func _advisor_skill(aid: String, e: Dictionary) -> float:
 
 ## Kısa hitap adı: "General Arden" -> "Arden", "Prens Marcus" -> "Prens".
 func short_name(a: Actor) -> String:
+	if a.short != "":
+		return a.short
 	return "Prens" if a.royal else a.display_name.split(" ")[-1]
 
 
