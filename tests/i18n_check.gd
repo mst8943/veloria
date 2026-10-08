@@ -46,15 +46,18 @@ func _check_po_gender(text: String) -> void:
 		if line.begins_with("msgstr "):
 			if collecting:
 				_check_gender_pronouns(value, "en.po msgstr")
+				_check_quote_style(value, "en.po msgstr")
 			collecting = true
 			value = _po_literal(line.trim_prefix("msgstr "))
 		elif collecting and line.begins_with("\""):
 			value += _po_literal(line)
 		elif collecting:
 			_check_gender_pronouns(value, "en.po msgstr")
+			_check_quote_style(value, "en.po msgstr")
 			collecting = false
 	if collecting:
 		_check_gender_pronouns(value, "en.po msgstr")
+		_check_quote_style(value, "en.po msgstr")
 
 
 func _po_literal(raw: String) -> String:
@@ -171,6 +174,7 @@ func _check_tree(value: Variant, file_name: String, key: String = "") -> void:
 		for ch in TURKISH:
 			_expect(not value.contains(ch), "%s Türkçe karakter içeriyor: %s" % [file_name, value])
 		_check_gender_pronouns(value, file_name + "/" + key)
+		_check_quote_style(value, file_name + "/" + key)
 
 
 func _check_gender_pronouns(value: String, path: String) -> void:
@@ -180,6 +184,13 @@ func _check_gender_pronouns(value: String, path: String) -> void:
 		push_warning("I18N gender warning (%s): female reference with masculine pronoun" % path)
 	if has_male and not has_female and _female_pronouns.search(value) != null:
 		push_warning("I18N gender warning (%s): male reference with feminine pronoun" % path)
+
+
+func _check_quote_style(value: String, path: String) -> void:
+	if value.contains("’") or value.contains("‘"):
+		push_warning("I18N quote style warning (%s): use straight apostrophes/single quotes" % path)
+	if value.contains("\""):
+		push_warning("I18N quote style warning (%s): use curly double quotes" % path)
 
 
 func _expect(condition: bool, message: String) -> void:

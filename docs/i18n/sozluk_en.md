@@ -14,6 +14,8 @@ gösterilen metindir.
   özel adlar büyük, diğer sözcükler küçük harfle başlar.
 - `action` tekil, `actions` çoğul olarak `mesai` karşılığıdır.
 - Kişi ve yer adları aşağıdaki istisnalar dışında değişmez.
+- Kesme ve tek tırnak düz apostrofla (`'`), çift tırnak kıvrık biçimde
+  (`“...”`) yazılır; oyuncuya görünen İngilizce metinde düz çift tırnak yoktur.
 
 ## Sabit terimler
 

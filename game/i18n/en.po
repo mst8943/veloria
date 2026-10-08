@@ -386,11 +386,11 @@ msgstr ""
 "[color=gray][font_size=13]Copyright (c) 2014-present Godot Engine contributors.\n"
 "Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.\n"
 "\n"
-"Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n"
+"Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n"
 "\n"
 "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n"
 "\n"
-"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+"THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
 "\n"
 "Portions of this software are copyright © The FreeType Project (www.freetype.org). All rights reserved.[/font_size][/color]"
 
@@ -1250,7 +1250,7 @@ msgid "hiç yanıltmadı"
 msgstr "never misled you"
 
 msgid "   [color=gray]En pahalısı, hafta %d — %s:[/color] \"%s\" dedi; en iyisi \"%s\" idi.%s\n"
-msgstr "   [color=gray]Costliest, week %d — %s:[/color] they said \"%s\"; the best choice was \"%s\".%s\n"
+msgstr "   [color=gray]Costliest, week %d — %s:[/color] they said “%s”; the best choice was “%s”.%s\n"
 
 msgid "  [color=#c0504a](dinledin)[/color]"
 msgstr "  [color=#c0504a](you followed it)[/color]"
@@ -1328,10 +1328,10 @@ msgid "TARİH NE YAZACAK?[/font_size][/color][/b]\n[color=gray]Aynı saltanat, i
 msgstr "WHAT WILL HISTORY SAY?[/font_size][/color][/b]\n[color=gray]One reign, two pens.[/color]\n\n"
 
 msgid "[color=#d6b25e][b]Saray tarihçisi[/b][/color]\n[i]\"%s\"[/i]\n\n"
-msgstr "[color=#d6b25e][b]Court historian[/b][/color]\n[i]\"%s\"[/i]\n\n"
+msgstr "[color=#d6b25e][b]Court historian[/b][/color]\n[i]“%s”[/i]\n\n"
 
 msgid "[color=#c0504a][b]Sürgündeki tarihçi[/b][/color]\n[i]\"%s\"[/i]\n"
-msgstr "[color=#c0504a][b]Historian in exile[/b][/color]\n[i]\"%s\"[/i]\n"
+msgstr "[color=#c0504a][b]Historian in exile[/b][/color]\n[i]“%s”[/i]\n"
 
 msgid "Tarihçiler bu saltanat hakkında sessiz kaldı."
 msgstr "The historians had nothing to say about this reign."
@@ -1343,7 +1343,7 @@ msgid "Kimse sana belirgin biçimde yalan söylemedi. Ya da hepsini fark ettin.\
 msgstr "No one clearly lied to you. Or you caught every lie.\n"
 
 msgid "• Hafta %d — [b]%s[/b] sana şunu söyledi: \"%s\"\n   [color=gray]Gerçekte:[/color] %s\n\n"
-msgstr "• Week %d — [b]%s[/b] told you: \"%s\"\n   [color=gray]In truth:[/color] %s\n\n"
+msgstr "• Week %d — [b]%s[/b] told you: “%s”\n   [color=gray]In truth:[/color] %s\n\n"
 
 msgid "KARARLARIN[/font_size][/color][/b]   [color=gray]%d kayıt · en yenisi üstte[/color]\n\n"
 msgstr "YOUR DECISIONS[/font_size][/color][/b]   [color=gray]%d entries · newest first[/color]\n\n"

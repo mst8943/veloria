@@ -59,7 +59,7 @@
                                             }
                                         ],
                             "ignore":  {
-                                           "text":  "The protests were left to their own devicesÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Âand grew."
+                                           "text":  "The protests were left to their own devices, and grew."
                                        }
                         },
     "gazeteci_ihale":  {
@@ -417,7 +417,7 @@
               },
     "enflasyon":  {
                       "title":  "Inflation spills into the streets",
-                      "text":  "Prices climb every week in the markets. Finance calls it ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“temporary.ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€Â¢",
+                      "text":  "Prices climb every week in the markets. Finance calls it 'temporary.'",
                       "choices":  [
                                       {
                                           "label":  "Lean on the central bank",
@@ -442,7 +442,7 @@
                           "choices":  [
                                           {
                                               "label":  "Sack the minister",
-                                              "text":  "The minister fell. The public is satisfiedÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Âfor now."
+                                              "text":  "The minister fell. The public is satisfied—for now."
                                           },
                                           {
                                               "label":  "Bury the scandal",
@@ -459,7 +459,7 @@
                       },
     "arden_bakanlik":  {
                            "title":  "Arden sends the bill",
-                           "text":  "General Arden, who dispersed the protests, now wants the Ministry of Defense under his command too. ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“You remember who cleared the squares.ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€Â¢",
+                           "text":  "General Arden, who dispersed the protests, now wants the Ministry of Defense under his command too. “You remember who cleared the squares.”",
                            "choices":  [
                                            {
                                                "label":  "Give him the ministry",
@@ -480,7 +480,7 @@
                        },
     "lena_kitap":  {
                        "title":  "Silenced journalist publishes a book abroad",
-                       "text":  "Leyla Sarn has left the country. Her book, ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“The Silent Palace of Veloria,ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€Â¢ tops the bestseller lists in neighboring countries. Your name appears in it, too.",
+                       "text":  "Leyla Sarn has left the country. Her book, “The Silent Palace of Veloria,” tops the bestseller lists in neighboring countries. Your name appears in it, too.",
                        "choices":  [
                                        {
                                            "label":  "Ban the book",
@@ -492,7 +492,7 @@
                                        },
                                        {
                                            "label":  "Launch a counter-campaign",
-                                           "text":  "Leyla was branded a ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“foreign agent.ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€Â¢ Sarne knows exactly what he wants."
+                                           "text":  "Leyla was branded a “foreign agent.” Sarne knows exactly what he wants."
                                        }
                                    ],
                        "ignore":  {
@@ -522,7 +522,7 @@
                        },
     "voss_hakkinda":  {
                           "title":  "Vale has a file on you, too",
-                          "text":  "Helena whispers: a thick folder marked ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“Your MajestyÃƒÂ¢Ã¢â€šÂ¬Ã¢â€Â¢ was spotted in Vale\u0027s archive.",
+                          "text":  "Helena whispers: a thick folder marked “Your Majesty” was spotted in Vale\u0027s archive.",
                           "choices":  [
                                           {
                                               "label":  "Give Vale more power",
@@ -543,7 +543,7 @@
                       },
     "prens_kacis":  {
                         "title":  "The Prince escapes surveillance",
-                        "text":  "Prince Marcus vanished from the Palace one night. In a neighboring capital, he speaks of the ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“rightful dynastyÃƒÂ¢Ã¢â€šÂ¬Ã¢â€Â¢ before the cameras.",
+                        "text":  "Prince Marcus vanished from the Palace one night. In a neighboring capital, he speaks of the “rightful dynasty” before the cameras.",
                         "choices":  [
                                         {
                                             "label":  "Demand his return",
@@ -551,7 +551,7 @@
                                         },
                                         {
                                             "label":  "Pardon and recall him",
-                                            "text":  "The Prince returned. GratefulÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Âor merely patient?"
+                                            "text":  "The Prince returned. Grateful—or merely patient?"
                                         },
                                         {
                                             "label":  "Leave him in exile",
@@ -887,7 +887,7 @@
                                           },
                                           {
                                               "label":  "Demand the questions in advance",
-                                              "text":  "Leyla sent the questionsâ€”and mentioned that in the interview."
+                                              "text":  "Leyla sent the questions—and mentioned that in the interview."
                                           },
                                           {
                                               "label":  "Refuse",
@@ -971,7 +971,7 @@
                                            },
                                            {
                                                "label":  "Water it down",
-                                               "text":  "Half the reform remainedâ€”and half the effect."
+                                               "text":  "Half the reform remained—and half the effect."
                                            },
                                            {
                                                "label":  "Reject it",
@@ -2394,7 +2394,7 @@
                            },
     "yay_halden_kopus":  {
                              "title":  "Sarne cuts the broadcast",
-                             "text":  "You let him pull the plug. Sarne slipped the remote into his pocket. “I protected you. One day, you’ll remember which button I pressed.”",
+                             "text":  "You let him pull the plug. Sarne slipped the remote into his pocket. “I protected you. One day, you'll remember which button I pressed.”",
                              "choices":  [
                                              {
                                                  "label":  "Ask for the broadcast schedule",
@@ -2410,8 +2410,8 @@
                                         }
                          },
     "yay_lena_yukselis":  {
-                              "title":  "Leyla’s source ledger",
-                              "text":  "Leyla spent the night comparing documents. “Before I print this, I’ll ask one more person. One mistake can burn the truth too.”",
+                              "title":  "Leyla's source ledger",
+                              "text":  "Leyla spent the night comparing documents. “Before I print this, I'll ask one more person. One mistake can burn the truth too.”",
                               "choices":  [
                                               {
                                                   "label":  "Wait for the documents to be verified",
@@ -2427,8 +2427,8 @@
                                          }
                           },
     "yay_lena_sinav":  {
-                           "title":  "The source’s name is demanded",
-                           "text":  "Someone from the Palace wants Leyla’s source. She kept hold of the file. “I’ll discuss the story. I won’t give you the name.”",
+                           "title":  "The source's name is demanded",
+                           "text":  "Someone from the Palace wants Leyla's source. She kept hold of the file. “I'll discuss the story. I won't give you the name.”",
                            "choices":  [
                                            {
                                                "label":  "Protect the source",
@@ -2445,7 +2445,7 @@
                        },
     "yay_lena_sadakat":  {
                              "title":  "Leyla protects her source",
-                             "text":  "You did not pursue her source. Leyla nodded. “You don’t have to trust me. Test what I write.”",
+                             "text":  "You did not pursue her source. Leyla nodded. “You don't have to trust me. Test what I write.”",
                              "choices":  [
                                              {
                                                  "label":  "Give a straight answer",
@@ -2478,8 +2478,8 @@
                                       }
                        },
     "yay_dorn_yukselis":  {
-                              "title":  "Helena’s appointment book",
-                              "text":  "Helena brought the appointment book on a silver tray. “Your Majesty, everyone at the door thinks they’re urgent. I only keep the queue in order.”",
+                              "title":  "Helena's appointment book",
+                              "text":  "Helena brought the appointment book on a silver tray. “Your Majesty, everyone at the door thinks they're urgent. I only keep the queue in order.”",
                               "choices":  [
                                               {
                                                   "label":  "Open the book to inspection",
@@ -2529,7 +2529,7 @@
                                         }
                          },
     "yay_dorn_kopus":  {
-                           "title":  "Helena’s private entrance",
+                           "title":  "Helena's private entrance",
                            "text":  "You let her hide the queue. Helena smiled again. “The back door is still a Palace door, Your Majesty.”",
                            "choices":  [
                                            {
@@ -2546,7 +2546,7 @@
                                       }
                        },
     "yay_prens_yukselis":  {
-                               "title":  "The Prince’s empty chair",
+                               "title":  "The Prince's empty chair",
                                "text":  "Marcus saw there was no place set for him at the ceremony. “Our father would have set the same table. The crown went to you; my chair did not vanish.”",
                                "choices":  [
                                                {
