@@ -1,0 +1,212 @@
+{
+    "tac_giyme":  {
+                      "title":  "The morning after the coronation",
+                      "text":  "Every power center is watching the new king\u0027s first move. The waiting room is full. Whom you receive first will tell everyone who matters to you.",
+                      "choices":  [
+                                      {
+                                          "label":  "Receive Arden first",
+                                          "text":  "Arden bowed and left pleased. Vale checked his watch in the waiting room."
+                                      },
+                                      {
+                                          "label":  "Receive Vale first",
+                                          "text":  "Vale left you a thick file: \u0027Who is who, Your Majesty.\u0027 Arden took note."
+                                      },
+                                      {
+                                          "label":  "See no one; greet the people",
+                                          "text":  "You waved from the balcony. The crowd applauded; those in the waiting room did not."
+                                      }
+                                  ],
+                      "ignore":  {
+                                     "text":  "You spent your first day in the waiting room."
+                                 }
+                  },
+    "ilk_butce":  {
+                      "title":  "The first budget signature",
+                      "text":  "Prime Minister Veyra placed the first budget on your desk. One line was left blank: who gets the extra revenue?",
+                      "choices":  [
+                                      {
+                                          "label":  "The army",
+                                          "text":  "Goblets were raised in the barracks. Veyra quietly took note."
+                                      },
+                                      {
+                                          "label":  "The people",
+                                          "text":  "Bread prices fell a little. For the first time, the people spoke your name with affection."
+                                      },
+                                      {
+                                          "label":  "The Palace treasury",
+                                          "text":  "Your personal coffers filled. Veyra will not forget this line."
+                                      }
+                                  ],
+                      "ignore":  {
+                                     "text":  "The budget passed on Veyra\u0027s recommendation."
+                                 }
+                  },
+    "gida_protestosu":  {
+                            "title":  "Food prices spark protests",
+                            "text":  "Bakery queues are growing in the capital. Police reports say things are \u0027under control,\u0027 but some units are said to be reluctant.",
+                            "choices":  [
+                                            {
+                                                "label":  "Send troops and police",
+                                                "text":  "The squares were cleared. General Arden will not forget this."
+                                            },
+                                            {
+                                                "label":  "Freeze prices by decree",
+                                                "text":  "The queues outside bakeries thinned, but the budget and the market can barely breathe."
+                                            },
+                                            {
+                                                "label":  "Look the other way",
+                                                "text":  "The protests grew for another week."
+                                            }
+                                        ],
+                            "ignore":  {
+                                           "text":  "The protests were left to their own devicesâ€”and grew."
+                                       }
+                        },
+    "gazeteci_ihale":  {
+                           "title":  "A reporter probes a secret tender",
+                           "text":  "Leyla Sarn keeps finding the same company\u0027s name in state tenders: Sarne Holding.",
+                           "choices":  [
+                                           {
+                                               "label":  "Warn Sarne",
+                                               "text":  "Sarne was grateful. Now you owe him a favor, not the other way around."
+                                           },
+                                           {
+                                               "label":  "Silence the reporter",
+                                               "text":  "Leyla stopped writing. A frightened reporter does not forget."
+                                           },
+                                           {
+                                               "label":  "Let it run",
+                                               "text":  "The file reached the press. Sarne weakened, and you look honest."
+                                           }
+                                       ],
+                           "ignore":  {
+                                          "text":  "The reporter kept investigating."
+                                      }
+                       },
+    "general_atamalari":  {
+                              "title":  "The general appoints his own officers to key posts",
+                              "text":  "Three important commands changed hands at the General Staff. All of them went to Arden\u0027s former students.",
+                              "choices":  [
+                                              {
+                                                  "label":  "Block the appointments",
+                                                  "text":  "Arden backed down, but his gaze changed."
+                                              },
+                                              {
+                                                  "label":  "Approve them",
+                                                  "text":  "The army now belongs to Arden. Its loyalty to you depends on his goodwill."
+                                              },
+                                              {
+                                                  "label":  "Counterbalance: empower Vale",
+                                                  "text":  "Intelligence and the army are keeping an eye on each other."
+                                              }
+                                          ],
+                              "ignore":  {
+                                             "text":  "The appointments went through quietly."
+                                         }
+                          },
+    "kis_krizi":  {
+                      "title":  "A harsh winter, energy prices",
+                      "text":  "Natural gas prices have doubled. Sarne is making a fortune from energy companies.",
+                      "choices":  [
+                                      {
+                                          "label":  "Subsidize households",
+                                          "text":  "Bills fell; the budget took a hit."
+                                      },
+                                      {
+                                          "label":  "Tax energy companies",
+                                          "text":  "Sarne is furious, but the Treasury is full."
+                                      },
+                                      {
+                                          "label":  "Let the market decide",
+                                          "text":  "Prices soared."
+                                      }
+                                  ],
+                      "ignore":  {
+                                     "text":  "The winter grew harsher; no one intervened."
+                                 }
+                  },
+    "kral_hasta":  {
+                       "title":  "\u0027Is the King ill?\u0027",
+                       "text":  "Outside the Palace, people are saying the King has not been seen for two days. No one has made an official statement.",
+                       "choices":  [
+                                       {
+                                           "label":  "Appear at a public ceremony",
+                                           "text":  "You stood tall before the crowd."
+                                       },
+                                       {
+                                           "label":  "Deny it through Sarne\u0027s media",
+                                           "text":  "The rumor went quiet. Sarne knows what you did."
+                                       },
+                                       {
+                                           "label":  "Ignore it",
+                                           "text":  "The rumor grew."
+                                       }
+                                   ],
+                       "ignore":  {
+                                      "text":  "The rumor spread through the Palace corridors."
+                                  }
+                   },
+    "prens_hirs":  {
+                       "title":  "The Prince meets nobles in secret",
+                       "text":  "Reports say your brother, Prince Marcus, has dined with every noble family in the last two weeks.",
+                       "choices":  [
+                                       {
+                                           "label":  "Place him under Palace watch",
+                                           "text":  "The Prince stayed home. Something changed in his eyes."
+                                       },
+                                       {
+                                           "label":  "Give him an important post",
+                                           "text":  "The Prince accepted gladly. His ambition grew, too."
+                                       },
+                                       {
+                                           "label":  "Have Vale watch him",
+                                           "text":  "Vale is taking notes."
+                                       }
+                                   ],
+                       "ignore":  {
+                                      "text":  "The Prince kept meeting them."
+                                  }
+                   },
+    "muhalefet_birlesme":  {
+                               "title":  "The opposition unites its two wings",
+                               "text":  "Adrian Voss is trying to bring the divided opposition together on a single list.",
+                               "choices":  [
+                                               {
+                                                   "label":  "Split them with secret money",
+                                                   "text":  "The two wings turned on each other. But the money trail remains."
+                                               },
+                                               {
+                                                   "label":  "Negotiate with Voss",
+                                                   "text":  "Voss gained a seat; you gained time."
+                                               },
+                                               {
+                                                   "label":  "Arrest Voss",
+                                                   "text":  "The opposition fell silent; the streets grew angry."
+                                               }
+                                           ],
+                               "ignore":  {
+                                              "text":  "The opposition united."
+                                          }
+                           },
+    "yargic_dosya":  {
+                         "title":  "The High Court probes ministerial tenders",
+                         "text":  "Chief Prosecutor Renn has opened the tender files of two ministers. One trail may lead back to the Palace.",
+                         "choices":  [
+                                         {
+                                             "label":  "Apply pressure",
+                                             "text":  "Renn backed off, but the pressure was put in writing."
+                                         },
+                                         {
+                                             "label":  "Let it proceed",
+                                             "text":  "The case is moving forward. It may not protect you, but it will not tarnish your name either."
+                                         },
+                                         {
+                                             "label":  "Sacrifice the minister",
+                                             "text":  "A minister fell; the case was closed. What the minister knows was not."
+                                         }
+                                     ],
+                         "ignore":  {
+                                        "text":  "The case moved through the courts."
+                                    }
+                     }
+}
