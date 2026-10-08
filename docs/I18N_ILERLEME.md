@@ -47,9 +47,16 @@ L2: statik arayüz metinleri, dosya başına ayrı commit ve `en.po` karşılık
   pencereli giriş testi, autoplay masaüstü/mobil ve tempo testi geçti.
 - Tam koşu: 101/104/TAHTTA/Medya Rejimi/112. Ölçüt bot: 85% / 45% / 20%,
   L0 ile birebir aynı. Ayar ekranı görüntüsü: `dist/i18n_l1_menu/`.
-- Altyapı commit'i: `ab56462`; kapı tamamlama commit'i: bekliyor.
+- Altyapı commit'i: `ab56462`; kapı tamamlama commit'i: `005316b`.
 
 ## L2 — devam ediyor
 
 - `modal.gd`: Kapat ve Vazgeç düğmeleri `tr()` ile kaynak anahtarına bağlandı;
   İngilizce karşılıkları `Close` ve `Cancel`. Commit: `db05126`.
+- `ui_kit.gd`: İngilizce büyük harf dönüşümü Türkçe `i/ı` kuralını uygulamaz.
+  Commit: `2948d4b`.
+- `truth_chart.gd`: Hakikat grafiği başlığı, boş durum metni ve seri etiketleri
+  çevrildi. Commit: `e17e796`.
+- `menu.gd`: Ana menü, yeni oyun ve ayarlar etiketleri ile açıklamaları
+  çevrildi. Uzun Nasıl Oynanır ve Hakkında metinleri sonraki L2 adımında
+  tamamlanacak. Commit: `39044fa`.
