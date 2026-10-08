@@ -1839,3 +1839,249 @@ msgstr "improved"
 
 msgid "Yönetimin %s bir rejim olarak anılmaya başladı."
 msgstr "Your rule began to be known as a %s regime."
+
+msgid "Prens'in muhafızları sarayın doğu kanadını tuttu. Soylular taht salonunda toplanıyor; kimse seni çağırmadı."
+msgstr "The Prince's guards have taken the east wing of the palace. The nobles are gathering in the throne room; no one has summoned you."
+
+msgid "%s birlikleri başkentin girişlerini tuttu. Saraya mühürlü bir mektup geldi: 'Majestelerinin istirahati için.'"
+msgstr "%s's troops have taken the capital's entrances. A sealed letter arrived at the palace: 'For His Majesty's rest.'"
+
+msgid "Muhafız komutanı çağrılarına cevap vermiyor."
+msgstr "The captain of the guard isn't answering your calls."
+
+msgid "Muhafızların bir kısmı tereddütte."
+msgstr "Some of the guards are wavering."
+
+msgid "Saray muhafızları sana bağlı görünüyor."
+msgstr "The palace guards seem loyal to you."
+
+msgid "Sokak öfkeli; meydanlar senin için dolmayabilir."
+msgstr "The streets are angry; the squares may not fill for you."
+
+msgid "Sokak tedirgin; kimse kimin kazanacağını bilmiyor."
+msgstr "The streets are uneasy; no one knows who will win."
+
+msgid "Sokaklar sakin; halk sana hâlâ kulak verir."
+msgstr "The streets are calm; the people will still listen to you."
+
+msgid "DARBE GİRİŞİMİ — bu hafta karar vermezsen saray düşer."
+msgstr "COUP ATTEMPT — if you don't decide this week, the palace will fall."
+
+msgid "Darbe kapıda"
+msgstr "The coup is at the gates"
+
+msgid "%s\n%s %s%s"
+msgstr "%s\n%s %s%s"
+
+msgid " Bir kez boyun eğdin; bu kez sözüne inanmayabilirler."
+msgstr " You yielded once; they may not believe you this time."
+
+msgid "Sadık birlikleri topla, liderleri tutuklat"
+msgstr "Rally loyal troops and arrest the leaders"
+
+msgid "%s istediğini ver"
+msgstr "Give %s what they want"
+
+msgid "Balkona çık, halka seslen"
+msgstr "Step onto the balcony and address the people"
+
+msgid "Karar verilmedi. Kapılar açıldı."
+msgstr "No decision was made. The gates opened."
+
+msgid "Darbenin lideri ortada yok; komplo dağıldı."
+msgstr "The coup's leader is nowhere to be found; the conspiracy has dissolved."
+
+msgid "Sadık birlikler gece yarısı karargâhı bastı. %s tutuklandı. Komplocular sindi; ama bu gecenin izi kalacak."
+msgstr "Loyal troops raided the headquarters at midnight. %s was arrested. The conspirators have gone quiet, but this night will leave its mark."
+
+msgid "Darbe gecesi sadık birlikleri toplamaya çalıştın; muhafızlar silahlarını indirdi."
+msgstr "On the night of the coup, you tried to rally loyal troops; the guards lowered their weapons."
+
+msgid "Muhafızlar silahlarını indirdi. %s kapıdan girdiğinde salonda senden başka kimse yoktu."
+msgstr "The guards lowered their weapons. When %s entered the hall, no one was there but you."
+
+msgid "Darbe gecesi bir kez daha taviz vermeyi denedin; bu kez kimse sözüne inanmadı."
+msgstr "On the night of the coup, you tried to yield once more; this time no one believed you."
+
+msgid "%s teklifini dinledi, sonra güldü: 'Bunu geçen sefer de söylemiştiniz, Majesteleri.'"
+msgstr "%s listened to your offer, then laughed: 'You said that last time too, Your Majesty.'"
+
+msgid "%s istediğini aldı. Tanklar kışlaya döndü; ama artık herkes bu ülkeyi gerçekte kimin yönettiğini biliyor."
+msgstr "%s got what they wanted. The tanks returned to their barracks, but everyone now knows who truly rules this country."
+
+msgid "Meydan doldu. Kalabalık adını haykırırken %s yanındakilerin birer birer telefonu kapattığını gördü."
+msgstr "The square filled. As the crowd chanted your name, %s watched their allies hang up one by one."
+
+msgid "Darbe gecesi halka seslendin; meydan boş kaldı."
+msgstr "On the night of the coup, you addressed the people; the square remained empty."
+
+msgid "Balkona çıktığında meydan yarı boştu. Gelenler de senin için değil, ne olacağını görmek için gelmişti."
+msgstr "When you stepped onto the balcony, the square was half empty. Those who came were there to see what would happen, not to support you."
+
+msgid "Kriz kapına dayandığında karar veremedin."
+msgstr "When the crisis reached your door, you could not decide."
+
+msgid "SOKAK: Meydanlardaki kalabalık her gün büyüyor; artık dağılmıyorlar."
+msgstr "STREET: The crowds in the squares grow every day; they no longer disperse."
+
+msgid "MAHKEME: Savcılar saraya dair dosyaları tek bir soruşturmada topluyor."
+msgstr "COURT: Prosecutors are bringing the files concerning the palace into a single investigation."
+
+msgid "KRİZ: Meydanlar ayakta; sokak sarayın kapısında."
+msgstr "CRISIS: The squares are in revolt; the streets are at the palace gates."
+
+msgid "KRİZ: Mahkeme kralın yetkilerini askıya almayı görüşüyor."
+msgstr "CRISIS: The court is considering suspending the king's powers."
+
+msgid "Komutanlar halka ateş açma emrini tartışıyor; kimse ilk adımı atmak istemiyor."
+msgstr "The commanders are debating an order to fire on the people; no one wants to make the first move."
+
+msgid "Ordu emir bekliyor, ama emri kimin vereceğini merak ediyor."
+msgstr "The army is waiting for orders, but wonders who will give them."
+
+msgid "Birlikler hazır; sana bağlı görünüyorlar."
+msgstr "The troops are ready and seem loyal to you."
+
+msgid "Kalabalık artık senin adını değil, sloganlarını haykırıyor."
+msgstr "The crowd is chanting slogans now, not your name."
+
+msgid "Kalabalık öfkeli ama dinlemeye hazır görünenler var."
+msgstr "The crowd is angry, but some seem ready to listen."
+
+msgid "Kalabalığın çoğu hâlâ senden bir söz bekliyor."
+msgstr "Most of the crowd is still waiting for a promise from you."
+
+msgid "AYAKLANMA — bu hafta karar vermezsen saray düşer."
+msgstr "UPRISING — if you don't decide this week, the palace will fall."
+
+msgid "Sokaklar ayakta"
+msgstr "The streets are in revolt"
+
+msgid "Başkentin bütün meydanları dolu. Barikatlar sarayın üç sokak ötesinde. Leyla'nın gazetesi tek kelimelik bir manşet attı: 'Yeter.'\n%s %s%s"
+msgstr "Every square in the capital is full. The barricades are three streets from the palace. Leyla's paper ran a one-word headline: 'Enough.'\n%s %s%s"
+
+msgid " Daha önce taleplerini kabul ettiğini söylemiştin; bu kez sözüne inanmayabilirler."
+msgstr " You said you had accepted their demands before; they may not believe you this time."
+
+msgid "Orduyu sokağa sür"
+msgstr "Send the army into the streets"
+
+msgid "Taleplerini kabul et"
+msgstr "Accept their demands"
+
+msgid "Meydana in, halkla konuş"
+msgstr "Go to the square and speak to the people"
+
+msgid "Karar verilmedi. Barikatlar sarayın kapısına ulaştı."
+msgstr "No decision was made. The barricades reached the palace gates."
+
+msgid "Başsavcı Renn"
+msgstr "Prosecutor General Renn"
+
+msgid "Başsavcı"
+msgstr "Prosecutor General"
+
+msgid "Mahkemenin arkasında meclis ve sokak var; tasfiyeye kimse seyirci kalmaz."
+msgstr "The council and the streets stand behind the court; no one will watch a purge from the sidelines."
+
+msgid "Mahkeme bölünmüş; bazı yargıçlar senden bir işaret bekliyor."
+msgstr "The court is divided; some judges are waiting for a signal from you."
+
+msgid "Mahkeme yalnız; arkasında duran pek kimse yok."
+msgstr "The court stands alone; few people are behind it."
+
+msgid "Muhalefet meclisi elinde tutuyor; pazarlığa ihtiyacı yok."
+msgstr "The opposition controls the council; it has no need to bargain."
+
+msgid "Mecliste kararsız sıralar var."
+msgstr "There are undecided seats in the council."
+
+msgid "Meclis bölünmüş; bir dokunulmazlık yasası geçebilir."
+msgstr "The council is divided; an immunity bill might pass."
+
+msgid "YETKİ KRİZİ — bu hafta karar vermezsen yetkilerin elinden alınır."
+msgstr "POWER CRISIS — if you don't decide this week, your powers will be taken away."
+
+msgid "Mahkeme yetkilerini askıya almayı görüşüyor"
+msgstr "The court is considering suspending your powers"
+
+msgid "%s biriken dosyaları tek bir kararla birleştirdi: kralın yetkileri, soruşturma bitene kadar meclise devredilecek. Karar yarın okunacak.\n%s %s%s"
+msgstr "%s has combined the accumulating files into a single case: the king's powers will be transferred to the council until the investigation is over. The decision will be read tomorrow.\n%s %s%s"
+
+msgid " Daha önce mahkemeyle uzlaştın; bu kez yalnızca sözünle yetinmeyebilirler."
+msgstr " You reached an agreement with the court before; this time your word alone may not satisfy them."
+
+msgid "Mahkemeyi tasfiye et"
+msgstr "Purge the court"
+
+msgid "İfade ver, mahkemeyle uzlaş"
+msgstr "Testify and reach an agreement with the court"
+
+msgid "Meclisle dokunulmazlık pazarlığı yap"
+msgstr "Bargain with the council over immunity"
+
+msgid "Karar verilmedi. Mahkeme kararını okudu."
+msgstr "No decision was made. The court read its decision."
+
+msgid "Ayaklanma gecesi orduyu sokağa sürdün; askerler kalabalığa katıldı."
+msgstr "On the night of the uprising, you sent the army into the streets; the soldiers joined the crowd."
+
+msgid "Askerler barikata vardı ve durdu. Biri miğferini çıkardı; sonra hepsi."
+msgstr "The soldiers reached the barricade and stopped. One took off his helmet; then they all did."
+
+msgid "Meydanlar sabaha temizlendi. Kimse sayıyı söylemiyor; herkes biliyor."
+msgstr "The squares were cleared by morning. No one says the number; everyone knows it."
+
+msgid "Ayaklanma gecesi yine söz verdin; kimse inanmadı."
+msgstr "On the night of the uprising, you made another promise; no one believed you."
+
+msgid "Talepleri kabul ettiğini duyurdun. Meydandan gelen cevap bir kahkahaydı."
+msgstr "You announced that you had accepted the demands. The square answered with laughter."
+
+msgid "Fiyatlar donduruldu, iki bakan istifa etti. Barikatlar söküldü; muhalefet bu geceyi zafer sayıyor."
+msgstr "Prices were frozen, and two ministers resigned. The barricades came down; the opposition calls tonight a victory."
+
+msgid "Ayaklanma gecesi meydana indin; kalabalık seni dinlemedi."
+msgstr "On the night of the uprising, you went to the square; the crowd wouldn't listen."
+
+msgid "Meydana indiğinde sesin uğultuda kayboldu. Muhafızların seni geri çekmesi gerekti."
+msgstr "Your voice was lost in the roar when you entered the square. Your guards had to pull you back."
+
+msgid "Meydanda konuştun. Kalabalık önce sustu, sonra dağıldı. Bu gece kimse kazanmadı; kimse de kaybetmedi."
+msgstr "You spoke in the square. The crowd fell silent, then dispersed. No one won tonight, but no one lost either."
+
+msgid "Yetki krizinde mahkemeyi tasfiye etmeye kalktın; meclis ve sokak mahkemenin arkasında durdu."
+msgstr "During the power crisis, you tried to purge the court; the council and the streets stood behind it."
+
+msgid "Tasfiye kararnamesini meclis bir saat içinde iptal etti. Yargıçlar kürsüde, sen saraydasın; ama ne kadar?"
+msgstr "The council overturned the purge decree within an hour. The judges are on the bench and you are in the palace—but for how long?"
+
+msgid "Yeni yargıçlar yemin etti. Dosyalar rafa kalktı; ama rafın nerede olduğunu herkes biliyor."
+msgstr "The new judges were sworn in. The files were shelved, but everyone knows where the shelf is."
+
+msgid "Yetki krizinde mahkemeyle yeniden uzlaşmaya çalıştın; bu kez sözüne itibar edilmedi."
+msgstr "During the power crisis, you tried to reach another agreement with the court; this time your word carried no weight."
+
+msgid "İfade verdin. Yargıçlar dinledi, not aldı ve kararı yine de okudu."
+msgstr "You testified. The judges listened, took notes, and read the decision anyway."
+
+msgid "Mahkemede saatlerce ifade verdin. Karar ertelendi; tacın ağırlığı bir parça hafifledi, bir parça da azaldı."
+msgstr "You testified in court for hours. The decision was postponed; the crown grew a little lighter, and a little smaller."
+
+msgid "Yetki krizinde meclisle dokunulmazlık pazarlığına girdin; meclis pazarlığı reddetti."
+msgstr "During the power crisis, you bargained with the council over immunity; the council rejected the deal."
+
+msgid "Dokunulmazlık yasası oylamada düştü. Muhalefet sıralarında alkış vardı."
+msgstr "The immunity bill failed in the vote. The opposition benches applauded."
+
+msgid "Dokunulmazlık yasası birkaç oy farkla geçti. Bazı vekiller bu hafta yeni arabalarla geldi."
+msgstr "The immunity bill passed by a few votes. Some members arrived in new cars this week."
+
+msgid "DARBE GİRİŞİMİ"
+msgstr "COUP ATTEMPT"
+
+msgid "AYAKLANMA"
+msgstr "UPRISING"
+
+msgid "YETKİ KRİZİ"
+msgstr "POWER CRISIS"
