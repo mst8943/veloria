@@ -30,7 +30,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S2: L2 — `person_panel.gd` (ACTION_META dahil) + `desk_view.gd` + `city_view.gd` + `media_view.gd` + `end_screen.gd`; ardından masaüstü ve mobil L2 ekran görüntüsü kapısı.
+S2: L2 — sürmekte olan dosya `person_panel.gd` (ACTION_META dahil); ardından `desk_view.gd`, `city_view.gd`, `media_view.gd`, `end_screen.gd` ve masaüstü/mobil L2 ekran görüntüsü kapısı.
 
 ## L1 — tamamlandı
 
@@ -66,3 +66,5 @@ S2: L2 — `person_panel.gd` (ACTION_META dahil) + `desk_view.gd` + `city_view.g
   (`2948d4b`) ve `truth_chart.gd` (`e17e796`) için zaten tamamlanmıştı;
   `autoplay.gd` oyuncuya gösterilen sabit metin içermedi. Commitler:
   `621eff8`, `e1b4848`, `f9a1123`, `5061966`, `b3b4539`.
+- S2 öncesi kalan künye: `menu.gd` Hakkında metni `tr()` ile kaynak anahtara
+  bağlandı; İngilizce lisans/katkı karşılığı `en.po`'ya eklendi.
