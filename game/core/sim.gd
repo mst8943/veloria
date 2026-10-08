@@ -2599,7 +2599,6 @@ func _end(survived: bool) -> void:
 		"historians": historians(survived), "timeline": timeline.duplicate(), "council": council_record(),
 		"plot": plot_log.duplicate(), "signs": sign_record(), "state": _state_record()}
 	record["new_achievements"] = _award_achievements(survived, title, cause) if record_chronicle else []
-	record["title"] = tr(str(record["title"]))
 	if record_chronicle:
 		_append_chronicle(record)
 	# Biten saltanata kayıttan geri dönülmez: tarih tek yönlüdür.
