@@ -2570,11 +2570,10 @@ func _end(survived: bool) -> void:
 		if coup_leader != "" and actors.has(coup_leader):
 			var l: Actor = actors[coup_leader]
 			var promo_week: int = flags.get(l.id.to_upper() + "_GUCLENDI", 0)
-			var how := "Askerî darbeyle" if l.military else "Saray darbesiyle"
 			if promo_week > 0:
-				cause = tr("Saltanatının %d. haftasında %s görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti.") % [week - 1, tr(how), l.display_name, week - promo_week]
+				cause = tr("Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti.") % [week - 1, l.display_name, week - promo_week] if l.military else tr("Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti.") % [week - 1, l.display_name, week - promo_week]
 			else:
-				cause = tr("Saltanatının %d. haftasında %s görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı.") % [week - 1, tr(how), l.display_name]
+				cause = tr("Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı.") % [week - 1, l.display_name] if l.military else tr("Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı.") % [week - 1, l.display_name]
 			if crisis_note != "":
 				cause += " " + crisis_note
 		elif unrest >= 100.0:

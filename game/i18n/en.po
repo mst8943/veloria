@@ -2089,20 +2089,20 @@ msgstr "UPRISING"
 msgid "YETKİ KRİZİ"
 msgstr "POWER CRISIS"
 
-msgid "Askerî darbeyle"
-msgstr "In a military coup"
-
-msgid "Saray darbesiyle"
-msgstr "In a palace coup"
-
 msgid "Devrilen Kral"
 msgstr "The Overthrown King"
 
-msgid "Saltanatının %d. haftasında %s görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti."
-msgstr "You were deposed in week %d of your reign. The coup leader was %s, whom you had promoted just %d weeks earlier."
+msgid "Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti."
+msgstr "You were deposed in week %d of your reign in a military coup. The coup leader was %s, whom you had promoted just %d weeks earlier."
 
-msgid "Saltanatının %d. haftasında %s görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı."
-msgstr "You were deposed in week %d of your reign. The coup leader was %s. You never promoted them; they built their power while you were busy elsewhere."
+msgid "Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti."
+msgstr "You were deposed in week %d of your reign in a palace coup. The coup leader was %s, whom you had promoted just %d weeks earlier."
+
+msgid "Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı."
+msgstr "You were deposed in week %d of your reign in a military coup. The coup leader was %s. You never promoted them; they built their power while you were busy elsewhere."
+
+msgid "Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı."
+msgstr "You were deposed in week %d of your reign in a palace coup. The coup leader was %s. You never promoted them; they built their power while you were busy elsewhere."
 
 msgid "Saltanatının %d. haftasında halk ayaklanması sarayı kuşattı."
 msgstr "In week %d of your reign, a popular uprising surrounded the palace."
