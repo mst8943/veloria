@@ -86,3 +86,17 @@ Her onuncu İngilizce metin, kaplama dosyalarının sabit sıralı taramasından
 | 140 | Prens’in boş sandalyesi | The Prince’s empty chair | events/yay_prens_yukselis/title |
 | 145 | Meydanın sesi yükseliyor | The square raises its voice | events/yay_brandt_sinav/title |
 | 150 | Renn kürsüsünde kalıyor | Renn stays on the bench | events/yay_falk_sadakat/title |
+
+## S9 — olay başlıkları (her beş olayda bir)
+
+| Olay | Türkçe | English | Kaplama yolu |
+|---:|---|---|---|
+| 155 | Sermayenin meclis kuşatması | Capital circles the Assembly | events/rejim_oligark_hesap/title |
+| 160 | Vergi defterleri kapanmıyor | The tax ledgers won't close | events/maliye_cokus/title |
+| 165 | Maliye defterlerinde yeni düzen | A new order in the Treasury books | events/uzman_bakan/title |
+| 170 | Valiliklerin hesap günü | The provinces call in their accounts | events/vilayet_hesabi/title |
+| 175 | Saray payının hesabı | The Palace's share hits the papers | events/saray_payi_sizdi/title |
+| 180 | Veliahtın ilk sözü | The heir's first words | events/julian_halka_konusma/title |
+| 185 | Elçilik notunun öteki yüzü | The other side of the embassy note | events/elena_abartili_rapor/title |
+| 190 | Drakon'un silah anlaşması | Drakon's arms deal | events/drakon_silah_anlasmasi/title |
+| 195 | Drakon'un güvenlik teklifi | Drakon's security offer | events/drakon_darbe_destegi/title |

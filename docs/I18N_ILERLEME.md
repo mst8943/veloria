@@ -25,21 +25,21 @@ dosyası değiştirilmedi.
 
 ## Açık sorunlar
 
-- S5 ile `actors.json` ve içerik kaplamalarının ilk grubu tamamlandı. İngilizce
-  ekranlarda kalan Türkçe içerik, `events.json` başlık/gövde/seçenekleri ve
-  bunlardan türeyen haber/karar kayıtlarıdır; S6–S9 olay partilerinde çevrilecek.
+- S9 ekran taramasında kapsam dışı UI/final kayıtlarında Türkçe kaldı; ayrıntılı
+  liste S9 kanıtlarında. Bunlar L5 doğrulamasında ele alınacak.
 
 ## SIRADAKİ ADIM
 
-S9: L4 — `events.json` parti 4 (olay 151–195, son parti).
+S10: L5 — doğrulama, İngilizce rehber, sürüm 1.5.0 ve paketler.
 
 S9 olay kontrol noktası: 151–160 `9d8f816`, 161–170 `c48566d`, 171–180
-`108ad68`, 181–190 `29d2160` ile kaplandı
-ve her partiden sonra `i18n_check` ile `event_check --lang=en` geçti.
+`108ad68`, 181–190 `29d2160`, 191–195 `f44309d` ile kaplandı; 195/195
+olay kaplaması tamamlandı. Her partiden sonra `i18n_check` ile
+`event_check --lang=en` geçti.
 
-S9 ön kontrolleri: cinsiyet tutarlılığı ve sezgisel uyarı `c154aa5`, İngilizce
-tırnak normalleştirmesi ve stil uyarısı `7aeb00f` ile tamamlandı; son olay
-partisi sürüyor.
+S9 ön düzeltmeleri: cinsiyet tutarlılığı `c154aa5`, İngilizce tırnak
+normalleştirmesi `7aeb00f`; kontrol noktaları `8a1bfb9`, `0c896fd`,
+`cd7418d`, `718fc40`, `12048cc`.
 
 ## L1 — tamamlandı
 
@@ -275,3 +275,29 @@ partisi sürüyor.
   incelendi: Türkçe çekimler Türkçe, İngilizce çekimler İngilizce; taşma ya da
   mobil bildirim-şerit çakışması görülmedi. Sonraki S9 kapsamındaki 151–195
   olayları İngilizce kaplamada henüz yok.
+
+## S9 — tamamlandı
+
+- `game/data/en/events.json` olay 151–195 eklendi; toplam 195/195 olay.
+  Her parça `i18n_check` ve `event_check --lang=en` ile geçti; parça
+  commitleri `9d8f816`, `c48566d`, `108ad68`, `29d2160`, `f44309d`.
+- Kalite örneklerine olay 155, 160, …, 195 başlıkları eklendi.
+- Testler: `TEST: OK`; `EVENTS: OK (195 olay, 0 uyarı)` TR/EN;
+  `SAVE: OK`; `CONTENT: OK (5 dosya, 8 bozuk örnek)` TR/EN;
+  `I18N: OK` (cinsiyet/tırnak uyarısı yok); `UI INPUT: OK`. Pacing testi geçti:
+  en düşük 0.81, en uzun olaysız seri 2/2 hafta. `unit_tests.gd` sonucu
+  `398 passed, 1 failed`: kapsam dışı ve önceki S7/S8'de de görülen Beckett
+  `audit finds the offscreen control`.
+- `--autoplay --full` Türkçe ve `--lang=en` aynı satırı verdi:
+  `FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi
+  miras_kararı=true olay=112 son_ekran=true`. İngilizce 80 kampanya probe'u
+  tabanla aynı: kolay 68/80, normal 36/80, zor 16/80.
+- `dist/i18n_s9_{tr,en}_{desktop,mobile}` altında masaüstü 17, mobil 19 PNG
+  her dil için üretildi. Oyun, karar, kişi/kurum, medya, menü ve final
+  ekranları görsel olarak incelendi; olay metninde taşma görülmedi.
+- İngilizce ekranlarda kalan Türkçe satırlar (L5/UI temizliğine bırakıldı):
+  menü zorluk adları `Kolay`, `Zor`; ayarlarda `Language / Dil`; Hakikat
+  Dosyası'nda `Kraliçe Helena` ve `(kötü haberi sana iletmedi)`; Komplo
+  Defteri'nde `huzursuzlanmaya başladı`, `komploya katıldı`,
+  `darbe hazırlığına geçti`, `darbe girişimini başlattı`; Devlet Defteri'nde
+  `Çocuksu`. İngilizce olay kaplamalarında kalan Türkçe metin bulunmadı.
