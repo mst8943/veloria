@@ -18,10 +18,10 @@ dosyası değiştirilmedi.
 - L0.1 — `tools/i18n_scan.py` GDScript sabitlerini ve JSON oyuncu metinlerini
   envanterler. İç içe `content_reports`, `content_council`,
   `content_achievements` ve `content_history` özyinelemeli taranır; meclisteki
-  `experts` aktör kimliği dizisi metin sayılmaz. Commit: bekliyor.
-- L0.2 — Terim ve üslup sözlüğü: `docs/i18n/sozluk_en.md`. Commit: bekliyor.
+  `experts` aktör kimliği dizisi metin sayılmaz. Commit: `b5112f4`.
+- L0.2 — Terim ve üslup sözlüğü: `docs/i18n/sozluk_en.md`. Commit: `b5112f4`.
 - L0.3 — Türkçe taban test, tam oyun, ölçüm ve görsel kanıtları kaydedildi.
-  Commit: bekliyor.
+  Commit: `b5112f4`.
 
 ## Açık sorunlar
 
@@ -44,3 +44,4 @@ L1 kapısı için tam test, `--full`, ölçüt ve menü ekran görüntüsü alı
 - `content_data.gd`, İngilizce etkinse `game/data/en/` içindeki metin
   kaplamasını güvenli biçimde birleştirir. Kaplama yoksa Türkçe kaynak kalır.
 - İlk kontroller: `I18N: OK`, `SAVE: OK`, `TEST: OK`.
+- Altyapı commit'i: `ab56462`.
