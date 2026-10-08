@@ -25,12 +25,13 @@ dosyası değiştirilmedi.
 
 ## Açık sorunlar
 
-- İngilizce içerik kaplamaları L4'te yazılacak. O zamana kadar İngilizce dil
-  seçimi, eksik içerikte güvenli Türkçe geri dönüş kullanır.
+- S5 ile `actors.json` ve içerik kaplamalarının ilk grubu tamamlandı. İngilizce
+  ekranlarda kalan Türkçe içerik, `events.json` başlık/gövde/seçenekleri ve
+  bunlardan türeyen haber/karar kayıtlarıdır; S6–S9 olay partilerinde çevrilecek.
 
 ## SIRADAKİ ADIM
 
-S5: L4 — `content_*.json` ve `actors.json` çevirisi.
+S6: L4 — `events.json` parti 1 (ilk yaklaşık 50 olay).
 
 ## L1 — tamamlandı
 
@@ -153,9 +154,38 @@ S5: L4 — `content_*.json` ve `actors.json` çevirisi.
   17, mobil 19 PNG. Gazete, TV, ana oyun ve oyun sonu görüntüleri açılarak
   incelendi. Türkçe örnekler tamamen Türkçe; incelenen sayfalarda kırpılma/
   taşma görülmedi. İngilizce basın şablonları ve tarihçi/oyun sonu özeti İngilizce.
-- İngilizce ekranda kalan Türkçe örnekler L4 veri kapsamındadır: olay başlıkları,
-  gövdeleri ve seçenekleri (`events.json`); kişi unvanları ve rapor/alamet gövdeleri
-  (`actors.json`, `content_reports.json`); oyun sonu karar geçmişindeki olay ve
-  seçenek metinleri. Basının olaydan aldığı ana manşet/gövde de `events.json`
-  kaynağında kaldı. Sabit gazete/TV etiketleri, ikincil sütunlar, motto, para
-  birimi gösterimi, oyun sonu nedenleri ve tarihçi anlatısı çevrildi.
+- S3b'de kalan kişi unvanları ile rapor/alamet gövdeleri S5'te çevrildi.
+  Güncel İngilizce ekranlarda kalan Türkçe içerik `events.json` başlıkları,
+  gövdeleri, seçenekleri ve bunlardan türeyen haber/karar geçmişi metinleridir;
+  olay çevirileri S6–S9 kapsamındadır.
+
+## S5 — tamamlandı
+
+- `game/data/en/actors.json` 14 kişinin ad/unvan/kırmızı çizgi/zayıf nokta
+  gösterimlerini aldı. İngilizce `content_labels`, `content_council`,
+  `content_reports`, `content_achievements` ve `content_history` kaplamaları
+  ana metin yapısı ve dizi uzunluklarıyla eşleşir. İç ödül/rejim kimlikleri,
+  uzman aktör listesi ve mantık değerleri Türkçe kaynakta bırakıldı.
+- `i18n_check.gd` kaplama yapısını, mantık alanı dışlamalarını, dil seçimi ve
+  eksik çeviride Türkçe geri dönüşü denetler. `content_check.gd` İngilizce hata
+  metinleriyle de çalışır. S5'in ilk denemesinde bulunan rapor iyeliği karışımı,
+  `Loc.poss()` ile giderildi; Türkçe cümle değişmedi.
+- Kalite örnekleri: `docs/i18n/kalite_ornekleri.md`, sabit sıradaki 376 metinden
+  her onuncu örnek (37 satır).
+- Testler: `TEST: OK`, `EVENTS: OK (195 olay, 0 uyarı)`, `SAVE: OK`,
+  `CONTENT: OK (5 dosya, 8 bozuk örnek)` Türkçe ve `--lang=en`, `I18N: OK`,
+  `UI INPUT: OK`; pacing en düşük `0.81`, en uzun olaysız seri `2/2`. Bilinen
+  bağımsız Beckett unit testi: `398 passed, 1 failed` (`audit finds the offscreen control`).
+- `--autoplay --full` TR/EN birebir: `FULLRUN tohum=101 hafta=104 sonuç=TAHTTA
+  ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`. İngilizce
+  `advice_weighted` 80 kampanya ölçümü tüm zorluklarda tabanla aynı: kazanma
+  `68/80, 36/80, 16/80`; ortalama hafta `97.0, 81.3, 62.3`; kapasite
+  `54.0, 53.2, 53.3`; Arden girişimi `25, 52, 70`, hazırlığı `51, 61, 52`,
+  darbe zaferi `11, 34, 57`.
+- Son görseller `dist/i18n_s5_{tr,en}_{desktop,mobile}`: 17/19 PNG her dil/cihaz
+  için. Masa, rapor, basın ve oyun sonu ekranları açılarak karşılaştırıldı;
+  incelenen ekranlarda taşma yok. İngilizce ekranda kalan metinler olay ve olay
+  kayıtlarıdır; `kurush` para adı tarihsel birim olarak translitere edilmiştir.
+- S5 dosya commitleri: `09b5192`, `fb0c46d`, `68f362c`, `267cca4`, `d0ef3b0`,
+  `89e39b4`, `b36fe87`, `53665c4`, `b8de8d3`, `c1c8ef5`, `4d047af`, `9f21772`,
+  `52ec99f`, `4bd1be1`.
