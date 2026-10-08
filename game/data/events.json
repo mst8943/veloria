@@ -3,21 +3,21 @@
     "id": "tac_giyme", "min_week": 1, "max_week": 1, "art": "toren", "title": "Taç giyme töreninin ertesi sabahı",
     "text": "Bütün güç merkezleri yeni kralın ilk hamlesini izliyor. Bekleme salonu dolu. İlk kimi huzuruna kabul edeceğin, kime öncelik verdiğini herkese söyleyecek.",
     "choices": [
-      {"label": "Önce General Arden'i kabul et", "text": "Arden selam verdi ve memnun ayrıldı. Voss bekleme salonunda saatine baktı.", "fx": {"actors": {"arden": {"l_career": 6}, "voss": {"ambition": 2}}}},
-      {"label": "Önce İstihbarat Başkanı Voss'u kabul et", "text": "Voss sana kalın bir dosya bıraktı: 'Kim kimdir, Majesteleri.' Arden ise bunu not etti.", "fx": {"actors": {"voss": {"l_career": 6}, "arden": {"ambition": 2}}}},
+      {"label": "Önce General Arden'i kabul et", "text": "Arden selam verdi ve memnun ayrıldı. Vale bekleme salonunda saatine baktı.", "fx": {"actors": {"arden": {"l_career": 6}, "voss": {"ambition": 2}}}},
+      {"label": "Önce İstihbarat Başkanı Vale'yi kabul et", "text": "Vale sana kalın bir dosya bıraktı: 'Kim kimdir, Majesteleri.' Arden ise bunu not etti.", "fx": {"actors": {"voss": {"l_career": 6}, "arden": {"ambition": 2}}}},
       {"label": "Kimseyi kabul etme, halkın önüne çık", "text": "Balkondan el salladın. Kalabalık alkışladı; bekleme salonundakiler ise alkışlamadı.", "fx": {"king": 3, "opp": -2, "actors": {"arden": {"ambition": 1}, "voss": {"ambition": 1}, "halden": {"ambition": 1}}}}
     ],
     "ignore": {"text": "İlk günü bekleme salonunda geçirdin.", "fx": {"king": -1}}
   },
   {
     "id": "ilk_butce", "min_week": 2, "max_week": 2, "art": "butce_acigi", "title": "İlk bütçe imzası",
-    "text": "Maliye Bakanı Kessler masana ilk bütçeyi koydu. Bir kalem boş bırakılmış: fazladan gelir kime gidecek?",
+    "text": "Başbakan Veyra masana ilk bütçeyi koydu. Bir kalem boş bırakılmış: fazladan gelir kime gidecek?",
     "choices": [
-      {"label": "Orduya", "text": "Kışlalarda kadeh kaldırıldı. Kessler sessizce not aldı.", "fx": {"economy": -2, "actors": {"arden": {"power": 4, "l_career": 4}}}},
+      {"label": "Orduya", "text": "Kışlalarda kadeh kaldırıldı. Veyra sessizce not aldı.", "fx": {"economy": -2, "actors": {"arden": {"power": 4, "l_career": 4}}}},
       {"label": "Halka", "text": "Ekmek fiyatı biraz düştü. Halk adını ilk kez sevgiyle andı.", "fx": {"unrest": -5, "economy": -2}},
-      {"label": "Sarayın kasasına", "text": "Kişisel kasan doldu. Kessler bu satırı unutmayacak.", "fx": {"wealth": 4, "fact": {"id": "saray_payi", "text": "İlk bütçeden sarayın kasasına aktarılan pay", "subject": "king", "severity": 15, "knowers": ["kessler"]}}}
+      {"label": "Sarayın kasasına", "text": "Kişisel kasan doldu. Veyra bu satırı unutmayacak.", "fx": {"wealth": 4, "fact": {"id": "saray_payi", "text": "İlk bütçeden sarayın kasasına aktarılan pay", "subject": "king", "severity": 15, "knowers": ["kessler"]}}}
     ],
-    "ignore": {"text": "Bütçe Kessler'in önerisiyle geçti.", "fx": {}}
+    "ignore": {"text": "Bütçe Veyra'nın önerisiyle geçti.", "fx": {}}
   },
   {
     "id": "gida_protestosu", "min_week": 3, "title": "Gıda fiyatları protestoya dönüşüyor",
@@ -35,15 +35,15 @@
   },
   {
     "id": "gazeteci_ihale", "min_week": 6, "title": "Gazeteci gizli ihaleyi araştırıyor",
-    "text": "Lena Ostrow, devlet ihalelerinde hep aynı şirketin adını buluyor: Halden Holding.",
-    "fx": {"fact": {"id": "ihale_dosyasi", "text": "Halden'e verilen gizli ihale dosyası", "subject": "halden", "severity": 40, "knowers": ["lena", "halden"]}},
+    "text": "Leyla Sarn, devlet ihalelerinde hep aynı şirketin adını buluyor: Sarne Holding.",
+    "fx": {"fact": {"id": "ihale_dosyasi", "text": "Sarne'ye verilen gizli ihale dosyası", "subject": "halden", "severity": 40, "knowers": ["lena", "halden"]}},
     "choices": [
-      {"label": "Halden'i uyar", "text": "Halden minnettar kaldı. Artık sana bir iyilik borçlu değil; sen ona bir iyilik borçlusun.",
+      {"label": "Sarne'yi uyar", "text": "Sarne minnettar kaldı. Artık sana bir iyilik borçlu değil; sen ona bir iyilik borçlusun.",
        "fx": {"actors": {"halden": {"obligation": 10, "l_complicity": 10}, "lena": {"fear": 8}}}},
-      {"label": "Gazeteciyi sustur", "text": "Lena artık yazmıyor. Ama korkmuş bir gazeteci unutmaz.",
+      {"label": "Gazeteciyi sustur", "text": "Leyla artık yazmıyor. Ama korkmuş bir gazeteci unutmaz.",
        "fx": {"actors": {"lena": {"fear": 35, "honesty": -0.1}, "voss": {"power": 4}}, "flag": "GAZETECI_SUSTURULDU",
               "fact": {"id": "gazeteci_baskisi", "text": "Gazeteciye uygulanan baskı", "subject": "king", "severity": 40, "knowers": ["lena", "voss"]}}},
-      {"label": "Yayınlansın", "text": "Dosya basına çıktı. Halden zayıfladı, sen de dürüst görünüyorsun.",
+      {"label": "Yayınlansın", "text": "Dosya basına çıktı. Sarne zayıfladı, sen de dürüst görünüyorsun.",
        "fx": {"king": 2, "opp": 3, "actors": {"halden": {"power": -10, "ambition": 6}}, "flag": "IHALE_YAYINLANDI"}}
     ],
     "ignore": {"text": "Gazeteci araştırmaya devam ediyor.", "fx": {"unrest": 2}}
@@ -56,18 +56,18 @@
        "fx": {"actors": {"arden": {"ambition": 6, "l_career": -10, "fear": 10}}}},
       {"label": "Onayla", "text": "Ordu artık Arden'in. Sana sadakat ise onun iyi niyetine bağlı.",
        "fx": {"actors": {"arden": {"power": 8, "obligation": 6, "ambition": 3}}}},
-      {"label": "Karşı denge: Voss'u güçlendir", "text": "İstihbarat ile ordu birbirini kolluyor.",
+      {"label": "Karşı denge: Vale'yi güçlendir", "text": "İstihbarat ile ordu birbirini kolluyor.",
        "fx": {"actors": {"voss": {"power": 10, "ambition": 4}, "arden": {"ambition": 3}}}}
     ],
     "ignore": {"text": "Atamalar sessizce yapıldı.", "fx": {"actors": {"arden": {"power": 8, "ambition": 5}}}}
   },
   {
     "id": "kis_krizi", "min_week": 14, "title": "Sert kış, enerji fiyatları",
-    "text": "Doğalgaz fiyatı iki katına çıktı. Halden enerji şirketlerinden büyük kâr ediyor.",
+    "text": "Doğalgaz fiyatı iki katına çıktı. Sarne enerji şirketlerinden büyük kâr ediyor.",
     "choices": [
       {"label": "Halka sübvansiyon", "text": "Faturalar düştü, bütçe zorlandı.",
        "fx": {"unrest": -8, "economy": -6, "actors": {"halden": {"power": 4}}}},
-      {"label": "Enerji şirketlerine ek vergi", "text": "Halden öfkeli ama hazine doldu.",
+      {"label": "Enerji şirketlerine ek vergi", "text": "Sarne öfkeli ama hazine doldu.",
        "fx": {"economy": 4, "actors": {"halden": {"ambition": 8, "power": -6, "l_money": -8}}}},
       {"label": "Piyasaya bırak", "text": "Fiyatlar uçtu.", "fx": {"unrest": 6, "economy": -5, "actors": {"halden": {"power": 8}}}}
     ],
@@ -78,7 +78,7 @@
     "text": "Sarayın dışında kralın iki gündür görünmediği konuşuluyor. Kimse resmî açıklama yapmıyor.",
     "choices": [
       {"label": "Halka açık bir törenle görün", "text": "Kalabalığın karşısında dimdik durdun.", "fx": {"king": 6, "wealth": -3}},
-      {"label": "Halden'in medyasıyla yalanla", "text": "Söylenti sustu. Ama Halden ne yaptığını biliyor.",
+      {"label": "Sarne'nin medyasıyla yalanla", "text": "Söylenti sustu. Ama Sarne ne yaptığını biliyor.",
        "fx": {"king": 2, "actors": {"halden": {"obligation": 8}},
               "fact": {"id": "saglik_yalani", "text": "Kralın sağlık söylentisinin yalanlanma operasyonu", "subject": "king", "severity": 30, "knowers": ["halden"]}}},
       {"label": "Yok say", "text": "Söylenti büyüdü.", "fx": {"king": -4}}
@@ -87,13 +87,13 @@
   },
   {
     "id": "prens_hirs", "min_week": 8, "title": "Prens soylularla gizli görüşüyor",
-    "text": "Kardeşin Prens Cassian'ın son iki haftada bütün soylu ailelerle akşam yemeği yediği bildiriliyor.",
+    "text": "Kardeşin Prens Marcus'un son iki haftada bütün soylu ailelerle akşam yemeği yediği bildiriliyor.",
     "choices": [
       {"label": "Saray gözetimi altına al", "text": "Prens evde kaldı. Gözlerinde bir şey değişti.",
        "fx": {"actors": {"prens": {"fear": 20, "ambition": 6, "l_fear": 10}}}},
       {"label": "Ona önemli bir görev ver", "text": "Prens görevi sevinçle kabul etti. Hırsı da büyüdü.",
        "fx": {"actors": {"prens": {"power": 10, "obligation": 8, "ambition": 4}}}},
-      {"label": "Voss'a izlettir", "text": "Voss notlar tutuyor.",
+      {"label": "Vale'ye izlettir", "text": "Vale notlar tutuyor.",
        "fx": {"actors": {"voss": {"power": 5}},
               "fact": {"id": "prens_izleniyor", "text": "Prensin gizlice izlenmesi", "subject": "king", "severity": 25, "knowers": ["voss", "dorn"]}}}
     ],
@@ -101,22 +101,22 @@
   },
   {
     "id": "muhalefet_birlesme", "min_week": 10, "min_opposition": 28, "title": "Muhalefet iki kanadı birleştiriyor",
-    "text": "Teodor Brandt, bölünmüş muhalefeti tek listede toplamaya çalışıyor.",
+    "text": "Adrian Voss, bölünmüş muhalefeti tek listede toplamaya çalışıyor.",
     "choices": [
       {"label": "Muhalefeti böl (gizli para)", "text": "İki kanat birbirine girdi. Ama para izi kaldı.",
        "fx": {"opp": -14, "wealth": -5, "fact": {"id": "muhalefet_finansmani", "text": "Muhalefeti bölmek için verilen gizli para", "subject": "king", "severity": 30, "knowers": ["voss"]}}},
-      {"label": "Brandt'la müzakere et", "text": "Brandt bir koltuk kazandı; sen zaman kazandın.",
+      {"label": "Voss'la müzakere et", "text": "Voss bir koltuk kazandı; sen zaman kazandın.",
        "fx": {"opp": -6, "actors": {"brandt": {"power": 6, "obligation": 6}}}},
-      {"label": "Brandt'ı tutuklat", "text": "Muhalefet susturuldu, sokak öfkelendi.",
+      {"label": "Voss'u tutuklat", "text": "Muhalefet susturuldu, sokak öfkelendi.",
        "fx": {"opp": -14, "unrest": 8, "king": -3, "actors": {"brandt": {"fear": 20, "ambition": 10}, "arden": {"power": 3}}}}
     ],
     "ignore": {"text": "Muhalefet birleşti.", "fx": {"opp": 10}}
   },
   {
     "id": "yargic_dosya", "min_week": 12, "title": "Yüksek Mahkeme bakan ihalelerini soruşturuyor",
-    "text": "Yargıç Falk, iki bakanın ihale dosyasını açtı. Dosyanın uzantısı saraya uzanabilir.",
+    "text": "Başsavcı Renn, iki bakanın ihale dosyasını açtı. Dosyanın uzantısı saraya uzanabilir.",
     "choices": [
-      {"label": "Baskı kur", "text": "Falk geri çekildi ama bu baskı yazıldı.",
+      {"label": "Baskı kur", "text": "Renn geri çekildi ama bu baskı yazıldı.",
        "fx": {"actors": {"falk": {"fear": 25, "l_ideology": -8}}, "fact": {"id": "yargi_baskisi", "text": "Yargıca yapılan baskı", "subject": "king", "severity": 35, "knowers": ["falk", "dorn"]}}},
       {"label": "Bağımsız bırak", "text": "Dosya ilerliyor. Seni korumayabilir, ama itibarını da düşürmez.",
        "fx": {"king": -2, "actors": {"falk": {"l_ideology": 5, "power": 5}},
@@ -128,16 +128,16 @@
   },
   {
     "id": "voss_dosyalar", "min_week": 16, "min_power": {"voss": 50}, "title": "İstihbarat başkanı siyasetçiler hakkında dosya topluyor",
-    "text": "Voss'un arşivleri her gün büyüyor. Dosyaların bir kısmı senin sarayından kişilere ait.",
+    "text": "Vale'nin arşivleri her gün büyüyor. Dosyaların bir kısmı senin sarayından kişilere ait.",
     "choices": [
-      {"label": "Dosyaları iste", "text": "Voss dosyaları verdi. Ama kopyası kalmış olabilir.",
+      {"label": "Dosyaları iste", "text": "Vale dosyaları verdi. Ama kopyası kalmış olabilir.",
        "fx": {"actors": {"voss": {"fear": 15, "ambition": 5}}, "wealth": 3}},
-      {"label": "Yetkisini genişlet", "text": "Voss artık herkes hakkında bir şey biliyor. Senin hakkında da.",
+      {"label": "Yetkisini genişlet", "text": "Vale artık herkes hakkında bir şey biliyor. Senin hakkında da.",
        "fx": {"actors": {"voss": {"power": 10, "ambition": 6, "secrets_on_king": 1}}}},
-      {"label": "Ordu ile rekabete sok", "text": "Arden ile Voss birbirine bakıyor.",
+      {"label": "Ordu ile rekabete sok", "text": "Arden ile Vale birbirine bakıyor.",
        "fx": {"actors": {"arden": {"ambition": 3}, "voss": {"ambition": 3, "fear": -5}}}}
     ],
-    "ignore": {"text": "Voss çalışmaya devam etti.", "fx": {"actors": {"voss": {"power": 6, "secrets_on_king": 1}}}}
+    "ignore": {"text": "Vale çalışmaya devam etti.", "fx": {"actors": {"voss": {"power": 6, "secrets_on_king": 1}}}}
   },
   {
     "id": "sinir_krizi", "min_week": 22, "min_cap": {"ordu": 41}, "title": "Komşu devletle sınır gerilimi",
@@ -146,18 +146,18 @@
       {"label": "Seferberlik ilan et", "text": "Halk gündemi değiştirdi. Ordunun ağırlığı arttı.",
        "fx": {"unrest": -10, "economy": -7, "actors": {"arden": {"power": 10}}}},
       {"label": "Diplomasi", "text": "Gerilim soğudu, ordu hoşnutsuz.", "fx": {"king": 2, "actors": {"arden": {"ambition": 2}, "kessler": {"power": 3}}}},
-      {"label": "Gerilimi kullan (medyaya servis et)", "text": "Halden manşetleri doldurdu. Hesabı sonra ödenir.",
+      {"label": "Gerilimi kullan (medyaya servis et)", "text": "Sarne manşetleri doldurdu. Hesabı sonra ödenir.",
        "fx": {"unrest": -6, "actors": {"halden": {"power": 6, "obligation": 4}}}}
     ],
     "ignore": {"text": "Sınırda gerilim tırmandı.", "fx": {"unrest": 5, "actors": {"arden": {"power": 6}}}}
   },
   {
     "id": "butce_acigi", "max_economy": 45, "min_week": 12, "title": "Bütçe açığı büyüyor",
-    "text": "Maliye Bakanı Kessler kesintiler olmadan maaşların ödenemeyeceğini söylüyor.",
+    "text": "Başbakan Veyra kesintiler olmadan maaşların ödenemeyeceğini söylüyor.",
     "choices": [
       {"label": "Kesintilere onay ver", "text": "Kemer sıkma başladı. Halk bunu sana yazacak.", "fx": {"economy": 6, "unrest": 8, "actors": {"kessler": {"power": 4}}}},
-      {"label": "Halden'den borç al", "text": "Kasa doldu. Borç ise sana yazıldı.", "fx": {"economy": 5, "actors": {"halden": {"obligation": 10, "power": 5}}}},
-      {"label": "Rakamları gizle", "text": "Dürüst Kessler bu talebi sevmedi.",
+      {"label": "Sarne'den borç al", "text": "Kasa doldu. Borç ise sana yazıldı.", "fx": {"economy": 5, "actors": {"halden": {"obligation": 10, "power": 5}}}},
+      {"label": "Rakamları gizle", "text": "Dürüst Veyra bu talebi sevmedi.",
        "fx": {"actors": {"kessler": {"fear": 15, "honesty": -0.15}},
               "fact": {"id": "butce_gizleme", "text": "Bütçe açığının gizlenmesi", "subject": "king", "severity": 30, "knowers": ["kessler"]}}}
     ],
@@ -169,7 +169,7 @@
     "choices": [
       {"label": "'Sahte' ilan et", "text": "Ortalık sakinleşti. Bir sonraki iddiada inandırıcılığın azalacak.", "fx": {"king": 1, "unrest": -2, "flag": "SAHTE_ILAN_EDILDI"}},
       {"label": "Özür dile", "text": "Dürüst göründün, ama zayıf da.", "fx": {"king": -3, "unrest": -4}},
-      {"label": "Voss'a kaynağı buldur", "text": "Voss bir kaynak buldu. Gerçek olup olmadığı belirsiz.", "fx": {"actors": {"voss": {"power": 5}}}}
+      {"label": "Vale'ye kaynağı buldur", "text": "Vale bir kaynak buldu. Gerçek olup olmadığı belirsiz.", "fx": {"actors": {"voss": {"power": 5}}}}
     ],
     "ignore": {"text": "Video milyonlarca kez izlendi.", "fx": {"king": -5, "unrest": 4}}
   },
@@ -177,7 +177,7 @@
     "id": "gizli_toplanti", "min_week": 14, "needs_ready": true, "title": "Gizli toplantı söylentileri",
     "text": "Başkentte birkaç güçlü ismin bir villada gizlice buluştuğu konuşuluyor.",
     "choices": [
-      {"label": "Voss'a izlettir", "text": "Voss toplantıları doğruladı, ama kimin olduğunu söylemedi.", "fx": {"actors": {"voss": {"power": 6}}}},
+      {"label": "Vale'ye izlettir", "text": "Vale toplantıları doğruladı, ama kimin olduğunu söylemedi.", "fx": {"actors": {"voss": {"power": 6}}}},
       {"label": "Şüphelileri tek tek ara", "text": "Çağırdıkların sana yalan söyledi.", "fx": {"king": -1}},
       {"label": "Tüm elitlere ziyafet ver", "text": "Güç bir gösteriye döndü.", "fx": {"wealth": -4, "king": 4}}
     ],
@@ -189,7 +189,7 @@
     "choices": [
       {"label": "Rektörlerle pazarlık yap", "text": "Gençlerin bir kısmı geri döndü.", "fx": {"unrest": -6, "economy": -2}},
       {"label": "Polis çevirsin", "text": "Kampüsler kapatıldı. Hafıza kaldı.", "fx": {"unrest": -8, "opp": 4, "actors": {"arden": {"power": 3}}}},
-      {"label": "Halden'in medyası karalasın", "text": "Öğrenciler 'yabancı ajan' ilan edildi.", "fx": {"unrest": -4, "actors": {"halden": {"obligation": 5, "power": 3}}, "opp": 3}}
+      {"label": "Sarne'nin medyası karalasın", "text": "Öğrenciler 'yabancı ajan' ilan edildi.", "fx": {"unrest": -4, "actors": {"halden": {"obligation": 5, "power": 3}}, "opp": 3}}
     ],
     "ignore": {"text": "Eylemler büyüdü.", "fx": {"unrest": 8, "opp": 4}}
   },
@@ -214,14 +214,14 @@
     "ignore": {"text": "Cenazede senin yokluğun konuşuldu.", "fx": {"king": -6}}
   },
   {
-    "id": "dorn_filtre", "min_week": 14, "min_power": {"dorn": 35}, "title": "Kâhya randevu listesini daraltıyor",
-    "text": "Kâhya Dorn artık kimin seni göreceğine karar veriyor. Raporların bir kısmı artık gelmiyor olabilir.",
+    "id": "dorn_filtre", "min_week": 14, "min_power": {"dorn": 35}, "title": "Kraliçe randevu listesini daraltıyor",
+    "text": "Kraliçe Helena artık kimin seni göreceğine karar veriyor. Raporların bir kısmı artık gelmiyor olabilir.",
     "choices": [
-      {"label": "Dorn'a güven", "text": "Kâhya memnun; yalnızca onun gözünden bakıyorsun.", "fx": {"actors": {"dorn": {"power": 8, "obligation": 5}}}},
-      {"label": "Dorn'u uyar", "text": "Dorn şaşırdı ve biraz korktu.", "fx": {"actors": {"dorn": {"fear": 15, "ambition": 3}}}},
+      {"label": "Helena'ya güven", "text": "Helena memnun; yalnızca onun gözünden bakıyorsun.", "fx": {"actors": {"dorn": {"power": 8, "obligation": 5}}}},
+      {"label": "Helena'yı uyar", "text": "Helena şaşırdı ve biraz korktu.", "fx": {"actors": {"dorn": {"fear": 15, "ambition": 3}}}},
       {"label": "Gizli ikinci bir kanal kur", "text": "Kimse bilmeden bilgi akıyor; ama bu da yazıldı.", "fx": {"wealth": -3, "actors": {"voss": {"power": 3}}}}
     ],
-    "ignore": {"text": "Kâhya listeyi daralttı.", "fx": {"actors": {"dorn": {"power": 8, "ambition": 4}}}}
+    "ignore": {"text": "Helena listeyi daralttı.", "fx": {"actors": {"dorn": {"power": 8, "ambition": 4}}}}
   },
   {
     "id": "toren", "min_week": 5, "once": false, "cooldown": 18, "chance": 0.25, "title": "Kraliyet töreni önerisi",
@@ -247,7 +247,7 @@
     "text": "Basın, bakanlardan birinin yurtdışına para çıkardığını yazıyor. Gazeteciler saraydan açıklama bekliyor.",
     "choices": [
       {"label": "Bakanı tasfiye et", "text": "Bakan düştü, kamuoyu tatmin oldu.", "fx": {"king": 3, "unrest": -4, "actors": {"kessler": {"fear": 8}}}},
-      {"label": "Skandalı gündemden düşür", "text": "Halden'in medyası başka bir konuya geçti.", "fx": {"actors": {"halden": {"obligation": 5}}, "king": -1}},
+      {"label": "Skandalı gündemden düşür", "text": "Sarne'nin medyası başka bir konuya geçti.", "fx": {"actors": {"halden": {"obligation": 5}}, "king": -1}},
       {"label": "Bakanı koru", "text": "Bakan sana borçlandı. Basın saldırıyor.", "fx": {"king": -3, "actors": {"kessler": {"obligation": 6, "l_complicity": 6}}}}
     ],
     "ignore": {"text": "Skandal büyüdü.", "fx": {"king": -4, "unrest": 3}}
@@ -265,37 +265,37 @@
   },
   {
     "id": "lena_kitap", "flag_age": {"gazeteci_ihale_1": 12}, "title": "Susturulan gazeteci yurtdışında kitap yayınladı",
-    "text": "Lena Ostrow yurtdışına çıkmış. 'Veloria'nın Sessiz Sarayı' adlı kitabı komşu ülkelerde çok satanlar listesinde; içinde senin adın da geçiyor.",
+    "text": "Leyla Sarn yurtdışına çıkmış. 'Veloria'nın Sessiz Sarayı' adlı kitabı komşu ülkelerde çok satanlar listesinde; içinde senin adın da geçiyor.",
     "choices": [
       {"label": "Kitabı yasakla", "text": "Yasak kitabı daha da merak edilir yaptı.", "fx": {"opp": 5, "unrest": 3, "leak": "gazeteci_baskisi"}},
       {"label": "Görmezden gel", "text": "Saray sustu; kitap ise konuşmaya devam ediyor.", "fx": {"king": -3}},
-      {"label": "Halden'in medyasıyla karşı kampanya", "text": "Lena 'yabancı ajan' ilan edildi. Halden ne istediğini biliyor.", "fx": {"actors": {"halden": {"obligation": 6, "power": 3}}}}
+      {"label": "Sarne'nin medyasıyla karşı kampanya", "text": "Leyla 'yabancı ajan' ilan edildi. Sarne ne istediğini biliyor.", "fx": {"actors": {"halden": {"obligation": 6, "power": 3}}}}
     ],
     "ignore": {"text": "Kitap yurt içinde de elden ele dolaşıyor.", "fx": {"king": -4, "opp": 3}}
   },
   {
-    "id": "halden_intikam", "flag_age": {"gazeteci_ihale_2": 6}, "alive": ["halden"], "title": "Halden'in kanalları saraya saldırıyor",
-    "text": "İhale dosyası yayınlandıktan sonra Halden'in bütün kanalları her akşam sarayın israfını anlatıyor.",
+    "id": "halden_intikam", "flag_age": {"gazeteci_ihale_2": 6}, "alive": ["halden"], "title": "Sarne'nin kanalları saraya saldırıyor",
+    "text": "İhale dosyası yayınlandıktan sonra Sarne'nin bütün kanalları her akşam sarayın israfını anlatıyor.",
     "choices": [
-      {"label": "Barış teklif et", "text": "Halden saldırıları durdurdu. Bedeli cebinden çıktı.", "fx": {"wealth": -5, "actors": {"halden": {"l_money": 10, "ambition": -4}}}},
-      {"label": "Vergi denetimi başlat", "text": "Halden'in şirketlerinde denetim var; kendisi ise öfkeden köpürüyor.", "fx": {"actors": {"halden": {"power": -8, "ambition": 8, "fear": 12}}}},
+      {"label": "Barış teklif et", "text": "Sarne saldırıları durdurdu. Bedeli cebinden çıktı.", "fx": {"wealth": -5, "actors": {"halden": {"l_money": 10, "ambition": -4}}}},
+      {"label": "Vergi denetimi başlat", "text": "Sarne'nin şirketlerinde denetim var; kendisi ise öfkeden köpürüyor.", "fx": {"actors": {"halden": {"power": -8, "ambition": 8, "fear": 12}}}},
       {"label": "Devlet medyasıyla karşılık ver", "text": "İki tarafın kanalları birbirini yiyor. Halk kimseye inanmıyor.", "fx": {"king": -1, "unrest": 2}}
     ],
     "ignore": {"text": "Saldırılar sürdü.", "fx": {"king": -4}}
   },
   {
-    "id": "voss_hakkinda", "min_week": 24, "actor_min": {"voss": {"secrets_on_king": 3, "power": 55}}, "title": "Voss'un senin hakkında da bir dosyası var",
-    "text": "Kâhya fısıldıyor: Voss'un arşivinde 'Majesteleri' etiketli kalın bir klasör görülmüş.",
+    "id": "voss_hakkinda", "min_week": 24, "actor_min": {"voss": {"secrets_on_king": 3, "power": 55}}, "title": "Vale'nin senin hakkında da bir dosyası var",
+    "text": "Helena fısıldıyor: Vale'nin arşivinde 'Majesteleri' etiketli kalın bir klasör görülmüş.",
     "choices": [
-      {"label": "Voss'a daha fazla yetki ver", "text": "Voss memnun. Dosya da yerinde duruyor.", "fx": {"actors": {"voss": {"power": 10, "obligation": 8}}}},
-      {"label": "Arşivi gizlice yaktır", "text": "Bir gece arşivde yangın çıktı. Voss kimin yaptığını biliyor.", "fx": {"wealth": -4, "actors": {"voss": {"secrets_on_king": -2, "ambition": 10, "fear": 10}}}},
-      {"label": "Voss'la yüz yüze konuş", "text": "İkiniz de birbirinizi tehdit etmeden tehdit ettiniz.", "fx": {"actors": {"voss": {"fear": 6, "l_complicity": 8}}}}
+      {"label": "Vale'ye daha fazla yetki ver", "text": "Vale memnun. Dosya da yerinde duruyor.", "fx": {"actors": {"voss": {"power": 10, "obligation": 8}}}},
+      {"label": "Arşivi gizlice yaktır", "text": "Bir gece arşivde yangın çıktı. Vale kimin yaptığını biliyor.", "fx": {"wealth": -4, "actors": {"voss": {"secrets_on_king": -2, "ambition": 10, "fear": 10}}}},
+      {"label": "Vale'yle yüz yüze konuş", "text": "İkiniz de birbirinizi tehdit etmeden tehdit ettiniz.", "fx": {"actors": {"voss": {"fear": 6, "l_complicity": 8}}}}
     ],
     "ignore": {"text": "Dosya kalınlaşmaya devam ediyor.", "fx": {"actors": {"voss": {"secrets_on_king": 1}}}}
   },
   {
     "id": "prens_kacis", "flag_age": {"prens_hirs_0": 10}, "alive": ["prens"], "title": "Prens gözetimden kaçtı",
-    "text": "Prens Cassian bir gece saraydan kaybolmuş. Komşu bir başkentte, kameraların önünde 'meşru hanedandan' söz ediyor.",
+    "text": "Prens Marcus bir gece saraydan kaybolmuş. Komşu bir başkentte, kameraların önünde 'meşru hanedandan' söz ediyor.",
     "choices": [
       {"label": "İadesini iste", "text": "Komşu devlet oyalıyor. Prens her gün biraz daha ünlü.", "fx": {"king": -2, "actors": {"prens": {"ambition": 10, "power": 4}}}},
       {"label": "Af ilan et ve geri çağır", "text": "Prens döndü. Minnettar mı, yoksa sadece sabırlı mı?", "fx": {"actors": {"prens": {"fear": -10, "l_career": 12, "ambition": -4}}}},
@@ -305,20 +305,20 @@
   },
   {
     "id": "prens_veliaht", "flag_age": {"prens_hirs_1": 10}, "actor_min": {"prens": {"power": 42}}, "title": "Prens veliahtlık istiyor",
-    "text": "Verdiğin görevde başarılı olan Prens Cassian, resmen veliaht ilan edilmek istiyor.",
+    "text": "Verdiğin görevde başarılı olan Prens Marcus, resmen veliaht ilan edilmek istiyor.",
     "choices": [
       {"label": "Veliaht ilan et", "text": "Prens artık sıradaki kral. Beklemek zorunda olduğu tek şey sensin.", "fx": {"actors": {"prens": {"power": 10, "l_career": 15, "ambition": -8}}}},
       {"label": "Reddet", "text": "Prens başını eğdi. Soyluların akşam yemekleri yeniden başladı.", "fx": {"actors": {"prens": {"ambition": 12, "l_career": -8}}}},
-      {"label": "Evlilik ittifakı öner", "text": "Prens, Halden'in kızıyla nişanlandı. İki güç merkezi birleşti.", "fx": {"actors": {"prens": {"l_career": 8, "power": 5}, "halden": {"power": 4}}}}
+      {"label": "Evlilik ittifakı öner", "text": "Prens, Sarne'nin kızıyla nişanlandı. İki güç merkezi birleşti.", "fx": {"actors": {"prens": {"l_career": 8, "power": 5}, "halden": {"power": 4}}}}
     ],
     "ignore": {"text": "Prens cevap bekliyor.", "fx": {"actors": {"prens": {"ambition": 6}}}}
   },
   {
-    "id": "brandt_hapis", "flag_age": {"muhalefet_birlesme_2": 8}, "title": "Brandt hapisten mektup yazıyor",
-    "text": "Tutuklanan muhalefet lideri Teodor Brandt'ın hücreden yazdığı mektuplar her hafta duvarlara yapıştırılıyor.",
+    "id": "brandt_hapis", "flag_age": {"muhalefet_birlesme_2": 8}, "title": "Voss hapisten mektup yazıyor",
+    "text": "Tutuklanan muhalefet lideri Adrian Voss'un hücreden yazdığı mektuplar her hafta duvarlara yapıştırılıyor.",
     "choices": [
-      {"label": "Serbest bırak", "text": "Brandt çıktı, kalabalık onu karşıladı. Öfke biraz dindi, efsane büyüdü.", "fx": {"unrest": -6, "opp": 4, "actors": {"brandt": {"ambition": 5, "power": 5}}}},
-      {"label": "Şartlı tahliye anlaşması", "text": "Brandt siyasetten çekilmeyi kabul etti. Şimdilik.", "fx": {"opp": -5, "actors": {"brandt": {"power": -8, "obligation": 6}}}},
+      {"label": "Serbest bırak", "text": "Voss çıktı, kalabalık onu karşıladı. Öfke biraz dindi, efsane büyüdü.", "fx": {"unrest": -6, "opp": 4, "actors": {"brandt": {"ambition": 5, "power": 5}}}},
+      {"label": "Şartlı tahliye anlaşması", "text": "Voss siyasetten çekilmeyi kabul etti. Şimdilik.", "fx": {"opp": -5, "actors": {"brandt": {"power": -8, "obligation": 6}}}},
       {"label": "Tecrite al", "text": "Mektuplar durdu. Sokak durmadı.", "fx": {"unrest": 7, "opp": 6, "actors": {"brandt": {"fear": 20}}}}
     ],
     "ignore": {"text": "Mektuplar çoğalıyor.", "fx": {"unrest": 5, "opp": 5}}
@@ -327,31 +327,31 @@
     "id": "muhalefet_para", "flag_age": {"muhalefet_birlesme_0": 10}, "needs_fact": "muhalefet_finansmani", "title": "Muhalefeti bölen para soruluyor",
     "text": "Muhalefetin bölünmesinden kazançlı çıkan vekillerin banka hesapları bir sivil toplum raporunda.",
     "choices": [
-      {"label": "Suçu istihbarata at", "text": "Voss'un adı geçti. Voss bunu unutmayacak.", "fx": {"actors": {"voss": {"ambition": 10, "fear": 8}}}},
+      {"label": "Suçu istihbarata at", "text": "Vale'nin adı geçti. Vale bunu unutmayacak.", "fx": {"actors": {"voss": {"ambition": 10, "fear": 8}}}},
       {"label": "Raporu bastır", "text": "Rapor kayboldu; dedikodu kaybolmadı.", "fx": {"wealth": -4, "unrest": 2}},
       {"label": "Her şeyi inkâr et", "text": "İnkâr manşetlere çıktı; belgeler de.", "fx": {"leak": "muhalefet_finansmani", "king": -1}}
     ],
     "ignore": {"text": "Rapor elden ele dolaşıyor.", "fx": {"leak": "muhalefet_finansmani"}}
   },
   {
-    "id": "falk_istifa", "flag_age": {"yargic_dosya_0": 8}, "alive": ["falk"], "title": "Yargıç Falk istifayı düşünüyor",
-    "text": "Baskıdan bıkan Yargıç Falk masana bir mektup bıraktı: 'Ya bağımsızım ya da yokum.'",
+    "id": "falk_istifa", "flag_age": {"yargic_dosya_0": 8}, "alive": ["falk"], "title": "Başsavcı Renn istifayı düşünüyor",
+    "text": "Baskıdan bıkan Başsavcı Renn masana bir mektup bıraktı: 'Ya bağımsızım ya da yokum.'",
     "choices": [
       {"label": "İstifasını kabul et, sadık birini ata", "text": "Mahkeme artık senin. Ama mahkemenin artık kimseyi ikna etmediği de bir gerçek.", "fx": {"remove": "falk", "king": 2, "opp": 5}},
-      {"label": "Onu ikna et", "text": "Falk kaldı. Bağımsızlığı ise eskisinden daha keskin.", "fx": {"actors": {"falk": {"l_ideology": 10, "power": 4, "fear": -10}}}},
-      {"label": "Baskıyı artır", "text": "Falk sustu. Mektubun bir kopyası ise kayıp.", "fx": {"actors": {"falk": {"fear": 20}}, "fact": {"id": "falk_mektubu", "text": "Yargıcın istifa mektubu", "subject": "king", "severity": 35, "knowers": ["falk", "dorn", "lena"]}}}
+      {"label": "Onu ikna et", "text": "Renn kaldı. Bağımsızlığı ise eskisinden daha keskin.", "fx": {"actors": {"falk": {"l_ideology": 10, "power": 4, "fear": -10}}}},
+      {"label": "Baskıyı artır", "text": "Renn sustu. Mektubun bir kopyası ise kayıp.", "fx": {"actors": {"falk": {"fear": 20}}, "fact": {"id": "falk_mektubu", "text": "Yargıcın istifa mektubu", "subject": "king", "severity": 35, "knowers": ["falk", "dorn", "lena"]}}}
     ],
-    "ignore": {"text": "Falk kararını basına açıkladı.", "fx": {"king": -4, "remove": "falk", "opp": 4}}
+    "ignore": {"text": "Renn kararını basına açıkladı.", "fx": {"king": -4, "remove": "falk", "opp": 4}}
   },
   {
-    "id": "kessler_istifa", "min_week": 16, "actor_min": {"kessler": {"fear": 50}}, "alive": ["kessler"], "title": "Maliye Bakanı istifa mektubunu bıraktı",
-    "text": "Marta Kessler korkudan yorulmuş. Mektubunda 'artık size doğru rakamı söyleyemiyorum' yazıyor.",
+    "id": "kessler_istifa", "min_week": 16, "actor_min": {"kessler": {"fear": 50}}, "alive": ["kessler"], "title": "Başbakan istifa mektubunu bıraktı",
+    "text": "Selin Veyra korkudan yorulmuş. Mektubunda 'artık size doğru rakamı söyleyemiyorum' yazıyor.",
     "choices": [
-      {"label": "İstifayı kabul et", "text": "Kessler gitti. Yerine gelen kişi sana hep iyi haber getiriyor.", "fx": {"remove": "kessler", "economy": -6}},
-      {"label": "Güven ve maaş artışı ver", "text": "Kessler kaldı; biraz rahatladı.", "fx": {"wealth": -4, "actors": {"kessler": {"fear": -20, "l_money": 8}}}},
-      {"label": "Tehdit et", "text": "Kessler kaldı. Raporları ise eskisinden güzel.", "fx": {"actors": {"kessler": {"fear": 12, "honesty": -0.15}}}}
+      {"label": "İstifayı kabul et", "text": "Veyra gitti. Yerine gelen kişi sana hep iyi haber getiriyor.", "fx": {"remove": "kessler", "economy": -6}},
+      {"label": "Güven ve maaş artışı ver", "text": "Veyra kaldı; biraz rahatladı.", "fx": {"wealth": -4, "actors": {"kessler": {"fear": -20, "l_money": 8}}}},
+      {"label": "Tehdit et", "text": "Veyra kaldı. Raporları ise eskisinden güzel.", "fx": {"actors": {"kessler": {"fear": 12, "honesty": -0.15}}}}
     ],
-    "ignore": {"text": "Kessler artık toplantılara gelmiyor.", "fx": {"remove": "kessler", "economy": -8}}
+    "ignore": {"text": "Veyra artık toplantılara gelmiyor.", "fx": {"remove": "kessler", "economy": -8}}
   },
   {
     "id": "gercek_kayit", "flag_age": {"deepfake_0": 8}, "title": "Bu sefer kayıt gerçek",
@@ -359,7 +359,7 @@
     "choices": [
       {"label": "Yine 'sahte' de", "text": "Bu sefer kimse inanmadı.", "fx": {"king": -7, "unrest": 4}},
       {"label": "Kabul et ve özür dile", "text": "Dürüstlük biraz itibar kurtardı.", "fx": {"king": -3}},
-      {"label": "Halden'le gündemi değiştir", "text": "Kanallar başka bir krize geçti. Faturası sonra gelecek.", "fx": {"actors": {"halden": {"obligation": 8}}, "king": -1}}
+      {"label": "Sarne'yle gündemi değiştir", "text": "Kanallar başka bir krize geçti. Faturası sonra gelecek.", "fx": {"actors": {"halden": {"obligation": 8}}, "king": -1}}
     ],
     "ignore": {"text": "Kayıt herkesin telefonunda.", "fx": {"king": -6}}
   },
@@ -377,19 +377,19 @@
     "id": "liman_skandali", "flag_age": {"halden_ihale_0": 12}, "needs_fact": "liman_komisyonu", "title": "Liman ihalesi gazetelerde",
     "text": "Bir liman işçisi, ihalenin komisyon belgelerini bir gazeteye vermiş.",
     "choices": [
-      {"label": "Halden'i feda et", "text": "Halden tutuklandı. Ama elindeki her şeyi anlatmaya hazır.", "fx": {"actors": {"halden": {"power": -14, "ambition": 12, "fear": 10}}, "king": 1}},
+      {"label": "Sarne'yi feda et", "text": "Sarne tutuklandı. Ama elindeki her şeyi anlatmaya hazır.", "fx": {"actors": {"halden": {"power": -14, "ambition": 12, "fear": 10}}, "king": 1}},
       {"label": "Gazeteyi kapattır", "text": "Gazete kapandı. Haber başka on yerde çıktı.", "fx": {"leak": "liman_komisyonu", "opp": 4}},
-      {"label": "Suçu bakanlığa at", "text": "Bir bakan suçlandı. Kessler bu oyunu seyretti.", "fx": {"actors": {"kessler": {"fear": 12}}}}
+      {"label": "Suçu bakanlığa at", "text": "Bir bakan suçlandı. Veyra bu oyunu seyretti.", "fx": {"actors": {"kessler": {"fear": 12}}}}
     ],
     "ignore": {"text": "Belgeler yayıldı.", "fx": {"leak": "liman_komisyonu"}}
   },
   {
-    "id": "dorn_rusvet", "flag_age": {"dorn_filtre_0": 10}, "alive": ["dorn"], "title": "Kâhya randevuları satıyor",
-    "text": "Sana ulaşmak isteyenlerin Dorn'a para ödediği ortaya çıktı. Kimi göreceğine bu yüzden o karar veriyormuş.",
+    "id": "dorn_rusvet", "flag_age": {"dorn_filtre_0": 10}, "alive": ["dorn"], "title": "Kraliyet Vakfı randevuları satıyor",
+    "text": "Sana ulaşmak isteyenlerin Kraliyet Vakfı'na 'bağış' yaptığı ortaya çıktı. Kimi göreceğine bu yüzden Helena karar veriyormuş.",
     "choices": [
-      {"label": "Dorn'u görevden al", "text": "Kâhya gitti. Sarayın bütün sırlarını da yanında götürdü.", "fx": {"remove": "dorn", "king": 1}},
-      {"label": "Göz yum", "text": "Dorn minnettar. Kapın artık tamamen onda.", "fx": {"actors": {"dorn": {"power": 6, "obligation": 5}}}},
-      {"label": "Dorn'u kullan: rakipleri bekletsin", "text": "Rakiplerin artık seni göremiyor. Ama senin de onları göremediğini unutma.", "fx": {"opp": -3, "actors": {"dorn": {"l_complicity": 10, "power": 4}}}}
+      {"label": "Helena'yı saraydan uzaklaştır", "text": "Helena sarayı terk etti. Sarayın bütün sırlarını da yanında götürdü.", "fx": {"remove": "dorn", "king": 1}},
+      {"label": "Göz yum", "text": "Helena minnettar. Kapın artık tamamen onda.", "fx": {"actors": {"dorn": {"power": 6, "obligation": 5}}}},
+      {"label": "Helena'yı kullan: rakipleri bekletsin", "text": "Rakiplerin artık seni göremiyor. Ama senin de onları göremediğini unutma.", "fx": {"opp": -3, "actors": {"dorn": {"l_complicity": 10, "power": 4}}}}
     ],
     "ignore": {"text": "Kapındaki pazar büyüyor.", "fx": {"actors": {"dorn": {"power": 6}}}}
   },
@@ -397,7 +397,7 @@
     "id": "butce_ifsa", "flag_age": {"butce_acigi_2": 8}, "needs_fact": "butce_gizleme", "title": "Gizlenen bütçe açığı ortaya çıktı",
     "text": "Uluslararası bir kredi kuruluşu, Veloria'nın açıkladığı rakamlarla gerçekleri yan yana yayınladı.",
     "choices": [
-      {"label": "Kessler'i suçla", "text": "Kessler günah keçisi oldu. Bunu asla unutmayacak.", "fx": {"king": 1, "actors": {"kessler": {"fear": 20, "l_career": -10}}}},
+      {"label": "Veyra'yı suçla", "text": "Veyra günah keçisi oldu. Bunu asla unutmayacak.", "fx": {"king": 1, "actors": {"kessler": {"fear": 20, "l_career": -10}}}},
       {"label": "Gerçeği açıkla", "text": "Piyasalar sarsıldı ama sana inananlar arttı.", "fx": {"king": -2, "economy": 3}},
       {"label": "Raporu 'yabancı müdahale' ilan et", "text": "Gündem değişti; faizler yükseldi.", "fx": {"economy": -5, "unrest": -2}}
     ],
@@ -419,7 +419,7 @@
     "choices": [
       {"label": "Desteği kabul et", "text": "Kasan doldu. Artık bir yabancıya da borçlusun.", "fx": {"wealth": 8, "fact": {"id": "yabanci_para", "text": "Yabancı bir devletten alınan gizli destek", "subject": "king", "severity": 45, "knowers": ["voss", "dorn"]}}},
       {"label": "Reddet", "text": "Büyükelçi kibarca gülümsedi ve muhalefetle görüşmeye gitti.", "fx": {"opp": 4, "actors": {"brandt": {"power": 4}}}},
-      {"label": "Voss'a devret", "text": "Voss iki tarafla da konuşuyor.", "fx": {"actors": {"voss": {"power": 6, "ambition": 4}}}}
+      {"label": "Vale'ye devret", "text": "Vale iki tarafla da konuşuyor.", "fx": {"actors": {"voss": {"power": 6, "ambition": 4}}}}
     ],
     "ignore": {"text": "Büyükelçi başka kapılar çalıyor.", "fx": {"opp": 3}}
   },
@@ -429,7 +429,7 @@
     "choices": [
       {"label": "Meclisi feshet", "text": "Meclis kapandı. Sokaklar dolmaya başladı.", "fx": {"king": -4, "opp": -8, "unrest": 9, "actors": {"falk": {"l_ideology": -10}}}},
       {"label": "Seçime izin ver", "text": "Seçim takvimi açıklandı. Meşruiyetin arttı, gücün sınandı.", "fx": {"king": 3, "opp": 6}},
-      {"label": "Muhalefete bakanlık teklif et", "text": "Brandt'ın partisi hükümete girdi. Muhalefet bölündü.", "fx": {"opp": -8, "actors": {"brandt": {"power": 8, "obligation": 6}}}}
+      {"label": "Muhalefete bakanlık teklif et", "text": "Voss'un partisi hükümete girdi. Muhalefet bölündü.", "fx": {"opp": -8, "actors": {"brandt": {"power": 8, "obligation": 6}}}}
     ],
     "ignore": {"text": "İmzalar çoğalıyor.", "fx": {"opp": 6, "king": -2}}
   },
@@ -446,31 +446,31 @@
 
   {
     "id": "voss_arden_catisma", "min_week": 18, "actor_min": {"voss": {"power": 55}, "arden": {"power": 55}}, "title": "İstihbarat orduyu dinliyor",
-    "text": "Arden, Voss'un genelkurmayın telefonlarını dinlettiğini öğrenmiş. İkisi de aynı gün huzuruna çıkmak istiyor.",
+    "text": "Arden, Vale'nin genelkurmayın telefonlarını dinlettiğini öğrenmiş. İkisi de aynı gün huzuruna çıkmak istiyor.",
     "choices": [
-      {"label": "Voss'un yanında dur", "text": "Voss memnun. Arden kapıyı biraz sert kapattı.", "fx": {"actors": {"voss": {"power": 6}, "arden": {"ambition": 8, "l_career": -6}}}},
-      {"label": "Arden'in yanında dur", "text": "Dinlemeler durdu. Voss ise kayıtları saklamayı ihmal etmedi.", "fx": {"actors": {"arden": {"power": 6}, "voss": {"ambition": 8, "secrets_on_king": 1}}}},
+      {"label": "Vale'nin yanında dur", "text": "Vale memnun. Arden kapıyı biraz sert kapattı.", "fx": {"actors": {"voss": {"power": 6}, "arden": {"ambition": 8, "l_career": -6}}}},
+      {"label": "Arden'in yanında dur", "text": "Dinlemeler durdu. Vale ise kayıtları saklamayı ihmal etmedi.", "fx": {"actors": {"arden": {"power": 6}, "voss": {"ambition": 8, "secrets_on_king": 1}}}},
       {"label": "İkisini de azarla", "text": "İkisi de geri çekildi. Birbirlerine olan güvensizlikleri ise sana yaradı.", "fx": {"actors": {"voss": {"fear": 10, "ambition": 3}, "arden": {"fear": 10, "ambition": 3}}}}
     ],
     "ignore": {"text": "Çatışma kendi kendine büyüdü.", "fx": {"actors": {"voss": {"ambition": 4}, "arden": {"ambition": 4}}}}
   },
   {
     "id": "lena_roportaj", "min_week": 15, "alive": ["lena"], "blocks_flag": ["gazeteci_ihale_1"], "title": "Gazeteci röportaj istiyor",
-    "text": "Lena Ostrow, sansürsüz bir röportaj için randevu istiyor. 'Halk sizi sizden dinlemek istiyor.'",
+    "text": "Leyla Sarn, sansürsüz bir röportaj için randevu istiyor. 'Halk sizi sizden dinlemek istiyor.'",
     "choices": [
       {"label": "Dürüst bir röportaj ver", "text": "Röportaj çok konuşuldu. Bazıları ilk kez sana inandı.", "fx": {"king": 3, "opp": -2, "actors": {"lena": {"l_ideology": 10}}}},
-      {"label": "Soruları önceden iste", "text": "Lena soruları gönderdi ve röportaja bunu da yazdı.", "fx": {"king": 1, "actors": {"lena": {"fear": 5, "ambition": 3}}}},
+      {"label": "Soruları önceden iste", "text": "Leyla soruları gönderdi ve röportaja bunu da yazdı.", "fx": {"king": 1, "actors": {"lena": {"fear": 5, "ambition": 3}}}},
       {"label": "Reddet", "text": "Ertesi gün gazetede boş bir sayfa vardı: 'Kral konuşmadı.'", "fx": {"king": -1, "actors": {"lena": {"ambition": 4}}}}
     ],
     "ignore": {"text": "Talep cevapsız kaldı.", "fx": {"king": -1}}
   },
   {
-    "id": "brandt_koalisyon", "min_week": 30, "min_opposition": 45, "alive": ["brandt"], "title": "Brandt koalisyon öneriyor",
-    "text": "Muhalefet güçlü. Brandt sokakları sakinleştirmek karşılığında hükümete ortak olmayı teklif ediyor.",
+    "id": "brandt_koalisyon", "min_week": 30, "min_opposition": 45, "alive": ["brandt"], "title": "Voss koalisyon öneriyor",
+    "text": "Muhalefet güçlü. Voss sokakları sakinleştirmek karşılığında hükümete ortak olmayı teklif ediyor.",
     "choices": [
-      {"label": "Kabul et", "text": "Muhalefet hükümete girdi. Sokaklar sakinleşti; Brandt'ın gücü saraya taşındı.", "fx": {"opp": -12, "king": -2, "actors": {"brandt": {"power": 12, "obligation": 8, "l_career": 10}}}},
-      {"label": "Reddet", "text": "Brandt mitinglere geri döndü.", "fx": {"opp": 4}},
-      {"label": "Kabul et, içeriden çökert", "text": "Koalisyon kuruldu. Voss ilk günden muhalefetin bakanlarını izliyor.", "fx": {"opp": -8, "actors": {"brandt": {"power": 6}}, "fact": {"id": "koalisyon_tuzagi", "text": "Koalisyonun içeriden çökertilme planı", "subject": "king", "severity": 30, "knowers": ["voss"]}}}
+      {"label": "Kabul et", "text": "Muhalefet hükümete girdi. Sokaklar sakinleşti; Voss'un gücü saraya taşındı.", "fx": {"opp": -12, "king": -2, "actors": {"brandt": {"power": 12, "obligation": 8, "l_career": 10}}}},
+      {"label": "Reddet", "text": "Voss mitinglere geri döndü.", "fx": {"opp": 4}},
+      {"label": "Kabul et, içeriden çökert", "text": "Koalisyon kuruldu. Vale ilk günden muhalefetin bakanlarını izliyor.", "fx": {"opp": -8, "actors": {"brandt": {"power": 6}}, "fact": {"id": "koalisyon_tuzagi", "text": "Koalisyonun içeriden çökertilme planı", "subject": "king", "severity": 30, "knowers": ["voss"]}}}
     ],
     "ignore": {"text": "Teklif masada bekliyor; muhalefet sabırsız.", "fx": {"opp": 5}}
   },
@@ -485,31 +485,31 @@
     "ignore": {"text": "Taslak sızdı.", "fx": {"king": -2, "opp": 3}}
   },
   {
-    "id": "halden_kanal", "min_week": 24, "actor_min": {"halden": {"power": 65}}, "title": "Halden son bağımsız kanalı satın alıyor",
-    "text": "Halden, ülkedeki son bağımsız televizyon kanalına teklif verdi. Satılırsa haberlerin tamamı tek elden çıkacak.",
+    "id": "halden_kanal", "min_week": 24, "actor_min": {"halden": {"power": 65}}, "title": "Sarne son bağımsız kanalı satın alıyor",
+    "text": "Sarne, ülkedeki son bağımsız televizyon kanalına teklif verdi. Satılırsa haberlerin tamamı tek elden çıkacak.",
     "choices": [
-      {"label": "İzin ver", "text": "Artık bütün ekranlar Halden'in. Ve dolayısıyla, bir ölçüde senin.", "fx": {"actors": {"halden": {"power": 8, "obligation": 4}, "lena": {"fear": 5}}}},
-      {"label": "Rekabet kuruluyla engelle", "text": "Satış durdu. Halden bunu kişisel algıladı.", "fx": {"actors": {"halden": {"ambition": 8, "l_money": -5}}}},
+      {"label": "İzin ver", "text": "Artık bütün ekranlar Sarne'nin. Ve dolayısıyla, bir ölçüde senin.", "fx": {"actors": {"halden": {"power": 8, "obligation": 4}, "lena": {"fear": 5}}}},
+      {"label": "Rekabet kuruluyla engelle", "text": "Satış durdu. Sarne bunu kişisel algıladı.", "fx": {"actors": {"halden": {"ambition": 8, "l_money": -5}}}},
       {"label": "Kanalı devlet satın alsın", "text": "Kanal artık devletin. Halk devlet kanalına ne kadar inanır, göreceğiz.", "fx": {"economy": -4, "king": 2, "actors": {"halden": {"ambition": 4}}}}
     ],
     "ignore": {"text": "Satış tamamlandı.", "fx": {"actors": {"halden": {"power": 8}}}}
   },
   {
-    "id": "kessler_reform", "min_week": 20, "alive": ["kessler"], "actor_max": {"kessler": {"fear": 40}}, "title": "Kessler cesur bir reform öneriyor",
-    "text": "Maliye Bakanı vergi sistemini baştan yazmak istiyor. 'Bugün acıtır, bir yıl sonra kurtarır.'",
+    "id": "kessler_reform", "min_week": 20, "alive": ["kessler"], "actor_max": {"kessler": {"fear": 40}}, "title": "Veyra cesur bir reform öneriyor",
+    "text": "Başbakan vergi sistemini baştan yazmak istiyor. 'Bugün acıtır, bir yıl sonra kurtarır.'",
     "choices": [
       {"label": "Reformu uygula", "text": "Reform başladı. İlk aylar zor geçecek.", "fx": {"economy": -4, "unrest": 5, "actors": {"kessler": {"power": 6, "l_ideology": 8}}}},
       {"label": "Sulandırarak uygula", "text": "Reformun yarısı kaldı; etkisinin de.", "fx": {"economy": 1}},
-      {"label": "Reddet", "text": "Kessler raporu çekmecesine koydu. Gözlerindeki ışık biraz söndü.", "fx": {"actors": {"kessler": {"l_ideology": -8, "fear": 5}}}}
+      {"label": "Reddet", "text": "Veyra raporu çekmecesine koydu. Gözlerindeki ışık biraz söndü.", "fx": {"actors": {"kessler": {"l_ideology": -8, "fear": 5}}}}
     ],
     "ignore": {"text": "Reform taslağı unutuldu.", "fx": {"actors": {"kessler": {"l_ideology": -5}}}}
   },
   {
     "id": "reform_meyve", "flag_age": {"kessler_reform_0": 12}, "title": "Reformun meyveleri",
-    "text": "Kessler'in vergi reformu bir yılın sonunda sonuç verdi: hazine doluyor, yatırımcılar geri dönüyor.",
+    "text": "Veyra'nın vergi reformu bir yılın sonunda sonuç verdi: hazine doluyor, yatırımcılar geri dönüyor.",
     "choices": [
-      {"label": "Başarıyı sahiplen", "text": "Manşetler 'Kralın reformu'ndan söz ediyor. Kessler sessiz.", "fx": {"king": 5, "economy": 8, "actors": {"kessler": {"l_career": -5}}}},
-      {"label": "Kessler'e teşekkür et", "text": "Kessler alkışlandı. Sadakati derinleşti.", "fx": {"king": 2, "economy": 8, "actors": {"kessler": {"l_career": 10, "power": 4}}}}
+      {"label": "Başarıyı sahiplen", "text": "Manşetler 'Kralın reformu'ndan söz ediyor. Veyra sessiz.", "fx": {"king": 5, "economy": 8, "actors": {"kessler": {"l_career": -5}}}},
+      {"label": "Veyra'ya teşekkür et", "text": "Veyra alkışlandı. Sadakati derinleşti.", "fx": {"king": 2, "economy": 8, "actors": {"kessler": {"l_career": 10, "power": 4}}}}
     ],
     "ignore": {"text": "Reform sessizce işini yaptı.", "fx": {"economy": 6}}
   },
@@ -527,27 +527,27 @@
     "id": "suikast", "min_week": 30, "needs_ready": true, "chance": 0.5, "title": "Kortejine suikast girişimi",
     "text": "Bir tören dönüşü kortejine ateş açıldı. Kurtuldun. Kimin tetiği çektiğini değil, kimin izin verdiğini merak ediyorsun.",
     "choices": [
-      {"label": "Güvenlik tasfiyesi başlat", "text": "Muhafızlar değişti. Voss soruşturmayı yürütüyor; her şeyi o biliyor.", "fx": {"king": 3, "actors": {"voss": {"power": 8}, "arden": {"fear": 10}}}},
+      {"label": "Güvenlik tasfiyesi başlat", "text": "Muhafızlar değişti. Vale soruşturmayı yürütüyor; her şeyi o biliyor.", "fx": {"king": 3, "actors": {"voss": {"power": 8}, "arden": {"fear": 10}}}},
       {"label": "Sıkıyönetim ilan et", "text": "Sokaklarda tanklar var. Düzen geldi; ordunun gücüyle birlikte.", "fx": {"king": 2, "unrest": -8, "opp": 6, "actors": {"arden": {"power": 10}}}},
       {"label": "Halkın karşısına çık", "text": "Yaralı kolunla balkona çıktın. Kalabalık seni alkışladı.", "fx": {"king": 6, "unrest": -3}}
     ],
     "ignore": {"text": "Suikast soruşturması sürüncemede.", "fx": {"king": -3}}
   },
   {
-    "id": "dorn_sir", "min_week": 22, "alive": ["dorn"], "actor_min": {"dorn": {"power": 35}}, "title": "Kâhya özel hayatını biliyor",
-    "text": "Dorn, bir akşam kadehini doldururken mırıldandı: 'Geçen ayki gece ziyaretlerinizi kimseye söylemedim, Majesteleri.'",
+    "id": "dorn_sir", "min_week": 22, "alive": ["dorn"], "actor_min": {"dorn": {"power": 35}}, "title": "Kraliçe özel hayatını biliyor",
+    "text": "Helena, bir akşam kadehini doldururken mırıldandı: 'Geçen ayki gece ziyaretlerinizi kimseye söylemedim, Majesteleri.'",
     "choices": [
-      {"label": "Ona terfi ver", "text": "Dorn yeni unvanından memnun. Sırrın da onunla birlikte terfi etti.", "fx": {"actors": {"dorn": {"power": 8, "obligation": 6, "l_career": 8, "secrets_on_king": 1}}}},
-      {"label": "Sessizliğini satın al", "text": "Dorn zarfı aldı ve teşekkür etti. İlk zarf olmayacak.", "fx": {"wealth": -5, "actors": {"dorn": {"l_money": 10, "secrets_on_king": 1}}}},
-      {"label": "Onu tehdit et", "text": "Dorn sarardı ve sustu. Ama bir şeyler yazmaya başladı.", "fx": {"actors": {"dorn": {"fear": 20, "ambition": 6}}, "fact": {"id": "kahya_gunlugu", "text": "Kâhyanın tuttuğu gizli günlük", "subject": "king", "severity": 30, "knowers": ["dorn"]}}}
+      {"label": "Vakıftaki yetkisini genişlet", "text": "Helena yeni yetkisinden memnun. Sırrın da onunla birlikte büyüdü.", "fx": {"actors": {"dorn": {"power": 8, "obligation": 6, "l_career": 8, "secrets_on_king": 1}}}},
+      {"label": "Sessizliğini satın al", "text": "Helena zarfı aldı ve teşekkür etti. İlk zarf olmayacak.", "fx": {"wealth": -5, "actors": {"dorn": {"l_money": 10, "secrets_on_king": 1}}}},
+      {"label": "Onu tehdit et", "text": "Helena sarardı ve sustu. Ama bir şeyler yazmaya başladı.", "fx": {"actors": {"dorn": {"fear": 20, "ambition": 6}}, "fact": {"id": "kahya_gunlugu", "text": "Kraliçe'nin tuttuğu gizli günlük", "subject": "king", "severity": 30, "knowers": ["dorn"]}}}
     ],
-    "ignore": {"text": "Dorn bir şey söylemedi; söylemeyeceği de belli değil.", "fx": {"actors": {"dorn": {"secrets_on_king": 1}}}}
+    "ignore": {"text": "Helena bir şey söylemedi; söylemeyeceği de belli değil.", "fx": {"actors": {"dorn": {"secrets_on_king": 1}}}}
   },
   {
     "id": "prens_suikast", "min_week": 26, "alive": ["prens"], "chance": 0.5, "title": "Prense suikast girişimi",
-    "text": "Prens Cassian bir suikastten kıl payı kurtuldu. Saraydaki herkes, sessizce, sana bakıyor.",
+    "text": "Prens Marcus bir suikastten kıl payı kurtuldu. Saraydaki herkes, sessizce, sana bakıyor.",
     "choices": [
-      {"label": "Açık soruşturma başlat", "text": "Voss bir fail buldu. Herkes ikna olmadı.", "fx": {"king": 1, "actors": {"voss": {"power": 4}, "prens": {"fear": 5}}}},
+      {"label": "Açık soruşturma başlat", "text": "Vale bir fail buldu. Herkes ikna olmadı.", "fx": {"king": 1, "actors": {"voss": {"power": 4}, "prens": {"fear": 5}}}},
       {"label": "Prense özel koruma ver", "text": "Prens korumayı kabul etti. Koruyucularını kimin seçtiğini sordu.", "fx": {"actors": {"prens": {"l_career": 8, "power": 4}}}},
       {"label": "Sessiz kal", "text": "Sessizliğin bir itiraf gibi okundu.", "fx": {"king": -4, "actors": {"prens": {"ambition": 10}}, "fact": {"id": "prens_suikast_soylentisi", "text": "Prens suikastının arkasında sarayın olduğu söylentisi", "subject": "king", "severity": 30, "knowers": ["prens", "voss"]}}}
     ],
@@ -559,7 +559,7 @@
     "choices": [
       {"label": "Krediyi kabul et", "text": "Hazine nefes aldı. Kemer sıkma sokağı öfkelendirdi.", "fx": {"economy": 12, "unrest": 6, "opp": 3}},
       {"label": "Reddet", "text": "Egemenlik korundu; kasa boş kaldı.", "fx": {"economy": -3, "king": 1}},
-      {"label": "Halden'in bankasından borçlan", "text": "Para yurt içinden geldi. Borç ise Halden'e.", "fx": {"economy": 6, "actors": {"halden": {"obligation": 10, "power": 4}}}}
+      {"label": "Sarne'nin bankasından borçlan", "text": "Para yurt içinden geldi. Borç ise Sarne'ye.", "fx": {"economy": 6, "actors": {"halden": {"obligation": 10, "power": 4}}}}
     ],
     "ignore": {"text": "Teklif geri çekildi.", "fx": {"economy": -4}}
   },
@@ -585,38 +585,38 @@
     "ignore": {"text": "Talep bekletildi; subaylar söyleniyor.", "fx": {"actors": {"arden": {"ambition": 5}}}}
   },
   {
-    "id": "voss_emeklilik", "min_week": 50, "alive": ["voss"], "art": "voss_dosyalar_b", "title": "Voss emekli olmak istiyor",
-    "text": "İstihbarat Başkanı Voss yorulduğunu söylüyor. Ama otuz yıllık arşivi ne olacak?",
+    "id": "voss_emeklilik", "min_week": 50, "alive": ["voss"], "art": "voss_dosyalar_b", "title": "Vale emekli olmak istiyor",
+    "text": "İstihbarat Başkanı Vale yorulduğunu söylüyor. Ama otuz yıllık arşivi ne olacak?",
     "choices": [
-      {"label": "İzin ver, arşivi devlet alsın", "text": "Voss sessizce gitti. Arşivin bir kopyasının onunla gittiği söyleniyor.", "fx": {"remove": "voss", "king": 1, "fact": {"id": "voss_arsiv_kopyasi", "text": "Emekli Voss'un elindeki arşiv kopyası", "subject": "king", "severity": 35, "knowers": ["dorn"]}}},
-      {"label": "Kalması için ikna et", "text": "Voss kaldı. Fiyatı ise yüksek oldu.", "fx": {"wealth": -5, "actors": {"voss": {"obligation": 8, "l_money": 10}}}},
-      {"label": "Arşivi önce sen al, sonra gitsin", "text": "Dosyalar artık senin kasanda. Voss bunu bir güvensizlik olarak gördü.", "fx": {"remove": "voss", "wealth": -3, "king": 3}}
+      {"label": "İzin ver, arşivi devlet alsın", "text": "Vale sessizce gitti. Arşivin bir kopyasının onunla gittiği söyleniyor.", "fx": {"remove": "voss", "king": 1, "fact": {"id": "voss_arsiv_kopyasi", "text": "Emekli Vale'nin elindeki arşiv kopyası", "subject": "king", "severity": 35, "knowers": ["dorn"]}}},
+      {"label": "Kalması için ikna et", "text": "Vale kaldı. Fiyatı ise yüksek oldu.", "fx": {"wealth": -5, "actors": {"voss": {"obligation": 8, "l_money": 10}}}},
+      {"label": "Arşivi önce sen al, sonra gitsin", "text": "Dosyalar artık senin kasanda. Vale bunu bir güvensizlik olarak gördü.", "fx": {"remove": "voss", "wealth": -3, "king": 3}}
     ],
-    "ignore": {"text": "Voss istifasını erteledi; sabrını değil.", "fx": {"actors": {"voss": {"ambition": 6}}}}
+    "ignore": {"text": "Vale istifasını erteledi; sabrını değil.", "fx": {"actors": {"voss": {"ambition": 6}}}}
   },
   {
-    "id": "halden_parti", "min_week": 55, "actor_min": {"halden": {"power": 60}}, "art": "halden_kanal", "title": "Halden siyasi parti kuruyor",
-    "text": "Viktor Halden, kanallarının desteğiyle 'Yeni Veloria' adında bir parti kuracağını açıkladı.",
+    "id": "halden_parti", "min_week": 55, "actor_min": {"halden": {"power": 60}}, "art": "halden_kanal", "title": "Sarne siyasi parti kuruyor",
+    "text": "Victor Sarne, kanallarının desteğiyle 'Yeni Veloria' adında bir parti kuracağını açıkladı.",
     "choices": [
-      {"label": "Partiyi destekle, kontrol et", "text": "Halden'in partisi meclise girdi; senin adamın gibi davranıyor. Şimdilik.", "fx": {"opp": -6, "actors": {"halden": {"power": 8, "obligation": 6}}}},
-      {"label": "Seçim kurulu engellesin", "text": "Parti kurulamadı. Halden artık açık bir düşman.", "fx": {"actors": {"halden": {"ambition": 12, "l_money": -10}}}},
-      {"label": "Muhalefetle Halden'i çarpıştır", "text": "Brandt ve Halden birbirini yiyor. Sen izliyorsun.", "fx": {"opp": 4, "actors": {"halden": {"power": -4}, "brandt": {"power": -4}}}}
+      {"label": "Partiyi destekle, kontrol et", "text": "Sarne'nin partisi meclise girdi; senin adamın gibi davranıyor. Şimdilik.", "fx": {"opp": -6, "actors": {"halden": {"power": 8, "obligation": 6}}}},
+      {"label": "Seçim kurulu engellesin", "text": "Parti kurulamadı. Sarne artık açık bir düşman.", "fx": {"actors": {"halden": {"ambition": 12, "l_money": -10}}}},
+      {"label": "Muhalefetle Sarne'yi çarpıştır", "text": "Voss ve Sarne birbirini yiyor. Sen izliyorsun.", "fx": {"opp": 4, "actors": {"halden": {"power": -4}, "brandt": {"power": -4}}}}
     ],
     "ignore": {"text": "Parti kuruldu.", "fx": {"actors": {"halden": {"power": 6}}, "opp": 3}}
   },
   {
     "id": "lena_odul", "min_week": 48, "alive": ["lena"], "blocks_flag": ["gazeteci_ihale_1"], "art": "lena_kitap", "title": "Gazeteciye uluslararası ödül",
-    "text": "Lena Ostrow, Veloria'daki yolsuzluk haberleriyle uluslararası bir basın ödülü kazandı. Törende sana teşekkür etmeyi unutmadı; ya da ima etti.",
+    "text": "Leyla Sarn, Veloria'daki yolsuzluk haberleriyle uluslararası bir basın ödülü kazandı. Törende sana teşekkür etmeyi unutmadı; ya da ima etti.",
     "choices": [
       {"label": "Saraya davet edip tebrik et", "text": "Fotoğraf her yere yayıldı. Dürüst bir hükümdar görüntüsü.", "fx": {"king": 3, "actors": {"lena": {"l_ideology": 8}}}},
       {"label": "Görmezden gel", "text": "Saray sessiz kaldı.", "fx": {"king": -1}},
-      {"label": "Halden'in medyası ödülü karalasın", "text": "Ödül 'yabancı müdahale' ilan edildi. Lena daha sert yazacak.", "fx": {"actors": {"lena": {"ambition": 8}, "halden": {"obligation": 4}}, "opp": 2}}
+      {"label": "Sarne'nin medyası ödülü karalasın", "text": "Ödül 'yabancı müdahale' ilan edildi. Leyla daha sert yazacak.", "fx": {"actors": {"lena": {"ambition": 8}, "halden": {"obligation": 4}}, "opp": 2}}
     ],
     "ignore": {"text": "Ödül haberi gündemden düştü.", "fx": {}}
   },
   {
     "id": "prens_ordu", "min_week": 45, "alive": ["prens", "arden"], "actor_min": {"prens": {"ambition": 55}}, "art": "gizli_toplanti", "title": "Prens generallerle görüşüyor",
-    "text": "Prens Cassian'ın son iki hafta içinde üç tümen komutanıyla özel akşam yemeği yediği bildiriliyor.",
+    "text": "Prens Marcus'un son iki hafta içinde üç tümen komutanıyla özel akşam yemeği yediği bildiriliyor.",
     "choices": [
       {"label": "Komutanları tayin et", "text": "Komutanlar sınıra gönderildi. Prens mesajı aldı.", "fx": {"actors": {"prens": {"ambition": 4, "fear": 10}, "arden": {"l_career": -4}}}},
       {"label": "Prensle açıkça konuş", "text": "Kardeşin gülümsedi ve hiçbir şeyi inkâr etmedi.", "fx": {"actors": {"prens": {"fear": 6, "l_career": 4}}}},
@@ -630,7 +630,7 @@
     "choices": [
       {"label": "Sıkı karantina", "text": "Salgın yavaşladı; dükkânlar kapandı.", "fx": {"economy": -8, "unrest": -2, "king": 2}},
       {"label": "Hafif önlemler", "text": "Ekonomi döndü; hastaneler doldu.", "fx": {"economy": -3, "unrest": 5}},
-      {"label": "Hiçbir şey yapma, açıklamayı Halden yapsın", "text": "Kanallar 'abartılı panik' dedi. Cenazeler başka şey söyledi.", "fx": {"unrest": 9, "king": -4, "actors": {"halden": {"obligation": 4}}}}
+      {"label": "Hiçbir şey yapma, açıklamayı Sarne yapsın", "text": "Kanallar 'abartılı panik' dedi. Cenazeler başka şey söyledi.", "fx": {"unrest": 9, "king": -4, "actors": {"halden": {"obligation": 4}}}}
     ],
     "ignore": {"text": "Salgın kendi seyrinde ilerledi.", "fx": {"unrest": 8, "economy": -5}}
   },
@@ -640,7 +640,7 @@
     "choices": [
       {"label": "Depoları halka aç", "text": "Kimse donmadı. Hazine dondu.", "fx": {"economy": -6, "unrest": -8}},
       {"label": "Enerjiyi karneye bağla", "text": "Adil ama soğuk bir kış.", "fx": {"unrest": 3, "economy": -2}},
-      {"label": "Halden'den acil alım", "text": "Gaz geldi; fatura Halden'e borç olarak yazıldı.", "fx": {"unrest": -5, "actors": {"halden": {"obligation": 10, "power": 4}}}}
+      {"label": "Sarne'den acil alım", "text": "Gaz geldi; fatura Sarne'ye borç olarak yazıldı.", "fx": {"unrest": -5, "actors": {"halden": {"obligation": 10, "power": 4}}}}
     ],
     "ignore": {"text": "Kış sertleşti.", "fx": {"unrest": 10, "economy": -6}}
   },
@@ -672,7 +672,7 @@
       {"label": "Prensi halef ilan et", "text": "Hanedan devam edecek. Prens artık senin kaderine bağlı.", "fx": {"king": 3, "actors": {"prens": {"l_career": 15, "ambition": -8}}}},
       {"label": "Mutlak yetkiyi kalıcı kıl", "text": "Taç artık hiçbir kurumla paylaşılmıyor. Sessizlik çok derin.", "fx": {"king": 5, "opp": 8, "actors": {"falk": {"l_ideology": -15}, "brandt": {"ambition": 10}}}}
     ],
-    "ignore": {"text": "Miras sorusu cevapsız kaldı.", "fx": {"king": -2}}
+    "ignore": {"text": "Sophias sorusu cevapsız kaldı.", "fx": {"king": -2}}
   },
   {
     "id": "yeni_protesto", "min_week": 30, "min_unrest": 40, "once": false, "cooldown": 10, "chance": 0.35, "art": "gida_protestosu_b", "title": "Meydanlarda yeni protesto",
@@ -716,41 +716,41 @@
   },
   {
     "id": "ikinci_yil_butce", "min_week": 54, "max_week": 60, "alive": ["kessler"], "art": "butce_acigi", "title": "İkinci yılın bütçesi",
-    "text": "Kessler ikinci yılın bütçesini getirdi. Bu sefer boş bırakılmış kalem yok; ama senden üç önceliği sıralaman isteniyor.",
+    "text": "Veyra ikinci yılın bütçesini getirdi. Bu sefer boş bırakılmış kalem yok; ama senden üç önceliği sıralaman isteniyor.",
     "choices": [
       {"label": "Önce güvenlik", "text": "Ordu ve polis güçlendi; okullar bekleyecek.", "fx": {"unrest": -3, "economy": -2, "actors": {"arden": {"power": 4}}}},
       {"label": "Önce halk", "text": "Sosyal yardımlar arttı; açık da.", "fx": {"unrest": -6, "economy": -4}},
       {"label": "Önce hazine", "text": "Açık kapandı. Kemerler sıkıldı.", "fx": {"economy": 6, "unrest": 5, "actors": {"kessler": {"l_career": 4}}}}
     ],
-    "ignore": {"text": "Bütçe Kessler'in önerisiyle geçti.", "fx": {"economy": 2}}
+    "ignore": {"text": "Bütçe Veyra'nın önerisiyle geçti.", "fx": {"economy": 2}}
   },
   {
     "id": "odeme_defteri", "min_week": 56, "min_stat": {"bribes": 3}, "alive": ["dorn"], "art": "dorn_rusvet", "title": "Gizli ödemelerin defteri",
-    "text": "Kâhya Dorn bir gece masana küçük, yıpranmış bir defter bıraktı: bir yıl boyunca yaptığın gizli ödemelerin tarih tarih kaydı. 'Bunu ben tutmadım, Majesteleri. Ama kimin tuttuğunu biliyorum.'",
+    "text": "Kraliçe Helena bir gece masana küçük, yıpranmış bir defter bıraktı: bir yıl boyunca yaptığın gizli ödemelerin tarih tarih kaydı. 'Bunu ben tutmadım, Majesteleri. Ama kimin tuttuğunu biliyorum.'",
     "choices": [
-      {"label": "Defteri satın al, sahibini sustur", "text": "Defter yakıldı; sahibi şimdi senin maaşında. Dorn her şeyi gördü.", "fx": {"wealth": -8, "actors": {"dorn": {"obligation": 8, "secrets_on_king": 1}}}},
-      {"label": "Kessler 'diplomatik harcama' diye kayda geçirsin", "text": "Ödemeler bütçede bir satıra dönüştü. Kessler imzaladı; ellerini yıkadı ama kurulamadı.", "fx": {"actors": {"kessler": {"l_complicity": 10, "fear": 8}}, "fact": {"id": "odeme_kaydi", "text": "Gizli ödemelerin bütçeye diplomatik harcama diye yazılması", "subject": "king", "severity": 25, "knowers": ["kessler", "dorn"]}}},
-      {"label": "Defteri Dorn'a geri ver: 'Yak.'", "text": "Dorn defteri aldı. Yaktığından emin değilsin.", "fx": {"actors": {"dorn": {"power": 4, "l_complicity": 6, "secrets_on_king": 2}}}}
+      {"label": "Defteri satın al, sahibini sustur", "text": "Defter yakıldı; sahibi şimdi senin maaşında. Helena her şeyi gördü.", "fx": {"wealth": -8, "actors": {"dorn": {"obligation": 8, "secrets_on_king": 1}}}},
+      {"label": "Veyra 'diplomatik harcama' diye kayda geçirsin", "text": "Ödemeler bütçede bir satıra dönüştü. Veyra imzaladı; ellerini yıkadı ama kurulamadı.", "fx": {"actors": {"kessler": {"l_complicity": 10, "fear": 8}}, "fact": {"id": "odeme_kaydi", "text": "Gizli ödemelerin bütçeye diplomatik harcama diye yazılması", "subject": "king", "severity": 25, "knowers": ["kessler", "dorn"]}}},
+      {"label": "Defteri Helena'ya geri ver: 'Yak.'", "text": "Helena defteri aldı. Yaktığından emin değilsin.", "fx": {"actors": {"dorn": {"power": 4, "l_complicity": 6, "secrets_on_king": 2}}}}
     ],
     "ignore": {"text": "Defter masada bir hafta durdu, sonra kayboldu.", "fx": {"actors": {"dorn": {"secrets_on_king": 2}}, "fact": {"id": "odeme_defteri", "text": "Gizli ödemelerin tarih tarih tutulmuş defteri", "subject": "king", "severity": 30, "knowers": ["dorn"]}}}
   },
   {
     "id": "defter_kopya", "flag_age": {"odeme_defteri_2": 10}, "chance": 0.6, "art": "butce_ifsa", "title": "Defterin ikinci kopyası",
-    "text": "Yaktırdığını sandığın defterin fotokopileri bir avukatın kasasında çıktı. Avukat bir fiyat söylemiyor; bir isim söylüyor: Dorn.",
+    "text": "Yaktırdığını sandığın defterin fotokopileri bir avukatın kasasında çıktı. Avukat bir fiyat söylemiyor; bir isim söylüyor: Helena.",
     "choices": [
-      {"label": "Dorn'u görevden al", "text": "Dorn sessizce gitti. Kopyalar da onunla gitti; nereye gittiğini bilmiyorsun.", "fx": {"remove": ["dorn"], "fact": {"id": "defter_kopyasi", "text": "Gizli ödeme defterinin kopyaları", "subject": "king", "severity": 30, "knowers": ["voss"]}}},
-      {"label": "Dorn'la yeni bir anlaşma yap", "text": "Dorn'un yetkileri genişledi. Kopyalar kasada kaldı.", "fx": {"actors": {"dorn": {"power": 8, "obligation": 10}}}},
-      {"label": "Avukatı Voss'a bırak", "text": "Avukat ülkeyi terk etti. Voss bir dosya daha açtı.", "fx": {"actors": {"voss": {"power": 4, "secrets_on_king": 2}}}}
+      {"label": "Helena'yı saraydan uzaklaştır", "text": "Helena sessizce gitti. Kopyalar da onunla gitti; nereye gittiğini bilmiyorsun.", "fx": {"remove": ["dorn"], "fact": {"id": "defter_kopyasi", "text": "Gizli ödeme defterinin kopyaları", "subject": "king", "severity": 30, "knowers": ["voss"]}}},
+      {"label": "Helena'yla yeni bir anlaşma yap", "text": "Helena'nın yetkileri genişledi. Kopyalar kasada kaldı.", "fx": {"actors": {"dorn": {"power": 8, "obligation": 10}}}},
+      {"label": "Avukatı Vale'ye bırak", "text": "Avukat ülkeyi terk etti. Vale bir dosya daha açtı.", "fx": {"actors": {"voss": {"power": 4, "secrets_on_king": 2}}}}
     ],
     "ignore": {"text": "Kopyalar kasada bekliyor.", "fx": {"actors": {"dorn": {"ambition": 6}}}}
   },
   {
     "id": "yazili_emirler", "min_week": 58, "min_stat": {"written": 2}, "alive": ["falk"], "art": "yargic_dosya", "title": "Yazılı emirlerin kopyaları mahkemede",
-    "text": "Yargıç Falk'ın savcıları, geçen yıl verdiğin yazılı bastırma emirlerinin aslını istiyor. Kopyalar zaten ellerinde; imzanın sana ait olup olmadığını soruyorlar.",
+    "text": "Başsavcı Renn'in savcıları, geçen yıl verdiğin yazılı bastırma emirlerinin aslını istiyor. Kopyalar zaten ellerinde; imzanın sana ait olup olmadığını soruyorlar.",
     "choices": [
-      {"label": "Asıllarını teslim et, sorumluluğu üstlen", "text": "İmzan mahkeme tutanağına geçti. Falk ilk kez sana saygıyla baktı; generaller ilk kez endişeyle.", "fx": {"king": -4, "unrest": -3, "actors": {"falk": {"l_ideology": 12}, "arden": {"ambition": 4}}}},
+      {"label": "Asıllarını teslim et, sorumluluğu üstlen", "text": "İmzan mahkeme tutanağına geçti. Renn ilk kez sana saygıyla baktı; generaller ilk kez endişeyle.", "fx": {"king": -4, "unrest": -3, "actors": {"falk": {"l_ideology": 12}, "arden": {"ambition": 4}}}},
       {"label": "İmzaların sahte olduğunu açıkla", "text": "Saray sert bir yalanlama yayımladı. Savcılar imza uzmanı çağırdı.", "fx": {"king": 2, "fact": {"id": "emir_inkari", "text": "Kralın kendi imzasını sahte ilan etmesi", "subject": "king", "severity": 35, "knowers": ["falk", "voss"]}}},
-      {"label": "Arşivi Voss temizlesin", "text": "Asıllar arşivden kayboldu. Voss bunun bedelini ileride isteyecek.", "fx": {"actors": {"voss": {"power": 5, "secrets_on_king": 2}, "falk": {"ambition": 6}}}}
+      {"label": "Arşivi Vale temizlesin", "text": "Asıllar arşivden kayboldu. Vale bunun bedelini ileride isteyecek.", "fx": {"actors": {"voss": {"power": 5, "secrets_on_king": 2}, "falk": {"ambition": 6}}}}
     ],
     "ignore": {"text": "Savcılar kopyalarla yetindi; dava dosyası kalınlaşıyor.", "fx": {"fact": {"id": "emir_dosyasi", "text": "Kralın yazılı bastırma emirleri hakkında dava dosyası", "subject": "king", "severity": 30, "knowers": ["falk"]}}}
   },
@@ -759,17 +759,17 @@
     "text": "Geçen yıl korkuyla bağladığın isim artık korkmuyor. Bir yayıncıyla görüştüğü, 'kralın yöntemleri' üzerine bir kitap yazdığı konuşuluyor.",
     "choices": [
       {"label": "Susması için cömert bir teklif yap", "text": "Kitap yazılmadı. Fatura kabarık.", "fx": {"wealth": -7}},
-      {"label": "Voss ona karşı bir dosya hazırlasın", "text": "Kitap yarıda kaldı. Voss'un çekmecesine bir dosya daha girdi.", "fx": {"actors": {"voss": {"power": 4, "secrets_on_king": 1}}, "unrest": 2}},
+      {"label": "Vale ona karşı bir dosya hazırlasın", "text": "Kitap yarıda kaldı. Vale'nin çekmecesine bir dosya daha girdi.", "fx": {"actors": {"voss": {"power": 4, "secrets_on_king": 1}}, "unrest": 2}},
       {"label": "Yüz yüze özür dile", "text": "Bir kralın özür dilediği nadir görülür. Kitap çıkmadı; söylentisi çıktı.", "fx": {"king": -3, "opp": -3, "unrest": -2}}
     ],
     "ignore": {"text": "Kitap yayınevinde.", "fx": {"fact": {"id": "santaj_kitabi", "text": "Kralın şantaj yöntemlerini anlatan kitap taslağı", "subject": "king", "severity": 35, "knowers": ["lena"]}}}
   },
   {
     "id": "terfi_rekabet", "min_week": 57, "min_stat": {"promotes": 3}, "alive": ["arden", "voss"], "art": "general_atamalari", "title": "Terfi ettirdiklerin birbirine düşüyor",
-    "text": "Yükselttiğin isimler artık aynı koltuğa bakıyor. Arden ile Voss'un adamları bir bakanlık kadrosu için açıkça birbirini suçluyor.",
+    "text": "Yükselttiğin isimler artık aynı koltuğa bakıyor. Arden ile Vale'nin adamları bir bakanlık kadrosu için açıkça birbirini suçluyor.",
     "choices": [
-      {"label": "Arden'den yana ol", "text": "Ordu kazandı. Voss yenilgiyi unutmayacak.", "fx": {"actors": {"arden": {"power": 5, "l_career": 6}, "voss": {"ambition": 8, "l_career": -6}}}},
-      {"label": "Voss'tan yana ol", "text": "İstihbarat kazandı. Kışlalarda homurtu var.", "fx": {"actors": {"voss": {"power": 5, "l_career": 6}, "arden": {"ambition": 8, "l_career": -6}}}},
+      {"label": "Arden'den yana ol", "text": "Ordu kazandı. Vale yenilgiyi unutmayacak.", "fx": {"actors": {"arden": {"power": 5, "l_career": 6}, "voss": {"ambition": 8, "l_career": -6}}}},
+      {"label": "Vale'den yana ol", "text": "İstihbarat kazandı. Kışlalarda homurtu var.", "fx": {"actors": {"voss": {"power": 5, "l_career": 6}, "arden": {"ambition": 8, "l_career": -6}}}},
       {"label": "Kadroyu ikisine de verme", "text": "Kadro bir sivile gitti. İkisi de seni suçluyor; birbirlerini değil.", "fx": {"king": 2, "actors": {"arden": {"ambition": 4}, "voss": {"ambition": 4}}}}
     ],
     "ignore": {"text": "Kavga basına yansıdı.", "fx": {"unrest": 3, "actors": {"arden": {"power": 2}, "voss": {"power": 2}}}}
@@ -790,7 +790,7 @@
     "choices": [
       {"label": "Ajanı geri getir, yeni bir görev ver", "text": "Ajan geri döndü; yeni görevi sessiz kalmak.", "fx": {"wealth": -5, "actors": {"voss": {"l_complicity": 6}}}},
       {"label": "Yayıncıyı dava et", "text": "Dava kitabı durdurdu ve herkese okuttu.", "fx": {"unrest": 3, "fact": {"id": "operasyon_anilari", "text": "Saray adına yürütülen gizli operasyonların anıları", "subject": "king", "severity": 35, "knowers": ["lena", "brandt"]}}},
-      {"label": "Taslağı Halden'in kanallarında karala", "text": "Halden ajanı 'yabancı ajan' ilan etti. Kitap gölgede kaldı; Halden'e bir borcun daha var.", "fx": {"actors": {"halden": {"power": 4, "obligation": 6}}}}
+      {"label": "Taslağı Sarne'nin kanallarında karala", "text": "Sarne ajanı 'yabancı ajan' ilan etti. Kitap gölgede kaldı; Sarne'ye bir borcun daha var.", "fx": {"actors": {"halden": {"power": 4, "obligation": 6}}}}
     ],
     "ignore": {"text": "Taslak yayınevinde ilerliyor.", "fx": {"fact": {"id": "operasyon_taslagi", "text": "Gizli operasyonları anlatan kitap taslağı", "subject": "king", "severity": 30, "knowers": ["lena"]}}}
   },
@@ -815,54 +815,54 @@
     "ignore": {"text": "Atama oldu bitti.", "fx": {"actors": {"arden": {"power": 5}}}}
   },
   {
-    "id": "voss_sigorta", "min_week": 66, "actor_min": {"voss": {"secrets_on_king": 4}}, "alive": ["voss"], "art": "voss_dosyalar", "title": "Voss'un sigortası",
-    "text": "Voss bir akşam çayında sakin bir sesle söyledi: 'Bana bir şey olursa dosyalarım yabancı bir gazeteye gidecek. Bu bir tehdit değil, Majesteleri. Bir sigorta.'",
+    "id": "voss_sigorta", "min_week": 66, "actor_min": {"voss": {"secrets_on_king": 4}}, "alive": ["voss"], "art": "voss_dosyalar", "title": "Vale'nin sigortası",
+    "text": "Vale bir akşam çayında sakin bir sesle söyledi: 'Bana bir şey olursa dosyalarım yabancı bir gazeteye gidecek. Bu bir tehdit değil, Majesteleri. Bir sigorta.'",
     "choices": [
-      {"label": "Sigortayı kabul et, Voss'u koru", "text": "Voss artık dokunulmaz. Sen de onun dosyasına.", "fx": {"actors": {"voss": {"power": 6, "l_complicity": 10, "fear": -6}}}},
+      {"label": "Sigortayı kabul et, Vale'yi koru", "text": "Vale artık dokunulmaz. Sen de onun dosyasına.", "fx": {"actors": {"voss": {"power": 6, "l_complicity": 10, "fear": -6}}}},
       {"label": "Karşı sigorta: onun dosyalarını sen topla", "text": "Bir yarış başladı; kimin dosyası daha kalın?", "fx": {"wealth": -5, "actors": {"voss": {"fear": 10, "ambition": 6}}}},
-      {"label": "Voss'u emekliliğe zorla", "text": "Voss gitti. Dosyalar da gitti; nereye gittiğini yakında öğreneceksin.", "fx": {"remove": ["voss"], "fact": {"id": "voss_sigortasi", "text": "Voss'un yurtdışındaki sigorta dosyaları", "subject": "king", "severity": 40, "knowers": ["lena"]}}}
+      {"label": "Vale'yi emekliliğe zorla", "text": "Vale gitti. Dosyalar da gitti; nereye gittiğini yakında öğreneceksin.", "fx": {"remove": ["voss"], "fact": {"id": "voss_sigortasi", "text": "Vale'nin yurtdışındaki sigorta dosyaları", "subject": "king", "severity": 40, "knowers": ["lena"]}}}
     ],
-    "ignore": {"text": "Voss çayını bitirdi ve gitti.", "fx": {"actors": {"voss": {"power": 3}}}}
+    "ignore": {"text": "Vale çayını bitirdi ve gitti.", "fx": {"actors": {"voss": {"power": 3}}}}
   },
   {
-    "id": "halden_imparatorluk", "min_week": 68, "min_holding": 70, "actor_min": {"halden": {"power": 68}}, "art": "halden_kanal", "title": "Halden gazeteleri de satın alıyor",
-    "text": "Halden'in şirketi son iki büyük gazeteyi ve dağıtım ağını satın aldı. Artık kahvaltı masasındaki her manşet onun kaleminden çıkıyor.",
+    "id": "halden_imparatorluk", "min_week": 68, "min_holding": 70, "actor_min": {"halden": {"power": 68}}, "art": "halden_kanal", "title": "Sarne gazeteleri de satın alıyor",
+    "text": "Sarne'nin şirketi son iki büyük gazeteyi ve dağıtım ağını satın aldı. Artık kahvaltı masasındaki her manşet onun kaleminden çıkıyor.",
     "choices": [
-      {"label": "Rekabet kurulu satışı durdursun", "text": "Satış iptal edildi. Halden'in kanalları seni ilk kez eleştirdi.", "fx": {"king": 2, "actors": {"halden": {"ambition": 10, "power": -5, "l_money": -6}}}},
-      {"label": "Onayla, karşılığında yayın çizgisini iste", "text": "Manşetler senin. Halden'e olan borcun da.", "fx": {"unrest": -4, "actors": {"halden": {"power": 6, "obligation": 10}}}},
-      {"label": "Gazetelerden birini Lena'ya sattır", "text": "Bağımsız bir gazete daha yaşıyor. Halden bunu kimin ayarladığını biliyor.", "fx": {"opp": 2, "actors": {"halden": {"ambition": 6}, "lena": {"power": 6, "l_ideology": 8}}}}
+      {"label": "Rekabet kurulu satışı durdursun", "text": "Satış iptal edildi. Sarne'nin kanalları seni ilk kez eleştirdi.", "fx": {"king": 2, "actors": {"halden": {"ambition": 10, "power": -5, "l_money": -6}}}},
+      {"label": "Onayla, karşılığında yayın çizgisini iste", "text": "Manşetler senin. Sarne'ye olan borcun da.", "fx": {"unrest": -4, "actors": {"halden": {"power": 6, "obligation": 10}}}},
+      {"label": "Gazetelerden birini Leyla'ya sattır", "text": "Bağımsız bir gazete daha yaşıyor. Sarne bunu kimin ayarladığını biliyor.", "fx": {"opp": 2, "actors": {"halden": {"ambition": 6}, "lena": {"power": 6, "l_ideology": 8}}}}
     ],
     "ignore": {"text": "Satış tamamlandı.", "fx": {"actors": {"halden": {"power": 6}}}}
   },
   {
-    "id": "kessler_kacis", "min_week": 70, "actor_min": {"kessler": {"fear": 45}}, "alive": ["kessler"], "art": "kessler_istifa", "title": "Kessler'in ailesi yurtdışına taşındı",
-    "text": "Maliye Bakanı Kessler'in eşi ve çocukları sessizce yurtdışına taşındı. Kessler hâlâ masasında; ama valizinin hazır olduğu söyleniyor.",
+    "id": "kessler_kacis", "min_week": 70, "actor_min": {"kessler": {"fear": 45}}, "alive": ["kessler"], "art": "kessler_istifa", "title": "Veyra'nın ailesi yurtdışına taşındı",
+    "text": "Başbakan Veyra'nın eşi ve çocukları sessizce yurtdışına taşındı. Veyra hâlâ masasında; ama valizinin hazır olduğu söyleniyor.",
     "choices": [
-      {"label": "Ona güvence ver, korumasını artır", "text": "Kessler rahatladı. Muhafızların onu koruduğunu mu, izlediğini mi düşünüyor, bilmiyorsun.", "fx": {"wealth": -3, "actors": {"kessler": {"fear": -10, "l_career": 6}}}},
-      {"label": "Gitmesine izin ver, onurla", "text": "Kessler bir veda mektubu bıraktı. Hazinenin şifreleri de yeni bakana geçti; bazıları geçmedi.", "fx": {"remove": ["kessler"], "economy": -5}},
-      {"label": "Pasaportuna el koy", "text": "Kessler kaldı. Artık bir bakan değil, bir rehine.", "fx": {"actors": {"kessler": {"fear": 10, "honesty": 0.1, "l_fear": 12}}, "fact": {"id": "kessler_rehine", "text": "Maliye Bakanının pasaportuna el konması", "subject": "king", "severity": 20, "knowers": ["kessler", "voss"]}}}
+      {"label": "Ona güvence ver, korumasını artır", "text": "Veyra rahatladı. Muhafızların onu koruduğunu mu, izlediğini mi düşünüyor, bilmiyorsun.", "fx": {"wealth": -3, "actors": {"kessler": {"fear": -10, "l_career": 6}}}},
+      {"label": "Gitmesine izin ver, onurla", "text": "Veyra bir veda mektubu bıraktı. Hazinenin şifreleri de yeni bakana geçti; bazıları geçmedi.", "fx": {"remove": ["kessler"], "economy": -5}},
+      {"label": "Pasaportuna el koy", "text": "Veyra kaldı. Artık bir bakan değil, bir rehine.", "fx": {"actors": {"kessler": {"fear": 10, "honesty": 0.1, "l_fear": 12}}, "fact": {"id": "kessler_rehine", "text": "Başbakanın pasaportuna el konması", "subject": "king", "severity": 20, "knowers": ["kessler", "voss"]}}}
     ],
-    "ignore": {"text": "Kessler bir sabah masasına gelmedi.", "fx": {"remove": ["kessler"], "economy": -7}}
+    "ignore": {"text": "Veyra bir sabah masasına gelmedi.", "fx": {"remove": ["kessler"], "economy": -7}}
   },
   {
-    "id": "lena_belgesel", "min_week": 64, "alive": ["lena"], "blocks_flag": ["gazeteci_ihale_1"], "chance": 0.6, "art": "lena_roportaj", "title": "Lena saltanatının belgeselini çekiyor",
-    "text": "Lena Ostrow, saltanatının ilk yılını anlatan bir belgesel hazırladı. Fragmanda senin sözlerin, raporların ve sokağın görüntüleri yan yana.",
+    "id": "lena_belgesel", "min_week": 64, "alive": ["lena"], "blocks_flag": ["gazeteci_ihale_1"], "chance": 0.6, "art": "lena_roportaj", "title": "Leyla saltanatının belgeselini çekiyor",
+    "text": "Leyla Sarn, saltanatının ilk yılını anlatan bir belgesel hazırladı. Fragmanda senin sözlerin, raporların ve sokağın görüntüleri yan yana.",
     "choices": [
       {"label": "Belgesel için röportaj ver", "text": "Kameraya açık konuştun. Belgesel seni yumuşatmadı, ama dürüst buldu.", "fx": {"king": 2, "opp": -3, "actors": {"lena": {"l_ideology": 8}}}},
       {"label": "Gösterimi yasakla", "text": "Belgesel yasaklandı ve herkes izledi.", "fx": {"unrest": 5, "fact": {"id": "belgesel_yasagi", "text": "Saltanat belgeselinin yasaklanması", "subject": "king", "severity": 25, "knowers": ["lena", "brandt"]}}},
-      {"label": "Halden aynı gece başka bir belgesel yayınlasın", "text": "İki belgesel, iki gerçek. Halk hangisine inanacağını seçti; bilmiyorsun hangisini.", "fx": {"actors": {"halden": {"power": 3, "obligation": 4}, "lena": {"ambition": 4}}}}
+      {"label": "Sarne aynı gece başka bir belgesel yayınlasın", "text": "İki belgesel, iki gerçek. Halk hangisine inanacağını seçti; bilmiyorsun hangisini.", "fx": {"actors": {"halden": {"power": 3, "obligation": 4}, "lena": {"ambition": 4}}}}
     ],
     "ignore": {"text": "Belgesel gösterime girdi.", "fx": {"opp": 3}}
   },
   {
-    "id": "dorn_anilar", "min_week": 72, "alive": ["dorn"], "actor_min": {"dorn": {"power": 45}}, "chance": 0.6, "art": "dorn_sir", "title": "Kâhya anılarını yazıyor",
-    "text": "Dorn her gece bir saat yazıyor. Kâhyalar anı yazmaz, Majesteleri; yazarlarsa bir şey bilirler.",
+    "id": "dorn_anilar", "min_week": 72, "alive": ["dorn"], "actor_min": {"dorn": {"power": 45}}, "chance": 0.6, "art": "dorn_sir", "title": "Kraliçe anılarını yazıyor",
+    "text": "Helena her gece bir saat yazıyor. Kraliçeler anı yazmaz, Majesteleri; yazarlarsa bir şey bilirler.",
     "choices": [
-      {"label": "Anıları saray arşivine satın al", "text": "Defterler arşivde. Dorn emekliliğini düşünmeye başladı.", "fx": {"wealth": -5, "actors": {"dorn": {"obligation": 6, "ambition": -4}}}},
-      {"label": "Dorn'a bir unvan ver, yazmayı bıraksın", "text": "Dorn artık 'Saray Nazırı'. Kalemi çekmecede, anahtarı cebinde.", "fx": {"actors": {"dorn": {"power": 6, "l_career": 8}}}},
-      {"label": "Odasını gizlice arat", "text": "Defterler bulundu. Dorn neyin bulunduğunu da biliyor, kimin aradığını da.", "fx": {"actors": {"dorn": {"fear": 8, "ambition": 8, "l_career": -8}}}}
+      {"label": "Anıları saray arşivine satın al", "text": "Defterler arşivde. Helena emekliliğini düşünmeye başladı.", "fx": {"wealth": -5, "actors": {"dorn": {"obligation": 6, "ambition": -4}}}},
+      {"label": "Helena'ya Vakıf'ta tam yetki ver, yazmayı bıraksın", "text": "Helena artık Vakıf'ın tek yetkilisi. Kalemi çekmecede, anahtarı cebinde.", "fx": {"actors": {"dorn": {"power": 6, "l_career": 8}}}},
+      {"label": "Odasını gizlice arat", "text": "Defterler bulundu. Helena neyin bulunduğunu da biliyor, kimin aradığını da.", "fx": {"actors": {"dorn": {"fear": 8, "ambition": 8, "l_career": -8}}}}
     ],
-    "ignore": {"text": "Dorn yazmaya devam ediyor.", "fx": {"actors": {"dorn": {"secrets_on_king": 1}}}}
+    "ignore": {"text": "Helena yazmaya devam ediyor.", "fx": {"actors": {"dorn": {"secrets_on_king": 1}}}}
   },
   {
     "id": "generaller_muhtirasi", "min_week": 80, "alive": ["arden"], "actor_min": {"arden": {"power": 62, "ambition": 50}}, "art": "general_atamalari", "title": "Generallerin muhtırası",
@@ -876,7 +876,7 @@
   },
   {
     "id": "muhtira_sonrasi", "flag_age": {"generaller_muhtirasi_0": 6}, "alive": ["arden"], "art": "terhis", "title": "Kabinedeki generaller",
-    "text": "Kabineye aldığın generaller artık bakanlıkları değil, bakanları yönetiyor. Kessler bir bütçe kalemini imzalamadan önce Genelkurmay'ı aradı.",
+    "text": "Kabineye aldığın generaller artık bakanlıkları değil, bakanları yönetiyor. Veyra bir bütçe kalemini imzalamadan önce Genelkurmay'ı aradı.",
     "choices": [
       {"label": "Generalleri kabinede bırak", "text": "Düzen sağlandı. Kimin düzeni olduğunu sormuyorsun.", "fx": {"unrest": -3, "actors": {"arden": {"power": 6}}}},
       {"label": "Birini rüşvet skandalıyla düşür", "text": "Bir general gitti. Diğerleri dersini aldı; hangi dersi, belli değil.", "fx": {"actors": {"arden": {"power": -6, "ambition": 6, "fear": 6}, "voss": {"power": 3}}}},
@@ -885,14 +885,14 @@
     "ignore": {"text": "Generaller yerleşti.", "fx": {"actors": {"arden": {"power": 4}}}}
   },
   {
-    "id": "halden_meclis", "min_week": 82, "min_holding": 80, "alive": ["halden"], "actor_min": {"halden": {"power": 66}}, "art": "milletvekili_satin", "title": "Halden meclisi satın alıyor",
-    "text": "Halden'in kasası açıldı: bir gecede on bir milletvekili parti değiştirdi. Meclis artık senin yasalarını değil, Halden'in ihalelerini konuşuyor.",
+    "id": "halden_meclis", "min_week": 82, "min_holding": 80, "alive": ["halden"], "actor_min": {"halden": {"power": 66}}, "art": "milletvekili_satin", "title": "Sarne meclisi satın alıyor",
+    "text": "Sarne'nin kasası açıldı: bir gecede on bir milletvekili parti değiştirdi. Meclis artık senin yasalarını değil, Sarne'nin ihalelerini konuşuyor.",
     "choices": [
-      {"label": "Halden'le ortaklık kur", "text": "Yasalar geçiyor. Halden'in imzası olmadan hiçbiri.", "fx": {"king": -3, "economy": 4, "actors": {"halden": {"power": 8, "obligation": 12}}}},
-      {"label": "Vekil transferlerini Falk'a soruştur", "text": "Mahkeme dosyaları kabarıyor; Halden'in kanalları seni 'diktatör' ilan etti.", "fx": {"unrest": 4, "actors": {"halden": {"power": -6, "ambition": 10}, "falk": {"power": 5}}}},
-      {"label": "Meclisi feshet", "text": "Meclis kapandı. Halden'in vekilleri de, senin vekillerin de evine gitti.", "fx": {"king": 3, "opp": 10, "unrest": 6, "fact": {"id": "meclis_feshi", "text": "Meclisin oligark kavgası yüzünden feshedilmesi", "subject": "king", "severity": 35, "knowers": ["falk", "brandt", "halden"]}}}
+      {"label": "Sarne'yle ortaklık kur", "text": "Yasalar geçiyor. Sarne'nin imzası olmadan hiçbiri.", "fx": {"king": -3, "economy": 4, "actors": {"halden": {"power": 8, "obligation": 12}}}},
+      {"label": "Vekil transferlerini Renn'e soruştur", "text": "Mahkeme dosyaları kabarıyor; Sarne'nin kanalları seni 'diktatör' ilan etti.", "fx": {"unrest": 4, "actors": {"halden": {"power": -6, "ambition": 10}, "falk": {"power": 5}}}},
+      {"label": "Meclisi feshet", "text": "Meclis kapandı. Sarne'nin vekilleri de, senin vekillerin de evine gitti.", "fx": {"king": 3, "opp": 10, "unrest": 6, "fact": {"id": "meclis_feshi", "text": "Meclisin oligark kavgası yüzünden feshedilmesi", "subject": "king", "severity": 35, "knowers": ["falk", "brandt", "halden"]}}}
     ],
-    "ignore": {"text": "Vekiller Halden'in sofrasında.", "fx": {"opp": 4, "actors": {"halden": {"power": 5}}}}
+    "ignore": {"text": "Vekiller Sarne'nin sofrasında.", "fx": {"opp": 4, "actors": {"halden": {"power": 5}}}}
   },
   {
     "id": "cadir_kent", "min_week": 80, "min_unrest": 50, "art": "genel_grev", "title": "Meydanda çadır kent",
@@ -906,7 +906,7 @@
   },
   {
     "id": "soylular_meclisi", "min_week": 84, "alive": ["prens"], "actor_min": {"prens": {"ambition": 55, "power": 42}}, "art": "prens_hirs", "title": "Prens soylular meclisini topluyor",
-    "text": "Yüzyıldır toplanmayan Soylular Meclisi, Prens Cassian'ın çağrısıyla yazlık sarayda bir araya geldi. Gündemde tek madde var: 'Tacın sağlığı.'",
+    "text": "Yüzyıldır toplanmayan Soylular Meclisi, Prens Marcus'un çağrısıyla yazlık sarayda bir araya geldi. Gündemde tek madde var: 'Tacın sağlığı.'",
     "choices": [
       {"label": "Meclise sen de katıl, başkanlık et", "text": "Soylular kalktı, selam verdi. Prens'in yüzündeki gülümseme gerçek değildi.", "fx": {"king": 4, "actors": {"prens": {"ambition": 6, "power": -4}}}},
       {"label": "Toplantıyı yasadışı ilan et", "text": "Muhafızlar kapıyı kapattı. Soylular bunu hiç unutmayacak.", "fx": {"king": 2, "actors": {"prens": {"ambition": 10, "fear": 6}}, "opp": 3}},
@@ -916,27 +916,27 @@
   },
   {
     "id": "dosyalar_birlesiyor", "min_week": 86, "alive": ["falk"], "chance": 0.7, "art": "yargic_dosya", "title": "Yüksek Mahkeme dosyaları birleştiriyor",
-    "text": "Yargıç Falk, iki yıl boyunca açılan bütün dosyaları tek bir soruşturmada birleştirdi. Dosyanın adı kısa: 'Saray.'",
+    "text": "Başsavcı Renn, iki yıl boyunca açılan bütün dosyaları tek bir soruşturmada birleştirdi. Dosyanın adı kısa: 'Saray.'",
     "choices": [
       {"label": "İfade vermeyi kabul et", "text": "Mahkemede oturdun. Sorular ağırdı; ama kralın yasaya uyduğu görüldü.", "fx": {"king": -3, "opp": -6, "unrest": -4, "actors": {"falk": {"l_ideology": 10}}}},
       {"label": "Dokunulmazlık yasası çıkar", "text": "Yasa geçti. Mahkeme bekleyecek; bir gün sen tahtta olmadığında.", "fx": {"opp": 6, "actors": {"falk": {"ambition": 8, "l_ideology": -10}, "brandt": {"ambition": 6}}}},
-      {"label": "Falk'ı emekliliğe sevk et", "text": "Falk gitti; dosya yeni yargıçların masasında. Ve gazetelerde.", "fx": {"remove": ["falk"], "fact": {"id": "falk_tasfiyesi", "text": "Saray soruşturmasını yürüten yargıcın tasfiyesi", "subject": "king", "severity": 40, "knowers": ["brandt", "lena"]}}}
+      {"label": "Renn'i emekliliğe sevk et", "text": "Renn gitti; dosya yeni yargıçların masasında. Ve gazetelerde.", "fx": {"remove": ["falk"], "fact": {"id": "falk_tasfiyesi", "text": "Saray soruşturmasını yürüten yargıcın tasfiyesi", "subject": "king", "severity": 40, "knowers": ["brandt", "lena"]}}}
     ],
     "ignore": {"text": "Soruşturma ilerliyor.", "fx": {"fact": {"id": "saray_dosyasi", "text": "Yüksek Mahkemenin birleşik 'Saray' soruşturması", "subject": "king", "severity": 35, "knowers": ["falk", "brandt"]}}}
   },
   {
-    "id": "derin_devlet", "min_week": 84, "alive": ["voss"], "actor_min": {"voss": {"power": 68}}, "art": "voss_arden_catisma", "title": "Voss'un gölge kabinesi",
-    "text": "Bakanlıklarda Voss'un adamları var; bakanların bilmediği kararlar alınıyor. Bu sabah bir valinin atamasını gazeteden öğrendin.",
+    "id": "derin_devlet", "min_week": 84, "alive": ["voss"], "actor_min": {"voss": {"power": 68}}, "art": "voss_arden_catisma", "title": "Vale'nin gölge kabinesi",
+    "text": "Bakanlıklarda Vale'nin adamları var; bakanların bilmediği kararlar alınıyor. Bu sabah bir valinin atamasını gazeteden öğrendin.",
     "choices": [
-      {"label": "Voss'un ağını resmîleştir", "text": "Gölge kabine artık gölge değil. Voss'un imzası seninkinin yanında.", "fx": {"actors": {"voss": {"power": 6, "obligation": 8, "l_career": 8}}}},
-      {"label": "Arden'le Voss'u birbirine düşür", "text": "Ordu istihbaratı dinliyor, istihbarat orduyu. İkisi de seni unuttu; şimdilik.", "fx": {"actors": {"voss": {"power": -5, "ambition": 4}, "arden": {"power": 3, "ambition": 4}}}},
-      {"label": "Valileri tek tek görevden al", "text": "Atamalar iptal edildi. Voss gülümsedi; elinde başka listeler var.", "fx": {"king": 3, "actors": {"voss": {"ambition": 8, "fear": 4}}}}
+      {"label": "Vale'nin ağını resmîleştir", "text": "Gölge kabine artık gölge değil. Vale'nin imzası seninkinin yanında.", "fx": {"actors": {"voss": {"power": 6, "obligation": 8, "l_career": 8}}}},
+      {"label": "Arden'le Vale'yi birbirine düşür", "text": "Ordu istihbaratı dinliyor, istihbarat orduyu. İkisi de seni unuttu; şimdilik.", "fx": {"actors": {"voss": {"power": -5, "ambition": 4}, "arden": {"power": 3, "ambition": 4}}}},
+      {"label": "Valileri tek tek görevden al", "text": "Atamalar iptal edildi. Vale gülümsedi; elinde başka listeler var.", "fx": {"king": 3, "actors": {"voss": {"ambition": 8, "fear": 4}}}}
     ],
     "ignore": {"text": "Gölge kabine toplantıda.", "fx": {"actors": {"voss": {"power": 5}}, "king": -2}}
   },
   {
     "id": "kuraklik", "min_week": 58, "chance": 0.5, "art": "enflasyon", "title": "Kuraklık",
-    "text": "Üç aydır yağmur yok. Tahıl ambarları yarıya indi, köylüler kentlere geliyor. Kessler 'yabancı tahıl' diyor, Arden 'ambarlara asker' diyor.",
+    "text": "Üç aydır yağmur yok. Tahıl ambarları yarıya indi, köylüler kentlere geliyor. Veyra 'yabancı tahıl' diyor, Arden 'ambarlara asker' diyor.",
     "choices": [
       {"label": "Yurtdışından tahıl al", "text": "Ekmek fiyatı sabit kaldı; hazine eridi.", "fx": {"economy": -7, "unrest": -3}},
       {"label": "Ambarları orduya teslim et", "text": "Dağıtım düzenli, kuyruklar uzun ve sessiz.", "fx": {"unrest": 2, "actors": {"arden": {"power": 4}}}},
@@ -946,9 +946,9 @@
   },
   {
     "id": "maden_faciasi", "min_week": 74, "chance": 0.6, "art": "cenaze", "title": "Maden faciası",
-    "text": "Kuzeydeki bir madende göçük: kırk iki işçi. Madenin sahibi Halden'in bir şirketi; güvenlik raporları iki yıldır imzasız.",
+    "text": "Kuzeydeki bir madende göçük: kırk iki işçi. Madenin sahibi Sarne'nin bir şirketi; güvenlik raporları iki yıldır imzasız.",
     "choices": [
-      {"label": "Halden'i sorumlu tut", "text": "Halden tazminat ödedi ve seni hiç affetmedi.", "fx": {"unrest": -6, "king": 2, "actors": {"halden": {"ambition": 8, "l_money": -6}}}},
+      {"label": "Sarne'yi sorumlu tut", "text": "Sarne tazminat ödedi ve seni hiç affetmedi.", "fx": {"unrest": -6, "king": 2, "actors": {"halden": {"ambition": 8, "l_money": -6}}}},
       {"label": "Ulusal yas ilan et, soruşturmayı yavaşlat", "text": "Bayraklar yarıya indi. Raporlar bir dolaba.", "fx": {"unrest": -2, "actors": {"halden": {"obligation": 6}}, "fact": {"id": "maden_raporlari", "text": "Maden faciasının saklanan güvenlik raporları", "subject": "king", "severity": 25, "knowers": ["halden", "lena"]}}},
       {"label": "Cenazelere kendin git", "text": "Bir kral madenci dullarının arasında. Kimse ne diyeceğini bilemedi; sen de.", "fx": {"king": 3, "unrest": -4, "opp": -2}}
     ],
@@ -959,14 +959,14 @@
     "text": "Uzak bir ülkenin devlet fonu, başkent limanını kırk yıllığına kiralamak istiyor. Teklif cömert; şartlar küçük harflerle.",
     "choices": [
       {"label": "Kabul et", "text": "Hazine doldu. Limanda başka bir bayrak dalgalanıyor.", "fx": {"economy": 9, "opp": 5, "unrest": 3}},
-      {"label": "Halden'in şirketine ortaklık şartıyla kabul et", "text": "Halden de ortak. Herkes kazandı; halk hariç.", "fx": {"economy": 6, "actors": {"halden": {"power": 5, "obligation": 6}}, "fact": {"id": "liman_kirasi", "text": "Liman kirasında Halden'e verilen gizli pay", "subject": "king", "severity": 25, "knowers": ["halden", "kessler"]}}},
+      {"label": "Sarne'nin şirketine ortaklık şartıyla kabul et", "text": "Sarne de ortak. Herkes kazandı; halk hariç.", "fx": {"economy": 6, "actors": {"halden": {"power": 5, "obligation": 6}}, "fact": {"id": "liman_kirasi", "text": "Liman kirasında Sarne'ye verilen gizli pay", "subject": "king", "severity": 25, "knowers": ["halden", "kessler"]}}},
       {"label": "Reddet", "text": "Liman senin. Hazine boş.", "fx": {"economy": -2, "king": 2}}
     ],
     "ignore": {"text": "Fon başka bir limana gitti.", "fx": {}}
   },
   {
     "id": "multeciler", "min_week": 76, "chance": 0.5, "art": "sinir_krizi", "title": "Sınırda mülteciler",
-    "text": "Komşu ülkedeki iç savaştan kaçan binlerce insan sınır kapısında. Arden kapıları kapatmak, Brandt açmak istiyor.",
+    "text": "Komşu ülkedeki iç savaştan kaçan binlerce insan sınır kapısında. Arden kapıları kapatmak, Voss açmak istiyor.",
     "choices": [
       {"label": "Kapıları aç", "text": "Kamplar kuruldu. Dünya seni alkışladı; taşra homurdandı.", "fx": {"king": 2, "unrest": 4, "economy": -3, "actors": {"brandt": {"l_ideology": 6}}}},
       {"label": "Kapıları kapat", "text": "Sınır sessiz. Fotoğraflar değil.", "fx": {"unrest": -2, "opp": 3, "actors": {"arden": {"power": 3}}}},
@@ -1006,11 +1006,11 @@
   },
   {
     "id": "anayasa_taslagi", "min_week": 92, "alive": ["brandt"], "chance": 0.7, "art": "anayasa_degisikligi", "title": "Muhalefetin anayasa taslağı",
-    "text": "Brandt ve bir grup hukukçu yeni bir anayasa taslağı yayımladı: tacın yetkileri meclise geçiyor. Taslağı Yargıç Falk'ın okuduğu söyleniyor.",
+    "text": "Voss ve bir grup hukukçu yeni bir anayasa taslağı yayımladı: tacın yetkileri meclise geçiyor. Taslağı Başsavcı Renn'in okuduğu söyleniyor.",
     "choices": [
       {"label": "Taslağı müzakereye aç", "text": "Masa kuruldu. Generaller masaya çağrılmadıklarını not etti.", "fx": {"opp": -8, "unrest": -4, "actors": {"brandt": {"l_ideology": 10}, "arden": {"ambition": 5}}}},
       {"label": "Taslağı yasakla, yazarlarını soruştur", "text": "Taslak yasaklandı ve fotokopiyle çoğaldı.", "fx": {"opp": 6, "unrest": 4, "actors": {"brandt": {"ambition": 8}}, "fact": {"id": "anayasa_yasagi", "text": "Anayasa taslağı yazarlarının soruşturulması", "subject": "king", "severity": 25, "knowers": ["brandt", "falk"]}}},
-      {"label": "Kendi taslağını yaz, Halden yaysın", "text": "İki taslak, iki televizyon. Halk hangisinin kime ait olduğunu karıştırdı; amaç da buydu.", "fx": {"opp": -3, "actors": {"halden": {"power": 3, "obligation": 6}}}}
+      {"label": "Kendi taslağını yaz, Sarne yaysın", "text": "İki taslak, iki televizyon. Halk hangisinin kime ait olduğunu karıştırdı; amaç da buydu.", "fx": {"opp": -3, "actors": {"halden": {"power": 3, "obligation": 6}}}}
     ],
     "ignore": {"text": "Taslak imza topluyor.", "fx": {"opp": 5}}
   },
@@ -1027,19 +1027,19 @@
   {"id": "hamle_arden_subay", "min_week": 4, "once": false, "cooldown": 10, "chance": 0.175, "actor_min": {"arden": {"power": 50}}, "actor": "arden", "tone": -1, "title": "Arden'in subayları kritik görevlere", "news": "Arden başkentteki iki alayın komutasına kendi subaylarını getirdi.", "fx": {"actors": {"arden": {"power": 2, "ambition": 1}}}},
   {"id": "hamle_arden_tatbikat", "min_week": 4, "once": false, "cooldown": 14, "chance": 0.126, "actor_min": {"arden": {"ambition": 45}}, "actor": "arden", "tone": -1, "title": "Başkent yakınında tatbikat", "news": "Arden haber vermeden başkentin girişinde bir tatbikat yaptı. Tanklar bir gece yolları tuttu.", "fx": {"unrest": 1, "actors": {"arden": {"power": 1}}}},
   {"id": "hamle_arden_yemin", "min_week": 4, "once": false, "cooldown": 16, "chance": 0.105, "actor_max": {"arden": {"ambition": 40}}, "actor": "arden", "tone": 1, "title": "Kışlada bağlılık yemini", "news": "Arden kışlada subaylarına krala bağlılık yeminini tazeletti.", "fx": {"actors": {"arden": {"l_career": 2}}}},
-  {"id": "hamle_voss_dosya", "min_week": 4, "once": false, "cooldown": 12, "chance": 0.154, "actor_min": {"voss": {"power": 45}}, "actor": "voss", "tone": -1, "title": "Voss bir bakanı dosyaladı", "news": "Voss Maliye Bakanı hakkında yeni bir dosya hazırladı; Kessler bunu duydu.", "fx": {"actors": {"voss": {"power": 1}, "kessler": {"fear": 2}}}},
-  {"id": "hamle_voss_dinleme", "min_week": 4, "once": false, "cooldown": 14, "chance": 0.126, "actor_min": {"voss": {"ambition": 40}}, "actor": "voss", "tone": -1, "title": "Saray hatları dinlemede", "news": "Voss saray telefonlarının bir kısmını 'güvenlik gerekçesiyle' dinlemeye aldı.", "fx": {"actors": {"voss": {"secrets_on_king": 1, "power": 1}}}},
-  {"id": "hamle_halden_kanal", "min_week": 4, "once": false, "cooldown": 12, "chance": 0.154, "actor_min": {"halden": {"power": 50}}, "actor": "halden", "tone": -1, "title": "Halden'in kanalları bir bakanı hedefliyor", "news": "Halden'in kanalları bir hafta boyunca Kessler'i hedef aldı. Hedefin neden Kessler olduğunu kimse sormuyor.", "fx": {"opp": 1, "actors": {"halden": {"power": 1}, "kessler": {"fear": 2}}}},
-  {"id": "hamle_halden_ihale", "min_week": 4, "once": false, "cooldown": 14, "chance": 0.126, "actor_min": {"halden": {"power": 45}}, "actor": "halden", "tone": 0, "title": "Halden yeni bir ihale aldı", "news": "Halden'in şirketlerinden biri bir köprü ihalesini aldı. Ekonomi canlanıyor; Halden de.", "fx": {"economy": 1, "actors": {"halden": {"power": 2}}}},
-  {"id": "hamle_kessler_kemer", "min_week": 4, "once": false, "cooldown": 14, "chance": 0.126, "alive": ["kessler"], "max_economy": 50, "actor": "kessler", "tone": 0, "title": "Kessler sessizce kemer sıktı", "news": "Kessler sana sormadan bazı sosyal harcamaları dondurdu. Kasa rahatladı; fırın kuyrukları uzadı.", "fx": {"economy": 2, "unrest": 1}},
-  {"id": "hamle_kessler_fazla", "min_week": 4, "once": false, "cooldown": 16, "chance": 0.105, "alive": ["kessler"], "min_economy": 55, "actor": "kessler", "tone": 1, "title": "Bütçede beklenmedik fazla", "news": "Kessler vergi gelirlerinde beklenmedik bir fazla buldu ve hazineye aktardı.", "fx": {"economy": 1, "wealth": 1, "actors": {"kessler": {"l_career": 1}}}},
-  {"id": "hamle_lena_ifsa", "min_week": 4, "once": false, "cooldown": 12, "chance": 0.14, "alive": ["lena"], "blocks_flag": ["gazeteci_ihale_1"], "actor": "lena", "tone": -1, "title": "Lena bir bakanı ifşa etti", "news": "Lena'nın gazetesi bir bakanlıktaki usulsüzlüğü belgeleriyle yayımladı.", "fx": {"opp": 2, "unrest": 1, "actors": {"lena": {"power": 1}}}},
-  {"id": "hamle_brandt_miting", "min_week": 4, "once": false, "cooldown": 10, "chance": 0.154, "alive": ["brandt"], "actor": "brandt", "tone": -1, "title": "Brandt taşrada miting yaptı", "news": "Brandt taşrada kalabalık bir miting yaptı. Konuşmasında senin adın on bir kez geçti.", "fx": {"opp": 2, "actors": {"brandt": {"power": 1}}}},
-  {"id": "hamle_brandt_sendika", "min_week": 4, "once": false, "cooldown": 14, "chance": 0.126, "alive": ["brandt"], "min_opposition": 35, "actor": "brandt", "tone": -1, "title": "Brandt sendikalarla anlaştı", "news": "Brandt büyük sendikalarla ortak bir bildiri imzaladı. Fabrikalarda toplantılar sıklaştı.", "fx": {"opp": 1, "unrest": 2}},
+  {"id": "hamle_voss_dosya", "min_week": 4, "once": false, "cooldown": 12, "chance": 0.154, "actor_min": {"voss": {"power": 45}}, "actor": "voss", "tone": -1, "title": "Vale bir bakanı dosyaladı", "news": "Vale Başbakan hakkında yeni bir dosya hazırladı; Veyra bunu duydu.", "fx": {"actors": {"voss": {"power": 1}, "kessler": {"fear": 2}}}},
+  {"id": "hamle_voss_dinleme", "min_week": 4, "once": false, "cooldown": 14, "chance": 0.126, "actor_min": {"voss": {"ambition": 40}}, "actor": "voss", "tone": -1, "title": "Saray hatları dinlemede", "news": "Vale saray telefonlarının bir kısmını 'güvenlik gerekçesiyle' dinlemeye aldı.", "fx": {"actors": {"voss": {"secrets_on_king": 1, "power": 1}}}},
+  {"id": "hamle_halden_kanal", "min_week": 4, "once": false, "cooldown": 12, "chance": 0.154, "actor_min": {"halden": {"power": 50}}, "actor": "halden", "tone": -1, "title": "Sarne'nin kanalları bir bakanı hedefliyor", "news": "Sarne'nin kanalları bir hafta boyunca Veyra'yı hedef aldı. Hedefin neden Veyra olduğunu kimse sormuyor.", "fx": {"opp": 1, "actors": {"halden": {"power": 1}, "kessler": {"fear": 2}}}},
+  {"id": "hamle_halden_ihale", "min_week": 4, "once": false, "cooldown": 14, "chance": 0.126, "actor_min": {"halden": {"power": 45}}, "actor": "halden", "tone": 0, "title": "Sarne yeni bir ihale aldı", "news": "Sarne'nin şirketlerinden biri bir köprü ihalesini aldı. Ekonomi canlanıyor; Sarne de.", "fx": {"economy": 1, "actors": {"halden": {"power": 2}}}},
+  {"id": "hamle_kessler_kemer", "min_week": 4, "once": false, "cooldown": 14, "chance": 0.126, "alive": ["kessler"], "max_economy": 50, "actor": "kessler", "tone": 0, "title": "Veyra sessizce kemer sıktı", "news": "Veyra sana sormadan bazı sosyal harcamaları dondurdu. Kasa rahatladı; fırın kuyrukları uzadı.", "fx": {"economy": 2, "unrest": 1}},
+  {"id": "hamle_kessler_fazla", "min_week": 4, "once": false, "cooldown": 16, "chance": 0.105, "alive": ["kessler"], "min_economy": 55, "actor": "kessler", "tone": 1, "title": "Bütçede beklenmedik fazla", "news": "Veyra vergi gelirlerinde beklenmedik bir fazla buldu ve hazineye aktardı.", "fx": {"economy": 1, "wealth": 1, "actors": {"kessler": {"l_career": 1}}}},
+  {"id": "hamle_lena_ifsa", "min_week": 4, "once": false, "cooldown": 12, "chance": 0.14, "alive": ["lena"], "blocks_flag": ["gazeteci_ihale_1"], "actor": "lena", "tone": -1, "title": "Leyla bir bakanı ifşa etti", "news": "Leyla'nın gazetesi bir bakanlıktaki usulsüzlüğü belgeleriyle yayımladı.", "fx": {"opp": 2, "unrest": 1, "actors": {"lena": {"power": 1}}}},
+  {"id": "hamle_brandt_miting", "min_week": 4, "once": false, "cooldown": 10, "chance": 0.154, "alive": ["brandt"], "actor": "brandt", "tone": -1, "title": "Voss taşrada miting yaptı", "news": "Voss taşrada kalabalık bir miting yaptı. Konuşmasında senin adın on bir kez geçti.", "fx": {"opp": 2, "actors": {"brandt": {"power": 1}}}},
+  {"id": "hamle_brandt_sendika", "min_week": 4, "once": false, "cooldown": 14, "chance": 0.126, "alive": ["brandt"], "min_opposition": 35, "actor": "brandt", "tone": -1, "title": "Voss sendikalarla anlaştı", "news": "Voss büyük sendikalarla ortak bir bildiri imzaladı. Fabrikalarda toplantılar sıklaştı.", "fx": {"opp": 1, "unrest": 2}},
   {"id": "hamle_prens_soylular", "min_week": 4, "once": false, "cooldown": 12, "chance": 0.14, "actor_min": {"prens": {"ambition": 50}}, "actor": "prens", "tone": -1, "title": "Prens soylu ailelerle yemekte", "news": "Prens bu hafta üç soylu aileyle yemek yedi. Masada tahtın geleceği konuşulmuş.", "fx": {}},
   {"id": "hamle_prens_vakif", "min_week": 4, "once": false, "cooldown": 18, "chance": 0.084, "alive": ["prens"], "actor": "prens", "tone": 0, "title": "Prens bir vakıf kurdu", "news": "Prens yoksul çocuklar için bir vakıf kurdu. Halk onu seviyor; soylular onu izliyor.", "fx": {"unrest": -2, "actors": {"prens": {"l_career": 1}}}},
-  {"id": "hamle_falk_dava", "min_week": 4, "once": false, "cooldown": 14, "chance": 0.105, "alive": ["falk"], "actor_min": {"falk": {"power": 40}}, "actor": "falk", "tone": 0, "title": "Falk bir bakan hakkında dava açtı", "news": "Yargıç Falk bir bakanın ihale dosyasını yeniden açtı. Mahkeme koridorları kalabalık.", "fx": {"opp": -1, "actors": {"falk": {"power": 1}}}},
-  {"id": "hamle_dorn_liste", "min_week": 4, "once": false, "cooldown": 14, "chance": 0.126, "alive": ["dorn"], "actor_min": {"dorn": {"power": 35}}, "actor": "dorn", "tone": -1, "title": "Dorn randevu listesini daralttı", "news": "Dorn bu hafta üç bakanın randevusunu 'Majestelerinin yorgunluğu' gerekçesiyle iptal etti.", "fx": {"actors": {"dorn": {"power": 1}}}},
+  {"id": "hamle_falk_dava", "min_week": 4, "once": false, "cooldown": 14, "chance": 0.105, "alive": ["falk"], "actor_min": {"falk": {"power": 40}}, "actor": "falk", "tone": 0, "title": "Renn bir bakan hakkında dava açtı", "news": "Başsavcı Renn bir bakanın ihale dosyasını yeniden açtı. Mahkeme koridorları kalabalık.", "fx": {"opp": -1, "actors": {"falk": {"power": 1}}}},
+  {"id": "hamle_dorn_liste", "min_week": 4, "once": false, "cooldown": 14, "chance": 0.126, "alive": ["dorn"], "actor_min": {"dorn": {"power": 35}}, "actor": "dorn", "tone": -1, "title": "Helena randevu listesini daralttı", "news": "Helena bu hafta üç bakanın randevusunu 'Majestelerinin yorgunluğu' gerekçesiyle iptal etti.", "fx": {"actors": {"dorn": {"power": 1}}}},
   {
     "id": "yay_arden_yukselis",
     "min_week": 20,
@@ -1195,8 +1195,8 @@
       "voss"
     ],
     "art": "voss_arden_catisma",
-    "title": "Voss’un bilgi masası",
-    "text": "Voss, saraya gelen her raporu tek masada toplamayı önerdi. “Dağınık bilgi, işlenmemiş bilgidir. Bunu düzene sokalım.”",
+    "title": "Vale'nin bilgi masası",
+    "text": "Vale, saraya gelen her raporu tek masada toplamayı önerdi. “Dağınık bilgi, işlenmemiş bilgidir. Bunu düzene sokalım.”",
     "choices": [
       {
         "label": "Kayıtları ortak deftere geçir",
@@ -1211,8 +1211,8 @@
         }
       },
       {
-        "label": "Masayı Voss’a bırak",
-        "text": "Masayı Voss’a bırak.",
+        "label": "Masayı Vale'ye bırak",
+        "text": "Masayı Vale'ye bırak.",
         "fx": {
           "actors": {
             "voss": {
@@ -1240,11 +1240,11 @@
     ],
     "art": "gizli_toplanti",
     "title": "Kapalı dosyanın anahtarı",
-    "text": "Bir dosyada hem bir bakanın hem sarayın adı geçiyor. Voss gözünü kaldırmadan sordu: “Kayıt mahkemeye mi gider, kasaya mı?”",
+    "text": "Bir dosyada hem bir bakanın hem sarayın adı geçiyor. Vale gözünü kaldırmadan sordu: “Kayıt mahkemeye mi gider, kasaya mı?”",
     "choices": [
       {
-        "label": "Dosyayı Falk’a teslim et",
-        "text": "Dosyayı Falk’a teslim et.",
+        "label": "Dosyayı Renn'e teslim et",
+        "text": "Dosyayı Renn'e teslim et.",
         "fx": {
           "actors": {
             "falk": {
@@ -1255,8 +1255,8 @@
         }
       },
       {
-        "label": "Voss’un kasasında tut",
-        "text": "Voss’un kasasında tut.",
+        "label": "Vale'nin kasasında tut",
+        "text": "Vale'nin kasasında tut.",
         "fx": {
           "actors": {
             "voss": {
@@ -1286,8 +1286,8 @@
       "voss"
     ],
     "art": "deepfake",
-    "title": "Voss arşivi açıyor",
-    "text": "Mahkeme yolunu seçtiğini hatırlayan Voss dosyayı usulünce teslim etti. “Bir kopyası bende yok, Majesteleri. Bu kez.”",
+    "title": "Vale arşivi açıyor",
+    "text": "Mahkeme yolunu seçtiğini hatırlayan Vale dosyayı usulünce teslim etti. “Bir kopyası bende yok, Majesteleri. Bu kez.”",
     "choices": [
       {
         "label": "Teslim tutanağını imzala",
@@ -1319,8 +1319,8 @@
       "voss"
     ],
     "art": "deepfake",
-    "title": "Voss’un ikinci arşivi",
-    "text": "Dosyayı kasada tutmasına izin vermiştin. Voss ince bir klasör uzattı: “Aslı emniyette. Yerini bilmeniz şimdilik gerekmiyor.”",
+    "title": "Vale'nin ikinci arşivi",
+    "text": "Dosyayı kasada tutmasına izin vermiştin. Vale ince bir klasör uzattı: “Aslı emniyette. Yerini bilmeniz şimdilik gerekmiyor.”",
     "choices": [
       {
         "label": "Arşivin kaydını iste",
@@ -1352,8 +1352,8 @@
       "kessler"
     ],
     "art": "kessler_reform",
-    "title": "Kessler’in cetveli",
-    "text": "Kessler cetvelin kenarına kendi eliyle not düşmüş: “Her kuruşun yeri belli olursa korkacak bir şey kalmaz.” Son satırın mürekkebi henüz kurumamış.",
+    "title": "Veyra'nın cetveli",
+    "text": "Veyra cetvelin kenarına kendi eliyle not düşmüş: “Her kuruşun yeri belli olursa korkacak bir şey kalmaz.” Son satırın mürekkebi henüz kurumamış.",
     "choices": [
       {
         "label": "Cetveli meclise de göster",
@@ -1388,7 +1388,7 @@
     ],
     "art": "butce_acigi",
     "title": "Eksik bütçe satırı",
-    "text": "Hazine giderlerinde açıklanmayan bir kalem var. Kessler fısıldadı: “Bu satırı kapatırsam bugün rahat ederiz. Yarın edemeyiz.”",
+    "text": "Hazine giderlerinde açıklanmayan bir kalem var. Veyra fısıldadı: “Bu satırı kapatırsam bugün rahat ederiz. Yarın edemeyiz.”",
     "choices": [
       {
         "label": "Açığı açıkça yaz",
@@ -1428,8 +1428,8 @@
       "kessler"
     ],
     "art": "butce_ifsa",
-    "title": "Kessler imzasını koyuyor",
-    "text": "Açığı açıklamasına izin vermiştin. Kessler titreyen elini imzanın yanına koydu: “Rakamlar ağır, fakat artık bizim.”",
+    "title": "Veyra imzasını koyuyor",
+    "text": "Açığı açıklamasına izin vermiştin. Veyra titreyen elini imzanın yanına koydu: “Rakamlar ağır, fakat artık bizim.”",
     "choices": [
       {
         "label": "Bakanın arkasında dur",
@@ -1466,7 +1466,7 @@
     ],
     "art": "butce_ifsa",
     "title": "Defterde boş bir satır",
-    "text": "Eksik kalemi gizlemesini istemiştin. Kessler defteri kapatmadı: “Majesteleri, boş bıraktığım yer her gün biraz büyüyor.”",
+    "text": "Eksik kalemi gizlemesini istemiştin. Veyra defteri kapatmadı: “Majesteleri, boş bıraktığım yer her gün biraz büyüyor.”",
     "choices": [
       {
         "label": "Defteri yeniden aç",
@@ -1500,8 +1500,8 @@
       "halden"
     ],
     "art": "halden_kanal",
-    "title": "Halden’in açık mikrofonu",
-    "text": "Halden stüdyonun kapılarını açtı. “Ekran benden, ses sizden. İsterseniz yarın bütün ülke sizi dinler.” Gülümserken reklam defterini de uzattı.",
+    "title": "Sarne'nin açık mikrofonu",
+    "text": "Sarne stüdyonun kapılarını açtı. “Ekran benden, ses sizden. İsterseniz yarın bütün ülke sizi dinler.” Gülümserken reklam defterini de uzattı.",
     "choices": [
       {
         "label": "Yayını açık tut",
@@ -1537,7 +1537,7 @@
     ],
     "art": "halden_ihale",
     "title": "Ekranın bedeli",
-    "text": "Bir ihale haberini yayından çıkarmak istiyor. Halden elini omzuna koydu: “Bir tek akşamlık sessizlik, Majesteleri. Sonra herkes kazanır.”",
+    "text": "Bir ihale haberini yayından çıkarmak istiyor. Sarne elini omzuna koydu: “Bir tek akşamlık sessizlik, Majesteleri. Sonra herkes kazanır.”",
     "choices": [
       {
         "label": "Haberi yayınla",
@@ -1585,8 +1585,8 @@
       "halden"
     ],
     "art": "halden_fatura",
-    "title": "Halden sözleşmeyi gösteriyor",
-    "text": "Haberi yayında bırakmıştın. Halden anlaşmayı masaya serdi: “Açık iş, açık hesap. Bu kadar dürüstlüğe alışmam gerekecek.”",
+    "title": "Sarne sözleşmeyi gösteriyor",
+    "text": "Haberi yayında bırakmıştın. Sarne anlaşmayı masaya serdi: “Açık iş, açık hesap. Bu kadar dürüstlüğe alışmam gerekecek.”",
     "choices": [
       {
         "label": "Sözleşmeyi yayımla",
@@ -1618,8 +1618,8 @@
       "halden"
     ],
     "art": "halden_fatura",
-    "title": "Halden yayını kesiyor",
-    "text": "Yayını durdurmasına izin vermiştin. Halden kumandayı cebine koydu: “Sizi korudum. Bir gün hangi düğmeye bastığımı hatırlarsınız.”",
+    "title": "Sarne yayını kesiyor",
+    "text": "Yayını durdurmasına izin vermiştin. Sarne kumandayı cebine koydu: “Sizi korudum. Bir gün hangi düğmeye bastığımı hatırlarsınız.”",
     "choices": [
       {
         "label": "Yayın takvimini iste",
@@ -1653,8 +1653,8 @@
       "lena"
     ],
     "art": "lena_roportaj",
-    "title": "Lena’nın kaynak defteri",
-    "text": "Lena gece boyunca belge karşılaştırdı. “Yazmadan önce üçüncü bir kişiye daha soracağım. Bir yanlış, doğruyu da yakar.”",
+    "title": "Leyla'nın kaynak defteri",
+    "text": "Leyla gece boyunca belge karşılaştırdı. “Yazmadan önce üçüncü bir kişiye daha soracağım. Bir yanlış, doğruyu da yakar.”",
     "choices": [
       {
         "label": "Belgelerin doğrulanmasını bekle",
@@ -1690,7 +1690,7 @@
     ],
     "art": "gazeteci_ihale",
     "title": "Kaynağın adı soruluyor",
-    "text": "Saraydan biri Lena’nın kaynağını öğrenmek istiyor. Lena dosyayı elinden bırakmadı: “Haberi tartışırım. İsmi vermem.”",
+    "text": "Saraydan biri Leyla'nın kaynağını öğrenmek istiyor. Leyla dosyayı elinden bırakmadı: “Haberi tartışırım. İsmi vermem.”",
     "choices": [
       {
         "label": "Kaynağı koru",
@@ -1736,8 +1736,8 @@
       "lena"
     ],
     "art": "lena_kitap",
-    "title": "Lena kaynağını koruyor",
-    "text": "Kaynağın peşine düşmemiştin. Lena başını salladı: “Bana inanmanız gerekmiyor. Yazdığımı sınayın.”",
+    "title": "Leyla kaynağını koruyor",
+    "text": "Kaynağın peşine düşmemiştin. Leyla başını salladı: “Bana inanmanız gerekmiyor. Yazdığımı sınayın.”",
     "choices": [
       {
         "label": "Açık yanıt ver",
@@ -1769,8 +1769,8 @@
       "lena"
     ],
     "art": "lena_kitap",
-    "title": "Lena kapıyı kapatıyor",
-    "text": "Kaynağı istemiştin. Lena kapıyı kapatırken konuştu: “Bir daha bana değil, yayımladığım belgeye cevap verin.”",
+    "title": "Leyla kapıyı kapatıyor",
+    "text": "Kaynağı istemiştin. Leyla kapıyı kapatırken konuştu: “Bir daha bana değil, yayımladığım belgeye cevap verin.”",
     "choices": [
       {
         "label": "Basına yanıt hakkı gönder",
@@ -1804,8 +1804,8 @@
       "dorn"
     ],
     "art": "dorn_filtre",
-    "title": "Dorn’un randevu defteri",
-    "text": "Dorn gümüş tepside randevu defterini getirdi. “Majesteleri, kapıdaki herkes kendini acil sanıyor. Ben yalnızca sırayı koruyorum.”",
+    "title": "Helena'nın randevu defteri",
+    "text": "Helena gümüş tepside randevu defterini getirdi. “Majesteleri, kapıdaki herkes kendini acil sanıyor. Ben yalnızca sırayı koruyorum.”",
     "choices": [
       {
         "label": "Defteri denetime aç",
@@ -1816,8 +1816,8 @@
         }
       },
       {
-        "label": "Dorn’un takdirine bırak",
-        "text": "Dorn’un takdirine bırak.",
+        "label": "Helena'nın takdirine bırak",
+        "text": "Helena'nın takdirine bırak.",
         "fx": {
           "actors": {
             "dorn": {
@@ -1845,7 +1845,7 @@
     ],
     "art": "dorn_rusvet",
     "title": "Saray kapısındaki sıra",
-    "text": "İki heyet aynı saate yazılmış. Dorn hafifçe eğildi: “Hangisinin önce girdiği, hangisinin daha önemli sayılacağını belirler.”",
+    "text": "İki heyet aynı saate yazılmış. Helena hafifçe gülümsedi: “Hangisinin önce girdiği, hangisinin daha önemli sayılacağını belirler.”",
     "choices": [
       {
         "label": "Sırayı ilan et",
@@ -1883,8 +1883,8 @@
       "dorn"
     ],
     "art": "dorn_sir",
-    "title": "Dorn defteri açıyor",
-    "text": "Sırayı açık tutmasını istemiştin. Dorn kalemi sana uzattı: “Bugün kapıyı ben değil, kayıt açtı.”",
+    "title": "Helena defteri açıyor",
+    "text": "Sırayı açık tutmasını istemiştin. Helena kalemi sana uzattı: “Bugün kapıyı ben değil, kayıt açtı.”",
     "choices": [
       {
         "label": "Tutanağı sakla",
@@ -1916,8 +1916,8 @@
       "dorn"
     ],
     "art": "dorn_sir",
-    "title": "Dorn’un özel kapısı",
-    "text": "Sırayı gizlemesine izin vermiştin. Dorn yine eğildi: “Arka kapı da sarayın kapısıdır, Majesteleri.”",
+    "title": "Helena'nın özel kapısı",
+    "text": "Sırayı gizlemesine izin vermiştin. Helena yine gülümsedi: “Arka kapı da sarayın kapısıdır, Majesteleri.”",
     "choices": [
       {
         "label": "Kapıları yeniden say",
@@ -1952,7 +1952,7 @@
     ],
     "art": "prens_hirs",
     "title": "Prens’in boş sandalyesi",
-    "text": "Cassian törende kendisine yer ayrılmadığını gördü. “Babamız aynı sofrayı kurardı. Taç size kaldı diye sandalyem yok olmadı.”",
+    "text": "Marcus törende kendisine yer ayrılmadığını gördü. “Babamız aynı sofrayı kurardı. Taç size kaldı diye sandalyem yok olmadı.”",
     "choices": [
       {
         "label": "Törende yer aç",
@@ -1991,7 +1991,7 @@
     ],
     "art": "prens_veliaht",
     "title": "Aile sofrasındaki mühür",
-    "text": "Hanedanın ortak bildirisi için mühür bekleniyor. Cassian durdu: “Kardeş olarak mı imzalıyorum, gölge olarak mı?”",
+    "text": "Hanedanın ortak bildirisi için mühür bekleniyor. Marcus durdu: “Kardeş olarak mı imzalıyorum, gölge olarak mı?”",
     "choices": [
       {
         "label": "Ortak bildiriyi birlikte imzala",
@@ -2030,7 +2030,7 @@
     ],
     "art": "prens_kacis",
     "title": "Prens yanında duruyor",
-    "text": "Onu bildiride eşit aile üyesi saymıştın. Cassian kalabalığa dönüp “Kardeşimin tacını ben de korurum” dedi.",
+    "text": "Onu bildiride eşit aile üyesi saymıştın. Marcus kalabalığa dönüp “Kardeşimin tacını ben de korurum” dedi.",
     "choices": [
       {
         "label": "Sözünü kabul et",
@@ -2063,7 +2063,7 @@
     ],
     "art": "prens_kacis",
     "title": "Prens ayrı sofra kuruyor",
-    "text": "Mührü ondan esirgemiştin. Cassian kırgınlığını saklamadı: “Sarayınızın dışında da bir aile soframız var.”",
+    "text": "Mührü ondan esirgemiştin. Marcus kırgınlığını saklamadı: “Sarayınızın dışında da bir aile soframız var.”",
     "choices": [
       {
         "label": "Aileyle görüş",
@@ -2095,8 +2095,8 @@
       "brandt"
     ],
     "art": "brandt_koalisyon",
-    "title": "Brandt mahallelerde",
-    "text": "Brandt fabrika kapısında konuştu: “İnsanlar ekmekle oy arasında seçim yapmak zorunda kalmamalı.” Ardından gelenleri tek tek dinledi.",
+    "title": "Voss mahallelerde",
+    "text": "Voss fabrika kapısında konuştu: “İnsanlar ekmekle oy arasında seçim yapmak zorunda kalmamalı.” Ardından gelenleri tek tek dinledi.",
     "choices": [
       {
         "label": "Temsilcileri dinle",
@@ -2132,7 +2132,7 @@
     ],
     "art": "genel_grev",
     "title": "Meydanın sesi yükseliyor",
-    "text": "Meydanda öfkeli bir kalabalık var. Brandt yumruğunu indirdi: “Bugün söz vermezsek yarın taş konuşacak.”",
+    "text": "Meydanda öfkeli bir kalabalık var. Voss yumruğunu indirdi: “Bugün söz vermezsek yarın taş konuşacak.”",
     "choices": [
       {
         "label": "Masaya çağır",
@@ -2171,8 +2171,8 @@
       "brandt"
     ],
     "art": "muhalefet_birlesme",
-    "title": "Brandt sandığı işaret ediyor",
-    "text": "Masaya çağrını hatırladı. Brandt meydanda “Hesabı sandıkta soracağız” dedi; alkış arasında ıslık da vardı.",
+    "title": "Voss sandığı işaret ediyor",
+    "text": "Masaya çağrını hatırladı. Voss meydanda “Hesabı sandıkta soracağız” dedi; alkış arasında ıslık da vardı.",
     "choices": [
       {
         "label": "Seçim takvimini tartış",
@@ -2204,8 +2204,8 @@
       "brandt"
     ],
     "art": "muhalefet_birlesme",
-    "title": "Brandt meydanı bırakmıyor",
-    "text": "Kapıları kapatmıştın. Brandt öfkeyle konuştu: “Bizi dinlemeyen saraya, meydan kendi cevabını verir.”",
+    "title": "Voss meydanı bırakmıyor",
+    "text": "Kapıları kapatmıştın. Voss öfkeyle konuştu: “Bizi dinlemeyen saraya, meydan kendi cevabını verir.”",
     "choices": [
       {
         "label": "Açık konuşma öner",
@@ -2239,8 +2239,8 @@
       "falk"
     ],
     "art": "yargic_dosya",
-    "title": "Falk’ın bağımsızlık metni",
-    "text": "Falk kısa bir metin okudu: “Kanun kral için de yazılır. Başka türlü kanun değildir.” Salondaki sessizlik alkıştan uzundu.",
+    "title": "Renn'in bağımsızlık metni",
+    "text": "Renn kısa bir metin okudu: “Kanun kral için de yazılır. Başka türlü kanun değildir.” Salondaki sessizlik alkıştan uzundu.",
     "choices": [
       {
         "label": "Metni kayda geçir",
@@ -2279,7 +2279,7 @@
     ],
     "art": "anayasa_degisikligi",
     "title": "Saray dosyasının usulü",
-    "text": "Sarayla ilgili dosya önüne geldi. Falk cübbesini düzeltti: “İçeriğine hükmetmem. Önce usulüne bakarım.”",
+    "text": "Sarayla ilgili dosya önüne geldi. Renn cübbesini düzeltti: “İçeriğine hükmetmem. Önce usulüne bakarım.”",
     "choices": [
       {
         "label": "Dosyayı usulüne bırak",
@@ -2325,8 +2325,8 @@
       "falk"
     ],
     "art": "falk_istifa",
-    "title": "Falk kürsüsünde kalıyor",
-    "text": "Usulü korumasına izin vermiştin. Falk dosyayı mühürledi: “Bu karar ne sizin ne benim. Mahkemenin.”",
+    "title": "Renn kürsüsünde kalıyor",
+    "text": "Usulü korumasına izin vermiştin. Renn dosyayı mühürledi: “Bu karar ne sizin ne benim. Mahkemenin.”",
     "choices": [
       {
         "label": "Mahkeme kararını uygula",
@@ -2358,8 +2358,8 @@
       "falk"
     ],
     "art": "falk_istifa",
-    "title": "Falk yalnız kalıyor",
-    "text": "Usule karışmıştın. Falk kürsüde tek başına kaldı: “Bir yargıç yalnız kalsa da kararını yazmalı.”",
+    "title": "Renn yalnız kalıyor",
+    "text": "Usule karışmıştın. Renn kürsüde tek başına kaldı: “Bir yargıç yalnız kalsa da kararını yazmalı.”",
     "choices": [
       {
         "label": "Yargıcın sözünü dinle",
@@ -2431,7 +2431,7 @@
     "chance": 0.7,
     "art": "genel_grev",
     "title": "Meydanın kuşatması",
-    "text": "Meydanı yıllarca dinledin; şimdi her mahalle kendi hesabını getiriyor. Brandt kürsüden “Alkışla değil, cevapla yönetin” diye seslendi. Saray kapısı açık ama yol kalabalık.",
+    "text": "Meydanı yıllarca dinledin; şimdi her mahalle kendi hesabını getiriyor. Voss kürsüden “Alkışla değil, cevapla yönetin” diye seslendi. Saray kapısı açık ama yol kalabalık.",
     "choices": [
       {
         "label": "Temsilcileri saraya al",
@@ -2467,7 +2467,7 @@
     "chance": 0.7,
     "art": "dorn_filtre",
     "title": "Makamların hesabı",
-    "text": "Dorn’un defterinde senden görev alanların adları yan yana duruyor. Her biri ayrı bir karşılık bekliyor. Kâhya kibarca eğildi: “Majesteleri, bu sıra kendi kendine oluşmadı.”",
+    "text": "Helena'nın defterinde senden görev alanların adları yan yana duruyor. Her biri ayrı bir karşılık bekliyor. Helena kibarca gülümsedi: “Majesteleri, bu sıra kendi kendine oluşmadı.”",
     "choices": [
       {
         "label": "Atamaları açıkça gözden geçir",
@@ -2478,8 +2478,8 @@
         }
       },
       {
-        "label": "Dorn’dan sözleri toplamasını iste",
-        "text": "Kâhya kapıları kapattı; beklentiler kapanmadı.",
+        "label": "Helena'dan sözleri toplamasını iste",
+        "text": "Helena kapıları kapattı; beklentiler kapanmadı.",
         "fx": {
           "king": -1,
           "unrest": -1
@@ -2503,7 +2503,7 @@
     "chance": 0.7,
     "art": "milletvekili_satin",
     "title": "Sermayenin meclis kuşatması",
-    "text": "Sermaye çevreleri bütçe oylaması öncesi aynı masada toplandı. Halden’in adı listede var; masayı kimin kurduğunu herkes başka anlatıyor. Vekiller karar için saraya bakıyor.",
+    "text": "Sermaye çevreleri bütçe oylaması öncesi aynı masada toplandı. Sarne'nin adı listede var; masayı kimin kurduğunu herkes başka anlatıyor. Vekiller karar için saraya bakıyor.",
     "choices": [
       {
         "label": "Bağış defterlerini aç",
@@ -2539,7 +2539,7 @@
     "chance": 0.7,
     "art": "halden_kanal",
     "title": "Yayınlar desteğini çekiyor",
-    "text": "Sabah bültenleri aynı boşluğu bıraktı: kralın adı yok. Halden’in kanalı ve bağımsız gazeteler farklı sebeplerle susuyor. Ülke bu sessizliği bir haber gibi okuyor.",
+    "text": "Sabah bültenleri aynı boşluğu bıraktı: kralın adı yok. Sarne'nin kanalı ve bağımsız gazeteler farklı sebeplerle susuyor. Ülke bu sessizliği bir haber gibi okuyor.",
     "choices": [
       {
         "label": "Kameralar önünde soru al",
@@ -2575,10 +2575,10 @@
     "chance": 0.7,
     "art": "voss_arden_catisma",
     "title": "Gizli arşivin muhtırası",
-    "text": "Bakanların masasına aynı anda mühürlü zarflar bırakıldı. İçindekileri yalnız istihbarat biliyor. Voss ortada görünmüyor; kurduğu arşiv şimdi kendi adına konuşuyor.",
+    "text": "Bakanların masasına aynı anda mühürlü zarflar bırakıldı. İçindekileri yalnız istihbarat biliyor. Vale ortada görünmüyor; kurduğu arşiv şimdi kendi adına konuşuyor.",
     "choices": [
       {
-        "label": "Dosyaları Falk’a teslim et",
+        "label": "Dosyaları Renn'e teslim et",
         "text": "Mühürler mahkemede açıldı; saray da kendi dosyasını gördü.",
         "fx": {
           "king": 1,
@@ -2610,11 +2610,11 @@
   },
   "art": "butce_acigi",
   "title": "Maaşlar ödenemiyor",
-  "text": "Kessler maaş defterlerini açtı: 'Gelecek ayı bekleyemeyiz, Majesteleri.' Kışlaların payı da bu sayfada.",
+  "text": "Veyra maaş defterlerini açtı: 'Gelecek ayı bekleyemeyiz, Majesteleri.' Kışlaların payı da bu sayfada.",
   "choices": [
     {
       "label": "Borç bul",
-      "text": "Kessler bir borç anlaşması getirdi. Kasa nefes aldı, faiz deftere işlendi.",
+      "text": "Veyra bir borç anlaşması getirdi. Kasa nefes aldı, faiz deftere işlendi.",
       "fx": {
         "treasury": 15,
         "economy": -2
@@ -2666,7 +2666,7 @@
   "cooldown": 20,
   "art": "butce_acigi",
   "title": "Kasada beklenmedik fazla",
-  "text": "Kessler, 'Biriken payı kime ayıracağız?' diye sordu. Defterin kenarına kimsenin adını yazmadı.",
+  "text": "Veyra, 'Biriken payı kime ayıracağız?' diye sordu. Defterin kenarına kimsenin adını yazmadı.",
   "choices": [
     {
       "label": "Kurumlara yatırım yap",
@@ -2689,7 +2689,7 @@
     },
     {
       "label": "Saray payını ayır",
-      "text": "Kessler boş satıra bir rakam yazdı; defterin kopyası da var.",
+      "text": "Veyra boş satıra bir rakam yazdı; defterin kopyası da var.",
       "fx": {
         "treasury": -5,
         "wealth": 4,
@@ -2707,7 +2707,7 @@
     }
   ],
   "ignore": {
-    "text": "Kessler fazlayı kasada tuttu.",
+    "text": "Veyra fazlayı kasada tuttu.",
     "fx": {}
   }
 },
@@ -2719,7 +2719,7 @@
   },
   "art": "butce_acigi",
   "title": "Vergi defterleri kapanmıyor",
-  "text": "Kessler dosyaları masaya dizdi: 'Tahsilat memurları hesap çıkaramıyor. Bana yeni insan verin.'",
+  "text": "Veyra dosyaları masaya dizdi: 'Tahsilat memurları hesap çıkaramıyor. Bana yeni insan verin.'",
   "choices": [
     {
       "label": "Uzman ekip kur",
@@ -2732,8 +2732,8 @@
       }
     },
     {
-      "label": "Halden’den geçici kaynak iste",
-      "text": "Bir çek geldi. Kessler alacaklının adını iki kez çizdi.",
+      "label": "Sarne'den geçici kaynak iste",
+      "text": "Bir çek geldi. Veyra alacaklının adını iki kez çizdi.",
       "fx": {
         "treasury": 7,
         "capacity": {
@@ -2762,11 +2762,11 @@
   },
   "art": "yargic_dosya",
   "title": "Mahkemeler karar yazamıyor",
-  "text": "Falk, 'Dosyalar bekledikçe tanıklar susuyor' dedi. Koridorda dava vekilleri sıraya girmiş.",
+  "text": "Renn, 'Dosyalar bekledikçe tanıklar susuyor' dedi. Koridorda dava vekilleri sıraya girmiş.",
   "choices": [
     {
       "label": "Yargıçlara kadro aç",
-      "text": "Falk yeni isimleri tek tek inceledi.",
+      "text": "Renn yeni isimleri tek tek inceledi.",
       "fx": {
         "treasury": -3,
         "capacity": {
@@ -2802,11 +2802,11 @@
   },
   "art": "toren",
   "title": "Valilikler sarayın emrini bekliyor",
-  "text": "Dorn nazikçe eğildi: 'Yazı gitti, Majesteleri. Ulaştığından emin olamıyoruz.'",
+  "text": "Helena nazikçe eğildi: 'Yazı gitti, Majesteleri. Ulaştığından emin olamıyoruz.'",
   "choices": [
     {
       "label": "Denetçileri gönder",
-      "text": "Valiler mühürleri buldu; Dorn hangisinin eksik olduğunu not etti.",
+      "text": "Valiler mühürleri buldu; Helena hangisinin eksik olduğunu not etti.",
       "fx": {
         "treasury": -3,
         "capacity": {
@@ -2815,8 +2815,8 @@
       }
     },
     {
-      "label": "Dorn’a yetki ver",
-      "text": "Kâhyanın ağı sarayın yerine çalışmaya başladı.",
+      "label": "Helena'ya yetki ver",
+      "text": "Kraliçe'nin ağı sarayın yerine çalışmaya başladı.",
       "fx": {
         "capacity": {
           "idare": 3
@@ -2870,7 +2870,7 @@
     },
     {
       "label": "Haber akışını yönet",
-      "text": "Halden sınır görüntülerini döndürdü. Kışlalar hâlâ bekliyor.",
+      "text": "Sarne sınır görüntülerini döndürdü. Kışlalar hâlâ bekliyor.",
       "fx": {
         "unrest": -3,
         "flag": "sinir_krizi_2"
@@ -2937,11 +2937,11 @@
   },
   "art": "kessler_reform",
   "title": "Maliye defterlerinde yeni düzen",
-  "text": "Kessler, 'Bu kez kalemler birbirini tutuyor' dedi. Yıllardır bekleyen vergi dosyaları kapanıyor.",
+  "text": "Veyra, 'Bu kez kalemler birbirini tutuyor' dedi. Yıllardır bekleyen vergi dosyaları kapanıyor.",
   "choices": [
     {
       "label": "Kazancı kasada tut",
-      "text": "Kessler fazla mesaiyi sürdürdü.",
+      "text": "Veyra fazla mesaiyi sürdürdü.",
       "fx": {
         "treasury": 4
       }
@@ -3023,11 +3023,11 @@
   "needs_flag": "KADRO_LIYAKATLI_HUKUK",
   "art": "yargic_dosya",
   "title": "Savcı sarayın dosyasına yaklaşıyor",
-  "text": "Falk, 'Atadığınız savcı yalnızca suçun izini sürüyor. Kapıyı ben de kapatmam' dedi.",
+  "text": "Renn, 'Atadığınız savcı yalnızca suçun izini sürüyor. Kapıyı ben de kapatmam' dedi.",
   "choices": [
     {
       "label": "Savcının işine karışma",
-      "text": "Falk ilk kez başını salladı. Dosya açık kaldı.",
+      "text": "Renn ilk kez başını salladı. Dosya açık kaldı.",
       "fx": {
         "capacity": {
           "hukuk": 2
@@ -3037,7 +3037,7 @@
     },
     {
       "label": "Saray kayıtlarını gözden geçir",
-      "text": "Kayıtlar düzeldi; Falk nedenini sormadı.",
+      "text": "Kayıtlar düzeldi; Renn nedenini sormadı.",
       "fx": {
         "treasury": -2,
         "king": 1
@@ -3064,12 +3064,12 @@
     }
   },
   "art": "skandal_bakan",
-  "title": "Liyakatli kâhya kendi yolunu çiziyor",
-  "text": "Dorn usulca, 'Devletin işi sarayın takvimine sığmıyor, Majesteleri' dedi. Valiler artık önce onu arıyor.",
+  "title": "Liyakatli kraliçe kendi yolunu çiziyor",
+  "text": "Helena usulca, 'Devletin işi sarayın takvimine sığmıyor, Majesteleri' dedi. Valiler artık önce onu arıyor.",
   "choices": [
     {
       "label": "Yetkisini yazıya bağla",
-      "text": "Dorn mührü aldı; sınırlar da kâğıda geçti.",
+      "text": "Helena mührü aldı; sınırlar da kâğıda geçti.",
       "fx": {
         "capacity": {
           "idare": 2
@@ -3095,7 +3095,7 @@
     }
   ],
   "ignore": {
-    "text": "Dorn işini bildiği gibi sürdürdü.",
+    "text": "Helena işini bildiği gibi sürdürdü.",
     "fx": {
       "actors": {
         "dorn": {
@@ -3114,7 +3114,7 @@
   },
   "art": "butce_acigi",
   "title": "Devlet sessizce yavaşlıyor",
-  "text": "Maliye ve saray yazışmaları aynı masada birikti. Kessler sayfa çevirdi, Dorn başka bir dosyayı örttü.",
+  "text": "Maliye ve saray yazışmaları aynı masada birikti. Veyra sayfa çevirdi, Helena başka bir dosyayı örttü.",
   "choices": [
     {
       "label": "Ortak denetim kur",
@@ -3154,11 +3154,11 @@
   "chance": 0.55,
   "art": "toren",
   "title": "Valiliklerin hesap günü",
-  "text": "Dorn taşradan gelen mühürlü yazıları önüne koydu: 'Hepsi cevap bekliyor, Majesteleri. Birini öncelemelisiniz.'",
+  "text": "Helena taşradan gelen mühürlü yazıları önüne koydu: 'Hepsi cevap bekliyor, Majesteleri. Birini öncelemelisiniz.'",
   "choices": [
     {
       "label": "Vergi defterlerini aç",
-      "text": "Kessler geciken tahsilatı izlemeye başladı.",
+      "text": "Veyra geciken tahsilatı izlemeye başladı.",
       "fx": {
         "treasury": 1,
         "capacity": {
@@ -3168,7 +3168,7 @@
     },
     {
       "label": "Valilik yazılarını bitir",
-      "text": "Dorn yazıları çıkardı, kasa hesabı yarına kaldı.",
+      "text": "Helena yazıları çıkardı, kasa hesabı yarına kaldı.",
       "fx": {
         "capacity": {
           "idare": 1
@@ -3178,7 +3178,7 @@
     }
   ],
   "ignore": {
-    "text": "Dorn yazıları sıraya koydu.",
+    "text": "Helena yazıları sıraya koydu.",
     "fx": {}
   }
 },
@@ -3191,7 +3191,7 @@
   "chance": 0.55,
   "art": "skandal_bakan",
   "title": "Kadro defterinin son sayfası",
-  "text": "Kessler dört kurumun boş kadrolarını saydı. 'İsimleri değil, yapılacak işi konuşalım' dedi.",
+  "text": "Veyra dört kurumun boş kadrolarını saydı. 'İsimleri değil, yapılacak işi konuşalım' dedi.",
   "choices": [
     {
       "label": "Açıkları uzmanlarla doldur",
@@ -3226,11 +3226,11 @@
   "max_week": 96,
   "art": "butce_acigi",
   "title": "Son çeyreğin hesabı",
-  "text": "Kessler ve Falk aynı masada bekliyor. Biri kasanın, öteki adliyenin gelecek yıla bırakacağı dosyaları getirdi.",
+  "text": "Veyra ve Renn aynı masada bekliyor. Biri kasanın, öteki adliyenin gelecek yıla bırakacağı dosyaları getirdi.",
   "choices": [
     {
       "label": "Kasayı toparla",
-      "text": "Kessler defterleri aldı; Falk kendi dosyasıyla çıktı.",
+      "text": "Veyra defterleri aldı; Renn kendi dosyasıyla çıktı.",
       "fx": {
         "treasury": 2,
         "capacity": {
@@ -3240,7 +3240,7 @@
     },
     {
       "label": "Adliyeyi toparla",
-      "text": "Falk dosyaları kapattı; kasadan bir pay gitti.",
+      "text": "Renn dosyaları kapattı; kasadan bir pay gitti.",
       "fx": {
         "treasury": -2,
         "capacity": {
@@ -3257,42 +3257,42 @@
 {
   "id": "halden_yayin_kesti", "min_week": 24, "min_holding": 60, "needs_hostile": true, "chance": 0.35,
   "art": "halden_kanal", "title": "Bütün kanallar sustu",
-  "text": "Halden'in gazetesi ve televizyonu aynı sabah hükümeti hedef aldı. \"Bir emir vermeniz gerekmiyor Majesteleri,\" dedi Halden. \"Herkes kimin sustuğunu gördü.\"",
+  "text": "Sarne'nin gazetesi ve televizyonu aynı sabah hükümeti hedef aldı. \"Bir emir vermeniz gerekmiyor Majesteleri,\" dedi Sarne. \"Herkes kimin sustuğunu gördü.\"",
   "choices": [
-    {"label": "Lena'ya söz ver", "text": "Lena, yayında boş bırakılan yerleri kendi sesiyle doldurdu.", "fx": {"wealth": -2, "unrest": -1}},
-    {"label": "Halden'le konuş", "text": "Halden dinledi; yayınları için yeni bir pay istedi.", "fx": {"treasury": -2, "holding": 2}}
+    {"label": "Leyla'ya söz ver", "text": "Leyla, yayında boş bırakılan yerleri kendi sesiyle doldurdu.", "fx": {"wealth": -2, "unrest": -1}},
+    {"label": "Sarne'yle konuş", "text": "Sarne dinledi; yayınları için yeni bir pay istedi.", "fx": {"treasury": -2, "holding": 2}}
   ],
   "ignore": {"text": "Ertesi gün manşetler yine sarayı suçladı.", "fx": {"unrest": 1}}
 },
 {
   "id": "ihale_sorusturmasi_sizinti", "min_week": 20, "needs_flag": "HALDEN_SAVCI_SIZDI", "flag_age": {"HALDEN_SAVCI_SIZDI": 1},
   "art": "halden_fatura", "title": "Soruşturmanın sayfaları dışarıda",
-  "text": "Falk dosyayı kapatmadan önce Halden'in gazetesi başlığı bastı. \"Mühür adliyede kaldı Majesteleri; sayfalar kalmadı,\" dedi.",
+  "text": "Renn dosyayı kapatmadan önce Sarne'nin gazetesi başlığı bastı. \"Mühür adliyede kaldı Majesteleri; sayfalar kalmadı,\" dedi.",
   "choices": [
-    {"label": "Falk'ı koru", "text": "Falk görevinde kaldı. Saray, soruşturmanın yükünü üstlendi.", "fx": {"king": -1, "capacity": {"hukuk": 1}}},
-    {"label": "Dosyayı beklet", "text": "Falk başını eğdi. Gazete bunu da yazdı.", "fx": {"capacity": {"hukuk": -1}, "unrest": 1}}
+    {"label": "Renn'i koru", "text": "Renn görevinde kaldı. Saray, soruşturmanın yükünü üstlendi.", "fx": {"king": -1, "capacity": {"hukuk": 1}}},
+    {"label": "Dosyayı beklet", "text": "Renn başını eğdi. Gazete bunu da yazdı.", "fx": {"capacity": {"hukuk": -1}, "unrest": 1}}
   ],
   "ignore": {"text": "Sızıntının kaynağı bulunamadı.", "fx": {}}
 },
 {
   "id": "saray_payi_sizdi", "min_week": 39, "needs_flag": "SARAY_PAYI_BASLADI", "flag_age": {"SARAY_PAYI_BASLADI": 26},
   "art": "gazeteci_ihale", "title": "Saray payının hesabı",
-  "text": "Kessler'in iki çeyrektir tuttuğu ayrı sütun gazeteye düştü. \"Rakamları ben yazdım Majesteleri,\" dedi. \"Başlığı başkası attı.\"",
+  "text": "Veyra'nın iki çeyrektir tuttuğu ayrı sütun gazeteye düştü. \"Rakamları ben yazdım Majesteleri,\" dedi. \"Başlığı başkası attı.\"",
   "choices": [
-    {"label": "Payı kes", "text": "Kessler ayrı sütunu kapattı; kasanın izi yine defterde kaldı.", "fx": {"court_share": false, "king": 1}},
-    {"label": "Payı savun", "text": "Kessler defteri açık bıraktı. Gazete ikinci baskıyı hazırladı.", "fx": {"king": -2, "unrest": 1}}
+    {"label": "Payı kes", "text": "Veyra ayrı sütunu kapattı; kasanın izi yine defterde kaldı.", "fx": {"court_share": false, "king": 1}},
+    {"label": "Payı savun", "text": "Veyra defteri açık bıraktı. Gazete ikinci baskıyı hazırladı.", "fx": {"king": -2, "unrest": 1}}
   ],
   "ignore": {"text": "Gazete saraydan yanıt alamadığını yazdı.", "fx": {"king": -1}}
 },
 {
   "id": "holding_devrildi", "min_week": 52, "min_holding": 70, "needs_moved": "halden", "chance": 0.6,
-  "art": "halden_intikam", "title": "Halden karşı safta",
-  "text": "Halden'in şirketleri sarayla bağını kopardı. Yayınları konuşuyor, holdingi yavaşça eriyor. \"Beni buradan çıkarabilirsiniz Majesteleri,\" dedi, \"sesimi değil.\"",
+  "art": "halden_intikam", "title": "Sarne karşı safta",
+  "text": "Sarne'nin şirketleri sarayla bağını kopardı. Yayınları konuşuyor, holdingi yavaşça eriyor. \"Beni buradan çıkarabilirsiniz Majesteleri,\" dedi, \"sesimi değil.\"",
   "choices": [
-    {"label": "Rakip yayını destekle", "text": "Lena'nın küçük masası büyüdü; Halden'in kanalları yerinde kaldı.", "fx": {"wealth": -2, "king": 1}},
+    {"label": "Rakip yayını destekle", "text": "Leyla'nın küçük masası büyüdü; Sarne'nin kanalları yerinde kaldı.", "fx": {"wealth": -2, "king": 1}},
     {"label": "Bekle", "text": "Holding yeni ortak aradı. Saray kapısı kapalı kaldı.", "fx": {"holding": -3}}
   ],
-  "ignore": {"text": "Halden'in kanalları yayınını sürdürdü.", "fx": {}}
+  "ignore": {"text": "Sarne'nin kanalları yayınını sürdürdü.", "fx": {}}
 },
 {
   "id": "son_butce_mektubu", "min_week": 97, "art": "butce_acigi", "title": "Son bütçe mektubu",

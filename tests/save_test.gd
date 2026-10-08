@@ -38,7 +38,7 @@ func _init() -> void:
 	var d: Dictionary = str_to_var(f.get_as_text())
 	f.close()
 	_check("sürüm yazıldı", int(d.get("version", 0)) == sim.SAVE_VERSION)
-	# Sürüm 6: kurum çizelgesinde Halden'in haftalık payı tutulmuyordu.
+	# Sürüm 6: kurum çizelgesinde Sarne'nin haftalık payı tutulmuyordu.
 	var v6 := d.duplicate(true)
 	v6["version"] = 6
 	for point: Dictionary in v6["capacity_timeline"]:
@@ -46,14 +46,14 @@ func _init() -> void:
 	_write(sim.save_path, v6)
 	_check("v6 holding çizelgesi göçü", sim.load_game() and not sim.capacity_timeline.is_empty()
 		and absf(float(sim.capacity_timeline[-1].get("holding", -1.0)) - holding_before) < 0.001)
-	# Sürüm 5: Halden holdingi ve kadro günlüğü henüz kayıtlı değildi.
+	# Sürüm 5: Sarne holdingi ve kadro günlüğü henüz kayıtlı değildi.
 	var v5 := d.duplicate(true)
 	v5["version"] = 5
 	for k in ["holding", "halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log"]:
 		v5.erase(k)
 	_write(sim.save_path, v5)
 	var old_holding := clampf(float(d["actors"]["halden"]["power"]) - 10.0, 0.0, 100.0)
-	_check("v5 Halden göçü", sim.load_game() and absf(sim.holding - old_holding) < 0.001 and sim.kadro_log.is_empty() and sim.halden_demands == 0)
+	_check("v5 Sarne göçü", sim.load_game() and absf(sim.holding - old_holding) < 0.001 and sim.kadro_log.is_empty() and sim.halden_demands == 0)
 	# Sürüm 4: devlet alanları yoktu.
 	var v4 := d.duplicate(true)
 	v4["version"] = 4

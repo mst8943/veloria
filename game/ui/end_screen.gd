@@ -183,7 +183,7 @@ func _append_state(state: Dictionary) -> void:
 		for item: Dictionary in appointments:
 			lies_page.append_text("• %d. hafta — %s: %s\n" % [int(item["week"]),
 				institutions.get(str(item["institution"]), str(item["institution"])), "Sadık Ata" if item["kind"] == "loyal" else "Liyakatli Ata"])
-	lies_page.append_text("[color=gray]İhale:[/color] %d kez. [color=gray]Halden'in düşman yayını:[/color] %d hafta.\n" % [
+	lies_page.append_text("[color=gray]İhale:[/color] %d kez. [color=gray]Sarne'nin düşman yayını:[/color] %d hafta.\n" % [
 		int(state.get("tenders", 0)), int(state.get("hostile_weeks", 0))])
 
 

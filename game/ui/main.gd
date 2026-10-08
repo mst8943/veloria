@@ -455,7 +455,7 @@ func _build_header(parent: Control) -> void:
 	(_buttons["desk"] as Button).size_flags_horizontal = Control.SIZE_SHRINK_END
 	(_buttons["desk"] as Button).custom_minimum_size.x = 96
 	_add_btn(top, "media", "Medya", _open_media)
-	(_buttons["media"] as Button).tooltip_text = "Medya Merkezi: Halden'in gazetesi, Lena'nın bağımsız gazetesi ve Halden TV. İkisini karşılaştır; biri yalan söylüyor olabilir."
+	(_buttons["media"] as Button).tooltip_text = "Medya Merkezi: Sarne'nin gazetesi, Leyla'nın bağımsız gazetesi ve Sarne TV. İkisini karşılaştır; biri yalan söylüyor olabilir."
 	_add_btn(top, "save", "Kaydet", _on_save)
 	_add_btn(top, "menu", "Menü", _show_menu)
 	(_buttons["media"] as Button).size_flags_horizontal = Control.SIZE_SHRINK_END

@@ -1,6 +1,6 @@
 extends RefCounted
 ## Basın: gazeteler ve televizyon, simülasyonun gizli durumundan her hafta üretilir.
-## Her yayın sahibinin gözüyle yazar: Halden süsler ve sansürler, Lena gerçeğe yakın yazar.
+## Her yayın sahibinin gözüyle yazar: Sarne süsler ve sansürler, Leyla gerçeğe yakın yazar.
 ## Böylece iki gazeteyi karşılaştırmak oyuncu için bir bilgi kaynağıdır.
 
 const OUTLETS := {
@@ -25,18 +25,18 @@ const STREET := {
 		["Meydanlar doldu", "Binlerce kişi sokakta. Polisin bazı birimlerinin müdahaleden kaçındığı görüldü."]],
 }
 const OPP := {
-	"state": [["Muhalefet dağınık", "Brandt'ın partisi iç kavgalarla uğraşıyor."],
+	"state": [["Muhalefet dağınık", "Voss'un partisi iç kavgalarla uğraşıyor."],
 		["Muhalefet sorumsuz", "Meclisteki bazı vekillerin söylemleri istikrarı tehdit ediyor."],
 		["Muhalefete sert uyarı", "Hükümet, sokağı kışkırtanların hesap vereceğini açıkladı."]],
-	"free": [["Muhalefet sessiz", "Brandt bu hafta kürsüye çıkmadı."],
+	"free": [["Muhalefet sessiz", "Voss bu hafta kürsüye çıkmadı."],
 		["Muhalefet örgütleniyor", "Kapalı kapılar ardında iki kanadın birleşme görüşmesi sürüyor."],
-		["Muhalefet sokağa çağırıyor", "Brandt: 'Bu saray halkın sesini artık duymak zorunda.'"]],
+		["Muhalefet sokağa çağırıyor", "Voss: 'Bu saray halkın sesini artık duymak zorunda.'"]],
 }
 const ROYAL_FLUFF := ["Kral, saray bahçelerini halka açtı.", "Kraliyet orkestrası hafta sonu konser verecek.",
 	"Kral, yetimhaneye bağışta bulundu.", "Saray protokolü yeni törenler hazırlıyor.", "Kral'ın sabah yürüyüşü halkı mutlu etti."]
 const WEATHER := ["Başkentte yağmur, gece sis.", "Açık ve soğuk; sabah kırağı.", "Bulutlu, akşama doğru fırtına.",
 	"Güneşli ama rüzgârlı.", "Kar bekleniyor; yollar kayganlaşabilir.", "Ilık bir hafta, gece serin."]
-const ADS := ["KRALİYET PİYANGOSU · Büyük ikramiye bu cumartesi!", "HALDEN ENERJİ · Kışa hazır mısınız?",
+const ADS := ["KRALİYET PİYANGOSU · Büyük ikramiye bu cumartesi!", "SARNE ENERJİ · Kışa hazır mısınız?",
 	"Saat tamiri ve altın alım satımı · Eski Çarşı No: 12", "Grand Otel Veloria · Balo salonu kiralanır.",
 	"Kayıp: Gri kedi, adı Baron. Bulana ödül.", "Tercüme bürosu · Gizlilik garantili."]
 
@@ -125,7 +125,7 @@ static func edition(sim: Node, outlet: String) -> Dictionary:
 			art = ["kis_krizi", "gida_protestosu", "gida_protestosu_b"][ub]
 	if outlet == "state" and sim.halden_mood() == "düşmanca":
 		head = _pick(["Saray halktan koptu", "Hükümet sözünü tutmadı", "Kraliyet hesap vermeli"], "halden_manset", w)
-		sub = "Halden'in yayın kurulu bu hafta sarayın kararlarını sert sözlerle sorguluyor."
+		sub = "Sarne'nin yayın kurulu bu hafta sarayın kararlarını sert sözlerle sorguluyor."
 		art = "halden_ihale"
 	out["headline"] = head
 	out["lead"] = sub
@@ -152,7 +152,7 @@ static func edition(sim: Node, outlet: String) -> Dictionary:
 		if sim.halden_mood() == "düşmanca":
 			cols = [
 				{"title": "EKONOMİ", "head": "Bakanlığa zor sorular", "body": "Yayın kurulu, sarayın harcamalarına ilişkin hesabın açıklanmasını istiyor."},
-				{"title": "SOKAK", "head": "Halkın sesi duyulmalı", "body": "Halden'in köşe yazarları kararların halka sorulmadığını savunuyor."},
+				{"title": "SOKAK", "head": "Halkın sesi duyulmalı", "body": "Sarne'nin köşe yazarları kararların halka sorulmadığını savunuyor."},
 				{"title": "MECLİS", "head": "Saray meclise dönsün", "body": "Kanaldaki yorumcular kraliyet kararlarının denetlenmesini talep ediyor."},
 				{"title": "SARAYDAN", "head": "Açıklama bekleniyor", "body": "Yayın kurulu saraydan cevap beklediğini duyurdu."},
 			]
@@ -162,7 +162,7 @@ static func edition(sim: Node, outlet: String) -> Dictionary:
 	return out
 
 
-## Halden TV yayını.
+## Sarne TV yayını.
 static func broadcast(sim: Node) -> Dictionary:
 	var ed := edition(sim, "state")
 	var ticker: Array[String] = []
@@ -175,5 +175,5 @@ static func broadcast(sim: Node) -> Dictionary:
 	for c in ed["columns"]:
 		ticker.append("%s: %s" % [c["title"], c["head"]])
 	ticker.append("HAVA: " + str(ed["weather"]))
-	var name := "HALDEN TV" if sim.actors.has("halden") else "DEVLET TELEVİZYONU"
+	var name := "SARNE TV" if sim.actors.has("halden") else "DEVLET TELEVİZYONU"
 	return {"channel": name, "headline": ed["headline"], "sub": ed["lead"], "ticker": ticker, "art": ed.get("art", "")}

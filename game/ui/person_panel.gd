@@ -19,7 +19,7 @@ const TIPS := {
 	"o_sor": "Soruşturma (1 mesai)\nİstihbarat gibi güçlü birine verilirse sorunlu isimleri ipucu olarak getirebilir.",
 	"investigate": "Araştır (1 mesai)\nSeçilen kişinin önce zayıf noktasını, sonra kırmızı çizgisini öğrenmeye çalışır. İstihbarat güçlüyse şans artar.",
 	"blackmail": "Şantaj (1 mesai)\nZayıf noktası bilinen birini korkuyla bağlar, borcunu siler. Ama iz bırakır, hırsını büyütür; dürüst biri ifşa edebilir.",
-	"p_0": "Söz: Başbakanlık (1 mesai)\nHemen sadakat getirir. Tutarsan çok güçlenir; senin gücünden de pay alır. Yalnızca bir kişiye verilebilir.",
+	"p_0": "Söz: Naiplik (1 mesai)\nHemen sadakat getirir. Tutarsan çok güçlenir; senin gücünden de pay alır. Yalnızca bir kişiye verilebilir.",
 	"p_1": "Söz: Liman İhalesi (1 mesai)\nHemen sadakat getirir. Tutarsan zenginleşir, sana da komisyon düşer. Yalnızca bir kişiye verilebilir.",
 	"p_2": "Söz: Dokunulmazlık (1 mesai)\nHemen sadakat getirir. Tutarsan korkusu azalır. Aynı sözü iki kişiye vermek er geç duyulur.",
 	"op_dikkat": "Dikkat Dağıt (2 mesai)\nSahte bir kriz yaratıp huzursuzluğu azaltır. Çember büyüdükçe başarı da, sızıntı riski de artar.",
@@ -42,7 +42,7 @@ const CAT_TIPS := {
 	"EMRET": "Emret\nHuzursuzluğu bastırma emri. Kanal seçimi sonucu ve inkâr edilebilirliği belirler.",
 	"BASKI": "Baskı\nŞantaj ve görevden alma. Güçlü araçlar, ama geri tepebilirler.",
 	"OPERASYON": "Operasyon (2 mesai)\n1–3 kişiyle gizli iş. Çemberi kurmak için Çoklu seçim'i aç ya da Ctrl ile kişi ekle.",
-	"DEVLET": "Devlet\nKurum başkanları için kadro kararnameleri ve Halden için ihale.",
+	"DEVLET": "Devlet\nKurum başkanları için kadro kararnameleri ve Sarne için ihale.",
 }
 
 const HINT_DEFAULT := "[color=#8f7a45]Bir eylemin üzerine gel ya da dokun: ne yaptığını ve bedelini burada görürsün.[/color]"
@@ -129,7 +129,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 	av.add_child(host._act_title)
 	var groups := [
 		["KAZAN", [["summon", "Huzura Çağır"], ["promote", "Terfi"], ["bribe", "Gizli Ödeme"]]],
-		["SÖZ VER", [["p_0", "Başbakanlık"], ["p_1", "Liman İhalesi"], ["p_2", "Dokunulmazlık"]]],
+		["SÖZ VER", [["p_0", "Naiplik"], ["p_1", "Liman İhalesi"], ["p_2", "Dokunulmazlık"]]],
 		["ÖĞREN", [["cross", "Doğrula"], ["investigate", "Araştır"], ["o_sor", "Soruşturma"]]],
 		["EMRET", [["o_yaz", "Yazılı Emir"], ["o_soz", "Sözlü Emir"], ["o_ima", "İma"]]],
 		["BASKI", [["blackmail", "Şantaj"], ["dismiss", "Görevden Al"]]],
@@ -266,7 +266,7 @@ const ACTION_META := {
 	"o_ima": ["İma", 1, 0.0, 1, 2],
 	"blackmail": ["Şantaj", 1, 0.0, 2, 2],
 	"dismiss": ["Görevden Al", 1, 0.0, 0, 1],
-	"p_0": ["Söz: Başbakanlık", 1, 0.0, 0, 1],
+	"p_0": ["Söz: Naiplik", 1, 0.0, 0, 1],
 	"p_1": ["Söz: Liman İhalesi", 1, 0.0, 0, 1],
 	"p_2": ["Söz: Dokunulmazlık", 1, 0.0, 0, 1],
 	"op_dikkat": ["Dikkat Dağıt", 2, 0.0, 1, 1],
@@ -308,7 +308,7 @@ func _preview(key: String) -> void:
 		match key:
 			"tender":
 				if id != "halden":
-					note = "Yalnızca Halden'e ihale verilebilir."
+					note = "Yalnızca Sarne'ye ihale verilebilir."
 				elif Sim.tender_wait() > 0:
 					note = "İhale komisyonu yeni dosyayı henüz açmıyor."
 			"appoint_loyal", "appoint_merit":
@@ -586,7 +586,7 @@ func _update_info() -> void:
 	if id == "halden":
 		var influence := Sim.halden_influence_band()
 		host._traits.add_child(_trait("Nüfuz · " + influence, UIKit.AMBER, -1, 0,
-			"Halden'in anlattığı şirket ağı; gerçek sınırları daha geniş olabilir."))
+			"Sarne'nin anlattığı şirket ağı; gerçek sınırları daha geniş olabilir."))
 		var mood := Sim.halden_mood()
 		host._traits.add_child(_trait("Medya · " + mood, UIKit.DANGER if mood == "düşmanca" else UIKit.GOLD,
 			-1, 0, "Gazete ve kanalının saraya karşı tutumu."))

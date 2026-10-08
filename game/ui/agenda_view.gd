@@ -527,7 +527,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 
 
 ## Meclisin görüşü: iki danışmanın kısa önerisi (docs/design/danisman_gorusleri.md).
-## Döndürür: seçenek -> düğme ipucuna eklenecek satırlar ("Kessler: öneriyor").
+## Döndürür: seçenek -> düğme ipucuna eklenecek satırlar ("Veyra: öneriyor").
 func _add_council(parent: VBoxContainer, pending_index: int) -> Dictionary:
 	var notes := {}
 	var items: Array = []

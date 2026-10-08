@@ -188,7 +188,7 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 
 
 ## Türkçe ek uyumu: özel isme kesme işaretiyle doğru eki ekler.
-## kind: "e" (yönelme: Voss'a, Arden'e), "in" (ilgi: Voss'un, Brandt'ın, Arden'in), "i" (belirtme: Voss'u, Arden'i)
+## kind: "e" (yönelme: Vale'ye, Arden'e), "in" (ilgi: Vale'nin, Voss'un, Arden'in), "i" (belirtme: Vale'yi, Arden'i)
 static func ek(name: String, kind: String) -> String:
 	var word := name.split(" ")[-1].to_lower()
 	var last_vowel := "e"
@@ -202,7 +202,7 @@ static func ek(name: String, kind: String) -> String:
 	if kind == "e":
 		return "%s'%s%s" % [name, "y" if ends_vowel else "", "a" if back else "e"]
 	var v: String = {"a": "ı", "ı": "ı", "o": "u", "u": "u", "e": "i", "i": "i", "ö": "ü", "ü": "ü"}[last_vowel]
-	if kind == "i":  # belirtme: Arden'i, Voss'u, Lena'yı
+	if kind == "i":  # belirtme: Arden'i, Vale'yi, Leyla'yı
 		return "%s'%s%s" % [name, "y" if ends_vowel else "", v]
 	return "%s'%s%sn" % [name, "n" if ends_vowel else "", v]
 
@@ -263,7 +263,7 @@ func save_summary() -> String:
 
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
-## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Halden ve kadro günlüğü
+## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Sarne ve kadro günlüğü
 const SAVE_VERSION := 7
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
@@ -481,7 +481,7 @@ func tender_wait() -> int:
 
 func give_tender(id: String) -> String:
 	if id != "halden" or not actors.has(id) or actors[id].moved:
-		return "Bu ihale Halden'e verilemez."
+		return "Bu ihale Sarne'ye verilemez."
 	if tender_wait() > 0:
 		return "İhale komisyonu yeni dosyayı henüz açmıyor."
 	if not spend_mesai():
@@ -495,9 +495,9 @@ func give_tender(id: String) -> String:
 	capacity["maliye"] = maxf(5.0, float(capacity["maliye"]) - 2.0)
 	actors[id].power += 3.0
 	actors[id].loyalty["money"] += 6.0
-	_add_fact("ihale_komisyonu_%d" % week, "Halden ihalesinden saraya aktarılan komisyon", "king", 18.0, ["halden", "kessler"], 1)
+	_add_fact("ihale_komisyonu_%d" % week, "Sarne ihalesinden saraya aktarılan komisyon", "king", 18.0, ["halden", "kessler"], 1)
 	changed.emit()
-	return "İhale Halden'e verildi. Şirketleri işi üstlendi; Kessler sözleşmenin bir kopyasını sakladı."
+	return "İhale Sarne'ye verildi. Şirketleri işi üstlendi; Veyra sözleşmenin bir kopyasını sakladı."
 
 
 func halden_mood() -> String:
@@ -510,7 +510,7 @@ func halden_mood() -> String:
 
 
 func halden_influence_band() -> String:
-	var seen := holding - 8.0  # Halden ağının gerçek sınırlarını küçümser.
+	var seen := holding - 8.0  # Sarne ağının gerçek sınırlarını küçümser.
 	return "sınırlı" if seen < 40.0 else ("yaygın" if seen < 70.0 else "her yerde")
 
 
@@ -651,7 +651,7 @@ func order(id: String, task: String, channel: String) -> String:
 
 
 ## Araştır: seçilen kişinin önce zayıf noktasını, sonra kırmızı çizgisini öğrenmeye çalışır.
-## İstihbarat (Voss) ne kadar güçlüyse şans o kadar yüksek; ama Voss da öğrendiğini saklar.
+## İstihbarat (Vale) ne kadar güçlüyse şans o kadar yüksek; ama Vale da öğrendiğini saklar.
 func investigate(id: String) -> String:
 	var a: Actor = actors[id]
 	if a.known_weak and a.known_red:
@@ -1006,7 +1006,7 @@ func _keep_promise(p: Dictionary) -> void:
 		a.loyalty["career"] = float(a.loyalty["career"]) + 6.0
 		a.obligation = maxf(0.0, a.obligation - 10.0)
 		match p["prize"]:
-			"Başbakanlık":
+			"Naiplik", "Başbakanlık":
 				a.power += 16.0
 				king_strength -= 2.0
 			"Liman İhalesi":
@@ -1077,9 +1077,9 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 		return "Bu kararın gerektirdiği kişi artık sarayda değil."
 	if e.get("kind", "") == "patronage":
 		if choice_index == 2 and (not actors.has("lena") or actors["lena"].moved or Press.is_closed(self, "free")):
-			return "Lena artık bağımsız yayın kuramıyor."
+			return "Leyla artık bağımsız yayın kuramıyor."
 		if choice_index == 3 and (not actors.has("falk") or actors["falk"].moved):
-			return "Falk artık savcılığa başvuramıyor."
+			return "Renn artık savcılığa başvuramıyor."
 	var fx: Dictionary = ch.get("fx", {})
 	if float(fx.get("wealth", 0)) + private_wealth < 0.0:
 		return "Kişisel servetin yetersiz."
@@ -1314,7 +1314,7 @@ func _diff_visible(b: Dictionary, n: Dictionary) -> Array:
 		out.append(mv.duplicate())
 	if b["halden_mood"] != n["halden_mood"]:
 		out.append({"tone": -1 if n["halden_mood"] == "düşmanca" else 0, "actor": "halden",
-			"text": "Halden'in yayınlarının havası değişti: artık %s." % n["halden_mood"]})
+			"text": "Sarne'nin yayınlarının havası değişti: artık %s." % n["halden_mood"]})
 	for id in b["people"]:
 		var p0: Dictionary = b["people"][id]
 		var name: String = p0["name"]
@@ -1677,7 +1677,7 @@ func _fire_budget() -> void:
 	var note := ""
 	for report: Dictionary in reports:
 		if report["source"] == "kessler":
-			note = " Kessler'in son raporu: " + str(report["text"])
+			note = " Veyra'nın son raporu: " + str(report["text"])
 			break
 	var choices: Array = []
 	for option: Dictionary in STATE_CONTENT["choices"]:
@@ -1740,7 +1740,7 @@ func _resolve_patronage(choice: int, level: int) -> String:
 			halden_hostile_until = 0
 			flags["HALDEN_SICAK"] = week
 			stats["halden_granted"] = int(stats.get("halden_granted", 0)) + 1
-			_add_fact("halden_talep_%d" % week, "Halden'e verilen yeni yayın ve ihale payı", "king", 18.0 + 2.0 * level, ["halden", "kessler"], 1)
+			_add_fact("halden_talep_%d" % week, "Sarne'ye verilen yeni yayın ve ihale payı", "king", 18.0 + 2.0 * level, ["halden", "kessler"], 1)
 			if not facts.has("liman_komisyonu"):
 				_add_fact("liman_komisyonu", "Liman ihalesindeki komisyon", "king", 35.0, ["halden"], 1)
 		1:
@@ -1767,10 +1767,10 @@ func _resolve_patronage(choice: int, level: int) -> String:
 				halden.fear += 15.0
 				halden.ambition += 6.0
 				flags["HALDEN_SAVCI_BASARILI"] = week
-				return str(option["text"]) + " Defterler açıldı; Halden geri çekiliyor."
+				return str(option["text"]) + " Defterler açıldı; Sarne geri çekiliyor."
 			halden_hostile_until = week + 8
 			flags["HALDEN_SAVCI_SIZDI"] = week
-			_add_fact("halden_savci_sizinti_%d" % week, "Halden soruşturmasının saraydan sızması", "king", 25.0, ["halden", "falk"], 1)
+			_add_fact("halden_savci_sizinti_%d" % week, "Sarne soruşturmasının saraydan sızması", "king", 25.0, ["halden", "falk"], 1)
 			return str(option["text"]) + " Dosya sızdı; yayınlar sarayı hedef alıyor."
 	return str(option["text"])
 
@@ -2172,7 +2172,7 @@ func _street_event() -> Dictionary:
 	return {"id": "ayaklanma_krizi", "art": "genel_grev", "crisis": true, "crisis_kind": "street", "advisors": [],
 		"banner": "AYAKLANMA — bu hafta karar vermezsen saray düşer.",
 		"title": "Sokaklar ayakta",
-		"text": "Başkentin bütün meydanları dolu. Barikatlar sarayın üç sokak ötesinde. Lena'nın gazetesi tek kelimelik bir manşet attı: 'Yeter.'\n%s %s%s" % [army_t, street_t,
+		"text": "Başkentin bütün meydanları dolu. Barikatlar sarayın üç sokak ötesinde. Leyla'nın gazetesi tek kelimelik bir manşet attı: 'Yeter.'\n%s %s%s" % [army_t, street_t,
 			"" if int(stats.get("street_concessions", 0)) == 0 else " Daha önce taleplerini kabul ettiğini söylemiştin; bu kez sözüne inanmayabilirler."],
 		"cues": {"guard": force_b, "street": appeal_b},
 		"choices": [
@@ -2185,7 +2185,7 @@ func _street_event() -> Dictionary:
 func _legal_event() -> Dictionary:
 	var purge_b := _band3(other_chance("purge"), 0.45, 0.25)
 	var bargain_b := _band3(other_chance("bargain"), 0.45, 0.25)
-	var judge := "Yargıç Falk" if actors.has("falk") else "Yüksek Mahkeme Başkanı"
+	var judge := "Başsavcı Renn" if actors.has("falk") else "Başsavcı"
 	var court_t: String = ["Mahkemenin arkasında meclis ve sokak var; tasfiyeye kimse seyirci kalmaz.", "Mahkeme bölünmüş; bazı yargıçlar senden bir işaret bekliyor.", "Mahkeme yalnız; arkasında duran pek kimse yok."][purge_b]
 	var house_t: String = ["Muhalefet meclisi elinde tutuyor; pazarlığa ihtiyacı yok.", "Mecliste kararsız sıralar var.", "Meclis bölünmüş; bir dokunulmazlık yasası geçebilir."][bargain_b]
 	return {"id": "yetki_krizi", "art": "yargic_dosya", "crisis": true, "crisis_kind": "legal", "advisors": [],
@@ -2647,12 +2647,12 @@ func _generate_reports() -> void:
 		if rb > worst_band and a.id != "dorn":
 			worst_band = rb
 			worst_idx = reports.size() - 1
-	# Kâhya: güçlüyse kötü haberi odana ulaştırmayabilir.
+	# Kraliçe (saray kapısı): güçlüyse kötü haberi odana ulaştırmayabilir.
 	if dorn != null and not dorn.moved and worst_band >= 1 and worst_idx >= 0:
 		if rng.randf() < clampf(0.15 + dorn.power / 250.0 + dorn.ambition / 400.0, 0.0, 0.7):
 			var dropped: Dictionary = reports[worst_idx]
 			reports.remove_at(worst_idx)
-			truth_log.append({"week": week, "name": "Alaric Dorn", "said": "(kötü haberi sana iletmedi)",
+			truth_log.append({"week": week, "name": "Kraliçe Helena", "said": "(kötü haberi sana iletmedi)",
 				"truth": "%s: %s" % [dropped["name"], dropped["text"]], "diff": 2})
 
 

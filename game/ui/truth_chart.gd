@@ -1,6 +1,6 @@
 extends Control
 ## Hakikat grafiği: oyun boyunca gizli kalan gerçek durumun haftalık seyri.
-## Altın: taht · kırmızı: halk · mor: komplo · yeşil: kurumlar · mavi: Halden.
+## Altın: taht · kırmızı: halk · mor: komplo · yeşil: kurumlar · mavi: Sarne.
 
 const UIKit := preload("res://game/ui/ui_kit.gd")
 const SERIES := [
@@ -8,7 +8,7 @@ const SERIES := [
 	{"key": "unrest", "name": "Halkın öfkesi", "color": Color("c0504a")},
 	{"key": "plot", "name": "Komplo", "color": Color("9a6ad6")},
 	{"key": "capacity", "name": "Devlet", "color": Color("7fae7a")},
-	{"key": "holding", "name": "Halden'in payı", "color": Color("66a9bd")},
+	{"key": "holding", "name": "Sarne'nin payı", "color": Color("66a9bd")},
 ]
 
 var data: Array = []

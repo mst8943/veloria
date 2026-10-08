@@ -1,6 +1,6 @@
 {
   "prizes": [
-    "Başbakanlık",
+    "Naiplik",
     "Liman İhalesi",
     "Dokunulmazlık"
   ],
@@ -54,23 +54,23 @@
     "istihbarat"
   ],
   "patronage": {
-    "title": "Halden'in talebi",
+    "title": "Sarne'nin talebi",
     "text": [
-      "Halden sözleşme defterini masaya bıraktı. 'Gazetelerim de kanalım da burada, Majesteleri. Karşılığını konuşalım.' Dorn fısıldıyor: 'Yayınları ona bağlı.'",
-      "Halden bu kez ricada bulunmuyor. 'Sarayın sesini taşıyan benim. Yeni payımı istiyorum.' Dorn kapıda bekliyor; gazetelerin kime bağlı olduğunu hatırlatıyor.",
-      "Halden dosyayı açmadan konuştu: 'Benden vazgeçmek kolay değil, Majesteleri.' Dorn, yayınların saraya ne kadar yaklaştığını söylemekten kaçınıyor."
+      "Sarne sözleşme defterini masaya bıraktı. 'Gazetelerim de kanalım da burada, Majesteleri. Karşılığını konuşalım.' Helena fısıldıyor: 'Yayınları ona bağlı.'",
+      "Sarne bu kez ricada bulunmuyor. 'Sarayın sesini taşıyan benim. Yeni payımı istiyorum.' Helena kapıda bekliyor; gazetelerin kime bağlı olduğunu hatırlatıyor.",
+      "Sarne dosyayı açmadan konuştu: 'Benden vazgeçmek kolay değil, Majesteleri.' Helena, yayınların saraya ne kadar yaklaştığını söylemekten kaçınıyor."
     ],
-    "ignore": "Halden cevap alamadı; yayın kurulu beklemeye geçti.",
+    "ignore": "Sarne cevap alamadı; yayın kurulu beklemeye geçti.",
     "choices": [
-      {"label": "İstediğini ver", "text": "Halden payını aldı. Saraya komisyon ulaştı; Kessler dosyanın bir kopyasını sakladı."},
-      {"label": "Reddet", "text": "Halden sözleşmeyi topladı. Ertesi gün yayınlarının sesi değişti."},
-      {"label": "Rakip yayın kur", "text": "Lena bağımsız yayını büyüttü. Halden bunu unutmayacak."},
-      {"label": "Savcılığa başvur", "text": "Falk holdingin defterlerini mahkemeye taşıdı."}
+      {"label": "İstediğini ver", "text": "Sarne payını aldı. Saraya komisyon ulaştı; Veyra dosyanın bir kopyasını sakladı."},
+      {"label": "Reddet", "text": "Sarne sözleşmeyi topladı. Ertesi gün yayınlarının sesi değişti."},
+      {"label": "Rakip yayın kur", "text": "Leyla bağımsız yayını büyüttü. Sarne bunu unutmayacak."},
+      {"label": "Savcılığa başvur", "text": "Renn holdingin defterlerini mahkemeye taşıdı."}
     ]
   },
   "budget": {
     "title": "Çeyrek bütçesi",
-    "text": "Marta Kessler önüne gelecek çeyreğin defterini koydu. Bakanlıkların nefesi ile kasanın ömrü aynı sayfaya sığmıyor.",
+    "text": "Selin Veyra önüne gelecek çeyreğin defterini koydu. Bakanlıkların nefesi ile kasanın ömrü aynı sayfaya sığmıyor.",
     "ignore": "Meclis görüşemedi; eski dengeli düzen sürdü.",
     "choices": [
       {"label": "Sıkı bütçe", "text": "Kasa korunacak; kurumlar biraz daha yıpranacak, sokak daralacak.", "stance": -1, "court_share": false},

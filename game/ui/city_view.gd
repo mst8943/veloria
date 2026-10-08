@@ -317,7 +317,7 @@ func _site_details(id: String) -> String:
 					public += 1 if f.get("public", false) else 0
 			return "Saraya uzanan dosyalar: [b]%d[/b] (kamuya açık: %d).\nHer dosya, yargının sana yaklaşan bir adımıdır." % [total, public]
 		"maliye":
-			return "Kessler bütçe defterlerini tutuyor. Saray harcamalarıyla devlet kasasını karıştırma."
+			return "Veyra bütçe defterlerini tutuyor. Saray harcamalarıyla devlet kasasını karıştırma."
 		"parlamento":
 			var active := 0
 			for p in Sim.promises:
@@ -329,11 +329,11 @@ func _site_details(id: String) -> String:
 		"istihbarat":
 			return "Araştırma yaptırırsan zayıf noktaları bulur. Ama öğrendiği her şeyi saklar."
 		"medya":
-			return "Halden'in kanalları ve Lena'nın gazetesi aynı haftayı farklı anlatır. Karşılaştır."
+			return "Sarne'nin kanalları ve Leyla'nın gazetesi aynı haftayı farklı anlatır. Karşılaştır."
 		"holding":
 			if Sim.actors.has("halden") and Sim.actors["halden"].obligation >= 8.0:
-				return "Halden sana yaptıklarının karşılığını bekliyor. Borç defterin onun masasında."
-			return "Halden Holding enerji, inşaat ve medyada faaliyet gösteriyor."
+				return "Sarne sana yaptıklarının karşılığını bekliyor. Borç defterin onun masasında."
+			return "Sarne Holding enerji, inşaat ve medyada faaliyet gösteriyor."
 	return ""
 
 

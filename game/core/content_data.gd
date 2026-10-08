@@ -211,14 +211,14 @@ func _labels(data: Dictionary) -> String:
 			return "bütçe seçeneği hatalı"
 	var patronage: Variant = data["patronage"]
 	if not patronage is Dictionary or _keys(patronage, ["title", "text", "ignore", "choices"]) != "":
-		return "Halden talep kartı anahtarları eksik"
+		return "Sarne talep kartı anahtarları eksik"
 	if not _text(patronage["title"]) or not _texts(patronage["text"], 3) or patronage["text"].size() != 3 or not _text(patronage["ignore"]):
-		return "Halden talep metni eksik"
+		return "Sarne talep metni eksik"
 	if not patronage["choices"] is Array or patronage["choices"].size() != 4:
-		return "Halden talebinde dört seçenek gerekli"
+		return "Sarne talebinde dört seçenek gerekli"
 	for option in patronage["choices"]:
 		if not option is Dictionary or _keys(option, ["label", "text"]) != "" or not _text(option["label"]) or not _text(option["text"]):
-			return "Halden talep seçeneği hatalı"
+			return "Sarne talep seçeneği hatalı"
 	for key in ["regime_names", "regime_titles", "regime_threats"]:
 		if not data[key] is Dictionary: return "%s sözlük olmalı" % key
 		issue = _keys(data[key], REGIMES)

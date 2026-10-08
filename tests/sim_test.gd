@@ -123,7 +123,7 @@ func _init() -> void:
 	sim.week += 3
 	sim.give_tender("halden")
 	if sim.holding != held + 10.0:
-		push_error("karşı saftaki Halden'e ihale verildi")
+		push_error("karşı saftaki Sarne'ye ihale verildi")
 		ok = false
 	sim.new_game(31, 1)
 	sim.facts.clear()
@@ -150,77 +150,77 @@ func _init() -> void:
 	sim.unrest = 30.0
 	sim.halden_hostile_until = sim.week + 2
 	if sim.halden_mood() != "düşmanca":
-		push_error("Halden düşman yayın durumuna geçmedi")
+		push_error("Sarne düşman yayın durumuna geçmedi")
 		ok = false
 	sim._tick_holding()
 	var hostile_head: String = Press.edition(sim, "state")["headline"]
 	if sim.unrest <= 30.0 or sim.king_strength >= 50.0 or int(sim.stats.get("halden_hostile_weeks", 0)) != 1 or not (hostile_head in ["Saray halktan koptu", "Hükümet sözünü tutmadı", "Kraliyet hesap vermeli"]) or Press.broadcast(sim)["headline"] != hostile_head:
-		push_error("Halden'in düşman yayını veya haftalık etkisi hatalı")
+		push_error("Sarne'nin düşman yayını veya haftalık etkisi hatalı")
 		ok = false
 	sim.halden_hostile_until = 0
 	for key in sim.actors["halden"].loyalty:
 		sim.actors["halden"].loyalty[key] = 0.0
 	sim.actors["halden"].loyalty["money"] = 30.0
 	if sim.halden_mood() != "sıcak":
-		push_error("Halden sıcak medya durumuna geçmedi")
+		push_error("Sarne sıcak medya durumuna geçmedi")
 		ok = false
 	var before_mood: Dictionary = sim._visible_snapshot()
 	sim.halden_hostile_until = sim.week + 2
 	var mood_changes: Array = sim._diff_visible(before_mood, sim._visible_snapshot())
-	if not mood_changes.any(func(change: Dictionary) -> bool: return "Halden'in yayınlarının havası değişti" in str(change["text"])):
-		push_error("Halden'in değişen havası haftalık özette yok")
+	if not mood_changes.any(func(change: Dictionary) -> bool: return "Sarne'nin yayınlarının havası değişti" in str(change["text"])):
+		push_error("Sarne'nin değişen havası haftalık özette yok")
 		ok = false
 	sim.holding = 40.0
 	if sim.halden_influence_band() != "sınırlı":
-		push_error("Halden nüfuz bandı hatalı")
+		push_error("Sarne nüfuz bandı hatalı")
 		ok = false
 	sim.holding = 60.0
 	if sim.halden_influence_band() != "yaygın":
-		push_error("Halden orta nüfuz bandı hatalı")
+		push_error("Sarne orta nüfuz bandı hatalı")
 		ok = false
 	sim.holding = 80.0
 	if sim.halden_influence_band() != "her yerde":
-		push_error("Halden yüksek nüfuz bandı hatalı")
+		push_error("Sarne yüksek nüfuz bandı hatalı")
 		ok = false
 	sim.new_game(31, 1)
 	sim.week = 18
 	sim.pending.clear()
 	sim._fire_patronage()
 	if sim.pending.size() != 1 or sim.pending[0]["event"]["choices"].size() != 4 or sim.halden_demands != 1:
-		push_error("Halden talep kartı açılmadı")
+		push_error("Sarne talep kartı açılmadı")
 		ok = false
 	else:
 		sim.actors["lena"].moved = true
 		var mesai_before: int = sim.mesai
 		sim.resolve_decision(0, 2)
 		if sim.mesai != mesai_before or sim.pending.is_empty():
-			push_error("Lena yokken rakip yayın kurulabildi")
+			push_error("Leyla yokken rakip yayın kurulabildi")
 			ok = false
 		sim.actors["lena"].moved = false
 		sim.resolve_decision(0, 1)
 		if sim.halden_hostile_until != 24 or sim.stats.get("halden_rejected", 0) != 1:
-			push_error("Halden talebi reddi uygulanmadı")
+			push_error("Sarne talebi reddi uygulanmadı")
 			ok = false
 	sim._fire_patronage()
 	if not sim.pending.is_empty():
-		push_error("Halden talebi bekleme süresi uygulanmadı")
+		push_error("Sarne talebi bekleme süresi uygulanmadı")
 		ok = false
 	sim.week = 26
 	sim.holding = 60.0
 	sim._fire_patronage()
 	if sim.pending.size() != 1 or sim.pending[0]["event"]["level"] != 1:
-		push_error("Halden ikinci talep eşiği çalışmadı")
+		push_error("Sarne ikinci talep eşiği çalışmadı")
 		ok = false
 	else:
 		var prior_holding: float = sim.holding
 		sim.resolve_decision(0, 0)
 		if sim.holding != prior_holding + 12.0 or sim.halden_mood() != "sıcak" or sim.stats.get("halden_granted", 0) != 1 or not sim.flags.has("halden_ihale_0") or not sim.flags.has("halden_fatura_0") or not sim.facts.has("liman_komisyonu"):
-			push_error("Halden talebini verme etkisi uygulanmadı")
+			push_error("Sarne talebini verme etkisi uygulanmadı")
 			ok = false
 		sim.week += 12
 		for old_chain: Dictionary in sim._events:
 			if old_chain["id"] == "liman_skandali" and not sim._eligible(old_chain):
-				push_error("Halden talebi liman skandalı zincirini açmadı")
+				push_error("Sarne talebi liman skandalı zincirini açmadı")
 				ok = false
 		sim.week -= 12
 	if not sim._eligible({"id": "holding_ok", "min_holding": 70, "max_holding": 75}) or sim._eligible({"id": "holding_high", "min_holding": 73}) or sim._eligible({"id": "holding_low", "max_holding": 65}):
@@ -260,16 +260,16 @@ func _init() -> void:
 	if not sim.actors["halden"].known_weak or sim.facts.is_empty():
 		push_error("şantaj/araştırma çalışmadı")
 		ok = false
-	print("  Halden korku: %.0f -> %.0f" % [fear_before, sim.actors["halden"].fear])
+	print("  Sarne korku: %.0f -> %.0f" % [fear_before, sim.actors["halden"].fear])
 	sim.mesai = 4
 	print("  ", sim.order("arden", "bastir", "yazili"))
 
 	# Söz defteri: aynı ödülü iki kişiye ver, birini tut -> diğeri bozulur
 	sim.new_game(9, 1)
 	sim.mesai = 4
-	print("Söz: ", sim.promise("arden", "Başbakanlık"))
-	print("Söz: ", sim.promise("halden", "Başbakanlık"))
-	print("Söz (tekrar): ", sim.promise("arden", "Başbakanlık"))
+	print("Söz: ", sim.promise("arden", "Naiplik"))
+	print("Söz: ", sim.promise("halden", "Naiplik"))
+	print("Söz (tekrar): ", sim.promise("arden", "Naiplik"))
 	var guard_w := 0
 	while sim.pending.filter(func(x: Dictionary) -> bool: return str(x["event"]["id"]).begins_with("soz_")).is_empty() and guard_w < 15:
 		sim.mesai = 4
@@ -377,9 +377,9 @@ func _init() -> void:
 		ok = false
 
 	# Türkçe ek uyumu
-	var ek_cases := {"Elias Voss|e": "Elias Voss'a", "General Arden|e": "General Arden'e", "Teodor Brandt|in": "Teodor Brandt'ın",
-		"Alaric Dorn|in": "Alaric Dorn'un", "Lena Ostrow|e": "Lena Ostrow'a", "Viktor Halden|in": "Viktor Halden'in",
-		"Prens Cassian|e": "Prens Cassian'a", "Lena|in": "Lena'nın", "Marta Kessler|e": "Marta Kessler'e"}
+	var ek_cases := {"Nadir Vale|e": "Nadir Vale'ye", "General Arden|e": "General Arden'e", "Adrian Voss|in": "Adrian Voss'un",
+		"Kraliçe Helena|in": "Kraliçe Helena'nın", "Leyla Sarn|e": "Leyla Sarn'a", "Victor Sarne|in": "Victor Sarne'nin",
+		"Prens Marcus|e": "Prens Marcus'a", "Leyla|in": "Leyla'nın", "Selin Veyra|e": "Selin Veyra'ya"}
 	for k in ek_cases:
 		var parts: PackedStringArray = k.split("|")
 		var got: String = sim.ek(parts[0], parts[1])
@@ -607,7 +607,7 @@ func _play_week(policy: String) -> void:
 
 func _test_advice() -> bool:
 	var ok := true
-	var acc := {"Arden": "Arden'i", "Voss": "Voss'u", "Lena": "Lena'yı", "Falk": "Falk'ı", "Prens": "Prens'i"}
+	var acc := {"Arden": "Arden'i", "Vale": "Vale'yi", "Leyla": "Leyla'yı", "Renn": "Renn'i", "Prens": "Prens'i"}
 	for n in acc:
 		if sim.ek(n, "i") != acc[n]:
 			push_error("ek hatası: %s -> %s" % [n, sim.ek(n, "i")])

@@ -15,7 +15,7 @@ extends SceneTree
 ##   advice_naive     visible + kartta ilk danışmanın önerisine uyar
 ##   advice_weighted  visible + meclis oylarını toplar (öneri +1, uyarı −1, ÇIKARI VAR yarım), kaçamakta rastgele
 ##   advice_quiet     advice_weighted ama alametlere (şüphe göstergesine) tepki vermez (teşhis için)
-##   advice_kessler   visible + Kessler konuşuyorsa ona, yoksa advice_weighted gibi (baskın strateji kontrolü)
+##   advice_kessler   visible + Veyra konuşuyorsa ona, yoksa advice_weighted gibi (baskın strateji kontrolü)
 ##   advice_soft      advice_weighted ama sokağı hiç bastırmaz (huzura çağırır/doğrular): sokak yolunu ölçer
 ##   advice_dirty     advice_weighted ama yazılı emir, araştırma ve şantaj kullanır: mahkeme yolunu ölçer
 ##   advice_scheme    advice_weighted ama haftada bir, en şüpheli iki kişiyi birbirine düşürür (Birbirine Düşür'ün gücünü ölçer)

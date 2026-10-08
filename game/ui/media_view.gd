@@ -73,7 +73,7 @@ func _ready() -> void:
 	bar.add_child(sp)
 	for key in ["state", "free", "tv"]:
 		var b := Button.new()
-		b.text = {"state": "Veloria Haber", "free": "Serbest Kalem", "tv": "Halden TV"}[key]
+		b.text = {"state": "Veloria Haber", "free": "Serbest Kalem", "tv": "Sarne TV"}[key]
 		b.toggle_mode = true
 		b.focus_mode = Control.FOCUS_NONE
 		b.custom_minimum_size = Vector2(150, 40)
