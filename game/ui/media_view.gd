@@ -5,6 +5,7 @@ signal closed
 
 const UIKit := preload("res://game/ui/ui_kit.gd")
 const Press := preload("res://game/core/press.gd")
+const Loc := preload("res://game/core/loc.gd")
 const NEWSPRINT := preload("res://game/ui/newsprint.gdshader")
 const PAPER_SHADER := preload("res://game/ui/paper.gdshader")
 const CRT_SHADER := preload("res://game/ui/crt.gdshader")
@@ -290,7 +291,8 @@ func _build_paper(outlet: String) -> void:
 	lead_row.add_child(story)
 	story.add_child(_ink_body(tr("[b]BAŞKENT —[/b] %s") % str(ed["lead"]), 20))
 	var pg := 2 + int(ed["week"]) % 6
-	var more := _ink_label(tr("Devamı sayfa %d'%s") % [pg, ["de", "te", "te", "te", "da", "de"][pg - 2]], 15, INK_SOFT)
+	var more_text := tr("Devamı sayfa %d") % pg if Loc.lang == "en" else tr("Devamı sayfa %d'%s") % [pg, ["de", "te", "te", "te", "da", "de"][pg - 2]]
+	var more := _ink_label(more_text, 15, INK_SOFT)
 	more.add_theme_font_override("font", UIKit.serif_italic())
 	more.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	story.add_child(more)
