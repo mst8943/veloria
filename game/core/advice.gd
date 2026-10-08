@@ -1,6 +1,7 @@
 extends RefCounted
 ## Meclis görüşlerinin davranışı. Sim dış API'yi korur; metin tabloları JSON'dan gelir.
 const Actor := preload("res://game/core/actor.gd")
+const Loc := preload("res://game/core/loc.gd")
 var sim: Node
 var content: Dictionary:
 	get: return sim.COUNCIL_CONTENT
@@ -278,7 +279,7 @@ func _advise(a: Actor, e: Dictionary, r: RandomNumberGenerator) -> Dictionary:
 			text += " %s ise %s." % [content["roman"][mini(worst, 3)], bad]
 	item["text"] = text
 	if e.get("kind", "") == "patronage" and a.id == "dorn":
-		item["text"] += " Gazeteler ona bağlı, Majesteleri."
+		item["text"] += " " + tr("Gazeteler ona bağlı, Majesteleri.")
 	return item
 
 
@@ -300,8 +301,8 @@ func _advice_reason(fx: Dictionary, good: bool, r: RandomNumberGenerator, self_i
 		var aid := key.substr(6)
 		var nm: String = short_name(actors[aid]) if actors.has(aid) else aid.capitalize()
 		var forms: Array = content["actor_good"] if good else content["actor_bad"]
-		var line: String = forms[r.randi() % forms.size()]
-		return line.replace("{n_in}", ek(nm, "in")).replace("{n_i}", ek(nm, "i"))
+		var line: String = tr(str(forms[r.randi() % forms.size()]))
+		return line.replace("{n_in}", Loc.poss(nm) if Loc.lang == "en" else ek(nm, "in")).replace("{n_i}", nm if Loc.lang == "en" else ek(nm, "i"))
 	if key.begins_with("capacity:"):
 		key = "capacity"
 	var opts: Array = content["reasons"][key][0 if good else 1]
