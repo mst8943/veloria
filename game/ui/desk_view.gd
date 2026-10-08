@@ -129,7 +129,7 @@ func _build() -> void:
 	top.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(top)
 	_title = Label.new()
-	_title.text = "HAFTA %d   ·   KRAL ADRİAN IV" % Sim.week
+	_title.text = tr("HAFTA %d   ·   KRAL ADRİAN IV") % Sim.week
 	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_title.add_theme_font_override("font", UIKit.serif())
 	_title.add_theme_font_size_override("font_size", 34)
@@ -144,7 +144,7 @@ func _build() -> void:
 	var news := ""
 	if not Sim.weekly_news.is_empty():
 		news = str(Sim.weekly_news[0])
-	_sub.text = news if news != "" else "Masada yeni dosyalar var."
+	_sub.text = news if news != "" else tr("Masada yeni dosyalar var.")
 	_sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_sub.add_theme_font_size_override("font_size", 17)
 	_sub.add_theme_color_override("font_color", Color("e8dcc0"))
@@ -155,7 +155,7 @@ func _build() -> void:
 	_open_btn = Button.new()
 	_open_btn.theme_type_variation = "PrimaryButton"
 	var n := Sim.pending.size()
-	_open_btn.text = ("%d KARAR BEKLİYOR   ·   GÜNDEMİ AÇ   »" % n) if n > 0 else "GÜNDEMİ AÇ   »"
+	_open_btn.text = (tr("%d KARAR BEKLİYOR   ·   GÜNDEMİ AÇ   »") % n) if n > 0 else tr("GÜNDEMİ AÇ   »")
 	_open_btn.position = Vector2(500, 818)
 	_open_btn.size = Vector2(600, 56)
 	_open_btn.focus_mode = Control.FOCUS_NONE
@@ -291,7 +291,7 @@ func _plate(id: String, title: String, area: Vector2) -> Control:
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(row)
 	var name_l := Label.new()
-	name_l.text = title
+	name_l.text = tr(title)
 	name_l.add_theme_font_override("font", UIKit.serif())
 	name_l.add_theme_font_size_override("font_size", 31 if mobile else 23)
 	name_l.add_theme_color_override("font_color", Color("f1e6c8"))
@@ -371,10 +371,10 @@ func _mark_text(id: String) -> String:
 		"gundem":
 			return str(Sim.pending.size()) if not Sim.pending.is_empty() else ""
 		"medya":
-			return "YENİ" if (not media_fresh_fn.is_valid() or media_fresh_fn.call()) else ""
+			return tr("YENİ") if (not media_fresh_fn.is_valid() or media_fresh_fn.call()) else ""
 		"gunluk":
 			var due := _due_promises()
-			return ("%d söz" % due) if due > 0 else ""
+			return (tr("%d söz") % due) if due > 0 else ""
 	return ""
 
 
@@ -391,41 +391,41 @@ func _summary(id: String) -> String:
 	match id:
 		"gundem":
 			if Sim.pending.is_empty():
-				return "Bekleyen karar yok"
+				return tr("Bekleyen karar yok")
 			var urgent: Dictionary = Sim.pending[0]
 			for p in Sim.pending:
 				if int(p["age"]) > int(urgent["age"]):
 					urgent = p
-			var head := "%d karar" % Sim.pending.size()
-			var lead := "en acil" if int(urgent["age"]) > 0 else "ilki"
-			return "%s · %s: %s" % [head, lead, urgent["event"]["title"]]
+			var head := tr("%d karar") % Sim.pending.size()
+			var lead := tr("en acil") if int(urgent["age"]) > 0 else tr("ilki")
+			return tr("%s · %s: %s") % [head, lead, urgent["event"]["title"]]
 		"medya":
 			var ed: Dictionary = Press.edition(Sim, "state")
 			var h := str(ed.get("headline", ""))
-			return h if h != "" else "Bu haftanın gazeteleri"
+			return h if h != "" else tr("Bu haftanın gazeteleri")
 		"kisiler":
 			var enemies := 0
 			for a in Sim.actors.values():
 				if a.moved:
 					enemies += 1
-			var t := "%d mesai" % Sim.mesai if Sim.mesai > 0 else "Mesai bitti"
+			var t := tr("%d mesai") % Sim.mesai if Sim.mesai > 0 else tr("Mesai bitti")
 			var sus := 0
 			for a in Sim.actors.values():
 				if not a.moved and Sim.suspicion_level(a.id) >= 2:
 					sus += 1
 			if enemies > 0:
-				t += " · %d düşman" % enemies
+				t += " · " + (tr("%d düşman") % enemies)
 			if sus > 0:
-				t += " · %d şüpheli" % sus
+				t += " · " + (tr("%d şüpheli") % sus)
 			return t
 		"gunluk":
 			var due := _due_promises()
 			if due > 0:
-				return "%d sözün vadesi yaklaşıyor" % due
-			return "Hafta %d · saltanatın kaydı" % Sim.week
+				return tr("%d sözün vadesi yaklaşıyor") % due
+			return tr("Hafta %d · saltanatın kaydı") % Sim.week
 		"dosyalar":
 			if Sim.facts.is_empty():
-				return "Dosya şimdilik boş"
+				return tr("Dosya şimdilik boş")
 			var rumors := 0
 			var mine := 0
 			for f: Dictionary in Sim.facts.values():
@@ -435,18 +435,18 @@ func _summary(id: String) -> String:
 					rumors += 1
 				if f["subject"] == "king":
 					mine += 1
-			var t := "%d kayıt" % Sim.facts.size()
+			var t := tr("%d kayıt") % Sim.facts.size()
 			if mine > 0:
-				t += " · %d tanesi sana dair" % mine
+				t += " · " + (tr("%d tanesi sana dair") % mine)
 			if rumors > 0:
-				t += " · %d dedikodu" % rumors
+				t += " · " + (tr("%d dedikodu") % rumors)
 			return t
 		"harita":
-			return "Kurumlar ve sokaklar"
+			return tr("Kurumlar ve sokaklar")
 		"hanedan":
 			var n: int = Sim.load_chronicle().size()
 			var ach: int = Sim.load_achievements().size()
-			return "%d saltanat · %d / %d başarım" % [n, ach, Sim.ACHIEVEMENTS.size()]
+			return tr("%d saltanat · %d / %d başarım") % [n, ach, Sim.ACHIEVEMENTS.size()]
 	return ""
 
 
@@ -493,7 +493,7 @@ func _draw_object(id: String, sz: Vector2) -> Control:
 			var v := VBoxContainer.new()
 			v.add_theme_constant_override("separation", 4)
 			paper.add_child(v)
-			var m := _ink("VELORİA HABER", 26, true)
+			var m := _ink(tr("VELORİA HABER"), 26, true)
 			m.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			v.add_child(m)
 			var rule := ColorRect.new()
@@ -561,7 +561,7 @@ func _draw_object(id: String, sz: Vector2) -> Control:
 			thread.size = Vector2(3, sz.y - 40)
 			thread.rotation = deg_to_rad(18)
 			root.add_child(thread)
-			var stamp := _ink("GİZLİ", 30, true)
+			var stamp := _ink(tr("GİZLİ"), 30, true)
 			stamp.add_theme_color_override("font_color", Color("8e1f17"))
 			stamp.position = Vector2(sz.x / 2 - 40, sz.y / 2 - 10)
 			stamp.rotation = deg_to_rad(-12)
@@ -609,7 +609,7 @@ func _draw_object(id: String, sz: Vector2) -> Control:
 					lines.draw_circle(Vector2(p.x * sz.x, p.y * sz.y), 9.0, Color("7a2a1e"))
 					lines.draw_circle(Vector2(p.x * sz.x, p.y * sz.y), 4.0, Color("e6dcc2")))
 			map.add_child(lines)
-			var t := _ink("BAŞKENT", 34, true)
+			var t := _ink(tr("BAŞKENT"), 34, true)
 			t.position = Vector2(20, 12)
 			map.add_child(t)
 	return root

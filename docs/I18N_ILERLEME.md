@@ -30,7 +30,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S2: L2 — sürmekte olan dosya `desk_view.gd`; ardından `city_view.gd`, `media_view.gd`, `end_screen.gd` ve masaüstü/mobil L2 ekran görüntüsü kapısı.
+S2: L2 — sürmekte olan dosya `city_view.gd`; ardından `media_view.gd`, `end_screen.gd` ve masaüstü/mobil L2 ekran görüntüsü kapısı.
 
 ## L1 — tamamlandı
 
@@ -70,3 +70,5 @@ S2: L2 — sürmekte olan dosya `desk_view.gd`; ardından `city_view.gd`, `media
   bağlandı; İngilizce lisans/katkı karşılığı `en.po`'ya eklendi.
 - `person_panel.gd`: kişi rolleri, eylem kategorileri, ACTION_META önizlemesi,
   araç ipuçları ve durum metinleri çevrildi; `en.po` karşılıkları eklendi.
+- `desk_view.gd`: masa etiketleri, hafta/karar düğmesi, rozetler ve kısa durum
+  özetleri `tr()` ile bağlandı; `en.po` karşılıkları eklendi.
