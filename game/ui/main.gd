@@ -1174,7 +1174,7 @@ func _refresh() -> void:
 	_rebuild_facts()
 	_promise_list.clear()
 	if Sim.promises.is_empty():
-		_promise_list.append_text("[color=gray]Henüz kimseye söz vermedin. Saray sekmesinde/sağda bir kişi seçip 'Söz Ver' kullanabilirsin.[/color]")
+		_promise_list.append_text(tr("[color=gray]Henüz kimseye söz vermedin. Saray sekmesinde/sağda bir kişi seçip 'Söz Ver' kullanabilirsin.[/color]"))
 	for p in Sim.promises:
 		var nm: String = Sim.actors[p["actor"]].display_name if Sim.actors.has(p["actor"]) else str(p["actor"])
 		var st := ""

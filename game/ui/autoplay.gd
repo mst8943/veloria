@@ -55,11 +55,7 @@ func _autoplay_full() -> void:
 				else:
 					(m._buttons["cross"] as Button).pressed.emit()
 			m._end_btn.pressed.emit()
-		var hist: Array = Sim.record.get("history", [])
-		var halef := false
-		for h in hist:
-			if str(h).contains("Saltanatın mirası"):
-				halef = true
+		var halef: bool = Sim.fired_events.has("halef_karari")
 		print("FULLRUN tohum=%d hafta=%d sonuç=%s ünvan=%s miras_kararı=%s olay=%d son_ekran=%s" % [100 + seeds_tried, Sim.record["weeks"],
 			"TAHTTA" if Sim.record["survived"] else "DÜŞTÜ", Sim.record["title"], halef, Sim.fired_events.size(), m._end_overlay.visible])
 		if Sim.record["survived"]:

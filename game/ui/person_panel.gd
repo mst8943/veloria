@@ -623,7 +623,7 @@ func _update_info() -> void:
 	var dim := Color(UIKit.TEXT_DIM, 0.8)
 	host._traits.add_child(_trait(tr("Zayıf nokta: ") + (a.weak_point if a.known_weak else "?"), UIKit.DANGER if a.known_weak else dim, -1, 0,
 		tr("Biliniyorsa şantaj mümkün. 'Araştır' ile öğrenilebilir.") if not a.known_weak else tr("Şantaj için kullanılabilir.")))
-		host._traits.add_child(_trait(tr("Kırmızı çizgi: ") + (tr(a.red_line) if a.known_red else "?"), Color("d9963e") if a.known_red else dim, -1, 0,
+	host._traits.add_child(_trait(tr("Kırmızı çizgi: ") + (tr(a.red_line) if a.known_red else "?"), Color("d9963e") if a.known_red else dim, -1, 0,
 		tr("Bu çizgiyi aşarsan affetmez.")))
 	var k: Dictionary = Sim.karne.get(a.id, {"ok": 0, "bad": 0})
 	if int(k["ok"]) + int(k["bad"]) > 0:

@@ -1924,6 +1924,9 @@ msgstr "When you stepped onto the balcony, the square was half empty. Those who 
 msgid "Kriz kapına dayandığında karar veremedin."
 msgstr "When the crisis reached your door, you could not decide."
 
+msgid "Darbe kapına dayandığında karar veremedin."
+msgstr "When the coup reached your door, you could not decide."
+
 msgid "SOKAK: Meydanlardaki kalabalık her gün büyüyor; artık dağılmıyorlar."
 msgstr "STREET: The crowds in the squares grow every day; they no longer disperse."
 
@@ -3105,3 +3108,33 @@ msgstr "Publicly humiliating Drakon"
 
 msgid "Seravia ticaretinin keyfî kesilmesi"
 msgstr "Arbitrarily cutting off Seravian trade"
+
+msgid "Darbe girişiminin gece yarısı sert biçimde bastırılması"
+msgstr "The coup attempt being crushed at midnight"
+
+msgid "Maden faciasının saklanan güvenlik raporları"
+msgstr "The withheld safety reports on the mine disaster"
+
+msgid "Meclisin oligark kavgası yüzünden feshedilmesi"
+msgstr "The Assembly being dissolved over the oligarch feud"
+
+msgid "Ayaklanmanın ordu eliyle kanlı bastırılması"
+msgstr "The army's bloody suppression of the uprising"
+
+msgid "komplodan çekildi"
+msgstr "withdrew from the conspiracy"
+
+msgid "İlk bütçeden sarayın kasasına aktarılan pay"
+msgstr "A cut from the first budget diverted into the Palace treasury"
+
+msgid "Milletvekillerinin satın alınması"
+msgstr "Buying off members of parliament"
+
+msgid "Kraliçe'nin tuttuğu gizli günlük"
+msgstr "The Queen's secret journal"
+
+msgid "Kapatılan bir yolsuzluk dosyası"
+msgstr "A corruption file that was closed"
+
+msgid "[color=gray]Henüz kimseye söz vermedin. Saray sekmesinde/sağda bir kişi seçip 'Söz Ver' kullanabilirsin.[/color]"
+msgstr "[color=gray]No promises yet. Select someone in the Palace tab or on the right and choose Promise.[/color]"

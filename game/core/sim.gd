@@ -2605,11 +2605,11 @@ func _end(survived: bool) -> void:
 		cause = "104 haftalık saltanatın sonunda tahtını korudun."
 		cause_display = tr("104 haftalık saltanatın sonunda tahtını korudun.")
 		var state_title := _survivor_title(top)
-		title = state_title if state_title in ["Harap Devletin Kralı", "Liyakat Kralı"] else tr(str(REGIME_TITLES.get(regime, state_title)))
+		title = state_title if state_title in ["Harap Devletin Kralı", "Liyakat Kralı"] else str(REGIME_TITLES.get(regime, state_title))
 	record = {"survived": survived, "title": title, "weeks": week - 1, "cause": cause,
 		"top_actor": top.display_name if top else "", "history": history.duplicate(), "cause_display": cause_display,
 		"lies": _top_lies(), "king": KING_NAME,
-		"regime": regime_name() if regime != "" else "", "threat": regime_threat() if regime != "" else "",
+		"regime": str(REGIME_NAMES.get(regime, "")) if regime != "" else "", "threat": str(REGIME_THREATS.get(regime, "")) if regime != "" else "",
 		"promises": "%d söz verdin: %d tutuldu, %d bozuldu." % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
 		"promises_display": tr("%d söz verdin: %d tutuldu, %d bozuldu.") % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
 		"historians": historians(survived), "timeline": timeline.duplicate(), "council": council_record(),
