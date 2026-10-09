@@ -311,10 +311,10 @@ func _rebuild_agenda() -> void:
 		hb.add_theme_constant_override("separation", 6 if host._mobile else 14)
 		card.add_child(hb)
 		var tex: Texture2D = host._event_art(str(e.get("art", e["id"])))
-		if tex and not host._mobile:
+		if tex:
 			# Görsel kendi çerçevesinde yavaşça hareket eder (yaşayan kart).
 			var frame := Control.new()
-			frame.custom_minimum_size = Vector2(240, 135)
+			frame.custom_minimum_size = Vector2(112, 63) if host._mobile else Vector2(240, 135)
 			frame.clip_contents = true
 			hb.add_child(frame)
 			var img := TextureRect.new()
@@ -324,7 +324,7 @@ func _rebuild_agenda() -> void:
 			img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 			frame.add_child(img)
 			if not host._fast():
-				img.pivot_offset = Vector2(120, 67)
+				img.pivot_offset = frame.custom_minimum_size / 2.0
 				var drift := img.create_tween().set_loops()
 				drift.tween_property(img, "scale", Vector2(1.08, 1.08), 9.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 				drift.tween_property(img, "scale", Vector2.ONE, 9.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
@@ -338,6 +338,9 @@ func _rebuild_agenda() -> void:
 		t.add_theme_font_size_override("font_size", host._fs(17 if host._mobile else 22))
 		t.add_theme_color_override("font_color", UIKit.GOLD)
 		t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if host._mobile:
+			t.custom_minimum_size.y = 44
+			t.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		var late_text := ""
 		if p["age"] > 0 or crisis:
 			late_text = str(e.get("banner", tr("Bu hafta karar vermezsen saray düşer."))) if crisis else tr("Karar bekliyor — bu hafta çözülmezse kendi kendine çözülecek.")

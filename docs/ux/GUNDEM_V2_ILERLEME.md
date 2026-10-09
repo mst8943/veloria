@@ -2,6 +2,20 @@
 
 **SIRADAKİ DİLİM: bitti**
 
+## U4b — mobil düzeltmeler tamamlandı (2026-10-10)
+
+- Kişiler’de seçim yapıldığında portre kartları 150×132’den 120×104’e iner; grup sekmeleri ve oklar sabit kalır. Seçili kişi alanı kendi dikey kaydırmasında kalır; EYLEMLER başlığı tek satır ellipsis kullanır, eylem sekmeleri/düğmeleri en az 44 px’tir. Alt çubuk kişi alanının dışında kalır.
+- Gündem karar kartı görseli mobilde gizlenmez; 112×63’e küçültülür. Başlık en az 44 px yer ayırır ve taşarsa ellipsis uygular. 2/3 bekleyen kararda tek kart, sayaç/noktalar ve seçenekler korunur.
+- KAPI: `sim_test` TEST: OK (çıkışta mevcut Godot kaynak temizleme uyarıları); `event_check` TR/EN 195 olay, 0 uyarı; `save_test` SAVE: OK; `content_check` TR/EN 5 dosya/8 bozuk örnek; `i18n_check` I18N: OK; `ui_logic_test` OK; `unit_tests` 399/399; `pacing_test` OK (çıkışta kaynak temizleme uyarıları); masaüstü ve mobil pencereli `ui_input_test` OK. İlk paralel içerik kontrolünde paylaşılan `user://` test dosyası çakıştığından TR/EN kontrolleri sırayla tekrarlandı; ikisi de geçti.
+- Masaüstü `--autoplay` ×3: DONE (38/44/36 hafta); `--autoplay --mobile`: DONE (48 hafta). `--autoplay --full` TR/EN aynı: `tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`.
+- `advice_weighted`, 80 kampanya: TR ve EN **68/80, 36/80, 16/80**; tabanla birebir.
+- 1067×600 ekran kanıtları `C:/Users/USER/Desktop/oyun_u4b_shots/{tr,en}/` altında; her dosya açılarak kontrol edildi:
+  - `u4b_agenda_1.png`, `u4b_agenda_2.png`, `u4b_agenda_3.png` (iki dilde): karar başlığı ve küçültülmüş görsel, tüm seçenekler; 2/3’te tek kart ve karar göstergeleri.
+  - `u4b_people_dynasty.png`, `u4b_people_state.png`, `u4b_people_power.png`, `u4b_people_foreign.png` (iki dilde): seçili kişi, doğru grup/portre, başlık ve çipler; isim veya alt çubuk taşması yok.
+  - `u4b_people_dynasty_actions.png`, `u4b_people_state_actions.png`, `u4b_people_power_actions.png`, `u4b_people_foreign_actions.png` (iki dilde): eylem sekmeleri, düğmeler ve son eylem alanı tamamen görünür; eylem düğmeleri alt çubuktan ayrı.
+  - `u4b_reports.png` (iki dilde): Raporlar sekmesi, değişenler/rapor listesi ve tüm raporlar düğmesi; kesik satır veya taşma yok.
+- Değişiklik commit’leri: Kişiler `e75ec72`; Gündem/görüntü akışı/ilerleme kaydı bir sonraki commit’te.
+
 ## U3b + U4 — tamamlandı (2026-10-10)
 
 - U3b ayrı commit `3ff3b8d`: hafta defteri “Bu hafta” altında oyuncu eylemleri ve sonuçlarını tutuyor; danışman raporları ayrı “Raporlar / Reports” başlığı altında. TR/EN masaüstü kanıtı: `C:/Users/USER/Desktop/oyun_u3b_u4_shots/u3b-{tr,en}/1_oyun.png`.

@@ -45,6 +45,43 @@ func _shot(file_name: String) -> void:
 func _run() -> void:
 	# Kişi paneli dolu görünsün: en güçlü kişiyi seç.
 	var sim0: Node = root.get_node("Sim")
+	if "--u4b" in OS.get_cmdline_user_args():
+		main._tabs.current_tab = 0
+		for count in [1, 2, 3]:
+			sim0.pending.clear()
+			for id in ["gida_protestosu", "general_atamalari", "gazeteci_ihale"]:
+				for event in sim0._events:
+					if event["id"] == id:
+						sim0.pending.append({"event": event, "age": 0})
+						break
+					if sim0.pending.size() == count:
+						break
+			main._agenda_view.decision_index = 0
+			main._refresh()
+			main._scroll.scroll_vertical = 0
+			await _shot("u4b_agenda_%d" % count)
+		main._tabs.current_tab = 1
+		for pair in [["dynasty", "dorn"], ["state", "arden"], ["power", "halden"], ["foreign", "elena"]]:
+			(main._person_panel._mobile_group_buttons[pair[0]] as Button).pressed.emit()
+			var tap := InputEventMouseButton.new()
+			tap.button_index = MOUSE_BUTTON_LEFT
+			tap.pressed = true
+			main._person_panel._on_card_input(tap, pair[1])
+			for frame in 4:
+				await process_frame
+			main._person_panel._mobile_person_scroll.scroll_vertical = 0
+			await _shot("u4b_people_%s" % pair[0])
+			var profile_scroll: ScrollContainer = main._person_panel._mobile_person_scroll
+			var profile_bar := profile_scroll.get_v_scroll_bar()
+			profile_scroll.scroll_vertical = maxi(0, int(profile_bar.max_value - profile_bar.page) - 22)
+			await _shot("u4b_people_%s_actions" % pair[0])
+		main._tabs.current_tab = 2
+		main._mobile_report_tabs.current_tab = 0
+		var reports_scroll := main._report_box.get_parent() as ScrollContainer
+		reports_scroll.scroll_vertical = int(reports_scroll.get_v_scroll_bar().max_value)
+		await _shot("u4b_reports")
+		quit(0)
+		return
 	if "--u4" in OS.get_cmdline_user_args():
 		main._tabs.current_tab = 0
 		await _shot("u4_agenda")
