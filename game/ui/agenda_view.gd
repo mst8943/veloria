@@ -299,7 +299,7 @@ func _rebuild_agenda() -> void:
 		card.add_theme_stylebox_override("panel", card_box)
 		host._agenda.add_child(card)
 		if lead:
-			UIKit.ornament(card, UIKit.DANGER if crisis else UIKit.GOLD, 18, 5)
+			UIKit.ornament(card, UIKit.DANGER if crisis else UIKit.GOLD, 28, 5)
 		host._decision_cards.append(card)
 		animated.append(card)
 		if (p["age"] > 0 or crisis) and not host._fast():

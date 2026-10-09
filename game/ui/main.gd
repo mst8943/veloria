@@ -399,6 +399,7 @@ func _build_ui() -> void:
 	_wire(_end_btn)
 	_end_btn.pressed.connect(_end_week_pressed)
 	bottom.add_child(_end_btn)
+	UIKit.ornament(_end_btn, Color(UIKit.GOLD, 0.9), 18, 3)
 
 	_desk = DESK_VIEW.new()
 	_desk.mobile = _mobile

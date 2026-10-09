@@ -90,20 +90,60 @@ static func caps() -> Font:
 ## Çerçevenin köşelerine ince altın köşebentler çizer (paneli "hazırlanmış" gösterir).
 ## Panelin kendi çiziminde, çocukların altında kalır; tıklamayı etkilemez.
 static func ornament(c: CanvasItem, col: Color = Color(GOLD, 0.75), length := 14.0, inset := 4.0) -> void:
-	c.draw.connect(func() -> void:
-		var s: Vector2 = (c as Control).size
-		# Çift çerçeve: içte ince altın kıl çizgisi ve üst kenarda hafif ışık (hazırlanmış yüzey hissi).
-		c.draw_rect(Rect2(Vector2(inset, inset), s - Vector2(2.0 * inset, 2.0 * inset)), Color(col, col.a * 0.2), false, 1.0)
-		c.draw_line(Vector2(2, 1), Vector2(s.x - 2, 1), Color(1.0, 0.94, 0.8, 0.07), 1.0)
-		var w := 1.5
+	# Süs, panelin çocuklarının ÜSTÜNE çizilir (görselin köşelerinde de görünsün); tıklamayı etkilemez.
+	var host := c as Control
+	var ov := Control.new()
+	ov.name = "Ornament"
+	ov.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ov.set_anchors_preset(Control.PRESET_FULL_RECT)
+	host.add_child(ov)
+	ov.draw.connect(func() -> void:
+		var s: Vector2 = host.size
+		var o: Vector2 = -ov.position
+		var big := length >= 16.0
+		# Çift çerçeve: dışta belirgin altın çizgi, içte ince kıl çizgisi (kaplama pervaz hissi).
+		var outer := Rect2(o + Vector2(inset, inset), s - Vector2(2.0 * inset, 2.0 * inset))
+		ov.draw_rect(outer, Color(col, col.a * (0.55 if big else 0.2)), false, 1.4 if big else 1.0)
+		if big:
+			ov.draw_rect(outer.grow(-4.0), Color(col, col.a * 0.2), false, 1.0)
+		ov.draw_line(o + Vector2(2, 1), o + Vector2(s.x - 2, 1), Color(1.0, 0.94, 0.8, 0.07), 1.0)
 		for corner in [Vector2(0, 0), Vector2(1, 0), Vector2(0, 1), Vector2(1, 1)]:
-			var p := Vector2(inset + corner.x * (s.x - 2.0 * inset), inset + corner.y * (s.y - 2.0 * inset))
-			var dx := length * (1.0 if corner.x == 0.0 else -1.0)
-			var dy := length * (1.0 if corner.y == 0.0 else -1.0)
-			c.draw_line(p, p + Vector2(dx, 0), col, w, true)
-			c.draw_line(p, p + Vector2(0, dy), col, w, true)
-			c.draw_rect(Rect2(p - Vector2(1.5, 1.5), Vector2(3, 3)), col))
-	c.queue_redraw()
+			var p := o + Vector2(inset + corner.x * (s.x - 2.0 * inset), inset + corner.y * (s.y - 2.0 * inset))
+			var sx := 1.0 if corner.x == 0.0 else -1.0
+			var sy := 1.0 if corner.y == 0.0 else -1.0
+			_corner(ov, p, sx, sy, length, col, big)
+		if big and s.x > 220.0:
+			# Üst ve alt kenarın ortasında küçük elmas.
+			for y in [inset, s.y - inset]:
+				_diamond(ov, o + Vector2(s.x * 0.5, y), 3.6, col)
+	)
+	host.resized.connect(ov.queue_redraw)
+	ov.queue_redraw()
+
+
+## Köşe süsü: iki kenar boyunca çizgi, içeri kıvrılan bir volüt ve köşede elmas.
+static func _corner(c: CanvasItem, p: Vector2, sx: float, sy: float, length: float, col: Color, big: bool) -> void:
+	c.draw_line(p, p + Vector2(sx * length, 0), col, 1.6, true)
+	c.draw_line(p, p + Vector2(0, sy * length), col, 1.6, true)
+	if big:
+		# Art deco yelpaze: köşeden açılan iki eş merkezli yay, aralarında ışın ve uçlarda nokta.
+		for ri in 2:
+			var rad := length * (0.45 if ri == 0 else 0.78)
+			var pts := PackedVector2Array()
+			for i in 13:
+				var ang := (float(i) / 12.0) * PI * 0.5
+				pts.append(p + Vector2(sx * cos(ang), sy * sin(ang)) * rad)
+			c.draw_polyline(pts, Color(col, col.a * (0.95 if ri == 0 else 0.6)), 1.5 if ri == 0 else 1.2, true)
+		var d := Vector2(sx, sy).normalized()
+		c.draw_line(p + d * length * 0.45, p + d * length * 0.78, Color(col, col.a * 0.8), 1.2, true)
+		_diamond(c, p + d * length * 0.78, 2.4, col)
+		_diamond(c, p + Vector2(sx * length * 0.78, 0), 1.8, col)
+		_diamond(c, p + Vector2(0, sy * length * 0.78), 1.8, col)
+	_diamond(c, p, 3.2 if big else 2.2, col)
+
+
+static func _diamond(c: CanvasItem, center: Vector2, r: float, col: Color) -> void:
+	c.draw_colored_polygon(PackedVector2Array([center + Vector2(0, -r), center + Vector2(r, 0), center + Vector2(0, r), center + Vector2(-r, 0)]), col)
 
 
 ## Ekran başlık bandı: koyu, alt kenarında ince altın çizgi. Ana ekran, harita ve medyada aynı.
@@ -210,7 +250,7 @@ static func build_theme(mobile := false) -> Theme:
 	t.set_color("font_color", "Label", TEXT)
 	t.set_color("default_color", "RichTextLabel", TEXT)
 	# Düğmeler
-	var n := _lift(box(PANEL_HI, Color(GOLD_DIM, 0.45), 5, bm))
+	var n := _lift(box(PANEL_HI, Color(GOLD_DIM, 0.8), 5, bm))
 	var h := _lift(box(HOVER, GOLD, 5, bm))
 	var p := box(Color("13110d"), GOLD, 5, bm)
 	var d := box(Color(PANEL_HI, 0.5), Color(GOLD_DIM, 0.15), 5, bm)
@@ -228,9 +268,9 @@ static func build_theme(mobile := false) -> Theme:
 	t.set_type_variation("ChoiceButton", "Button")
 	t.set_stylebox("pressed", "ChoiceButton", box(Color("3a331f"), GOLD, 4, bm))
 	# Seçenek: sol kenarda altın vurgu çizgisi
-	var ch_n := box(Color("1c1915"), Color(GOLD_DIM, 0.25), 4, bm)
+	var ch_n := box(Color("1c1915"), Color(GOLD_DIM, 0.55), 4, bm)
 	ch_n.border_width_left = 3
-	ch_n.border_color = Color(GOLD_DIM, 0.45)
+	ch_n.border_color = Color(GOLD_DIM, 0.6)
 	var ch_h := box(Color("2d2a1f"), GOLD, 4, bm)
 	ch_h.border_width_left = 5
 	t.set_stylebox("normal", "ChoiceButton", ch_n)
@@ -257,14 +297,22 @@ static func build_theme(mobile := false) -> Theme:
 	# Birincil düğme
 	t.add_type("PrimaryButton")
 	t.set_type_variation("PrimaryButton", "Button")
-	t.set_stylebox("normal", "PrimaryButton", _lift(box(Color("3a301a"), GOLD, 6, 14, 2)))
-	t.set_stylebox("hover", "PrimaryButton", _lift(box(Color("5a4a22"), Color("ffe08a"), 6, 14, 2)))
+	var pr_n := _lift(box(Color("3a301a"), GOLD, 6, 14, 2))
+	pr_n.shadow_color = Color(GOLD, 0.28)
+	pr_n.shadow_size = 9
+	pr_n.shadow_offset = Vector2.ZERO
+	var pr_h := _lift(box(Color("5a4a22"), Color("ffe08a"), 6, 14, 2))
+	pr_h.shadow_color = Color(GOLD, 0.45)
+	pr_h.shadow_size = 12
+	pr_h.shadow_offset = Vector2.ZERO
+	t.set_stylebox("normal", "PrimaryButton", pr_n)
+	t.set_stylebox("hover", "PrimaryButton", pr_h)
 	t.set_stylebox("pressed", "PrimaryButton", box(Color("2a2212"), GOLD, 6, 14, 2))
 	t.set_color("font_color", "PrimaryButton", Color("fff3d0"))
 	t.set_font("font", "PrimaryButton", caps())
 	t.set_font_size("font_size", "PrimaryButton", 20)
 	# Sekmeler: seçili sekme panelle birleşir, üstünde altın çizgi taşır; diğerleri zeminsiz.
-	t.set_stylebox("panel", "TabContainer", box(Color(PANEL, 0.88), Color(GOLD_DIM, 0.3), 6, 8))
+	t.set_stylebox("panel", "TabContainer", box(Color(PANEL, 0.88), Color(GOLD_DIM, 0.55), 6, 8))
 	t.set_stylebox("tab_selected", "TabContainer", _tab(Color(PANEL_HI, 0.95), GOLD, 2))
 	t.set_stylebox("tab_unselected", "TabContainer", _tab(Color(0, 0, 0, 0.25), Color(GOLD_DIM, 0.25), 1))
 	t.set_stylebox("tab_hovered", "TabContainer", _tab(Color(HOVER, 0.8), GOLD_DIM, 1))
