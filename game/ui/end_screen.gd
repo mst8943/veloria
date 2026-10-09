@@ -193,7 +193,7 @@ func _append_state(state: Dictionary) -> void:
 	lies_page.append_text(tr("\n[b][color=#d9b359][font_size=22]DEVLET DEFTERİ — ne pahasına[/font_size][/color][/b]\n"))
 	lies_page.append_text(tr("[color=gray]Kurumların ortalama hâli:[/color] %s. En zayıf an: %d. hafta, %s.\n") % [
 		_state_band(float(state.get("average", 55.0))), int(state.get("low_week", 0)), _state_band(float(state.get("lowest", 55.0)))])
-	lies_page.append_text(tr("[color=gray]O haftanın kaydı:[/color] %s\n") % tr(str(state.get("low_event", ""))))
+	lies_page.append_text(tr("[color=gray]O haftanın kaydı:[/color] %s\n") % _history_text(str(state.get("low_event", ""))))
 	var appointments: Array = state.get("appointments", [])
 	var institutions := {"maliye": "Maliye", "hukuk": "Adliye", "ordu": "Ordu", "idare": "İdare"}
 	if appointments.is_empty():
