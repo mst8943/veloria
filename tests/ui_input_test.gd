@@ -67,6 +67,20 @@ func _run() -> void:
 		printerr("UI INPUT: şerit kısayolu seçemedi")
 		quit(1)
 		return
+	main._divan.open()
+	await process_frame
+	_click_at(main._divan.group_buttons[0].get_global_rect().get_center())
+	await process_frame
+	if main._divan.groups[0].visible:
+		printerr("UI INPUT: Divan grubu katlanmadı")
+		quit(1)
+		return
+	main._divan.close()
+	main._divan.open()
+	if main._divan.groups[0].visible:
+		printerr("UI INPUT: Divan grup durumu korunmadı")
+		quit(1)
+		return
 	print("UI INPUT: OK")
 	quit(0)
 
@@ -80,4 +94,6 @@ func _click_at(pos: Vector2) -> void:
 	click.global_position = pos
 	click.button_index = MOUSE_BUTTON_LEFT
 	click.pressed = true
+	root.push_input(click, true)
+	click.pressed = false
 	root.push_input(click, true)

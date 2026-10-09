@@ -14,6 +14,10 @@ func _initialize() -> void:
 			out = a.substr(6)
 	if "--mobile" in OS.get_cmdline_user_args():
 		DisplayServer.window_set_size(Vector2i(1067, 600))
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--size="):
+			var dims := a.substr(7).split("x")
+			DisplayServer.window_set_size(Vector2i(int(dims[0]), int(dims[1])))
 	DirAccess.make_dir_recursive_absolute(out)
 	# Yalnızca bellekte: project.godot'a yazılmaz.
 	ProjectSettings.set_setting("veloria/dev_autostart", true)
@@ -65,6 +69,26 @@ func _run() -> void:
 	for a in sim0.actors.values():
 		if top_id == "" or a.power > sim0.actors[top_id].power:
 			top_id = a.id
+	if "--u1b" in OS.get_cmdline_user_args():
+		main._sel.clear()
+		main._sel.append("elena")
+		main._style_cards()
+		main._update_info()
+		main._divan.open()
+		await main._divan.motion.finished
+		for frame in 8:
+			await process_frame
+		var screen := main.get_viewport_rect()
+		var dr: Rect2 = main._divan.drawer.get_global_rect()
+		var cr: Rect2 = main._divan.focus_button.get_global_rect()
+		print("U1B BOUNDS window=", DisplayServer.window_get_size(), " viewport=", screen.size, " drawer=", dr, " close=", cr)
+		if dr.position.x < -1 or dr.end.x > screen.end.x + 1 or cr.position.x < dr.position.x or cr.end.x > screen.end.x + 1:
+			printerr("U1B BOUNDS: FAIL")
+			quit(1)
+			return
+		await _shot("u1b_divan")
+		quit(0)
+		return
 	if "--u1" in OS.get_cmdline_user_args() and "--mobile" not in OS.get_cmdline_user_args():
 		main._sel.clear()
 		main._refresh()

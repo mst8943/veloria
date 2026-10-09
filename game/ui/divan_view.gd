@@ -16,13 +16,16 @@ var tile: Button
 var layer: CanvasLayer
 var shade: ColorRect
 var drawer: PanelContainer
+var motion: Tween
 var focus_button: Button
 var groups: Array[GridContainer] = []
+var group_buttons: Array[Button] = []
 var parked: Control
 var guide_hint: Label
 var opened := false
 var last_id := ""
 var visible_ids: Array = []
+var folded: Dictionary = {}
 
 
 func _init(main: Control) -> void:
@@ -62,7 +65,7 @@ func build(right: VBoxContainer) -> void:
 			close())
 	overlay.add_child(shade)
 	drawer = PanelContainer.new()
-	drawer.anchor_left = 0.55
+	drawer.anchor_left = 0.51 if DisplayServer.window_get_size().x < 1200 else 0.55
 	drawer.anchor_right = 1.0
 	drawer.anchor_bottom = 1.0
 	drawer.add_theme_stylebox_override("panel", UIKit.box(UIKit.PANEL, UIKit.GOLD_DIM, UIKit.RADIUS, 14))
@@ -89,26 +92,43 @@ func build(right: VBoxContainer) -> void:
 	heading.add_child(close_button)
 	focus_button = close_button
 	for entry in GROUPS:
+		var row := HBoxContainer.new()
+		body.add_child(row)
 		var button := Button.new()
 		button.text = tr(entry[0])
 		button.theme_type_variation = "GhostButton"
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.custom_minimum_size.y = 44
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		host._wire(button)
-		body.add_child(button)
+		row.add_child(button)
+		group_buttons.append(button)
+		var arrow := Control.new()
+		arrow.set_anchors_preset(Control.PRESET_CENTER_RIGHT)
+		arrow.position = Vector2(-19, 16)
+		arrow.custom_minimum_size = Vector2(12, 12)
+		arrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		button.add_child(arrow)
 		var grid := GridContainer.new()
 		grid.columns = 4
 		grid.add_theme_constant_override("h_separation", 6)
 		grid.add_theme_constant_override("v_separation", 6)
 		body.add_child(grid)
 		groups.append(grid)
-		button.pressed.connect(func() -> void: grid.visible = not grid.visible)
+		grid.visible = not bool(folded.get(entry[0], false))
+		arrow.draw.connect(func() -> void:
+			var points := PackedVector2Array([Vector2(1, 3), Vector2(11, 3), Vector2(6, 9)]) if grid.visible else PackedVector2Array([Vector2(1, 9), Vector2(11, 9), Vector2(6, 3)])
+			arrow.draw_colored_polygon(points, UIKit.GOLD))
+		button.pressed.connect(func() -> void:
+			grid.visible = not grid.visible
+			folded[entry[0]] = not grid.visible
+			arrow.queue_redraw())
 		if entry[0] == "Dış ilişkiler":
 			var note := Label.new()
 			note.text = tr("Dışişleri Bakanı'nın raporu")
 			note.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-			body.add_child(note)
-			button.pressed.connect(func() -> void: note.visible = grid.visible)
+			note.add_theme_font_size_override("font_size", host._fs(11))
+			row.add_child(note)
 	layer.visible = false
 
 
@@ -180,12 +200,18 @@ func open() -> void:
 	opened = true
 	layer.visible = true
 	refresh()
+	host._style_cards()
 	focus_button.call_deferred("grab_focus")
-	drawer.position.x = shade.size.x
+	drawer.offset_left = drawer.size.x
+	drawer.offset_right = drawer.size.x
 	if host._fast():
-		drawer.position.x = shade.size.x * 0.55
+		drawer.offset_left = 0
+		drawer.offset_right = 0
 	else:
-		drawer.create_tween().tween_property(drawer, "position:x", shade.size.x * 0.55, 0.18)
+		var tween := drawer.create_tween().set_parallel()
+		motion = tween
+		tween.tween_property(drawer, "offset_left", 0.0, 0.18)
+		tween.tween_property(drawer, "offset_right", 0.0, 0.18)
 	Sfx.play("paper")
 
 
@@ -197,8 +223,9 @@ func close() -> void:
 		layer.visible = false
 		refresh()
 	else:
-		var tween := drawer.create_tween()
-		tween.tween_property(drawer, "position:x", shade.size.x, 0.18)
+		var tween := drawer.create_tween().set_parallel()
+		tween.tween_property(drawer, "offset_left", drawer.size.x, 0.18)
+		tween.tween_property(drawer, "offset_right", drawer.size.x, 0.18)
 		tween.finished.connect(func() -> void:
 			layer.visible = false
 			refresh())
