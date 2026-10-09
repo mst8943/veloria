@@ -89,6 +89,34 @@ func _run() -> void:
 		await _shot("u1b_divan")
 		quit(0)
 		return
+	var u2_count := 0
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--u2="):
+			u2_count = int(arg.substr(5))
+	if u2_count > 0:
+		sim0.week = 8
+		sim0.pending.clear()
+		for id in ["gida_protestosu", "general_atamalari", "gazeteci_ihale"]:
+			for event in sim0._events:
+				if event["id"] == id:
+					sim0.pending.append({"event": event, "age": 0})
+					break
+			if sim0.pending.size() == u2_count:
+				break
+		main._agenda_view.decision_index = 0
+		main._refresh()
+		main._on_flow("gundem")
+		await _shot("u2_%d_karar" % u2_count)
+		var bar: VScrollBar = main._scroll.get_v_scroll_bar()
+		var overflow := bar.max_value - bar.page
+		print("U2 SCROLL ", u2_count, ": ", overflow)
+		main._agenda_view.show_decision(u2_count - 1)
+		await _shot("u2_%d_son_karar" % u2_count)
+		if main._agenda_view.reasons_button != null:
+			main._agenda_view.reasons_button.toggled.emit(true)
+			await _shot("u2_%d_gerekceler" % u2_count)
+		quit(1 if overflow > 2 and not main._mobile else 0)
+		return
 	if "--u1" in OS.get_cmdline_user_args() and "--mobile" not in OS.get_cmdline_user_args():
 		main._sel.clear()
 		main._refresh()

@@ -81,6 +81,57 @@ func _run() -> void:
 		printerr("UI INPUT: Divan grup durumu korunmadı")
 		quit(1)
 		return
+	main._divan.close()
+	var sim: Node = root.get_node("Sim")
+	sim.pending.clear()
+	for id in ["gida_protestosu", "general_atamalari", "gazeteci_ihale"]:
+		for event in sim._events:
+			if event["id"] == id:
+				sim.pending.append({"event": event, "age": 0})
+				break
+	main._agenda_view.decision_index = 0
+	main._refresh()
+	await process_frame
+	if main._decision_cards.size() != 1 or main._decision_buttons.size() != sim.pending[0]["event"]["choices"].size():
+		printerr("UI INPUT: tek karar kartı kurulmadı")
+		quit(1)
+		return
+	for child in main._agenda.get_children():
+		if child is Button and child.text.begins_with("Sırada"):
+			child.pressed.emit()
+			break
+	await process_frame
+	if main._agenda_view.decision_index != 1:
+		printerr("UI INPUT: Sırada satırı kararı değiştirmedi")
+		quit(1)
+		return
+	_click_at(main._agenda_view.reasons_button.get_global_rect().get_center())
+	await process_frame
+	if not main._agenda_view.reasons_button.button_pressed:
+		printerr("UI INPUT: Gerekçeler açılmadı")
+		quit(1)
+		return
+	var right := InputEventKey.new()
+	right.keycode = KEY_RIGHT
+	right.pressed = true
+	root.push_input(right, true)
+	await process_frame
+	if main._agenda_view.decision_index != 2:
+		printerr("UI INPUT: sağ ok kararı değiştirmedi")
+		quit(1)
+		return
+	_click_at(main._agenda_view.nav_buttons[0].get_global_rect().get_center())
+	await process_frame
+	if main._agenda_view.decision_index != 1:
+		printerr("UI INPUT: sol düğme kararı değiştirmedi")
+		quit(1)
+		return
+	main._decision_buttons[0].pressed.emit()
+	await process_frame
+	if sim.pending.size() != 2:
+		printerr("UI INPUT: seçili karar çözülmedi")
+		quit(1)
+		return
 	print("UI INPUT: OK")
 	quit(0)
 

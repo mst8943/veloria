@@ -30,6 +30,46 @@ msgstr "Report by the Foreign Minister"
 msgid "Diğer kişiler Divan'da"
 msgstr "Other people are in the Court"
 
+msgid "Sırada"
+msgstr "Up next"
+
+msgid "Gerekçeler"
+msgstr "Reasons"
+
+msgid "Önceki karar"
+msgstr "Previous decision"
+
+msgid "Sonraki karar"
+msgstr "Next decision"
+
+msgid "Bu hafta bekleyen karar yok. Kişilerle ilgilen ya da haftayı bitir."
+msgstr "No decisions are waiting this week. See to your people or end the week."
+
+msgid "Kararsız"
+msgstr "Undecided"
+
+msgid "Kaçamak"
+msgstr "Evasive"
+
+msgid "%s'yi öneririm"
+msgstr "I recommend %s"
+
+msgid "%s'ye karşı"
+msgstr "Against %s"
+
+msgid " (çıkarı var)"
+msgstr " (has an interest)"
+
+msgid "Karar %d/%d"
+msgid_plural "Karar %d/%d [plural]"
+msgstr[0] "Decision %d/%d"
+msgstr[1] "Decision %d/%d"
+
+msgid "%d hafta kaldı"
+msgid_plural "%d hafta kaldı [plural]"
+msgstr[0] "%d week left"
+msgstr[1] "%d weeks left"
+
 msgid "Vazgeç"
 msgstr "Cancel"
 

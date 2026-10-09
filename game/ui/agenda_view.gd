@@ -1,8 +1,12 @@
 extends RefCounted
 
 const UIKit := preload("res://game/ui/ui_kit.gd")
+const Loc := preload("res://game/core/loc.gd")
 
 var host: Control
+var decision_index := 0
+var reasons_button: Button
+var nav_buttons: Array[Button] = []
 
 func _init(main: Control) -> void:
 	host = main
@@ -198,10 +202,13 @@ func _rebuild_facts() -> void:
 
 func _rebuild_agenda() -> void:
 	var keep_scroll: int = host._scroll.scroll_vertical
+	decision_index = clampi(decision_index, 0, maxi(0, Sim.pending.size() - 1))
 	for c in host._agenda.get_children():
 		c.queue_free()
 	host._decision_buttons.clear()
 	host._decision_cards.clear()
+	reasons_button = null
+	nav_buttons.clear()
 	var animated: Array[Control] = []
 	if Sfx.tips and Sim.week <= 3:
 		_add_guide(animated)
@@ -240,15 +247,48 @@ func _rebuild_agenda() -> void:
 		nh.add_child(nl)
 	if not Sim.pending.is_empty():
 		# Yardımcı metin yalnızca ilk haftalarda; sonra tekrar etmesin.
-		host._agenda.add_child(host._section(tr("KARAR BEKLEYENLER"), tr("her karar 1 mesai · ertelenen karar 2 hafta sonra kendiliğinden çözülür") if Sim.week <= 4 else ""))
+		var section: Control = host._section(tr("KARAR BEKLEYENLER"), tr("her karar 1 mesai · ertelenen karar 2 hafta sonra kendiliğinden çözülür") if Sim.week <= 4 else "")
+		if Sim.pending.size() == 1:
+			host._agenda.add_child(section)
+		else:
+			var nav := HBoxContainer.new()
+			host._agenda.add_child(nav)
+			section.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			nav.add_child(section)
+			var previous := _nav_button(-1)
+			nav.add_child(previous)
+			nav_buttons.append(previous)
+			var count := Label.new()
+			count.text = Loc.ntr("Karar %d/%d", Sim.pending.size()) % [decision_index + 1, Sim.pending.size()]
+			count.add_theme_color_override("font_color", UIKit.GOLD)
+			count.add_theme_font_size_override("font_size", host._fs(13))
+			count.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			nav.add_child(count)
+			for index in Sim.pending.size():
+				var dot := Control.new()
+				dot.custom_minimum_size = Vector2(12, 12)
+				dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				dot.draw.connect(func() -> void: dot.draw_circle(Vector2(6, 6), 3.5, UIKit.GOLD if index == decision_index else UIKit.GOLD_DIM))
+				nav.add_child(dot)
+			var following := _nav_button(1)
+			nav.add_child(following)
+			nav_buttons.append(following)
+	else:
+		var empty := Label.new()
+		empty.text = tr("Bu hafta bekleyen karar yok. Kişilerle ilgilen ya da haftayı bitir.")
+		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		empty.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+		host._agenda.add_child(empty)
 	for pi in Sim.pending.size():
+		if pi != decision_index:
+			continue
 		var p: Dictionary = Sim.pending[pi]
 		var e: Dictionary = p["event"]
 		var card := PanelContainer.new()
 		# Göz önce ilk karta ve süresi dolanlara gitsin; diğerleri sakin çerçeveli.
 		var crisis: bool = e.get("crisis", false)
 		var lead: bool = pi == 0 or int(p["age"]) > 0 or crisis
-		var card_box := UIKit.box(Color(UIKit.PANEL, 0.96), UIKit.DANGER if crisis else (UIKit.GOLD if lead else Color(UIKit.GOLD_DIM, 0.45)), 8, 12, 2 if lead else 1)
+		var card_box := UIKit.box(Color(UIKit.PANEL, 0.96), UIKit.DANGER if crisis else (UIKit.GOLD if lead else Color(UIKit.GOLD_DIM, 0.45)), UIKit.RADIUS, 12 if host._mobile else 8, 2 if lead else 1)
 		card_box.shadow_color = Color(0, 0, 0, 0.45)
 		card_box.shadow_size = 8 if lead else 3
 		card.add_theme_stylebox_override("panel", card_box)
@@ -285,7 +325,7 @@ func _rebuild_agenda() -> void:
 				drift.tween_property(img, "scale", Vector2.ONE, 9.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		var vb := VBoxContainer.new()
 		vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		vb.add_theme_constant_override("separation", 6)
+		vb.add_theme_constant_override("separation", 6 if host._mobile else 3)
 		hb.add_child(vb)
 		var t := Label.new()
 		t.text = str(e["title"])
@@ -325,7 +365,22 @@ func _rebuild_agenda() -> void:
 			b.pressed.connect(host._choose.bind(pi, ci))
 			vb.add_child(b)
 			host._decision_buttons.append(b)
-	_add_changes(animated)
+	if Sim.pending.size() > 1:
+		for pi in Sim.pending.size():
+			if pi == decision_index:
+				continue
+			var remaining := maxi(1, 2 - int(Sim.pending[pi]["age"]))
+			var next := Button.new()
+			next.text = "%s: %s  ·  %s" % [tr("Sırada"), str(Sim.pending[pi]["event"]["title"]), Loc.ntr("%d hafta kaldı", remaining) % remaining]
+			next.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			next.theme_type_variation = "GhostButton"
+			next.custom_minimum_size.y = 44 if host._mobile else 32
+			next.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+			host._wire(next)
+			next.pressed.connect(show_decision.bind(pi))
+			host._agenda.add_child(next)
+	if host._report_box == null:
+		_add_changes(animated)
 	if host._report_box != null:
 		_add_week_ledger(animated)
 	var texts: Array[RichTextLabel] = []
@@ -363,6 +418,29 @@ func _rebuild_agenda() -> void:
 		_play_reveal.call_deferred(animated, texts)
 	else:
 		host._reveal = false
+
+
+func show_decision(index: int) -> void:
+	if Sim.pending.is_empty():
+		return
+	decision_index = clampi(index, 0, Sim.pending.size() - 1)
+	host._scroll.scroll_vertical = 0
+	_rebuild_agenda()
+
+
+func _nav_button(step: int) -> Button:
+	var button := Button.new()
+	button.custom_minimum_size = Vector2(44 if host._mobile else 36, 44 if host._mobile else 36)
+	button.theme_type_variation = "GhostButton"
+	button.tooltip_text = tr("Önceki karar") if step < 0 else tr("Sonraki karar")
+	button.disabled = decision_index == 0 if step < 0 else decision_index == Sim.pending.size() - 1
+	host._wire(button)
+	button.draw.connect(func() -> void:
+		var mid := button.size / 2.0
+		var tip := -5.0 if step < 0 else 5.0
+		button.draw_colored_polygon(PackedVector2Array([mid + Vector2(tip, 0), mid + Vector2(-tip, -6), mid + Vector2(-tip, 6)]), UIKit.GOLD if not button.disabled else UIKit.GOLD_DIM))
+	button.pressed.connect(func() -> void: show_decision(decision_index + step))
+	return button
 
 
 ## Raporun geçen haftaya göre yönü: söylenen bandın farkı (gerçek değil). -1 iyimserleşti, +1 karamsarlaştı, 0 aynı/yok.
@@ -406,7 +484,8 @@ func _draw_trend(c: Control, t: int) -> void:
 func _add_changes(animated: Array[Control]) -> void:
 	if Sim.week_changes.is_empty():
 		return
-	host._agenda.add_child(host._section(tr("GEÇEN HAFTADAN BERİ"), tr("görebildiklerinde ne değişti")))
+	var target: VBoxContainer = host._report_box if host._report_box != null else host._agenda
+	target.add_child(host._section(tr("GEÇEN HAFTADAN BERİ"), tr("görebildiklerinde ne değişti")))
 	for ch: Dictionary in Sim.week_changes:
 		var row := PanelContainer.new()
 		var sb := UIKit.box(Color(UIKit.PANEL_HI, 0.35), Color(0, 0, 0, 0), 2, 8)
@@ -416,7 +495,7 @@ func _add_changes(animated: Array[Control]) -> void:
 		sb.border_width_left = 3
 		row.add_theme_stylebox_override("panel", sb)
 		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		host._agenda.add_child(row)
+		target.add_child(row)
 		animated.append(row)
 		var h := HBoxContainer.new()
 		h.add_theme_constant_override("separation", 8)
@@ -479,6 +558,7 @@ func _add_week_ledger(animated: Array[Control]) -> void:
 func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]) -> void:
 	for c in host._report_box.get_children():
 		c.queue_free()
+	_add_changes(animated)
 	host._report_box.add_child(host._section(tr("BU HAFTANIN RAPORLARI"), tr("masana ulaşan: %d") % Sim.reports.size()))
 	for r: Dictionary in Sim.reports:
 		var panel := PanelContainer.new()
@@ -539,13 +619,58 @@ func _add_council(parent: VBoxContainer, pending_index: int) -> Dictionary:
 		return notes
 	var panel := PanelContainer.new()
 	var sb := UIKit.box(Color(0, 0, 0, 0.22), Color(UIKit.GOLD_DIM, 0.22), 6, 8)
-	sb.content_margin_top = 6
-	sb.content_margin_bottom = 6
+	sb.content_margin_top = 6 if host._mobile else 4
+	sb.content_margin_bottom = 6 if host._mobile else 4
 	panel.add_theme_stylebox_override("panel", sb)
 	parent.add_child(panel)
+	var shell := VBoxContainer.new()
+	shell.add_theme_constant_override("separation", 4)
+	panel.add_child(shell)
+	var summary := HBoxContainer.new()
+	summary.add_theme_constant_override("separation", 5)
+	shell.add_child(summary)
+	for it: Dictionary in items:
+		var actor = Sim.actors[it["actor"]]
+		var portrait: Control = host._initial_art(actor.id, Vector2(22, 22), 11)
+		portrait.tooltip_text = "%s · %s" % [actor.display_name, actor.title]
+		summary.add_child(portrait)
+		var brief := tr("Kaçamak") if it["kind"] == "evasive" else tr("Kararsız")
+		if int(it["rec"]) >= 0:
+			brief = tr("%s'yi öneririm") % ["I", "II", "III", "IV"][mini(int(it["rec"]), 3)]
+		elif int(it["warn"]) >= 0:
+			brief = tr("%s'ye karşı") % ["I", "II", "III", "IV"][mini(int(it["warn"]), 3)]
+		if it["stake"]:
+			brief += tr(" (çıkarı var)")
+		var short := Label.new()
+		short.text = brief
+		short.tooltip_text = "%s: %s" % [actor.display_name, it["text"]]
+		short.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		short.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		short.add_theme_font_size_override("font_size", host._fs(12))
+		summary.add_child(short)
+	var why := Button.new()
+	why.text = tr("Gerekçeler")
+	why.theme_type_variation = "GhostButton"
+	why.toggle_mode = true
+	why.custom_minimum_size = Vector2(104, 44 if host._mobile else 32)
+	host._wire(why)
+	summary.add_child(why)
+	reasons_button = why
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 6)
-	panel.add_child(col)
+	col.visible = false
+	shell.add_child(col)
+	var arrow := Control.new()
+	arrow.position = Vector2(why.custom_minimum_size.x - 18, 16)
+	arrow.custom_minimum_size = Vector2(12, 12)
+	arrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	why.add_child(arrow)
+	arrow.draw.connect(func() -> void:
+		var pts := PackedVector2Array([Vector2(1, 3), Vector2(11, 3), Vector2(6, 9)]) if not why.button_pressed else PackedVector2Array([Vector2(1, 9), Vector2(11, 9), Vector2(6, 3)])
+		arrow.draw_colored_polygon(pts, UIKit.GOLD))
+	why.toggled.connect(func(on: bool) -> void:
+		col.visible = on
+		arrow.queue_redraw())
 	var head := Label.new()
 	head.text = tr("MECLİSİN GÖRÜŞÜ")
 	head.add_theme_font_override("font", UIKit.caps())

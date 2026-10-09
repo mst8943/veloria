@@ -210,6 +210,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		KEY_SPACE:
 			if in_game and not _menu.visible and not _end_overlay.visible and not _media.visible and not _desk.visible and not _city.visible:
 				_end_week_pressed()
+		KEY_LEFT, KEY_RIGHT:
+			if in_game and _tabs.current_tab == 0 and not _menu.visible and not _end_overlay.visible and not _media.visible and not _desk.visible and not _city.visible and not _modal.visible:
+				_agenda_view.show_decision(_agenda_view.decision_index + (-1 if k.keycode == KEY_LEFT else 1))
 		KEY_S:
 			if k.ctrl_pressed and in_game:
 				_on_save()
@@ -917,6 +920,7 @@ func _after_load(message: String) -> void:
 	_headline.get_parent().visible = false
 	_sel.clear()
 	_divan.last_id = ""
+	_agenda_view.decision_index = 0
 	_cards_sig = ""
 	_last_mesai = -1
 	_last_wealth = -1
@@ -1154,9 +1158,9 @@ func _fact_act(kind: String, fid: String) -> void:
 func _choose(pending_index: int, choice_index: int) -> void:
 	if _busy:
 		return
-	if not _fast() and pending_index < _decision_cards.size():
+	if not _fast() and not _decision_cards.is_empty():
 		_busy = true
-		var card := _decision_cards[pending_index]
+		var card := _decision_cards[0]
 		_stamp_seal(card)
 		await get_tree().create_timer(0.55).timeout
 		await create_tween().tween_property(card, "modulate:a", 0.0, 0.22).finished
