@@ -171,7 +171,7 @@ func _append_council(council: Array) -> void:
 		var misled := int(c["misled"])
 		var col := "#c0504a" if misled * 3 >= int(c["given"]) and misled > 0 else ("#d08a3d" if misled > 0 else "#7fae7a")
 		lies_page.append_text(tr("[b]%s[/b]   %d öneri · %d kez dinledin · [color=%s]%s[/color]\n") % [
-			tr(str(c["name"])), int(c["given"]), int(c["followed"]), col, tr("%d kez yanılttı") % misled if misled > 0 else tr("hiç yanıltmadı")])
+			tr(str(c["name"])), int(c["given"]), int(c["followed"]), col, Loc.ntr("%d kez yanılttı", misled) % misled if misled > 0 else tr("hiç yanıltmadı")])
 		var w: Dictionary = c["worst"]
 		if not w.is_empty():
 			lies_page.append_text(tr("   [color=gray]En pahalısı, hafta %d — %s:[/color] \"%s\" dedi; en iyisi \"%s\" idi.%s\n") % [

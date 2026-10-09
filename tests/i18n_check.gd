@@ -19,6 +19,7 @@ func _init() -> void:
 	_male_pronouns.compile("(?i)\\b(he|him|his|himself)\\b")
 	_female_pronouns.compile("(?i)\\b(she|her|hers|herself)\\b")
 	_check_po()
+	_check_plural_forms()
 	_check_overlays()
 	_check_overlay_shapes()
 	_check_loader_fallback()
@@ -37,19 +38,19 @@ func _check_po() -> void:
 	for entry in ids.slice(1):
 		if entry.begins_with("\"\""):
 			continue
-		_expect(entry.contains("msgstr \""), "en.po msgstr eksik")
+		_expect(entry.contains("msgstr \"") or entry.contains("msgstr[0] \""), "en.po msgstr eksik")
 
 
 func _check_po_gender(text: String) -> void:
 	var collecting := false
 	var value := ""
 	for line in text.split("\n"):
-		if line.begins_with("msgstr "):
+		if line.begins_with("msgstr ") or line.begins_with("msgstr[0] ") or line.begins_with("msgstr[1] "):
 			if collecting:
 				_check_gender_pronouns(value, "en.po msgstr")
 				_check_quote_style(value, "en.po msgstr")
 			collecting = true
-			value = _po_literal(line.trim_prefix("msgstr "))
+			value = _po_literal(line.substr(line.find(" ") + 1))
 		elif collecting and line.begins_with("\""):
 			value += _po_literal(line)
 		elif collecting:
@@ -59,6 +60,56 @@ func _check_po_gender(text: String) -> void:
 	if collecting:
 		_check_gender_pronouns(value, "en.po msgstr")
 		_check_quote_style(value, "en.po msgstr")
+
+
+func _check_plural_forms() -> void:
+	var cases := [
+		["%d mesai", "%d action", "%d actions"],
+		["%d karar", "%d decision", "%d decisions"],
+		["%d karar bekliyor", "%d decision waiting", "%d decisions waiting"],
+		["%d söz", "%d promise", "%d promises"],
+		["%d sözün vadesi geldi", "%d promise due", "%d promises due"],
+		["%d sözün vadesi yaklaşıyor", "%d promise is coming due", "%d promises are coming due"],
+		["%d düşman", "%d enemy", "%d enemies"],
+		["%d şüpheli", "%d suspect", "%d suspects"],
+		["%d kayıt", "%d entry", "%d entries"],
+		["%d dedikodu", "%d rumour", "%d rumours"],
+		["%d sırrın yayılıyor", "%d of your secrets is spreading", "%d of your secrets are spreading"],
+		["%d kez yanılttı", "misled you %d time", "misled you %d times"],
+		["%d KARAR BEKLİYOR   ·   GÜNDEMİ AÇ   »", "%d DECISION WAITING   ·   OPEN AGENDA   »", "%d DECISIONS WAITING   ·   OPEN AGENDA   »"],
+		["%d söz verdin: %d tutuldu, %d bozuldu.", "You made %d promise: %d kept, %d broken.", "You made %d promises: %d kept, %d broken."],
+		["%s ile %s'i yakın zamanda birbirine düşürmeyi denedin; %d hafta bekle.", "You recently tried to set %s and %s against each other; wait %d week.", "You recently tried to set %s and %s against each other; wait %d weeks."],
+		["Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti.", "You were deposed in week %d of your reign in a military coup. The coup leader was %s, whom you had promoted just %d week earlier.", "You were deposed in week %d of your reign in a military coup. The coup leader was %s, whom you had promoted just %d weeks earlier."],
+		["Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti.", "You were deposed in week %d of your reign in a palace coup. The coup leader was %s, whom you had promoted just %d week earlier.", "You were deposed in week %d of your reign in a palace coup. The coup leader was %s, whom you had promoted just %d weeks earlier."],
+		["Bu çifti yakın zamanda denedin; %d hafta bekle.", "You tried this pair recently; wait %d week.", "You tried this pair recently; wait %d weeks."],
+		["%s yeniden çağırmak için %d hafta beklemelisin.", "%s can be summoned again in %d week.", "%s can be summoned again in %d weeks."]
+	]
+	Loc.set_lang("en")
+	for item in cases:
+		var singular := str(item[1])
+		var plural := str(item[2])
+		var translated_one := Loc.ntr(str(item[0]), 1)
+		var translated_two := Loc.ntr(str(item[0]), 2)
+		_expect((translated_one % _plural_test_args(translated_one, 1)) == singular % _plural_test_args(singular, 1), "İngilizce tekil çoğul hatalı: " + str(item[0]))
+		_expect((translated_two % _plural_test_args(translated_two, 2)) == plural % _plural_test_args(plural, 2), "İngilizce çoğul hatalı: " + str(item[0]))
+	Loc.set_lang("tr")
+	for item in cases:
+		var source := str(item[0])
+		_expect(Loc.ntr(source, 1) % _plural_test_args(source, 1) == source % _plural_test_args(source, 1), "Türkçe tekil kaynak değişti: " + source)
+		_expect(Loc.ntr(source, 2) % _plural_test_args(source, 2) == source % _plural_test_args(source, 2), "Türkçe çoğul kaynak değişti: " + source)
+
+
+func _plural_test_args(format: String, count: int) -> Variant:
+	if format.contains("%d söz verdin") or format.contains("You made %d promise") or format.contains("You made %d promises"):
+		return [count, 2, 0]
+	if format.contains("hafta önce kendisi tarafından") or (format.contains("week") and format.contains("earlier")):
+		return [10, "Viktor", count]
+	if format.contains("%s"):
+		if format.begins_with("%s ile %s") or format.contains("%s and %s"):
+			return ["Selin", "Marcus", count]
+		if format.begins_with("%s"):
+			return ["Selin", count]
+	return count
 
 
 func _po_literal(raw: String) -> String:

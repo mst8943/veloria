@@ -24,6 +24,16 @@
 - Sürüm 1.5.0 Windows/Linux/Web export ve ZIP'leri hazırlandı. Web HTTP 200;
   bu oturumda tarayıcı/app CUA yüzeyi boş olduğundan WebGL etkileşim testi ve
   Claude'a rapor iletimi doğrulanamadı. Linux çalıştırması ve ses denenmedi.
+- Kapanış düzeltmesi: sayılı İngilizce ifadeler `Loc.ntr()` ile Godot
+  `translate_plural()` desteğine bağlandı (bekleyen kararlar, eylem, söz,
+  hafta, dosya/şüpheli/alamet sayaçları). `i18n_check`, kapsanan her kalıp için
+  1 ve 2 değerlerini İngilizce olarak doğruluyor; Türkçe şablonların aynı
+  kaldığını da denetliyor. Testler: `TEST: OK`, `EVENTS: OK` (TR/EN),
+  `SAVE: OK`, `CONTENT: OK` (TR/EN), `I18N: OK`, `UI INPUT: OK`.
+  `--autoplay --full` TR/EN: `FULLRUN tohum=101 hafta=104 sonuç=TAHTTA
+  ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`.
+  İngilizce `advice_weighted` 80 kampanya: Kolay 68/80, Normal 36/80,
+  Zor 16/80; tabanla aynı.
 - Kalan: İngilizce çeviriyi ana dili İngilizce olan birinin redaksiyonu.
 
 ## Taban (L0)

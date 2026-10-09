@@ -1,6 +1,7 @@
 extends RefCounted
 
 const UIKit := preload("res://game/ui/ui_kit.gd")
+const Loc := preload("res://game/core/loc.gd")
 
 var host: Control
 
@@ -299,7 +300,8 @@ func _preview(key: String) -> void:
 		if n != 2:
 			note = tr("Çoklu seçimi aç ve tam iki kişi seç.")
 		elif Sim.rival_wait(host._sel) > 0:
-			note = tr("Bu çifti yakın zamanda denedin; %d hafta bekle.") % Sim.rival_wait(host._sel)
+			var wait := Sim.rival_wait(host._sel)
+			note = Loc.ntr("Bu çifti yakın zamanda denedin; %d hafta bekle.", wait) % wait
 		else:
 			note = tr("İkisi de güçlü ve hırslıysa daha çok kapışırlar. Başarısız olursa kimin yaptığını anlarlar.")
 	elif key.begins_with("op_"):
@@ -335,7 +337,7 @@ func _preview(key: String) -> void:
 			"summon":
 				var wait := Sim.summon_wait(id)
 				if wait > 0:
-					note = tr("%s yeniden çağırmak için %d hafta beklemelisin.") % [Sim.ek(a.display_name, "i"), wait]
+					note = Loc.ntr("%s yeniden çağırmak için %d hafta beklemelisin.", wait) % [Sim.ek(a.display_name, "i"), wait]
 			"promote":
 				if tier == 3:
 					risk = 2
@@ -370,7 +372,7 @@ func _preview(key: String) -> void:
 	if key in ["appoint_loyal", "appoint_merit", "tender", "train_heir", "delegation"]:
 		host._hint_label.text = "[color=#d6b25e][b]%s[/b][/color]   [color=#9a958a]%s[/color]\n%s" % [tr(str(m[0])), tr("1 mesai"), note]
 		return
-	var cost := tr("%d mesai") % int(m[1])
+	var cost := Loc.ntr("%d mesai", int(m[1])) % int(m[1])
 	var wealth: float = Sim.BRIBE_COST if float(m[2]) < 0.0 else float(m[2])
 	if wealth > 0.0:
 		cost += " · " + (tr("%d servet") % int(wealth))

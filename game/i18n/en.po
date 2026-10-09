@@ -2,6 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Veloria 1.4\n"
 "Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
@@ -153,7 +154,7 @@ msgid "Henüz tamamlanmış bir saltanat yok. İlk hükümdarlığın burada an�
 msgstr "There is no completed reign yet. Your first will be remembered here."
 
 msgid "Saltanat sayısı: %d   ·   Tahtta kalan: %d   ·   En uzun saltanat: %d hafta\n\n"
-msgstr "Reigns: %d   ·   Stayed on the throne: %d   ·   Longest reign: %d weeks\n\n"
+msgstr "Reigns: %d   ·   Stayed on the throne: %d   ·   Longest reign (weeks): %d\n\n"
 
 msgid "Oyuna Dön"
 msgstr "Return to Game"
@@ -216,7 +217,7 @@ msgstr "PUBLIC"
 msgid "DEDİKODU"
 msgstr "RUMOUR"
 msgid "%d kişi biliyor  ·  %d kopya"
-msgstr "%d people know  ·  %d copies"
+msgstr "Known by: %d  ·  Copies: %d"
 msgid "Sızdır"
 msgstr "Leak"
 msgid "Bastır"
@@ -605,7 +606,9 @@ msgid "Çoklu seçimi aç ve tam iki kişi seç."
 msgstr "Enable multi-select and choose exactly two people."
 
 msgid "Bu çifti yakın zamanda denedin; %d hafta bekle."
-msgstr "You tried this pair recently; wait %d weeks."
+msgid_plural "Bu çifti yakın zamanda denedin; %d hafta bekle. [plural]"
+msgstr[0] "You tried this pair recently; wait %d week."
+msgstr[1] "You tried this pair recently; wait %d weeks."
 
 msgid "İkisi de güçlü ve hırslıysa daha çok kapışırlar. Başarısız olursa kimin yaptığını anlarlar."
 msgstr "If both are powerful and ambitious, they will feud harder. If it fails, they will know who caused it."
@@ -644,7 +647,9 @@ msgid "Bu kurumda yeni atama için beklemelisin."
 msgstr "You must wait before making another appointment to this institution."
 
 msgid "%s yeniden çağırmak için %d hafta beklemelisin."
-msgstr "Wait %d weeks before summoning %s again."
+msgid_plural "%s yeniden çağırmak için %d hafta beklemelisin. [plural]"
+msgstr[0] "%s can be summoned again in %d week."
+msgstr[1] "%s can be summoned again in %d weeks."
 
 msgid "%s zaten vazgeçilmez; terfi onu daha da tehlikeli yapar."
 msgstr "%s is already indispensable; promoting them would make them even more dangerous."
@@ -683,7 +688,9 @@ msgid "1 mesai"
 msgstr "1 action"
 
 msgid "%d mesai"
-msgstr "%d actions"
+msgid_plural "%d mesai [plural]"
+msgstr[0] "%d action"
+msgstr[1] "%d actions"
 
 msgid "%d servet"
 msgstr "%d wealth"
@@ -869,7 +876,9 @@ msgid "Masada yeni dosyalar var."
 msgstr "New files are waiting on the desk."
 
 msgid "%d KARAR BEKLİYOR   ·   GÜNDEMİ AÇ   »"
-msgstr "%d DECISIONS WAITING   ·   OPEN AGENDA   »"
+msgid_plural "%d KARAR BEKLİYOR   ·   GÜNDEMİ AÇ   » [plural]"
+msgstr[0] "%d DECISION WAITING   ·   OPEN AGENDA   »"
+msgstr[1] "%d DECISIONS WAITING   ·   OPEN AGENDA   »"
 
 msgid "GÜNDEMİ AÇ   »"
 msgstr "OPEN AGENDA   »"
@@ -878,13 +887,17 @@ msgid "YENİ"
 msgstr "NEW"
 
 msgid "%d söz"
-msgstr "%d promises"
+msgid_plural "%d söz [plural]"
+msgstr[0] "%d promise"
+msgstr[1] "%d promises"
 
 msgid "Bekleyen karar yok"
 msgstr "No pending decisions"
 
 msgid "%d karar"
-msgstr "%d decisions"
+msgid_plural "%d karar [plural]"
+msgstr[0] "%d decision"
+msgstr[1] "%d decisions"
 
 msgid "en acil"
 msgstr "most urgent"
@@ -898,9 +911,6 @@ msgstr "%s · %s: %s"
 msgid "Bu haftanın gazeteleri"
 msgstr "This week's papers"
 
-msgid "%d mesai"
-msgstr "%d actions"
-
 msgid "Mesai bitti"
 msgstr "No actions left"
 
@@ -908,7 +918,9 @@ msgid "Mesai %d / %d"
 msgstr "Actions %d / %d"
 
 msgid "%d karar bekliyor"
-msgstr "%d decisions waiting"
+msgid_plural "%d karar bekliyor [plural]"
+msgstr[0] "%d decision waiting"
+msgstr[1] "%d decisions waiting"
 
 msgid "  ·  %d tanesi bu hafta düşer"
 msgstr "  ·  %d due this week"
@@ -920,7 +932,9 @@ msgid "Medya okunmadı"
 msgstr "Press unread"
 
 msgid "%d sözün vadesi geldi"
-msgstr "%d promises due"
+msgid_plural "%d sözün vadesi geldi [plural]"
+msgstr[0] "%d promise due"
+msgstr[1] "%d promises due"
 
 msgid "Söz vadesi"
 msgstr "Promise due"
@@ -929,7 +943,9 @@ msgid "Sırrın yayılıyor"
 msgstr "Your secret is spreading"
 
 msgid "%d sırrın yayılıyor"
-msgstr "%d of your secrets are spreading"
+msgid_plural "%d sırrın yayılıyor [plural]"
+msgstr[0] "%d of your secrets is spreading"
+msgstr[1] "%d of your secrets are spreading"
 
 msgid "Hazırsın: haftayı bitir"
 msgstr "Ready to end the week"
@@ -950,13 +966,19 @@ msgid "[color=orange]Hafta %d: %s[/color]\n"
 msgstr "[color=orange]Week %d: %s[/color]\n"
 
 msgid "%d düşman"
-msgstr "%d enemies"
+msgid_plural "%d düşman [plural]"
+msgstr[0] "%d enemy"
+msgstr[1] "%d enemies"
 
 msgid "%d şüpheli"
-msgstr "%d suspects"
+msgid_plural "%d şüpheli [plural]"
+msgstr[0] "%d suspect"
+msgstr[1] "%d suspects"
 
 msgid "%d sözün vadesi yaklaşıyor"
-msgstr "%d promises are coming due"
+msgid_plural "%d sözün vadesi yaklaşıyor [plural]"
+msgstr[0] "%d promise is coming due"
+msgstr[1] "%d promises are coming due"
 
 msgid "Hafta %d · saltanatın kaydı"
 msgstr "Week %d · reign record"
@@ -965,19 +987,23 @@ msgid "Dosya şimdilik boş"
 msgstr "The file is empty for now"
 
 msgid "%d kayıt"
-msgstr "%d entries"
+msgid_plural "%d kayıt [plural]"
+msgstr[0] "%d entry"
+msgstr[1] "%d entries"
 
 msgid "%d tanesi sana dair"
-msgstr "%d concern you"
+msgstr "Concerning you: %d"
 
 msgid "%d dedikodu"
-msgstr "%d rumours"
+msgid_plural "%d dedikodu [plural]"
+msgstr[0] "%d rumour"
+msgstr[1] "%d rumours"
 
 msgid "Kurumlar ve sokaklar"
 msgstr "Institutions and streets"
 
 msgid "%d saltanat · %d / %d başarım"
-msgstr "%d reigns · %d / %d achievements"
+msgstr "Reigns: %d · Achievements: %d / %d"
 
 msgid "VELORİA HABER"
 msgstr "VELORIA NEWS"
@@ -1223,7 +1249,7 @@ msgid "KOMPLO DEFTERİ — perde arkasında ne oldu"
 msgstr "PLOT LEDGER — what happened behind the scenes"
 
 msgid "[color=gray]Son gördüğün alametlerin %d'i gerçekti, %d'i dedikoduydu.[/color]\n\n"
-msgstr "[color=gray]Of the signs you saw, %d were real and %d were rumours.[/color]\n\n"
+msgstr "[color=gray]Signs — real: %d · rumours: %d[/color]\n\n"
 
 msgid "Sarayda kimse sana karşı örgütlenmedi.\n"
 msgstr "No one at court conspired against you.\n"
@@ -1241,10 +1267,12 @@ msgid "Meclis bu saltanatta hiç öneride bulunmadı.\n"
 msgstr "The Assembly offered no advice during this reign.\n"
 
 msgid "[b]%s[/b]   %d öneri · %d kez dinledin · [color=%s]%s[/color]\n"
-msgstr "[b]%s[/b]   %d suggestions · followed %d times · [color=%s]%s[/color]\n"
+msgstr "[b]%s[/b]   Suggestions: %d · Followed: %d · [color=%s]%s[/color]\n"
 
 msgid "%d kez yanılttı"
-msgstr "misled you %d times"
+msgid_plural "%d kez yanılttı [plural]"
+msgstr[0] "misled you %d time"
+msgstr[1] "misled you %d times"
 
 msgid "hiç yanıltmadı"
 msgstr "never misled you"
@@ -1280,10 +1308,10 @@ msgid "• %d. hafta — %s: %s\n"
 msgstr "• Week %d — %s: %s\n"
 
 msgid "[color=gray]İhale:[/color] %d kez. [color=gray]Sarne'nin düşman yayını:[/color] %d hafta.\n"
-msgstr "[color=gray]Contracts:[/color] %d. [color=gray]Weeks of hostile coverage from Sarne:[/color] %d.\n"
+msgstr "[color=gray]Contracts:[/color] %d. [color=gray]Hostile coverage (weeks):[/color] %d.\n"
 
 msgid "[color=gray]Dış ilişkiler:[/color] %d heyet; en soğuk an %d. hafta. [color=gray]Veliaht:[/color] %s.\n"
-msgstr "[color=gray]Foreign relations:[/color] %d delegations; coldest point in week %d. [color=gray]Heir:[/color] %s.\n"
+msgstr "[color=gray]Foreign relations — delegations:[/color] %d; coldest point in week %d. [color=gray]Heir:[/color] %s.\n"
 
 msgid "Tahtını korudun."
 msgstr "You kept your throne."
@@ -1295,7 +1323,7 @@ msgid "[b][font_size=%d]Kral %s[/font_size][/b]   [font_size=%d][color=%s]%s[/co
 msgstr "[b][font_size=%d]King %s[/font_size][/b]   [font_size=%d][color=%s]%s[/color][/font_size]\n[font_size=%d][color=gray]Title:[/color] [color=#d9b359]%s[/color][/font_size]"
 
 msgid "[b]Saltanat:[/b] %d hafta  ·  [b]En güçlü isim:[/b] %s\n[b]Söz sicili:[/b] %s\n[b]Karar defteri:[/b] %d kayıt\n"
-msgstr "[b]Reign:[/b] %d weeks  ·  [b]Most powerful:[/b] %s\n[b]Promise record:[/b] %s\n[b]Decision ledger:[/b] %d entries\n"
+msgstr "[b]Reign (weeks):[/b] %d  ·  [b]Most powerful:[/b] %s\n[b]Promise record:[/b] %s\n[b]Decision ledger — entries:[/b] %d\n"
 
 msgid "[b]Rejimin:[/b] %s. [b]Son sınavı:[/b] %s.\n"
 msgstr "[b]Your regime:[/b] %s. [b]Final test:[/b] %s.\n"
@@ -1307,10 +1335,10 @@ msgid "[b]Hakikat Dosyası:[/b] kimse sana belirgin biçimde yalan söylemedi.\n
 msgstr "[b]Truth File:[/b] no one clearly lied to you.\n"
 
 msgid "[b]Hakikat Dosyası:[/b] [color=#c0504a]%d kişi sana yalan söyledi.[/color] Kim olduklarını Hakikat Dosyası sekmesinde gör.\n"
-msgstr "[b]Truth File:[/b] [color=#c0504a]%d people lied to you.[/color] See who in the Truth File tab.\n"
+msgstr "[b]Truth File — liars:[/b] [color=#c0504a]%d.[/color] See who in the Truth File tab.\n"
 
 msgid "[b]Meclis:[/b] seni en çok [color=#d08a3d]%s[/color] yanılttı (%d kez). Ayrıntısı Hakikat Dosyası'nda.\n"
-msgstr "[b]Assembly:[/b] [color=#d08a3d]%s[/color] misled you most (%d times). Details are in the Truth File.\n"
+msgstr "[b]Assembly:[/b] [color=#d08a3d]%s[/color] misled you most. Times: %d. Details are in the Truth File.\n"
 
 msgid "[b]Komplo:[/b] ilk kıvılcım %d. haftada, [color=#c0504a]%s[/color]. Kronolojisi Hakikat Dosyası'nda.\n"
 msgstr "[b]Plot:[/b] the first spark came in week %d, [color=#c0504a]%s[/color]. Its timeline is in the Truth File.\n"
@@ -1346,7 +1374,7 @@ msgid "• Hafta %d — [b]%s[/b] sana şunu söyledi: \"%s\"\n   [color=gray]Ge
 msgstr "• Week %d — [b]%s[/b] told you: “%s”\n   [color=gray]In truth:[/color] %s\n\n"
 
 msgid "KARARLARIN[/font_size][/color][/b]   [color=gray]%d kayıt · en yenisi üstte[/color]\n\n"
-msgstr "YOUR DECISIONS[/font_size][/color][/b]   [color=gray]%d entries · newest first[/color]\n\n"
+msgstr "YOUR DECISIONS[/font_size][/color][/b]   [color=gray]Entries: %d · newest first[/color]\n\n"
 
 msgid "Hiç karar vermedin. Tarih bunu da yazar."
 msgstr "You made no decisions. History will record that too."
@@ -1370,7 +1398,7 @@ msgid "[b][color=#d9b359][font_size=22]HAKİKAT DOSYASI — sana söylenmeyenler
 msgstr "[b][color=#d9b359][font_size=22]TRUTH FILE — what they did not tell you[/font_size][/color][/b]\n\n"
 
 msgid "[b][color=#d9b359][font_size=22]KARARLARIN[/font_size][/color][/b]   [color=gray]%d kayıt · en yenisi üstte[/color]\n\n"
-msgstr "[b][color=#d9b359][font_size=22]YOUR DECISIONS[/font_size][/color][/b]   [color=gray]%d entries · newest first[/color]\n\n"
+msgstr "[b][color=#d9b359][font_size=22]YOUR DECISIONS[/font_size][/color][/b]   [color=gray]Entries: %d · newest first[/color]\n\n"
 
 msgid "Naiplik"
 msgstr "Regency"
@@ -1580,7 +1608,9 @@ msgid "Sana karşı harekete geçmiş biriyle oyun oynamak işe yaramaz."
 msgstr "Playing games with someone who has already moved against you won't work."
 
 msgid "%s ile %s'i yakın zamanda birbirine düşürmeyi denedin; %d hafta bekle."
-msgstr "You recently tried to set %s and %s against each other; wait %d weeks."
+msgid_plural "%s ile %s'i yakın zamanda birbirine düşürmeyi denedin; %d hafta bekle. [plural]"
+msgstr[0] "You recently tried to set %s and %s against each other; wait %d week."
+msgstr[1] "You recently tried to set %s and %s against each other; wait %d weeks."
 
 msgid "Birbirine düşürmek 2 mesai ister."
 msgstr "Setting them against each other costs 2 work actions."
@@ -2096,10 +2126,14 @@ msgid "Devrilen Kral"
 msgstr "The Overthrown King"
 
 msgid "Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti."
-msgstr "You were deposed in week %d of your reign in a military coup. The coup leader was %s, whom you had promoted just %d weeks earlier."
+msgid_plural "Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti. [plural]"
+msgstr[0] "You were deposed in week %d of your reign in a military coup. The coup leader was %s, whom you had promoted just %d week earlier."
+msgstr[1] "You were deposed in week %d of your reign in a military coup. The coup leader was %s, whom you had promoted just %d weeks earlier."
 
 msgid "Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti."
-msgstr "You were deposed in week %d of your reign in a palace coup. The coup leader was %s, whom you had promoted just %d weeks earlier."
+msgid_plural "Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti. [plural]"
+msgstr[0] "You were deposed in week %d of your reign in a palace coup. The coup leader was %s, whom you had promoted just %d week earlier."
+msgstr[1] "You were deposed in week %d of your reign in a palace coup. The coup leader was %s, whom you had promoted just %d weeks earlier."
 
 msgid "Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı."
 msgstr "You were deposed in week %d of your reign in a military coup. The coup leader was %s. You never promoted them; they built their power while you were busy elsewhere."
@@ -2120,7 +2154,9 @@ msgid "104 haftalık saltanatın sonunda tahtını korudun."
 msgstr "You kept your throne after a 104-week reign."
 
 msgid "%d söz verdin: %d tutuldu, %d bozuldu."
-msgstr "You made %d promises: %d kept, %d broken."
+msgid_plural "%d söz verdin: %d tutuldu, %d bozuldu. [plural]"
+msgstr[0] "You made %d promise: %d kept, %d broken."
+msgstr[1] "You made %d promises: %d kept, %d broken."
 
 msgid "O hafta kayda geçen bir olay yok."
 msgstr "No event was recorded that week."
@@ -2408,7 +2444,7 @@ msgid "Kral %s, iki yıl boyunca sayısız fırtınaya rağmen tahtını korudu.
 msgstr "King %s kept his throne through countless storms over two years."
 
 msgid "Kral %s, %d hafta boyunca imkânsız bir krallığı ayakta tutmaya çalıştı; düşüşü, ihanetin eseriydi."
-msgstr "King %s tried to hold an impossible kingdom together for %d weeks; betrayal brought his downfall."
+msgstr "King %s tried to hold an impossible kingdom together until week %d; betrayal brought his downfall."
 
 msgid "Saltanatında hazine doldu, pazarlar canlandı."
 msgstr "The treasury filled and markets flourished during his reign."
@@ -2627,16 +2663,16 @@ msgid "Zor"
 msgstr "Hard"
 
 msgid "Saltanatı, ortaya saçılan %d sırla hatırlanır."
-msgstr "His reign is remembered for the %d secrets that came to light."
+msgstr "His reign is remembered for the number of secrets that came to light: %d."
 
 msgid "Sadakati parayla satın aldı; %d gizli ödeme kayıtlara geçti."
-msgstr "He bought loyalty with money; %d secret payments were recorded."
+msgstr "He bought loyalty with money; the recorded total for secret payments was %d."
 
 msgid "Yakın çevresini şantajla yönetti."
 msgstr "He ruled his inner circle through blackmail."
 
 msgid "%d sözünü tutmadı."
-msgstr "He broke %d promises."
+msgstr "Broken promises: %d."
 
 msgid "Basını susturdu."
 msgstr "He silenced the press."

@@ -1210,7 +1210,7 @@ func _rebuild_flow() -> void:
 		if int(p["age"]) > 0:
 			late += 1
 	if not Sim.pending.is_empty():
-		var t := tr("%d karar bekliyor") % Sim.pending.size()
+		var t := Loc.ntr("%d karar bekliyor", Sim.pending.size()) % Sim.pending.size()
 		if late > 0:
 			t += (tr(" · %d acil") if _mobile else tr("  ·  %d tanesi bu hafta düşer")) % late
 		items.append([t, UIKit.DANGER if late > 0 else UIKit.GOLD, "gundem"])
@@ -1221,13 +1221,13 @@ func _rebuild_flow() -> void:
 		if str(p["state"]) == "active" and int(p["due"]) <= Sim.week + 1:
 			due += 1
 	if due > 0:
-		items.append([tr("%d sözün vadesi geldi") % due if not _mobile else tr("Söz vadesi"), Color("d9b359"), "dosyalar"])
+		items.append([Loc.ntr("%d sözün vadesi geldi", due) % due if not _mobile else tr("Söz vadesi"), Color("d9b359"), "dosyalar"])
 	var spreading := 0
 	for f: Dictionary in Sim.facts.values():
 		if f["subject"] == "king" and not f.get("public", false) and float(f["common"]) >= 0.3:
 			spreading += 1
 	if spreading > 0:
-		items.append([tr("Sırrın yayılıyor") if spreading == 1 else tr("%d sırrın yayılıyor") % spreading, UIKit.DANGER, "dosyalar"])
+		items.append([Loc.ntr("%d sırrın yayılıyor", spreading) % spreading, UIKit.DANGER, "dosyalar"])
 	if Sim.mesai == 0 and Sim.pending.is_empty():
 		items.append([tr("Hazırsın: haftayı bitir") if not _mobile else tr("Hazır"), UIKit.OK, ""])
 	var sig := str(items)

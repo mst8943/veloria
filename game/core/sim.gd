@@ -963,7 +963,7 @@ func divide_rivals(ids: Array) -> String:
 		return tr("Sana karşı harekete geçmiş biriyle oyun oynamak işe yaramaz.")
 	var wait := rival_wait(ids)
 	if wait > 0:
-		return tr("%s ile %s'i yakın zamanda birbirine düşürmeyi denedin; %d hafta bekle.") % [a.display_name, b.display_name, wait]
+		return Loc.ntr("%s ile %s'i yakın zamanda birbirine düşürmeyi denedin; %d hafta bekle.", wait) % [a.display_name, b.display_name, wait]
 	if mesai < 2:
 		return tr("Birbirine düşürmek 2 mesai ister.")
 	spend_mesai(2)
@@ -2578,8 +2578,9 @@ func _end(survived: bool) -> void:
 			var l: Actor = actors[coup_leader]
 			var promo_week: int = flags.get(l.id.to_upper() + "_GUCLENDI", 0)
 			if promo_week > 0:
+				var promo_gap := week - promo_week
 				cause = "Saltanatının %d. haftasında %s görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti." % [week - 1, "Askerî darbeyle" if l.military else "Saray darbesiyle", l.display_name, week - promo_week]
-				cause_display = tr("Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti.") % [week - 1, l.display_name, week - promo_week] if l.military else tr("Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti.") % [week - 1, l.display_name, week - promo_week]
+				cause_display = Loc.ntr("Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti.", promo_gap) % [week - 1, l.display_name, promo_gap] if l.military else Loc.ntr("Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti.", promo_gap) % [week - 1, l.display_name, promo_gap]
 			else:
 				cause = "Saltanatının %d. haftasında %s görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı." % [week - 1, "Askerî darbeyle" if l.military else "Saray darbesiyle", l.display_name]
 				cause_display = tr("Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı.") % [week - 1, l.display_name] if l.military else tr("Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı.") % [week - 1, l.display_name]
@@ -2611,7 +2612,7 @@ func _end(survived: bool) -> void:
 		"lies": _top_lies(), "king": KING_NAME,
 		"regime": str(REGIME_NAMES.get(regime, "")) if regime != "" else "", "threat": str(REGIME_THREATS.get(regime, "")) if regime != "" else "",
 		"promises": "%d söz verdin: %d tutuldu, %d bozuldu." % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
-		"promises_display": tr("%d söz verdin: %d tutuldu, %d bozuldu.") % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
+		"promises_display": Loc.ntr("%d söz verdin: %d tutuldu, %d bozuldu.", int(stats.get("promises", 0))) % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
 		"historians": historians(survived), "timeline": timeline.duplicate(), "council": council_record(),
 		"plot": plot_log.duplicate(), "signs": sign_record(), "state": _state_record()}
 	record["new_achievements"] = _award_achievements(survived, title, cause) if record_chronicle else []

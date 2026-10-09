@@ -6,6 +6,7 @@ extends Control
 signal request(target: String)
 
 const UIKit := preload("res://game/ui/ui_kit.gd")
+const Loc := preload("res://game/core/loc.gd")
 const Press := preload("res://game/core/press.gd")
 
 const LIT_SHADER := preload("res://game/ui/desk_lit.gdshader")
@@ -155,7 +156,7 @@ func _build() -> void:
 	_open_btn = Button.new()
 	_open_btn.theme_type_variation = "PrimaryButton"
 	var n := Sim.pending.size()
-	_open_btn.text = (tr("%d KARAR BEKLİYOR   ·   GÜNDEMİ AÇ   »") % n) if n > 0 else tr("GÜNDEMİ AÇ   »")
+	_open_btn.text = (Loc.ntr("%d KARAR BEKLİYOR   ·   GÜNDEMİ AÇ   »", n) % n) if n > 0 else tr("GÜNDEMİ AÇ   »")
 	_open_btn.position = Vector2(500, 818)
 	_open_btn.size = Vector2(600, 56)
 	_open_btn.focus_mode = Control.FOCUS_NONE
@@ -374,7 +375,7 @@ func _mark_text(id: String) -> String:
 			return tr("YENİ") if (not media_fresh_fn.is_valid() or media_fresh_fn.call()) else ""
 		"gunluk":
 			var due := _due_promises()
-			return (tr("%d söz") % due) if due > 0 else ""
+			return (Loc.ntr("%d söz", due) % due) if due > 0 else ""
 	return ""
 
 
@@ -396,7 +397,7 @@ func _summary(id: String) -> String:
 			for p in Sim.pending:
 				if int(p["age"]) > int(urgent["age"]):
 					urgent = p
-			var head := tr("%d karar") % Sim.pending.size()
+			var head := Loc.ntr("%d karar", Sim.pending.size()) % Sim.pending.size()
 			var lead := tr("en acil") if int(urgent["age"]) > 0 else tr("ilki")
 			return tr("%s · %s: %s") % [head, lead, urgent["event"]["title"]]
 		"medya":
@@ -408,20 +409,20 @@ func _summary(id: String) -> String:
 			for a in Sim.actors.values():
 				if a.moved:
 					enemies += 1
-			var t := tr("%d mesai") % Sim.mesai if Sim.mesai > 0 else tr("Mesai bitti")
+			var t := Loc.ntr("%d mesai", Sim.mesai) % Sim.mesai if Sim.mesai > 0 else tr("Mesai bitti")
 			var sus := 0
 			for a in Sim.actors.values():
 				if not a.moved and Sim.suspicion_level(a.id) >= 2:
 					sus += 1
 			if enemies > 0:
-				t += " · " + (tr("%d düşman") % enemies)
+				t += " · " + (Loc.ntr("%d düşman", enemies) % enemies)
 			if sus > 0:
-				t += " · " + (tr("%d şüpheli") % sus)
+				t += " · " + (Loc.ntr("%d şüpheli", sus) % sus)
 			return t
 		"gunluk":
 			var due := _due_promises()
 			if due > 0:
-				return tr("%d sözün vadesi yaklaşıyor") % due
+				return Loc.ntr("%d sözün vadesi yaklaşıyor", due) % due
 			return tr("Hafta %d · saltanatın kaydı") % Sim.week
 		"dosyalar":
 			if Sim.facts.is_empty():
@@ -435,11 +436,11 @@ func _summary(id: String) -> String:
 					rumors += 1
 				if f["subject"] == "king":
 					mine += 1
-			var t := tr("%d kayıt") % Sim.facts.size()
+			var t := Loc.ntr("%d kayıt", Sim.facts.size()) % Sim.facts.size()
 			if mine > 0:
 				t += " · " + (tr("%d tanesi sana dair") % mine)
 			if rumors > 0:
-				t += " · " + (tr("%d dedikodu") % rumors)
+				t += " · " + (Loc.ntr("%d dedikodu", rumors) % rumors)
 			return t
 		"harita":
 			return tr("Kurumlar ve sokaklar")
