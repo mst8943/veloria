@@ -118,3 +118,36 @@ Layout: same main screen, but the right column shows below the watchlist strip a
 ```
 Layout: landscape phone game UI. Bottom tab bar with three tabs "Agenda, People, Reports". People tab: a horizontally scrollable strip of portrait tiles grouped by small labels "Dynasty | State | Power | Foreign", and below it the selected person's panel with action buttons. Large touch-friendly buttons.
 ```
+
+## Taslak görsellere kararlar (2026-10-09)
+Kullanıcı dört taslak üretti: `docs/ux/taslak_v2/` (`1_ana_ekran`, `2_divan`, `3_kisi_secili`, `4_mobil_kisiler`; `.gdignore` var, Godot içe aktarmaz). Karakter adları ve portreler görsel modelin uydurmasıdır; yalnızca YERLEŞİM referanstır.
+
+### Aynen alınanlar
+- **Ana ekran (1):** sol tek tam karar kartı (görsel solda, başlık, tek satır danışman özeti + iki mini portre, I/II/III geniş seçenekler), altında katlanmış "Sırada" satırı (kum saati çizilir, ▾ çizilir); sağda WATCHLIST şeridi (5 portre + "+9 Divan" karosu), altında "BU HAFTA DEĞİŞENLER" (4 satır + "Tüm raporlar (10)"); altta durum çubuğu ve tek büyük altın "HAFTAYI BİTİR".
+- **Divan (2):** sağdan kayan çekmece, dört katlanır grup (Hanedan / Devlet / Güç ve kamuoyu / Dış ilişkiler), grup başlığında küçük simge ve ▾/▴; seçili kartta altın çerçeve; "Dış ilişkiler" grubunda "Dışişleri Bakanı'nın raporu" notu; sağ üstte kapatma.
+- **Kişi seçili (3):** şeridin altında kişi bloğu: portre, ad, unvan, durum çipleri, kategori sekmeleri, eylem düğmeleri, kısa açıklama; "Bu hafta değişenler" alta üç satıra iner.
+- **Mobil (4):** alt sekme çubuğu (Gündem / Kişiler / Raporlar), Kişiler'de üstte GRUP SEKMELERİ (Hanedan / Devlet / Güç / Dış), altında yatay kaydırmalı portre şeridi (iki yanda ok), altında seçili kişinin bloğu ve geniş dokunma hedefli eylem düğmeleri.
+
+### Değiştirilenler (oyunun kuralları)
+| Taslakta | Sorun | Uygulamada |
+|---|---|---|
+| Başlıkta "1.2K / +6 / 78 / 92" gibi kaynak sayıları | "Sayı yok" ilkesine aykırı | Mevcut başlık aynen kalır (hafta, mesai, kasa göstergesi, Masa/Medya/Kaydet/Menü) |
+| Portre köşesinde yeşil/sarı/kırmızı nokta = sadakat/nüfuz/hırs gibi okunur | Gizli değerleri sızdırır | Nokta yalnızca GÖRÜLEBİLİR duruma bağlı: kırmızı = düşman/komplo belirtisi görüldü, altın = bekleyen kararda söz sahibi, mavi = yeni/değişen rapor; hiçbiri sadakat/hırs değil |
+| Kişi çipleri "Loyal / Influential / Ambitious" (renkli) | Gizli değerleri adlandırıyor | Mevcut çipler kalır: Güç · etkili, Nüfuz, Medya, Tavır (üç kademeli bant, kural dışı bilgi yok) |
+| Kategori sekmeleri yalnızca simge | Öğrenilebilirlik düşer | Metin etiketli sekmeler (KAZAN, SÖZ VER, ÖĞREN, EMRET, BASKI, OPERASYON, DEVLET) kalır; simge eklenirse etiketle birlikte ve çizilmiş şekil olarak |
+| "Influence" listesi yeşil ▲ / kırmızı ▼ ok | Gizli değerin yönünü gösterir | Yalnızca oyuncunun zaten gördüğü değişim (Geçen haftadan beri) gösterilir; ok yok, değişim cümlesi var |
+| Üst gezinme "Realm / Map / Codex / Settings" | Oyunda yok | Mevcut: Masa, Medya, Kaydet, Menü |
+| "Changed this week" satırlarında tema simgeleri (buğday, kule, kılıç) | Web'de glif/simge riski | Renkli nokta + kısa cümle; simge gerekirse çizilmiş şekil (glif değil) |
+
+### Eklenenler (taslakta yok)
+- Şerit önceliği saf fonksiyon (`strip_ids`) ve birim testi (yukarıda).
+- İlk 3 hafta çekirdek 5 kişi + "diğerleri Divan'da" ipucu.
+- Divan'da klavye: Esc kapatır; kişi seçilince çekmece kapanır.
+- Danışman özet satırında "Gerekçeler ▾" ile tam alıntı.
+
+### Uygulama sırası (dilimler)
+1. U1: Kişi şeridi + Divan çekmecesi (masaüstü); kartlar aynı nesneler; `strip_ids` + testler.
+2. U2: Karar sırası (tek tam kart + "Sırada"), tek satır danışman özeti.
+3. U3: "Bu hafta değişenler" + "Tüm raporlar"; kişi seçilmeden eylem bloğu kapalı.
+4. U4: Mobil (3 sekme, grup sekmeleri, kaydırmalı şerit).
+Her dilimde `--autoplay` (masaüstü/mobil/--full), `ui_input_test`, TR+EN ekran görüntüleri; denge etkilenmez (yalnızca arayüz): ölçüt probe tabanla birebir aynı.
