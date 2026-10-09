@@ -2,8 +2,9 @@ extends SceneTree
 ## İngilizce katmanının biçimini denetler; L4'te tam içerik zorunlu olur.
 
 const TURKISH := "çğıöşüİÇĞÖŞÜ"
-const LOGIC := {"id": true, "fx": true, "needs_flag": true, "flag": true, "actor": true, "domain": true, "art": true, "min_stat": true, "max_stat": true, "stance": true, "court_share": true}
+const LOGIC := {"id": true, "fx": true, "needs_flag": true, "flag": true, "actor": true, "domain": true, "art": true, "min_stat": true, "max_stat": true, "stance": true, "court_share": true, "red_line": true}
 const ContentData := preload("res://game/core/content_data.gd")
+const Actor := preload("res://game/core/actor.gd")
 const Loc := preload("res://game/core/loc.gd")
 var ok := true
 var _female_refs := RegEx.new()
@@ -102,9 +103,18 @@ func _check_overlay_shapes() -> void:
 		var translated: Variant = actor_overlay[id]
 		_expect(translated is Dictionary, "actors girdisi sözlük değil: " + id)
 		if translated is Dictionary:
-			_expect(translated.size() == 4, "actors girdisinde gösterim alanı sayısı hatalı: " + id)
-			for field in ["name", "title", "red_line", "weak_point"]:
+			_expect(translated.size() == 3, "actors girdisinde gösterim alanı sayısı hatalı: " + id)
+			_expect(not translated.has("red_line"), "actors kaplaması mantık alanı içeriyor: %s/red_line" % id)
+			for field in ["name", "title", "weak_point"]:
 				_expect(translated.has(field) and translated[field] is String and not str(translated[field]).strip_edges().is_empty(), "actors alanı eksik: %s/%s" % [id, field])
+	Loc.set_lang("en")
+	var translated_actors: Array = ContentData.new().load_actors()
+	var arden_data: Dictionary = translated_actors.filter(func(actor: Dictionary) -> bool: return actor.get("id") == "arden")[0]
+	var arden = Actor.new()
+	arden.setup(arden_data)
+	_expect(arden.red_line.contains("ateş") and arden.crosses_red_line("bastir"), "İngilizce kaplama kırmızı çizgi mantığını değiştirdi")
+	_expect(tr(arden.red_line) != arden.red_line, "kırmızı çizgi gösterim çevirisi eksik")
+	Loc.set_lang("tr")
 	for id in actor_overlay:
 		_expect(actors.any(func(actor: Dictionary) -> bool: return str(actor.get("id", "")) == str(id)), "actors kaplamasında bilinmeyen kişi: " + str(id))
 

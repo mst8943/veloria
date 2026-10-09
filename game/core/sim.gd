@@ -764,7 +764,7 @@ func order(id: String, task: String, channel: String) -> String:
 		_:
 			text = tr("%s emri aldı.") % a.display_name
 	if crossed:
-		text = tr("%s emri kırmızı çizgisini aştığı için gönülsüzce, yarım yamalak uyguladı. Bunu sana yazdı. (Kırmızı çizgisi: %s)") % [a.display_name, a.red_line]
+		text = tr("%s emri kırmızı çizgisini aştığı için gönülsüzce, yarım yamalak uyguladı. Bunu sana yazdı. (Kırmızı çizgisi: %s)") % [a.display_name, tr(a.red_line)]
 	if delayed:
 		text += tr(" Ama acele etmedi; emri günlerce bekletti.")
 	changed.emit()
@@ -794,7 +794,7 @@ func investigate(id: String) -> String:
 		return tr("%s zayıf noktası bulundu: %s. Artık şantaj mümkün.") % [ek(a.display_name, "in"), a.weak_point]
 	a.known_red = true
 	changed.emit()
-	return tr("%s asla geçmeyeceği çizgi: %s.") % [ek(a.display_name, "in"), a.red_line]
+	return tr("%s asla geçmeyeceği çizgi: %s.") % [ek(a.display_name, "in"), tr(a.red_line)]
 
 
 ## Şantaj: zayıf noktası bilinen birini korkuyla bağlar. Borcunu siler ama hırsını büyütür ve iz bırakır.

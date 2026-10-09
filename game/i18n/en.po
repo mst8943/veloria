@@ -3063,3 +3063,45 @@ msgstr "%s. %s"
 
 msgid "%s %s ise %s."
 msgstr "%s If %s is chosen, it %s."
+
+msgid "Siviller üzerine ateş açma emri"
+msgstr "An order to fire on civilians"
+
+msgid "Kendi ajanlarının ifşa edilmesi"
+msgstr "His agents being exposed"
+
+msgid "Bütçe verisini tahrif etmek"
+msgstr "Falsifying budget figures"
+
+msgid "Şirketlerine el konulması"
+msgstr "The seizure of his companies"
+
+msgid "Kaynaklarının ifşası"
+msgstr "Her sources being exposed"
+
+msgid "Kralın özel hayatını konuşmak"
+msgstr "Discussion of the king's private life"
+
+msgid "Hanedanın küçük düşürülmesi"
+msgstr "Humiliating the dynasty"
+
+msgid "Taraftarlarının tutuklanması"
+msgstr "The arrest of his supporters"
+
+msgid "Bağımsızlığına müdahale"
+msgstr "Interference with her independence"
+
+msgid "Hanedanın geleceğinin pazarlık konusu yapılması"
+msgstr "Bargaining away the dynasty's future"
+
+msgid "Elçilik yazışmalarının açılması"
+msgstr "Opening embassy correspondence"
+
+msgid "Asteria yurttaşlarının hedef alınması"
+msgstr "Targeting Asterian citizens"
+
+msgid "Drakon'un açıkça küçük düşürülmesi"
+msgstr "Publicly humiliating Drakon"
+
+msgid "Seravia ticaretinin keyfî kesilmesi"
+msgstr "Arbitrarily cutting off Seravian trade"
