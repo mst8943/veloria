@@ -36,6 +36,21 @@ msgstr "Up next"
 msgid "Gerekçeler"
 msgstr "Reasons"
 
+msgid "BU HAFTA DEĞİŞENLER"
+msgstr "CHANGED THIS WEEK"
+
+msgid "önce değişenler"
+msgstr "changes first"
+
+msgid "Tüm raporlar (%d)"
+msgstr "All reports (%d)"
+
+msgid "Bir kişi seç. Sayıları göremezsin; yalnızca davranışlarından tahmin edebilirsin."
+msgstr "Choose someone. You cannot see the numbers; infer them from behaviour."
+
+msgid "Seçimi kaldır"
+msgstr "Clear selection"
+
 msgid "Önceki karar"
 msgstr "Previous decision"
 

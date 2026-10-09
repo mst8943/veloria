@@ -26,6 +26,7 @@ var _header_progress: ProgressBar
 var _header_mesai: Label
 var _header_wealth: Label
 var _headline: Label
+var _headline_notice := ""
 var _tabs: TabContainer
 var _scroll: ScrollContainer
 var _agenda: VBoxContainer
@@ -53,7 +54,6 @@ var _curtain_sub: Label
 var _mobile := false
 var _act_title: Label
 var _fact_box: VBoxContainer
-var _toasts: VBoxContainer
 var _desk: Control
 var _city: Control
 var _files_tab: Control
@@ -70,6 +70,7 @@ var _promise_list: RichTextLabel
 var _multi_btn: Button
 var _act_cat := "KAZAN"            # eylem panelinde açık kategori
 var _report_box: VBoxContainer     # masaüstünde raporların sağ sütundaki listesi (mobilde null)
+var _all_reports_popup: PopupPanel
 var _cat_rows: Dictionary = {}     # kategori -> düğme satırı
 var _cat_btns: Dictionary = {}     # kategori -> sekme düğmesi
 var _hint_label: RichTextLabel
@@ -199,6 +200,11 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				_modal.hide()
 			elif _divan.opened:
 				_divan.close()
+			elif in_game and not _sel.is_empty() and not _menu.visible and not _desk.visible and not _city.visible and not _media.visible and not _modal.visible:
+				_sel.clear()
+				_style_cards()
+				_update_info()
+				_divan.refresh()
 			elif _menu.visible and _menu.page_now != "main":
 				_menu_show_page("main")
 			elif _desk.visible and not _menu.visible:
@@ -278,10 +284,7 @@ func _build_ui() -> void:
 	_headline = Label.new()
 	_headline.add_theme_color_override("font_color", UIKit.AMBER.lightened(0.35))
 	_headline.add_theme_font_size_override("font_size", _fs(14))
-	_headline.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	if _mobile:
-		_headline.max_lines_visible = 2
-		_headline.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_headline.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	var hl_sb := UIKit.box(Color(UIKit.PLATE, 0.78), Color(0, 0, 0, 0), 2, 12)
 	hl_sb.border_color = UIKit.AMBER
 	hl_sb.border_width_left = 3
@@ -293,10 +296,6 @@ func _build_ui() -> void:
 	var hl_row := HBoxContainer.new()
 	hl_row.visible = false
 	hl_row.add_child(_headline)
-	var hl_gap := Control.new()
-	hl_gap.custom_minimum_size.x = 520 if _mobile else 436
-	hl_gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hl_row.add_child(hl_gap)
 	root.add_child(hl_row)
 
 	var cols := HBoxContainer.new()
@@ -377,25 +376,6 @@ func _build_ui() -> void:
 	_wire(_end_btn)
 	_end_btn.pressed.connect(_end_week_pressed)
 	bottom.add_child(_end_btn)
-
-	# Bildirimler: sağ üstte, üst üste birikir (içeriğin üstüne binmez).
-	_toasts = VBoxContainer.new()
-	_toasts.anchor_left = 1.0
-	_toasts.anchor_right = 1.0
-	_toasts.offset_left = -440 if not _mobile else -520
-	_toasts.offset_right = -18
-	_toasts.offset_top = 86
-	_toasts.add_theme_constant_override("separation", 8)
-	_toasts.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var tl := CanvasLayer.new()
-	tl.layer = 40
-	add_child(tl)
-	var troot := Control.new()
-	troot.set_anchors_preset(Control.PRESET_FULL_RECT)
-	troot.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	troot.theme = theme   # CanvasLayer temayı devretmez: bildirimler de aynı fontu kullansın
-	tl.add_child(troot)
-	troot.add_child(_toasts)
 
 	_desk = DESK_VIEW.new()
 	_desk.mobile = _mobile
@@ -745,37 +725,10 @@ func _section(title: String, helper := "") -> Control:
 
 ## Eylem panelinde bir kategori aç: yalnızca onun düğmeleri görünür.
 func _toast_msg(text: String) -> void:
-	if _toasts == null or text == "":
+	if _headline == null or text == "":
 		return
-	while _toasts.get_child_count() >= (1 if _mobile else 2):
-		var old := _toasts.get_child(0)
-		_toasts.remove_child(old)
-		old.queue_free()
-	var card := PanelContainer.new()
-	var sb := UIKit.box(Color(UIKit.PLATE, 0.95), Color(UIKit.GOLD_DIM, 0.7), 6, 9)
-	sb.border_width_left = 4
-	sb.border_color = UIKit.GOLD
-	sb.shadow_color = Color(0, 0, 0, 0.5)
-	sb.shadow_size = 10
-	card.add_theme_stylebox_override("panel", sb)
-	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var l := Label.new()
-	l.text = text
-	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	l.add_theme_font_size_override("font_size", _fs(13))
-	card.add_child(l)
-	_toasts.add_child(card)
-	if _fast():
-		var q := card.create_tween()
-		q.tween_interval(3.0)
-		q.tween_callback(card.queue_free)
-		return
-	card.modulate.a = 0.0
-	var tw := card.create_tween()
-	tw.tween_property(card, "modulate:a", 1.0, 0.25)
-	tw.tween_interval(4.2)
-	tw.tween_property(card, "modulate:a", 0.0, 0.6)
-	tw.tween_callback(card.queue_free)
+	_headline_notice = text
+	_update_headline()
 
 
 func _log(text: String) -> void:
@@ -830,8 +783,6 @@ func _initial_art(id: String, size: Vector2, letter_size := 40) -> Control:
 func _show_menu() -> void:
 	_menu.show()
 	_menu_show_page("main")
-	for t in _toasts.get_children():   # bildirimler menünün üstünde kalmasın
-		t.queue_free()
 	# İlk düğme duruma göre: oyun sürüyorsa "Oyuna Dön", yoksa kayıttan "Devam Et".
 	var b_first := _menu.get_meta("first") as Button
 	var b_new := _menu.get_meta("new") as Button
@@ -1337,11 +1288,8 @@ func _headline_items() -> Array:
 
 
 func _on_week(_w: int) -> void:
-	var headline_text: Array[String] = []
-	for item in _headline_items().slice(0, 3):
-		headline_text.append(Sim.news_for_display(str(item)))
-	_headline.text = "  ·  ".join(headline_text)
-	_headline.get_parent().visible = _headline.text != ""
+	_headline_notice = ""
+	_update_headline()
 	if not Sim.weekly_news.is_empty():
 		var news_text: Array[String] = []
 		for item in Sim.weekly_news:
@@ -1353,6 +1301,18 @@ func _on_week(_w: int) -> void:
 					UIKit.shake(_stage, 7.0, 0.45)
 				break
 	_tabs.current_tab = 0
+
+
+func _update_headline() -> void:
+	var items: Array[String] = []
+	if _headline_notice != "":
+		items.append(_headline_notice)
+	for item in _headline_items().slice(0, 1):
+		items.append(Sim.news_for_display(str(item)))
+	if items.size() < 2 and Sfx.tips and AGENDA_VIEW.ADVICE.has(Sim.week):
+		items.append(tr(str(AGENDA_VIEW.ADVICE[Sim.week])))
+	_headline.text = "  ·  ".join(items.slice(0, 2))
+	_headline.get_parent().visible = _headline.text != ""
 
 
 func _on_news(_text: String) -> void:

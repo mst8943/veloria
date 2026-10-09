@@ -23,12 +23,52 @@ func _run() -> void:
 		quit(1)
 		return
 	main._sel.clear()
-	var report: Control = main._report_box.get_child(1)
 	var expected := str(root.get_node("Sim").reports[0]["source"])
+	var report: Control
+	for child in main._report_box.get_children():
+		if child is PanelContainer and child.has_meta("report_id"):
+			report = child
+			break
 	_click_at(report.get_global_rect().get_center())
 	await process_frame
 	if main._sel != [expected]:
 		printerr("UI INPUT: rapordan kişi seçilemedi: ", main._sel)
+		quit(1)
+		return
+	for child in main._report_box.get_children():
+		if child is Button and ((child as Button).text.begins_with("Tüm raporlar") or (child as Button).text.begins_with("All reports")):
+			(child as Button).pressed.emit()
+			break
+	await process_frame
+	if not main._all_reports_popup.visible:
+		printerr("UI INPUT: tüm raporlar kaplaması açılmadı")
+		quit(1)
+		return
+	var full_list := main._all_reports_popup.get_child(0).get_child(0) as VBoxContainer
+	if full_list.get_child_count() != root.get_node("Sim").reports.size():
+		printerr("UI INPUT: tüm raporlar listesi eksik")
+		quit(1)
+		return
+	(full_list.get_child(0) as Button).pressed.emit()
+	await process_frame
+	if main._all_reports_popup.visible or main._sel != [expected]:
+		printerr("UI INPUT: kaplamadan rapor seçilemedi")
+		quit(1)
+		return
+	_click_at(main._person_panel.clear_button.get_global_rect().get_center())
+	await process_frame
+	if not main._sel.is_empty() or main._person_panel.person_block.visible:
+		printerr("UI INPUT: X seçimi kaldıramadı")
+		quit(1)
+		return
+	_click_at(main._cards["arden"].get_global_rect().get_center())
+	var selection_escape := InputEventKey.new()
+	selection_escape.keycode = KEY_ESCAPE
+	selection_escape.pressed = true
+	root.push_input(selection_escape, true)
+	await process_frame
+	if not main._sel.is_empty() or main._person_panel.person_block.visible:
+		printerr("UI INPUT: Esc seçimi kaldıramadı")
 		quit(1)
 		return
 	main._instant = true

@@ -47,6 +47,7 @@ func _autoplay_full() -> void:
 					break
 				m._sel.clear()
 				m._sel.append(target.id)
+				m._update_info()
 				if target.rebellion_drive() > 0.0 and Sim.private_wealth >= 5.0 and not bribed:
 					bribed = true
 					(m._buttons["bribe"] as Button).pressed.emit()

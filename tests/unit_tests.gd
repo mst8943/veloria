@@ -925,7 +925,7 @@ func _t_ui_inspect() -> void:
 	stage.add_child(ob)
 	var far := TextureButton.new()
 	far.name = "Far"
-	far.position = Vector2(200, 200)  # entirely outside the 64x64 viewport
+	far.position = root.get_visible_rect().size + Vector2(10, 10)
 	far.size = Vector2(10, 10)
 	stage.add_child(far)
 	var lbl := Label.new()

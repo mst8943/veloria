@@ -4,6 +4,9 @@ const UIKit := preload("res://game/ui/ui_kit.gd")
 const Loc := preload("res://game/core/loc.gd")
 
 var host: Control
+var person_block: VBoxContainer
+var selection_hint: Label
+var clear_button: Button
 
 const ROLE := {"army": "Ordu", "intel": "İstihbarat", "economy": "Maliye", "media": "Medya", "press": "Basın",
 	"gate": "Saray", "royal": "Hanedan", "heir": "Veliaht", "foreign": "Dışişleri", "opposition": "Muhalefet", "court": "Yargı"}
@@ -90,10 +93,19 @@ func _build_ui(cols: HBoxContainer) -> void:
 	right.add_child(host._grid)
 	if not host._mobile:
 		host._divan.build(right)
+	selection_hint = Label.new()
+	selection_hint.text = tr("Bir kişi seç. Sayıları göremezsin; yalnızca davranışlarından tahmin edebilirsin.")
+	selection_hint.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+	selection_hint.add_theme_font_size_override("font_size", host._fs(13))
+	selection_hint.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	right.add_child(selection_hint)
+	person_block = VBoxContainer.new()
+	person_block.add_theme_constant_override("separation", 6)
+	right.add_child(person_block)
 
 	var detail := PanelContainer.new()
 	detail.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.85), Color(UIKit.GOLD_DIM, 0.3), 6, 8))
-	right.add_child(detail)
+	person_block.add_child(detail)
 	UIKit.ornament(detail)
 	var irow := HBoxContainer.new()
 	irow.add_theme_constant_override("separation", 10)
@@ -101,6 +113,19 @@ func _build_ui(cols: HBoxContainer) -> void:
 	host._portrait_box = Control.new()
 	host._portrait_box.custom_minimum_size = Vector2(62, 62)
 	irow.add_child(host._portrait_box)
+	var clear := Button.new()
+	clear_button = clear
+	clear.custom_minimum_size = Vector2(28, 28)
+	clear.theme_type_variation = "GhostButton"
+	clear.tooltip_text = tr("Seçimi kaldır")
+	clear.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	clear.draw.connect(func() -> void:
+		var mid := clear.size / 2.0
+		clear.draw_line(mid + Vector2(-5, -5), mid + Vector2(5, 5), UIKit.GOLD, 2.0, true)
+		clear.draw_line(mid + Vector2(5, -5), mid + Vector2(-5, 5), UIKit.GOLD, 2.0, true))
+	clear.pressed.connect(func() -> void: host._sel.clear(); _style_cards(); _update_info(); host._divan.refresh())
+	host._wire(clear)
+	irow.add_child(clear)
 	var icol := VBoxContainer.new()
 	icol.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	icol.add_theme_constant_override("separation", 5)
@@ -122,7 +147,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 	# Eylem paneli: tek çerçeve, başlıkta seçili kişi, eylemler amaca göre gruplu.
 	var act_panel := PanelContainer.new()
 	act_panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.8), Color(UIKit.GOLD_DIM, 0.28), 8, 10))
-	right.add_child(act_panel)
+	person_block.add_child(act_panel)
 	UIKit.ornament(act_panel)
 	var av := VBoxContainer.new()
 	av.add_theme_constant_override("separation", 5)
@@ -610,8 +635,9 @@ func _update_info() -> void:
 		c.queue_free()
 	var id: String = host._selected_primary()
 	host._portrait_box.visible = id != ""
+	selection_hint.visible = id == ""
+	person_block.visible = id != ""
 	if id == "":
-		host._info.append_text(tr("[color=gray]Bir kişi seç. Sayıları göremezsin; yalnızca davranışlarından tahmin edebilirsin.[/color]"))
 		return
 	var a = Sim.actors[id]
 	var art: Control = host._initial_art(a.id, Vector2(62, 62), 32)

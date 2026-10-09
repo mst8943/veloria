@@ -390,8 +390,6 @@ func _rebuild_agenda() -> void:
 			host._agenda.add_child(next)
 	if host._report_box == null:
 		_add_changes(animated)
-	if host._report_box != null:
-		_add_week_ledger(animated)
 	var texts: Array[RichTextLabel] = []
 	if host._report_box != null:
 		_fill_reports_compact(animated, texts)
@@ -491,10 +489,10 @@ func _draw_trend(c: Control, t: int) -> void:
 
 ## Gündem: geçen haftadan bu yana görünür göstergelerde ne değişti (Sim.week_changes). Boşsa bölüm yok.
 func _add_changes(animated: Array[Control]) -> void:
+	var target: VBoxContainer = host._report_box if host._report_box != null else host._agenda
+	target.add_child(host._section(tr("BU HAFTA DEĞİŞENLER"), tr("önce değişenler")))
 	if Sim.week_changes.is_empty():
 		return
-	var target: VBoxContainer = host._report_box if host._report_box != null else host._agenda
-	target.add_child(host._section(tr("GEÇEN HAFTADAN BERİ"), tr("görebildiklerinde ne değişti")))
 	for ch: Dictionary in Sim.week_changes:
 		var row := PanelContainer.new()
 		var sb := UIKit.box(Color(UIKit.PANEL_HI, 0.35), Color(0, 0, 0, 0), 2, 8)
@@ -526,10 +524,11 @@ func _add_changes(animated: Array[Control]) -> void:
 ## Masaüstü: karar kartlarının altında haftanın defteri. Eylem sonuçları bildirimde kaybolur, ipucu satırı
 ## yalnızca sonuncuyu tutar; burada hafta boyunca durur. Boşken sıradaki adımı söyler. Yeni bilgi açmaz.
 func _add_week_ledger(animated: Array[Control]) -> void:
+	var target: VBoxContainer = host._report_box if host._report_box != null else host._agenda
 	if host._week_log_week != Sim.week:
 		host._week_log.clear()
 		host._week_log_week = Sim.week
-	host._agenda.add_child(host._section(tr("BU HAFTA"), tr("yaptıkların ve sonuçları")))
+	target.add_child(host._section(tr("BU HAFTA"), tr("yaptıkların ve sonuçları")))
 	if host._week_log.is_empty():
 		var empty := Label.new()
 		empty.text = (tr("Henüz bir şey yapmadın. Bir güç merkezine tıkla, Eylemler panelinden mesai harca.") if Sim.mesai > 0
@@ -537,7 +536,7 @@ func _add_week_ledger(animated: Array[Control]) -> void:
 		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		empty.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 		empty.add_theme_font_size_override("font_size", host._fs(13))
-		host._agenda.add_child(empty)
+		target.add_child(empty)
 		return
 	for i in host._week_log.size():
 		var row := PanelContainer.new()
@@ -548,7 +547,7 @@ func _add_week_ledger(animated: Array[Control]) -> void:
 		sb.border_width_left = 2
 		row.add_theme_stylebox_override("panel", sb)
 		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		host._agenda.add_child(row)
+		target.add_child(row)
 		var l := RichTextLabel.new()
 		l.bbcode_enabled = true
 		l.fit_content = true
@@ -559,7 +558,7 @@ func _add_week_ledger(animated: Array[Control]) -> void:
 		l.text = "[color=#d6b25e]%d[/color]   %s" % [i + 1, host._week_log[i]]
 		row.add_child(l)
 	# Yalnızca en son satır canlanır (her eylemde bütün liste yeniden belirmesin).
-	animated.append(host._agenda.get_child(host._agenda.get_child_count() - 1))
+	animated.append(target.get_child(target.get_child_count() - 1))
 
 
 ## Masaüstü: raporlar sağ sütunda, kaynağının altında kompakt bir liste. Satıra tıklamak o kişiyi seçer.
@@ -568,8 +567,43 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 	for c in host._report_box.get_children():
 		c.queue_free()
 	_add_changes(animated)
-	host._report_box.add_child(host._section(tr("BU HAFTANIN RAPORLARI"), tr("masana ulaşan: %d") % Sim.reports.size()))
-	for r: Dictionary in Sim.reports:
+	_add_week_ledger(animated)
+	var full_reports := PopupPanel.new()
+	host.add_child(full_reports)
+	var popup_scroll := ScrollContainer.new()
+	popup_scroll.custom_minimum_size = Vector2(900, 680)
+	full_reports.add_child(popup_scroll)
+	var popup_list := VBoxContainer.new()
+	popup_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	popup_scroll.add_child(popup_list)
+	var all_reports := Button.new()
+	all_reports.text = tr("Tüm raporlar (%d)") % Sim.reports.size()
+	all_reports.theme_type_variation = "GhostButton"
+	all_reports.pressed.connect(func() -> void: host._all_reports_popup.popup_centered(Vector2i(920, 700)))
+	host._wire(all_reports)
+	if is_instance_valid(host._all_reports_popup):
+		host._all_reports_popup.free()
+	host._all_reports_popup = full_reports
+	for i in mini(4, Sim.reports.size()):
+		var r: Dictionary = Sim.reports[i]
+		var entry := Button.new()
+		entry.text = "%s · %s\n%s" % [r["name"], r["title"], r["text"]]
+		entry.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		entry.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		entry.custom_minimum_size.y = 56
+		popup_list.add_child(entry)
+		var source := str(r["source"])
+		entry.pressed.connect(func() -> void:
+			if Sim.actors.has(source):
+				host._sel.clear()
+				host._sel.append(source)
+				host._style_cards()
+				host._update_info()
+				host._divan.refresh()
+			host._all_reports_popup.hide())
+		host._wire(entry)
+	for report_index in Sim.reports.size():
+		var r: Dictionary = Sim.reports[report_index]
 		var panel := PanelContainer.new()
 		panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var band := clampi(int(r.get("band", 1)), 0, 2)
@@ -583,6 +617,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		panel.mouse_filter = Control.MOUSE_FILTER_STOP
 		panel.tooltip_text = "%s · %s\nTıkla: kişiyi seç. Kenar rengi raporun söylediğidir, gerçek olmayabilir.%s" % [r["name"], r["title"], _trend_tip(r)]
 		var sid := str(r["source"])
+		panel.set_meta("report_id", sid)
 		panel.gui_input.connect(func(ev: InputEvent) -> void:
 			var mb := ev as InputEventMouseButton
 			if mb != null and mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT and Sim.actors.has(sid):
@@ -591,8 +626,9 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 				host._sel.append(sid)
 				host._style_cards()
 				host._update_info()
-				host._divan.refresh())
-		host._report_box.add_child(panel)
+				host._divan.refresh()
+				host._all_reports_popup.hide())
+		(host._report_box if report_index < 4 else popup_list).add_child(panel)
 		animated.append(panel)
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)
@@ -614,6 +650,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		l.text = "[b]%s[/b]  %s" % [_short_name(str(r["name"])), r["text"]]
 		row.add_child(l)
 		texts.append(l)
+	host._report_box.add_child(all_reports)
 
 
 ## Meclisin görüşü: iki danışmanın kısa önerisi (docs/design/danisman_gorusleri.md).

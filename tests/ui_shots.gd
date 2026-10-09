@@ -97,8 +97,9 @@ func _run() -> void:
 		sim0.week = 8
 		if "--u2-week-log" in OS.get_cmdline_user_args():
 			main._week_log_week = sim0.week
-			for i in 5:
-				main._week_log.append("Action %d: the council considered the long term consequences of the appointment and recorded its response for the royal archive." % (i + 1))
+			main._week_log.clear()
+			for text in ["The General reviewed the appointment.", "The palace received the signed report.", "The ministers recorded their response.", "The court awaits the next decision."]:
+				main._week_log.append(text)
 		sim0.pending.clear()
 		for id in ["gida_protestosu", "general_atamalari", "gazeteci_ihale"]:
 			for event in sim0._events:
@@ -120,6 +121,37 @@ func _run() -> void:
 			main._agenda_view.reasons_button.toggled.emit(true)
 			await _shot("u2_%d_gerekceler" % u2_count)
 		quit(1 if overflow > 2 and not main._mobile else 0)
+		return
+	var u3_state := ""
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--u3="):
+			u3_state = arg.substr(5)
+	if u3_state != "":
+		sim0.week = 8
+		sim0.pending.clear()
+		for id in ["gida_protestosu", "general_atamalari", "gazeteci_ihale"]:
+			for event in sim0._events:
+				if event["id"] == id:
+					sim0.pending.append({"event": event, "age": 0})
+		main._agenda_view.decision_index = 0
+		if u3_state == "enemy":
+			sim0.actors["voss"].moved = true
+			main._sel.clear()
+			main._sel.append("voss")
+		elif u3_state == "selected":
+			main._sel.clear()
+			main._sel.append("arden")
+		main._refresh()
+		main._style_cards()
+		main._update_info()
+		main._on_flow("gundem")
+		if u3_state == "reports":
+			for child in main._report_box.get_children():
+				if child is Button and ((child as Button).text.begins_with("Tüm raporlar") or (child as Button).text.begins_with("All reports")):
+					(child as Button).pressed.emit()
+					break
+		await _shot("u3_" + u3_state)
+		quit(0)
 		return
 	if "--u1" in OS.get_cmdline_user_args() and "--mobile" not in OS.get_cmdline_user_args():
 		main._sel.clear()

@@ -1,6 +1,19 @@
 # Gündem v2 ilerleme
 
-**SIRADAKİ DİLİM: U3**
+**SIRADAKİ DİLİM: U4**
+
+## U2b + U3 — tamamlandı (2026-10-09)
+
+- U2b ayrı commit `eb36696`: Sırada satırında HOVER zemin/çerçeve, el imleci ve çizilmiş ok. TR/EN, 2/3 karar, gerekçe açık/kapalı ekranları: `C:/Users/USER/Desktop/oyun_u2b_u3_shots/final-u2b-{tr,en}-{2,3}/`. EN 1280×720, 3 karar ve açık gerekçede sol sütun taşması 0 px; 4 hafta defteri satırı U3 rapor sütununda kesilmeden görünüyor: `final-u2b-log-en/u2_3_gerekceler.png`.
+- U3: raporlar “Bu hafta değişenler” altında görünür hafta değişimleri, hafta defteri ve ilk 4 rapor sırasıyla gösteriliyor; “Tüm raporlar (N)” kaplaması tam listeyi ve rapordan kişi seçimini koruyor. Geçen haftadan beri verisi yalnızca burada. Seçim yokken tek satır ipucu, seçimde kişi/eylem bloğu ve X/Esc kaldırma; otomatik tam oynatma eylemden önce kişiyi seçiyor. Bildirim > haber > ipucu üst şeridi tek satır ve en çok 2 öğe.
+- `ui_input_test`: Sırada satırı, tüm raporlar kaplaması/listedeki rapor sayısı, rapor tıklaması, X/Esc ile seçim temizleme ve Divan etkileşimleri OK. Beckett `unit_tests` fikstüründeki ekran dışı hedef artık geçerli viewport ölçüsüne göre kuruluyor: 399/399 kontrol geçti.
+
+### KAPI
+
+- `sim_test`, `event_check` (195 olay, 0 uyarı), `save_test`, `content_check`, `i18n_check`, `pacing_test`, `ui_logic_test`, `ui_input_test`: OK. EN `event_check` ve `content_check`: OK. `unit_tests`: 399/399.
+- Masaüstü `--autoplay` ×3: DONE (32/29/105 hafta); `--autoplay --mobile`: DONE (34 hafta). `--autoplay --full` TR ve EN birebir: `tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`.
+- `advice_weighted`, 80 kampanya, tüm zorluklar: TR ve EN **68/80, 36/80, 16/80**; tabanla birebir. Loglar: `C:/Users/USER/Desktop/oyun_u2b_u3_shots/final-probe-{tr,en}.log`.
+- TR/EN masaüstü PNG'leri (seçim yok, seçili, düşman seçili, 3 karar) gözle incelendi: `C:/Users/USER/Desktop/oyun_u2b_u3_shots/final-u3-{tr,en}/u3_{none,selected,enemy,3}.png`. Taşma, kırpılma ve dil karışımı görülmedi. `pacing_test` ve `sim_test` çıkışlarında önceki Godot kaynak/nesne sızıntısı uyarıları sürüyor.
 
 ## U1b + U2 — tamamlandı (2026-10-09)
 
@@ -17,7 +30,7 @@
 
 ### Açık konu
 
-- U3: değişenler/raporlar son düzeni ve kişi seçimine bağlı blok. U4: mobil yeniden düzenleme.
+- U4: mobil yeniden düzenleme.
 
 ## U1 — tamamlandı (2026-10-09)
 
