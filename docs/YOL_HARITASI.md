@@ -51,6 +51,7 @@ Baştan sona oynanabilir, sağlam bir dikey dilim (erken alfa): 104 hafta, 9 gü
 **D. Arayüz ve görünüm**
 - ⬜ Masa/harita ile ana ekran iki paralel gezinme yolu
 - ✅ Ana ekran sadeleştirildi: eylemler kategori sekmelerinde (17 düğme → 6 sekme + 3 düğme), raporlar kaynaklarının altında, ilk haftalarda "Bu hafta ne yapmalı?" yol göstericisi (`docs/ux/ana_ekran_sadelestirme.md`)
+- ✅ Gündem v2 U1–U4: karar sırası, değişenler ve rapor ayrımı, seçime bağlı eylem alanı, mobil Gündem/Kişiler/Raporlar; Dosyalar ve Günlük erişimi korundu (`docs/ux/gundem_sadelestirme_v2.md`)
 - ✅ Eylem önizlemesi (maliyet / risk / iz)
 - ⬜ Ses sentetik
 - 🟡 Bildirimler kompakt ve en çok 2 (mobilde 1); mobilde haber şeridinin üstüne binmesi sürüyor

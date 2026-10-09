@@ -7,6 +7,18 @@ var host: Control
 var person_block: VBoxContainer
 var selection_hint: Label
 var clear_button: Button
+var _mobile_card_row: HBoxContainer
+var _mobile_group := "dynasty"
+var _mobile_group_buttons: Dictionary = {}
+var _mobile_person_scroll: ScrollContainer
+const MOBILE_GROUPS := {
+	"dynasty": ["dorn", "prens", "julian"],
+	"state": ["arden", "voss", "kessler", "falk"],
+	"power": ["halden", "lena", "brandt"],
+	"foreign": ["elena", "claire", "malenkov", "lucien"],
+}
+const MOBILE_DOMAIN_GROUP := {"gate": "dynasty", "royal": "dynasty", "heir": "dynasty", "army": "state", "intel": "state", "economy": "state", "court": "state", "media": "power", "press": "power", "opposition": "power", "foreign": "foreign"}
+const MOBILE_GROUP_LABELS := {"dynasty": "Hanedan", "state": "Devlet", "power": "Güç", "foreign": "Dış"}
 
 const ROLE := {"army": "Ordu", "intel": "İstihbarat", "economy": "Maliye", "media": "Medya", "press": "Basın",
 	"gate": "Saray", "royal": "Hanedan", "heir": "Veliaht", "foreign": "Dışişleri", "opposition": "Muhalefet", "court": "Yargı"}
@@ -61,26 +73,31 @@ func _build_ui(cols: HBoxContainer) -> void:
 	# Sağ: kişiler ve eylemler
 	var right := VBoxContainer.new()
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	right.add_theme_constant_override("separation", 6)
 	if host._mobile:
-		# Mobil: kişiler ve eylemler ayrı bir sekme (yatay telefonda iki sütun sığmaz).
-		var saray := ScrollContainer.new()
-		saray.name = "Saray"
-		saray.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-		host._tabs.add_child(saray)
-		host._tabs.move_child(saray, 1)
-		saray.add_child(right)
+		var people := VBoxContainer.new()
+		people.name = "Kişiler"
+		people.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		people.add_theme_constant_override("separation", 6)
+		host._tabs.add_child(people)
+		host._tabs.move_child(people, 1)
+		host._tabs.set_tab_title(1, tr("Kişiler"))
+		people.add_child(right)
 	else:
 		cols.add_child(right)
-	var cap_row := HBoxContainer.new()
-	right.add_child(cap_row)
-	var cap: Control = host._section(tr("GÜÇ MERKEZLERİ") if host._mobile else tr("İZLEME LİSTESİ"))
-	cap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	cap.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	cap_row.add_child(cap)
+	if not host._mobile:
+		var cap_row := HBoxContainer.new()
+		right.add_child(cap_row)
+		var cap: Control = host._section(tr("İZLEME LİSTESİ"))
+		cap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		cap.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		cap_row.add_child(cap)
 	host._multi_btn = Button.new()
 	host._multi_btn.text = tr("Çoklu seçim")
 	host._multi_btn.toggle_mode = true
+	if host._mobile:
+		host._multi_btn.custom_minimum_size.y = 44
 	host._multi_btn.add_theme_font_size_override("font_size", host._fs(13))
 	host._multi_btn.tooltip_text = tr("Açıkken kartlara dokunmak seçime ekler/çıkarır (Ctrl ile aynı). Operasyon çemberi için.")
 	host._wire(host._multi_btn)
@@ -91,6 +108,43 @@ func _build_ui(cols: HBoxContainer) -> void:
 	host._grid.add_theme_constant_override("h_separation", 6)
 	host._grid.add_theme_constant_override("v_separation", 6)
 	right.add_child(host._grid)
+	if host._mobile:
+		host._grid.visible = false
+		var group_row := HBoxContainer.new()
+		group_row.add_theme_constant_override("separation", 4)
+		right.add_child(group_row)
+		var group := ButtonGroup.new()
+		for key in ["dynasty", "state", "power", "foreign"]:
+			var tab := Button.new()
+			tab.text = tr(MOBILE_GROUP_LABELS[key])
+			tab.toggle_mode = true
+			tab.button_group = group
+			tab.theme_type_variation = "GhostButton"
+			tab.custom_minimum_size = Vector2(44, 44)
+			tab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			tab.pressed.connect(_set_mobile_group.bind(key))
+			host._wire(tab)
+			group_row.add_child(tab)
+			_mobile_group_buttons[key] = tab
+		var strip := HBoxContainer.new()
+		strip.add_theme_constant_override("separation", 6)
+		right.add_child(strip)
+		var left := _mobile_arrow(false)
+		strip.add_child(left)
+		var card_scroll := ScrollContainer.new()
+		card_scroll.name = "Kişi şeridi"
+		card_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		card_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+		card_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		strip.add_child(card_scroll)
+		_mobile_card_row = HBoxContainer.new()
+		_mobile_card_row.add_theme_constant_override("separation", 8)
+		card_scroll.add_child(_mobile_card_row)
+		var right_arrow := _mobile_arrow(true)
+		strip.add_child(right_arrow)
+		left.pressed.connect(func() -> void: card_scroll.scroll_horizontal = maxi(0, card_scroll.scroll_horizontal - 220))
+		right_arrow.pressed.connect(func() -> void: card_scroll.scroll_horizontal += 220)
+		_set_mobile_group("dynasty")
 	if not host._mobile:
 		host._divan.build(right)
 	selection_hint = Label.new()
@@ -98,10 +152,20 @@ func _build_ui(cols: HBoxContainer) -> void:
 	selection_hint.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 	selection_hint.add_theme_font_size_override("font_size", host._fs(13))
 	selection_hint.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	right.add_child(selection_hint)
+	var profile_parent: Control = right
+	if host._mobile:
+		_mobile_person_scroll = ScrollContainer.new()
+		_mobile_person_scroll.name = "Kişi ayrıntısı"
+		_mobile_person_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		_mobile_person_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		right.add_child(_mobile_person_scroll)
+		profile_parent = _mobile_person_scroll
+	profile_parent.add_child(selection_hint)
+	selection_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	person_block = VBoxContainer.new()
+	person_block.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	person_block.add_theme_constant_override("separation", 6)
-	right.add_child(person_block)
+	profile_parent.add_child(person_block)
 
 	var detail := PanelContainer.new()
 	detail.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.85), Color(UIKit.GOLD_DIM, 0.3), 6, 8))
@@ -115,7 +179,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 	irow.add_child(host._portrait_box)
 	var clear := Button.new()
 	clear_button = clear
-	clear.custom_minimum_size = Vector2(28, 28)
+	clear.custom_minimum_size = Vector2(44 if host._mobile else 28, 44 if host._mobile else 28)
 	clear.theme_type_variation = "GhostButton"
 	clear.tooltip_text = tr("Seçimi kaldır")
 	clear.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
@@ -203,6 +267,8 @@ func _build_ui(cols: HBoxContainer) -> void:
 		cb.button_group = cat_group
 		cb.theme_type_variation = "GhostButton"
 		cb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		if host._mobile:
+			cb.custom_minimum_size.y = 44
 		cb.clip_text = true
 		cb.add_theme_font_size_override("font_size", host._fs(11))
 		if g[0] == "BASKI":
@@ -255,6 +321,50 @@ func _build_ui(cols: HBoxContainer) -> void:
 		host._report_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		host._report_box.add_theme_constant_override("separation", 4)
 		rscroll.add_child(host._report_box)
+	else:
+		var mobile_report_scroll := ScrollContainer.new()
+		mobile_report_scroll.name = "Raporlar listesi"
+		mobile_report_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		mobile_report_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		host._mobile_reports_page.add_child(mobile_report_scroll)
+		host._report_box = VBoxContainer.new()
+		host._report_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		host._report_box.add_theme_constant_override("separation", 4)
+		mobile_report_scroll.add_child(host._report_box)
+
+
+func _mobile_arrow(to_right: bool) -> Button:
+	var button := Button.new()
+	button.custom_minimum_size = Vector2(44, 44)
+	button.theme_type_variation = "GhostButton"
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	button.draw.connect(func() -> void:
+		var mid := button.size / 2.0
+		var sign := 1.0 if to_right else -1.0
+		button.draw_line(mid + Vector2(-4 * sign, -7), mid + Vector2(4 * sign, 0), UIKit.GOLD, 2.5, true)
+		button.draw_line(mid + Vector2(4 * sign, 0), mid + Vector2(-4 * sign, 7), UIKit.GOLD, 2.5, true))
+	host._wire(button)
+	return button
+
+
+func _set_mobile_group(key: String) -> void:
+	_mobile_group = key
+	for name in _mobile_group_buttons:
+		(_mobile_group_buttons[name] as Button).set_pressed_no_signal(name == key)
+	if _mobile_card_row == null:
+		return
+	for id in host._cards:
+		var card: Control = host._cards[id]
+		var destination: Node = _mobile_card_row if id in MOBILE_GROUPS[key] else host._grid
+		if card.get_parent() != destination:
+			if card.get_parent() != null:
+				card.get_parent().remove_child(card)
+			destination.add_child(card)
+
+
+func _group_for_actor(id: String) -> String:
+	var domain := str(Sim.actors[id].domain)
+	return str(MOBILE_DOMAIN_GROUP.get(domain, "dynasty"))
 
 
 func _show_act_cat(cat: String) -> void:
@@ -269,6 +379,8 @@ func _add_btn(parent: Node, key: String, text: String, cb: Callable) -> void:
 	var b := Button.new()
 	b.text = tr(text)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	if host._mobile:
+		b.custom_minimum_size.y = 44
 	b.pressed.connect(cb)
 	if TIPS.has(key):
 		var tip: String = tr(TIPS[key])
@@ -437,7 +549,11 @@ func _rebuild_cards() -> void:
 			if Sim.actors.has(s):
 				kept.append(s)
 		host._sel = kept
+		if host._mobile:
+			_set_mobile_group(_group_for_actor(host._sel[0]) if not host._sel.is_empty() else _mobile_group)
 	_style_cards()
+	if host._mobile:
+		_set_mobile_group(_mobile_group)
 
 
 var _card_fade_tex: Texture2D
@@ -626,6 +742,8 @@ func _update_action_states() -> void:
 
 
 func _update_info() -> void:
+	if host._mobile and host._sel.size() == 1 and Sim.actors.has(host._sel[0]):
+		_set_mobile_group(_group_for_actor(host._sel[0]))
 	_update_action_states()
 	host._info.clear()
 	for c in host._portrait_box.get_children():

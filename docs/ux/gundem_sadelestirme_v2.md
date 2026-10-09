@@ -151,3 +151,9 @@ Kullanıcı dört taslak üretti: `docs/ux/taslak_v2/` (`1_ana_ekran`, `2_divan`
 3. U3: "Bu hafta değişenler" + "Tüm raporlar"; kişi seçilmeden eylem bloğu kapalı.
 4. U4: Mobil (3 sekme, grup sekmeleri, kaydırmalı şerit).
 Her dilimde `--autoplay` (masaüstü/mobil/--full), `ui_input_test`, TR+EN ekran görüntüleri; denge etkilenmez (yalnızca arayüz): ölçüt probe tabanla birebir aynı.
+
+## Sonuç
+
+**U3b + U4 tamamlandı (2026-10-10).** Sağ sütunda oyuncunun haftalık eylem ve sonuçları “Bu hafta” altında; danışman raporları “Raporlar / Reports” altında. Mobil ana sekmeler Gündem, Kişiler ve Raporlar; Dosyalar ile Günlük, Raporlar sekmesinin alt sekmeleri olarak erişilebilir. Kişiler ekranında Hanedan, Devlet, Güç ve Dış grupları 14 mevcut kartı kapsar; portreler yatay şerit ve çizilmiş oklarla gezinir. Seçim ayrıntısı ve eylemler kaydırılabilir alt alanda kalır; dokunma hedefleri en az 44 px. Gündem’de U2’nin tek tam karar kartı ve Sırada akışı, Raporlar’da değişenler ve tam rapor listesi korunur.
+
+KAPI: `sim_test`, `event_check`, `save_test`, `content_check`, `i18n_check`, `pacing_test`, `ui_logic_test`, masaüstü/mobil `ui_input_test`, `unit_tests` (399/399) ve İngilizce `event_check`/`content_check` geçti. Masaüstü otomatik oynatma üç tur; mobil otomatik oynatma ve TR/EN tam kampanya aynı sonuçla tamamlandı. `advice_weighted` 80 kampanya ölçütü TR/EN **68/80, 36/80, 16/80**, tabanla aynı. Gözle kontrol edilen TR/EN masaüstü ve 1067×600 mobil kanıtları: `C:/Users/USER/Desktop/oyun_u3b_u4_shots/` (`final-desktop-{tr,en}`, `final-mobile-{tr,en}`); U3b başlık kanıtları `u3b-{tr,en}` klasörlerinde. Mobil görüntülerde taşma, kırpılma veya karışık dil görülmedi.

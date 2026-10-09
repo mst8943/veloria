@@ -48,6 +48,30 @@ msgstr "All reports (%d)"
 msgid "Raporlar"
 msgstr "Reports"
 
+msgid "Gündem"
+msgstr "Agenda"
+
+msgid "Kişiler"
+msgstr "People"
+
+msgid "Hanedan"
+msgstr "Dynasty"
+
+msgid "Devlet"
+msgstr "State"
+
+msgid "Güç"
+msgstr "Power"
+
+msgid "Dış"
+msgstr "Foreign"
+
+msgid "Dosyalar"
+msgstr "Files"
+
+msgid "Günlük"
+msgstr "Journal"
+
 msgid "Bir kişi seç. Sayıları göremezsin; yalnızca davranışlarından tahmin edebilirsin."
 msgstr "Choose someone. You cannot see the numbers; infer them from behaviour."
 
@@ -3251,5 +3275,5 @@ msgstr "The Queen's secret journal"
 msgid "Kapatılan bir yolsuzluk dosyası"
 msgstr "A corruption file that was closed"
 
-msgid "[color=gray]Henüz kimseye söz vermedin. Saray sekmesinde/sağda bir kişi seçip 'Söz Ver' kullanabilirsin.[/color]"
-msgstr "[color=gray]No promises yet. Select someone in the Palace tab or on the right and choose Promise.[/color]"
+msgid "[color=gray]Henüz kimseye söz vermedin. Kişiler sekmesinde/sağda bir kişi seçip 'Söz Ver' kullanabilirsin.[/color]"
+msgstr "[color=gray]No promises yet. Select someone in the People tab or on the right and choose Promise.[/color]"

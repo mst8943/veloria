@@ -1,6 +1,12 @@
 # Veloria — Durum ve Yapılacaklar (yeni oturum için devir notu)
 
-Son güncelleme: 2026-10-09 (dağıtım 1.5.0). Dal: `veloria`.
+Son güncelleme: 2026-10-10 (dağıtım 1.5.0). Dal: `veloria`.
+
+## Gündem v2 — U3b + U4 tamamlandı (2026-10-10)
+
+U3b’de haftalık oyuncu eylemleri/sonuçları ile danışman raporları ayrı başlıklandı (“Bu hafta” / “Raporlar”, EN: “This week” / “Reports”). U4 mobilde Gündem · Kişiler · Raporlar sekmeleri; Raporlar altında Dosyalar ve Günlük alt sekmeleri; Kişiler’de dört grup üzerinden erişilen 14 kişi, çizilmiş yatay şerit okları ve seçime bağlı eylem paneli tamamlandı. Tüm mobil eylem/kategori/grup kontrolleri en az 44 px.
+
+KAPI: `sim_test`, `event_check` (195/0), `save_test`, `content_check`, `i18n_check`, `pacing_test`, `ui_logic_test`, masaüstü ve mobil `ui_input_test`, `unit_tests` (399/399) OK; EN olay/içerik kontrolleri OK. Masaüstü `--autoplay` ×3 (20/81/37 hafta), `--autoplay --mobile` (46 hafta) ve TR/EN `--full` aynı sonuçla tamamlandı. `advice_weighted` TR/EN 80 kampanya sonucu **68/80, 36/80, 16/80**; tabanla aynı. PNG kanıtları `C:/Users/USER/Desktop/oyun_u3b_u4_shots/` altındaki `u3b-{tr,en}`, `final-desktop-{tr,en}` ve `final-mobile-{tr,en}` klasörlerinde gözle kontrol edildi.
 
 ## Dağıtım 1.5.0 ve S10 yerelleştirme kapısı
 

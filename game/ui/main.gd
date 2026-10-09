@@ -57,6 +57,8 @@ var _fact_box: VBoxContainer
 var _desk: Control
 var _city: Control
 var _files_tab: Control
+var _mobile_report_tabs: TabContainer
+var _mobile_reports_page: VBoxContainer
 var _media: Control
 var _media_seen_week := 0
 var _acted_week := 0              # bu hafta bir kişiye eylem yapıldı mı (yol gösterici için)
@@ -347,11 +349,31 @@ func _build_ui() -> void:
 	_tabs.add_child(_journal)
 	_tabs.set_tab_title(2, tr("Günlük"))
 	_tabs.tab_changed.connect(func(_i: int) -> void: Sfx.play("paper", -10.0))
+	if _mobile:
+		_tabs.remove_child(files)
+		_tabs.remove_child(_journal)
+		_mobile_report_tabs = TabContainer.new()
+		_mobile_report_tabs.name = "Raporlar"
+		_mobile_report_tabs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_mobile_report_tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		_mobile_reports_page = VBoxContainer.new()
+		_mobile_reports_page.name = "Raporlar"
+		_mobile_reports_page.add_theme_constant_override("separation", 6)
+		_mobile_report_tabs.add_child(_mobile_reports_page)
+		_mobile_report_tabs.set_tab_title(0, tr("Raporlar"))
+		_mobile_report_tabs.add_child(files)
+		_mobile_report_tabs.set_tab_title(1, tr("Dosyalar"))
+		_mobile_report_tabs.add_child(_journal)
+		_mobile_report_tabs.set_tab_title(2, tr("Günlük"))
+		_tabs.add_child(_mobile_report_tabs)
+		_tabs.set_tab_title(1, tr("Raporlar"))
 	var tab_icons := ["rapor", "dosya", "gunluk"]
-	for i in tab_icons.size():
+	for i in (3 if not _mobile else 0):
 		var ti := _art("res://art/icons/%s.png" % tab_icons[i])
 		if ti:
 			_tabs.set_tab_icon(i, ti)
+	if _mobile:
+		_tabs.set_tab_title(0, tr("Gündem"))
 	_tabs.add_theme_constant_override("icon_max_width", 20)
 
 	_build_person_panel(cols)
@@ -892,6 +914,10 @@ func _show_desk() -> void:
 
 
 func _select_tab(ctrl: Control) -> void:
+	if _mobile and _mobile_report_tabs != null and ctrl.get_parent() == _mobile_report_tabs:
+		_tabs.current_tab = _tabs.get_tab_idx_from_control(_mobile_report_tabs)
+		_mobile_report_tabs.current_tab = _mobile_report_tabs.get_tab_idx_from_control(ctrl)
+		return
 	var idx := _tabs.get_tab_idx_from_control(ctrl)
 	if idx >= 0:
 		_tabs.current_tab = idx
@@ -1152,7 +1178,7 @@ func _refresh() -> void:
 	_rebuild_facts()
 	_promise_list.clear()
 	if Sim.promises.is_empty():
-		_promise_list.append_text(tr("[color=gray]Henüz kimseye söz vermedin. Saray sekmesinde/sağda bir kişi seçip 'Söz Ver' kullanabilirsin.[/color]"))
+		_promise_list.append_text(tr("[color=gray]Henüz kimseye söz vermedin. Kişiler sekmesinde/sağda bir kişi seçip 'Söz Ver' kullanabilirsin.[/color]"))
 	for p in Sim.promises:
 		var nm: String = Sim.actors[p["actor"]].display_name if Sim.actors.has(p["actor"]) else str(p["actor"])
 		var st := ""

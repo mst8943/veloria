@@ -1,6 +1,16 @@
 # Gündem v2 ilerleme
 
-**SIRADAKİ DİLİM: U4**
+**SIRADAKİ DİLİM: bitti**
+
+## U3b + U4 — tamamlandı (2026-10-10)
+
+- U3b ayrı commit `3ff3b8d`: hafta defteri “Bu hafta” altında oyuncu eylemleri ve sonuçlarını tutuyor; danışman raporları ayrı “Raporlar / Reports” başlığı altında. TR/EN masaüstü kanıtı: `C:/Users/USER/Desktop/oyun_u3b_u4_shots/u3b-{tr,en}/1_oyun.png`.
+- U4 mobil sekmeleri Gündem · Kişiler · Raporlar. Dosyalar ve Günlük Raporlar içindeki alt sekmelerden erişiliyor. Kişiler’de dört yerelleştirilmiş grup, aynı 14 kart kontrolünün yatay şeritte filtrelenmesi, iki yanda çizilmiş ok ve aşağıda seçime bağlı kişi/eylem alanı var. Eylem kategori ve düğmeleri, grup sekmeleri, oklar ve seçim temizleme en az 44 px. Gündem’de tek tam karar kartı ve Sırada satırları; Raporlar’da değişenler, hafta eylem defteri ve ilk dört rapor + tüm liste kaplaması.
+- Mobil `ui_input_test`: OK; üç bekleyen kararda tek kart/iki kuyruk satırı, kuyruk geçişi, Gerekçeler, 14 kişinin grup erişimi, 44 px hedefler, iki şerit oku, seçim temizleme, tam rapor kaplaması ve Dosyalar/Günlük gezinmesi kontrol edildi. `--autoplay --mobile`: `tohum=11 hafta=46 basılan=150 sonuç=DÜŞTÜ`.
+- KAPI testleri: `sim_test`, `event_check` (195 olay/0 uyarı), `save_test`, `content_check`, `i18n_check`, `pacing_test`, `ui_logic_test`, masaüstü ve mobil `ui_input_test`, `unit_tests` (399/399) OK; EN `event_check` ve `content_check` OK. `pacing_test`/`sim_test` kapanışında Godot kaynak temizleme uyarıları sürüyor.
+- Masaüstü `--autoplay` ×3: `20/DÜŞTÜ`, `81/DÜŞTÜ`, `37/DÜŞTÜ` hafta. `--autoplay --full` TR ve EN aynı: `tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`.
+- `advice_weighted`, 80 kampanya: TR/EN **68/80, 36/80, 16/80**; tabanla birebir aynı.
+- 1067×600 mobil PNG’leri TR/EN: `C:/Users/USER/Desktop/oyun_u3b_u4_shots/final-mobile-{tr,en}/` (Gündem, üç karar/kuyruk, dört kişi grubu, kişi seçimi/eylemler, Raporlar/tam liste, Dosyalar, Günlük). Masaüstü durum PNG’leri: `C:/Users/USER/Desktop/oyun_u3b_u4_shots/final-desktop-{tr,en}/` (seçim yok, seçili, düşman). U3b ilk ekranları ayrı `u3b-{tr,en}` klasörlerinde. Görseller gözle kontrol edildi; metin karışması veya yatay taşma görülmedi, karar kartı ve seçenekleri tam görünüyor.
 
 ## U2b + U3 — tamamlandı (2026-10-09)
 
@@ -28,9 +38,9 @@
 - Ölçüt probe (`advice_weighted`, 80 kampanya): TR **68/80, 36/80, 16/80**; EN **68/80, 36/80, 16/80**. Tabanla birebir aynı. Günlükler: `C:/Users/USER/Desktop/oyun_u1b_u2_shots/probe_{tr,en}.log`.
 - Masaüstü PNG: `C:/Users/USER/Desktop/oyun_u1b_u2_shots/u2_{tr,en}_{2,3}/u2_{2,3}_{karar,son_karar,gerekceler}.png`; mobil PNG: `u2_mobile_{tr,en}/u2_2_{karar,son_karar,gerekceler}.png`. Görüntülerde 2 ve 3 karar, Sırada satırları, oklar/noktalar, tam alıntı ve TR/EN metinler gözle kontrol edildi. 1280×720 masaüstünde iki ve üç karar için sol kaydırma payı **0 px**. Mobilde mevcut kaydırmalı Gündem düzeni duruyor; yeniden düzenleme U4 kapsamında.
 
-### Açık konu
+### Sonraki adım
 
-- U4: mobil yeniden düzenleme.
+- U4, U3b + U4 oturumunda tamamlandı; sonraki dilim yok.
 
 ## U1 — tamamlandı (2026-10-09)
 

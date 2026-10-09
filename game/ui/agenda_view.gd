@@ -92,7 +92,7 @@ func _guide_go(step: int) -> void:
 		2:
 			host._open_media()
 		3:
-			var saray := host._tabs.get_node_or_null("Saray") as Control
+			var saray := host._tabs.get_node_or_null("Kişiler") as Control
 			if saray != null:
 				host._select_tab(saray)
 			host._hint(tr("Bir kişiye eylem\n") + tr(GUIDE_STEPS[2][1]))
@@ -212,7 +212,7 @@ func _rebuild_agenda() -> void:
 	var animated: Array[Control] = []
 	if Sfx.tips and Sim.week <= 3:
 		_add_guide(animated)
-	if Sfx.tips and ADVICE.has(Sim.week) and not (host._mobile and Sim.week <= 3):
+	if not host._mobile and Sfx.tips and ADVICE.has(Sim.week):
 		# Saray kâtibinin notu (mobilde ilk haftalarda yol gösterici yeterli; kart ekrana sığsın): tek ince satır (gündemin en değerli yerini kaplamasın).
 		var note := PanelContainer.new()
 		var nsb := UIKit.box(Color(0.11, 0.095, 0.06, 0.85), Color(UIKit.GOLD_DIM, 0.45), 6, 8)
@@ -247,7 +247,7 @@ func _rebuild_agenda() -> void:
 		nh.add_child(nl)
 	if not Sim.pending.is_empty():
 		# Yardımcı metin yalnızca ilk haftalarda; sonra tekrar etmesin.
-		var section: Control = host._section(tr("KARAR BEKLEYENLER"), tr("her karar 1 mesai · ertelenen karar 2 hafta sonra kendiliğinden çözülür") if Sim.week <= 4 else "")
+		var section: Control = host._section(tr("KARAR BEKLEYENLER"), tr("her karar 1 mesai · ertelenen karar 2 hafta sonra kendiliğinden çözülür") if Sim.week <= 4 and not host._mobile else "")
 		if Sim.pending.size() == 1:
 			host._agenda.add_child(section)
 		else:
@@ -289,6 +289,11 @@ func _rebuild_agenda() -> void:
 		var crisis: bool = e.get("crisis", false)
 		var lead: bool = pi == 0 or int(p["age"]) > 0 or crisis
 		var card_box := UIKit.box(Color(UIKit.PANEL, 0.96), UIKit.DANGER if crisis else (UIKit.GOLD if lead else Color(UIKit.GOLD_DIM, 0.45)), UIKit.RADIUS, 12 if host._mobile else 8, 2 if lead else 1)
+		if host._mobile:
+			card_box.content_margin_top = 4
+			card_box.content_margin_bottom = 4
+			card_box.content_margin_left = 8
+			card_box.content_margin_right = 8
 		card_box.shadow_color = Color(0, 0, 0, 0.45)
 		card_box.shadow_size = 8 if lead else 3
 		card.add_theme_stylebox_override("panel", card_box)
@@ -303,10 +308,10 @@ func _rebuild_agenda() -> void:
 			pulse.tween_property(card_box, "border_color", UIKit.DANGER, 0.9).set_trans(Tween.TRANS_SINE)
 			pulse.tween_property(card_box, "border_color", Color("ff8a7a") if crisis else UIKit.GOLD, 0.9).set_trans(Tween.TRANS_SINE)
 		var hb := HBoxContainer.new()
-		hb.add_theme_constant_override("separation", 14)
+		hb.add_theme_constant_override("separation", 6 if host._mobile else 14)
 		card.add_child(hb)
 		var tex: Texture2D = host._event_art(str(e.get("art", e["id"])))
-		if tex:
+		if tex and not host._mobile:
 			# Görsel kendi çerçevesinde yavaşça hareket eder (yaşayan kart).
 			var frame := Control.new()
 			frame.custom_minimum_size = Vector2(240, 135)
@@ -325,24 +330,30 @@ func _rebuild_agenda() -> void:
 				drift.tween_property(img, "scale", Vector2.ONE, 9.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		var vb := VBoxContainer.new()
 		vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		vb.add_theme_constant_override("separation", 6 if host._mobile else 3)
+		vb.add_theme_constant_override("separation", 0 if host._mobile else 3)
 		hb.add_child(vb)
 		var t := Label.new()
 		t.text = str(e["title"])
 		t.add_theme_font_override("font", UIKit.serif())
-		t.add_theme_font_size_override("font_size", host._fs(22))
+		t.add_theme_font_size_override("font_size", host._fs(17 if host._mobile else 22))
 		t.add_theme_color_override("font_color", UIKit.GOLD)
 		t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		vb.add_child(t)
+		var late_text := ""
 		if p["age"] > 0 or crisis:
+			late_text = str(e.get("banner", tr("Bu hafta karar vermezsen saray düşer."))) if crisis else tr("Karar bekliyor — bu hafta çözülmezse kendi kendine çözülecek.")
+		vb.add_child(t)
+		if late_text != "":
 			var late := Label.new()
-			late.text = str(e.get("banner", tr("Bu hafta karar vermezsen saray düşer."))) if crisis else tr("Karar bekliyor — bu hafta çözülmezse kendi kendine çözülecek.")
+			late.text = late_text
+			late.tooltip_text = late_text
 			late.add_theme_color_override("font_color", UIKit.DANGER)
-			late.add_theme_font_size_override("font_size", host._fs(13))
+			late.add_theme_font_size_override("font_size", host._fs(11 if host._mobile else 13))
 			vb.add_child(late)
 		var d := Label.new()
 		d.text = str(e["text"])
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if host._mobile:
+			d.add_theme_font_size_override("font_size", host._fs(11))
 		vb.add_child(d)
 		var council := _add_council(vb, pi)
 		if crisis:
@@ -361,6 +372,14 @@ func _rebuild_agenda() -> void:
 				b.tooltip_text += "\n\n" + "\n".join(council[ci])
 			b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 			b.theme_type_variation = "ChoiceButton"
+			if host._mobile:
+				b.custom_minimum_size.y = 44
+				b.add_theme_font_size_override("font_size", host._fs(13))
+				for state in ["normal", "hover", "pressed", "disabled"]:
+					var choice_style := b.get_theme_stylebox(state).duplicate() as StyleBoxFlat
+					choice_style.content_margin_top = 2
+					choice_style.content_margin_bottom = 2
+					b.add_theme_stylebox_override(state, choice_style)
 			host._wire(b)
 			b.pressed.connect(host._choose.bind(pi, ci))
 			vb.add_child(b)
@@ -572,7 +591,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 	var full_reports := PopupPanel.new()
 	host.add_child(full_reports)
 	var popup_scroll := ScrollContainer.new()
-	popup_scroll.custom_minimum_size = Vector2(900, 680)
+	popup_scroll.custom_minimum_size = Vector2(900, 420) if host._mobile else Vector2(900, 680)
 	full_reports.add_child(popup_scroll)
 	var popup_list := VBoxContainer.new()
 	popup_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -580,7 +599,8 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 	var all_reports := Button.new()
 	all_reports.text = tr("Tüm raporlar (%d)") % Sim.reports.size()
 	all_reports.theme_type_variation = "GhostButton"
-	all_reports.pressed.connect(func() -> void: host._all_reports_popup.popup_centered(Vector2i(920, 700)))
+	all_reports.custom_minimum_size.y = 44 if host._mobile else 0
+	all_reports.pressed.connect(func() -> void: host._all_reports_popup.popup_centered(Vector2i(1000, 500) if host._mobile else Vector2i(920, 700)))
 	host._wire(all_reports)
 	if is_instance_valid(host._all_reports_popup):
 		host._all_reports_popup.free()
@@ -666,8 +686,8 @@ func _add_council(parent: VBoxContainer, pending_index: int) -> Dictionary:
 		return notes
 	var panel := PanelContainer.new()
 	var sb := UIKit.box(Color(0, 0, 0, 0.22), Color(UIKit.GOLD_DIM, 0.22), 6, 8)
-	sb.content_margin_top = 6 if host._mobile else 4
-	sb.content_margin_bottom = 6 if host._mobile else 4
+	sb.content_margin_top = 2 if host._mobile else 4
+	sb.content_margin_bottom = 2 if host._mobile else 4
 	panel.add_theme_stylebox_override("panel", sb)
 	parent.add_child(panel)
 	var shell := VBoxContainer.new()
