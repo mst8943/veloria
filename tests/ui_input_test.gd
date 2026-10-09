@@ -256,6 +256,23 @@ func _run_mobile() -> void:
 		printerr("UI INPUT: mobil kişi seçimi bloğu açmadı")
 		quit(1)
 		return
+	var profile_scroll: ScrollContainer = main._person_panel._mobile_person_scroll
+	var profile_view := profile_scroll.get_global_rect()
+	if profile_view.end.y > main._end_btn.get_global_rect().position.y or main._person_panel.host._act_title.custom_minimum_size.y < 44:
+		printerr("UI INPUT: kişi ayrıntısı alt çubukla çakışıyor ya da eylem başlığı küçük")
+		quit(1)
+		return
+	for button in main._buttons.values():
+		if (button as Button).custom_minimum_size.y < 44:
+			printerr("UI INPUT: seçili kişi eylemi 44 px altında")
+			quit(1)
+			return
+	for i in 3:
+		await process_frame
+	if profile_scroll.get_v_scroll_bar().max_value <= profile_scroll.get_v_scroll_bar().page:
+		printerr("UI INPUT: kişi eylem bloğu dikey erişilebilir değil")
+		quit(1)
+		return
 	main._person_panel.clear_button.pressed.emit()
 	await process_frame
 	if not main._sel.is_empty() or main._person_panel.person_block.visible:

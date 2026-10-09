@@ -220,6 +220,8 @@ func _build_ui(cols: HBoxContainer) -> void:
 	host._act_title.add_theme_font_override("font", UIKit.serif())
 	host._act_title.add_theme_font_size_override("font_size", host._fs(17))
 	host._act_title.add_theme_color_override("font_color", UIKit.GOLD)
+	host._act_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	host._act_title.custom_minimum_size.y = 44 if host._mobile else 0
 	av.add_child(host._act_title)
 	var groups := [
 		["KAZAN", [["summon", "Huzura Çağır"], ["promote", "Terfi"], ["bribe", "Gizli Ödeme"]]],
@@ -594,6 +596,7 @@ func _make_card(a) -> PanelContainer:
 	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card_art.add_child(fade)
 	var v := VBoxContainer.new()
+	card.set_meta("card_labels", v)
 	v.add_theme_constant_override("separation", -2)
 	v.anchor_top = 1.0
 	v.anchor_right = 1.0
@@ -670,6 +673,13 @@ func _on_card_input(ev: InputEvent, id: String) -> void:
 func _style_cards(hover_id := "") -> void:
 	for id in host._cards:
 		var card: PanelContainer = host._cards[id]
+		if host._mobile:
+			var compact: bool = not host._sel.is_empty()
+			card.custom_minimum_size = Vector2(120, 104) if compact else Vector2(150, 132)
+			var portrait := card.get_child(0) as Control
+			portrait.custom_minimum_size = Vector2(100, 92) if compact else Vector2(130, 120)
+			var labels := card.get_meta("card_labels") as VBoxContainer
+			labels.offset_top = -42 if compact else -52
 		var a = Sim.actors.get(id)
 		var selected: bool = host._sel.has(id)
 		var primary: bool = not host._sel.is_empty() and host._sel[0] == id
