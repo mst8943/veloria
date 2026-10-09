@@ -378,11 +378,6 @@ func _rebuild_agenda() -> void:
 			if host._mobile:
 				b.custom_minimum_size.y = 44
 				b.add_theme_font_size_override("font_size", host._fs(13))
-				for state in ["normal", "hover", "pressed", "disabled"]:
-					var choice_style := b.get_theme_stylebox(state).duplicate() as StyleBoxFlat
-					choice_style.content_margin_top = 2
-					choice_style.content_margin_bottom = 2
-					b.add_theme_stylebox_override(state, choice_style)
 			host._wire(b)
 			b.pressed.connect(host._choose.bind(pi, ci))
 			vb.add_child(b)

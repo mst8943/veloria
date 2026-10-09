@@ -301,6 +301,17 @@ func _run_mobile() -> void:
 		printerr("UI INPUT: mobil karar sırası tek kart/iki satır değil: ", main._decision_cards.size(), " / ", queued)
 		quit(1)
 		return
+	for button in main._decision_buttons:
+		if button.custom_minimum_size.y < 44:
+			printerr("UI INPUT: mobil karar seçeneği 44 px altında")
+			quit(1)
+			return
+		for state in ["normal", "hover", "pressed"]:
+			var style := button.get_theme_stylebox(state) as StyleBoxTexture
+			if style == null or style.texture == null or not style.texture.resource_path.get_file().begins_with("btn_"):
+				printerr("UI INPUT: mobil karar seçeneği %s dokusunu kullanmıyor" % state)
+				quit(1)
+				return
 	queue_button.pressed.emit()
 	await process_frame
 	if main._agenda_view.decision_index != 1:
