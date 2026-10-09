@@ -15,9 +15,11 @@ const MENU := preload("res://game/ui/menu.gd")
 const MODAL := preload("res://game/ui/modal.gd")
 const AGENDA_VIEW := preload("res://game/ui/agenda_view.gd")
 const PERSON_PANEL := preload("res://game/ui/person_panel.gd")
+const DIVAN_VIEW := preload("res://game/ui/divan_view.gd")
 
 var _agenda_view: RefCounted
 var _person_panel: RefCounted
+var _divan: RefCounted
 var _stage: Control
 var _header_week: Label
 var _header_progress: ProgressBar
@@ -98,6 +100,7 @@ func _ready() -> void:
 	Sim.game_ended.connect(_on_end)
 	_agenda_view = AGENDA_VIEW.new(self)
 	_person_panel = PERSON_PANEL.new(self)
+	_divan = DIVAN_VIEW.new(self)
 	_build_ui()
 	_build_fx()
 	if Sim.content_error != "":
@@ -149,6 +152,7 @@ func _ready() -> void:
 			_sel = [ds]
 			_style_cards()
 			_update_info()
+			_divan.refresh()
 		if ProjectSettings.get_setting("veloria/dev_press_end", false):
 			await get_tree().create_timer(6.0).timeout
 			_end_week_pressed()
@@ -175,6 +179,17 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if k == null or not k.pressed or k.echo:
 		return
 	var in_game: bool = not Sim.actors.is_empty() and not Sim.ended
+	if in_game and not _mobile and not _divan.opened and not _menu.visible and not _desk.visible and not _city.visible and not _media.visible and not _modal.visible \
+			and k.keycode >= KEY_1 and k.keycode <= KEY_5 and not k.ctrl_pressed and not k.alt_pressed:
+		var index := k.keycode - KEY_1
+		if index < _divan.visible_ids.size():
+			_sel.clear()
+			_sel.append(str(_divan.visible_ids[index]))
+			_style_cards()
+			_update_info()
+			_divan.refresh()
+			get_viewport().set_input_as_handled()
+		return
 	match k.keycode:
 		KEY_F11:
 			Sfx.set_fullscreen(not Sfx.fullscreen)
@@ -182,6 +197,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		KEY_ESCAPE:
 			if _modal.visible:
 				_modal.hide()
+			elif _divan.opened:
+				_divan.close()
 			elif _menu.visible and _menu.page_now != "main":
 				_menu_show_page("main")
 			elif _desk.visible and not _menu.visible:
@@ -899,6 +916,7 @@ func _after_load(message: String) -> void:
 	_headline.text = ""
 	_headline.get_parent().visible = false
 	_sel.clear()
+	_divan.last_id = ""
 	_cards_sig = ""
 	_last_mesai = -1
 	_last_wealth = -1
@@ -966,6 +984,7 @@ func _on_city_request(target: String, arg: String) -> void:
 				_sel = [arg]
 				_style_cards()
 				_update_info()
+				_divan.refresh()
 			if _mobile:
 				_tabs.current_tab = 1
 
@@ -1107,6 +1126,7 @@ func _act(fn: Callable) -> void:
 		_toast_msg(tr("Önce bir kişi seç."))
 		return
 	_acted_week = Sim.week
+	_divan.last_id = id
 	_log(fn.call(id))
 
 
@@ -1116,6 +1136,8 @@ func _op(kind: String) -> void:
 		if Sim.actors.has(s):
 			ids.append(s)
 	_acted_week = Sim.week
+	if not ids.is_empty():
+		_divan.last_id = str(ids[0])
 	_log(Sim.divide_rivals(ids) if kind == "dus" else Sim.operation(kind, ids))
 
 
@@ -1171,6 +1193,7 @@ func _refresh() -> void:
 	_last_wealth = int(Sim.private_wealth)
 	_rebuild_agenda()
 	_rebuild_cards()
+	_divan.refresh()
 	_rebuild_facts()
 	_promise_list.clear()
 	if Sim.promises.is_empty():

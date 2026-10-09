@@ -31,6 +31,42 @@ func _run() -> void:
 		printerr("UI INPUT: rapordan kişi seçilemedi: ", main._sel)
 		quit(1)
 		return
+	main._instant = true
+	main._divan.open()
+	await process_frame
+	_click_at(main._cards["elena"].get_global_rect().get_center())
+	await process_frame
+	if main._divan.opened or main._sel != ["elena"]:
+		printerr("UI INPUT: Divan'dan kişi seçilemedi")
+		quit(1)
+		return
+	main._divan.open()
+	_click_at(Vector2(20, 300))
+	await process_frame
+	if main._divan.opened:
+		printerr("UI INPUT: dış tıklama Divan'ı kapatmadı")
+		quit(1)
+		return
+	main._divan.open()
+	var escape := InputEventKey.new()
+	escape.keycode = KEY_ESCAPE
+	escape.pressed = true
+	root.push_input(escape, true)
+	await process_frame
+	if main._divan.opened:
+		printerr("UI INPUT: Esc Divan'ı kapatmadı")
+		quit(1)
+		return
+	var first := str(main._divan.visible_ids[0])
+	var one := InputEventKey.new()
+	one.keycode = KEY_1
+	one.pressed = true
+	root.push_input(one, true)
+	await process_frame
+	if main._sel != [first]:
+		printerr("UI INPUT: şerit kısayolu seçemedi")
+		quit(1)
+		return
 	print("UI INPUT: OK")
 	quit(0)
 

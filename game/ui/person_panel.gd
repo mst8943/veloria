@@ -71,7 +71,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		cols.add_child(right)
 	var cap_row := HBoxContainer.new()
 	right.add_child(cap_row)
-	var cap: Control = host._section(tr("GÜÇ MERKEZLERİ"))
+	var cap: Control = host._section(tr("GÜÇ MERKEZLERİ") if host._mobile else tr("İZLEME LİSTESİ"))
 	cap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cap.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	cap_row.add_child(cap)
@@ -88,6 +88,8 @@ func _build_ui(cols: HBoxContainer) -> void:
 	host._grid.add_theme_constant_override("h_separation", 6)
 	host._grid.add_theme_constant_override("v_separation", 6)
 	right.add_child(host._grid)
+	if not host._mobile:
+		host._divan.build(right)
 
 	var detail := PanelContainer.new()
 	detail.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.85), Color(UIKit.GOLD_DIM, 0.3), 6, 8))
@@ -398,7 +400,7 @@ func _rebuild_cards() -> void:
 		sig += "%s%d," % [a.id, 1 if a.moved else 0]
 	if sig != host._cards_sig:
 		host._cards_sig = sig
-		for c in host._grid.get_children():
+		for c in host._cards.values():
 			c.queue_free()
 		host._cards.clear()
 		for a in Sim.actors.values():
@@ -434,6 +436,7 @@ func _card_fade() -> Texture2D:
 func _make_card(a) -> PanelContainer:
 	var card := PanelContainer.new()
 	card.custom_minimum_size = Vector2(108, 96) if not host._mobile else Vector2(150, 132)
+	card.clip_contents = true
 	card.mouse_filter = Control.MOUSE_FILTER_STOP
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	card.tooltip_text = "%s\n%s" % [a.display_name, a.title]
@@ -478,6 +481,15 @@ func _make_card(a) -> PanelContainer:
 	v.add_child(r)
 	card.set_meta("id", a.id)
 	card.set_meta("role", r)
+	if not host._mobile:
+		var badge := Control.new()
+		badge.custom_minimum_size = Vector2(10, 10)
+		badge.position = Vector2(5, 5)
+		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		badge.draw.connect(func() -> void: badge.draw_circle(Vector2(5, 5), 4, badge.get_meta("color", UIKit.GOLD)))
+		badge.visible = false
+		card.add_child(badge)
+		card.set_meta("badge", badge)
 	card.gui_input.connect(_on_card_input.bind(a.id))
 	# Üzerine gelince portre çerçevesinin içinde hafifçe yakınlaşır.
 	var portrait_img: Control = card_art.get_child(0)
@@ -507,6 +519,11 @@ func _on_card_input(ev: InputEvent, id: String) -> void:
 		host._sel.append(id)
 	_style_cards()
 	_update_info()
+	if not host._mobile:
+		if host._divan.opened:
+			host._divan.close()
+		else:
+			host._divan.refresh()
 
 
 func _style_cards(hover_id := "") -> void:

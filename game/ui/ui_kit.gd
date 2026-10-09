@@ -18,6 +18,7 @@ const TEXT_DIM := Color("9a958a")
 const DANGER := Color("c0504a")
 const OK := Color("7fae7a")
 const AMBER := Color("d08a3d")   # uyarı değil, dikkat: "çıkarı var" gibi
+const REPORT_BLUE := Color("6e9fc4") # görünür rapor değişimi
 
 const SERIF_PATH := "res://game/fonts/EBGaramond.ttf"
 const SANS_PATH := "res://game/fonts/IBMPlexSans.ttf"

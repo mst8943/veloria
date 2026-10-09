@@ -65,6 +65,23 @@ func _run() -> void:
 	for a in sim0.actors.values():
 		if top_id == "" or a.power > sim0.actors[top_id].power:
 			top_id = a.id
+	if "--u1" in OS.get_cmdline_user_args() and "--mobile" not in OS.get_cmdline_user_args():
+		main._sel.clear()
+		main._refresh()
+		await _shot("u1_serit")
+		main._divan.open()
+		await _shot("u1_divan")
+		main._instant = true
+		main._divan.close()
+		main._instant = false
+		main._sel.clear()
+		main._sel.append("elena")
+		main._style_cards()
+		main._update_info()
+		main._divan.refresh()
+		await _shot("u1_kisi_secili")
+		quit(0)
+		return
 	main._sel.clear()
 	main._sel.append(top_id)
 	main._style_cards()

@@ -9,6 +9,27 @@ msgstr ""
 msgid "Kapat"
 msgstr "Close"
 
+msgid "İZLEME LİSTESİ"
+msgstr "WATCHLIST"
+
+msgid "DİVAN"
+msgstr "THE COURT"
+
+msgid "Divan"
+msgstr "Court"
+
+msgid "Güç ve kamuoyu"
+msgstr "Public & power"
+
+msgid "Dış ilişkiler"
+msgstr "Foreign affairs"
+
+msgid "Dışişleri Bakanı'nın raporu"
+msgstr "Report by the Foreign Minister"
+
+msgid "Diğer kişiler Divan'da"
+msgstr "Other people are in the Court"
+
 msgid "Vazgeç"
 msgstr "Cancel"
 
