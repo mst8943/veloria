@@ -364,6 +364,9 @@ static func build_theme(mobile := false) -> Theme:
 	t.set_stylebox("tab_selected", "TabContainer", _tab(Color(PANEL_HI, 0.95), GOLD, 2))
 	t.set_stylebox("tab_unselected", "TabContainer", _tab(Color(0, 0, 0, 0.25), Color(GOLD_DIM, 0.25), 1))
 	t.set_stylebox("tab_hovered", "TabContainer", _tab(Color(HOVER, 0.8), GOLD_DIM, 1))
+	var tp := tex_box("frame_panel_dark", [44, 44, 44, 44], [18, 16, 18, 16])
+	if tp != null:
+		t.set_stylebox("panel", "TabContainer", tp)
 	var ta := tex_box("tab_active", [24, 20, 24, 8], [16, 8, 16, 6])
 	if ta != null:
 		t.set_stylebox("tab_selected", "TabContainer", ta)

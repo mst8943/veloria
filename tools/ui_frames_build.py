@@ -69,5 +69,15 @@ def main() -> None:
         print(name, (w, h), "->", im.size)
 
 
+def make_dark_panel() -> None:
+	"""frame_panel + koyu iç dolgu: TabContainer paneli ve oyun sonu paneli için."""
+	im = Image.open(os.path.join(ROOT, "frame_panel.png")).convert("RGBA")
+	fx, fy = 7, 7
+	base = Image.new("RGBA", im.size, (0, 0, 0, 0))
+	base.paste(Image.new("RGBA", (im.width - 2 * fx, im.height - 2 * fy), (23, 21, 17, 232)), (fx, fy))
+	Image.alpha_composite(base, im).save(os.path.join(ROOT, "frame_panel_dark.png"))
+
+
 if __name__ == "__main__":
     main()
+    make_dark_panel()
