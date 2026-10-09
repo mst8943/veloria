@@ -12,6 +12,8 @@ func _initialize() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--out="):
 			out = a.substr(6)
+	if "--mobile" in OS.get_cmdline_user_args():
+		DisplayServer.window_set_size(Vector2i(1067, 600))
 	DirAccess.make_dir_recursive_absolute(out)
 	# Yalnızca bellekte: project.godot'a yazılmaz.
 	ProjectSettings.set_setting("veloria/dev_autostart", true)
@@ -29,7 +31,7 @@ func _boot() -> void:
 
 
 func _shot(file_name: String) -> void:
-	for i in 120:
+	for i in 8:
 		await process_frame
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_png(out.path_join(file_name + ".png"))
@@ -39,6 +41,26 @@ func _shot(file_name: String) -> void:
 func _run() -> void:
 	# Kişi paneli dolu görünsün: en güçlü kişiyi seç.
 	var sim0: Node = root.get_node("Sim")
+	if "--state-only" in OS.get_cmdline_user_args():
+		sim0.timeline.clear()
+		sim0.capacity_timeline.clear()
+		for w in range(1, 13):
+			sim0.timeline.append({"w": w * 8, "king": 70.0, "unrest": 30.0, "plot": 20.0, "foreign": 72.0, "heir": 75.0})
+			sim0.capacity_timeline.append({"w": w * 8, "maliye": 78.0, "hukuk": 78.0, "ordu": 78.0, "idare": 78.0, "holding": 35.0})
+		sim0.week = 105
+		sim0._end(true)
+		await process_frame
+		sim0.record["new_achievements"] = ["liyakat_krali", "oligarki_dizginleyen", "uc_bayrak", "hazir_veliaht"]
+		main._end_overlay.show_record(sim0.record)
+		var state_tabs: TabContainer = main._end_overlay.tabs
+		state_tabs.current_tab = 0
+		await _shot("5_devlet_son")
+		state_tabs.current_tab = 1
+		await _shot("5_devlet_grafik")
+		state_tabs.current_tab = 3
+		await _shot("5_devlet_defteri")
+		quit(0)
+		return
 	var top_id := ""
 	for a in sim0.actors.values():
 		if top_id == "" or a.power > sim0.actors[top_id].power:
@@ -310,8 +332,18 @@ func _run() -> void:
 		quit(0)
 		return
 	while not sim.ended:
-		while not sim.pending.is_empty() and sim.mesai > 0:
-			sim.resolve_decision(0, 0)   # meclis sicili dolsun
+		var guard := 0
+		while not sim.pending.is_empty() and sim.mesai > 0 and guard < 6:
+			guard += 1
+			var choices: Array = sim.pending[0]["event"]["choices"]
+			var choice := -1
+			for i in choices.size():
+				if choices[i].get("available", true) and sim.private_wealth + float(choices[i].get("fx", {}).get("wealth", 0)) >= 0.0:
+					choice = i
+					break
+			if choice < 0:
+				break
+			sim.resolve_decision(0, choice)	# meclis sicili dolsun
 		sim.end_week()
 	await process_frame
 	var tabs: TabContainer = main._end_overlay.tabs
