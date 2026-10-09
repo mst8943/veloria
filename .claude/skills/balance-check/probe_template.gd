@@ -27,6 +27,7 @@ var style := ""   # advice_soft / advice_dirty oyun tarzı
 
 
 func _initialize() -> void:
+	root.get_node("Sfx").set_language("en" if "--lang=en" in OS.get_cmdline_user_args() else "tr")
 	sim = root.get_node("Sim")
 	sim.record_chronicle = false
 	sim.autosave = false
