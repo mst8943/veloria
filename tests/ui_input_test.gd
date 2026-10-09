@@ -278,8 +278,8 @@ func _run_mobile() -> void:
 	if not main._sel.is_empty() or main._person_panel.person_block.visible:
 		printerr("UI INPUT: mobil seçim temizlenmedi")
 		quit(1)
-		return
 	var sim: Node = root.get_node("Sim")
+	sim.week = 4
 	sim.pending.clear()
 	for id in ["gida_protestosu", "general_atamalari", "gazeteci_ihale"]:
 		for event in sim._events:
@@ -290,6 +290,8 @@ func _run_mobile() -> void:
 	main._refresh()
 	main._tabs.current_tab = 0
 	await process_frame
+	main._scroll.scroll_vertical = 0
+	await process_frame
 	var queued := 0
 	var queue_button: Button
 	for child in main._agenda.get_children():
@@ -299,6 +301,41 @@ func _run_mobile() -> void:
 				queue_button = child
 	if main._decision_cards.size() != 1 or queued != 2:
 		printerr("UI INPUT: mobil karar sırası tek kart/iki satır değil: ", main._decision_cards.size(), " / ", queued)
+		quit(1)
+		return
+	var decision_card: Control = main._decision_cards[0]
+	var decision_row: HBoxContainer
+	for child in decision_card.get_children():
+		if child is HBoxContainer:
+			decision_row = child
+			break
+	if decision_row == null or decision_row.get_child_count() < 2:
+		printerr("UI INPUT: mobil karar görseli/metin satırı yok")
+		quit(1)
+		return
+	var art_frame := decision_row.get_child(0) as Control
+	var text_column := decision_row.get_child(1) as VBoxContainer
+	var decision_title := text_column.get_child(0) as Label
+	var card_style := decision_card.get_theme_stylebox("panel") as StyleBoxFlat
+	if art_frame.size.x < decision_card.size.x * 0.30 or art_frame.size.y < 110:
+		printerr("UI INPUT: mobil karar görseli kartın %30'undan dar/kısa")
+		quit(1)
+		return
+	if decision_title.autowrap_mode == TextServer.AUTOWRAP_OFF or decision_title.custom_minimum_size.y < 44:
+		printerr("UI INPUT: mobil karar başlığı iki satıra yer ayırmıyor")
+		quit(1)
+		return
+	var short_title := decision_title.text
+	decision_title.text = "%s %s %s" % [short_title, short_title, short_title]
+	await process_frame
+	if decision_title.get_line_count() < 2:
+		printerr("UI INPUT: mobil uzun karar başlığı iki satıra sarmıyor")
+		quit(1)
+		return
+	decision_title.text = short_title
+	await process_frame
+	if card_style == null or card_style.content_margin_top < 10 or card_style.content_margin_right < 20:
+		printerr("UI INPUT: mobil karar kartı ornament için güvenli iç boşluk bırakmıyor")
 		quit(1)
 		return
 	for button in main._decision_buttons:
@@ -312,6 +349,11 @@ func _run_mobile() -> void:
 				printerr("UI INPUT: mobil karar seçeneği %s dokusunu kullanmıyor" % state)
 				quit(1)
 				return
+		var button_rect: Rect2 = button.get_global_rect()
+		if button_rect.position.y < decision_card.get_global_rect().position.y or button_rect.end.y > decision_card.get_global_rect().end.y or button_rect.end.y > main._end_btn.get_global_rect().position.y:
+			printerr("UI INPUT: mobil karar düğmesi kart/alt çubuk tarafından örtülüyor")
+			quit(1)
+			return
 	queue_button.pressed.emit()
 	await process_frame
 	if main._agenda_view.decision_index != 1:

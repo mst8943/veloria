@@ -2,6 +2,16 @@
 
 **SIRADAKİ DİLİM: bitti**
 
+## M1 — mobil karar kartı düzeltmesi tamamlandı (2026-10-10)
+
+- Mobil I/II/III seçenekleri UIKit `ChoiceButton` normal/hover/pressed dokularını kullanıyor; en az 44 px yüksekliğinde. Karar görseli solda 320×110 (kartın %30’undan geniş), başlık iki satıra sarılabiliyor; ornament köşeleri ve artırılmış iç boşluk metin/düğme alanını açık bırakıyor. Yalnız mobil boşluklar sıkılaştırıldı; masaüstü yerleşim kodu değişmedi.
+- Pencereli `ui_input_test`: masaüstü ve `--mobile` OK. Mobil kontrol; düğme dokuları/hedefleri, görsel oranı, uzun başlıkta sarma, kart/alt çubuk sınırları ve karar sırası geçişini doğruluyor.
+- KAPI: `sim_test` TEST: OK (kapanışta mevcut Godot ObjectDB/kaynak uyarıları); `event_check` TR/EN 195 olay, 0 uyarı; `save_test` SAVE: OK; `content_check` TR/EN 5 dosya/8 bozuk örnek; `i18n_check` I18N: OK. Masaüstü `--autoplay` ×3: 53/55/64 hafta; `--autoplay --mobile`: 35 hafta/104 eylem. `--autoplay --full` TR ve EN birebir: `tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`.
+- `advice_weighted`, 80 kampanya, TR ve EN: **68/80, 36/80, 16/80**; tabanla birebir.
+- 1067×600 mobil kanıtlar `C:/Users/USER/Desktop/oyun_m1_shots/final-mobile-{tr,en}/` altında. Her dilde `u4b_agenda_1.png`, `u4b_agenda_2.png`, `u4b_agenda_3.png`: başlık, görsel, danışman satırı, dokulu üç seçenek, kart çerçevesi ve 1/2/3 karar göstergeleri tam; taşma/örtüşme yok. `people_selected.png`: kişi seçimi, grup, ad/çipler ve eylem kategorileri; `u4b_reports.png`: Raporlar üst görünümü ve metin akışı. Aynı klasörlerdeki dört grup/eylem ek kareleri de açılıp kontrol edildi.
+- Masaüstü TR önce/sonra karşılaştırması: `C:/Users/USER/Desktop/oyun_m1_shots/before-desktop-tr/u2_3_karar.png` ve `final-desktop-tr/u2_3_karar.png`; `final-desktop-tr/u2_3_son_karar.png`, `u2_3_gerekceler.png` de incelendi. Kart yerleşimi/ölçeklemesi değişmedi.
+- Değişiklikler: ayrı doku commit’i `9a75778`; mobil kart/kanıt/test ve bu kayıt ikinci commit’te.
+
 ## U4b — mobil düzeltmeler tamamlandı (2026-10-10)
 
 - Kişiler’de seçim yapıldığında portre kartları 150×132’den 120×104’e iner; grup sekmeleri ve oklar sabit kalır. Seçili kişi alanı kendi dikey kaydırmasında kalır; EYLEMLER başlığı tek satır ellipsis kullanır, eylem sekmeleri/düğmeleri en az 44 px’tir. Alt çubuk kişi alanının dışında kalır.

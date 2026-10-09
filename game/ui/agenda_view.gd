@@ -290,16 +290,16 @@ func _rebuild_agenda() -> void:
 		var lead: bool = pi == 0 or int(p["age"]) > 0 or crisis
 		var card_box := UIKit.box(Color(UIKit.PANEL, 0.96), UIKit.DANGER if crisis else (UIKit.GOLD if lead else Color(UIKit.GOLD_DIM, 0.45)), UIKit.RADIUS, 12 if host._mobile else 8, 2 if lead else 1)
 		if host._mobile:
-			card_box.content_margin_top = 4
-			card_box.content_margin_bottom = 4
-			card_box.content_margin_left = 8
-			card_box.content_margin_right = 8
+			card_box.content_margin_top = 10
+			card_box.content_margin_bottom = 8
+			card_box.content_margin_left = 12
+			card_box.content_margin_right = 24
 		card_box.shadow_color = Color(0, 0, 0, 0.45)
 		card_box.shadow_size = 8 if lead else 3
 		card.add_theme_stylebox_override("panel", card_box)
 		host._agenda.add_child(card)
 		if lead:
-			UIKit.ornament(card, UIKit.DANGER if crisis else UIKit.GOLD, 28, 5)
+			UIKit.ornament(card, UIKit.DANGER if crisis else UIKit.GOLD, 12 if host._mobile else 28, 8 if host._mobile else 5)
 		host._decision_cards.append(card)
 		animated.append(card)
 		if (p["age"] > 0 or crisis) and not host._fast():
@@ -314,7 +314,9 @@ func _rebuild_agenda() -> void:
 		if tex:
 			# Görsel kendi çerçevesinde yavaşça hareket eder (yaşayan kart).
 			var frame := Control.new()
-			frame.custom_minimum_size = Vector2(112, 63) if host._mobile else Vector2(240, 135)
+			frame.custom_minimum_size = Vector2(320, 110) if host._mobile else Vector2(240, 135)
+			if host._mobile:
+				frame.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 			frame.clip_contents = true
 			hb.add_child(frame)
 			var img := TextureRect.new()

@@ -77,8 +77,6 @@ func _run() -> void:
 			await _shot("u4b_people_%s_actions" % pair[0])
 		main._tabs.current_tab = 2
 		main._mobile_report_tabs.current_tab = 0
-		var reports_scroll := main._report_box.get_parent() as ScrollContainer
-		reports_scroll.scroll_vertical = int(reports_scroll.get_v_scroll_bar().max_value)
 		await _shot("u4b_reports")
 		quit(0)
 		return

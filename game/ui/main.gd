@@ -275,10 +275,10 @@ func _build_ui() -> void:
 	var margin := MarginContainer.new()
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
 	for side in ["left", "right", "top", "bottom"]:
-		margin.add_theme_constant_override("margin_" + side, 18)
+		margin.add_theme_constant_override("margin_" + side, 4 if _mobile and side == "bottom" else 18)
 	_stage.add_child(margin)
 	var root := VBoxContainer.new()
-	root.add_theme_constant_override("separation", 10)
+	root.add_theme_constant_override("separation", 0 if _mobile else 10)
 	margin.add_child(root)
 
 	_build_header(root)
@@ -318,7 +318,7 @@ func _build_ui() -> void:
 	_tabs.set_tab_title(0, tr("Gündem"))
 	_agenda = VBoxContainer.new()
 	_agenda.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_agenda.add_theme_constant_override("separation", 10)
+	_agenda.add_theme_constant_override("separation", 6 if _mobile else 10)
 	_scroll.add_child(_agenda)
 	var files := VBoxContainer.new()
 	files.name = "Dosyalar"
