@@ -96,10 +96,21 @@ static func ornament(c: CanvasItem, col: Color = Color(GOLD, 0.75), length := 14
 	ov.name = "Ornament"
 	ov.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ov.set_anchors_preset(Control.PRESET_FULL_RECT)
+	if col.r > col.g * 1.5 and col.g < 0.4:
+		ov.modulate = Color(1.1, 0.5, 0.45)   # tehlike çerçevesi: altın doku kırmızıya boyanır
 	host.add_child(ov)
+	# Doku stili çizim geri çağrısının dışında tutulur (yoksa doku erken serbest kalır ve beyaz çizilir).
+	var framed: StyleBoxTexture = null
+	if length >= 16.0:
+		framed = tex_box("frame_panel" if length >= 24.0 else "frame_card", [44, 44, 44, 44] if length >= 24.0 else [26, 26, 26, 26])
+		if framed != null:
+			framed.draw_center = false
 	ov.draw.connect(func() -> void:
 		var s: Vector2 = host.size
 		var o: Vector2 = -ov.position
+		if framed != null:
+			ov.draw_style_box(framed, Rect2(o + Vector2(inset - 3.0, inset - 3.0), s - Vector2(2.0 * inset - 6.0, 2.0 * inset - 6.0)))
+			return
 		var big := length >= 16.0
 		# Çift çerçeve: dışta belirgin altın çizgi, içte ince kıl çizgisi (kaplama pervaz hissi).
 		var outer := Rect2(o + Vector2(inset, inset), s - Vector2(2.0 * inset, 2.0 * inset))
@@ -222,6 +233,26 @@ static func _tab(bg: Color, line: Color, w: int) -> StyleBoxFlat:
 	return s
 
 
+## Boyanmış 9 dilimli doku stili; dosya yoksa null (çağıran düz stile düşer).
+static func tex_box(name: String, margins: Array, content: Array = [], tint: Color = Color.WHITE) -> StyleBoxTexture:
+	var path := "res://art/ui/%s.png" % name
+	if not ResourceLoader.exists(path):
+		return null
+	var sb := StyleBoxTexture.new()
+	sb.texture = load(path)
+	sb.texture_margin_left = margins[0]
+	sb.texture_margin_top = margins[1]
+	sb.texture_margin_right = margins[2]
+	sb.texture_margin_bottom = margins[3]
+	sb.modulate_color = tint
+	if content.size() == 4:
+		sb.content_margin_left = content[0]
+		sb.content_margin_top = content[1]
+		sb.content_margin_right = content[2]
+		sb.content_margin_bottom = content[3]
+	return sb
+
+
 static func _check_tex(checked: bool) -> Texture2D:
 	var img := Image.create(20, 20, false, Image.FORMAT_RGBA8)
 	img.fill(Color(0, 0, 0, 0.45))
@@ -258,6 +289,13 @@ static func build_theme(mobile := false) -> Theme:
 	t.set_stylebox("hover", "Button", h)
 	t.set_stylebox("pressed", "Button", p)
 	t.set_stylebox("disabled", "Button", d)
+	var bpad := [bm, maxi(bm - 4, 4), bm, maxi(bm - 4, 4)]
+	var tn := tex_box("btn_normal", [16, 9, 16, 9], bpad)
+	if tn != null:
+		t.set_stylebox("normal", "Button", tn)
+		t.set_stylebox("hover", "Button", tex_box("btn_hover", [16, 9, 16, 9], bpad))
+		t.set_stylebox("pressed", "Button", tex_box("btn_pressed", [16, 9, 16, 9], bpad))
+		t.set_stylebox("disabled", "Button", tex_box("btn_normal", [16, 9, 16, 9], bpad, Color(1, 1, 1, 0.4)))
 	t.set_stylebox("focus", "Button", box(Color(0, 0, 0, 0), Color(GOLD, 0.6), 5, 12))
 	t.set_color("font_color", "Button", TEXT)
 	t.set_color("font_hover_color", "Button", Color("fff3d0"))
@@ -275,6 +313,10 @@ static func build_theme(mobile := false) -> Theme:
 	ch_h.border_width_left = 5
 	t.set_stylebox("normal", "ChoiceButton", ch_n)
 	t.set_stylebox("hover", "ChoiceButton", ch_h)
+	if tn != null:
+		t.set_stylebox("normal", "ChoiceButton", tex_box("btn_normal", [16, 9, 16, 9], bpad))
+		t.set_stylebox("hover", "ChoiceButton", tex_box("btn_hover", [16, 9, 16, 9], bpad))
+		t.set_stylebox("pressed", "ChoiceButton", tex_box("btn_pressed", [16, 9, 16, 9], bpad))
 	# Tehlikeli eylem: kırmızımsı
 	t.add_type("DangerButton")
 	t.set_type_variation("DangerButton", "Button")
@@ -307,6 +349,12 @@ static func build_theme(mobile := false) -> Theme:
 	pr_h.shadow_offset = Vector2.ZERO
 	t.set_stylebox("normal", "PrimaryButton", pr_n)
 	t.set_stylebox("hover", "PrimaryButton", pr_h)
+	var ppad := [30, 10, 30, 10]
+	var pn := tex_box("btn_primary", [34, 14, 34, 14], ppad)
+	if pn != null:
+		t.set_stylebox("normal", "PrimaryButton", pn)
+		t.set_stylebox("hover", "PrimaryButton", tex_box("btn_primary", [34, 14, 34, 14], ppad, Color(1.25, 1.2, 1.1)))
+		t.set_stylebox("pressed", "PrimaryButton", tex_box("btn_primary", [34, 14, 34, 14], ppad, Color(0.75, 0.7, 0.65)))
 	t.set_stylebox("pressed", "PrimaryButton", box(Color("2a2212"), GOLD, 6, 14, 2))
 	t.set_color("font_color", "PrimaryButton", Color("fff3d0"))
 	t.set_font("font", "PrimaryButton", caps())
@@ -316,6 +364,11 @@ static func build_theme(mobile := false) -> Theme:
 	t.set_stylebox("tab_selected", "TabContainer", _tab(Color(PANEL_HI, 0.95), GOLD, 2))
 	t.set_stylebox("tab_unselected", "TabContainer", _tab(Color(0, 0, 0, 0.25), Color(GOLD_DIM, 0.25), 1))
 	t.set_stylebox("tab_hovered", "TabContainer", _tab(Color(HOVER, 0.8), GOLD_DIM, 1))
+	var ta := tex_box("tab_active", [24, 20, 24, 8], [16, 8, 16, 6])
+	if ta != null:
+		t.set_stylebox("tab_selected", "TabContainer", ta)
+		t.set_stylebox("tab_unselected", "TabContainer", tex_box("tab_idle", [20, 12, 20, 8], [16, 8, 16, 6]))
+		t.set_stylebox("tab_hovered", "TabContainer", tex_box("tab_idle", [20, 12, 20, 8], [16, 8, 16, 6], Color(1.6, 1.5, 1.3)))
 	t.set_color("font_selected_color", "TabContainer", GOLD)
 	t.set_color("font_unselected_color", "TabContainer", TEXT_DIM)
 	t.set_color("font_hovered_color", "TabContainer", TEXT)
