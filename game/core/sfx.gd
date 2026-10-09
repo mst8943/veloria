@@ -1,12 +1,12 @@
 extends Node
 ## Ses ve ayarlar (autoload: Sfx).
 ## Sesler kodla sentezlenir. res://audio/<ad>.ogg|wav varsa o kullanılır:
-##   ambient, click, hover, paper, seal, bell, stinger_loss, stinger_win
+##   ambient, click, hover, paper, seal, bell, stinger_loss, stinger_win, cutscene, alert
 
 const RATE := 22050
 const Loc := preload("res://game/core/loc.gd")
 const SETTINGS_PATH := "user://veloria_settings.cfg"
-const NAMES := ["click", "hover", "paper", "seal", "bell", "stinger_loss", "stinger_win"]
+const NAMES := ["click", "hover", "paper", "seal", "bell", "stinger_loss", "stinger_win", "cutscene", "alert"]
 
 var music_volume := 0.5
 var sfx_volume := 0.8
@@ -120,7 +120,10 @@ func play(name: String, volume_db := 0.0, pitch := 1.0) -> void:
 func start_music() -> void:
 	if _music.playing or not _streams.has("ambient"):
 		return
-	_music.stream = _streams["ambient"]
+	var amb: AudioStream = _streams["ambient"]
+	if "loop" in amb:
+		amb.loop = true   # ogg/mp3 müzik döngüde çalar
+	_music.stream = amb
 	_music.volume_db = -6.0
 	_music.play()
 

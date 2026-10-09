@@ -210,6 +210,7 @@ func play(shots: Array) -> void:
 		get_viewport().size_changed.connect(_fit_to_screen)
 	_skipped = false
 	_playing = true
+	Sfx.play("cutscene", -4.0)
 	modulate.a = 1.0
 	show()
 	_top_bar.offset_bottom = 0.0

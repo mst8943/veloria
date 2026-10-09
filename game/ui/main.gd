@@ -1000,7 +1000,10 @@ func _end_week_pressed() -> void:
 	_curtain_img.modulate.a = 0.0
 	await create_tween().tween_property(_curtain, "modulate:a", 1.0, 0.2 if short else 0.4).finished
 	var old_week: int = Sim.week
+	var had_crisis: bool = Sim.active_crisis_label() != ""
 	Sim.end_week()
+	if not had_crisis and not Sim.ended and Sim.active_crisis_label() != "":
+		Sfx.play("alert", -3.0)
 	if not Sim.ended:
 		_curtain_title.text = tr("HAFTA %d") % Sim.week
 		var headline := ""
