@@ -95,6 +95,10 @@ func _run() -> void:
 			u2_count = int(arg.substr(5))
 	if u2_count > 0:
 		sim0.week = 8
+		if "--u2-week-log" in OS.get_cmdline_user_args():
+			main._week_log_week = sim0.week
+			for i in 5:
+				main._week_log.append("Action %d: the council considered the long term consequences of the appointment and recorded its response for the royal archive." % (i + 1))
 		sim0.pending.clear()
 		for id in ["gida_protestosu", "general_atamalari", "gazeteci_ihale"]:
 			for event in sim0._events:

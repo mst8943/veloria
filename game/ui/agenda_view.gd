@@ -375,7 +375,16 @@ func _rebuild_agenda() -> void:
 			next.alignment = HORIZONTAL_ALIGNMENT_LEFT
 			next.theme_type_variation = "GhostButton"
 			next.custom_minimum_size.y = 44 if host._mobile else 32
+			next.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 			next.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+			var queue_style := UIKit.box(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 4, 8)
+			var queue_hover := UIKit.box(UIKit.HOVER, Color(UIKit.GOLD_DIM, 0.65), 4, 8)
+			next.add_theme_stylebox_override("normal", queue_style)
+			next.add_theme_stylebox_override("hover", queue_hover)
+			next.add_theme_stylebox_override("pressed", queue_hover)
+			next.draw.connect(func() -> void:
+				var mid := Vector2(next.size.x - 13, next.size.y / 2.0)
+				next.draw_colored_polygon(PackedVector2Array([mid + Vector2(-3, -5), mid + Vector2(3, 0), mid + Vector2(-3, 5)]), UIKit.GOLD))
 			host._wire(next)
 			next.pressed.connect(show_decision.bind(pi))
 			host._agenda.add_child(next)
@@ -489,8 +498,8 @@ func _add_changes(animated: Array[Control]) -> void:
 	for ch: Dictionary in Sim.week_changes:
 		var row := PanelContainer.new()
 		var sb := UIKit.box(Color(UIKit.PANEL_HI, 0.35), Color(0, 0, 0, 0), 2, 8)
-		sb.content_margin_top = 4
-		sb.content_margin_bottom = 4
+		sb.content_margin_top = 2
+		sb.content_margin_bottom = 2
 		sb.border_color = [UIKit.DANGER, UIKit.AMBER, UIKit.OK][int(ch["tone"]) + 1]
 		sb.border_width_left = 3
 		row.add_theme_stylebox_override("panel", sb)
@@ -545,8 +554,8 @@ func _add_week_ledger(animated: Array[Control]) -> void:
 		l.fit_content = true
 		l.scroll_active = false
 		l.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		l.add_theme_font_size_override("normal_font_size", host._fs(13))
-		l.add_theme_font_size_override("bold_font_size", host._fs(13))
+		l.add_theme_font_size_override("normal_font_size", host._fs(12))
+		l.add_theme_font_size_override("bold_font_size", host._fs(12))
 		l.text = "[color=#d6b25e]%d[/color]   %s" % [i + 1, host._week_log[i]]
 		row.add_child(l)
 	# Yalnızca en son satır canlanır (her eylemde bütün liste yeniden belirmesin).
