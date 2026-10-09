@@ -6,7 +6,7 @@ Veloria'da modern kurumlara sahip hayali bir krallığın yeni kralısın: **Adr
 
 ## Kurulum
 
-Dağıtımdaki son paket **1.4.0**. Devlet kapasitesi, Sarne'nin patronajı, veliaht ve dış ilişkiler bu sürümdedir.
+Dağıtımdaki son paket **1.5.0**. Devlet kapasitesi, Sarne'nin patronajı, veliaht, dış ilişkiler ve Türkçe/İngilizce arayüz bu sürümdedir. İngilizce paket ayrıca `OYUNCU_REHBERI.en.md` içerir.
 
 | Platform | Nasıl açılır |
 |---|---|
@@ -48,7 +48,7 @@ Haritada yedi kurum var. Birine tıklayınca başındaki kişiyi, onun bu haftak
 
 - **Gündem:** Bekleyen kararlar (görselli kartlar) ve haftanın raporları. Masaüstünde kararların altındaki **BU HAFTA** defteri, o hafta yaptığın eylemleri ve sonuçlarını sırayla tutar (bildirim kaybolsa da). Üstündeki **GEÇEN HAFTADAN BERİ** bölümü, görebildiğin göstergelerde neyin değiştiğini toplar: kimin raporu kötüleşti, kim güçlendi, kimin tavrı sertleşti, hangi sır yayıldı, hangi söz tutuldu ya da karşılığı istendi, hangi karar kendiliğinden çözüldü. Rapor satırlarındaki küçük ok, kaynağın geçen haftaya göre daha iyimser (yeşil) ya da daha karamsar (kırmızı) konuştuğunu gösterir; bu raporun söylediğidir, gerçek olmayabilir.
 - **Eylem önizlemesi:** Bir eylem düğmesinin üstüne gelince Eylemler panelinin altında bedeli (mesai, servet), bıraktığı iz ve tahmini riski görürsün; seçili kişiye göre uyarı da çıkar (ör. zayıf noktası bilinmeyene şantaj olmaz).
-- **Güç Merkezleri:** 9 karakterin portreleri. Birini seçince hakkında bildiklerin görünür.
+- **Güç Merkezleri:** Saray ve çevresindeki kişilerin portreleri. Birini seçince hakkında bildiklerin görünür.
 - **Emirler ve eylemler:** Seçili kişi üzerinde yapabileceklerin.
 - **Dosyalar:** Sırlar, kanıtlar ve **Söz Defteri**.
 - **Günlük:** Olup bitenlerin kaydı.
@@ -127,7 +127,7 @@ Saltanat bittiğinde (104 hafta ya da düşüş) sana bir **ünvan** verilir. Ta
 - **Hakikat Dosyası:** Kim, ne zaman, sana ne yalan söyledi. Altında **Meclis Sicili** (her danışmanın kaç öneri verdiği, kaçını dinlediğin, kaçında seni yanılttığı), **Komplo Defteri** (kim ne zaman huzursuzlandı, komploya katıldı, çekildi) ve **Devlet Defteri** (atamalar, en zayıf hafta, ihaleler ve düşman yayın) vardır.
 - **Kararlar:** Verdiğin ve ertelediğin tüm kararlar, en yenisi üstte.
 - Saltanatın **Hükümdarlık Arşivi**'ne kaydedilir.
-- Kazandığın yeni **başarımlar** duyurulur. 19 başarımın tamamı Arşiv'de listelenir.
+- Kazandığın yeni **başarımlar** duyurulur. 22 başarımın tamamı Arşiv'de listelenir.
 
 ## Kısayollar
 
@@ -144,7 +144,7 @@ Oyun her hafta sonunda **otomatik kaydedilir**. Saltanat bittiğinde kayıt sili
 
 Ana menüde dört düğme var: **Devam Et** (oyun sürüyorsa **Oyuna Dön**), **Yeni Oyun**, **Ayarlar**, **Çıkış**. Altındaki bağlantılar: Nasıl Oynanır, Hükümdarlık Arşivi, Hakkında.
 
-Zorluk (Kolay / Normal / Zor) **Yeni Oyun** sayfasında seçilir. **Ayarlar** sayfasında: müzik ve efekt sesi, tam ekran, kısa geçişler, danışman ipuçları, açılış sineması ve haftaya masadan başlama. Esc alt sayfadan ana menüye döner.
+Zorluk (Kolay / Normal / Zor) **Yeni Oyun** sayfasında seçilir. **Ayarlar** sayfasında müzik ve efekt sesi, tam ekran, kısa geçişler, danışman ipuçları, açılış sineması, haftaya masadan başlama ve arayüz dili seçilir. Dil tercihi bir sonraki açılış için saklanır. Esc alt sayfadan ana menüye döner.
 
 ## İpuçları
 

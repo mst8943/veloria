@@ -12,4 +12,6 @@ $G = 'C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_
 
 `--seed=7` rastgele autoplay'in tekrar üretilebilir tohumunu seçer; bu tohum kayıpla biter. `--full`, mevcut dikkatli autoplay akışını çalıştırır; 101–106 aralığından tahtta kalış bulana dek dener. Her iki komutta da `--i18n-dump` autoplay'in kendi çıkışını engeller ki tarayıcı son ekranları dolaşıp dökümü yazabilsin. `--lang=en` yerine argümanı kaldırmak varsayılan Türkçe'yi tarar. `--mobile` Godot penceresini 1067×600 mobil düzene alır.
 
+S10 son taraması: seed 7 kayıp koşusu 4.452, `--full` tahtta kalış koşusu 36.042 benzersiz kontrol metni topladı. İlk taramadaki `Darbe kapına dayandığında karar veremedin.` satırının çevirisi eklendikten sonra iki çıktıda da `I18N_TURKISH? total=0` oldu. TSV dosyaları `dist/i18n_dump_en_loss_final.tsv` ve `dist/i18n_dump_en_survival_final.tsv` konumundadır.
+
 TSV sütunları görünürlük, kontrol yolu ve metindir. `I18N_TURKISH?` satırları Türkçe karakter veya sık Türkçe sözcük sezgiseliyle bulunan görünür metinlerdir; heuristik olduğundan her satırı inceleyin. Karakter ve sözcük eşleşmesi yokluğu görsel doğrulamanın yerine geçmez. Ekran görüntülerini ayrıca `tests/ui_shots.gd` ile alın.

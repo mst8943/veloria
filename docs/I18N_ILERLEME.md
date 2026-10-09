@@ -1,5 +1,31 @@
 # İngilizce Yerelleştirme İlerlemesi
 
+## S10 — tamamlandı
+
+- İngilizce görünümde kalan zorluk adları, kişi unvanları, darbe krizi açıklaması,
+  Hakikat Dosyası/komplo aşamaları ve veliaht kademeleri kapatıldı. Dil seçicinin
+  `Language / Dil` etiketi iki dilde ortak bırakıldı.
+- `tools/i18n_dump.gd` pencereli taraması seed 7 kaybında 4.452, `--full`
+  tahtta kalışta 36.042 benzersiz kontrol metnini topladı. İlk taramadaki tek
+  Türkçe satır çevrildi; son iki tarama `I18N_TURKISH? total=0` verdi.
+- Rehber `docs/OYUNCU_REHBERI.en.md` tamamlandı; mimari/yeni dil yönergesi
+  `docs/design/yerellestirme.md` içinde. Yeni metin kuralı VELORIA.md'de:
+  `tr()` + `en.po` veya Türkçe veri + `game/data/en/` kaplaması.
+- `i18n_check`, TR/EN `content_check` ve `event_check`, `sim_test`,
+  `save_test`, `ui_input_test` geçti; tempo tabanı 0,81. `unit_tests.gd`
+  398 geçti / 1 başarısız: önceki aşamalarda da görülen Beckett
+  `audit finds the offscreen control` testi.
+- TR/EN `--autoplay --full` aynı satır verdi: `FULLRUN tohum=101 hafta=104
+  sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`.
+  Dört botun 80 kampanyalık, üç zorluk ölçümleri iki dilde birebir aynı:
+  weighted 68/36/16, veliaht 71/34/19, heyet 70/40/20, bloc 70/36/22.
+- Masaüstü (1280×720) ve mobil (1067×600) UI PNG'leri `dist/i18n_s10_*`
+  altında açılıp kontrol edildi. Esas ekranlar dil tutarlı, yatay taşma yok.
+- Sürüm 1.5.0 Windows/Linux/Web export ve ZIP'leri hazırlandı. Web HTTP 200;
+  bu oturumda tarayıcı/app CUA yüzeyi boş olduğundan WebGL etkileşim testi ve
+  Claude'a rapor iletimi doğrulanamadı. Linux çalıştırması ve ses denenmedi.
+- Kalan: İngilizce çeviriyi ana dili İngilizce olan birinin redaksiyonu.
+
 ## Taban (L0)
 
 | Kanıt | Sonuç |
@@ -30,7 +56,7 @@ dosyası değiştirilmedi.
 
 ## SIRADAKİ ADIM
 
-S10: L5 — doğrulama, İngilizce rehber, sürüm 1.5.0 ve paketler.
+S11: İngilizce metinlerin anadili İngilizce olan biri tarafından redaksiyonu.
 
 S9 olay kontrol noktası: 151–160 `9d8f816`, 161–170 `c48566d`, 171–180
 `108ad68`, 181–190 `29d2160`, 191–195 `f44309d` ile kaplandı; 195/195

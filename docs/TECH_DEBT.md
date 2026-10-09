@@ -4,8 +4,9 @@
 
 - Dış ilişki ve veliaht final çizgileri eski kayıtlar için güvenli varsayılan kullanır; geçmiş çizelgelerde ayrıntılı veri yoktur.
 - `ui_shots.gd --state` yapay final durumları kurar; gerçek oyuncu akışını kapsayan tarayıcı testi ayrı bir iş olarak kalır.
+- Yerelleştirme altyapısı (TR kaynak + EN çeviri/kaplama) tamamlandı; İngilizce metinlerin anadili İngilizce olan bir kişi tarafından redaksiyonu bekliyor.
 
-Son güncelleme: 2026-10-08. Yöntem: `.claude/skills/tech-debt/SKILL.md`.
+Son güncelleme: 2026-10-09. Yöntem: `.claude/skills/tech-debt/SKILL.md`.
 
 ## Ölçüm
 | Dosya | Satır | Not |
@@ -43,7 +44,7 @@ Son güncelleme: 2026-10-08. Yöntem: `.claude/skills/tech-debt/SKILL.md`.
 | 5 | Her `Sim.changed`'de gündem/kartlar baştan kuruluyor | açık | 3 | M |
 | 6 | Kullanıcı dosyaları `str_to_var` ile okunuyor | açık (yükleme artık bozuk dosyada çökmeden reddediyor) | 2 | S |
 | 7 | Otomatik oynatma kodu üretim betiğinde | **yapıldı** (`autoplay.gd`; hâlâ yalnızca `--autoplay` ile yükleniyor) | — | — |
-| 8 | Metinler kodda, `tr()` yok | açık | 2 | L |
+| 8 | Metinler kodda, `tr()` yok | **yapıldı** (L0–L5; TR kaynak, PO ve veri kaplaması) | — | — |
 | 9 | Proje başkasının deposunda, uzak yedek yok | **açık, kullanıcıda** | 9 | S (kullanıcı) |
 | 10 | Ses kodla sentezleniyor | açık (ürün borcu) | 3 | L |
 

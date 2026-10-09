@@ -1,6 +1,25 @@
 # Veloria — Durum ve Yapılacaklar (yeni oturum için devir notu)
 
-Son güncelleme: 2026-10-08 (dağıtım 1.3.0). Dal: `veloria`.
+Son güncelleme: 2026-10-09 (dağıtım 1.5.0). Dal: `veloria`.
+
+## Dağıtım 1.5.0 ve S10 yerelleştirme kapısı
+
+İngilizce metin temizliği tamamlandı: zorluklar, görünen unvanlı adlar, Hakikat Dosyası ve komplo/veliaht kademeleri çevrilir; Türkçe iç anahtarlar Türkçe kalıp gösterim sınırında çevrilir. Kayıp (seed 7) ve tahtta kalış (`--full`) pencereli ekran dökümleri sırasıyla **4.452** ve **36.042** benzersiz kontrol metni içerdi; son taramada Türkçe karakter/sözcük sezgiseli **0** satır buldu. İlk taramada bulunan darbe krizi satırı en.po'ya eklendi.
+
+Testler: `TEST: OK`, `SAVE: OK`, `CONTENT: OK` TR/EN, `EVENTS: OK (195 olay, 0 uyarı)` TR/EN, `I18N: OK`, `UI INPUT: OK`; pacing en düşük **0,81**. `unit_tests.gd`: **398 geçti, 1 başarısız** — Beckett'e ait, önceki S7–S9'da da görülen `audit finds the offscreen control`. `--autoplay --full` TR/EN aynı: `FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`.
+
+80 kampanya/zorluk sondajı (TR ve EN sayısal olarak birebir):
+
+| Bot | Kolay | Normal | Zor |
+|---|---:|---:|---:|
+| `advice_weighted` | 68/80 | 36/80 | 16/80 |
+| `advice_veliaht` | 71/80 | 34/80 | 19/80 |
+| `advice_heyet` | 70/80 | 40/80 | 20/80 |
+| `advice_bloc` | 70/80 | 36/80 | 22/80 |
+
+UI kanıtları `dist/i18n_s10_{tr,en}_{desktop,mobile}_state/` altındadır; masaüstü 1280×720, mobil **1067×600**. Oyun, karar, Saray, Masa, harita/elçilik, bütçe, final, grafik ve Devlet Defteri PNG'leri açılıp incelendi; görünür dil tutarlı, yatay taşma görülmedi. `dist/i18n_s10_en_desktop_menu/4_menu_ayarlar.png` Language / Dil seçimini gösterir.
+
+Windows/Linux/Web dışa aktarımı ve ZIP doğrulaması başarılı. `Veloria-1.5.0-windows.zip` **63.432.774**, `-linux.zip` **53.653.166**, `-web.zip` **37.362.174** bayt; üçünde de uygun çalıştırıcı/`index.html` ve Türkçe + İngilizce rehber bulundu. Web sunucusu `127.0.0.1:8770` üzerinden HTTP 200 verdi ve kapatıldı. Bu çalışma ortamında CUA açık Claude/tarayıcı yüzeyi göstermediğinden WebGL etkileşimleri ve Claude'a rapor aktarımı yapılamadı; Linux ikilisi Windows'ta, ses ve gerçek oyuncu akışı denenmedi. **Kalan işler:** İngilizce metinlerin anadili İngilizce olan biri tarafından redaksiyonu; `events/dorn_*` portreleri.
 
 ## Dağıtım 1.4.0 ve Yeni Kadro
 

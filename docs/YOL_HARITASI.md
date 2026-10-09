@@ -1,6 +1,6 @@
 # Veloria — Analiz ve Yol Haritası (durumlu)
 
-İlk analiz raporu: 2026-10-04 (üçüncü oturum). Bu sürüm: 2026-10-04, dördüncü oturum sonu.
+İlk analiz raporu: 2026-10-04 (üçüncü oturum). Bu sürüm: 2026-10-09, S10 / 1.5.0.
 İşaretler: ✅ yapıldı · 🟡 kısmen · ⬜ kalan · 👤 kullanıcıda
 
 ## 1. Oyun ne durumda?
@@ -82,11 +82,11 @@ Baştan sona oynanabilir, sağlam bir dikey dilim (erken alfa): 104 hafta, 9 gü
 
 **Faz 3 — Kampanya ve içerik: ✅** dönemler (Bedellerin Dönüşü / Hesaplaşma) · ✅ ikinci yıl için 30 olay (`docs/design/ikinci_yil.md`) · ✅ dokuz karakterin hikâye yayı (`docs/design/hikaye_yaylari.md`) · ✅ altı rejim tipi ve final tehdidi (`docs/design/rejim_tipi.md`)
 **Faz 4 — Büyük sistemler:** ✅ tasarım yazıldı (`docs/design/devlet_ve_patronaj.md`; 4a devlet kapasitesi ve kasa, 4b patronaj/oligark, 4c bağlama) · ✅ 4a · ✅ 4b · ✅ 4c (Zor düzeyinde iki tarz bot için denge ince ayarı açık)
-**Faz 5 — Cila ve altyapı:** ⬜ gerçek ses/müzik · ✅ `main.gd` bölmesi · ⬜ artırımlı arayüz güncellemesi · ⬜ yerelleştirme
+**Faz 5 — Cila ve altyapı:** ⬜ gerçek ses/müzik · ✅ `main.gd` bölmesi · ⬜ artırımlı arayüz güncellemesi · ✅ Türkçe/İngilizce yerelleştirme ve 1.5.0 paketleme
 
 **Yeni Kadro — B1–B3: ✅** Julian/Elena, üç dış temsilci, veliaht, elçilikler, dış ilişki finalleri ve 1.4.0 dağıtımı tamamlandı.
 
 ## 5. Sıradaki
-1. ✅ Arayüz sadeleştirme turu (ilk ekran kalabalık) — `docs/ux/ana_ekran_sadelestirme.md`
-2. ✅ Faz 1'in kalanı: değişim okları + hafta özeti, eylem önizlemesi
-3. ✅ Faz 0: kayıt sürümü, olay doğrulayıcısı; 👤 depo (kullanıcıda)
+1. **L5 kalan kalite işi:** İngilizce metinlerin anadili İngilizce olan biri tarafından redaksiyonu.
+2. Gerçek ses/müzik için kaynak varlıklar; şu an ses sentezleniyor.
+3. `_refresh` için artırımlı arayüz güncellemesi ve kullanıcı tarafından kendi uzak deponun açılması.

@@ -1,6 +1,6 @@
 # Veloria — Proje Başvuru Kartı (tüm skill'ler bunu kullanır)
 
-Güncel dağıtım sürümü: **1.4.0** (Windows, Linux, Web). Sürüm `project.godot` içindeki `application/config/version` değeridir; paketler `dist/release/Veloria-1.4.0-<platform>.zip` adını taşır.
+Güncel dağıtım sürümü: **1.5.0** (Windows, Linux, Web; Türkçe/İngilizce). Sürüm `project.godot` içindeki `application/config/version` değeridir; paketler `dist/release/Veloria-1.5.0-<platform>.zip` adını taşır. Her pakette `OYUNCU_REHBERI.md` ve `OYUNCU_REHBERI.en.md` bulunur.
 
 Bu dosya, skill'lerin projeyi her seferinde baştan keşfetmemesi için tek doğruluk kaynağıdır.
 Bir şey değiştiyse (dosya taşındı, komut değişti) önce burayı güncelle.
@@ -32,12 +32,15 @@ Kaynak: `VELORIA — Oyun Tasarım Özeti.md` (958 satır, 30 bölüm) ve `CLAUD
 | `game/ui/ui_kit.gd` | Tema, palet, `box()`, `band_style()`, `ornament()`, `divider()`, `caps()`, `serif()`, `tr_upper()`, animasyon yardımcıları |
 | `game/ui/desk_view.gd` | Çalışma Masası (diegetik merkez); `LAYOUT`, `FEEL`, `LAMP_UV`; `desk_lit/desk_shadow.gdshader` |
 | `game/ui/city_view.gd`, `media_view.gd`, `cinema.gd`, `truth_chart.gd` | Başkent haritası, Medya Merkezi, sinematikler, hakikat grafiği |
-| `game/data/actors.json` | 9 aktör: arden(ordu, military) voss(istihbarat) kessler(maliye) halden(medya) lena(basın, insider=false) dorn(kâhya) prens(royal) brandt(muhalefet, insider=false) falk(yargı) |
-| `game/data/events.json` | 179 kayıt: devlet/kasa, Halden patronajı ve geç dönem olayları; iki eski Halden karar kartı tek sistem kartına taşındı |
+| `game/data/actors.json` | 14 aktör: davranış alanları ve id'ler kaynak dilde kalır; yalnızca metin alanları çevrilir |
+| `game/data/en/actors.json` | 14 kişilik kaplama: görünen ad/unvan ve biyografi alanları; id sabit kalır |
+| `game/data/events.json` | 195 kayıt: devlet/kasa, patronaj ve geç dönem olayları; `game/data/en/events.json` yalnızca metin alanlarını kaplar |
 | `game/data/content_*.json` | Rapor/alamet, Meclis, tarihçi, başarım, ödül/kademe/rejim metin tabloları; sıra önemli, `content_check.gd` ile doğrula |
+| `game/i18n/en.po`, `game/core/loc.gd` | Koddan kurulan Türkçe kaynak cümleler için İngilizce çeviri; dil `Sim.new_game()` veri yüklemesinden önce seçilir |
+| `game/data/en/` | JSON metin kaplamaları; ana dosyayla yapı/anahtar/dizi boyu aynı, koşul/etki/id gibi mantık alanları yok |
 | `art/` | Görseller; `ART_PROMPTS.md` üretim promptları + STİL BLOĞU |
-| `tests/` | `sim_test.gd`, `pacing_test.gd`, `cause_probe.gd`, `ui_shots.gd` (`unit_tests.gd` ve `ci-smoke.ps1` Beckett eklentisine ait, dokunma) |
-| `docs/` | `DURUM_VE_YAPILACAKLAR.md` (devir notu — her oturum sonunda güncelle), `OYUNCU_REHBERI.md`, `GELISTIRICI_REHBERI.md`, `ARAYUZ_PLANI.md` |
+| `tests/` | `sim_test.gd`, `pacing_test.gd`, `cause_probe.gd`, `i18n_check.gd`, `ui_shots.gd` (`unit_tests.gd` ve `ci-smoke.ps1` Beckett eklentisine ait, dokunma) |
+| `docs/` | Devir: `DURUM_VE_YAPILACAKLAR.md`; oyuncu rehberleri `OYUNCU_REHBERI.md` / `.en.md`; yerelleştirme: `docs/design/yerellestirme.md` |
 
 ## Ana döngü (kodda)
 Hafta = `mesai_max` mesai (Normal 4, Kolay 5). Eylemler: karar (1), kişi eylemleri (1; terfi, gizli ödeme, söz, doğrula, araştır, emir ×3 kanal, şantaj, görevden al), operasyon (2), dosya (sızdır/bastır/yok et, 1).
@@ -63,16 +66,19 @@ Godot (console): `C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4
 - Simülasyon/denge: `"$G" --headless --path . --script res://tests/sim_test.gd` → sonda `TEST: OK`
 - Olay verisi doğrulayıcısı: `"$G" --headless --path . --script res://tests/event_check.gd` → `EVENTS: OK` (bilinmeyen anahtar/aktör/özellik, çözülemeyen bayrak, tutarsız hafta; **olay ekleyince/değiştirince çalıştır**). Başka dosya: `-- --file=<yol>`
 - İçerik doğrulayıcısı: `"$G" --headless --path . --script res://tests/content_check.gd` → `CONTENT: OK` (beş JSON, eksik/boş metin, bilinmeyen aktör, bozuk dosya). Metin ekleyince çalıştır. Eksik/bozuk içerik kampanyayı durdurur ve Türkçe hatayı menüde gösterir.
+- İngilizce içerik: `"$G" --headless --path . --script res://tests/content_check.gd -- --lang=en` ve `event_check.gd -- --lang=en`; yerelleştirme biçimi/anahtarları: `i18n_check.gd`.
 - Kayıt sürümü/göç: `"$G" --headless --path . --script res://tests/save_test.gd` → `SAVE: OK`
 - UI giriş testi (pencereli): `"$G" --path . --script res://tests/ui_input_test.gd` → `UI INPUT: OK` (kişi kartı ve rapor tıklaması)
 - Tempo: `"$G" --headless --path . --script res://tests/pacing_test.gd`
-- Arayüz otomatik oynatma: `"$G" --headless --path . -- --autoplay` (`--mobile`, `--full` = Kolay'da 104 hafta)
+- Arayüz otomatik oynatma: `"$G" --headless --path . -- --autoplay` (`--mobile`, `--full` = Kolay'da 104 hafta). Bu test UI metnini veya taşmayı doğrulamaz.
 - Ekran görüntüsü (pencereli, headless çizmez): `"$G" --path . --script res://tests/ui_shots.gd -- --out=<klasör> [--mobile] [--only-desk|--only-world]` → PNG'leri Read ile incele
+- İngilizce kampanya metin dökümü (yalnız pencereli): `tools/i18n_dump.gd`; komut ve sezgisel tarama `docs/i18n/english_screen_dump.md` içinde. Başsız testler arayüz metnini denetlemez.
 - Proje dışı deney betiği: scratchpad'e `extends SceneTree` betiği yaz, `--script "<mutlak yol>"` ile çalıştır (projeyi kirletmez). `Sim`'e `root.get_node("Sim")` ile eriş; `record_chronicle=false`, `autosave=false`, `save_path` değiştir.
 - Build: `"$G" --headless --path . --export-release "Windows Desktop"|Linux|Web` → `dist/`; sonra `.mcp.json` portunu 8770'e geri al.
 - Zaman sınırı: script hatasında süreç kapanmayabilir; komutları `timeout` ile çalıştır.
 
 ## Tuzaklar (bilinenler)
+- **Yeni oyuncu metni aynı değişiklikte çevrilir:** kod cümlesi için `tr("Türkçe tam cümle")` + `game/i18n/en.po`; içerik tablosu için Türkçe ana metin + `game/data/en/` kaplaması. Olay/aktör id'leri, koşul, bayrak, `fx` ve başka mantık alanları çevrilmez. `docs/design/yerellestirme.md`.
 - `class_name` yerine `preload` kullan (editör önbelleği).
 - Kayıt şemasını değiştirince (`save_game` sözlüğüne alan ekleyince) `Sim.SAVE_VERSION`'ı artır, `_migrate_save`'e adım, `save_test.gd`'ye eski sürümü taklit eden adım ekle.
 - Olay motoru (`_apply_effects`, `_bump`) bilinmeyen anahtarı ve yanlış yazılmış aktör özelliğini hata vermeden yok sayar: `event_check.gd` bunun için var.
