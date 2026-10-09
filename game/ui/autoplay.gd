@@ -64,7 +64,8 @@ func _autoplay_full() -> void:
 			"TAHTTA" if Sim.record["survived"] else "DÜŞTÜ", Sim.record["title"], halef, Sim.fired_events.size(), m._end_overlay.visible])
 		if Sim.record["survived"]:
 			break
-	m.get_tree().quit(0)
+	if "--i18n-dump" not in OS.get_cmdline_user_args():
+		m.get_tree().quit(0)
 
 
 func run() -> void:
@@ -72,7 +73,11 @@ func run() -> void:
 		await _autoplay_full()
 		return
 	var rng := RandomNumberGenerator.new()
-	rng.seed = 11
+	var seed := 11
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--seed="):
+			seed = int(arg.substr(7))
+	rng.seed = seed
 	var pressed := 0
 	while not Sim.ended:
 		await m.get_tree().process_frame
@@ -125,5 +130,6 @@ func run() -> void:
 			m._on_city_request("actor", "arden")
 			m._modal.hide()
 		m._end_btn.pressed.emit()
-	print("AUTOPLAY DONE: hafta=%d basılan=%d sonuç=%s" % [Sim.week, pressed, Sim.record.get("title", "?")])
-	m.get_tree().quit(0)
+	print("AUTOPLAY DONE: tohum=%d hafta=%d basılan=%d sonuç=%s" % [seed, Sim.week, pressed, "TAHTTA" if Sim.record.get("survived", false) else "DÜŞTÜ"])
+	if "--i18n-dump" not in OS.get_cmdline_user_args():
+		m.get_tree().quit(0)
