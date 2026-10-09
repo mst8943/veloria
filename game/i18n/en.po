@@ -2491,6 +2491,9 @@ msgstr " Veyra's latest report: "
 msgid "Hafta %s — %s"
 msgstr "Week %s — %s"
 
+msgid "Hafta %d · %s"
+msgstr "Week %d · %s"
+
 msgid "(ertelendi)"
 msgstr "(deferred)"
 
