@@ -1,0 +1,80 @@
+[
+  {
+    "id": "kral_hasta_goruntu", "event": "kral_hasta", "choice": 0,
+    "shots": [
+      {"art": "events/kral_hasta", "line": "Üç gün sonra kral balkona çıktı.", "sub": "Sarayın dışında alkış, içinde sessizlik.", "hold": 3.4},
+      {"art": "portraits/king", "fit": "center", "line": "Hasta olan taç değil.", "sub": "", "hold": 2.8, "zoom_to": 1.08}
+    ]
+  },
+  {
+    "id": "suikast_sonrasi", "event": "suikast", "choice": -1,
+    "shots": [
+      {"art": "events/suikast", "line": "Namlular susmuştu.", "sub": "Sorular yeni başlıyordu.", "hold": 3.4},
+      {"art": "portraits/king", "fit": "center", "line": "Tetiği kimin çektiği önemli değildi.", "sub": "Kimin izin verdiği önemliydi.", "hold": 3.0, "zoom_to": 1.08}
+    ]
+  },
+  {
+    "id": "muhtira_kabine", "event": "generaller_muhtirasi", "choice": 0,
+    "shots": [
+      {"art": "events/general_atamalari", "line": "Kabine, generallerin istediği gibi kuruldu.", "sub": "", "hold": 3.4},
+      {"art": "portraits/arden", "fit": "center", "line": "Taç hâlâ senindi.", "sub": "Ama artık kimin sözüyle konuşuyordu?", "hold": 3.2, "zoom_to": 1.08}
+    ]
+  },
+  {
+    "id": "muhtira_aciklandi", "event": "generaller_muhtirasi", "choice": 2,
+    "shots": [
+      {"art": "events/general_atamalari", "line": "Muhtıra sabah gazetelerindeydi.", "sub": "Ordu ilk kez halkın gözü önünde sınandı.", "hold": 3.6}
+    ]
+  },
+  {
+    "id": "erken_secim_fesih", "event": "erken_secim", "choice": 0,
+    "shots": [
+      {"art": "events/erken_secim", "line": "Meclis feshedildi.", "sub": "Sandık, yeni bir hesap açtı.", "hold": 3.4}
+    ]
+  },
+  {
+    "id": "secim_gecesi", "event": "secim_sonucu", "choice": -1,
+    "shots": [
+      {"art": "events/erken_secim", "line": "Sandıklar açıldı.", "sub": "Muhalefet beklenenden güçlüydü.", "hold": 3.6}
+    ]
+  },
+  {
+    "id": "prens_kacti", "event": "prens_kacis", "choice": -1,
+    "shots": [
+      {"art": "events/prens_kacis", "line": "Prens Marcus sınırın ötesinde konuşuyordu.", "sub": "Kameralar önünde, 'meşru hanedan' adına.", "hold": 3.6},
+      {"art": "portraits/prens", "fit": "center", "line": "Kardeşin artık bir rakipti.", "sub": "", "hold": 2.8, "zoom_to": 1.08}
+    ]
+  },
+  {
+    "id": "halef_imzasi", "event": "halef_karari", "choice": -1,
+    "shots": [
+      {"art": "events/toren", "line": "İki yıl.", "sub": "Taç, bir ülkeyi yeniden biçimlendirdi.", "hold": 3.2},
+      {"art": "portraits/king", "fit": "center", "line": "Şimdi soru şuydu: senden sonra ne olacak?", "sub": "", "hold": 3.0, "zoom_to": 1.08}
+    ]
+  },
+  {
+    "id": "cenaze_salonu", "event": "cenaze", "choice": 0,
+    "shots": [
+      {"art": "events/cenaze", "line": "Bütün elitler aynı odadaydı.", "sub": "Herkes herkesi izliyordu.", "hold": 3.6}
+    ]
+  },
+  {
+    "id": "genel_grev_sehir", "event": "genel_grev", "choice": -1,
+    "shots": [
+      {"art": "events/genel_grev", "line": "Şehir durdu.", "sub": "Limanlar, fabrikalar, otobüsler.", "hold": 3.4}
+    ]
+  },
+  {
+    "id": "birinci_yil", "event": "yildonumu", "choice": 0,
+    "shots": [
+      {"art": "events/yildonumu", "line": "Bir yıl.", "sub": "Ve hâlâ ayaktasın.", "hold": 3.4}
+    ]
+  },
+  {
+    "id": "veliaht_meydanda", "event": "julian_halka_konusma", "choice": 0,
+    "shots": [
+      {"art": "events/prens_veliaht", "line": "Veliaht ilk kez halkın karşısındaydı.", "sub": "", "hold": 3.4},
+      {"art": "portraits/julian", "fit": "center", "line": "'Halk babamın sesini tanıyor.'", "sub": "Julian Valerius", "hold": 3.0, "zoom_to": 1.08}
+    ]
+  }
+]

@@ -67,6 +67,7 @@ var _mesai_box: HBoxContainer
 var _curtain_img: TextureRect
 var _curtain_skip := false
 var _cinema: Control
+var _cutscenes: Array = []
 var _modal: Control   # bilgi/onay penceresi (modal.gd)
 var _promise_list: RichTextLabel
 var _multi_btn: Button
@@ -1132,6 +1133,42 @@ func _fact_act(kind: String, fid: String) -> void:
 			_log(Sim.destroy_evidence(fid))
 
 
+## Karardan sonra ara sahne: game/data/cutscenes.json'daki eşleşen kayıt (choice -1 = her seçenek).
+func _play_cutscene(event_id: String, choice_index: int) -> void:
+	if _fast() or event_id == "":
+		return
+	if _cutscenes.is_empty():
+		var f := FileAccess.open("res://game/data/cutscenes.json", FileAccess.READ)
+		if f != null:
+			var parsed: Variant = JSON.parse_string(f.get_as_text())
+			if parsed is Array:
+				_cutscenes = parsed
+	for c: Dictionary in _cutscenes:
+		if str(c.get("event", "")) != event_id:
+			continue
+		var want := int(c.get("choice", -1))
+		if want != -1 and want != choice_index:
+			continue
+		var shots: Array = []
+		for s: Dictionary in c.get("shots", []):
+			var path := str(s.get("art", ""))
+			var tex: Texture2D = null
+			if path.begins_with("events/"):
+				tex = _event_art(path.trim_prefix("events/"))
+			elif path != "":
+				tex = _art("res://art/%s.png" % path)
+			shots.append({"tex": tex, "line": tr(str(s.get("line", ""))) if str(s.get("line", "")) != "" else "",
+				"sub": tr(str(s.get("sub", ""))) if str(s.get("sub", "")) != "" else "",
+				"hold": float(s.get("hold", 3.0)), "zoom_from": float(s.get("zoom_from", 1.0)),
+				"zoom_to": float(s.get("zoom_to", 1.12)), "fit": str(s.get("fit", "cover")), "video": str(s.get("video", ""))})
+		if shots.is_empty():
+			return
+		_busy = true
+		await _cinema.play(shots)
+		_busy = false
+		return
+
+
 func _choose(pending_index: int, choice_index: int) -> void:
 	if _busy:
 		return
@@ -1142,9 +1179,15 @@ func _choose(pending_index: int, choice_index: int) -> void:
 		await get_tree().create_timer(0.55).timeout
 		await create_tween().tween_property(card, "modulate:a", 0.0, 0.22).finished
 		_busy = false
+	var ev_id := ""
+	if pending_index >= 0 and pending_index < Sim.pending.size():
+		ev_id = str(Sim.pending[pending_index]["event"].get("id", ""))
+	var before: int = Sim.pending.size()
 	var text: String = Sim.resolve_decision(pending_index, choice_index)
 	if text != "":
 		_log(text)
+	if Sim.pending.size() < before and not Sim.ended:
+		await _play_cutscene(ev_id, choice_index)
 	if _queued_end:
 		_queued_end = false
 		_end_week_pressed()

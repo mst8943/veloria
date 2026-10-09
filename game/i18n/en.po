@@ -3277,3 +3277,99 @@ msgstr "A corruption file that was closed"
 
 msgid "[color=gray]Henüz kimseye söz vermedin. Kişiler sekmesinde/sağda bir kişi seçip 'Söz Ver' kullanabilirsin.[/color]"
 msgstr "[color=gray]No promises yet. Select someone in the People tab or on the right and choose Promise.[/color]"
+
+msgid "Üç gün sonra kral balkona çıktı."
+msgstr "Three days later, the king stepped onto the balcony."
+
+msgid "Sarayın dışında alkış, içinde sessizlik."
+msgstr "Applause outside the palace, silence within."
+
+msgid "Hasta olan taç değil."
+msgstr "It was not the crown that was ailing."
+
+msgid "Namlular susmuştu."
+msgstr "The guns had fallen silent."
+
+msgid "Sorular yeni başlıyordu."
+msgstr "The questions were only beginning."
+
+msgid "Tetiği kimin çektiği önemli değildi."
+msgstr "It did not matter who pulled the trigger."
+
+msgid "Kimin izin verdiği önemliydi."
+msgstr "It mattered who allowed it."
+
+msgid "Kabine, generallerin istediği gibi kuruldu."
+msgstr "The cabinet was formed as the generals wished."
+
+msgid "Taç hâlâ senindi."
+msgstr "The crown was still yours."
+
+msgid "Ama artık kimin sözüyle konuşuyordu?"
+msgstr "But whose word did it speak with now?"
+
+msgid "Muhtıra sabah gazetelerindeydi."
+msgstr "The memorandum was in the morning papers."
+
+msgid "Ordu ilk kez halkın gözü önünde sınandı."
+msgstr "For the first time, the army was tested in public view."
+
+msgid "Meclis feshedildi."
+msgstr "Parliament was dissolved."
+
+msgid "Sandık, yeni bir hesap açtı."
+msgstr "The ballot box opened a new account."
+
+msgid "Sandıklar açıldı."
+msgstr "The ballot boxes were opened."
+
+msgid "Muhalefet beklenenden güçlüydü."
+msgstr "The opposition was stronger than expected."
+
+msgid "Prens Marcus sınırın ötesinde konuşuyordu."
+msgstr "Prince Marcus was speaking beyond the border."
+
+msgid "Kameralar önünde, 'meşru hanedan' adına."
+msgstr "Before the cameras, in the name of the 'legitimate dynasty'."
+
+msgid "Kardeşin artık bir rakipti."
+msgstr "Your brother was now a rival."
+
+msgid "İki yıl."
+msgstr "Two years."
+
+msgid "Taç, bir ülkeyi yeniden biçimlendirdi."
+msgstr "The crown had reshaped a country."
+
+msgid "Şimdi soru şuydu: senden sonra ne olacak?"
+msgstr "Now the question was: what comes after you?"
+
+msgid "Bütün elitler aynı odadaydı."
+msgstr "All the elites were in the same room."
+
+msgid "Herkes herkesi izliyordu."
+msgstr "Everyone was watching everyone."
+
+msgid "Şehir durdu."
+msgstr "The city stopped."
+
+msgid "Limanlar, fabrikalar, otobüsler."
+msgstr "Ports, factories, buses."
+
+msgid "Bir yıl."
+msgstr "One year."
+
+msgid "Ve hâlâ ayaktasın."
+msgstr "And you are still standing."
+
+msgid "Veliaht ilk kez halkın karşısındaydı."
+msgstr "The heir stood before the people for the first time."
+
+msgid "'Halk babamın sesini tanıyor.'"
+msgstr "'The people know my father's voice.'"
+
+msgid "Julian Valerius"
+msgstr "Julian Valerius"
+
+msgid "Geç  »"
+msgstr "Skip  »"

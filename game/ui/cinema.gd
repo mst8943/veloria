@@ -9,6 +9,7 @@ const BAR_H := 0.11   # ekran yüksekliğinin oranı olarak bant kalınlığı
 
 var _img_a: TextureRect
 var _img_b: TextureRect
+var _video: VideoStreamPlayer
 var _top_bar: ColorRect
 var _bot_bar: ColorRect
 var _line: Label
@@ -29,6 +30,13 @@ func _ready() -> void:
 	add_child(black)
 	_img_a = _make_img()
 	_img_b = _make_img()
+	# İsteğe bağlı video: yalnızca Ogg Theora (.ogv) oynatılır; dosya yoksa görsele düşülür.
+	_video = VideoStreamPlayer.new()
+	_video.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_video.expand = true
+	_video.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_video.modulate.a = 0.0
+	add_child(_video)
 	var shade := ColorRect.new()
 	shade.color = Color(0, 0, 0, 0.18)
 	shade.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -67,7 +75,7 @@ func _ready() -> void:
 	_sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(_sub)
 	_skip_btn = Button.new()
-	_skip_btn.text = "Geç  »"
+	_skip_btn.text = tr("Geç  »")
 	_skip_btn.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_MINSIZE, 24)
 	_skip_btn.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	_skip_btn.grow_vertical = Control.GROW_DIRECTION_BEGIN
@@ -139,9 +147,10 @@ func _wait(t: float) -> void:
 
 
 ## Bir sahne: görsel çapraz geçişle gelir ve yavaşça yakınlaşır/kayar, üstüne satır yazılır.
-func _shot(tex: Texture2D, line: String, sub: String, hold: float, zoom_from := 1.0, zoom_to := 1.12, pan := Vector2.ZERO, fit := "cover") -> void:
+func _shot(tex: Texture2D, line: String, sub: String, hold: float, zoom_from := 1.0, zoom_to := 1.12, pan := Vector2.ZERO, fit := "cover", video := "") -> void:
 	if _skipped:
 		return
+	var has_video := video != "" and ResourceLoader.exists(video)
 	var front := _img_a if _front_is_a else _img_b
 	var back := _img_b if _front_is_a else _img_a
 	_front_is_a = not _front_is_a
@@ -161,6 +170,10 @@ func _shot(tex: Texture2D, line: String, sub: String, hold: float, zoom_from := 
 		var fade := create_tween().set_parallel(true)
 		fade.tween_property(back, "modulate:a", 1.0, 0.9)
 		fade.tween_property(front, "modulate:a", 0.0, 0.9)
+	if has_video:
+		_video.stream = load(video)
+		_video.play()
+		create_tween().tween_property(_video, "modulate:a", 1.0, 0.5)
 	_line.text = line
 	_sub.text = sub
 	_line.modulate.a = 0.0
@@ -170,6 +183,12 @@ func _shot(tex: Texture2D, line: String, sub: String, hold: float, zoom_from := 
 	tt.tween_property(_line, "modulate:a", 1.0, 0.7)
 	tt.parallel().tween_property(_sub, "modulate:a", 1.0, 0.9).set_delay(0.3)
 	await _wait(hold)
+	if has_video:
+		# Video süresi sahne süresinden uzunsa bitmesini (ya da geçilmesini) bekle.
+		while _video.is_playing() and not _skipped:
+			await get_tree().process_frame
+		_video.stop()
+		create_tween().tween_property(_video, "modulate:a", 0.0, 0.4)
 	if _skipped:
 		return
 	var out := create_tween().set_parallel(true)
@@ -198,7 +217,7 @@ func play(shots: Array) -> void:
 	_set_bars(1.0, 0.8)
 	for s: Dictionary in shots:
 		await _shot(s.get("tex"), str(s.get("line", "")), str(s.get("sub", "")), float(s.get("hold", 2.5)),
-			float(s.get("zoom_from", 1.0)), float(s.get("zoom_to", 1.12)), s.get("pan", Vector2.ZERO), str(s.get("fit", "cover")))
+			float(s.get("zoom_from", 1.0)), float(s.get("zoom_to", 1.12)), s.get("pan", Vector2.ZERO), str(s.get("fit", "cover")), str(s.get("video", "")))
 		if _skipped:
 			break
 	_playing = false
@@ -208,4 +227,6 @@ func play(shots: Array) -> void:
 	hide()
 	_img_a.modulate.a = 0.0
 	_img_b.modulate.a = 0.0
+	_video.stop()
+	_video.modulate.a = 0.0
 	finished.emit()
