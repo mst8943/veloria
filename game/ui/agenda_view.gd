@@ -568,6 +568,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		c.queue_free()
 	_add_changes(animated)
 	_add_week_ledger(animated)
+	host._report_box.add_child(host._section(tr("Raporlar")))
 	var full_reports := PopupPanel.new()
 	host.add_child(full_reports)
 	var popup_scroll := ScrollContainer.new()

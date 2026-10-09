@@ -45,6 +45,9 @@ msgstr "changes first"
 msgid "Tüm raporlar (%d)"
 msgstr "All reports (%d)"
 
+msgid "Raporlar"
+msgstr "Reports"
+
 msgid "Bir kişi seç. Sayıları göremezsin; yalnızca davranışlarından tahmin edebilirsin."
 msgstr "Choose someone. You cannot see the numbers; infer them from behaviour."
 
