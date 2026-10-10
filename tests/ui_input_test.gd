@@ -183,7 +183,7 @@ func _run() -> void:
 func _run_mobile() -> void:
 	for i in 20:
 		await process_frame
-	if main._tabs.get_tab_count() != 3 or main._tabs.get_tab_title(0) != tr("Gündem") or main._tabs.get_tab_title(1) != tr("Kişiler") or main._tabs.get_tab_title(2) != tr("Raporlar"):
+	if main._tabs.get_tab_count() != 3 or not main._tabs.get_tab_title(0).begins_with(tr("Gündem")) or main._tabs.get_tab_title(1) != tr("Kişiler") or main._tabs.get_tab_title(2) != tr("Raporlar"):
 		printerr("UI INPUT: mobil ana sekmeler hatalı")
 		quit(1)
 		return

@@ -25,7 +25,7 @@ func _frames(n := 6) -> void:
 func _run() -> void:
 	await _frames(30)
 	var ok := true
-	if main._tabs.get_tab_title(0) != "Gündem":
+	if not main._tabs.get_tab_title(0).begins_with("Gündem"):
 		printerr("LANG: TR başlangıç sekmesi: ", main._tabs.get_tab_title(0))
 		ok = false
 	main._show_menu()
@@ -34,7 +34,7 @@ func _run() -> void:
 	main.call_deferred("rebuild_ui")
 	await _frames(12)
 	var t0: String = main._tabs.get_tab_title(0)
-	if t0 != "Agenda":
+	if not t0.begins_with("Agenda"):
 		printerr("LANG: EN sekme başlığı yenilenmedi: ", t0)
 		ok = false
 	if not main._menu.visible or main._menu.page_now != "settings":
@@ -47,7 +47,7 @@ func _run() -> void:
 	root.get_node("Sfx").set_language("tr")
 	main.rebuild_ui()
 	await _frames(12)
-	if main._tabs.get_tab_title(0) != "Gündem":
+	if not main._tabs.get_tab_title(0).begins_with("Gündem"):
 		printerr("LANG: TR'ye dönüş yenilenmedi: ", main._tabs.get_tab_title(0))
 		ok = false
 	print("LANG: OK" if ok else "LANG: FAIL")

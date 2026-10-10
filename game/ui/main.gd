@@ -325,7 +325,7 @@ func _build_ui() -> void:
 	var margin := MarginContainer.new()
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
 	for side in ["left", "right", "top", "bottom"]:
-		margin.add_theme_constant_override("margin_" + side, 4 if _mobile and side == "bottom" else 18)
+		margin.add_theme_constant_override("margin_" + side, (4 if side in ["bottom", "top"] else 10) if _mobile else 18)
 	_stage.add_child(margin)
 	var root := VBoxContainer.new()
 	root.add_theme_constant_override("separation", 0 if _mobile else 10)
@@ -399,7 +399,9 @@ func _build_ui() -> void:
 	_journal.scroll_following = true
 	_tabs.add_child(_journal)
 	_tabs.set_tab_title(2, tr("Günlük"))
-	_tabs.tab_changed.connect(func(_i: int) -> void: Sfx.play("paper", -10.0))
+	_tabs.tab_changed.connect(func(_i: int) -> void:
+		Sfx.play("paper", -10.0)
+		_update_headline())
 	if _mobile:
 		_tabs.remove_child(files)
 		_tabs.remove_child(_journal)
@@ -1257,6 +1259,9 @@ func _refresh() -> void:
 	elif _header_progress.value < Sim.week:
 		create_tween().tween_property(_header_progress, "value", float(Sim.week), 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_update_mesai_pips()
+	if _tabs != null:
+		var waiting := Sim.pending.size()
+		_tabs.set_tab_title(0, tr("Gündem") + ("  ·  %d" % waiting if waiting > 0 else ""))
 	var mb := _buttons.get("media") as Button
 	if mb:
 		var fresh_issue: bool = _media_seen_week != Sim.week
@@ -1369,6 +1374,8 @@ func _flow_chip(text: String, col: Color, target: String) -> Control:
 	b.add_theme_stylebox_override("hover", hover if target != "" else normal)
 	b.add_theme_stylebox_override("pressed", hover if target != "" else normal)
 	b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	if _mobile and target != "":
+		b.custom_minimum_size.y = 44   # dokunma hedefi
 	if target == "":
 		b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		return b
@@ -1434,7 +1441,8 @@ func _update_headline() -> void:
 	if items.size() < 2 and Sfx.tips and AGENDA_VIEW.ADVICE.has(Sim.week):
 		items.append(tr(str(AGENDA_VIEW.ADVICE[Sim.week])))
 	_headline.text = "  ·  ".join(items.slice(0, 2))
-	_headline.get_parent().visible = _headline.text != ""
+	# Mobilde dikey alan kıt: haber şeridi yalnızca Gündem sekmesinde görünür.
+	_headline.get_parent().visible = _headline.text != "" and (not _mobile or _tabs.current_tab == 0)
 
 
 func _on_news(_text: String) -> void:
