@@ -5,6 +5,7 @@ const UIKit := preload("res://game/ui/ui_kit.gd")
 const Loc := preload("res://game/core/loc.gd")
 const ATMOS_SHADER := preload("res://game/ui/atmosphere.gdshader")
 const CINEMA := preload("res://game/ui/cinema.gd")
+const TOUCH_SCROLL := preload("res://game/ui/touch_scroll.gd")
 const MEDIA_VIEW := preload("res://game/ui/media_view.gd")
 const DESK_VIEW := preload("res://game/ui/desk_view.gd")
 const CITY_VIEW := preload("res://game/ui/city_view.gd")
@@ -96,6 +97,7 @@ func _ready() -> void:
 		or ProjectSettings.get_setting("veloria/dev_mobile", false) or "--mobile" in OS.get_cmdline_user_args()
 	if _mobile:
 		get_tree().root.content_scale_size = Vector2i(1067, 600)
+		add_child(TOUCH_SCROLL.new())
 	theme = UIKit.build_theme(_mobile)
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	Sim.week_advanced.connect(_on_week)
