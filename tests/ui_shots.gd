@@ -47,6 +47,21 @@ func _shot(file_name: String) -> void:
 func _run() -> void:
 	# Kişi paneli dolu görünsün: en güçlü kişiyi seç.
 	var sim0: Node = root.get_node("Sim")
+	if "--border-crisis" in OS.get_cmdline_user_args():
+		sim0.week = 50
+		sim0.crisis_cooldown = 0
+		sim0.ext_pressure["drakon"] = 70.0
+		sim0._open_other("border")
+		main._refresh()
+		await _shot("border_note")
+		sim0.resolve_decision(0, 0)
+		sim0.week += 1
+		sim0.pending.clear()
+		sim0._check_crises()
+		main._refresh()
+		await _shot("border_ultimatum")
+		quit(0)
+		return
 	if "--tour" in OS.get_cmdline_user_args():
 		var requested_step := 0
 		for arg in OS.get_cmdline_user_args():

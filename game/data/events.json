@@ -3480,5 +3480,24 @@
     {"label": "İç işi içeride bırak", "text": "Drakon temsilcisi başını eğdi; karar senin olarak kaldı.", "fx": {"foreign": {"drakon": -3}}}
   ],
   "ignore": {"text": "Teklif cevapsız kaldı.", "fx": {}}
+},
+{
+  "id": "b1a_drakon_sinir_notasi", "scripted_only": true, "art": "sinir_krizi", "title": "Drakon sınırda tatbikat başlattı",
+  "text": "Malenkov, birliklerin hareketini savundu ve son bir görüşme önerdi. Sınırdaki komutanlar senden açık talimat bekliyor.",
+  "choices": [
+    {"label": "Elçiyi görüşmeye çağır", "text": "Drakon yanıt aldı; Malenkov ültimatomu için son bir hafta tanıdı.", "crisis": "talk", "fx": {}},
+    {"label": "Sınırda tatbikat emri ver", "text": "Drakon yanıt aldı; Malenkov ültimatomu için son bir hafta tanıdı.", "crisis": "force", "fx": {}}
+  ],
+  "ignore": {"text": "Drakon yanıt alamadı ve birliklerini sınırda tuttu.", "fx": {}}
+},
+{
+  "id": "drakon_ultimatom", "scripted_only": true, "art": "sinir_krizi", "title": "Drakon sınır hattına ültimatom verdi",
+  "text": "General Malenkov tatbikatı gerçek bir konuşlanmaya çevirdi. Elçi son bir görüşme istedi; Arden sınırda emir bekliyor.",
+  "choices": [
+    {"label": "Orduyu sınıra gönder, taviz verme", "text": "Drakon geri çekildi; saray bu tavrın bedelini unutmayacak.", "crisis": "force", "fx": {}},
+    {"label": "Müzakere et ve sınır tavizi ver", "text": "Drakon geri çekildi; saray bu tavrın bedelini unutmayacak.", "crisis": "concede", "fx": {}},
+    {"label": "Asteria'dan güvence iste", "text": "Drakon geri çekildi; saray bu tavrın bedelini unutmayacak.", "crisis": "guarantee", "fx": {}}
+  ],
+  "ignore": {"text": "Drakon birlikleri sınır kapılarına ilerledi.", "fx": {}}
 }
 ]

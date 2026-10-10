@@ -3738,3 +3738,129 @@ msgstr "[b]Extension reign.[/b] Saves and achievements are kept separately.\n"
 
 msgid "\n[b][font_size=%d][color=#d6b25e]UZATMA BAŞARIMLARI[/color][/font_size][/b]\n"
 msgstr "\n[b][font_size=%d][color=#d6b25e]EXTENSION ACHIEVEMENTS[/color][/font_size][/b]\n"
+
+msgid "Çöken Egemen"
+msgstr "Broken Sovereign"
+
+msgid "Dış temas şüphesi"
+msgstr "Suspected foreign contacts"
+
+msgid "DIŞ MÜDAHALE"
+msgstr "FOREIGN INTERVENTION"
+
+msgid "Drakon sınırda tatbikat başlattı"
+msgstr "Drakon begins a border exercise"
+
+msgid "Drakon sınır hattına ültimatom verdi"
+msgstr "Drakon issues a border ultimatum"
+
+msgid "Drakon sınır krizi"
+msgstr "Drakon border crisis"
+
+msgid "SINIR NOTASI — Drakon bu hafta yanıt bekliyor."
+msgstr "BORDER NOTE — Drakon expects an answer this week."
+
+msgid "SINIR ÜLTİMATOMU — bu hafta karar vermezsen Drakon birlikleri ilerleyecek."
+msgstr "BORDER ULTIMATUM — Drakon troops will advance if you do not decide this week."
+
+msgid "Elçiyi görüşmeye çağır"
+msgstr "Invite the envoy to talks"
+
+msgid "Sınırda tatbikat emri ver"
+msgstr "Order an exercise at the border"
+
+msgid "Orduyu sınıra gönder, taviz verme"
+msgstr "Send the army to the border and refuse concessions"
+
+msgid "Müzakere et ve sınır tavizi ver"
+msgstr "Negotiate and concede at the border"
+
+msgid "Asteria'dan güvence iste"
+msgstr "Ask Asteria for a guarantee"
+
+msgid "Drakon yanıtı aldı; Malenkov ültimatomu için son bir hafta tanıdı."
+msgstr "Drakon received an answer; Malenkov allowed one final week before the ultimatum."
+
+msgid "Drakon yanıt alamadı ve birliklerini sınırda tuttu."
+msgstr "Drakon received no answer and kept its troops at the border."
+
+msgid "Drakon birlikleri sınır kapılarına ilerledi."
+msgstr "Drakon troops advanced toward the border gates."
+
+msgid "Drakon birlikleri sınırı geçti; elit koalisyonu seni teslim etti."
+msgstr "Drakon troops crossed the border; the elite coalition surrendered you."
+
+msgid "Tatbikat gerçek bir ilerleyişe dönüştü. Başkentten gelen raporlar artık emir değil, mazeret taşıyor."
+msgstr "The exercise became a real advance. Reports from the capital now carry excuses instead of orders."
+
+msgid "Drakon geri çekildi; saray bu tavrın bedelini ve kime borçlandığını unutmayacak."
+msgstr "Drakon withdrew; the court will remember the cost of this stance and whom it now owes."
+
+msgid "Yabancı müdahalesi başkentin yönetimini sona erdirdi."
+msgstr "Foreign intervention ended the capital's rule."
+
+msgid "Saltanatının %d. haftasında Drakon sınırı geçti; elit koalisyonu seni teslim etti. Yabancı müdahalesi başkentin yönetimini sona erdirdi."
+msgstr "In week %d of your reign, Drakon crossed the border; the elite coalition surrendered you. Foreign intervention ended the capital's rule."
+
+msgid "Yabancı müdahalesi"
+msgstr "Foreign intervention"
+
+msgid "Dış temaslar son haftalarda sıklaştı."
+msgstr "Contacts have intensified in recent weeks."
+
+msgid "%s elçisinin temasları son haftalarda sıklaştı."
+msgstr "The %s envoy's contacts have intensified in recent weeks."
+
+msgid "%s elçisi sınır ve ticaret görüşmelerini olağandışı biçimde artırdı."
+msgstr "The %s envoy has unusually increased border and trade talks."
+
+msgid "%s elçisinin son temasları diplomatik nezaket sınırını aşıyor."
+msgstr "The %s envoy's recent contacts go beyond diplomatic courtesy."
+
+msgid "Dış dünya — elçilerin sözleri ve hamleleri"
+msgstr "The outside world — envoys' words and moves"
+
+msgid "alamet"
+msgstr "warning sign"
+
+msgid "talk"
+msgstr "talks"
+
+msgid "force"
+msgstr "military response"
+
+msgid "concede"
+msgstr "concession"
+
+msgid "guarantee"
+msgstr "Asterian guarantee"
+
+msgid "DIŞİŞLERİ: Malenkov sınır hattındaki temasların olağandışı arttığını bildirdi."
+msgstr "FOREIGN MINISTRY: Malenkov reports unusual activity along the border."
+
+msgid "Asteria"
+msgstr "Asteria"
+
+msgid "Drakon"
+msgstr "Drakon"
+
+msgid "Seravia"
+msgstr "Seravia"
+
+msgid "Malenkov, birliklerin hareketini savundu ve son bir görüşme önerdi. Sınırdaki komutanlar senden açık talimat bekliyor."
+msgstr "Malenkov defended the troop movements and offered one last meeting. The border commanders await your clear orders."
+
+msgid "General Malenkov tatbikatı gerçek bir konuşlanmaya çevirdi. Elçi son bir görüşme istedi; Arden sınırda emir bekliyor."
+msgstr "General Malenkov turned the exercise into a real deployment. The envoy requested one final meeting; Arden awaits orders at the border."
+
+msgid "MALİ KUŞATMA"
+msgstr "FINANCIAL SIEGE"
+
+msgid "SUİKAST"
+msgstr "ASSASSINATION"
+
+msgid "\n[b][color=#d9b359][font_size=22]DIŞ DÜNYA — elçilerin sözleri ve hamleleri[/font_size][/color][/b]\n"
+msgstr "\n[b][color=#d9b359][font_size=22]THE OUTSIDE WORLD — envoys' words and moves[/font_size][/color][/b]\n"
+
+msgid "• Hafta %d — %s: %s\n"
+msgstr "• Week %d — %s: %s\n"

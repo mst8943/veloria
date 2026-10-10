@@ -11,9 +11,9 @@ const ACTOR := preload("res://game/core/actor.gd")
 const ContentData := preload("res://game/core/content_data.gd")
 const Loc := preload("res://game/core/loc.gd")
 
-const TOP_KEYS := ["id", "title", "text", "choices", "ignore", "fx", "art", "crisis", "advisors",
+const TOP_KEYS := ["id", "title", "text", "choices", "ignore", "fx", "art", "crisis", "crisis_kind", "banner", "rng_pool", "scripted_only", "advisors",
 	"min_week", "max_week", "chance", "once", "cooldown", "min_unrest", "max_unrest", "min_economy", "max_economy",
-	"min_opposition", "min_power", "min_cap", "max_cap", "min_treasury", "max_treasury", "min_holding", "max_holding", "min_heir", "max_heir", "min_foreign", "max_foreign", "needs_hostile", "needs_moved", "needs_flag", "blocks_flag", "any_flag", "flag_age", "actor_min", "actor_max",
+	"min_opposition", "min_power", "min_cap", "max_cap", "min_treasury", "max_treasury", "min_holding", "max_holding", "min_heir", "max_heir", "min_foreign", "max_foreign", "min_ext_pressure", "needs_hostile", "needs_moved", "needs_flag", "blocks_flag", "any_flag", "flag_age", "actor_min", "actor_max",
 	"alive", "needs_fact", "needs_ready", "min_stat", "max_stat", "news", "actor", "tone"]
 ## Sim.stats anahtarları (min_stat / max_stat koşulları)
 const STAT_KEYS := ["ops", "bribes", "promotes", "leaks", "dismissals", "written", "hints", "checks",
@@ -146,7 +146,7 @@ func _check_event(e: Dictionary) -> void:
 			if not c.has(k):
 				errors.append("%s: seçenek %d '%s' eksik" % [id, i, k])
 		for k in c:
-			if not k in ["label", "text", "fx"]:
+			if not k in ["label", "text", "fx", "crisis"]:
 				errors.append("%s: seçenek %d bilinmeyen anahtar '%s'" % [id, i, k])
 	var ig: Variant = e.get("ignore")
 	if not ig is Dictionary or not ig.has("text") or not ig.has("fx"):

@@ -301,6 +301,8 @@ func _init() -> void:
 	var never: Array = []
 	var new_event_count := 0
 	for e in sim._events:
+		if e.get("scripted_only", false):
+			continue
 		if str(e["id"]).begins_with("julian_") or str(e["id"]).begins_with("elena_"):
 			new_event_count += 1
 		if not fired_ids.has(e["id"]):

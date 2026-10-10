@@ -248,6 +248,16 @@ func _append_state(state: Dictionary) -> void:
 		int(state.get("delegations", 0)), int(state.get("foreign_cold_week", 0)), tr("Hazır") if float(state.get("heir_final", 0.0)) >= 70.0 else (tr("Gelişiyor") if float(state.get("heir_final", 0.0)) >= 40.0 else tr("Çocuksu"))])
 
 
+func _append_external(entries: Array) -> void:
+	if entries.is_empty():
+		return
+	lies_page.append_text(tr("\n[b][color=#d9b359][font_size=22]DIŞ DÜNYA — elçilerin sözleri ve hamleleri[/font_size][/color][/b]\n"))
+	for item: Dictionary in entries:
+		var kind := tr("Drakon sınır krizi") if item.get("kind", "") == "border" else tr(str(item.get("kind", "")))
+		var action := tr("alamet") if item.get("action", "") == "warning" else tr(str(item.get("action", "")))
+		lies_page.append_text(tr("• Hafta %d — %s: %s\n") % [int(item.get("week", 0)), kind, action])
+
+
 ## Kaydı sekmelere yazar (Özet, Tarihçiler, Hakikat Dosyası, Kararlar) ve final görselinin yolunu döndürür.
 ## Gösterme/sinema main.gd::_on_end'de kalır.
 func show_record(record: Dictionary) -> String:
@@ -326,6 +336,7 @@ func show_record(record: Dictionary) -> String:
 	_append_council(record.get("council", []))
 	_append_plot(record.get("plot", []), record.get("signs", {}))
 	_append_state(state)
+	_append_external(record.get("external_history", []))
 	# Kararlar: hepsi, sondan başa
 	log_page.clear()
 	log_page.append_text(tr("[b][color=#d9b359][font_size=22]KARARLARIN[/font_size][/color][/b]   [color=gray]%d kayıt · en yenisi üstte[/color]\n\n") % hist_log.size())

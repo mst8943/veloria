@@ -117,6 +117,12 @@ func _cause_kind(c: String) -> String:
 		return "ayaklanma"
 	if c.contains("yetkisiz"):
 		return "yetkisiz"
+	if c.contains("Yabancı müdahalesi"):
+		return "yabanci_mudahale"
+	if c.contains("Mali çöküş"):
+		return "mali_cokus"
+	if c.contains("Suikast"):
+		return "suikast"
 	if c.contains("elit"):
 		return "elit_koalisyonu"
 	return "diger"

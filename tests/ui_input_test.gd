@@ -4,6 +4,8 @@ var main: Control
 
 func _initialize() -> void:
 	ProjectSettings.set_setting("veloria/dev_autostart", true)
+	if "--mobile" in OS.get_cmdline_user_args():
+		DisplayServer.window_set_size(Vector2i(1067, 600))
 	main = (load("res://game/ui/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
 	_run.call_deferred()
@@ -272,7 +274,8 @@ func _run_mobile() -> void:
 			return
 	for i in 3:
 		await process_frame
-	if profile_scroll.get_v_scroll_bar().max_value <= profile_scroll.get_v_scroll_bar().page:
+	var fits_without_scroll: bool = main._person_panel.person_block.get_global_rect().end.y <= profile_view.end.y
+	if profile_scroll.get_v_scroll_bar().max_value <= profile_scroll.get_v_scroll_bar().page and not fits_without_scroll:
 		printerr("UI INPUT: kişi eylem bloğu dikey erişilebilir değil")
 		quit(1)
 		return

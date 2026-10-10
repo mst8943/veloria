@@ -31,6 +31,9 @@ func _init() -> void:
 	var holding_before: float = sim.holding
 	var heir_before: float = sim.heir_maturity
 	var foreign_before: Dictionary = sim.foreign.duplicate()
+	sim.ext_pressure["drakon"] = 41.0
+	sim.ext_rng.randf()
+	var external_rng_state: int = sim.ext_rng.state
 	_check("kaydet", sim.save_game())
 	var loaded: bool = sim.load_game()
 	var same_cap := true
@@ -44,6 +47,7 @@ func _init() -> void:
 	for power in foreign_before:
 		same_foreign = same_foreign and sim.foreign.has(power) and is_equal_approx(float(sim.foreign[power]), float(foreign_before[power]))
 	_check("dış ilişkiler gidiş-dönüş", same_foreign and sim.foreign_hint_until == 0)
+	_check("dış baskı ve ayrı üreteç gidiş-dönüş", is_equal_approx(float(sim.ext_pressure["drakon"]), 41.0) and sim.ext_rng.state == external_rng_state)
 	var f := FileAccess.open(sim.save_path, FileAccess.READ)
 	var d: Dictionary = str_to_var(f.get_as_text())
 	f.close()
@@ -55,14 +59,18 @@ func _init() -> void:
 	_check("v8 dil göçü", sim.load_game() and Loc.lang == "tr")
 	# B1 v8 kaydı: dış temsilciler ve ilişkiler henüz yoktu.
 	var b1_v8 := d.duplicate(true)
+	b1_v8["version"] = 8
 	for k in ["foreign", "foreign_hint_until"]:
+		b1_v8.erase(k)
+	for k in ["ext_pressure", "ext_rng", "external_history"]:
 		b1_v8.erase(k)
 	for id in ["claire", "malenkov", "lucien"]:
 		b1_v8["actors"].erase(id)
 		b1_v8["karne"].erase(id)
 	_write(sim.save_path, b1_v8)
 	_check("v8 dış güç göçü", sim.load_game() and sim.foreign.size() == 3 and sim.foreign_hint_until == 0
-		and sim.actors.has("claire") and sim.actors.has("malenkov") and sim.actors.has("lucien"))
+		and sim.actors.has("claire") and sim.actors.has("malenkov") and sim.actors.has("lucien")
+		and sim.ext_pressure["drakon"] == 0.0 and sim.ext_rng.state != 0)
 	# Sürüm 7: yeni kadro ve veliaht olgunluğu yoktu.
 	var v7 := d.duplicate(true)
 	v7["version"] = 7

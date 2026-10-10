@@ -34,6 +34,13 @@
 - Son kapılar: `sim_test`, `event_check` TR/EN, `save_test`, `content_check` TR/EN, `i18n_check`, `en_leak_test` (0 sızıntı), `lang_switch_test`, `touch_scroll_test`, `tour_test`, `cutscene_check`, `audio_check`, `a11y_test`, `daily_card_test`, `scenario_test`, `endless_test`, UI giriş testleri ve `i18n_missing.py` (0) geçti.
 - `--autoplay`, `--autoplay --mobile` TR/EN ve `--autoplay --full` TR/EN geçti. Tohum 101 tam koşusu iki dilde de 104 hafta / TAHTTA / Medya Rejimi / 112 olay verdi. `advice_weighted` probe (80 kampanya, üç zorluk) TR ve EN: 68/80, 36/80, 16/80.
 
+### B1a — Altyapı + Drakon sınır krizi
+- `ext_pressure` üç güç için ayrı kaydediliyor; SAVE_VERSION 11 oldu. v10 ve daha eski kayıtlara basınç, ayrı RNG ve geçmiş alanları güvenli varsayılanlarla göçüyor. Haftalık baskı ve şüphe göstergesi ana RNG'yi tüketmiyor; heyet gönderme baskıyı düşürüyor.
+- Drakon sınır notası bir hafta sonra ültimatoma ilerliyor; ordu, taviz ve Asteria güvencesi yolları var. Başarısızlık `Yabancı müdahalesi` / `Çöken Egemen`; dış eylemler ve Elena raporu Hakikat Dosyası'na ekleniyor. Başarım ve kriz kartı TR/EN içerikleri eklendi.
+- `external_crisis_test`, `sim_test`, `event_check` TR/EN, `save_test`, `content_check` TR/EN, `i18n_check`, `en_leak_test`, `i18n_missing.py` (0), `ui_input_test` masaüstü/mobil, `lang_switch`, `touch_scroll`, `tour`, `cutscene`, `audio`, `a11y`, `scenario`, `endless`, `ui_logic`, `unit_tests` (399 kontrol) geçti. Tempo testi en düşük dilimde 0,81 olay/hafta verdi.
+- Seed 101 `--autoplay --full`: TR/EN 104 / TAHTTA / Medya Rejimi / 112. Probe, TR ve EN aynı: Kolay 68/80 (%85), Normal 36/80 (%45), Zor 16/80 (%20). Bu alt dilimde dış kriz kaybı tetiklenmedi.
+- `en_dump` masaüstü/mobil + `en_dump2` sızıntı taraması: 4.052 metin, 0 şüpheli. Drakon nota/ültimatom kartı ekran görüntüleri TR/EN masaüstü (1280×720) ve mobil (1067×600) açılıp gözle kontrol edildi: `screenshots/faz6_b1a/{tr,en}/{desktop,mobile}`.
+
 ## SIRADAKİ DİLİM
 
-DALGA A tamamlandı. Sıradaki: B1 — Dış krizler ve suikast.
+DALGA A tamamlandı; B1a tamamlandı. Sıradaki: B1b — Mali kuşatma.

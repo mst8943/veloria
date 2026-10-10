@@ -3513,4 +3513,24 @@
                                                 "text":  "The offer went unanswered."
                                             }
                              }
+,
+    "b1a_drakon_sinir_notasi": {
+        "title": "Drakon begins a border exercise",
+        "text": "Malenkov defended the troop movements and offered one last meeting. The border commanders await your clear orders.",
+        "choices": [
+            {"label": "Invite the envoy to talks", "text": "Drakon received an answer; Malenkov allowed one final week before the ultimatum."},
+            {"label": "Order an exercise at the border", "text": "Drakon received an answer; Malenkov allowed one final week before the ultimatum."}
+        ],
+        "ignore": {"text": "Drakon received no answer and kept its troops at the border."}
+    },
+    "drakon_ultimatom": {
+        "title": "Drakon issues a border ultimatum",
+        "text": "General Malenkov turned the exercise into a real deployment. The envoy requested one final meeting; Arden awaits orders at the border.",
+        "choices": [
+            {"label": "Send the army to the border and refuse concessions", "text": "Drakon withdrew; the court will remember the cost of this stance."},
+            {"label": "Negotiate and concede at the border", "text": "Drakon withdrew; the court will remember the cost of this stance."},
+            {"label": "Ask Asteria for a guarantee", "text": "Drakon withdrew; the court will remember the cost of this stance."}
+        ],
+        "ignore": {"text": "Drakon troops advanced toward the border gates."}
+    }
 }

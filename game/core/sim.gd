@@ -65,6 +65,9 @@ var kadro_log: Array = []
 var heir_maturity := 30.0
 var foreign: Dictionary = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
 var foreign_hint_until := 0
+var ext_pressure: Dictionary = {"asteria": 0.0, "drakon": 0.0, "seravia": 0.0}
+var ext_rng := RandomNumberGenerator.new()
+var external_history: Array = []
 const ATTRITION := 0.04
 const STANCE_CAP := 0.23
 const TREASURY_COST := 0.15
@@ -89,6 +92,9 @@ const STATE_ECON_HUKUK := 0.001
 const STATE_DIFF := [0.7, 1.0, 1.2]
 const LEGAL_DIFF := [0.5, 1.0, 1.5]
 const FOREIGN_EFFECT_DIFF := [0.7, 1.0, 1.1]
+const EXT_PRESSURE_DECAY := 0.06
+const BORDER_WARNING_AT := 38.0
+const BORDER_CRISIS_AT := 62.0
 var actors: Dictionary = {}  # id -> Actor
 var facts: Dictionary = {}   # id -> Dictionary
 var flags: Dictionary = {}
@@ -170,6 +176,9 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "") -> void:
 	foreign_rng.seed = rng.seed ^ 0xF0E19
 	for power in foreign:
 		foreign[power] = 50.0 + foreign_rng.randf_range(-5.0, 5.0)
+	ext_rng.seed = rng.seed ^ 0xB1E710
+	ext_pressure = {"asteria": 0.0, "drakon": 0.0, "seravia": 0.0}
+	external_history.clear()
 	foreign_hint_until = 0
 	actors.clear()
 	facts.clear()
@@ -374,11 +383,11 @@ func save_summary() -> String:
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
 ## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Sarne ve kadro günlüğü
-const SAVE_VERSION := 10
+const SAVE_VERSION := 11
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
-	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless"]
+	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -456,6 +465,12 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 	if from < 10:
 		d["scenario"] = ""
 		d["endless"] = false
+	if from < 11:
+		d["ext_pressure"] = {"asteria": 0.0, "drakon": 0.0, "seravia": 0.0}
+		var old_ext_rng := RandomNumberGenerator.new()
+		old_ext_rng.seed = int(d.get("seed", 1)) ^ 0xB1E710
+		d["ext_rng"] = old_ext_rng.state
+		d["external_history"] = []
 	if not d.has("foreign"):
 		d["foreign"] = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
 	if not d.has("foreign_hint_until"):
@@ -494,6 +509,7 @@ func save_game() -> bool:
 		"halden_hostile_until": halden_hostile_until, "halden_demands": halden_demands,
 		"lena_boost_until": lena_boost_until, "kadro_log": kadro_log, "heir_maturity": heir_maturity,
 		"foreign": foreign, "foreign_hint_until": foreign_hint_until, "lang": Loc.lang, "scenario": scenario_id,
+		"ext_pressure": ext_pressure, "ext_rng": ext_rng.state, "external_history": external_history,
 		"endless": endless, "version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
@@ -579,6 +595,8 @@ func load_game() -> bool:
 	heir_maturity = float(d["heir_maturity"])
 	foreign = d["foreign"]
 	foreign_hint_until = int(d["foreign_hint_until"])
+	ext_pressure = d["ext_pressure"]
+	external_history = d["external_history"]
 	for id in d["actors"]:
 		if actors.has(id):
 			actors[id].from_save(d["actors"][id])
@@ -600,6 +618,7 @@ func load_game() -> bool:
 	promises = d.get("promises", [])
 	timeline = d.get("timeline", [])
 	rng.state = d["rng"]
+	ext_rng.state = d["ext_rng"]
 	_generate_reports()
 	report_prev = d.get("report_prev", {})   # _generate_reports'un üzerine yazdığı geçen hafta
 	week_changes = d.get("week_changes", [])
@@ -711,6 +730,7 @@ func send_delegation(id: String) -> String:
 	var target: String = FOREIGN_ENVOYS[id]
 	for power in foreign:
 		foreign[power] = clampf(float(foreign[power]) + (12.0 if power == target else -3.0), 0.0, 100.0)
+		ext_pressure[power] = maxf(0.0, float(ext_pressure.get(power, 0.0)) - (12.0 if power == target else 3.0))
 	flags["HEYET_GONDER"] = week
 	stats["delegations"] = int(stats.get("delegations", 0)) + 1
 	changed.emit()
@@ -1701,6 +1721,7 @@ func _world_tick() -> void:
 	_tick_state()
 	_tick_holding()
 	_tick_foreign()
+	_tick_external_pressure()
 	if heir_maturity >= 70.0 and actors.has("julian") and not actors["julian"].moved:
 		unrest = maxf(0.0, unrest - 0.015)
 		king_strength = minf(100.0, king_strength + 0.0075)
@@ -1768,6 +1789,55 @@ func _tick_foreign() -> void:
 	elif float(foreign["seravia"]) <= 30.0:
 		holding = minf(100.0, holding + 0.08 * scale)
 	_foreign_warnings()
+
+
+func _tick_external_pressure() -> void:
+	var arden: Actor = actors.get("arden")
+	var drakon_feed := maxf(0.0, 44.0 - float(foreign["drakon"])) * 0.13
+	drakon_feed += maxf(0.0, 48.0 - float(capacity["ordu"])) * 0.18
+	drakon_feed += maxf(0.0, 38.0 - (arden.total_loyalty() if arden else 50.0)) * 0.04
+	drakon_feed += 6.0 if fired_events.has("elena_asteria_sizinti") else 0.0
+	var asteria_feed := maxf(0.0, 38.0 - float(foreign["asteria"])) * 0.12
+	asteria_feed += maxf(0.0, 24.0 - treasury) * 0.09
+	asteria_feed += maxf(0.0, 38.0 - float(capacity["hukuk"])) * 0.05
+	var seravia_feed := maxf(0.0, 40.0 - float(foreign["seravia"])) * 0.12
+	seravia_feed += maxf(0.0, 25.0 - treasury) * 0.12
+	seravia_feed += maxf(0.0, 42.0 - float(capacity["maliye"])) * 0.06
+	var feed := {"asteria": asteria_feed, "drakon": drakon_feed, "seravia": seravia_feed}
+	for power in ext_pressure:
+		var noise := ext_rng.randf_range(-0.25, 0.55)
+		ext_pressure[power] = clampf(float(ext_pressure[power]) * (1.0 - EXT_PRESSURE_DECAY) + float(feed[power]) + noise, 0.0, 100.0)
+	if float(ext_pressure["drakon"]) >= BORDER_WARNING_AT and not warned.get("border_drakon", false):
+		warned["border_drakon"] = true
+		_add_news("DIŞİŞLERİ: Malenkov sınır hattındaki temasların olağandışı arttığını bildirdi.", tr("DIŞİŞLERİ: Malenkov sınır hattındaki temasların olağandışı arttığını bildirdi."))
+	elif float(ext_pressure["drakon"]) < BORDER_WARNING_AT - 10.0:
+		warned.erase("border_drakon")
+
+
+func external_suspicion_level(envoy_id: String) -> int:
+	var power := str(FOREIGN_ENVOYS.get(envoy_id, ""))
+	if power == "":
+		return 0
+	return _external_pressure_level(power)
+
+
+func _external_pressure_level(power: String) -> int:
+	var noise := RandomNumberGenerator.new()
+	noise.seed = ext_rng.seed ^ (week * 7919) ^ power.hash()
+	var estimate := float(ext_pressure.get(power, 0.0)) + noise.randf_range(-14.0, 14.0)
+	return 3 if estimate >= 70.0 else (2 if estimate >= 52.0 else (1 if estimate >= 34.0 else 0))
+
+
+func _external_report_hint(power: String) -> String:
+	var level := _external_pressure_level(power)
+	if level < 1:
+		return ""
+	var names := {"asteria": tr("Asteria"), "drakon": tr("Drakon"), "seravia": tr("Seravia")}
+	var messages := [
+		tr("%s elçisinin temasları son haftalarda sıklaştı.") % names[power],
+		tr("%s elçisi sınır ve ticaret görüşmelerini olağandışı biçimde artırdı.") % names[power],
+		tr("%s elçisinin son temasları diplomatik nezaket sınırını aşıyor.") % names[power]]
+	return messages[mini(level - 1, messages.size() - 1)]
 
 
 func _foreign_warnings() -> void:
@@ -1852,6 +1922,8 @@ func _decay_facts() -> void:
 
 
 func _eligible(e: Dictionary) -> bool:
+	if e.get("scripted_only", false):
+		return false
 	var id: String = e["id"]
 	var once: bool = e.get("once", true)
 	if fired_events.has(id):
@@ -1879,6 +1951,9 @@ func _eligible(e: Dictionary) -> bool:
 			return false
 	for power in e.get("max_foreign", {}):
 		if not foreign.has(power) or float(foreign[power]) > float(e["max_foreign"][power]):
+			return false
+	for power in e.get("min_ext_pressure", {}):
+		if float(ext_pressure.get(power, 0.0)) < float(e["min_ext_pressure"][power]):
 			return false
 	if e.get("needs_hostile", false) and halden_mood() != "düşmanca":
 		return false
@@ -2020,8 +2095,9 @@ func _fire_events() -> void:
 		var chance: float = e.get("chance", 1.0)
 		if e["id"] == "prens_veliaht" and heir_maturity >= 70.0:
 			chance *= 0.5
-		if _eligible(e) and rng.randf() <= chance:
-			pool.append([rng.randf(), e])
+		var event_rng: RandomNumberGenerator = ext_rng if e.get("rng_pool", "") == "external" else rng
+		if _eligible(e) and event_rng.randf() <= chance:
+			pool.append([event_rng.randf(), e])
 	pool.sort_custom(func(x: Array, y: Array) -> bool: return x[0] < y[0])
 	var added := 0
 	for item in pool:
@@ -2490,9 +2566,19 @@ var warned: Dictionary = {}        # işaret satırları bir kez: {"street": tru
 func _check_crises() -> void:
 	if ended:
 		return
+	var crisis_pending := false
+	for entry: Dictionary in pending:
+		if entry.get("event", {}).get("crisis", false):
+			crisis_pending = true
+	if other_crisis.get("phase", "") == "crisis" and not crisis_pending:
+		other_crisis["week"] = week
+		pending.insert(0, {"event": _external_event(str(other_crisis["kind"])), "age": 0})
+		return
 	# Açık kriz bir hafta içinde çözülmediyse ya da seçilen yol başarısız olduysa sonuçlanır.
 	if not other_crisis.is_empty() and (other_crisis.get("failed", false) or week > int(other_crisis["week"])):
 		var kind := str(other_crisis["kind"])
+		if kind in ["border", "siege", "assassination"]:
+			flags["external_defeat"] = kind
 		_close_other()
 		if crisis_note == "":
 			crisis_note = tr("Kriz kapına dayandığında karar veremedin.")
@@ -2526,9 +2612,16 @@ func _check_crises() -> void:
 		_open_other("street")
 	elif lp >= legal_at:
 		_open_other("legal")
+	elif float(ext_pressure.get("drakon", 0.0)) >= BORDER_CRISIS_AT:
+		_open_other("border")
 
 
 func other_chance(action: String) -> float:
+	if str(other_crisis.get("kind", "")) == "border":
+		match action:
+			"force": return clampf((float(capacity["ordu"]) + _army_loyalty() + treasury - 120.0) / 200.0, 0.08, 0.78)
+			"concede": return clampf(0.85 - float(stats.get("border_concessions", 0)) * 0.35, 0.18, 0.85)
+			_: return clampf((float(foreign.get("asteria", 50.0)) + float(capacity["hukuk"]) - ext_pressure["asteria"]) / 200.0, 0.1, 0.8)
 	var odds := _diff("crisis_odds")
 	match action:
 		"force":
@@ -2546,10 +2639,61 @@ func other_chance(action: String) -> float:
 
 func _open_other(kind: String) -> void:
 	other_crisis = {"kind": kind, "week": week}
-	var e := _street_event() if kind == "street" else _legal_event()
+	if kind in ["border", "siege", "assassination"]:
+		other_crisis["phase"] = "note"
+	var e: Dictionary
+	if kind == "street":
+		e = _street_event()
+	elif kind == "legal":
+		e = _legal_event()
+	else:
+		e = _external_event(kind)
 	pending.insert(0, {"event": e, "age": 0})
-	var crisis_news := "KRİZ: Meydanlar ayakta; sokak sarayın kapısında." if kind == "street" else "KRİZ: Mahkeme kralın yetkilerini askıya almayı görüşüyor."
+	var crisis_news := "KRİZ: Meydanlar ayakta; sokak sarayın kapısında." if kind == "street" else ("KRİZ: Mahkeme kralın yetkilerini askıya almayı görüşüyor." if kind == "legal" else "KRİZ: Drakon sınır hattında ültimatom verdi.")
 	_add_news(crisis_news, tr(crisis_news))
+	if kind in ["border", "siege", "assassination"]:
+		external_history.append({"week": week, "kind": kind, "action": "warning"})
+		crisis_cooldown = week + CRISIS_COOLDOWN
+
+
+func _external_event(kind: String) -> Dictionary:
+	if kind == "border":
+		if other_crisis.get("phase", "note") == "note":
+			var note_template := _event_template("b1a_drakon_sinir_notasi")
+			if not note_template.is_empty():
+				return note_template
+			return {"id": "b1a_drakon_sinir_notasi", "art": "sinir_hatti", "crisis": true, "crisis_kind": kind, "advisors": [],
+				"banner": tr("SINIR NOTASI — Drakon bu hafta yanıt bekliyor."), "title": tr("Drakon sınırda tatbikat başlattı"),
+				"text": tr("Malenkov, birliklerin hareketini savundu ve son bir görüşme önerdi. Sınırdaki komutanlar senden açık talimat bekliyor."),
+				"choices": [
+					{"label": tr("Elçiyi görüşmeye çağır"), "crisis": "talk", "fx": {}},
+					{"label": tr("Sınırda tatbikat emri ver"), "crisis": "force", "fx": {}}],
+				"ignore": {"text": tr("Drakon yanıt alamadı ve birliklerini sınırda tuttu."), "fx": {}}}
+		var template := _event_template("drakon_ultimatom")
+		if not template.is_empty():
+			return template
+		return {"id": "drakon_ultimatom", "art": "sinir_hatti", "crisis": true, "crisis_kind": kind, "advisors": [],
+			"banner": tr("SINIR ÜLTİMATOMU — bu hafta karar vermezsen Drakon birlikleri ilerleyecek."),
+			"title": tr("Drakon sınır hattına ültimatom verdi"),
+			"text": tr("General Malenkov tatbikatı gerçek bir konuşlanmaya çevirdi. Elçi son bir görüşme istedi; Arden sınırda emir bekliyor."),
+			"cues": {"guard": _band3(other_chance("force"), 0.5, 0.3), "street": _band3(other_chance("concede"), 0.7, 0.4)},
+			"choices": [
+				{"label": tr("Orduyu sınıra gönder, taviz verme"), "crisis": "force", "fx": {}},
+				{"label": tr("Müzakere et ve sınır tavizi ver"), "crisis": "concede", "fx": {}},
+				{"label": tr("Asteria'dan güvence iste"), "crisis": "guarantee", "fx": {}}],
+			"ignore": {"text": tr("Drakon birlikleri sınır kapılarına ilerledi."), "fx": {}}}
+	return {}
+
+
+func _event_template(id: String) -> Dictionary:
+	for event: Dictionary in _events:
+		if str(event.get("id", "")) == id:
+			var result := event.duplicate(true)
+			result["crisis"] = true
+			result["crisis_kind"] = str(other_crisis.get("kind", ""))
+			result["banner"] = tr("SINIR NOTASI — Drakon bu hafta yanıt bekliyor.") if id == "b1a_drakon_sinir_notasi" else tr("SINIR ÜLTİMATOMU — bu hafta karar vermezsen Drakon birlikleri ilerleyecek.")
+			return result
+	return {}
 
 
 func _band3(p: float, hi: float, mid: float) -> int:
@@ -2609,7 +2753,38 @@ func _fail_other(note: String) -> void:
 func _resolve_other(action: String) -> String:
 	crisis_cooldown = week + CRISIS_COOLDOWN
 	var kind := str(other_crisis.get("kind", ""))
-	var ok := rng.randf() < other_chance(action)
+	var ok := (ext_rng if kind in ["border", "siege", "assassination"] else rng).randf() < other_chance(action)
+	if kind == "border":
+		if other_crisis.get("phase", "") == "note":
+			external_history.append({"week": week, "kind": kind, "action": action, "success": ok, "phase": "note"})
+			if action == "talk":
+				ext_pressure["drakon"] = maxf(0.0, float(ext_pressure["drakon"]) - 10.0)
+			else:
+				ext_pressure["drakon"] = minf(100.0, float(ext_pressure["drakon"]) + 6.0)
+			other_crisis["phase"] = "crisis"
+			other_crisis["week"] = week + 1
+			return tr("Drakon yanıtı aldı; Malenkov ültimatomu için son bir hafta tanıdı.")
+		external_history.append({"week": week, "kind": kind, "action": action, "success": ok})
+		if not ok:
+			flags["external_defeat"] = kind
+			_fail_other(tr("Drakon birlikleri sınırı geçti; elit koalisyonu seni teslim etti."))
+			return tr("Tatbikat gerçek bir ilerleyişe dönüştü. Başkentten gelen raporlar artık emir değil, mazeret taşıyor.")
+		_close_other()
+		var relief := 34.0 if action == "concede" else (26.0 if action == "guarantee" else 20.0)
+		ext_pressure["drakon"] = maxf(0.0, float(ext_pressure["drakon"]) - relief)
+		if action == "force":
+			if actors.has("arden"):
+				actors["arden"].power += 8.0
+			treasury = maxf(0.0, treasury - 8.0)
+		elif action == "concede":
+			stats["border_concessions"] = int(stats.get("border_concessions", 0)) + 1
+			king_strength = maxf(0.0, king_strength - 6.0)
+			unrest = minf(100.0, unrest + 5.0)
+			foreign["drakon"] = minf(100.0, float(foreign["drakon"]) + 8.0)
+		else:
+			foreign["asteria"] = minf(100.0, float(foreign["asteria"]) + 6.0)
+			private_wealth = maxf(0.0, private_wealth - 5.0)
+		return tr("Drakon geri çekildi; saray bu tavrın bedelini ve kime borçlandığını unutmayacak.")
 	match action:
 		"force":
 			if not ok:
@@ -2686,6 +2861,9 @@ func active_crisis_label() -> String:
 			return tr("AYAKLANMA")
 		"legal":
 			return tr("YETKİ KRİZİ")
+		"border": return tr("DIŞ MÜDAHALE")
+		"siege": return tr("MALİ KUŞATMA")
+		"assassination": return tr("SUİKAST")
 	return ""
 
 
@@ -2730,7 +2908,7 @@ func legal_pressure() -> float:
 
 
 func _check_end() -> void:
-	if king_strength <= 0.0 or unrest >= 100.0 or legal_pressure() >= 100.0 or flags.has("YETKI_KAYBI"):
+	if king_strength <= 0.0 or unrest >= 100.0 or legal_pressure() >= 100.0 or flags.has("YETKI_KAYBI") or flags.has("external_defeat"):
 		_end(false)
 	elif week > MAX_WEEKS and not endless:
 		_end(true)
@@ -2748,7 +2926,12 @@ func _end(survived: bool) -> void:
 	var title := ""
 	if not survived:
 		title = "Devrilen Kral"
-		if coup_leader != "" and actors.has(coup_leader):
+		var external_cause := str(flags.get("external_defeat", ""))
+		if external_cause == "border":
+			title = "Çöken Egemen"
+			cause = "Saltanatının %d. haftasında Drakon sınırı geçti; elit koalisyonu seni teslim etti. Yabancı müdahalesi başkentin yönetimini sona erdirdi." % (week - 1)
+			cause_display = tr("Saltanatının %d. haftasında Drakon sınırı geçti; elit koalisyonu seni teslim etti. Yabancı müdahalesi başkentin yönetimini sona erdirdi.") % (week - 1)
+		elif coup_leader != "" and actors.has(coup_leader):
 			var l: Actor = actors[coup_leader]
 			var promo_week: int = flags.get(l.id.to_upper() + "_GUCLENDI", 0)
 			if promo_week > 0:
@@ -2789,7 +2972,7 @@ func _end(survived: bool) -> void:
 		"promises_display": Loc.ntr("%d söz verdin: %d tutuldu, %d bozuldu.", int(stats.get("promises", 0))) % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
 		"historians": historians(survived), "timeline": timeline.duplicate(), "council": council_record(),
 		"plot": plot_log.duplicate(), "signs": sign_record(), "state": _state_record(),
-		"scenario": scenario_id, "scenario_name": scenario_name, "endless": endless}
+		"scenario": scenario_id, "scenario_name": scenario_name, "endless": endless, "external_history": external_history.duplicate(true)}
 	record["new_achievements"] = _award_achievements(survived, title, cause) if record_chronicle else []
 	if record_chronicle:
 		_append_chronicle(record)
@@ -2874,7 +3057,9 @@ func _award_achievements(survived: bool, title: String, cause: String) -> Array:
 		if title.contains("Kukla") or title.contains("Tutsağı"):
 			earned.append("kukla")
 	else:
-		if coup_leader != "" and actors.has(coup_leader):
+		if str(flags.get("external_defeat", "")) == "border":
+			earned.append("yabanci_mudahale")
+		elif coup_leader != "" and actors.has(coup_leader):
 			earned.append("darbe")
 		elif unrest >= 100.0:
 			earned.append("ayaklanma")
@@ -3078,7 +3263,15 @@ func foreign_band(power: String, verified: bool = false) -> String:
 
 
 func foreign_report(verified: bool = false) -> String:
-	return tr("Asteria %s; Drakon %s; Seravia %s.") % [foreign_band("asteria", verified), foreign_band("drakon", verified), foreign_band("seravia", verified)]
+	var report := tr("Asteria %s; Drakon %s; Seravia %s.") % [foreign_band("asteria", verified), foreign_band("drakon", verified), foreign_band("seravia", verified)]
+	var hints: Array[String] = []
+	for power in ["asteria", "drakon", "seravia"]:
+		var hint := _external_report_hint(power)
+		if hint != "":
+			hints.append(hint)
+	if not hints.is_empty():
+		report += " " + " ".join(hints)
+	return report
 
 
 func _generate_reports() -> void:

@@ -699,8 +699,10 @@ func _style_cards(hover_id := "") -> void:
 			var rl := card.get_meta("role", null) as Label
 			if rl != null:
 				var role := tr(str(ROLE.get(a.domain, "")))
-				rl.text = UIKit.tr_upper(role if lvl < 2 else "%s · %s" % [role, Sim.SUSPICION_NAMES[lvl]])
-				rl.add_theme_color_override("font_color", [Color(UIKit.GOLD, 0.85), Color(UIKit.GOLD, 0.85), UIKit.AMBER.lightened(0.15), Color("ff8a7a")][lvl])
+				var external_lvl := Sim.external_suspicion_level(id) if Sim.FOREIGN_ENVOYS.has(id) else 0
+				var external_hint := external_lvl >= 2
+				rl.text = UIKit.tr_upper(tr("Dış temas şüphesi") if external_hint else (role if lvl < 2 else "%s · %s" % [role, Sim.SUSPICION_NAMES[lvl]]))
+				rl.add_theme_color_override("font_color", UIKit.AMBER.lightened(0.15) if external_hint else [Color(UIKit.GOLD, 0.85), Color(UIKit.GOLD, 0.85), UIKit.AMBER.lightened(0.15), Color("ff8a7a")][lvl])
 			if lvl >= 2:
 				border = Color(UIKit.AMBER if lvl == 2 else UIKit.DANGER, 0.7)
 		if hover_id == id:

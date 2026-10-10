@@ -23,5 +23,6 @@
   "hazir_veliaht": ["Heir Prepared", "End a reign with Julian ready."],
   "senaryo_darbe": ["Shadow of a Coup", "Finish the Coup-prone Kingdom scenario."],
   "senaryo_naiplik": ["The Regent's Test", "Finish the Regency scenario."],
-  "senaryo_bos_kasa": ["Last Coin", "Finish the Empty Treasury scenario."]
+  "senaryo_bos_kasa": ["Last Coin", "Finish the Empty Treasury scenario."],
+  "yabanci_mudahale": ["Broken Sovereign", "Fall from the throne to Drakon intervention."]
 }
