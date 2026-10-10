@@ -61,6 +61,11 @@ func _apply() -> void:
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if full else DisplayServer.WINDOW_MODE_WINDOWED)
 
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_WINDOW_FOCUS_IN and OS.has_feature("mobile"):
+		call_deferred("_apply")
+
+
 func set_music(v: float) -> void:
 	music_volume = v
 	_apply()
