@@ -23,6 +23,8 @@ var language := "tr"
 var _streams: Dictionary = {}
 var _players: Array[AudioStreamPlayer] = []
 var _music: AudioStreamPlayer
+var _music_b: AudioStreamPlayer
+var _music_tween: Tween
 var _next := 0
 var _rng := RandomNumberGenerator.new()
 
@@ -41,6 +43,9 @@ func _ready() -> void:
 	_music = AudioStreamPlayer.new()
 	_music.bus = "Music"
 	add_child(_music)
+	_music_b = AudioStreamPlayer.new()
+	_music_b.bus = "Music"
+	add_child(_music_b)
 	_build_streams()
 	_apply()
 
@@ -131,20 +136,50 @@ func play(name: String, volume_db := 0.0, pitch := 1.0) -> void:
 
 
 func start_music() -> void:
-	if _music.playing or not _streams.has("ambient"):
+	crossfade_to("ambient")
+
+
+func crossfade_to(name: String, seconds := 2.0) -> void:
+	if _music_tween != null and _music_tween.is_valid():
+		_music_tween.kill()
+	var next: AudioStreamPlayer = _music_b if _music.playing else _music
+	var previous: AudioStreamPlayer = _music if next == _music_b else _music_b
+	if name == "":
+		if OS.has_feature("headless") or "--autoplay" in OS.get_cmdline_user_args() or short_fx:
+			previous.stop()
+			return
+		_music_tween = create_tween()
+		_music_tween.tween_property(previous, "volume_db", -60.0, maxf(seconds, 2.0))
+		_music_tween.tween_callback(previous.stop)
 		return
-	var amb: AudioStream = _streams["ambient"]
-	if "loop" in amb:
-		amb.loop = true   # ogg/mp3 müzik döngüde çalar
-	_music.stream = amb
-	_music.volume_db = -6.0
-	_music.play()
+	var stream: AudioStream = _streams.get(name, _streams.get("ambient"))
+	if stream == null:
+		return
+	if next.playing and next.stream == stream:
+		return
+	if "loop" in stream:
+		stream.loop = true
+	next.stream = stream
+	var immediate := OS.has_feature("headless") or "--autoplay" in OS.get_cmdline_user_args() or short_fx
+	var duration := 0.0 if immediate else maxf(seconds, 2.0)
+	next.volume_db = -60.0 if duration > 0.0 else 0.0
+	next.play()
+	if immediate:
+		previous.stop()
+		next.volume_db = 0.0
+	else:
+		_music_tween = create_tween()
+		_music_tween.set_parallel(true)
+		_music_tween.tween_property(next, "volume_db", 0.0, duration)
+		if previous.playing:
+			_music_tween.tween_property(previous, "volume_db", -60.0, duration)
+		_music_tween.chain().tween_callback(previous.stop)
 
 
 # ---------------------------------------------------------------- Sentez
 
 func _build_streams() -> void:
-	for n in NAMES + ["ambient"]:
+	for n in NAMES + ["ambient", "menu", "tension", "crisis"]:
 		var loaded := _try_load(n)
 		if loaded != null:
 			_streams[n] = loaded
@@ -164,6 +199,9 @@ func _build_streams() -> void:
 		_streams["stinger_win"] = _synth_win()
 	if not _streams.has("ambient"):
 		_streams["ambient"] = _synth_ambient()
+	for n in ["menu", "tension", "crisis"]:
+		if not _streams.has(n):
+			_streams[n] = _streams["ambient"]
 
 
 func _try_load(n: String) -> AudioStream:

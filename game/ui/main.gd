@@ -93,6 +93,8 @@ var _last_mesai := -1
 var _autoplayer: RefCounted   # otomatik oynatma testi (autoplay.gd); await sırasında canlı kalsın
 var _last_wealth := -1
 var _tour: Control
+var _music_mode := ""
+var _music_mode_since := 0
 
 
 func _ready() -> void:
@@ -123,6 +125,7 @@ func _ready() -> void:
 		_show_menu()
 		_show_modal(tr("[b]İçerik yüklenemedi[/b]\n\n%s") % Sim.content_error)
 		return
+	_update_music()
 	var dev_run: bool = "--autoplay" in OS.get_cmdline_user_args() or ProjectSettings.get_setting("veloria/dev_autostart", false)
 	if dev_run:
 		Sim.record_chronicle = false   # test/geliştirme oyunları arşive yazılmaz
@@ -908,6 +911,7 @@ func _initial_art(id: String, size: Vector2, letter_size := 40) -> Control:
 
 func _show_menu() -> void:
 	_menu.show()
+	_update_music()
 	_menu_show_page("main")
 	# İlk düğme duruma göre: oyun sürüyorsa "Oyuna Dön", yoksa kayıttan "Devam Et".
 	var b_first := _menu.get_meta("first") as Button
@@ -936,12 +940,14 @@ func _show_menu() -> void:
 func _hide_menu() -> void:
 	if _fast():
 		_menu.hide()
+		_update_music()
 		return
 	var tw := _menu.create_tween()
 	tw.tween_property(_menu, "modulate:a", 0.0, 0.3)
 	tw.tween_callback(func() -> void:
 		_menu.hide()
-		_menu.modulate.a = 1.0)
+		_menu.modulate.a = 1.0
+		_update_music())
 
 
 func _request_new_game() -> void:
@@ -1317,6 +1323,7 @@ func _choose(pending_index: int, choice_index: int) -> void:
 # ---------------------------------------------------------------- Görünüm
 
 func _refresh() -> void:
+	_update_music()
 	if _header_week == null or Sim.actors.is_empty():
 		return
 	_header_week.text = tr("HAFTA %d / %d") % [Sim.week, Sim.MAX_WEEKS]
@@ -1545,6 +1552,7 @@ func _on_news(_text: String) -> void:
 
 
 func _on_end(record: Dictionary) -> void:
+	Sfx.crossfade_to("")
 	var bg_path: String = _end_overlay.show_record(record)
 	_menu.hide()
 	if _fast():
@@ -1561,6 +1569,28 @@ func _on_end(record: Dictionary) -> void:
 		UIKit.shake(_stage, 10.0, 0.6)
 	var dur := clampf(float(_end_overlay.summary.get_total_character_count()) * 0.012, 2.5, 6.0)
 	UIKit.typewrite(_end_overlay.summary, dur, 0.8)
+
+
+func _update_music() -> void:
+	if _menu == null:
+		return
+	var desired := "menu" if _menu.visible else "ambient"
+	if not _menu.visible and not Sim.actors.is_empty() and not Sim.ended:
+		if Sim.active_crisis_label() != "":
+			desired = "crisis"
+		else:
+			for item: Dictionary in Sim.pending:
+				if int(item.get("age", 0)) > 0:
+					desired = "tension"
+					break
+	if desired == _music_mode:
+		return
+	var now := Time.get_ticks_msec()
+	if _music_mode != "" and now - _music_mode_since < 8000:
+		return
+	_music_mode = desired
+	_music_mode_since = now
+	Sfx.crossfade_to(desired)
 
 func _rebuild_facts() -> void:
 	_agenda_view._rebuild_facts()
