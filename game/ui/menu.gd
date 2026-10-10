@@ -47,6 +47,7 @@ var bg: Control
 var items: Array = []        # açılış animasyonu sırası
 var pages: Dictionary = {}
 var page_now := "main"
+var _daily_status: Label
 
 
 func _init(main: Control) -> void:
@@ -145,6 +146,16 @@ func _build() -> void:
 		else:
 			host._continue())
 	var b_new := _btn(main_page, tr("Yeni Oyun"), func() -> void: show_page("new"))
+	var b_daily := _btn(main_page, tr("Günlük saltanat"), host._request_daily_game, true)
+	b_daily.add_theme_font_override("font", UIKit.serif())
+	b_daily.add_theme_font_size_override("font_size", host._fs(20))
+	_daily_status = Label.new()
+	_daily_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_daily_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_daily_status.add_theme_font_size_override("font_size", host._fs(14))
+	_daily_status.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+	main_page.add_child(_daily_status)
+	refresh_daily_result()
 	var b_set := _btn(main_page, tr("Ayarlar"), func() -> void: show_page("settings"))
 	var b_tour := _btn(main_page, tr("Turu yeniden göster"), host._replay_tour)
 	b_tour.theme_type_variation = "GhostButton"
@@ -287,7 +298,7 @@ func _build() -> void:
 	var b_back2 := _btn(set_page, tr("Geri"), func() -> void: show_page("main"))
 	b_back2.theme_type_variation = "GhostButton"
 
-	items = [title, mdiv, sub, b_first, b_new, b_set, b_tour, b_quit, links]
+	items = [title, mdiv, sub, b_first, b_new, b_daily, b_set, b_tour, b_quit, links]
 	set_meta("first", b_first)
 	set_meta("new", b_new)
 	var ver := Label.new()
@@ -342,10 +353,24 @@ func _heading(t: String) -> Label:
 
 func show_page(page_name: String) -> void:
 	page_now = page_name
+	if page_name == "main":
+		refresh_daily_result()
 	for k in pages:
 		(pages[k] as Control).visible = k == page_name
 	if not host._fast():
 		UIKit.fade_in(pages[page_name], 0.25)
+
+
+func refresh_daily_result() -> void:
+	if _daily_status == null:
+		return
+	var result := Sim.daily_result()
+	if result.is_empty():
+		_daily_status.text = tr("Bugünkü sonuç henüz yok.")
+		return
+	var verdict := tr("Tahtta kaldı") if result["survived"] else tr("Tahtını kaybetti")
+	var weeks := int(result["weeks"])
+	_daily_status.text = tr("Bugünkü sonuç: %s · %s") % [verdict, Loc.ntr("%d hafta", weeks) % weeks]
 
 
 func _translate_lines(source: String) -> String:

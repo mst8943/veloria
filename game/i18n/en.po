@@ -1,10 +1,81 @@
 msgid ""
-msgstr ""
+msgstr "\n"
 "Project-Id-Version: Veloria 1.4\n"
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "Günlük saltanat"
+msgstr "Daily reign"
+
+msgid "Bugünkü sonuç henüz yok."
+msgstr "No result for today yet."
+
+msgid "Bugünkü sonuç: %s · %s"
+msgstr "Today's result: %s · %s"
+
+msgid "Veloria saltanat kartı"
+msgstr "Veloria reign card"
+
+msgid "Tahtta kaldı"
+msgstr "Stayed on the throne"
+
+msgid "Tahtını kaybetti"
+msgstr "Lost the throne"
+
+msgid "En güçlü isim: %s"
+msgstr "Most powerful figure: %s"
+
+msgid "Paylaşım metni kopyalandı."
+msgstr "Share text copied."
+
+msgid "Kartı kaydet"
+msgstr "Save card"
+
+msgid "Metni kopyala"
+msgstr "Copy text"
+
+msgid "Kart klasörünü aç"
+msgstr "Open card folder"
+
+msgid "Ünvanın: %s"
+msgstr "Your title: %s"
+
+msgid "Saltanatın: %d hafta"
+msgstr "Your reign: %d weeks"
+
+msgid "Rejimin: %s"
+msgstr "Your regime: %s"
+
+msgid "Tarih: %s · Tohum: %d"
+msgstr "Date: %s · Seed: %d"
+
+msgid "Kart kaydedildi: %s"
+msgstr "Card saved: %s"
+
+msgid "Kart kaydedilemedi."
+msgstr "Could not save the card."
+
+msgid "Süren ya da kayıtlı bir saltanat var. Günlük oyuna başlarsan otomatik kayıt üzerine yazılacak."
+msgstr "A reign is in progress or saved. Starting the daily game will overwrite its autosave."
+
+msgid "Günlük oyuna başla"
+msgstr "Start daily game"
+
+msgid "VELORİA"
+msgstr "VELORIA"
+
+msgid "Kral %s"
+msgstr "King %s"
+
+msgid "Rejim oluşmadı"
+msgstr "No regime formed"
+
+msgid "%d hafta"
+msgid_plural "%d hafta"
+msgstr[0] "%d week"
+msgstr[1] "%d weeks"
 
 msgid "Turu yeniden göster"
 msgstr "Show the tour again"

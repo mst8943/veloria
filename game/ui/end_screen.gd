@@ -17,6 +17,7 @@ var lies_page: RichTextLabel
 var log_page: RichTextLabel
 var timeline: Array = []
 var chart_drawn := false
+var _record: Dictionary = {}
 
 
 func _history_text(value: String) -> String:
@@ -109,6 +110,37 @@ func _build() -> void:
 	var brow := HBoxContainer.new()
 	brow.add_theme_constant_override("separation", 12)
 	v.add_child(brow)
+	var card_row := HBoxContainer.new()
+	card_row.add_theme_constant_override("separation", 8)
+	v.add_child(card_row)
+	var save_card := Button.new()
+	save_card.text = tr("Kartı kaydet")
+	save_card.theme_type_variation = "GhostButton"
+	save_card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	save_card.custom_minimum_size.y = 44 if host._mobile else 0
+	host._wire(save_card)
+	save_card.pressed.connect(_save_card)
+	card_row.add_child(save_card)
+	var copy_text := Button.new()
+	copy_text.text = tr("Metni kopyala")
+	copy_text.theme_type_variation = "GhostButton"
+	copy_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	copy_text.custom_minimum_size.y = 44 if host._mobile else 0
+	host._wire(copy_text)
+	copy_text.pressed.connect(_copy_share_text)
+	card_row.add_child(copy_text)
+	if not OS.has_feature("web") and not OS.has_feature("android"):
+		var open_cards := Button.new()
+		open_cards.text = tr("Kart klasörünü aç")
+		open_cards.theme_type_variation = "GhostButton"
+		open_cards.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		open_cards.custom_minimum_size.y = 44 if host._mobile else 0
+		host._wire(open_cards)
+		open_cards.pressed.connect(func() -> void:
+			var path := ProjectSettings.globalize_path("user://cards")
+			DirAccess.make_dir_recursive_absolute(path)
+			OS.shell_open(path))
+		card_row.add_child(open_cards)
 	var again := Button.new()
 	again.text = tr("YENİDEN OYNA")
 	again.theme_type_variation = "PrimaryButton"
@@ -211,6 +243,7 @@ func _append_state(state: Dictionary) -> void:
 ## Kaydı sekmelere yazar (Özet, Tarihçiler, Hakikat Dosyası, Kararlar) ve final görselinin yolunu döndürür.
 ## Gösterme/sinema main.gd::_on_end'de kalır.
 func show_record(record: Dictionary) -> String:
+	_record = record.duplicate(true)
 	var bg_path := "res://art/end_victory.png"
 	if not record["survived"]:
 		var c: String = record["cause"]
@@ -296,3 +329,87 @@ func show_record(record: Dictionary) -> String:
 	chart_drawn = false
 	chart.set_data([], false)
 	return bg_path
+
+
+func _share_text() -> String:
+	var title := str(_record.get("title", ""))
+	var verdict := "Tahtta kaldı" if _record.get("survived", false) else "Tahtını kaybetti"
+	var actor := str(_record.get("top_actor", ""))
+	var tr_text := "%s\n%s\n%s\n%s" % ["Veloria saltanat kartı", title, verdict, "En güçlü isim: %s" % actor]
+	var en_text := "%s\n%s\n%s\n%s" % [Loc.en("Veloria saltanat kartı"), Loc.en(title), Loc.en(verdict), Loc.en("En güçlü isim: %s") % Loc.en(actor)]
+	return tr_text + "\n\n" + en_text
+
+
+func _copy_share_text() -> void:
+	DisplayServer.clipboard_set(_share_text())
+	host._show_modal(tr("Paylaşım metni kopyalandı."))
+
+
+func _save_card() -> void:
+	if OS.has_feature("web"):
+		_copy_share_text()
+		return
+	var vp := SubViewport.new()
+	vp.size = Vector2i(1080, 1350)
+	vp.transparent_bg = false
+	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	add_child(vp)
+	var root := Control.new()
+	root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	var panel := PanelContainer.new()
+	panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	panel.add_theme_stylebox_override("panel", UIKit.box(Color("17120e"), Color("c9a24f"), 18, 26, 2))
+	root.add_child(panel)
+	var content := VBoxContainer.new()
+	content.add_theme_constant_override("separation", 24)
+	panel.add_child(content)
+	var title := Label.new()
+	title.text = tr("VELORİA")
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_override("font", UIKit.serif())
+	title.add_theme_font_size_override("font_size", 64)
+	title.add_theme_color_override("font_color", UIKit.GOLD)
+	content.add_child(title)
+	var name := Label.new()
+	name.text = tr("Kral %s") % tr(str(_record.get("king", Sim.KING_NAME)))
+	name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	name.add_theme_font_override("font", UIKit.serif())
+	name.add_theme_font_size_override("font_size", 42)
+	name.add_theme_color_override("font_color", UIKit.TEXT)
+	content.add_child(name)
+	var portrait := TextureRect.new()
+	portrait.texture = host._art("res://art/portraits/king.png")
+	portrait.custom_minimum_size = Vector2(460, 520)
+	portrait.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	content.add_child(portrait)
+	var lines := Label.new()
+	var regime := str(_record.get("regime", ""))
+	if regime == "":
+		regime = tr("Rejim oluşmadı")
+	lines.text = "%s\n%s\n%s" % [tr("Ünvanın: %s") % tr(str(_record.get("title", ""))),
+		tr("Saltanatın: %d hafta") % int(_record.get("weeks", 0)),
+		tr("Rejimin: %s") % tr(regime)]
+	lines.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lines.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lines.add_theme_font_size_override("font_size", 32)
+	lines.add_theme_color_override("font_color", UIKit.TEXT)
+	content.add_child(lines)
+	var footer := Label.new()
+	var date := str(_record.get("daily_date", Time.get_date_string_from_system(true)))
+	var seed := int(_record.get("daily_seed", Sim.rng.seed))
+	footer.text = tr("Tarih: %s · Tohum: %d") % [date, seed]
+	footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	footer.add_theme_font_size_override("font_size", 24)
+	footer.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+	content.add_child(footer)
+	vp.add_child(root)
+	await RenderingServer.frame_post_draw
+	await RenderingServer.frame_post_draw
+	var dir := ProjectSettings.globalize_path("user://cards")
+	DirAccess.make_dir_recursive_absolute(dir)
+	var out := "user://cards/veloria_%s_%d.png" % [date, seed]
+	var err := vp.get_texture().get_image().save_png(out)
+	vp.queue_free()
+	host._show_modal(tr("Kart kaydedildi: %s") % ProjectSettings.globalize_path(out) if err == OK else tr("Kart kaydedilemedi."))

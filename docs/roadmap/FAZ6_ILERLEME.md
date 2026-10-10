@@ -14,6 +14,12 @@
 - `a11y_test`: `A11Y: OK`; i18n eksikleri: 0. Büyük metin UX auditleri TR/EN, 1067×600 ve 1280×720: hepsi `AUDIT BULGU: 0`.
 - Görüntüler alınıp incelendi: `screenshots/faz6_a2_large_1067_verified`, `faz6_a2_large_1280_verified`, `faz6_a2_large_1067_en_verified`, `faz6_a2_large_1280_en`.
 
+### A3 — Günlük tohum ve paylaşılabilir saltanat kartı
+- UTC tarihinden kararlı günlük tohum üretiliyor; günlük oyun Normal zorlukla açılıyor. `user://daily.cfg` günün ilk sonucunu saklıyor; tekrar oyun serbest, ilk sonuç korunuyor ve kampanya kaydına ek alan yazılmıyor.
+- Bitiş ekranındaki kart SubViewport ile 1080×1350 PNG olarak `user://cards/` içine kaydediliyor. Kartta kral portresi, ünvan, hafta, rejim, tarih ve tohum var. Paylaşım metni Türkçe ve İngilizce kopyalanıyor; Windows/Linux kart klasörünü açabiliyor. Web kart düğmesi metin kopyalıyor; Android uygulama klasörünü kullanıyor.
+- `daily_card_test`: `DAILY CARD: OK`; günlük tohum, ilk-sonuç korunması, çift dilli metin ve PNG boyutu/dosyası doğrulandı. i18n eksikleri: 0. TR/EN masaüstü ve mobil UX auditleri `AUDIT BULGU: 0`.
+- Görüntüler alınıp incelendi: `screenshots/faz6_a3_desktop_tr`, `faz6_a3_desktop_en`, `faz6_a3_mobile_tr`, `faz6_a3_mobile_en`, `faz6_a3_end_screen_tr_desktop.png`, `faz6_a3_end_screen_en_mobile.png`, `faz6_a3_card_tr.png`, `faz6_a3_card_en.png`.
+
 ## SIRADAKİ DİLİM
 
-A3 — Günlük tohum ve paylaşılabilir saltanat kartı.
+A4 — Senaryo modları ve sonsuz mod. Ardından istenen Başkent · Kurumlar dış alan tıklaması bu dalganın son işi olacak.

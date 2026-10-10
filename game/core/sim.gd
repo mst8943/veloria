@@ -19,6 +19,7 @@ const KING_NAME := "Adrian IV"
 const ACTORS_PATH := "res://game/data/actors.json"
 const EVENTS_PATH := "res://game/data/events.json"
 const CHRONICLE_PATH := "user://veloria_chronicle.txt"
+const DAILY_PATH := "user://daily.cfg"
 var save_path := "user://veloria_save.txt"   # testler kendi dosyasını kullanır, oyuncunun kaydına dokunmaz
 var record_chronicle := true                 # testlerde ve otomatik oynatmada arşive yazılmaz
 var autosave := true                         # her hafta sonunda otomatik kayıt
@@ -300,6 +301,31 @@ const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "we
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
 	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
+
+
+static func daily_seed(date: String) -> int:
+	var compact := date.replace("-", "")
+	return int(compact) if compact.is_valid_int() else 1
+
+
+func daily_result(date := Time.get_date_string_from_system(true)) -> Dictionary:
+	var cfg := ConfigFile.new()
+	if cfg.load(DAILY_PATH) != OK or str(cfg.get_value("daily", "date", "")) != date:
+		return {}
+	return {"title": str(cfg.get_value("daily", "title", "")), "weeks": int(cfg.get_value("daily", "weeks", 0)),
+		"survived": bool(cfg.get_value("daily", "survived", false)), "seed": int(cfg.get_value("daily", "seed", 0))}
+
+
+func save_daily_result(date: String, result: Dictionary, seed: int) -> bool:
+	if not daily_result(date).is_empty():
+		return false
+	var cfg := ConfigFile.new()
+	cfg.set_value("daily", "date", date)
+	cfg.set_value("daily", "title", str(result.get("title", "")))
+	cfg.set_value("daily", "weeks", int(result.get("weeks", 0)))
+	cfg.set_value("daily", "survived", bool(result.get("survived", false)))
+	cfg.set_value("daily", "seed", seed)
+	return cfg.save(DAILY_PATH) == OK
 
 
 ## Eski bir kaydı bugünkü şemaya taşır (adım adım: 1 -> 2 -> ...).

@@ -50,6 +50,9 @@ var _sel: Array[String] = []
 var _icons: Dictionary = {}
 var _menu: Control    # ana menü (menu.gd)
 var _end_overlay: Control   # oyun sonu ekranı (end_screen.gd)
+var _daily_run := false
+var _daily_date := ""
+var _daily_seed := 0
 var _fx: CanvasLayer
 var _curtain: ColorRect
 var _curtain_title: Label
@@ -962,8 +965,24 @@ func _request_new_game() -> void:
 		_start_new()
 
 
-func _start_new() -> void:
-	Sim.new_game(0, Sfx.difficulty)
+func _request_daily_game() -> void:
+	var in_progress: bool = not Sim.actors.is_empty() and not Sim.ended and Sim.week > 1
+	if in_progress or (Sim.actors.is_empty() and Sim.has_save()):
+		_show_modal(tr("Süren ya da kayıtlı bir saltanat var. Günlük oyuna başlarsan otomatik kayıt üzerine yazılacak."),
+			tr("Günlük oyuna başla"), _begin_daily_game)
+	else:
+		_begin_daily_game()
+
+
+func _begin_daily_game() -> void:
+	_daily_date = Time.get_date_string_from_system(true)
+	_daily_seed = Sim.daily_seed(_daily_date)
+	_start_new(_daily_seed, 1, true)
+
+
+func _start_new(seed_value := 0, diff := -1, daily := false) -> void:
+	_daily_run = daily
+	Sim.new_game(seed_value, diff if diff >= 0 else Sfx.difficulty)
 	if Sim.content_error != "":
 		_show_modal(tr("[b]İçerik yüklenemedi[/b]\n\n%s") % Sim.content_error)
 		return
@@ -1560,6 +1579,12 @@ func _on_news(_text: String) -> void:
 
 
 func _on_end(record: Dictionary) -> void:
+	if _daily_run:
+		record["daily_date"] = _daily_date
+		record["daily_seed"] = _daily_seed
+		Sim.save_daily_result(_daily_date, record, _daily_seed)
+		_menu.refresh_daily_result()
+		_daily_run = false
 	Sfx.crossfade_to("")
 	var bg_path: String = _end_overlay.show_record(record)
 	_menu.hide()
