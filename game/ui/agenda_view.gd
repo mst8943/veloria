@@ -212,7 +212,7 @@ func _rebuild_agenda() -> void:
 	var animated: Array[Control] = []
 	if Sfx.tips and Sim.week <= 3:
 		_add_guide(animated)
-	if not host._mobile and Sfx.tips and ADVICE.has(Sim.week):
+	if not host._mobile and Sfx.tips and ADVICE.has(Sim.week) and (host._tour == null or not host._tour.active):
 		# Saray kâtibinin notu (mobilde ilk haftalarda yol gösterici yeterli; kart ekrana sığsın): tek ince satır (gündemin en değerli yerini kaplamasın).
 		var note := PanelContainer.new()
 		var nsb := UIKit.box(Color(0.11, 0.095, 0.06, 0.85), Color(UIKit.GOLD_DIM, 0.45), 6, 8)

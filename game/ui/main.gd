@@ -18,6 +18,7 @@ const MODAL := preload("res://game/ui/modal.gd")
 const AGENDA_VIEW := preload("res://game/ui/agenda_view.gd")
 const PERSON_PANEL := preload("res://game/ui/person_panel.gd")
 const DIVAN_VIEW := preload("res://game/ui/divan_view.gd")
+const TOUR_VIEW := preload("res://game/ui/tour_view.gd")
 
 var _agenda_view: RefCounted
 var _person_panel: RefCounted
@@ -88,6 +89,7 @@ var _reveal := true
 var _last_mesai := -1
 var _autoplayer: RefCounted   # otomatik oynatma testi (autoplay.gd); await sırasında canlı kalsın
 var _last_wealth := -1
+var _tour: Control
 
 
 func _ready() -> void:
@@ -202,7 +204,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			Sfx.set_fullscreen(not Sfx.fullscreen)
 			Sfx.save_settings()
 		KEY_ESCAPE:
-			if _modal.visible:
+			if _tour != null and _tour.active:
+				_tour.finish()
+			elif _modal.visible:
 				_modal.hide()
 			elif _divan.opened:
 				_divan.close()
@@ -428,11 +432,14 @@ func _build_ui() -> void:
 	add_child(_modal)   # menünün üstünde
 	_end_overlay = END_SCREEN.new(self)
 	add_child(_end_overlay)
+	_tour = TOUR_VIEW.new(self)
+	add_child(_tour)
 
 
 func _build_header(parent: Control) -> void:
 	# Başlık bandı: koyu, alt kenarında ince altın çizgi.
 	var band := PanelContainer.new()
+	band.name = "TourTopBar"
 	band.add_theme_stylebox_override("panel", UIKit.band_style())
 	parent.add_child(band)
 	var top := HBoxContainer.new()
@@ -874,8 +881,21 @@ func _start_new() -> void:
 		_end_overlay.hide()
 		await _cinema.play(_intro_shots())
 	_after_load(tr("Taç sana emanet edildi. Güç merkezleri seni test edecek."))
-	if Sfx.desk_start:
+	var start_tour := not _fast() and Sfx.tour_enabled and not Sfx.tour_done
+	if start_tour:
+		_tour.begin()
+	elif Sfx.desk_start:
 		_show_desk()
+
+
+func _replay_tour() -> void:
+	if Sim.actors.is_empty() or Sim.ended:
+		Sfx.tour_enabled = true
+		Sfx.tour_done = false
+		_start_new()
+		return
+	_menu.hide()
+	_tour.begin()
 
 
 ## Açılış sineması: krallık, taç, güç merkezleri ve oyunun sorusu.
@@ -1201,6 +1221,8 @@ func _choose(pending_index: int, choice_index: int) -> void:
 		ev_id = str(Sim.pending[pending_index]["event"].get("id", ""))
 	var before: int = Sim.pending.size()
 	var text: String = Sim.resolve_decision(pending_index, choice_index)
+	if _tour != null and _tour.has_method("decision_made"):
+		_tour.decision_made()
 	if text != "":
 		_log(text)
 	if Sim.pending.size() < before and not Sim.ended:

@@ -47,6 +47,23 @@ func _shot(file_name: String) -> void:
 func _run() -> void:
 	# Kişi paneli dolu görünsün: en güçlü kişiyi seç.
 	var sim0: Node = root.get_node("Sim")
+	if "--tour" in OS.get_cmdline_user_args():
+		var requested_step := 0
+		for arg in OS.get_cmdline_user_args():
+			if arg.begins_with("--tour-step="):
+				requested_step = clampi(int(arg.substr(12)), 0, 9)
+		if requested_step == 3 and sim0.pending.is_empty():
+			for event in sim0._events:
+				if event["id"] == "gida_protestosu":
+					sim0.pending.append({"event": event, "age": 0})
+					break
+			main._refresh()
+		main._tour.begin()
+		main._tour.index = requested_step
+		main._tour._render()
+		await _shot("tour_%02d" % requested_step)
+		quit(0)
+		return
 	if "--all-actions" in OS.get_cmdline_user_args():
 		main._sel.clear()
 		main._sel.append("arden")

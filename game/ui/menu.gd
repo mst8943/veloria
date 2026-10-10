@@ -146,9 +146,11 @@ func _build() -> void:
 			host._continue())
 	var b_new := _btn(main_page, tr("Yeni Oyun"), func() -> void: show_page("new"))
 	var b_set := _btn(main_page, tr("Ayarlar"), func() -> void: show_page("settings"))
+	var b_tour := _btn(main_page, tr("Turu yeniden göster"), host._replay_tour)
+	b_tour.theme_type_variation = "GhostButton"
 	var b_quit := _btn(main_page, tr("Çıkış"), func() -> void: get_tree().quit())
 	b_quit.visible = not OS.has_feature("web")   # tarayıcıda çıkış anlamsız
-	for b in [b_first, b_new, b_set, b_quit]:
+	for b in [b_first, b_new, b_set, b_tour, b_quit]:
 		b.custom_minimum_size.y = 50 if host._mobile else 58
 		b.add_theme_font_override("font", UIKit.serif())
 		b.add_theme_font_size_override("font_size", host._fs(21))
@@ -213,6 +215,7 @@ func _build() -> void:
 		[tr("Danışman ipuçları"), Sfx.tips, func(on: bool) -> void: Sfx.tips = on, true],
 		[tr("Açılış sineması"), Sfx.intro, func(on: bool) -> void: Sfx.intro = on, true],
 		[tr("Haftaya masadan başla"), Sfx.desk_start, func(on: bool) -> void: Sfx.desk_start = on, true],
+		[tr("İlk açılış turu"), Sfx.tour_enabled, func(on: bool) -> void: Sfx.tour_enabled = on, true],
 	]
 	for c in checks:
 		if not c[3]:
@@ -255,7 +258,7 @@ func _build() -> void:
 	var b_back2 := _btn(set_page, tr("Geri"), func() -> void: show_page("main"))
 	b_back2.theme_type_variation = "GhostButton"
 
-	items = [title, mdiv, sub, b_first, b_new, b_set, b_quit, links]
+	items = [title, mdiv, sub, b_first, b_new, b_set, b_tour, b_quit, links]
 	set_meta("first", b_first)
 	set_meta("new", b_new)
 	var ver := Label.new()

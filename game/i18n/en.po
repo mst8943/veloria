@@ -6,6 +6,87 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Turu yeniden göster"
+msgstr "Show the tour again"
+
+msgid "İlk açılış turu"
+msgstr "First launch tour"
+
+msgid "Geri"
+msgstr "Back"
+
+msgid "Atla"
+msgstr "Skip"
+
+msgid "İleri"
+msgstr "Next"
+
+msgid "Bitir"
+msgstr "Finish"
+
+msgid "Adım %d / %d"
+msgstr "Step %d / %d"
+
+msgid "Taç sana emanet"
+msgstr "The crown is yours"
+
+msgid "Üst çubuk"
+msgstr "Top bar"
+
+msgid "Gündem ve danışmanlar"
+msgstr "Agenda and advisers"
+
+msgid "İlk kararın"
+msgstr "Your first decision"
+
+msgid "İzleme listesi ve Divan"
+msgstr "Watchlist and council"
+
+msgid "Eylemler"
+msgstr "Actions"
+
+msgid "Bu hafta değişenler ve raporlar"
+msgstr "Changes this week and reports"
+
+msgid "Dosyalar, günlük ve medya"
+msgstr "Files, journal and media"
+
+msgid "Haftayı bitir"
+msgstr "End the week"
+
+msgid "Menü ve ayarlar"
+msgstr "Menu and settings"
+
+msgid "Veloria'da amacın 104 hafta tahtta kalmak. Bu turu istediğin an atlayabilirsin."
+msgstr "Your goal in Veloria is to remain on the throne for 104 weeks. You can skip this tour at any time."
+
+msgid "Hafta ilerlemesi, mesai hakkın ve kişisel servetin burada. Masa çalışma alanını, Medya haber ve yayınları açar; Kaydet ve Menü diğer araçlara götürür."
+msgstr "Your week, available actions and personal wealth are shown here. Desk opens your workspace, Media shows reports and broadcasts, and Save and Menu open other tools."
+
+msgid "Bekleyen kararları burada görürsün. Danışmanların çıkarı olabilir; Gerekçeler sana dayanaklarını gösterir."
+msgstr "Pending decisions appear here. Advisers may have an interest of their own; Reasons show the basis for their advice."
+
+msgid "Bir seçeneğe dokunarak ilk gerçek kararını ver. Karar verilmeden bu adım ilerlemez; Atla seçimi zorlamaz."
+msgstr "Choose an option to make your first real decision. This step waits until you decide; Skip never chooses for you."
+
+msgid "İzleme listesi 14 kişiyi takip eder. Şeritten birini seçebilir veya +N Divan ile tüm grupları açabilirsin."
+msgstr "The watchlist follows 14 people. Select someone in the strip or open every group with +N Council."
+
+msgid "Yedi eylem sekmesi farklı yollar sunar. Eylemler haftalık mesai harcar; açıklamaları düğmelerde bulursun."
+msgstr "Seven action tabs offer different approaches. Actions use weekly effort; their buttons explain what each one does."
+
+msgid "Bu hafta değişenler ve Raporlar, kişilerin güçlenmesi veya hoşnutsuzluğu hakkında anlatı sunar; gizli sayılar gösterilmez."
+msgstr "Changes this week and Reports describe who is gaining influence or growing dissatisfied; hidden numbers stay hidden."
+
+msgid "Dosyalar kanıt ve sırları, Günlük yaşananları tutar. Medya'da farklı haber kaynaklarını karşılaştırabilirsin."
+msgstr "Files hold evidence and secrets, while the Journal records events. Compare different news sources in Media."
+
+msgid "Haftayı bitirince zaman ilerler. Ertelenen kararlar kendiliğinden çözülebilir; kriz ve darbe belirtilerini izle."
+msgstr "Ending the week moves time forward. Deferred decisions can resolve on their own; watch for signs of crises and coups."
+
+msgid "Menüde kayıt, yükleme, zorluk, dil ve ayarlar var. Buradan turu yeniden başlatabilir veya ilk açılış turunu kapatabilirsin."
+msgstr "The Menu contains saving, loading, difficulty, language and settings. You can replay the tour or disable it here."
+
 msgid "Kapat"
 msgstr "Close"
 

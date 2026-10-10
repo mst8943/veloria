@@ -69,8 +69,16 @@ func _scan_game_ui() -> void:
 			if child is Button and (child as Button).text.to_lower().contains("setting"):
 				(child as Button).pressed.emit()
 				await process_frame
-				_collect(main, "Settings")
 				break
+	_collect(main, "Settings")
+	main._tour.active = true
+	main._tour.show()
+	for step in 10:
+		main._tour.index = step
+		main._tour._render()
+		_collect(main, "Tour step %d" % step)
+	main._tour.active = false
+	main._tour.hide()
 	var menu_script: Script = main._menu.get_script()
 	for page in ["HOW_TO", "CREDITS"]:
 		main._show_modal(main._menu._translate_lines(str(menu_script.get_script_constant_map().get(page, ""))))
