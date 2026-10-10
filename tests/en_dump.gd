@@ -85,7 +85,7 @@ func _run() -> void:
 	for page in main._menu.pages:
 		main._menu.show_page(str(page))
 		_grab(main, "menu " + str(page))
-	main._show_modal(main._menu.CREDITS)
+	main._show_modal(main._menu._translate_lines(main._menu.CREDITS))
 	_grab(main, "credits")
 	var f := FileAccess.open(out_path, FileAccess.WRITE)
 	for t in rows:

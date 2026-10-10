@@ -3565,3 +3565,45 @@ msgstr "• Decisions you postpone resolve on their own after two weeks."
 
 msgid "• Oyun bittiğinde [b]Hakikat Dosyası[/b] sana kimin ne zaman yalan söylediğini gösterir."
 msgstr "• When the game ends, the [b]Truth File[/b] shows who lied to you, and when."
+
+msgid "Bir kişiye eylem\n"
+msgstr "Choose a person to act\n"
+
+msgid "Danışmanların kararlara dair görüşü. Gerekçeleri doğrudur ama seçicidir:\nherkes işine gelen tarafı anlatır. Kime güveneceğin senin kararın."
+msgstr "Your advisers' views on decisions. Their reasons are true but selective:\neach presents the side that serves them. Whom to trust is your decision."
+
+msgid "Seçeneklerden en az biri onu doğrudan etkiliyor. Önerisi tarafsız olmayabilir."
+msgstr "At least one option affects them directly. Their advice may not be impartial."
+
+msgid "Son zamanlarda hakkında alametler var."
+msgstr "There have been signs around them lately."
+
+msgid "Kaçamak konuşuyor. Korkan bir meclis kralına gerçeği söylemez."
+msgstr "They are evasive. A frightened council does not tell its king the truth."
+
+msgid "Seçenekler arasında belirgin bir fark görmüyor."
+msgstr "They see no clear difference between the options."
+
+msgid "Hakikat Dosyası"
+msgstr "Truth File"
+
+msgid "[b][font_size=%d][color=#d6b25e]Yeni saltanat[/color][/font_size][/b]\n\nSüren ya da kayıtlı bir saltanat var. Yeni bir oyuna başlarsan otomatik kayıt da üzerine yazılacak.\n\nDevam etmek istiyor musun?"
+msgstr "[b][font_size=%d][color=#d6b25e]New reign[/color][/font_size][/b]\n\nThere is a current or saved reign. Starting a new game will overwrite the autosave.\n\nDo you want to continue?"
+
+msgid "Terfi Ettir (1 mesai)\nGüç ve minnet verir; ama onun gücü, hırsı ve sana olan borcun da büyür."
+msgstr "Promote (1 action)\nGrants power and gratitude, but their power, ambition, and debt to you all grow."
+
+msgid "Görevden Al"
+msgstr "Dismiss"
+
+msgid "Terfi"
+msgstr "Promote"
+
+msgid "Söz: Naiplik"
+msgstr "Promise: Regency"
+
+msgid "Söz: Liman İhalesi"
+msgstr "Promise: Port Contract"
+
+msgid "Söz: Dokunulmazlık"
+msgstr "Promise: Immunity"

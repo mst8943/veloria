@@ -210,6 +210,8 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 ## Türkçe ek uyumu: özel isme kesme işaretiyle doğru eki ekler.
 ## kind: "e" (yönelme: Vale'ye, Arden'e), "in" (ilgi: Vale'nin, Voss'un, Arden'in), "i" (belirtme: Vale'yi, Arden'i)
 static func ek(name: String, kind: String) -> String:
+	if Loc.lang == "en":
+		return name
 	var word := name.split(" ")[-1].to_lower()
 	var last_vowel := "e"
 	for i in range(word.length() - 1, -1, -1):
@@ -1886,8 +1888,7 @@ func _fire_budget() -> void:
 	if pending.size() >= 3:
 		budget_stance = 0
 		court_share = false
-		_add_news("MALİYE: Meclis bütçeyi görüşemedi; eski dengeli düzen sürdü.",
-			tr("FINANCE: The council couldn't debate the budget; the previous balanced policy remains."))
+		_add_news("MALİYE: Meclis bütçeyi görüşemedi; eski dengeli düzen sürdü.")
 		return
 	var note := ""
 	for report: Dictionary in reports:

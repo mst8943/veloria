@@ -299,7 +299,7 @@ func _advice_reason(fx: Dictionary, good: bool, r: RandomNumberGenerator, self_i
 		return ""
 	if key.begins_with("actor:"):
 		var aid := key.substr(6)
-		var nm: String = short_name(actors[aid]) if actors.has(aid) else aid.capitalize()
+		var nm: String = short_name(actors[aid]) if actors.has(aid) else _missing_actor_name(aid)
 		var forms: Array = content["actor_good"] if good else content["actor_bad"]
 		var line: String = tr(str(forms[r.randi() % forms.size()]))
 		return line.replace("{n_in}", Loc.poss(nm) if Loc.lang == "en" else ek(nm, "in")).replace("{n_i}", nm if Loc.lang == "en" else ek(nm, "i"))
@@ -307,6 +307,11 @@ func _advice_reason(fx: Dictionary, good: bool, r: RandomNumberGenerator, self_i
 		key = "capacity"
 	var opts: Array = content["reasons"][key][0 if good else 1]
 	return tr(str(opts[r.randi() % opts.size()]))
+
+
+func _missing_actor_name(aid: String) -> String:
+	var names := {"falk": "Sophia Renn", "kessler": "Selin Veyra", "halden": "Victor Sarne", "brandt": "Adrian Voss", "lena": "Leyla Sarn", "dorn": "Queen Helena"}
+	return str(names.get(aid, aid.capitalize()))
 
 
 func _log_advice(e: Dictionary, advice: Array, chosen: int) -> void:
