@@ -83,5 +83,30 @@ func _run() -> void:
 	if presses != 1:
 		printerr("TOUCH: dokunuş düğmeye basmadı: ", presses)
 		ok = false
+	# 3) Uzun basış: ipucu balonu görünür, düğmeye basılmaz.
+	await create_timer(1.0).timeout
+	var tip_btn := sc.get_child(0).get_child(1) as Button
+	tip_btn.tooltip_text = "Açıklama metni"
+	await process_frame
+	var before := presses
+	var tp := tip_btn.get_global_rect().get_center()
+	sc.scroll_vertical = 0
+	await process_frame
+	tp = tip_btn.get_global_rect().get_center()
+	_ev_btn(tp, true)
+	await create_timer(0.8).timeout
+	_ev_btn(tp, false)
+	await process_frame
+	await process_frame
+	if presses != before:
+		printerr("TOUCH: uzun basış düğmeye bastı")
+		ok = false
+	var tip_found := false
+	for n in root.find_children("*", "PanelContainer", true, false):
+		if n.is_visible_in_tree() and n.get_child_count() > 0 and n.get_child(0) is Label and (n.get_child(0) as Label).text == "Açıklama metni":
+			tip_found = true
+	if not tip_found:
+		printerr("TOUCH: ipucu balonu görünmedi")
+		ok = false
 	print("TOUCH: OK" if ok else "TOUCH: FAIL")
 	quit(0 if ok else 1)
