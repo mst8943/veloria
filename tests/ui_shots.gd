@@ -453,6 +453,14 @@ func _run() -> void:
 		await _shot("1_maliye_aksiyor")
 		main._city.show_site("adliye")
 		await _shot("1_adliye_saglam")
+		var outside := InputEventMouseButton.new()
+		outside.position = Vector2(24, 400)
+		outside.global_position = outside.position
+		outside.button_index = MOUSE_BUTTON_LEFT
+		outside.pressed = true
+		root.push_input(outside, true)
+		await process_frame
+		await _shot("1_adliye_dis_tiklama_kapali")
 		main._city.close_view()
 		sim0.week = 13
 		sim0.pending.clear()

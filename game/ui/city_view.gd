@@ -42,9 +42,18 @@ var plates: Dictionary = {}   # kurum id -> etiket (test ve konumlandırma için
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	gui_input.connect(_on_background_input)
 	_sites = SITES.duplicate(true)
 	_load_overrides()
 	hide()
+
+
+func _on_background_input(event: InputEvent) -> void:
+	if not visible or not _drawer or not _drawer.visible:
+		return
+	if (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT) or (event is InputEventScreenTouch and event.pressed):
+		if not _drawer.get_global_rect().has_point(event.position):
+			_drawer.hide()
 
 
 func _load_overrides() -> void:

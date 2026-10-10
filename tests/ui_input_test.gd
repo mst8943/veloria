@@ -176,6 +176,9 @@ func _run() -> void:
 		printerr("UI INPUT: seçili karar çözülmedi")
 		quit(1)
 		return
+	if not await _check_city_dismiss():
+		quit(1)
+		return
 	print("UI INPUT: OK")
 	quit(0)
 
@@ -395,8 +398,47 @@ func _run_mobile() -> void:
 		quit(1)
 		return
 	main._all_reports_popup.hide()
+	if not await _check_city_dismiss():
+		quit(1)
+		return
 	print("UI INPUT: OK (mobile)")
 	quit(0)
+
+
+func _check_city_dismiss() -> bool:
+	main._city.mobile = DisplayServer.window_get_size().x <= 1100
+	main._city.open()
+	for i in 3:
+		await process_frame
+	main._city.show_site("adliye")
+	await process_frame
+	_click_at(main._city.plates["maliye"].get_global_rect().get_center())
+	await process_frame
+	if not main._city._drawer.visible:
+		printerr("UI INPUT: kurum tıklaması çekmeceyi kapattı")
+		return false
+	_click_at(main._city._drawer.get_global_rect().get_center())
+	await process_frame
+	if not main._city._drawer.visible:
+		printerr("UI INPUT: çekmece içi tıklama çekmeceyi kapattı")
+		return false
+	var tap := InputEventScreenTouch.new()
+	tap.position = Vector2(24, 400)
+	tap.pressed = true
+	root.push_input(tap, true)
+	await process_frame
+	if main._city._drawer.visible:
+		printerr("UI INPUT: dış dokunuş kurum çekmecesini kapatmadı")
+		return false
+	main._city.show_site("adliye")
+	await process_frame
+	_click_at(Vector2(24, 400))
+	await process_frame
+	if main._city._drawer.visible:
+		printerr("UI INPUT: boş alana tıklama kurum çekmecesini kapatmadı")
+		return false
+	main._city.close_view()
+	return true
 
 func _click_at(pos: Vector2) -> void:
 	var move := InputEventMouseMotion.new()
