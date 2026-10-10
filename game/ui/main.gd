@@ -1534,7 +1534,8 @@ func _on_end(record: Dictionary) -> void:
 	# Final sineması: sonuç görseli tam ekran, bantlı; ardından hakikat paneli.
 	Sfx.play("stinger_win" if record["survived"] else "stinger_loss", -2.0)
 	var big := tr("TAHTINI KORUDUN") if record["survived"] else tr("TAHTINI KAYBETTİN")
-	await _cinema.play([{"tex": _art(bg_path), "line": big, "sub": tr("Ünvanın: %s") % record["title"], "hold": 4.2, "zoom_from": 1.0, "zoom_to": 1.14}])
+	var title := Loc.en(str(record["title"])) if Loc.lang == "en" else tr(str(record["title"]))
+	await _cinema.play([{"tex": _art(bg_path), "line": big, "sub": tr("Ünvanın: %s") % title, "hold": 4.2, "zoom_from": 1.0, "zoom_to": 1.14}])
 	_end_overlay.show()
 	UIKit.fade_in(_end_overlay, 1.0)
 	if not record["survived"]:

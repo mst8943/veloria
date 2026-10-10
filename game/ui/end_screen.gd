@@ -222,7 +222,7 @@ func show_record(record: Dictionary) -> String:
 	bg.texture = host._art(bg_path)
 	var verdict := tr("Tahtını korudun.") if record["survived"] else tr("Tahtını kaybettin.")
 	head.clear()
-	var title := "The Overthrown King" if Loc.lang == "en" and str(record["title"]) == "Devrilen Kral" else tr(str(record["title"]))
+	var title := Loc.en(str(record["title"])) if Loc.lang == "en" else tr(str(record["title"]))
 	head.append_text(tr("[b][font_size=%d]Kral %s[/font_size][/b]   [font_size=%d][color=%s]%s[/color][/font_size]\n[font_size=%d][color=gray]Ünvanın:[/color] [color=#d9b359]%s[/color][/font_size]") % [
 		host._fs(34), record["king"], host._fs(22), "#7fae7a" if record["survived"] else "#c0504a", verdict, host._fs(19), title])
 	var lies: Array = record["lies"]
