@@ -2843,6 +2843,27 @@ msgstr "\n[b][font_size=%d][color=#d6b25e]ACHIEVEMENTS  ·  %d / %d[/color][/fon
 msgid "Normal"
 msgstr "Normal"
 
+msgid "Yazı boyutu"
+msgstr "Text size"
+
+msgid "Büyük"
+msgstr "Large"
+
+msgid "Çok büyük"
+msgstr "Largest"
+
+msgid "Renk körü modu"
+msgstr "Color-blind mode"
+
+msgid "Hareketi azalt"
+msgstr "Reduce motion"
+
+msgid "Titreşim"
+msgstr "Vibration"
+
+msgid "Yüksek kontrast"
+msgstr "High contrast"
+
 msgid "Zor"
 msgstr "Hard"
 

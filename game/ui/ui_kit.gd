@@ -24,6 +24,15 @@ const SERIF_PATH := "res://game/fonts/EBGaramond.ttf"
 const SANS_PATH := "res://game/fonts/IBMPlexSans.ttf"
 static var _serif: Font
 static var _sans := {}
+static var font_scale := 1.0
+static var high_contrast := false
+static var reduce_motion := false
+
+
+static func configure_accessibility(size: int, contrast: bool, motion: bool) -> void:
+	font_scale = [1.0, 1.14, 1.28][clampi(size, 0, 2)]
+	high_contrast = contrast
+	reduce_motion = motion
 
 
 ## Gövde fontu: gömülü IBM Plex Sans (değişken ağırlık). Metrikleri Godot'nun eski yedek fontuna
@@ -201,11 +210,15 @@ static func tr_upper(s: String) -> String:
 	return s.replace("i", "İ").replace("ı", "I").to_upper()
 
 
+static func scaled_font_size(size: int) -> int:
+	return roundi(size * font_scale)
+
+
 static func box(bg: Color, border: Color = Color(0, 0, 0, 0), radius := 6, margin := 10, border_w := 1) -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
 	s.bg_color = bg
-	s.border_color = border
-	s.set_border_width_all(border_w if border.a > 0.0 else 0)
+	s.border_color = Color(border, 1.0) if high_contrast and border.a > 0.0 else border
+	s.set_border_width_all(maxi(border_w, 2) if high_contrast and border.a > 0.0 else (border_w if border.a > 0.0 else 0))
 	s.set_corner_radius_all(mini(radius, RADIUS))
 	s.content_margin_left = margin
 	s.content_margin_right = margin
@@ -287,14 +300,14 @@ static func _check_tex(checked: bool) -> Texture2D:
 static func build_theme(mobile := false) -> Theme:
 	var t := Theme.new()
 	t.default_font = sans()
-	t.default_font_size = 18 if mobile else 15
+	t.default_font_size = scaled_font_size(18 if mobile else 15)
 	t.set_font("bold_font", "RichTextLabel", sans(680))
 	t.set_font("italics_font", "RichTextLabel", sans(500, true))
 	t.set_font("bold_italics_font", "RichTextLabel", sans(680, true))
 	var bm := 15 if mobile else 12  # düğme iç boşluğu: mobilde daha büyük dokunma alanı
 	# Etiketler ve metin
-	t.set_color("font_color", "Label", TEXT)
-	t.set_color("default_color", "RichTextLabel", TEXT)
+	t.set_color("font_color", "Label", TEXT.lightened(0.08) if high_contrast else TEXT)
+	t.set_color("default_color", "RichTextLabel", TEXT.lightened(0.08) if high_contrast else TEXT)
 	# Düğmeler
 	var n := _lift(box(PANEL_HI, Color(GOLD_DIM, 0.8), 5, bm))
 	var h := _lift(box(HOVER, GOLD, 5, bm))
@@ -350,7 +363,7 @@ static func build_theme(mobile := false) -> Theme:
 	t.set_color("font_color", "GhostButton", Color("d9c79a"))
 	t.set_color("font_hover_color", "GhostButton", Color("fff3d0"))
 	t.set_font("font", "GhostButton", serif())
-	t.set_font_size("font_size", "GhostButton", 19 if mobile else 17)
+	t.set_font_size("font_size", "GhostButton", scaled_font_size(19 if mobile else 17))
 	# Birincil düğme
 	t.add_type("PrimaryButton")
 	t.set_type_variation("PrimaryButton", "Button")
@@ -373,7 +386,7 @@ static func build_theme(mobile := false) -> Theme:
 	t.set_stylebox("pressed", "PrimaryButton", box(Color("2a2212"), GOLD, 6, 14, 2))
 	t.set_color("font_color", "PrimaryButton", Color("fff3d0"))
 	t.set_font("font", "PrimaryButton", caps())
-	t.set_font_size("font_size", "PrimaryButton", 20)
+	t.set_font_size("font_size", "PrimaryButton", scaled_font_size(20))
 	# Sekmeler: seçili sekme panelle birleşir, üstünde altın çizgi taşır; diğerleri zeminsiz.
 	t.set_stylebox("panel", "TabContainer", box(Color(PANEL, 0.88), Color(GOLD_DIM, 0.55), 6, 8))
 	t.set_stylebox("tab_selected", "TabContainer", _tab(Color(PANEL_HI, 0.95), GOLD, 2))
@@ -391,7 +404,7 @@ static func build_theme(mobile := false) -> Theme:
 	t.set_color("font_unselected_color", "TabContainer", TEXT_DIM)
 	t.set_color("font_hovered_color", "TabContainer", TEXT)
 	t.set_font("font", "TabContainer", serif())
-	t.set_font_size("font_size", "TabContainer", 21 if mobile else 17)
+	t.set_font_size("font_size", "TabContainer", scaled_font_size(21 if mobile else 17))
 	# Listeler
 	t.set_stylebox("panel", "ItemList", box(Color(PANEL, 0.6), Color(GOLD_DIM, 0.25), 4, 6))
 	t.set_stylebox("selected", "ItemList", box(Color("33291a"), GOLD_DIM, 3, 6))
@@ -422,7 +435,7 @@ static func build_theme(mobile := false) -> Theme:
 	# İpucu balonu
 	t.set_stylebox("panel", "TooltipPanel", box(Color(PLATE, 0.97), GOLD, 5, 10))
 	t.set_color("font_color", "TooltipLabel", TEXT)
-	t.set_font_size("font_size", "TooltipLabel", 14)
+	t.set_font_size("font_size", "TooltipLabel", scaled_font_size(14))
 	return t
 
 
@@ -438,6 +451,8 @@ static func fade_in(n: CanvasItem, dur := 0.35, delay := 0.0) -> Tween:
 
 
 static func pop_in(c: Control, dur := 0.32, delay := 0.0) -> Tween:
+	if reduce_motion:
+		return fade_in(c, minf(dur, 0.12), delay)
 	c.modulate.a = 0.0
 	c.scale = Vector2(0.96, 0.96)
 	c.pivot_offset = c.size / 2.0
@@ -451,6 +466,8 @@ static func pop_in(c: Control, dur := 0.32, delay := 0.0) -> Tween:
 
 
 static func pulse(c: Control, amount := 1.25, color: Color = GOLD) -> void:
+	if reduce_motion:
+		return
 	c.pivot_offset = c.size / 2.0
 	var tw := c.create_tween()
 	tw.set_parallel(true)
@@ -470,6 +487,8 @@ static func typewrite(l: RichTextLabel, dur := 0.9, delay := 0.0) -> Tween:
 
 
 static func hover_pop(c: Control, amount := 1.03) -> void:
+	if reduce_motion:
+		return
 	c.mouse_entered.connect(func() -> void:
 		c.pivot_offset = c.size / 2.0
 		var tw := c.create_tween()
@@ -480,6 +499,8 @@ static func hover_pop(c: Control, amount := 1.03) -> void:
 
 
 static func shake(c: Control, strength := 6.0, dur := 0.35) -> void:
+	if reduce_motion:
+		return
 	var origin := c.position
 	var tw := c.create_tween()
 	var steps := int(dur / 0.04)
@@ -520,6 +541,7 @@ static func dust(area: Vector2, amount := 36, alpha := 0.35) -> CPUParticles2D:
 	p.scale_amount_min = 0.15
 	p.scale_amount_max = 0.55
 	p.color = Color(1.0, 0.9, 0.7, alpha)
+	p.emitting = not reduce_motion
 	var fade := Gradient.new()
 	fade.set_color(0, Color(1, 1, 1, 0))
 	fade.add_point(0.25, Color(1, 1, 1, 1))

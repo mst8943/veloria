@@ -7,6 +7,7 @@ extends SceneTree
 var out := "user://audit"
 var main: Control
 var mobile := false
+var large_text := false
 var report: PackedStringArray = []
 var screen := ""
 const MIN_TOUCH := 44.0
@@ -18,8 +19,15 @@ func _initialize() -> void:
 		if a.begins_with("--out="):
 			out = a.substr(6)
 	mobile = "--mobile" in OS.get_cmdline_user_args()
-	if mobile:
-		DisplayServer.window_set_size(Vector2i(1067, 600))
+	large_text = "--large-text" in OS.get_cmdline_user_args()
+	var size_set := false
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--size="):
+			var dims := arg.substr(7).split("x")
+			DisplayServer.window_set_size(Vector2i(int(dims[0]), int(dims[1])))
+			size_set = true
+	if mobile or not size_set:
+		DisplayServer.window_set_size(Vector2i(1067, 600) if mobile else Vector2i(1600, 900))
 	DirAccess.make_dir_recursive_absolute(out)
 	ProjectSettings.set_setting("veloria/dev_autostart", true)
 	ProjectSettings.set_setting("veloria/dev_skip_weeks", 3)
@@ -29,6 +37,8 @@ func _initialize() -> void:
 func _boot() -> void:
 	await process_frame
 	(get_root().get_node("Sfx")).set_language("en" if "--lang=en" in OS.get_cmdline_user_args() else "tr")
+	if large_text:
+		(get_root().get_node("Sfx")).text_size = 2
 	main = (load("res://game/ui/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
 	_run.call_deferred()
@@ -64,6 +74,15 @@ func _label_text(c: Control) -> String:
 	if c is Label:
 		return (c as Label).text.left(30)
 	return ""
+
+
+func _clipped_by_parent(control: Control) -> bool:
+	var parent := control.get_parent()
+	while parent != null and parent != main:
+		if parent is ScrollContainer or (parent is Control and (parent as Control).clip_contents):
+			return true
+		parent = parent.get_parent()
+	return false
 
 
 func _measure(name: String) -> void:
@@ -104,10 +123,10 @@ func _measure(name: String) -> void:
 			var small := minf(r.size.x, r.size.y) < min_side
 			if small and r.size.x * r.size.y > 0:
 				report.append("[%s] KÜÇÜK HEDEF %dx%d  %s  «%s»" % [name, r.size.x, r.size.y, _path(c), _label_text(c)])
-			if vis.size.x < r.size.x * 0.6 or vis.size.y < r.size.y * 0.6:
+			if not _clipped_by_parent(c) and (vis.size.x < r.size.x * 0.6 or vis.size.y < r.size.y * 0.6):
 				if vis.size.x * vis.size.y > 4.0:
 					report.append("[%s] KISMEN KIRPIK DÜĞME %dx%d görünen %dx%d  %s  «%s»" % [name, r.size.x, r.size.y, vis.size.x, vis.size.y, _path(c), _label_text(c)])
-		if c is Label:
+		if c is Label and not _clipped_by_parent(c):
 			var l := c as Label
 			if l.text != "" and l.autowrap_mode == TextServer.AUTOWRAP_OFF and not l.clip_text and l.text_overrun_behavior == TextServer.OVERRUN_NO_TRIMMING:
 				var font := l.get_theme_font("font")
@@ -115,7 +134,7 @@ func _measure(name: String) -> void:
 				var w := font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 				if w > r.size.x + 2.0 and l.size.x > 4.0:
 					report.append("[%s] METİN TAŞIYOR %dpx > %dpx  %s  «%s»" % [name, w, r.size.x, _path(l), l.text.left(40)])
-		if r.end.x > vp.end.x + 2.0 or r.position.x < vp.position.x - 2.0:
+		if not _clipped_by_parent(c) and (r.end.x > vp.end.x + 2.0 or r.position.x < vp.position.x - 2.0):
 			if c is BaseButton or c is Label:
 				report.append("[%s] EKRANDAN TAŞAR  %s  %s  «%s»" % [name, r.position, _path(c), _label_text(c)])
 	seen += 1

@@ -145,7 +145,7 @@ func show_tab(key: String) -> void:
 func _ink_label(text: String, size: int, color: Color = INK, serif := false, wrap := true) -> Label:
 	var l := Label.new()
 	l.text = text
-	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_font_size_override("font_size", UIKit.scaled_font_size(size))
 	l.add_theme_color_override("font_color", color)
 	if serif:
 		l.add_theme_font_override("font", UIKit.serif())
@@ -166,7 +166,7 @@ func _ink_body(bbcode: String, size: int, color: Color = INK_SOFT, justify := tr
 	r.add_theme_font_override("bold_font", UIKit.caps())
 	r.add_theme_font_override("italics_font", UIKit.serif_italic())
 	for k in ["normal_font_size", "bold_font_size", "italics_font_size"]:
-		r.add_theme_font_size_override(k, size)
+		r.add_theme_font_size_override(k, UIKit.scaled_font_size(size))
 	r.add_theme_color_override("default_color", color)
 	# Dar sütunda iki yana yaslama kelime arasında delik açar; orada sola yaslı.
 	r.text = ("[fill]%s[/fill]" if justify else "%s") % bbcode
@@ -345,7 +345,7 @@ func _masthead(v: VBoxContainer, ed: Dictionary, free: bool) -> void:
 		tag.add_theme_font_override("font", UIKit.sans(700))
 		tag.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		var tagbox := _boxed(tag, RUBRIC, 0, 10, RUBRIC)
-		tagbox.custom_minimum_size.x = 118
+		tagbox.custom_minimum_size.x = 118.0 * UIKit.font_scale
 		tagbox.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		row.add_child(tagbox)
 	else:
@@ -358,7 +358,7 @@ func _masthead(v: VBoxContainer, ed: Dictionary, free: bool) -> void:
 		fv.base_font = UIKit.sans(760)
 		fv.spacing_glyph = -2
 		title.add_theme_font_override("font", fv)
-		title.add_theme_font_size_override("font_size", 64)
+		title.add_theme_font_size_override("font_size", UIKit.scaled_font_size(64))
 		# Plex en fazla 700 ağırlıkta; büyük boyda kalın tabloid logosu için mürekkep taşması.
 		title.add_theme_constant_override("outline_size", 3)
 		title.add_theme_color_override("font_outline_color", INK)
@@ -476,7 +476,7 @@ func _tv_label(text: String, size: int, color: Color, weight := 650) -> Label:
 	var l := Label.new()
 	l.text = text
 	l.add_theme_font_override("font", UIKit.sans(weight))
-	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_font_size_override("font_size", UIKit.scaled_font_size(size))
 	l.add_theme_color_override("font_color", color)
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return l

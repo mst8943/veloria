@@ -2,12 +2,18 @@
 
 ## Tamamlandı
 
-### A1 — Uyarlamalı müzik
-- `Sfx` iki oynatıcıyla müzik geçişi yapıyor; `menu`, `ambient`, `tension`, `crisis` adları dosyadan yükleniyor, bulunmazsa ambient akışına düşüyor.
-- Menü, oyun, yaşlanan karar ve kriz durumları eşlendi; normal geçişler en az 2 saniye, mod değişimleri en az 8 saniye aralıklı. Hızlı kip ve başsız/autoplay testleri anında geçiyor.
-- `audio_check`: OK. `sim_test`: TEST: OK. `git diff --check`: temiz.
-- Pencereli `ux_audit` başlatıldı; `screenshots/faz6_a1_tr` henüz PNG üretmedi. TR/EN masaüstü ve mobil görsel kapısı tamamlanmadı.
+### A1 — Uyarlamalı müzik (`4accbb5`)
+- Menü, normal oyun, yaşlanan karar ve kriz durumları iki müzik oynatıcısı arasında çapraz geçişle eşleniyor. Dosya yoksa ambient akışına, o da yoksa sentezlenmiş müziğe düşüyor; hızlı kip/autoplay geçişleri anında.
+- `audio_check`, `sim_test`, `event_check`, `save_test`, `content_check`, `i18n_check`, `en_leak_test`, `lang_switch`, `touch_scroll`, `tour`, `cutscene`, `ui_input_test` (masaüstü/mobil) ve autoplay kapıları geçti.
+- `--full` tohum 101: 104 hafta / TAHTTA / Medya Rejimi / 112 olay; TR ve EN aynı. Ölçüt probe: 68/80, 36/80, 16/80.
+- TR/EN masaüstü ve mobil görüntüleri alınıp incelendi: `screenshots/faz6_a1_tr`, `faz6_a1_en`, `faz6_a1_mobile_tr`, `faz6_a1_mobile_en`.
+
+### A2 — Erişilebilirlik
+- Ayarlara kalıcı yazı boyutu, renk körü modu, hareketi azalt, titreşim ve yüksek kontrast seçenekleri eklendi. Tercihler kampanya kaydından ayrı ayar dosyasında tutuluyor ve arayüze canlı uygulanıyor.
+- Hareket azaltma UI animasyonlarını, tozu ve yakınlaştırmayı etkisizleştiriyor; Android için karar, kriz başlangıcı ve hafta bitişi titreşimi eklendi. Renk körü görünümünde tehlike işareti şekil ile ayrılıyor.
+- `a11y_test`: `A11Y: OK`; i18n eksikleri: 0. Büyük metin UX auditleri TR/EN, 1067×600 ve 1280×720: hepsi `AUDIT BULGU: 0`.
+- Görüntüler alınıp incelendi: `screenshots/faz6_a2_large_1067_verified`, `faz6_a2_large_1280_verified`, `faz6_a2_large_1067_en_verified`, `faz6_a2_large_1280_en`.
 
 ## SIRADAKİ DİLİM
 
-A2 — Erişilebilirlik.
+A3 — Günlük tohum ve paylaşılabilir saltanat kartı.

@@ -20,7 +20,7 @@ const INK := Color("1b1610")
 const LAYOUT := {
 	"harita": [Rect2(630, 175, 340, 290), "Başkent · Kurumlar"],
 	"hanedan": [Rect2(150, 150, 200, 235), "Hanedan"],
-	"kisiler": [Rect2(1370, 300, 220, 200), "Kişiler"],
+	"kisiler": [Rect2(1300, 300, 220, 200), "Kişiler"],
 	"gunluk": [Rect2(130, 440, 240, 290), "Saltanat Günlüğü"],
 	"gundem": [Rect2(470, 500, 300, 240), "Gündem"],
 	"dosyalar": [Rect2(845, 500, 230, 240), "Gizli Dosyalar"],
@@ -133,7 +133,7 @@ func _build() -> void:
 	_title.text = tr("HAFTA %d   ·   KRAL ADRİAN IV") % Sim.week
 	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_title.add_theme_font_override("font", UIKit.serif())
-	_title.add_theme_font_size_override("font_size", 34)
+	_title.add_theme_font_size_override("font_size", UIKit.scaled_font_size(34))
 	_title.add_theme_color_override("font_color", UIKit.GOLD)
 	_title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
 	_title.add_theme_constant_override("shadow_outline_size", 8)
@@ -147,7 +147,7 @@ func _build() -> void:
 		news = Sim.news_for_display(str(Sim.weekly_news[0]))
 	_sub.text = news if news != "" else tr("Masada yeni dosyalar var.")
 	_sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_sub.add_theme_font_size_override("font_size", 17)
+	_sub.add_theme_font_size_override("font_size", UIKit.scaled_font_size(17))
 	_sub.add_theme_color_override("font_color", Color("e8dcc0"))
 	_sub.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
 	_sub.add_theme_constant_override("shadow_outline_size", 6)
@@ -271,7 +271,7 @@ func _plate(id: String, title: String, area: Vector2) -> Control:
 	var plate := Control.new()
 	plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	plate.position = Vector2((area.x - w) / 2.0, area.y + 2.0)
-	plate.size = Vector2(w, 70 if mobile else 52)
+	plate.size = Vector2(w, 130 if mobile else (116 if Sfx.text_size == 2 else 52))
 	# Arkada yumuşak, kenarsız bir karanlık: kutu değil, okunurluk için gölge.
 	var shade := TextureRect.new()
 	shade.texture = _plate_shade()
@@ -294,10 +294,13 @@ func _plate(id: String, title: String, area: Vector2) -> Control:
 	var name_l := Label.new()
 	name_l.text = tr(title)
 	name_l.add_theme_font_override("font", UIKit.serif())
-	name_l.add_theme_font_size_override("font_size", 31 if mobile else 23)
+	name_l.add_theme_font_size_override("font_size", UIKit.scaled_font_size(31 if mobile else 23))
 	name_l.add_theme_color_override("font_color", Color("f1e6c8"))
 	name_l.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
 	name_l.add_theme_constant_override("shadow_outline_size", 6)
+	name_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	name_l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	name_l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(name_l)
 	var mark := _mark_text(id)
@@ -320,7 +323,8 @@ func _plate(id: String, title: String, area: Vector2) -> Control:
 		b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var bl := Label.new()
 		bl.text = mark
-		bl.add_theme_font_size_override("font_size", 14)
+		bl.add_theme_font_size_override("font_size", UIKit.scaled_font_size(14))
+		bl.custom_minimum_size.x = maxf(16.0, bl.text.length() * 22.0)
 		bl.add_theme_color_override("font_color", Color("fff1dc"))
 		b.add_child(bl)
 		row.add_child(b)
@@ -328,10 +332,10 @@ func _plate(id: String, title: String, area: Vector2) -> Control:
 	var sum := Label.new()
 	sum.text = _summary(id)
 	sum.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	sum.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	sum.clip_text = true
-	sum.custom_minimum_size.x = w
-	sum.add_theme_font_size_override("font_size", 21 if mobile else 15)
+	sum.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	sum.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sum.custom_minimum_size.x = w - 20
+	sum.add_theme_font_size_override("font_size", UIKit.scaled_font_size(14 if mobile else 15))
 	sum.add_theme_color_override("font_color", Color(0.86, 0.8, 0.68, 0.92))
 	sum.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.95))
 	sum.add_theme_constant_override("shadow_outline_size", 5)
@@ -619,7 +623,7 @@ func _draw_object(id: String, sz: Vector2) -> Control:
 func _ink(text: String, size: int, serif: bool) -> Label:
 	var l := Label.new()
 	l.text = text
-	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_font_size_override("font_size", UIKit.scaled_font_size(size))
 	l.add_theme_color_override("font_color", INK)
 	if serif:
 		l.add_theme_font_override("font", UIKit.serif())
@@ -644,7 +648,7 @@ func _seal(pos: Vector2, d: float) -> Control:
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	l.add_theme_font_override("font", UIKit.serif())
-	l.add_theme_font_size_override("font_size", int(d * 0.55))
+	l.add_theme_font_size_override("font_size", UIKit.scaled_font_size(int(d * 0.55)))
 	l.add_theme_color_override("font_color", Color("f1d9a0"))
 	seal.add_child(l)
 	return seal

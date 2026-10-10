@@ -106,6 +106,7 @@ func _ready() -> void:
 	if _mobile:
 		get_tree().root.content_scale_size = Vector2i(1067, 600)
 		add_child(TOUCH_SCROLL.new())
+	UIKit.configure_accessibility(Sfx.text_size, Sfx.high_contrast, Sfx.reduce_motion)
 	theme = UIKit.build_theme(_mobile)
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	Sim.week_advanced.connect(_on_week)
@@ -196,6 +197,7 @@ func _ready() -> void:
 func rebuild_ui() -> void:
 	if _tabs == null:
 		return
+	UIKit.configure_accessibility(Sfx.text_size, Sfx.high_contrast, Sfx.reduce_motion)
 	var menu_open: bool = _menu != null and _menu.visible
 	var menu_page: String = _menu.page_now if _menu != null else "main"
 	var tab: int = _tabs.current_tab
@@ -313,7 +315,7 @@ func _fast() -> bool:
 
 ## Mobilde yazılar büyür (yatay telefon: ~1067x600 taban).
 func _fs(n: int) -> int:
-	return int(round(n * 1.22)) if _mobile else n
+	return roundi(n * [1.0, 1.14, 1.28][Sfx.text_size] * (1.22 if _mobile else 1.0))
 
 
 # ---------------------------------------------------------------- Kurulum
@@ -334,9 +336,10 @@ func _build_ui() -> void:
 		_stage.add_child(bg)
 		# Masa nefes alır gibi çok yavaş yakınlaşıp uzaklaşır.
 		bg.resized.connect(func() -> void: bg.pivot_offset = bg.size / 2.0)
-		var breathe := bg.create_tween().set_loops()
-		breathe.tween_property(bg, "scale", Vector2(1.05, 1.05), 28.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-		breathe.tween_property(bg, "scale", Vector2.ONE, 28.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		if not Sfx.reduce_motion:
+			var breathe := bg.create_tween().set_loops()
+			breathe.tween_property(bg, "scale", Vector2(1.05, 1.05), 28.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+			breathe.tween_property(bg, "scale", Vector2.ONE, 28.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		var dim := ColorRect.new()
 		dim.color = Color(UIKit.SHADE, 0.7)
 		dim.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -926,7 +929,7 @@ func _show_menu() -> void:
 	var first_primary: bool = in_game or Sim.has_save()
 	b_first.theme_type_variation = "PrimaryButton" if first_primary else ""
 	b_new.theme_type_variation = "" if first_primary else "PrimaryButton"
-	if not _instant:
+	if not _instant and not Sfx.reduce_motion:
 		var i := 0
 		for it in _menu.items:
 			UIKit.fade_in(it, 0.55, 0.12 * i)
@@ -1113,6 +1116,7 @@ func _end_week_pressed() -> void:
 		return
 	if _instant:
 		Sim.end_week()
+		_vibrate()
 		return
 	_busy = true
 	_curtain_skip = false
@@ -1124,8 +1128,10 @@ func _end_week_pressed() -> void:
 	var old_week: int = Sim.week
 	var had_crisis: bool = Sim.active_crisis_label() != ""
 	Sim.end_week()
+	_vibrate()
 	if not had_crisis and not Sim.ended and Sim.active_crisis_label() != "":
 		Sfx.play("alert", -3.0)
+		_vibrate(150)
 	if not Sim.ended:
 		_curtain_title.text = tr("HAFTA %d") % Sim.week
 		var headline := ""
@@ -1151,7 +1157,8 @@ func _end_week_pressed() -> void:
 			_curtain_img.scale = Vector2.ONE
 			var kb := create_tween().set_parallel(true)
 			kb.tween_property(_curtain_img, "modulate:a", img_alpha, 0.7)
-			kb.tween_property(_curtain_img, "scale", Vector2(1.1, 1.1), 3.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+			if not Sfx.reduce_motion:
+				kb.tween_property(_curtain_img, "scale", Vector2(1.1, 1.1), 3.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 		_curtain_title.modulate.a = 0.0
 		_curtain_sub.modulate.a = 0.0
 		var tw := create_tween().set_parallel(true)
@@ -1309,6 +1316,7 @@ func _choose(pending_index: int, choice_index: int) -> void:
 		ev_id = str(Sim.pending[pending_index]["event"].get("id", ""))
 	var before: int = Sim.pending.size()
 	var text: String = Sim.resolve_decision(pending_index, choice_index)
+	_vibrate()
 	if _tour != null and _tour.has_method("decision_made"):
 		_tour.decision_made()
 	if text != "":
@@ -1465,7 +1473,7 @@ func _flow_chip(text: String, col: Color, target: String) -> Control:
 func _pulse_end_button() -> void:
 	if _end_btn == null:
 		return
-	var ready: bool = Sim.pending.is_empty() and Sim.mesai == 0 and not Sim.ended and not _fast()
+	var ready: bool = Sim.pending.is_empty() and Sim.mesai == 0 and not Sim.ended and not _fast() and not Sfx.reduce_motion
 	if ready and (_end_pulse == null or not _end_pulse.is_valid()):
 		_end_pulse = _end_btn.create_tween().set_loops()
 		_end_pulse.tween_property(_end_btn, "modulate", Color(1.25, 1.2, 1.05), 0.9).set_trans(Tween.TRANS_SINE)
@@ -1591,6 +1599,11 @@ func _update_music() -> void:
 	_music_mode = desired
 	_music_mode_since = now
 	Sfx.crossfade_to(desired)
+
+
+func _vibrate(duration := 55) -> void:
+	if Sfx.vibration and OS.get_name() == "Android":
+		Input.vibrate_handheld(duration)
 
 func _rebuild_facts() -> void:
 	_agenda_view._rebuild_facts()

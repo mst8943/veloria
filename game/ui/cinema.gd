@@ -59,7 +59,7 @@ func _ready() -> void:
 	mc.add_child(v)
 	_line = Label.new()
 	_line.add_theme_font_override("font", UIKit.serif())
-	_line.add_theme_font_size_override("font_size", 46)
+	_line.add_theme_font_size_override("font_size", UIKit.scaled_font_size(46))
 	_line.add_theme_color_override("font_color", Color("f1e6c8"))
 	_line.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.85))
 	_line.add_theme_constant_override("shadow_offset_y", 3)
@@ -68,7 +68,7 @@ func _ready() -> void:
 	_line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(_line)
 	_sub = Label.new()
-	_sub.add_theme_font_size_override("font_size", 20)
+	_sub.add_theme_font_size_override("font_size", UIKit.scaled_font_size(20))
 	_sub.add_theme_color_override("font_color", UIKit.GOLD)
 	_sub.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.85))
 	_sub.add_theme_constant_override("shadow_outline_size", 6)
@@ -164,8 +164,9 @@ func _shot(tex: Texture2D, line: String, sub: String, hold: float, zoom_from := 
 		back.pivot_offset = size / 2.0
 		back.scale = Vector2(zoom_from, zoom_from)
 		back.position = Vector2.ZERO
+		var zoom_end := zoom_from if Sfx.reduce_motion else zoom_to
 		var cam := create_tween().set_parallel(true)
-		cam.tween_property(back, "scale", Vector2(zoom_to, zoom_to), hold + 1.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		cam.tween_property(back, "scale", Vector2(zoom_end, zoom_end), hold + 1.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		cam.tween_property(back, "position", pan, hold + 1.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		var fade := create_tween().set_parallel(true)
 		fade.tween_property(back, "modulate:a", 1.0, 0.9)

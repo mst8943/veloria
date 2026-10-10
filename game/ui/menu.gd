@@ -117,7 +117,7 @@ func _build() -> void:
 	shine.set_shader_parameter("screen_w", 1067.0 if host._mobile else 1600.0)
 	title.material = shine
 	title.add_theme_font_override("font", UIKit.serif())
-	title.add_theme_font_size_override("font_size", 60 if host._mobile else 84)
+	title.add_theme_font_size_override("font_size", host._fs(60 if host._mobile else 84))
 	title.add_theme_color_override("font_color", UIKit.GOLD)
 	title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.7))
 	title.add_theme_constant_override("shadow_offset_y", 4)
@@ -230,6 +230,32 @@ func _build() -> void:
 			apply.call(on)
 			Sfx.save_settings())
 		grid.add_child(cb)
+	grid.add_child(_label_dim(tr("Yazı boyutu")))
+	var text_size := OptionButton.new()
+	for option in [tr("Normal"), tr("Büyük"), tr("Çok büyük")]:
+		text_size.add_item(option)
+	text_size.select(Sfx.text_size)
+	text_size.custom_minimum_size.y = 44 if host._mobile else 0
+	text_size.item_selected.connect(func(index: int) -> void:
+		Sfx.text_size = index
+		Sfx.save_settings()
+		host.call_deferred("rebuild_ui"))
+	grid.add_child(text_size)
+	for option in [
+		[tr("Renk körü modu"), "colorblind_mode"],
+		[tr("Hareketi azalt"), "reduce_motion"],
+		[tr("Titreşim"), "vibration"],
+		[tr("Yüksek kontrast"), "high_contrast"],
+	]:
+		var cb := CheckBox.new()
+		cb.text = option[0]
+		cb.button_pressed = Sfx.get(option[1])
+		cb.custom_minimum_size.y = 44 if host._mobile else 0
+		cb.toggled.connect(func(on: bool) -> void:
+			Sfx.set(option[1], on)
+			Sfx.save_settings()
+			host.call_deferred("rebuild_ui"))
+		grid.add_child(cb)
 	grid.add_child(_label_dim(tr("Dil / Language")))
 	var language := OptionButton.new()
 	language.add_item("Türkçe", 0)
@@ -275,11 +301,11 @@ func _build() -> void:
 	ver.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	add_child(ver)
 	hide()
-	# Yavaş "Ken Burns" kaydırma
-	bg.pivot_offset = Vector2(800, 450)
-	var kb := bg.create_tween().set_loops()
-	kb.tween_property(bg, "scale", Vector2(1.07, 1.07), 22.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	kb.tween_property(bg, "scale", Vector2(1.0, 1.0), 22.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	if not Sfx.reduce_motion:
+		bg.pivot_offset = Vector2(800, 450)
+		var kb := bg.create_tween().set_loops()
+		kb.tween_property(bg, "scale", Vector2(1.07, 1.07), 22.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		kb.tween_property(bg, "scale", Vector2(1.0, 1.0), 22.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 
 func _btn(parent: Control, text: String, cb: Callable, primary := false) -> Button:

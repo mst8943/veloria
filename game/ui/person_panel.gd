@@ -850,6 +850,8 @@ func _trait(text: String, col: Color, filled := -1, total := 0, tip := "") -> Co
 		ds.bg_color = col if (filled < 0 or i < filled) else Color(col, 0.18)
 		dot.add_theme_stylebox_override("panel", ds)
 		dot.custom_minimum_size = Vector2(7, 7)
+		if Sfx.colorblind_mode and col.is_equal_approx(UIKit.DANGER):
+			dot.rotation = PI / 4.0
 		dot.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		row.add_child(dot)

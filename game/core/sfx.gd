@@ -19,6 +19,11 @@ var desk_start := true     # her haftaya çalışma masasından başla
 var tour_enabled := true
 var tour_done := false
 var language := "tr"
+var text_size := 0       # 0 normal, 1 large, 2 largest
+var colorblind_mode := false
+var reduce_motion := false
+var vibration := true
+var high_contrast := false
 
 var _streams: Dictionary = {}
 var _players: Array[AudioStreamPlayer] = []
@@ -99,6 +104,11 @@ func save_settings() -> void:
 	c.set_value("game", "language", language)
 	c.set_value("game", "tour_enabled", tour_enabled)
 	c.set_value("game", "tour_done", tour_done)
+	c.set_value("accessibility", "text_size", text_size)
+	c.set_value("accessibility", "colorblind", colorblind_mode)
+	c.set_value("accessibility", "reduce_motion", reduce_motion)
+	c.set_value("accessibility", "vibration", vibration)
+	c.set_value("accessibility", "high_contrast", high_contrast)
 	c.save(SETTINGS_PATH)
 
 
@@ -116,6 +126,11 @@ func _load_settings() -> void:
 	desk_start = c.get_value("game", "desk_start", true)
 	tour_enabled = c.get_value("game", "tour_enabled", true)
 	tour_done = c.get_value("game", "tour_done", false)
+	text_size = clampi(int(c.get_value("accessibility", "text_size", 0)), 0, 2)
+	colorblind_mode = c.get_value("accessibility", "colorblind", false)
+	reduce_motion = c.get_value("accessibility", "reduce_motion", false)
+	vibration = c.get_value("accessibility", "vibration", true)
+	high_contrast = c.get_value("accessibility", "high_contrast", false)
 	language = str(c.get_value("game", "language", "tr"))
 
 
