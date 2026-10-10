@@ -91,3 +91,16 @@ Baştan sona oynanabilir, sağlam bir dikey dilim (erken alfa): 104 hafta, 9 gü
 1. **L5 kalan kalite işi:** İngilizce metinlerin anadili İngilizce olan biri tarafından redaksiyonu.
 2. Gerçek ses/müzik için kaynak varlıklar; şu an ses sentezleniyor.
 3. `_refresh` için artırımlı arayüz güncellemesi ve kullanıcı tarafından kendi uzak deponun açılması.
+
+## 6. Faz 6 — Genişleme (orkestra planı, 2026-10-11)
+Claude tasarlar ve doğrular; Codex kodlar (`docs/roadmap/faz6_gorevleri.md`).
+
+| Dilim | İçerik | Durum |
+|---|---|---|
+| A1 | Uyarlamalı müzik (menü / oyun / gerilim / kriz) | ⬜ |
+| A2 | Erişilebilirlik (yazı boyutu, renk körü, hareketi azalt, titreşim) | ⬜ |
+| A3 | Günlük tohum ve paylaşılabilir saltanat kartı | ⬜ |
+| A4 | Senaryo modları ve sonsuz mod | ⬜ |
+| B1 | Dış krizler ve suikast (yeni kayıp yolları), `docs/design/dis_krizler_ve_suikast.md` | ⬜ tasarım hazır |
+| B2 | Miras ve hanedan, `docs/design/miras_ve_hanedan.md` | ⬜ tasarım hazır |
+| C | Google Play yayını, üçüncü dil, Steam, bulut kayıt | 👤 karar |
