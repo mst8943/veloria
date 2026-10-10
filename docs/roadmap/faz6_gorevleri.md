@@ -35,9 +35,18 @@ Amaç: tek ambient yerine duruma göre müzik: menü, normal oyun, gerilim, kriz
 - **Sonsuz mod:** Oyun sonu (TAHTTA) ekranında "Saltanata devam et": MAX_WEEKS aşılınca oyun sonlanmaz; olay havuzu bekleme süresiyle yeniden kullanılır; her 26 haftada kriz eşiği −2 (yumuşak zorluk artışı); kayıt ve başarımlar "Uzatma" olarak ayrı; en uzun saltanat defterde. Varsayılan akış değişmez.
 - Test: senaryo birim testleri, her senaryo için bot koşusu (80 kampanya/zorluk) ve tahtta kalma oranı bandı (Normal %25–65), senaryosuz --full aynı, sonsuz modda 200 hafta bot koşusu çökmeden bitiyor, save_test eski kayıt.
 
-## DALGA B (tasarım hazır, A'dan sonra)
-- **B1 — Dış krizler ve suikast:** docs/design/dis_krizler_ve_suikast.md (yeni kayıp yolları: yabancı müdahalesi, mali çöküş, suikast).
-- **B2 — Miras ve hanedan:** docs/design/miras_ve_hanedan.md (Hanedan Devam, Hanedan Defteri).
+## DALGA B (tasarım hazır)
+
+### B1 — Dış krizler ve suikast (SIRADAKİ)
+Tasarım: docs/design/dis_krizler_ve_suikast.md (önce BAŞTAN SONA oku; eşikler başlangıç değerleridir, probe ile ayarla). Üç alt dilim, her biri ayrı commit(ler), her biri sonunda kapılar:
+- **B1a — Altyapı + Drakon sınır krizi:** `ext_pressure` (üç güç, gizli, kayda yazılır; SAVE_VERSION artır + eski kayıt göçü), beslenme ve sönme kuralları, Elena raporu ve elçi kartı şüphe sinyali, `other_crisis` kalıbına `border` türü (alamet, nota, ültimatom kartı, SON "Yabancı müdahalesi", unvan "Çöken Egemen"), çift dilli metin, olay/karar içeriği (events.json + en/events.json), Hakikat Dosyası "Dış dünya" satırı.
+- **B1b — Mali kuşatma:** `siege` türü (ambargo notası, kredi kesilmesi kartı; kemer sıkma / Sarne sermayesi / taviz paketi), SON "Mali çöküş".
+- **B1c — Suikast:** `assassination` türü (alamet, hazırlık haftası kriz kartı, saldırı gecesi; güvenlik tasfiyesi / rota değiştir / halkın karşısına çık), yaralı kurtuluş zinciri, SON "Suikast". Çok düşük baz oran, hazırlık haftası olmadan asla.
+Ortak: yeni RNG için AYRI üreteç (mevcut tohumlar kaymasın); aynı anda yalnızca bir aktif kriz (darbe, ayaklanma, yetki ve dış krizlerin hepsi tek bekleme süresini paylaşır); en az 3 yeni başarım ve yeni unvanlar (TR/EN).
+KAPI (dilim başına): tüm testler; `--full` tohum 101 sonucu DEĞİŞMEMELİ (104/TAHTTA/Medya Rejimi/112; dış krizler bu tohumda tetiklenmiyorsa yeni taban gerekmez, tetikleniyorsa değişimi raporla); ölçüt probe (80 kampanya/zorluk) tabanın ±8 puanı içinde, kayıp nedeni dağılımı: darbe payı en çok %65, dış krizler toplam %10–20, her biri en az %2 (B1 tümü bittiğinde); tempo en az 0,8; en_leak ve i18n_missing 0; EN+TR ekran görüntüleri (kriz kartları ve mobil dahil) gözle kontrol.
+
+### B2 — Miras ve hanedan
+docs/design/miras_ve_hanedan.md (Hanedan Devam, Hanedan Defteri). B1'den sonra.
 
 ## DALGA C (kullanıcı kararı gerektirir)
 Google Play yayını (release keystore, AAB), üçüncü dil, Steam sürümü, bulut kayıt, tablet düzeni.

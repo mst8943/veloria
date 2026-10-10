@@ -25,3 +25,6 @@ nul
 
 # Registry publish tool (downloaded per-release, never ship it)
 mcp-publisher.exe
+
+# Codex dogrulama ekran goruntuleri (buyuk, depoya girmez)
+screenshots/faz*
