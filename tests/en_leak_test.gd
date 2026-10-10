@@ -1,16 +1,19 @@
 ﻿extends SceneTree
 ## English runtime leak gate: visible UI surfaces, tooltips, and generated campaign prose.
 const Loc := preload("res://game/core/loc.gd")
-const TR_CHARS := "çğıöşüİÇĞÖŞÜ"
-const WORDS := ["ve", "bir", "için", "bu", "ile", "gibi", "olarak", "daha", "çok", "kadar", "ama", "ancak", "veya", "ise", "değil", "var", "yok", "mesai", "hafta", "karar", "kişi", "kişiler", "soruşturma", "istihbarat", "raporu", "ertelendi", "gerekçeler", "başla", "kapat", "seç", "yaptıkların"]
-const NAMES := ["Veloria", "Sarne", "Arden", "Veyra", "Vale", "Voss", "Sarn", "Malenkov", "Duvall", "Lucien", "Marcus", "Helena", "Varos", "Renn", "Adrian", "Leyla"]
+const NAMES := ["veloria", "sarne", "arden", "veyra", "vale", "voss", "sarn", "malenkov", "duvall", "lucien", "marcus", "helena", "varos", "renn", "adrian", "leyla", "nadir", "victor", "viktor", "sophia", "selin", "julian", "valerius", "claire", "elena", "seravia", "drakon", "asteria", "via"]
 var main: Control
 var sfx: Node
 var seen := {}
 var failures: Array[String] = []
 var campaigns := 0
+var only_tr := {}
+var msgids := {}
+var same_msgids := {}
+var word_rx := RegEx.new()
 
 func _initialize() -> void:
+	_build_lexicon()
 	ProjectSettings.set_setting("veloria/dev_autostart", true)
 	ProjectSettings.set_setting("veloria/dev_skip_weeks", 3)
 	call_deferred("_boot")
@@ -113,8 +116,8 @@ func _scan_campaigns() -> void:
 		for line in sim.weekly_news: _check_text(sim.news_for_display(str(line)), "campaign %d news" % spec[0])
 		for report in sim.reports:
 			if report is Dictionary:
-				for value in report.values():
-					if value is String: _check_text(str(value), "campaign %d report" % spec[0])
+				for key in report:
+					if key != "source" and report[key] is String: _check_text(str(report[key]), "campaign %d report" % spec[0])
 		campaigns += 1
 	if sim.record is Dictionary and not sim.record.is_empty() and main._end_overlay != null:
 		main._end_overlay.show_record(sim.record)
@@ -152,22 +155,59 @@ func _collect(node: Node, screen: String) -> void:
 func _check_text(value: String, screen: String) -> void:
 	var text := value.strip_edges()
 	if text.is_empty(): return
-	var suspect := false
-	for ch in TR_CHARS:
-		if text.contains(ch):
-			var legal := false
-			for name in NAMES:
-				if text == name: legal = true
-			if not legal: suspect = true
-			break
+	var suspect := msgids.has(text) and not same_msgids.has(text)
 	if not suspect:
-		var rx := RegEx.new()
-		rx.compile("(?i)(^|[^A-Za-z])(" + "|".join(WORDS) + ")($|[^A-Za-z])")
-		suspect = rx.search(text) != null
+		for word in _words(text):
+			if only_tr.has(word):
+				suspect = true
+				break
 	if not suspect or seen.has(text): return
 	seen[text] = true
 	var location := _source_for(text)
 	failures.append("%s | %s | %s" % [location, screen, text.replace("\n", " ")])
+
+
+func _build_lexicon() -> void:
+	word_rx.compile("[A-Za-zÇĞİÖŞÜçğıöşü]{3,}")
+	var tr_words := {}
+	var en_words := {}
+	var po := FileAccess.get_file_as_string("res://game/i18n/en.po")
+	var pairs := RegEx.new()
+	pairs.compile("(?m)^msgid \\\"(.*)\\\"\\nmsgstr \\\"(.*)\\\"")
+	for pair in pairs.search_all(po):
+		var source := pair.get_string(1)
+		var translated := pair.get_string(2)
+		msgids[source] = true
+		if source == translated: same_msgids[source] = true
+		for word in _words(source): tr_words[word] = true
+		for word in _words(translated): en_words[word] = true
+	for path in ["res://game/data", "res://game/data/en"]:
+		var files: Array[String] = []
+		_list_files(path, files)
+		for file_path in files:
+			if not file_path.ends_with(".json") or file_path.ends_with("city_map.json") or file_path.ends_with("cutscenes.json"): continue
+			var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(file_path))
+			var target: Dictionary = en_words if path.ends_with("/en") else tr_words
+			_add_json_words(parsed, target)
+	for name in NAMES: en_words[name] = true
+	for word in tr_words:
+		if not en_words.has(word): only_tr[word] = true
+
+
+func _words(text: String) -> Array[String]:
+	var result: Array[String] = []
+	for hit in word_rx.search_all(text): result.append(hit.get_string().to_lower())
+	return result
+
+
+func _add_json_words(value: Variant, target: Dictionary) -> void:
+	if value is Dictionary:
+		for key in value:
+			if not ["id", "art", "flag", "actor", "subject", "fx"].has(key): _add_json_words(value[key], target)
+	elif value is Array:
+		for item in value: _add_json_words(item, target)
+	elif value is String:
+		for word in _words(str(value)): target[word] = true
 
 
 func _source_for(text: String) -> String:

@@ -64,11 +64,11 @@ func _act(sim: Node, id: String) -> void:
 
 func _run() -> void:
 	var sim: Node = root.get_node("Sim")
-	for seed_i in 4:
+	for seed_i in 12:
 		rng.seed = 100 + seed_i
 		sim.new_game(seed_i * 7 + 3, seed_i % 3)
 		main._refresh()
-		for w in 70:
+		for w in 104:
 			if sim.ended:
 				break
 			sim.mesai = 6

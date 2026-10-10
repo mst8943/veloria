@@ -25,6 +25,8 @@ var SIGN_TEXTS: Dictionary:
 	get: return sim.REPORT_CONTENT["sign_texts"]
 var HISTORY: Dictionary:
 	get: return sim.HISTORY_CONTENT
+var _signs_tr: Dictionary = {}
+var _signs_en: Dictionary = {}
 var REPORT: Dictionary:
 	get: return sim.REPORT_CONTENT
 var KING_NAME: String:
@@ -98,20 +100,47 @@ func historians(survived: bool) -> Array:
 
 
 func _sign_text(a: Actor, st: int) -> String:
-	var by: Dictionary = SIGN_TEXTS[str(st)]
-	var pool: Array = by.get(a.domain, [])
+	return str(_sign_text_pair(a, st)["en" if Loc.lang == "en" else "tr"])
+
+
+func _sign_text_pair(a: Actor, st: int) -> Dictionary:
+	if _signs_tr.is_empty():
+		var base: Variant = sim._content_loader._read("res://game/data/content_reports.json")
+		var english: Variant = sim._content_loader._read("res://game/data/en/content_reports.json")
+		_signs_tr = base.get("sign_texts", {}) if base is Dictionary else {}
+		_signs_en = english.get("sign_texts", {}) if english is Dictionary else {}
+	var by: Dictionary = _signs_tr[str(st)]
+	var domain := a.domain
+	var pool: Array = by.get(domain, [])
 	if pool.is_empty() or rng.randf() < 0.35:
+		domain = "_"
 		pool = by["_"]
-	var t: String = pool[rng.randi() % pool.size()]
+	var index := rng.randi() % pool.size()
+	var tr_t: String = pool[index]
+	var en_pool: Array = (_signs_en.get(str(st), {}) as Dictionary).get(domain, pool)
+	var en_t: String = en_pool[index] if index < en_pool.size() else Loc.en(tr_t)
 	var nm := short_name(a)
+	var tr_nm := _short_name_tr(a)
 	var partner := ""
+	var tr_partner := ""
 	for o: Actor in actors.values():
 		if o != a and o.ready and o.insider and not o.moved:
 			partner = short_name(o)
-	var p_e := partner if Loc.lang == "en" else (ek(partner, "e") if partner != "" else str(REPORT["unknown_partner"]))
-	var n_in := Loc.poss(nm) if Loc.lang == "en" else ek(nm, "in")
-	var n_case := nm if Loc.lang == "en" else ""
-	return t.replace("{n_in}", n_in).replace("{n_e}", n_case if Loc.lang == "en" else ek(nm, "e")).replace("{n_i}", n_case if Loc.lang == "en" else ek(nm, "i")).replace("{p_e}", p_e).replace("{n}", nm)
+			tr_partner = _short_name_tr(o)
+	return {"tr": _fill_sign(tr_t, tr_nm, tr_partner, false), "en": _fill_sign(en_t, nm, partner, true)}
+
+
+func _fill_sign(text: String, name: String, partner: String, english: bool) -> String:
+	var p_e: String = partner if english else (sim.ek_tr(partner, "e") if partner != "" else str(REPORT["unknown_partner"]))
+	var n_in: String = Loc.poss(name) if english else sim.ek_tr(name, "in")
+	var n_case: String = name if english else ""
+	return text.replace("{n_in}", n_in).replace("{n_e}", n_case if english else sim.ek_tr(name, "e")).replace("{n_i}", n_case if english else sim.ek_tr(name, "i")).replace("{p_e}", p_e).replace("{n}", name)
+
+
+func _short_name_tr(a: Actor) -> String:
+	if a.id == "prens": return "Prens"
+	var names := {"dorn": "Helena", "kessler": "Veyra", "halden": "Sarne", "lena": "Sarn", "brandt": "Voss", "falk": "Renn"}
+	return str(names.get(a.id, short_name(a)))
 
 
 func _phrase(a: Actor, value: float, echo: float) -> String:

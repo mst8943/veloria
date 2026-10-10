@@ -212,6 +212,10 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 static func ek(name: String, kind: String) -> String:
 	if Loc.lang == "en":
 		return name
+	return ek_tr(name, kind)
+
+
+static func ek_tr(name: String, kind: String) -> String:
 	var word := name.split(" ")[-1].to_lower()
 	var last_vowel := "e"
 	for i in range(word.length() - 1, -1, -1):
@@ -481,7 +485,7 @@ func _no_mesai() -> String:
 
 
 func news_for_display(source: String) -> String:
-	if weekly_news_localized.has(source):
+	if Loc.lang == "en" and weekly_news_localized.has(source):
 		return str(weekly_news_localized[source])
 	for prefix in ["KRİZ: ", "ALAMET: ", "SOKAK: ", "MAHKEME: ", "MALİYE: ", "ADLİYE: ", "İDARE: ", "ORDU: ", "DIŞİŞLERİ: ", "MANŞET: ", "ERTELENDİ — ", "KULİS: ", "OLAY: ", "SÖZ: ", "HAMLE: "]:
 		if source.begins_with(prefix):
@@ -489,10 +493,9 @@ func news_for_display(source: String) -> String:
 	return tr(source)
 
 
-func _add_news(source: String, localized: String = "") -> void:
+func _add_news(source: String, text_en: String = "") -> void:
 	weekly_news.append(source)
-	if localized != "":
-		weekly_news_localized[source] = localized
+	weekly_news_localized[source] = text_en if text_en != "" else Loc.en(source)
 
 
 ## Terfi: güç ve minnet verir, ama borç ve hırs da büyür.
@@ -673,11 +676,13 @@ func summon(id: String) -> String:
 	if a.plot_stage >= 2:
 		if rng.randf() < SUMMON_TELL:
 			a.loyalty["fear"] = float(a.loyalty["fear"]) + SUMMON_CAUGHT_FEAR
-			_add_sign(a, "%s huzurda kaçamak cevaplar verdi; gözlerini kaçırdı." % short_name(a), 2, true)
+			_add_sign(a, "%s huzurda kaçamak cevaplar verdi; gözlerini kaçırdı." % short_name(a), 2, true,
+				"%s gave evasive answers at court and avoided eye contact." % short_name(a))
 			return tr("%s huzurunda gergindi. Sorularına kaçamak cevaplar verdi ve erken ayrılmak için izin istedi.") % a.display_name
 		return tr("%s sakin ve saygılıydı. Hiçbir şey sezmedin.") % a.display_name
 	if rng.randf() < SUMMON_FALSE:
-		_add_sign(a, "%s huzurda tedirgin görünüyordu." % short_name(a), 1, false)
+		_add_sign(a, "%s huzurda tedirgin görünüyordu." % short_name(a), 1, false,
+			"%s appeared uneasy at court." % short_name(a))
 		return tr("%s tedirgindi; neden olduğunu söylemedi.") % a.display_name
 	var before := a.signs.size()
 	a.signs = a.signs.filter(func(g: Dictionary) -> bool: return g["real"])
@@ -704,7 +709,8 @@ func bribe(id: String) -> String:
 	a.loyalty["money"] += 8.0
 	a.secrets_on_king += 1
 	stats["bribes"] += 1
-	_add_fact("transfer_%s_%d" % [id, week], "%s yapılan gizli ödeme" % ek(a.display_name, "e"), "king", 18, [id, "dorn"], 2)
+	_add_fact("transfer_%s_%d" % [id, week], "%s yapılan gizli ödeme" % ek(a.display_name, "e"), "king", 18, [id, "dorn"], 2, 0.5,
+		"Secret payment made to %s" % a.display_name)
 	changed.emit()
 	return tr("%s gizli ödeme yapıldı. Sadakati arttı; ama bir iz kaldı.") % ek(a.display_name, "e")
 
@@ -721,7 +727,8 @@ func order(id: String, task: String, channel: String) -> String:
 			fidelity = 1.0
 			stats["written"] += 1
 			a.secrets_on_king += 1
-			_add_fact("emir_%s_%d" % [id, week], "%s verilen yazılı emir" % ek(a.display_name, "e"), "king", 35, [id], 1)
+			_add_fact("emir_%s_%d" % [id, week], "%s verilen yazılı emir" % ek(a.display_name, "e"), "king", 35, [id], 1, 0.5,
+				"Written order given to %s" % a.display_name)
 		"sozlu":
 			fidelity = 0.75
 		"ima":
@@ -732,7 +739,8 @@ func order(id: String, task: String, channel: String) -> String:
 	var delayed := a.plot_stage >= 2
 	if delayed:
 		fidelity *= PLOT_ORDER_DELAY
-		_add_sign(a, "%s emri geciktirdi; uygulamak için 'koşulların olgunlaşmasını' bekliyor." % short_name(a), 2, true)
+		_add_sign(a, "%s emri geciktirdi; uygulamak için 'koşulların olgunlaşmasını' bekliyor." % short_name(a), 2, true,
+			"%s delayed the order, waiting for conditions to mature before carrying it out." % short_name(a))
 	# Kırmızı çizgi: açık emirle çiğnenirse gönülsüz uygulanır ve küskünlük bırakır.
 	var crossed := a.crosses_red_line(task) and channel != "ima"
 	if crossed:
@@ -810,7 +818,8 @@ func blackmail(id: String) -> String:
 	stats["blackmails"] = int(stats.get("blackmails", 0)) + 1
 	a.blackmailed += 1
 	var fid := "santaj_%s_%d" % [id, week]
-	_add_fact(fid, "%s yapılan şantaj" % ek(a.display_name, "e"), "king", 30, [id], 1)
+	_add_fact(fid, "%s yapılan şantaj" % ek(a.display_name, "e"), "king", 30, [id], 1, 0.5,
+		"Blackmail of %s" % a.display_name)
 	var backfire := a.honesty * 0.35 + (0.25 if a.fear < 20.0 else 0.0) + 0.1 * (a.blackmailed - 1)
 	if rng.randf() < backfire:
 		facts[fid]["common"] = 0.45
@@ -999,7 +1008,7 @@ func leak_fact(fact_id: String) -> String:
 	stats["leaks"] += 1
 	facts[fact_id]["common"] = minf(1.0, facts[fact_id]["common"] + 0.5)
 	changed.emit()
-	return tr("'%s' basına sızdırıldı.") % fact_text_for_display(str(facts[fact_id]["text"]))
+	return tr("'%s' basına sızdırıldı.") % fact_text_for_display(facts[fact_id])
 
 
 func suppress_fact(fact_id: String) -> String:
@@ -1008,7 +1017,7 @@ func suppress_fact(fact_id: String) -> String:
 	var f: Dictionary = facts[fact_id]
 	f["common"] = maxf(0.0, f["common"] - 0.3)
 	changed.emit()
-	return tr("'%s' için sessizlik sağlandı. Kanıtın kopyaları hâlâ duruyor.") % fact_text_for_display(str(f["text"]))
+	return tr("'%s' için sessizlik sağlandı. Kanıtın kopyaları hâlâ duruyor.") % fact_text_for_display(f)
 
 
 ## Kanıtı yok et: kopya sayısı kadar zor; yok etme girişimi de iz bırakabilir.
@@ -1023,7 +1032,7 @@ func destroy_evidence(fact_id: String) -> String:
 	if int(f["copies"]) > 1:
 		f["copies"] = int(f["copies"]) - 1
 		changed.emit()
-		return tr("'%s' kanıtının bir kopyası yok edildi; hâlâ kopyaları var.") % fact_text_for_display(str(f["text"]))
+		return tr("'%s' kanıtının bir kopyası yok edildi; hâlâ kopyaları var.") % fact_text_for_display(f)
 	if rng.randf() < 0.7:
 		facts.erase(fact_id)
 		changed.emit()
@@ -1100,7 +1109,8 @@ func _tick_promises() -> void:
 			a.loyalty["career"] = maxf(0.0, float(a.loyalty["career"]) - 8.0)
 			a.ambition += 5.0
 		_add_fact("celiski_%s_%d" % [PRIZES.find(prize), week], "Aynı makamın birden çok kişiye vaat edilmesi (%s)" % prize,
-			"king", 20, group.map(func(p: Dictionary) -> String: return p["actor"]), 1)
+			"king", 20, group.map(func(p: Dictionary) -> String: return p["actor"]), 1, 0.5,
+			"The same office promised to several people (%s)" % prize)
 		_add_news("KULİS: %s aynı sözü aldıklarını öğrendi: %s." % [" ve ".join(names), prize],
 			tr("KULİS: %s aynı sözü aldıklarını öğrendi: %s.") % [" ve ".join(names), prize])
 	# Vadesi gelen sözler karar kartına dönüşür.
@@ -1164,7 +1174,8 @@ func _break_promise(p: Dictionary, betrayed := false) -> void:
 	if a != null:
 		a.loyalty["career"] = maxf(0.0, float(a.loyalty["career"]) - 15.0)
 		a.ambition += 12.0 if betrayed else 9.0
-		_add_fact("bozulan_soz_%s" % p["id"], "%s verilip tutulmayan söz (%s)" % [ek(a.display_name, "e"), p["prize"]], "king", 15, [a.id], 1)
+		_add_fact("bozulan_soz_%s" % p["id"], "%s verilip tutulmayan söz (%s)" % [ek(a.display_name, "e"), p["prize"]], "king", 15, [a.id], 1, 0.5,
+			"Promise made to %s and not kept (%s)" % [a.display_name, p["prize"]])
 		facts["bozulan_soz_%s" % p["id"]]["common"] = 0.2
 		if betrayed:
 			_extra_msgs.append("%s, kendisine vaat edilen %s başkasına verildiği için öfkeli." % [a.display_name, p["prize"]])
@@ -1187,7 +1198,8 @@ func dismiss(id: String) -> String:
 		a.ready = true
 		a.plot_stage = 3
 		king_strength -= 12.0
-		_add_fact("sizinti_%s" % id, "%s kralın sırlarını sızdırıyor" % a.display_name, "king", 60, [id], 1, 0.9)
+		_add_fact("sizinti_%s" % id, "%s kralın sırlarını sızdırıyor" % a.display_name, "king", 60, [id], 1, 0.9,
+			"%s is leaking the King's secrets" % a.display_name)
 		changed.emit()
 		return tr("%s görevden alındı ama kralın sırlarını biliyordu ve konuşmaya başladı!") % a.display_name
 	actors.erase(id)
@@ -1671,7 +1683,7 @@ func treasury_band() -> String:
 
 func _decay_facts() -> void:
 	for f: Dictionary in facts.values():
-		var fact_text := fact_text_for_display(str(f["text"]))
+		var fact_text := fact_text_for_display(f)
 		# Dosyalar sızar: bilen sayısı arttıkça ortak bilgi yavaş yavaş yükselir.
 		f["common"] = minf(1.0, f["common"] + 0.0065 * f["knowers"].size() * f.get("leakiness", 0.5))
 		if f["common"] >= 0.25 and f["common"] < 0.5 and not f.get("rumor", false):
@@ -2128,18 +2140,24 @@ func _plot_signs() -> void:
 			continue
 		var st := clampi(a.plot_stage, 0, 3)
 		if rng.randf() < float(PLOT_SIGN_P[st]):
-			_add_sign(a, _sign_text(a, st), int(PLOT_SIGN_W[st]), st > 0)
+			var pair := _sign_text_pair(a, st)
+			_add_sign(a, str(pair["tr"]), int(PLOT_SIGN_W[st]), st > 0, str(pair["en"]))
 
 
-func _add_sign(a: Actor, text: String, weight: int, real: bool) -> void:
-	a.signs.append({"w": week, "text": text, "weight": weight, "real": real})
+func _add_sign(a: Actor, text: String, weight: int, real: bool, text_en: String = "") -> void:
+	var shown_en := text_en if text_en != "" else Loc.en(text)
+	a.signs.append({"w": week, "text": text, "text_en": shown_en, "weight": weight, "real": real})
 	if a.signs.size() > 12:
 		a.signs.pop_front()
-	_add_news("ALAMET: " + text, tr("ALAMET: ") + tr(text))
+	_add_news("ALAMET: " + text, tr("ALAMET: ") + shown_en)
 
 
 func _sign_text(a: Actor, st: int) -> String:
 	return _narrative._sign_text(a, st)
+
+
+func _sign_text_pair(a: Actor, st: int) -> Dictionary:
+	return _narrative._sign_text_pair(a, st)
 
 
 ## Oyuncunun gördüğü alametlerin son haftalardaki ağırlığı (sayı olarak gösterilmez).
@@ -2960,14 +2978,16 @@ func _phrase(a: Actor, value: float, echo: float) -> String:
 	return _narrative._phrase(a, value, echo)
 
 
-func _add_fact(id: String, text: String, subject: String, severity: float, knowers: Array, copies: int, leakiness: float = 0.5) -> void:
+func _add_fact(id: String, text: String, subject: String, severity: float, knowers: Array, copies: int, leakiness: float = 0.5, text_en: String = "") -> void:
 	facts[id] = {"id": id, "text": text, "subject": subject, "severity": severity,
-		"knowers": knowers.duplicate(), "common": 0.0, "copies": copies, "leakiness": leakiness}
+		"text_en": text_en if text_en != "" else Loc.en(text), "knowers": knowers.duplicate(), "common": 0.0, "copies": copies, "leakiness": leakiness}
 
 
-func fact_text_for_display(text: String) -> String:
-	if Loc.lang != "en":
-		return text
+func fact_text_for_display(fact: Variant) -> String:
+	var text := str(fact.get("text", "")) if fact is Dictionary else str(fact)
+	if Loc.lang == "en" and fact is Dictionary and fact.has("text_en"):
+		return str(fact["text_en"])
+	if Loc.lang != "en": return text
 	if text.ends_with(" yapılan gizli ödeme"):
 		var apostrophe := text.find("'")
 		if apostrophe > 0:

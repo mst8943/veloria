@@ -820,7 +820,8 @@ func _signs_tip(a) -> String:
 	var lines: Array[String] = []
 	for g: Dictionary in a.signs:
 		if int(g["w"]) > Sim.week - Sim.PLOT_SUS_WINDOW:
-			lines.append(tr("Hafta %d — %s") % [int(g["w"]), tr(str(g["text"]))])
+			var text := str(g.get("text_en", g["text"])) if Loc.lang == "en" else str(g["text"])
+			lines.append(tr("Hafta %d — %s") % [int(g["w"]), text])
 	if lines.is_empty():
 		return tr("Son haftalarda hakkında bir alamet görülmedi.\nDarbeyi yalnızca ordu ya da hanedan başlatabilir; ama herkes komploya katılabilir.")
 	lines.reverse()
