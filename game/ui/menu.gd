@@ -260,6 +260,8 @@ func _build() -> void:
 			apply.call(on)
 			Sfx.save_settings())
 		grid.add_child(cb)
+	if grid.get_child_count() % 2 == 1:
+		grid.add_child(Control.new())   # tek sayıda onay kutusu: yazı boyutu etiketi ile seçimi hizalı kalsın
 	grid.add_child(_label_dim(tr("Yazı boyutu")))
 	var text_size := OptionButton.new()
 	for option in [tr("Normal"), tr("Büyük"), tr("Çok büyük")]:
