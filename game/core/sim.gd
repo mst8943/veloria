@@ -2151,6 +2151,8 @@ func _plot_signs() -> void:
 
 func _add_sign(a: Actor, text: String, weight: int, real: bool, text_en: String = "") -> void:
 	var shown_en := text_en if text_en != "" else Loc.en(text)
+	if shown_en != "":
+		shown_en = shown_en.substr(0, 1).to_upper() + shown_en.substr(1)   # "the Prince ..." cümle başında büyük harf
 	a.signs.append({"w": week, "text": text, "text_en": shown_en, "weight": weight, "real": real})
 	if a.signs.size() > 12:
 		a.signs.pop_front()

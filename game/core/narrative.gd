@@ -27,6 +27,7 @@ var HISTORY: Dictionary:
 	get: return sim.HISTORY_CONTENT
 var _signs_tr: Dictionary = {}
 var _signs_en: Dictionary = {}
+var _signs_en_root: Dictionary = {}
 var REPORT: Dictionary:
 	get: return sim.REPORT_CONTENT
 var KING_NAME: String:
@@ -109,6 +110,7 @@ func _sign_text_pair(a: Actor, st: int) -> Dictionary:
 		var english: Variant = sim._content_loader._read("res://game/data/en/content_reports.json")
 		_signs_tr = base.get("sign_texts", {}) if base is Dictionary else {}
 		_signs_en = english.get("sign_texts", {}) if english is Dictionary else {}
+		_signs_en_root = english if english is Dictionary else {}
 	var by: Dictionary = _signs_tr[str(st)]
 	var domain := a.domain
 	var pool: Array = by.get(domain, [])
@@ -131,10 +133,16 @@ func _sign_text_pair(a: Actor, st: int) -> Dictionary:
 
 
 func _fill_sign(text: String, name: String, partner: String, english: bool) -> String:
-	var p_e: String = partner if english else (sim.ek_tr(partner, "e") if partner != "" else str(REPORT["unknown_partner"]))
+	var unknown_en := "an unknown delegation"
+	if english and _signs_en_root.has("unknown_partner"):
+		unknown_en = str(_signs_en_root["unknown_partner"])
+	var p_e: String = (partner if partner != "" else unknown_en) if english else (sim.ek_tr(partner, "e") if partner != "" else str(REPORT["unknown_partner"]))
 	var n_in: String = Loc.poss(name) if english else sim.ek_tr(name, "in")
 	var n_case: String = name if english else ""
-	return text.replace("{n_in}", n_in).replace("{n_e}", n_case if english else sim.ek_tr(name, "e")).replace("{n_i}", n_case if english else sim.ek_tr(name, "i")).replace("{p_e}", p_e).replace("{n}", name)
+	var filled := text.replace("{n_in}", n_in).replace("{n_e}", n_case if english else sim.ek_tr(name, "e")).replace("{n_i}", n_case if english else sim.ek_tr(name, "i")).replace("{p_e}", p_e).replace("{n}", name)
+	if english and filled != "":
+		filled = filled.substr(0, 1).to_upper() + filled.substr(1)   # "the Prince ..." cümle başında büyük harf
+	return filled
 
 
 func _short_name_tr(a: Actor) -> String:
