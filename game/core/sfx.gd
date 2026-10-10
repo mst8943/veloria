@@ -56,7 +56,9 @@ func _ensure_bus(name: String) -> void:
 func _apply() -> void:
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(maxf(music_volume, 0.0001)))
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), linear_to_db(maxf(sfx_volume, 0.0001)))
-	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if fullscreen else DisplayServer.WINDOW_MODE_WINDOWED)
+	# Telefonda her zaman tam ekran: pencere kipi durum çubuğunu ve gezinme düğmelerini geri getirir.
+	var full := fullscreen or OS.has_feature("mobile")
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if full else DisplayServer.WINDOW_MODE_WINDOWED)
 
 
 func set_music(v: float) -> void:

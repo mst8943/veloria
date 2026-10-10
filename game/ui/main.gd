@@ -287,6 +287,23 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 
+## Telefonda çentik/kamera ve yuvarlak köşeler için güvenli alan boşlukları (görüntü alanı pikseli).
+func _safe_insets() -> Dictionary:
+	if not (_mobile and OS.has_feature("mobile")):
+		return {}
+	var win := Vector2(DisplayServer.window_get_size())
+	var safe := DisplayServer.get_display_safe_area()
+	var view := get_viewport_rect().size
+	if win.x < 1.0 or win.y < 1.0 or safe.size.x < 1:
+		return {}
+	var fx := view.x / win.x
+	var fy := view.y / win.y
+	return {
+		"left": int(maxf(0.0, safe.position.x * fx)), "top": int(maxf(0.0, safe.position.y * fy)),
+		"right": int(maxf(0.0, (win.x - safe.end.x) * fx)), "bottom": int(maxf(0.0, (win.y - safe.end.y) * fy)),
+	}
+
+
 func _fast() -> bool:
 	return _instant or Sfx.short_fx
 
@@ -331,8 +348,10 @@ func _build_ui() -> void:
 
 	var margin := MarginContainer.new()
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	var safe := _safe_insets()
 	for side in ["left", "right", "top", "bottom"]:
-		margin.add_theme_constant_override("margin_" + side, (4 if side in ["bottom", "top"] else 10) if _mobile else 18)
+		var base_margin: int = ((4 if side in ["bottom", "top"] else 10) if _mobile else 18)
+		margin.add_theme_constant_override("margin_" + side, base_margin + int(safe.get(side, 0)))
 	_stage.add_child(margin)
 	var root := VBoxContainer.new()
 	root.add_theme_constant_override("separation", 0 if _mobile else 10)
