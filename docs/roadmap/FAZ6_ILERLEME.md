@@ -20,6 +20,13 @@
 - `daily_card_test`: `DAILY CARD: OK`; günlük tohum, ilk-sonuç korunması, çift dilli metin ve PNG boyutu/dosyası doğrulandı. i18n eksikleri: 0. TR/EN masaüstü ve mobil UX auditleri `AUDIT BULGU: 0`.
 - Görüntüler alınıp incelendi: `screenshots/faz6_a3_desktop_tr`, `faz6_a3_desktop_en`, `faz6_a3_mobile_tr`, `faz6_a3_mobile_en`, `faz6_a3_end_screen_tr_desktop.png`, `faz6_a3_end_screen_en_mobile.png`, `faz6_a3_card_tr.png`, `faz6_a3_card_en.png`.
 
+### A4 — Senaryo modları ve sonsuz mod
+- Üç senaryo (Darbeye açık krallık, Naiplik, Boş kasa) Türkçe/İngilizce veri kaplamalarıyla eklendi. Varsayılan başlangıç yolu senaryosuz çalışıyor; kayıt sürümü 10'a çıkarıldı ve eski kayıtlarda senaryo/uzatma alanları göçle varsayılanlanıyor.
+- Senaryo seçimi yeni saltanat menüsünde yer alıyor; senaryoya göre üç yeni başarım veriliyor. Senaryo bot kapısı her zorlukta 80 kampanya çalıştırdı; Normal sonuçları darbe 36/80, naiplik 30/80, boş kasa 42/80 (hepsi %25–65 bandında).
+- Tahtta kalınan normal bitişten sonra uzatmaya geçilebiliyor. Uzatma ayrı kayıt/başarım dosyası kullanıyor, süreli olayları bekleme süresiyle yeniden açıyor ve her 26 haftada kriz eşiklerini azaltıyor. 200 haftayı aşan bot, ayrı kayıt ve eşik testi `ENDLESS: OK` verdi.
+- `sim_test`, `save_test`, `content_check`, `i18n_missing.py` (0) ve `scenario_test` geçti. UX audit TR/EN masaüstü ve 1067×600 mobilde `AUDIT BULGU: 0` verdi.
+- Görüntüler alınıp incelendi: `screenshots/faz6_a4_desktop_tr`, `faz6_a4_desktop_en`, `faz6_a4_mobile_tr`, `faz6_a4_mobile_en`; mobilde senaryo listesinin altı ve oyun sonu uzatma düğmesi de kontrol edildi.
+
 ## SIRADAKİ DİLİM
 
-A4 — Senaryo modları ve sonsuz mod. Ardından istenen Başkent · Kurumlar dış alan tıklaması bu dalganın son işi olacak.
+Dalga A son dokunuş — Başkent · Kurumlar yan çekmecesi boş alana/dışına tıklanınca kapanmalı.

@@ -3708,3 +3708,33 @@ msgstr "balanced"
 
 msgid "dolu"
 msgstr "full"
+
+msgid "Senaryo"
+msgstr "Scenario"
+
+msgid "Varsayılan"
+msgstr "Default"
+
+msgid "Mevcut oyun; başlangıç aynen korunur."
+msgstr "Current game; the starting setup stays exactly the same."
+
+msgid "Saltanata devam et"
+msgstr "Continue into extension"
+
+msgid "Uzatma başladı. Saltanatın artık ayrı kaydediliyor."
+msgstr "The extension has begun. This reign now has a separate save."
+
+msgid "Uzatma kaydedilemedi."
+msgstr "Could not save the extension."
+
+msgid "Uzatma"
+msgstr "Extension"
+
+msgid "[b]Senaryo:[/b] %s\n"
+msgstr "[b]Scenario:[/b] %s\n"
+
+msgid "[b]Uzatma saltanatı.[/b] Kayıt ve başarımlar Uzatma'da tutulur.\n"
+msgstr "[b]Extension reign.[/b] Saves and achievements are kept separately.\n"
+
+msgid "\n[b][font_size=%d][color=#d6b25e]UZATMA BAŞARIMLARI[/color][/font_size][/b]\n"
+msgstr "\n[b][font_size=%d][color=#d6b25e]EXTENSION ACHIEVEMENTS[/color][/font_size][/b]\n"

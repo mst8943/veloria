@@ -20,6 +20,9 @@ const ACTORS_PATH := "res://game/data/actors.json"
 const EVENTS_PATH := "res://game/data/events.json"
 const CHRONICLE_PATH := "user://veloria_chronicle.txt"
 const DAILY_PATH := "user://daily.cfg"
+const DEFAULT_SAVE_PATH := "user://veloria_save.txt"
+const EXTENSION_SAVE_PATH := "user://veloria_extension_save.txt"
+const EXTENSION_ACHIEVEMENTS_PATH := "user://veloria_extension_achievements.txt"
 var save_path := "user://veloria_save.txt"   # testler kendi dosyasını kullanır, oyuncunun kaydına dokunmaz
 var record_chronicle := true                 # testlerde ve otomatik oynatmada arşive yazılmaz
 var autosave := true                         # her hafta sonunda otomatik kayıt
@@ -105,6 +108,9 @@ var week_changes: Array = []       # {tone, text, actor}: görünür göstergele
 var weekly_moves: Array = []       # bu haftanın aktör hamleleri {tone, text, actor} (docs/design/aktor_hamleleri.md)
 var ended := false
 var record: Dictionary = {}
+var scenario_id := ""
+var scenario_name := ""
+var endless := false
 var coup_leader := ""
 
 var _events: Array = []
@@ -125,7 +131,7 @@ func _init() -> void:
 	_load_content()
 
 
-func new_game(seed_value: int = 0, diff: int = -1) -> void:
+func new_game(seed_value: int = 0, diff: int = -1, scenario := "") -> void:
 	_load_content()
 	if content_error != "":
 		push_error(content_error)
@@ -194,6 +200,9 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 	regime = ""
 	ended = false
 	record = {}
+	scenario_id = ""
+	scenario_name = ""
+	endless = false
 	coup_leader = ""
 	for d in _content_loader.load_actors():
 		var a := Actor.new()
@@ -207,6 +216,10 @@ func new_game(seed_value: int = 0, diff: int = -1) -> void:
 		karne[a.id] = {"ok": 0, "bad": 0}
 	_events = _content_loader.load_events(EVENTS_PATH)
 	_fire_events()
+	if scenario != "":
+		if not _apply_scenario(scenario):
+			push_error("Bilinmeyen senaryo: " + scenario)
+			return
 	_generate_reports()
 	_record_timeline()
 	changed.emit()
@@ -275,17 +288,83 @@ func _load_json(path: String) -> Array:
 	return parsed if parsed is Array else []
 
 
+func scenario_options() -> Array:
+	var f := FileAccess.open("res://game/data/scenarios.json", FileAccess.READ)
+	var data: Variant = JSON.parse_string(f.get_as_text()) if f else null
+	if not data is Array:
+		return []
+	if Loc.lang == "en":
+		var en_file := FileAccess.open("res://game/data/en/scenarios.json", FileAccess.READ)
+		var english: Variant = JSON.parse_string(en_file.get_as_text()) if en_file else null
+		if english is Dictionary:
+			for row: Dictionary in data:
+				var overlay: Dictionary = english.get(str(row.get("id", "")), {})
+				for key in ["name", "desc"]:
+					if overlay.has(key):
+						row[key] = overlay[key]
+	return data
+
+
+func _apply_scenario(id: String) -> bool:
+	for scenario: Dictionary in scenario_options():
+		if str(scenario.get("id", "")) != id:
+			continue
+		scenario_id = id
+		scenario_name = str(scenario.get("name", id))
+		var overrides: Dictionary = scenario.get("overrides", {})
+		for aid: String in overrides.get("actors", {}):
+			if not actors.has(aid):
+				return false
+			var actor: Actor = actors[aid]
+			for key in overrides["actors"][aid]:
+				if key == "loyalty":
+					for kind in overrides["actors"][aid][key]:
+						actor.loyalty[kind] = overrides["actors"][aid][key][kind]
+				elif key in ["power", "ambition", "fear", "honesty", "threshold"]:
+					actor.set(key, overrides["actors"][aid][key])
+				else:
+					return false
+		for key in overrides.get("flags", {}):
+			flags[key] = overrides["flags"][key]
+		for key in overrides.get("capacity", {}):
+			if not capacity.has(key):
+				return false
+			capacity[key] = overrides["capacity"][key]
+		private_wealth = float(overrides.get("wealth", private_wealth))
+		heir_maturity = float(overrides.get("heir_maturity", heir_maturity))
+		mesai_max = int(overrides.get("mesai_max", mesai_max))
+		mesai = mesai_max
+		for event_id in overrides.get("first_events", []):
+			for event: Dictionary in _events:
+				if str(event.get("id", "")) == str(event_id) and not fired_events.has(str(event_id)):
+					pending.append({"event": event.duplicate(true), "age": 0})
+					fired_events[str(event_id)] = week
+					break
+		return true
+	return false
+
+
 # ---------------------------------------------------------------- Kayıt
 
 func has_save() -> bool:
-	return FileAccess.file_exists(save_path)
+	return FileAccess.file_exists(_active_save_path()) or (save_path == DEFAULT_SAVE_PATH and FileAccess.file_exists(EXTENSION_SAVE_PATH))
+
+
+func _active_save_path() -> String:
+	if save_path != DEFAULT_SAVE_PATH:
+		return save_path
+	if not FileAccess.file_exists(EXTENSION_SAVE_PATH):
+		return DEFAULT_SAVE_PATH
+	if not FileAccess.file_exists(DEFAULT_SAVE_PATH):
+		return EXTENSION_SAVE_PATH
+	return EXTENSION_SAVE_PATH if FileAccess.get_modified_time(EXTENSION_SAVE_PATH) > FileAccess.get_modified_time(DEFAULT_SAVE_PATH) else DEFAULT_SAVE_PATH
 
 
 ## Menüde "Devam Et" yanında gösterilecek kısa özet: "Hafta 23 · Normal".
 func save_summary() -> String:
 	if not has_save():
 		return ""
-	var f := FileAccess.open(save_path, FileAccess.READ)
+	var f := FileAccess.open(_active_save_path(), FileAccess.READ)
 	var d: Variant = str_to_var(f.get_as_text())
 	if not d is Dictionary:
 		return ""
@@ -295,11 +374,11 @@ func save_summary() -> String:
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
 ## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Sarne ve kadro günlüğü
-const SAVE_VERSION := 9
+const SAVE_VERSION := 10
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
-	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang"]
+	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -374,6 +453,9 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 		d["karne"] = old_karne
 	if from < 9:
 		d["lang"] = "tr"
+	if from < 10:
+		d["scenario"] = ""
+		d["endless"] = false
 	if not d.has("foreign"):
 		d["foreign"] = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
 	if not d.has("foreign_hint_until"):
@@ -411,12 +493,37 @@ func save_game() -> bool:
 		"court_share": court_share, "capacity_timeline": capacity_timeline, "holding": holding,
 		"halden_hostile_until": halden_hostile_until, "halden_demands": halden_demands,
 		"lena_boost_until": lena_boost_until, "kadro_log": kadro_log, "heir_maturity": heir_maturity,
-		"foreign": foreign, "foreign_hint_until": foreign_hint_until, "lang": Loc.lang, "version": SAVE_VERSION}
+		"foreign": foreign, "foreign_hint_until": foreign_hint_until, "lang": Loc.lang, "scenario": scenario_id,
+		"endless": endless, "version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
 	f.store_string(var_to_str(data))
 	return true
+
+
+func continue_endless() -> bool:
+	if not ended or not record.get("survived", false) or endless:
+		return false
+	var old_week := week
+	var old_mesai := mesai
+	var old_record := record
+	var old_path := save_path
+	endless = true
+	ended = false
+	week = maxi(MAX_WEEKS + 1, week)
+	mesai = mesai_max
+	save_path = EXTENSION_SAVE_PATH
+	record = {}
+	if save_game():
+		return true
+	endless = false
+	ended = true
+	week = old_week
+	mesai = old_mesai
+	record = old_record
+	save_path = old_path
+	return false
 
 
 func load_game() -> bool:
@@ -427,6 +534,7 @@ func load_game() -> bool:
 	if not has_save():
 		load_error = "Kayıtlı oyun bulunamadı."
 		return false
+	save_path = _active_save_path()
 	var f := FileAccess.open(save_path, FileAccess.READ)
 	var d: Variant = str_to_var(f.get_as_text()) if f else null
 	if not d is Dictionary:
@@ -444,6 +552,13 @@ func load_game() -> bool:
 			load_error = "Kayıt dosyası eksik ya da bozuk ('%s' yok)." % k
 			return false
 	new_game(int(d.get("seed", 1)), int(d.get("diff", 1)))
+	scenario_id = str(d.get("scenario", ""))
+	endless = bool(d.get("endless", false))
+	if scenario_id != "":
+		for option in scenario_options():
+			if option["id"] == scenario_id:
+				scenario_name = str(option["name"])
+				break
 	week = d["week"]
 	mesai = d["mesai"]
 	king_strength = d["king"]
@@ -1740,11 +1855,14 @@ func _eligible(e: Dictionary) -> bool:
 	var id: String = e["id"]
 	var once: bool = e.get("once", true)
 	if fired_events.has(id):
-		if once:
+		if once and not endless:
 			return false
 		if week - int(fired_events[id]) < int(e.get("cooldown", 12)):
 			return false
-	if week < int(e.get("min_week", 0)) or week > int(e.get("max_week", 999)):
+	var max_week := int(e.get("max_week", 999))
+	if endless:
+		max_week = 999999
+	if week < int(e.get("min_week", 0)) or week > max_week:
 		return false
 	if unrest < float(e.get("min_unrest", 0)) or unrest > float(e.get("max_unrest", 100)):
 		return false
@@ -2073,7 +2191,8 @@ func _run_cascade() -> void:
 			_coup_now(lead)
 			return
 	var drop := _public_weakness()
-	var rd := _diff("ready_drive")
+	var pressure_steps := maxi(0, week - MAX_WEEKS - 1) / 26 if endless else 0
+	var rd := _diff("ready_drive") - pressure_steps * 2.0
 	for a: Actor in actors.values():
 		if a.insider and not a.supporting and not a.ready and a.rebellion_drive() > rd:
 			a.ready = true
@@ -2105,7 +2224,7 @@ func _run_cascade() -> void:
 			continue
 		var st := 0
 		if a.ready:
-			st = 3 if share_now >= _diff("coup_share") - PLOT_PREP_MARGIN else 2
+			st = 3 if share_now >= _diff("coup_share") - pressure_steps * 0.02 - PLOT_PREP_MARGIN else 2
 		elif a.rebellion_drive() >= rd - PLOT_UNEASY_GAP:
 			st = 1
 		if st != a.plot_stage:
@@ -2117,7 +2236,7 @@ func _run_cascade() -> void:
 	for a: Actor in actors.values():
 		if a.ready and a.insider and (a.military or a.royal):
 			striker = true
-	if coup_crisis.is_empty() and week >= int(_diff("grace")) and week >= crisis_cooldown and share_now >= _diff("coup_share") and striker:
+	if coup_crisis.is_empty() and week >= int(_diff("grace")) and week >= crisis_cooldown and share_now >= _diff("coup_share") - pressure_steps * 0.02 and striker:
 		_open_crisis()
 
 
@@ -2384,6 +2503,9 @@ func _check_crises() -> void:
 		return
 	# İşaretler (tohum -> işaret): eşiğe yaklaşınca bir kez haber; geri çekilince yeniden kurulur.
 	var lp := legal_pressure()
+	var pressure_steps := maxi(0, week - MAX_WEEKS - 1) / 26 if endless else 0
+	var uprising_at := UPRISING_AT - pressure_steps * 2.0
+	var legal_at := LEGAL_CRISIS_AT - pressure_steps * 2.0
 	if unrest >= STREET_WARN_AT and not warned.get("street", false):
 		warned["street"] = true
 		_add_news("SOKAK: Meydanlardaki kalabalık her gün büyüyor; artık dağılmıyorlar.",
@@ -2400,9 +2522,9 @@ func _check_crises() -> void:
 		return
 	if week < int(_diff("grace")) or week < crisis_cooldown:
 		return
-	if unrest >= UPRISING_AT:
+	if unrest >= uprising_at:
 		_open_other("street")
-	elif lp >= LEGAL_CRISIS_AT:
+	elif lp >= legal_at:
 		_open_other("legal")
 
 
@@ -2610,7 +2732,7 @@ func legal_pressure() -> float:
 func _check_end() -> void:
 	if king_strength <= 0.0 or unrest >= 100.0 or legal_pressure() >= 100.0 or flags.has("YETKI_KAYBI"):
 		_end(false)
-	elif week > MAX_WEEKS:
+	elif week > MAX_WEEKS and not endless:
 		_end(true)
 
 
@@ -2666,7 +2788,8 @@ func _end(survived: bool) -> void:
 		"promises": "%d söz verdin: %d tutuldu, %d bozuldu." % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
 		"promises_display": Loc.ntr("%d söz verdin: %d tutuldu, %d bozuldu.", int(stats.get("promises", 0))) % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
 		"historians": historians(survived), "timeline": timeline.duplicate(), "council": council_record(),
-		"plot": plot_log.duplicate(), "signs": sign_record(), "state": _state_record()}
+		"plot": plot_log.duplicate(), "signs": sign_record(), "state": _state_record(),
+		"scenario": scenario_id, "scenario_name": scenario_name, "endless": endless}
 	record["new_achievements"] = _award_achievements(survived, title, cause) if record_chronicle else []
 	if record_chronicle:
 		_append_chronicle(record)
@@ -2725,10 +2848,11 @@ const ACHIEVEMENTS_PATH := "user://veloria_achievements.txt"
 var ACHIEVEMENTS: Dictionary = {}
 
 
-func load_achievements() -> Dictionary:
-	if not FileAccess.file_exists(ACHIEVEMENTS_PATH):
+func load_achievements(extension := false) -> Dictionary:
+	var path := EXTENSION_ACHIEVEMENTS_PATH if extension else ACHIEVEMENTS_PATH
+	if not FileAccess.file_exists(path):
 		return {}
-	var d: Variant = str_to_var(FileAccess.open(ACHIEVEMENTS_PATH, FileAccess.READ).get_as_text())
+	var d: Variant = str_to_var(FileAccess.open(path, FileAccess.READ).get_as_text())
 	return d if d is Dictionary else {}
 
 
@@ -2783,14 +2907,19 @@ func _award_achievements(survived: bool, title: String, cause: String) -> Array:
 		earned.append("yalniz_kral")
 	if heir_maturity >= 70.0:
 		earned.append("hazir_veliaht")
-	var have := load_achievements()
+	match scenario_id:
+		"darbe": earned.append("senaryo_darbe")
+		"naiplik": earned.append("senaryo_naiplik")
+		"bos_kasa": earned.append("senaryo_bos_kasa")
+	var have := load_achievements(endless)
 	var fresh: Array = []
 	for id in earned:
 		if not have.has(id):
 			have[id] = Time.get_date_string_from_system()
 			fresh.append(id)
 	if record_chronicle and not fresh.is_empty():
-		var f := FileAccess.open(ACHIEVEMENTS_PATH, FileAccess.WRITE)
+		var path := EXTENSION_ACHIEVEMENTS_PATH if endless else ACHIEVEMENTS_PATH
+		var f := FileAccess.open(path, FileAccess.WRITE)
 		if f:
 			f.store_string(var_to_str(have))
 	return fresh
@@ -2808,7 +2937,8 @@ func load_chronicle() -> Array:
 func _append_chronicle(r: Dictionary) -> void:
 	var list := load_chronicle()
 	list.append({"date": Time.get_date_string_from_system(), "title": r["title"], "weeks": r["weeks"],
-		"survived": r["survived"], "cause": r["cause"], "difficulty": DIFFICULTY[difficulty]["name"]})
+		"survived": r["survived"], "cause": r["cause"], "difficulty": tr("Uzatma") if endless else DIFFICULTY[difficulty]["name"],
+		"extension": endless, "scenario": scenario_id})
 	var f := FileAccess.open(CHRONICLE_PATH, FileAccess.WRITE)
 	if f:
 		f.store_string(var_to_str(list.slice(maxi(0, list.size() - 50))))

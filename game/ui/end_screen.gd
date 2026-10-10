@@ -18,6 +18,7 @@ var log_page: RichTextLabel
 var timeline: Array = []
 var chart_drawn := false
 var _record: Dictionary = {}
+var _continue_btn: Button
 
 
 func _history_text(value: String) -> String:
@@ -149,6 +150,13 @@ func _build() -> void:
 	host._wire(again)
 	again.pressed.connect(host._start_new)
 	brow.add_child(again)
+	_continue_btn = Button.new()
+	_continue_btn.text = tr("Saltanata devam et")
+	_continue_btn.theme_type_variation = "GhostButton"
+	_continue_btn.custom_minimum_size = Vector2(220, 50)
+	host._wire(_continue_btn)
+	_continue_btn.pressed.connect(host._continue_endless)
+	brow.add_child(_continue_btn)
 	var to_menu := Button.new()
 	to_menu.text = tr("Ana Menü")
 	to_menu.theme_type_variation = "GhostButton"
@@ -267,6 +275,10 @@ func show_record(record: Dictionary) -> String:
 		int(record["weeks"]), record["top_actor"], str(record.get("promises_display", tr(str(record.get("promises", ""))))), hist_log.size()])
 	if str(record.get("regime", "")) != "":
 		summary.append_text(tr("[b]Rejimin:[/b] %s. [b]Son sınavı:[/b] %s.\n") % [tr(str(record["regime"])), tr(str(record["threat"]))])
+	if str(record.get("scenario_name", "")) != "":
+		summary.append_text(tr("[b]Senaryo:[/b] %s\n") % str(record["scenario_name"]))
+	if bool(record.get("endless", false)):
+		summary.append_text(tr("[b]Uzatma saltanatı.[/b] Kayıt ve başarımlar Uzatma'da tutulur.\n"))
 	var state: Dictionary = record.get("state", {})
 	if not state.is_empty():
 		summary.append_text(tr("[b]Devletin:[/b] %s. Bedeli Hakikat Dosyası'ndaki Devlet Defteri'nde.\n") % _state_band(float(state.get("average", 55.0))))
@@ -323,6 +335,7 @@ func show_record(record: Dictionary) -> String:
 		log_page.append_text("• %s\n" % _history_text(str(hist_log[i])))
 	tabs.set_tab_title(3, tr("Hakikat Dosyası (%d)") % lies.size() if not lies.is_empty() else tr("Hakikat Dosyası"))
 	tabs.current_tab = 0
+	_continue_btn.visible = bool(record.get("survived", false)) and not bool(record.get("endless", false))
 	for page in [summary, hist_page, lies_page, log_page]:
 		page.scroll_to_line(0)
 	timeline = state.get("timeline", record.get("timeline", []))

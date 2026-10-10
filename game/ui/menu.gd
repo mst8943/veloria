@@ -48,6 +48,7 @@ var items: Array = []        # açılış animasyonu sırası
 var pages: Dictionary = {}
 var page_now := "main"
 var _daily_status: Label
+var scenario_id := ""
 
 
 func _init(main: Control) -> void:
@@ -202,6 +203,24 @@ func _build() -> void:
 			Sfx.difficulty = i
 			Sfx.save_settings())
 		new_page.add_child(db)
+	new_page.add_child(_heading(tr("Senaryo")))
+	var scenario_group := ButtonGroup.new()
+	var scenarios := [{"id": "", "name": tr("Varsayılan"), "desc": tr("Mevcut oyun; başlangıç aynen korunur.")}]
+	scenarios.append_array(Sim.scenario_options())
+	for scenario: Dictionary in scenarios:
+		var id := str(scenario.get("id", ""))
+		var sb := Button.new()
+		sb.text = "%s\n%s" % [str(scenario.get("name", id)), str(scenario.get("desc", ""))]
+		sb.theme_type_variation = "ChoiceButton"
+		sb.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		sb.toggle_mode = true
+		sb.button_group = scenario_group
+		sb.button_pressed = id == scenario_id
+		sb.custom_minimum_size.y = 68 if host._mobile else 56
+		sb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		host._wire(sb)
+		sb.pressed.connect(func() -> void: scenario_id = id)
+		new_page.add_child(sb)
 	var nrow := HBoxContainer.new()
 	nrow.add_theme_constant_override("separation", 10)
 	new_page.add_child(nrow)

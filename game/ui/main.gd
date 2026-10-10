@@ -776,6 +776,12 @@ func _show_chronicle() -> void:
 			t += "[color=#d6b25e]»[/color]  [b]%s[/b]  [color=gray]%s · %s[/color]\n" % [info[0], info[1], have[id]]
 		else:
 			t += "[color=#55524c]·  %s  ·  %s[/color]\n" % [info[0], info[1]]
+	var extension_have: Dictionary = Sim.load_achievements(true)
+	if not extension_have.is_empty():
+		t += tr("\n[b][font_size=%d][color=#d6b25e]UZATMA BAŞARIMLARI[/color][/font_size][/b]\n") % _fs(24)
+		for id in extension_have:
+			var info: Array = Sim.ACHIEVEMENTS.get(id, [id, ""])
+			t += "[color=#d6b25e]»[/color]  [b]%s[/b]  [color=gray]%s · %s[/color]\n" % [info[0], info[1], extension_have[id]]
 	_show_modal(t)
 
 
@@ -958,11 +964,12 @@ func _hide_menu() -> void:
 
 func _request_new_game() -> void:
 	var in_progress: bool = not Sim.actors.is_empty() and not Sim.ended and Sim.week > 1
+	var selected_scenario := str(_menu.scenario_id)
 	if in_progress or (Sim.actors.is_empty() and Sim.has_save()):
 		_show_modal(tr("[b][font_size=%d][color=#d6b25e]Yeni saltanat[/color][/font_size][/b]\n\nSüren ya da kayıtlı bir saltanat var. Yeni bir oyuna başlarsan otomatik kayıt da üzerine yazılacak.\n\nDevam etmek istiyor musun?") % _fs(26),
-			tr("Yeni oyuna başla"), _start_new)
+			tr("Yeni oyuna başla"), _start_new.bind(0, -1, false, selected_scenario))
 	else:
-		_start_new()
+		_start_new(0, -1, false, selected_scenario)
 
 
 func _request_daily_game() -> void:
@@ -980,9 +987,10 @@ func _begin_daily_game() -> void:
 	_start_new(_daily_seed, 1, true)
 
 
-func _start_new(seed_value := 0, diff := -1, daily := false) -> void:
+func _start_new(seed_value := 0, diff := -1, daily := false, scenario := "") -> void:
 	_daily_run = daily
-	Sim.new_game(seed_value, diff if diff >= 0 else Sfx.difficulty)
+	Sim.save_path = Sim.DEFAULT_SAVE_PATH
+	Sim.new_game(seed_value, diff if diff >= 0 else Sfx.difficulty, scenario)
 	if Sim.content_error != "":
 		_show_modal(tr("[b]İçerik yüklenemedi[/b]\n\n%s") % Sim.content_error)
 		return
@@ -1028,6 +1036,13 @@ func _continue() -> void:
 		_after_load(tr("Kayıtlı oyun yüklendi (hafta %d).") % Sim.week)
 	else:
 		_show_modal(tr("[b]Kayıt yüklenemedi[/b]\n\n%s\n\nYeni bir saltanat başlatabilirsin.") % Sim.load_error)
+
+
+func _continue_endless() -> void:
+	if Sim.continue_endless():
+		_after_load(tr("Uzatma başladı. Saltanatın artık ayrı kaydediliyor."))
+	else:
+		_show_modal(tr("Uzatma kaydedilemedi."))
 
 
 func _after_load(message: String) -> void:

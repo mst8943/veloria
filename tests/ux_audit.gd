@@ -68,6 +68,16 @@ func _path(n: Node) -> String:
 	return "/".join(parts)
 
 
+func _find_scroll(node: Node) -> ScrollContainer:
+	if node is ScrollContainer:
+		return node
+	for child in node.get_children():
+		var found := _find_scroll(child)
+		if found != null:
+			return found
+	return null
+
+
 func _label_text(c: Control) -> String:
 	if c is BaseButton and "text" in c:
 		return str(c.get("text")).left(30)
@@ -211,6 +221,12 @@ func _run() -> void:
 		if main._menu.pages.has(page):
 			main._menu.show_page(page)
 			await _snap("x05_menu_" + page, 60)
+			if page == "new":
+				var menu_scroll := _find_scroll(main._menu)
+				if menu_scroll != null:
+					menu_scroll.scroll_vertical = int(menu_scroll.get_v_scroll_bar().max_value)
+					await _snap("x05_menu_new_scenarios", 30)
+					menu_scroll.scroll_vertical = 0
 	main._hide_menu()
 	main._show_modal("Test", "Tamam")
 	await _snap("x06_modal")
@@ -222,6 +238,7 @@ func _run() -> void:
 		sim0.timeline.append({"w": w * 8, "king": 70.0, "unrest": 30.0, "plot": 20.0, "foreign": 72.0, "heir": 75.0})
 		sim0.capacity_timeline.append({"w": w * 8, "maliye": 78.0, "hukuk": 78.0, "ordu": 78.0, "idare": 78.0, "holding": 35.0})
 	sim0.week = 105
+	main._instant = true
 	sim0._end(true)
 	await _frames(20)
 	main._end_overlay.show()

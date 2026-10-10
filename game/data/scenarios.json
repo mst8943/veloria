@@ -1,0 +1,34 @@
+[
+  {
+    "id": "darbe",
+    "name": "Darbeye açık krallık",
+    "desc": "Arden'in gücü yüksek, ordu daha kuşkulu; generalin hamlesi erken gelir.",
+    "overrides": {
+      "actors": {"arden": {"power": 72, "ambition": 55, "loyalty": {"ideology": 20, "career": 20}}},
+      "flags": {"SENARYO_DARBE": true},
+      "first_events": ["general_atamalari"]
+    }
+  },
+  {
+    "id": "naiplik",
+    "name": "Naiplik",
+    "desc": "Veliaht daha küçük; Helena sarayda daha güçlü bir naip.",
+    "overrides": {
+      "actors": {"dorn": {"power": 70, "loyalty": {"career": 30}}, "prens": {"power": 22}},
+      "heir_maturity": 12,
+      "flags": {"SENARYO_NAIPLIK": true},
+      "first_events": ["prens_veliaht"]
+    }
+  },
+  {
+    "id": "bos_kasa",
+    "name": "Boş kasa",
+    "desc": "Saray kasası ve maliye kapasitesi düşük başlıyor.",
+    "overrides": {
+      "wealth": 2,
+      "capacity": {"maliye": 28},
+      "flags": {"SENARYO_BOS_KASA": true},
+      "first_events": ["ilk_butce"]
+    }
+  }
+]

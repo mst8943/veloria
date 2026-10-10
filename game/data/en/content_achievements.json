@@ -20,5 +20,8 @@
   "oligarki_dizginleyen": ["The Oligarch Tamed", "Cut Sarne's rising share by the end of your reign."],
   "uc_bayrak": ["Three Flags", "End your reign on close terms with Asteria, Drakon, and Seravia."],
   "yalniz_kral": ["A Lonely King", "Stay on the throne while all three foreign powers are cold."],
-  "hazir_veliaht": ["Heir Prepared", "End a reign with Julian ready."]
+  "hazir_veliaht": ["Heir Prepared", "End a reign with Julian ready."],
+  "senaryo_darbe": ["Shadow of a Coup", "Finish the Coup-prone Kingdom scenario."],
+  "senaryo_naiplik": ["The Regent's Test", "Finish the Regency scenario."],
+  "senaryo_bos_kasa": ["Last Coin", "Finish the Empty Treasury scenario."]
 }

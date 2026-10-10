@@ -86,5 +86,17 @@
   "hazir_veliaht": [
     "Hazır Veliaht",
     "Julian hazırken bir saltanatı bitir."
+  ],
+  "senaryo_darbe": [
+    "Tahtta Darbe Gölgesi",
+    "Darbeye açık krallık senaryosunu bitir."
+  ],
+  "senaryo_naiplik": [
+    "Naibin Sınavı",
+    "Naiplik senaryosunu bitir."
+  ],
+  "senaryo_bos_kasa": [
+    "Son Akçe",
+    "Boş kasa senaryosunu bitir."
   ]
 }
