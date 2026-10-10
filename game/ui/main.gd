@@ -4,6 +4,7 @@ extends Control
 const UIKit := preload("res://game/ui/ui_kit.gd")
 const Loc := preload("res://game/core/loc.gd")
 const ATMOS_SHADER := preload("res://game/ui/atmosphere.gdshader")
+const VIBRANCY_SHADER := preload("res://game/ui/vibrancy.gdshader")
 const CINEMA := preload("res://game/ui/cinema.gd")
 const TOUCH_SCROLL := preload("res://game/ui/touch_scroll.gd")
 const MEDIA_VIEW := preload("res://game/ui/media_view.gd")
@@ -596,6 +597,17 @@ func _build_fx() -> void:
 		bar.anchor_top = 0.0 if top else 0.9
 		bar.anchor_bottom = 0.1 if top else 1.0
 		_curtain.add_child(bar)
+	var grade_layer := CanvasLayer.new()
+	grade_layer.name = "Vibrancy"
+	grade_layer.layer = 60
+	add_child(grade_layer)
+	var grade := ColorRect.new()
+	grade.set_anchors_preset(Control.PRESET_FULL_RECT)
+	grade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var grade_material := ShaderMaterial.new()
+	grade_material.shader = VIBRANCY_SHADER
+	grade.material = grade_material
+	grade_layer.add_child(grade)
 	_curtain.gui_input.connect(func(ev: InputEvent) -> void:
 		if ev is InputEventMouseButton and ev.pressed:
 			_curtain_skip = true)

@@ -31,6 +31,8 @@ func _boot() -> void:
 	(get_root().get_node("Sfx")).set_language("en" if "--lang=en" in OS.get_cmdline_user_args() else "tr")
 	main = (load("res://game/ui/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
+	if "--no-vibrancy" in OS.get_cmdline_user_args():
+		main.get_node("Vibrancy").hide()
 	_run.call_deferred()
 
 

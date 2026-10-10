@@ -1,6 +1,6 @@
 # Gece görevi ilerleme
 
-**SIRADAKİ DİLİM: 2 — Canlılık**
+**SIRADAKİ DİLİM: 3 — İlk açılış turu**
 
 ## Kararlar
 
@@ -24,8 +24,16 @@ Durum: tamamlandı.
 
 ## Dilim 2 — Canlılık
 
-Durum: sırada.
+Durum: tamamlandı.
+
+- Tek CanvasLayer ekran derecelendirmesi eklendi (satürasyon 1.30, kontrast 1.00, parlaklık 1.03); ayar anahtarı yok. UIKit'teki var olan GOLD_DIM ve DANGER tonları aynı renk ailesinde açılarak hover zemininde sırasıyla **4.71:1** ve **4.65:1** kontrasta ulaştı.
+- `docs/ux/canlilik_oncesi_sonrasi.md` altı ekranın bütün önce/sonra S/V ölçümlerini ve kanıt yollarını içeriyor. PIL ölçümü: masaüstü ekran ortalaması S **+23.9%**, V **+7.6%**; mobil S **+26.6%**, V **+8.4%**; birleşik S **+25.3%**, V **+8.0%**.
+- 1600×900 ve 1067×600 Türkçe `ui_shots` PNG'leri `C:/Users/USER/Desktop/oyun_gece_s2_{before,after}_tr_{desktop,mobile}/` altında. Her klasörde Menü, Gündem/karar, Masa, Medya, Harita, Oyun sonu ve ek UI kareleri var; temas sayfaları ve tam boy karar, medya, harita, oyun sonu kareleri açıldı. Metin/karar seçenekleri okunuyor, kırmızı ve yeşil ayırt ediliyor, yapay/neon renk yok. Oyun sonu Özeti kaydırılabilir; ekran karesi görünür kısmı gösterir.
+- KAPI: `sim_test`, `event_check`, `save_test`, `content_check`, `i18n_check`: OK; masaüstü/mobil `ui_input_test`, `touch_scroll_test` (tekrarda 3/3), `cutscene_check`, `audio_check`: OK. Godot çıkışında test süreçlerinde önceki ObjectDB/kaynak uyarıları görülüyor.
+- `--autoplay`: tohum 11/12/13 için 49/25/99 hafta; `--autoplay --mobile`: 84 hafta. `--autoplay --full` TR/EN aynı: `tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`.
+- Probe TR/EN aynı: **68/80, 36/80, 16/80** (Kolay/Normal/Zor), `advice_weighted`, 80 kampanya.
+- Değişiklikler tek Dilim 2 commit'inde.
 
 ## Dilim 3 — İlk açılış turu
 
-Durum: başlamadı.
+Durum: sırada.
