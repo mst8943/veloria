@@ -232,7 +232,8 @@ func _build() -> void:
 	language.select(1 if Loc.lang == "en" else 0)
 	language.item_selected.connect(func(index: int) -> void:
 		Sfx.set_language("en" if index == 1 else "tr")
-		Sfx.save_settings())
+		Sfx.save_settings()
+		host.call_deferred("rebuild_ui"))
 	grid.add_child(language)
 	var vgrid := GridContainer.new()
 	vgrid.columns = 2

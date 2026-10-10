@@ -69,6 +69,7 @@ var _curtain_img: TextureRect
 var _curtain_skip := false
 var _cinema: Control
 var _cutscenes: Array = []
+var _ui_nodes: Array = []   # _build_ui/_build_fx'in eklediği düğümler (dil değişince yeniden kurulur)
 var _modal: Control   # bilgi/onay penceresi (modal.gd)
 var _promise_list: RichTextLabel
 var _multi_btn: Button
@@ -107,8 +108,12 @@ func _ready() -> void:
 	_agenda_view = AGENDA_VIEW.new(self)
 	_person_panel = PERSON_PANEL.new(self)
 	_divan = DIVAN_VIEW.new(self)
+	var pre_ui := get_children()
 	_build_ui()
 	_build_fx()
+	for n in get_children():
+		if not pre_ui.has(n):
+			_ui_nodes.append(n)
 	if Sim.content_error != "":
 		_show_menu()
 		_show_modal(tr("[b]İçerik yüklenemedi[/b]\n\n%s") % Sim.content_error)
@@ -177,6 +182,49 @@ func _ready() -> void:
 				_show_modal(MENU.CREDITS)
 			"chronicle":
 				_show_chronicle()
+
+
+## Dil değişince arayüzü yeniden kurar: tr() ile bir kez yazılmış bütün metinler yeni dilde yenilenir.
+func rebuild_ui() -> void:
+	if _tabs == null:
+		return
+	var menu_open: bool = _menu != null and _menu.visible
+	var menu_page: String = _menu.page_now if _menu != null else "main"
+	var tab: int = _tabs.current_tab
+	var sel := _sel.duplicate()
+	var dec_index: int = _agenda_view.decision_index
+	for n in _ui_nodes:
+		if is_instance_valid(n):
+			remove_child(n)
+			n.queue_free()
+	_ui_nodes.clear()
+	_buttons.clear()
+	_cards.clear()
+	_cards_sig = ""
+	_decision_cards.clear()
+	_decision_buttons.clear()
+	_agenda_view = AGENDA_VIEW.new(self)
+	_person_panel = PERSON_PANEL.new(self)
+	_divan = DIVAN_VIEW.new(self)
+	var pre_ui := get_children()
+	_build_ui()
+	_build_fx()
+	for n in get_children():
+		if not pre_ui.has(n):
+			_ui_nodes.append(n)
+	_agenda_view.decision_index = dec_index
+	if not Sim.actors.is_empty():
+		_sel.clear()
+		for id in sel:
+			if Sim.actors.has(id):
+				_sel.append(id)
+		_refresh()
+		_style_cards()
+		_update_info()
+		_tabs.current_tab = clampi(tab, 0, _tabs.get_tab_count() - 1)
+	if menu_open:
+		_show_menu()
+		_menu.show_page(menu_page)
 
 
 ## Kısayollar: F11 tam ekran, Esc menü/pencere kapat, Boşluk haftayı bitir, Ctrl+S kaydet.
