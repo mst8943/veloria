@@ -141,8 +141,8 @@ func _run() -> void:
 		quit(1)
 		return
 	for child in main._agenda.get_children():
-		if child is Button and child.text.begins_with("Sırada"):
-			child.pressed.emit()
+		if child is Button and (child as Button).text.begins_with(tr("Sırada")):
+			(child as Button).pressed.emit()
 			break
 	await process_frame
 	if main._agenda_view.decision_index != 1:
@@ -295,7 +295,7 @@ func _run_mobile() -> void:
 	var queued := 0
 	var queue_button: Button
 	for child in main._agenda.get_children():
-		if child is Button and (child as Button).text.begins_with("Sırada"):
+		if child is Button and (child as Button).text.begins_with(tr("Sırada")):
 			queued += 1
 			if queue_button == null:
 				queue_button = child
