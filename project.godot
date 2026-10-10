@@ -16,7 +16,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="Veloria"
 config/description="Veloria: reaktif bir siyaset ve iktidar simülasyonu."
-config/version="1.5.0"
+config/version="1.6.0"
 run/main_scene="res://game/ui/main.tscn"
 config/features=PackedStringArray("4.7")
 boot_splash/bg_color="#0e0d11"
@@ -29,11 +29,6 @@ boot_splash/minimum_display_time=1200
 BeckettRuntime="*uid://do68dqybesb7r"
 Sim="*res://game/core/sim.gd"
 Sfx="*res://game/core/sfx.gd"
-
-[internationalization]
-
-locale/translations=PackedStringArray("res://game/i18n/en.po")
-locale/fallback="tr"
 
 [beckett]
 
@@ -59,6 +54,11 @@ window/handheld/orientation=4
 
 enabled=PackedStringArray("res://addons/beckett/plugin.cfg")
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://game/i18n/en.po")
+locale/fallback="tr"
+
 [veloria]
 
 dev_autostart=false
@@ -75,3 +75,7 @@ dev_choose=false
 dev_media=""
 dev_desk=false
 dev_city=""
+
+[rendering]
+
+textures/vram_compression/import_etc2_astc=true
