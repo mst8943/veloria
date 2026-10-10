@@ -157,8 +157,8 @@ func _build() -> void:
 	_open_btn.theme_type_variation = "PrimaryButton"
 	var n := Sim.pending.size()
 	_open_btn.text = (Loc.ntr("%d KARAR BEKLİYOR   ·   GÜNDEMİ AÇ   »", n) % n) if n > 0 else tr("GÜNDEMİ AÇ   »")
-	_open_btn.position = Vector2(500, 818)
-	_open_btn.size = Vector2(600, 56)
+	_open_btn.position = Vector2(500, 806)
+	_open_btn.size = Vector2(600, 72)
 	_open_btn.focus_mode = Control.FOCUS_NONE
 	_open_btn.pressed.connect(func() -> void: _go("gundem"))
 	_stage.add_child(_open_btn)

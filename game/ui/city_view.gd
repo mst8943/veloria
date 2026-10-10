@@ -14,10 +14,18 @@ const SITES := {
 	"genelkurmay": {"pos": Vector2(0.15, 0.7), "title": "GENELKURMAY", "sub": "Ordu ve komuta", "actor": "arden", "art": "general_atamalari"},
 	"medya": {"pos": Vector2(0.5, 0.62), "title": "MEDYA MERKEZİ", "sub": "Basın ve kamuoyu", "actor": "lena", "art": "halden_kanal"},
 	"istihbarat": {"pos": Vector2(0.85, 0.7), "title": "İSTİHBARAT", "sub": "Arşivler ve dosyalar", "actor": "voss", "art": "voss_dosyalar"},
-	"holding": {"pos": Vector2(0.5, 0.88), "title": "HALDEN HOLDİNG", "sub": "Sermaye, ihaleler, borçlar", "actor": "halden", "art": "halden_ihale"},
+	"holding": {"pos": Vector2(0.5, 0.88), "title": "SARNE HOLDİNG", "sub": "Sermaye, ihaleler, borçlar", "actor": "halden", "art": "halden_ihale"},
 	"asteria": {"pos": Vector2(0.68, 0.17), "title": "ASTERIA ELÇİLİĞİ", "sub": "Kredi ve hukuk diplomasisi", "actor": "claire", "art": "yabanci_elci"},
 	"drakon": {"pos": Vector2(0.32, 0.82), "title": "DRAKON ELÇİLİĞİ", "sub": "Sınır ve güvenlik", "actor": "malenkov", "art": "sinir_krizi"},
 	"seravia": {"pos": Vector2(0.74, 0.85), "title": "SERAVIA TEMSİLCİLİĞİ", "sub": "Ticaret ve limanlar", "actor": "lucien", "art": "yabanci_elci"},
+}
+
+## Telefonda etiketler çakışmasın: 3 sütun x 4 satır düzeni (kentin gerçek dağılımından bağımsız, okunur).
+const MOBILE_POS := {
+	"adliye": Vector2(0.17, 0.25), "saray": Vector2(0.50, 0.25), "parlamento": Vector2(0.83, 0.25),
+	"maliye": Vector2(0.17, 0.45), "medya": Vector2(0.50, 0.45), "asteria": Vector2(0.83, 0.45),
+	"genelkurmay": Vector2(0.17, 0.65), "holding": Vector2(0.50, 0.65), "istihbarat": Vector2(0.83, 0.65),
+	"drakon": Vector2(0.30, 0.85), "seravia": Vector2(0.70, 0.85),
 }
 
 var mobile := false
@@ -170,20 +178,20 @@ func _make_site(id: String) -> void:
 	var t := Label.new()
 	t.text = tr(str(s["title"]))
 	t.add_theme_font_override("font", UIKit.serif())
-	t.add_theme_font_size_override("font_size", 22 if not mobile else 26)
+	t.add_theme_font_size_override("font_size", 22 if not mobile else 21)
 	t.add_theme_color_override("font_color", Color("f1e6c8"))
 	row.add_child(t)
 	var sub := Label.new()
 	sub.text = tr(str(s["sub"]))
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	sub.add_theme_font_size_override("font_size", 13 if not mobile else 16)
+	sub.add_theme_font_size_override("font_size", 13 if not mobile else 15)
 	sub.add_theme_color_override("font_color", Color("b9b1a0"))
 	v.add_child(sub)
 	for c in plate.find_children("*", "Control", true, false):
 		(c as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
 	# Konum: yüzdelik nokta etiketin merkezi olur
 	var place := func() -> void:
-		var p: Vector2 = s["pos"]
+		var p: Vector2 = MOBILE_POS.get(id, s["pos"]) if mobile else s["pos"]
 		plate.position = Vector2(p.x * size.x, p.y * size.y) - plate.size / 2.0
 	plate.resized.connect(place)
 	place.call_deferred()

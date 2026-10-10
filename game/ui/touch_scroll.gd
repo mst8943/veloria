@@ -6,6 +6,9 @@ extends Node
 const DRAG_START := 9.0
 const COAST_MIN := 160.0      # px/sn: bunun altında ivme yok
 const COAST_DECAY := 4.2
+const LONG_PRESS_MS := 480    # uzun basış: ipucu balonu (dokunmatikte "üzerine gelme" yok)
+const TIP_SECONDS := 3.6
+const UIKit := preload("res://game/ui/ui_kit.gd")
 
 var _pressing := false
 var _dragging := false
@@ -19,6 +22,13 @@ var _acc := Vector2.ZERO     # tam sayıya yuvarlanamayan kalan hareket
 var _coast: Vector2 = Vector2.ZERO
 var _coast_h: Control
 var _coast_v: Control
+var _press_ms := 0
+var _long_armed := false     # uzun basış bekleniyor
+var _long_fired := false     # ipucu gösterildi: bırakma yutulur, düğmeye basılmaz
+var _tip_layer: CanvasLayer
+var _tip_panel: PanelContainer
+var _tip_label: Label
+var _tip_timer := 0.0
 const SYNTH_POS := Vector2(-4000, -4000)   # iptal için gönderilen sahte bırakma olayının konumu
 
 
@@ -55,7 +65,18 @@ func _input(event: InputEvent) -> void:
 			_acc = Vector2.ZERO
 			_horizontal = null
 			_vertical = null
+			_press_ms = Time.get_ticks_msec()
+			_long_armed = true
+			_long_fired = false
+			_hide_tip()
 		else:
+			_long_armed = false
+			if _long_fired:
+				_long_fired = false
+				_pressing = false
+				_dragging = false
+				get_viewport().set_input_as_handled()
+				return
 			var was := _dragging
 			_pressing = false
 			_dragging = false
@@ -87,6 +108,7 @@ func _input(event: InputEvent) -> void:
 					_pressing = false   # kaydırılacak bir şey yok: normal dokunuş akışı sürsün
 					return
 			_dragging = true
+			_long_armed = false
 			_cancel_press()
 			from = _start
 		var delta := mm.position - from
@@ -98,6 +120,17 @@ func _input(event: InputEvent) -> void:
 
 
 func _process(delta: float) -> void:
+	if _tip_timer > 0.0:
+		_tip_timer -= delta
+		if _tip_timer <= 0.0:
+			_hide_tip()
+	if _long_armed and _pressing and not _dragging and Time.get_ticks_msec() - _press_ms >= LONG_PRESS_MS:
+		_long_armed = false
+		var tip := _find_tip(_start)
+		if tip != "":
+			_long_fired = true
+			_cancel_press()
+			_show_tip(tip, _start)
 	if _coast == Vector2.ZERO:
 		return
 	var v := _coast.x if _coast_h != null else _coast.y
@@ -207,3 +240,69 @@ func _can(c: Control, horizontal: bool) -> bool:
 		var b2 := (c as ItemList).get_v_scroll_bar()
 		return b2.max_value - b2.page > 1.0
 	return false
+
+
+# ---------------------------------------------------------------- Uzun basış ipucu
+
+func _find_tip(pos: Vector2) -> String:
+	var best: Array = [""]   # (lambda dış değişkeni değiştiremez; dizi taşıyıcı)
+	var best_rank := [-1, -1]
+	var seq := [0]
+	_collect_tip(get_tree().root, pos, 0, seq, best_rank, best)
+	return str(best[0])
+
+
+func _collect_tip(n: Node, pos: Vector2, layer: int, seq: Array, best_rank: Array, best: Array) -> void:
+	if n is CanvasItem and not (n as CanvasItem).visible:
+		return
+	var l := layer
+	if n is CanvasLayer:
+		if n == _tip_layer:
+			return
+		l = (n as CanvasLayer).layer
+	if n is Control:
+		seq[0] += 1
+		var c := n as Control
+		if c.tooltip_text != "" and c.get_global_rect().has_point(pos):
+			if _better(l, seq[0], best_rank):
+				best_rank[0] = l
+				best_rank[1] = seq[0]
+				best[0] = c.tooltip_text
+	for ch in n.get_children():
+		_collect_tip(ch, pos, l, seq, best_rank, best)
+
+
+func _show_tip(text: String, at: Vector2) -> void:
+	if _tip_layer == null:
+		_tip_layer = CanvasLayer.new()
+		_tip_layer.layer = 200
+		add_child(_tip_layer)
+		_tip_panel = PanelContainer.new()
+		_tip_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_tip_panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PLATE, 0.97), UIKit.GOLD, 5, 12, 2))
+		_tip_layer.add_child(_tip_panel)
+		_tip_label = Label.new()
+		_tip_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_tip_label.custom_minimum_size.x = 340
+		_tip_label.add_theme_font_size_override("font_size", 18)
+		_tip_label.add_theme_color_override("font_color", UIKit.TEXT)
+		_tip_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_tip_panel.add_child(_tip_label)
+	_tip_label.text = text
+	_tip_panel.reset_size()
+	var vp := get_viewport().get_visible_rect().size
+	var sz := _tip_panel.get_combined_minimum_size()
+	var pos := at + Vector2(-sz.x * 0.5, -sz.y - 22.0)
+	if pos.y < 6.0:
+		pos.y = at.y + 30.0
+	pos.x = clampf(pos.x, 6.0, maxf(6.0, vp.x - sz.x - 6.0))
+	pos.y = clampf(pos.y, 6.0, maxf(6.0, vp.y - sz.y - 6.0))
+	_tip_panel.position = pos
+	_tip_panel.show()
+	_tip_timer = TIP_SECONDS
+
+
+func _hide_tip() -> void:
+	_tip_timer = 0.0
+	if _tip_panel != null:
+		_tip_panel.hide()

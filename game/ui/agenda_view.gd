@@ -314,9 +314,9 @@ func _rebuild_agenda() -> void:
 		if tex:
 			# Görsel kendi çerçevesinde yavaşça hareket eder (yaşayan kart).
 			var frame := Control.new()
-			frame.custom_minimum_size = Vector2(320, 110) if host._mobile else Vector2(240, 135)
+			frame.custom_minimum_size = Vector2(320, 120) if host._mobile else Vector2(240, 135)
 			if host._mobile:
-				frame.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+				frame.size_flags_vertical = Control.SIZE_EXPAND_FILL   # görsel kart yüksekliğini doldurur (kırpılarak)
 			frame.clip_contents = true
 			hb.add_child(frame)
 			var img := TextureRect.new()
@@ -358,7 +358,7 @@ func _rebuild_agenda() -> void:
 		d.text = str(e["text"])
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		if host._mobile:
-			d.add_theme_font_size_override("font_size", host._fs(11))
+			d.add_theme_font_size_override("font_size", host._fs(13))
 		vb.add_child(d)
 		var council := _add_council(vb, pi)
 		if crisis:

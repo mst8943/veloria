@@ -108,11 +108,24 @@ func _build_ui(cols: HBoxContainer) -> void:
 	host._grid.add_theme_constant_override("h_separation", 6)
 	host._grid.add_theme_constant_override("v_separation", 6)
 	right.add_child(host._grid)
+	# Mobilde grup sekmeleri, portre şeridi ve kişi bloğu TEK kaydırma sayfasında: parmakla her yer birlikte kayar.
+	var page_parent: Control = right
 	if host._mobile:
+		_mobile_person_scroll = ScrollContainer.new()
+		_mobile_person_scroll.name = "Kişiler sayfası"
+		_mobile_person_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		_mobile_person_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_mobile_person_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		right.add_child(_mobile_person_scroll)
+		var page := VBoxContainer.new()
+		page.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		page.add_theme_constant_override("separation", 8)
+		_mobile_person_scroll.add_child(page)
+		page_parent = page
 		host._grid.visible = false
 		var group_row := HBoxContainer.new()
 		group_row.add_theme_constant_override("separation", 4)
-		right.add_child(group_row)
+		page_parent.add_child(group_row)
 		var group := ButtonGroup.new()
 		for key in ["dynasty", "state", "power", "foreign"]:
 			var tab := Button.new()
@@ -128,7 +141,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 			_mobile_group_buttons[key] = tab
 		var strip := HBoxContainer.new()
 		strip.add_theme_constant_override("separation", 6)
-		right.add_child(strip)
+		page_parent.add_child(strip)
 		var left := _mobile_arrow(false)
 		strip.add_child(left)
 		var card_scroll := ScrollContainer.new()
@@ -152,14 +165,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 	selection_hint.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 	selection_hint.add_theme_font_size_override("font_size", host._fs(13))
 	selection_hint.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	var profile_parent: Control = right
-	if host._mobile:
-		_mobile_person_scroll = ScrollContainer.new()
-		_mobile_person_scroll.name = "Kişi ayrıntısı"
-		_mobile_person_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		_mobile_person_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-		right.add_child(_mobile_person_scroll)
-		profile_parent = _mobile_person_scroll
+	var profile_parent: Control = page_parent
 	profile_parent.add_child(selection_hint)
 	selection_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	person_block = VBoxContainer.new()
@@ -609,7 +615,7 @@ func _make_card(a) -> PanelContainer:
 	n.text = host._short_name(a.display_name)
 	n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	n.add_theme_font_override("font", UIKit.serif())
-	n.add_theme_font_size_override("font_size", host._fs(17))
+	n.add_theme_font_size_override("font_size", host._fs(18) if host._mobile else 17)
 	n.add_theme_color_override("font_color", Color("f3ead2"))
 	n.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.8))
 	n.add_theme_constant_override("shadow_outline_size", 4)
@@ -619,7 +625,7 @@ func _make_card(a) -> PanelContainer:
 	r.text = UIKit.tr_upper(tr("Düşman") if a.moved else tr(str(ROLE.get(a.domain, ""))))
 	r.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	r.add_theme_font_override("font", UIKit.caps())
-	r.add_theme_font_size_override("font_size", host._fs(10))
+	r.add_theme_font_size_override("font_size", host._fs(12) if host._mobile else host._fs(10))
 	r.add_theme_color_override("font_color", Color("ff8a7a") if a.moved else Color(UIKit.GOLD, 0.85))
 	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(r)

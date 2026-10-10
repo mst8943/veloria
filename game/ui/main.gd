@@ -71,6 +71,9 @@ var _curtain_img: TextureRect
 var _curtain_skip := false
 var _cinema: Control
 var _cutscenes: Array = []
+var _end_pulse: Tween
+var _headline_expanded := false
+var _ui_nodes: Array = []   # _build_ui/_build_fx'in eklediği düğümler (dil değişince yeniden kurulur)
 var _modal: Control   # bilgi/onay penceresi (modal.gd)
 var _promise_list: RichTextLabel
 var _multi_btn: Button
@@ -110,8 +113,12 @@ func _ready() -> void:
 	_agenda_view = AGENDA_VIEW.new(self)
 	_person_panel = PERSON_PANEL.new(self)
 	_divan = DIVAN_VIEW.new(self)
+	var pre_ui := get_children()
 	_build_ui()
 	_build_fx()
+	for n in get_children():
+		if not pre_ui.has(n):
+			_ui_nodes.append(n)
 	if Sim.content_error != "":
 		_show_menu()
 		_show_modal(tr("[b]İçerik yüklenemedi[/b]\n\n%s") % Sim.content_error)
@@ -180,6 +187,49 @@ func _ready() -> void:
 				_show_modal(MENU.CREDITS)
 			"chronicle":
 				_show_chronicle()
+
+
+## Dil değişince arayüzü yeniden kurar: tr() ile bir kez yazılmış bütün metinler yeni dilde yenilenir.
+func rebuild_ui() -> void:
+	if _tabs == null:
+		return
+	var menu_open: bool = _menu != null and _menu.visible
+	var menu_page: String = _menu.page_now if _menu != null else "main"
+	var tab: int = _tabs.current_tab
+	var sel := _sel.duplicate()
+	var dec_index: int = _agenda_view.decision_index
+	for n in _ui_nodes:
+		if is_instance_valid(n):
+			remove_child(n)
+			n.queue_free()
+	_ui_nodes.clear()
+	_buttons.clear()
+	_cards.clear()
+	_cards_sig = ""
+	_decision_cards.clear()
+	_decision_buttons.clear()
+	_agenda_view = AGENDA_VIEW.new(self)
+	_person_panel = PERSON_PANEL.new(self)
+	_divan = DIVAN_VIEW.new(self)
+	var pre_ui := get_children()
+	_build_ui()
+	_build_fx()
+	for n in get_children():
+		if not pre_ui.has(n):
+			_ui_nodes.append(n)
+	_agenda_view.decision_index = dec_index
+	if not Sim.actors.is_empty():
+		_sel.clear()
+		for id in sel:
+			if Sim.actors.has(id):
+				_sel.append(id)
+		_refresh()
+		_style_cards()
+		_update_info()
+		_tabs.current_tab = clampi(tab, 0, _tabs.get_tab_count() - 1)
+	if menu_open:
+		_show_menu()
+		_menu.show_page(menu_page)
 
 
 ## Kısayollar: F11 tam ekran, Esc menü/pencere kapat, Boşluk haftayı bitir, Ctrl+S kaydet.
@@ -282,7 +332,7 @@ func _build_ui() -> void:
 	var margin := MarginContainer.new()
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
 	for side in ["left", "right", "top", "bottom"]:
-		margin.add_theme_constant_override("margin_" + side, 4 if _mobile and side == "bottom" else 18)
+		margin.add_theme_constant_override("margin_" + side, (4 if side in ["bottom", "top"] else 10) if _mobile else 18)
 	_stage.add_child(margin)
 	var root := VBoxContainer.new()
 	root.add_theme_constant_override("separation", 0 if _mobile else 10)
@@ -302,6 +352,15 @@ func _build_ui() -> void:
 	hl_sb.content_margin_bottom = 5
 	_headline.add_theme_stylebox_override("normal", hl_sb)
 	_headline.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	if _mobile:
+		# Dokununca açılır: uzun haber metni tek satıra sığmıyor.
+		_headline.mouse_filter = Control.MOUSE_FILTER_STOP
+		_headline.custom_minimum_size.y = 40
+		_headline.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		_headline.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+				_headline_expanded = not _headline_expanded
+				_apply_headline_mode())
 	# Şerit sağ üstteki bildirimlerin altına girmesin.
 	var hl_row := HBoxContainer.new()
 	hl_row.visible = false
@@ -356,12 +415,16 @@ func _build_ui() -> void:
 	_journal.scroll_following = true
 	_tabs.add_child(_journal)
 	_tabs.set_tab_title(2, tr("Günlük"))
-	_tabs.tab_changed.connect(func(_i: int) -> void: Sfx.play("paper", -10.0))
+	_tabs.tab_changed.connect(func(_i: int) -> void:
+		Sfx.play("paper", -10.0)
+		_update_headline())
 	if _mobile:
 		_tabs.remove_child(files)
 		_tabs.remove_child(_journal)
 		_mobile_report_tabs = TabContainer.new()
 		_mobile_report_tabs.name = "Raporlar"
+		# İç içe çerçeve olmasın: alt sekme paneli sade kalır, dış panel zaten süslü.
+		_mobile_report_tabs.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.35), Color(UIKit.GOLD_DIM, 0.25), 4, 6))
 		_mobile_report_tabs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		_mobile_report_tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		_mobile_reports_page = VBoxContainer.new()
@@ -1243,6 +1306,10 @@ func _refresh() -> void:
 	elif _header_progress.value < Sim.week:
 		create_tween().tween_property(_header_progress, "value", float(Sim.week), 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_update_mesai_pips()
+	_pulse_end_button()
+	if _tabs != null:
+		var waiting := Sim.pending.size()
+		_tabs.set_tab_title(0, tr("Gündem") + ("  ·  %d" % waiting if waiting > 0 else ""))
 	var mb := _buttons.get("media") as Button
 	if mb:
 		var fresh_issue: bool = _media_seen_week != Sim.week
@@ -1355,6 +1422,8 @@ func _flow_chip(text: String, col: Color, target: String) -> Control:
 	b.add_theme_stylebox_override("hover", hover if target != "" else normal)
 	b.add_theme_stylebox_override("pressed", hover if target != "" else normal)
 	b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	if _mobile and target != "":
+		b.custom_minimum_size.y = 44   # dokunma hedefi
 	if target == "":
 		b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		return b
@@ -1363,6 +1432,22 @@ func _flow_chip(text: String, col: Color, target: String) -> Control:
 	_wire(b)
 	b.pressed.connect(_on_flow.bind(target))
 	return b
+
+
+## Yapılacak başka bir şey kalmadıysa (karar yok, mesai bitti) "Haftayı bitir" yumuşakça nabız gibi parlar:
+## oyuncunun gözü bir sonraki adıma gider.
+func _pulse_end_button() -> void:
+	if _end_btn == null:
+		return
+	var ready: bool = Sim.pending.is_empty() and Sim.mesai == 0 and not Sim.ended and not _fast()
+	if ready and (_end_pulse == null or not _end_pulse.is_valid()):
+		_end_pulse = _end_btn.create_tween().set_loops()
+		_end_pulse.tween_property(_end_btn, "modulate", Color(1.25, 1.2, 1.05), 0.9).set_trans(Tween.TRANS_SINE)
+		_end_pulse.tween_property(_end_btn, "modulate", Color.WHITE, 0.9).set_trans(Tween.TRANS_SINE)
+	elif not ready and _end_pulse != null:
+		_end_pulse.kill()
+		_end_pulse = null
+		_end_btn.modulate = Color.WHITE
 
 
 func _on_flow(target: String) -> void:
@@ -1411,6 +1496,17 @@ func _on_week(_w: int) -> void:
 	_tabs.current_tab = 0
 
 
+func _apply_headline_mode() -> void:
+	if _headline == null:
+		return
+	if _headline_expanded:
+		_headline.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_headline.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
+	else:
+		_headline.autowrap_mode = TextServer.AUTOWRAP_OFF
+		_headline.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+
+
 func _update_headline() -> void:
 	var items: Array[String] = []
 	if _headline_notice != "":
@@ -1420,7 +1516,9 @@ func _update_headline() -> void:
 	if items.size() < 2 and Sfx.tips and AGENDA_VIEW.ADVICE.has(Sim.week):
 		items.append(tr(str(AGENDA_VIEW.ADVICE[Sim.week])))
 	_headline.text = "  ·  ".join(items.slice(0, 2))
-	_headline.get_parent().visible = _headline.text != ""
+	_apply_headline_mode()
+	# Mobilde dikey alan kıt: haber şeridi yalnızca Gündem sekmesinde görünür.
+	_headline.get_parent().visible = _headline.text != "" and (not _mobile or _tabs.current_tab == 0)
 
 
 func _on_news(_text: String) -> void:
