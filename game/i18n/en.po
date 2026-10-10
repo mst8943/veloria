@@ -1165,7 +1165,7 @@ msgstr "INTELLIGENCE"
 msgid "Arşivler ve dosyalar"
 msgstr "Archives and files"
 
-msgid "HALDEN HOLDİNG"
+msgid "SARNE HOLDİNG"
 msgstr "SARNE HOLDING"
 
 msgid "Sermaye, ihaleler, borçlar"

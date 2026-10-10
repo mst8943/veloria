@@ -70,6 +70,7 @@ var _curtain_skip := false
 var _cinema: Control
 var _cutscenes: Array = []
 var _end_pulse: Tween
+var _headline_expanded := false
 var _ui_nodes: Array = []   # _build_ui/_build_fx'in eklediği düğümler (dil değişince yeniden kurulur)
 var _modal: Control   # bilgi/onay penceresi (modal.gd)
 var _promise_list: RichTextLabel
@@ -346,6 +347,15 @@ func _build_ui() -> void:
 	hl_sb.content_margin_bottom = 5
 	_headline.add_theme_stylebox_override("normal", hl_sb)
 	_headline.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	if _mobile:
+		# Dokununca açılır: uzun haber metni tek satıra sığmıyor.
+		_headline.mouse_filter = Control.MOUSE_FILTER_STOP
+		_headline.custom_minimum_size.y = 40
+		_headline.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		_headline.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+				_headline_expanded = not _headline_expanded
+				_apply_headline_mode())
 	# Şerit sağ üstteki bildirimlerin altına girmesin.
 	var hl_row := HBoxContainer.new()
 	hl_row.visible = false
@@ -1452,6 +1462,17 @@ func _on_week(_w: int) -> void:
 	_tabs.current_tab = 0
 
 
+func _apply_headline_mode() -> void:
+	if _headline == null:
+		return
+	if _headline_expanded:
+		_headline.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_headline.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
+	else:
+		_headline.autowrap_mode = TextServer.AUTOWRAP_OFF
+		_headline.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+
+
 func _update_headline() -> void:
 	var items: Array[String] = []
 	if _headline_notice != "":
@@ -1461,6 +1482,7 @@ func _update_headline() -> void:
 	if items.size() < 2 and Sfx.tips and AGENDA_VIEW.ADVICE.has(Sim.week):
 		items.append(tr(str(AGENDA_VIEW.ADVICE[Sim.week])))
 	_headline.text = "  ·  ".join(items.slice(0, 2))
+	_apply_headline_mode()
 	# Mobilde dikey alan kıt: haber şeridi yalnızca Gündem sekmesinde görünür.
 	_headline.get_parent().visible = _headline.text != "" and (not _mobile or _tabs.current_tab == 0)
 

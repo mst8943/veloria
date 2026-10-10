@@ -174,7 +174,18 @@ func _run() -> void:
 	main._city.close_view()
 	main._media.open("state")
 	await _snap("x03_medya", 60)
+	for tab in ["free", "tv"]:
+		if main._media.has_method("show_tab"):
+			main._media.show_tab(tab)
+			await _snap("x03_medya_" + tab, 60)
 	main._media.hide()
+	main._city.open()
+	await _frames(20)
+	main._city.show_site("adliye")
+	await _snap("x02_harita_adliye", 60)
+	main._city.show_site("holding")
+	await _snap("x02_harita_holding", 60)
+	main._city.close_view()
 	main._show_menu()
 	await _snap("x04_menu", 90)
 	for page in ["new", "settings", "help"]:
