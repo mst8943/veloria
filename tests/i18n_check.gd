@@ -23,8 +23,17 @@ func _init() -> void:
 	_check_overlays()
 	_check_overlay_shapes()
 	_check_loader_fallback()
+	_check_runtime_leaks()
 	print("I18N: OK" if ok else "I18N: FAIL")
 	quit(0 if ok else 1)
+
+
+func _check_runtime_leaks() -> void:
+	var output: Array = []
+	var project_path := ProjectSettings.globalize_path("res://")
+	var exit_code := OS.execute(OS.get_executable_path(), ["--headless", "--path", project_path, "--script", "res://tests/en_leak_test.gd"], output, true)
+	var result := "\n".join(PackedStringArray(output))
+	_expect(exit_code == 0 and result.contains("EN LEAK SCAN: 5 campaigns, 0 unique leaks"), "İngilizce çalışma zamanı sızıntı testi başarısız: " + result)
 
 
 func _check_po() -> void:

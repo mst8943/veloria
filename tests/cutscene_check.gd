@@ -6,6 +6,15 @@ var main: Control
 
 
 func _initialize() -> void:
+	if "--mobile" in OS.get_cmdline_user_args():
+		ProjectSettings.set_setting("veloria/dev_mobile", true)
+		DisplayServer.window_set_size(Vector2i(1067, 600))
+	_boot.call_deferred()
+
+
+func _boot() -> void:
+	await process_frame
+	root.get_node("Sfx").set_language("en" if "--lang=en" in OS.get_cmdline_user_args() else "tr")
 	main = (load("res://game/ui/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
 	_run.call_deferred()

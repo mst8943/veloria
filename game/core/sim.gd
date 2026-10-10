@@ -1218,7 +1218,7 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 		return _no_mesai()
 	if e.get("crisis", false):
 		pending.remove_at(pending_index)
-		history.append("Hafta %d — %s » %s" % [week, e["title"], ch["label"]])
+		history.append(tr("Hafta %d — %s » %s") % [week, e["title"], ch["label"]])
 		var kind := str(e.get("crisis_kind", "coup"))
 		var crisis_text := _resolve_crisis(str(ch.get("crisis", ""))) if kind == "coup" else _resolve_other(str(ch.get("crisis", "")))
 		if coup_crisis.get("failed", false) or other_crisis.get("failed", false):
@@ -1230,12 +1230,12 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 	flags["%s_%d" % [e["id"], choice_index]] = week
 	if e.get("kind", "") == "patronage":
 		var patronage_text := _resolve_patronage(choice_index, int(e["level"]))
-		history.append("Hafta %d — %s » %s" % [week, e["title"], ch["label"]])
+		history.append(tr("Hafta %d — %s » %s") % [week, e["title"], ch["label"]])
 		changed.emit()
 		return patronage_text
 	_extra_msgs.clear()
 	_apply_effects(fx)
-	history.append("Hafta %d — %s » %s" % [week, e["title"], ch["label"]])
+	history.append(tr("Hafta %d — %s » %s") % [week, e["title"], ch["label"]])
 	changed.emit()
 	var out := str(ch.get("text", ""))
 	if not _extra_msgs.is_empty():
@@ -1367,7 +1367,7 @@ func end_week() -> void:
 			flags[str(e["id"]) + "_ertelendi"] = week
 			_apply_effects(ig.get("fx", {}))
 			var line := "ERTELENDİ — %s: %s" % [e["title"], ig.get("text", "")]
-			history.append("Hafta %d — %s » (ertelendi)" % [week, e["title"]])
+			history.append(tr("Hafta %d — %s » (ertelendi)") % [week, e["title"]])
 			_add_news(line, tr("ERTELENDİ — %s: %s") % [e["title"], ig.get("text", "")])
 		else:
 			keep.append(p)
@@ -1871,7 +1871,7 @@ func _fire_events() -> void:
 		fired_events[e["id"]] = week
 		_apply_effects(e.get("fx", {}))
 		if not e.has("choices"):
-			history.append("Hafta %d — %s" % [week, e["title"]])
+			history.append(tr("Hafta %d — %s") % [week, e["title"]])
 		if e.has("news"):
 			# Aktör hamlesi: seçeneksiz, kendiliğinden; haberde ve "Geçen haftadan beri" özetinde görünür.
 			weekly_news.append("HAMLE: " + str(e["news"]))

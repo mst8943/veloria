@@ -156,7 +156,7 @@ func _build() -> void:
 	links.alignment = BoxContainer.ALIGNMENT_CENTER
 	links.add_theme_constant_override("separation", 6)
 	main_page.add_child(links)
-	for l in [[tr("Nasıl Oynanır"), func() -> void: host._show_modal(tr(HOW_TO))], [tr("Hükümdarlık Arşivi"), host._show_chronicle], [tr("Hakkında"), func() -> void: host._show_modal(tr(CREDITS))]]:
+	for l in [[tr("Nasıl Oynanır"), func() -> void: host._show_modal(_translate_lines(HOW_TO))], [tr("Hükümdarlık Arşivi"), host._show_chronicle], [tr("Hakkında"), func() -> void: host._show_modal(_translate_lines(CREDITS))]]:
 		var lb := Button.new()
 		lb.text = l[0]
 		lb.theme_type_variation = "GhostButton"
@@ -314,6 +314,13 @@ func show_page(page_name: String) -> void:
 		(pages[k] as Control).visible = k == page_name
 	if not host._fast():
 		UIKit.fade_in(pages[page_name], 0.25)
+
+
+func _translate_lines(source: String) -> String:
+	var lines := PackedStringArray()
+	for line in source.split("\n"):
+		lines.append(tr(line) if line != "" else "")
+	return "\n".join(lines)
 
 
 func _label_dim(t: String) -> Label:

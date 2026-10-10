@@ -636,7 +636,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		sb.border_color = [Color(UIKit.OK, 0.8), Color(UIKit.AMBER, 0.8), Color(UIKit.DANGER, 0.9)][band]
 		panel.add_theme_stylebox_override("panel", sb)
 		panel.mouse_filter = Control.MOUSE_FILTER_STOP
-		panel.tooltip_text = "%s · %s\nTıkla: kişiyi seç. Kenar rengi raporun söylediğidir, gerçek olmayabilir.%s" % [r["name"], r["title"], _trend_tip(r)]
+		panel.tooltip_text = tr("%s · %s\nTıkla: kişiyi seç. Kenar rengi raporun söylediğidir, gerçek olmayabilir.%s") % [r["name"], r["title"], _trend_tip(r)]
 		var sid := str(r["source"])
 		panel.set_meta("report_id", sid)
 		panel.gui_input.connect(func(ev: InputEvent) -> void:

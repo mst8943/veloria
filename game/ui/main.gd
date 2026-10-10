@@ -870,14 +870,14 @@ func _start_new() -> void:
 func _intro_shots() -> Array:
 	var p := func(id: String) -> Texture2D: return _art("res://art/portraits/%s.png" % id)
 	return [
-		{"tex": _art("res://art/menu_bg.png"), "line": "Veloria Krallığı.", "sub": "Modern kurumlar. Eski bir taç.", "hold": 2.8, "zoom_from": 1.0, "zoom_to": 1.12},
-		{"tex": _art("res://art/end_victory.png"), "line": "Babanın cenazesinin üçüncü günü.", "sub": "Taç artık senin başında: Kral Adrian IV.", "hold": 2.8, "zoom_from": 1.1, "zoom_to": 1.0},
-		{"tex": p.call("arden"), "fit": "center", "line": "Generaller sana selam veriyor.", "hold": 1.7, "zoom_from": 1.0, "zoom_to": 1.08},
-		{"tex": p.call("voss"), "fit": "center", "line": "Casuslar senin için dinliyor.", "hold": 1.7, "zoom_from": 1.0, "zoom_to": 1.08},
-		{"tex": p.call("halden"), "fit": "center", "line": "Patronlar sana ekranlarını açıyor.", "hold": 1.7, "zoom_from": 1.0, "zoom_to": 1.08},
-		{"tex": p.call("prens"), "fit": "center", "line": "Ve kendi kanından olanlar, sırasını bekliyor.", "hold": 2.1, "zoom_from": 1.0, "zoom_to": 1.08},
-		{"tex": _art("res://art/bg_desk.png"), "line": "Hepsi sana sadık olduğunu söylüyor.", "sub": "Bazıları yalan söylüyor.", "hold": 3.0, "zoom_from": 1.15, "zoom_to": 1.0},
-		{"tex": null, "line": "104 hafta.", "sub": "Tahtta kal.", "hold": 2.2},
+		{"tex": _art("res://art/menu_bg.png"), "line": tr("Veloria Krallığı."), "sub": tr("Modern kurumlar. Eski bir taç."), "hold": 2.8, "zoom_from": 1.0, "zoom_to": 1.12},
+		{"tex": _art("res://art/end_victory.png"), "line": tr("Babanın cenazesinin üçüncü günü."), "sub": tr("Taç artık senin başında: Kral Adrian IV."), "hold": 2.8, "zoom_from": 1.1, "zoom_to": 1.0},
+		{"tex": p.call("arden"), "fit": "center", "line": tr("Generaller sana selam veriyor."), "hold": 1.7, "zoom_from": 1.0, "zoom_to": 1.08},
+		{"tex": p.call("voss"), "fit": "center", "line": tr("Casuslar senin için dinliyor."), "hold": 1.7, "zoom_from": 1.0, "zoom_to": 1.08},
+		{"tex": p.call("halden"), "fit": "center", "line": tr("Patronlar sana ekranlarını açıyor."), "hold": 1.7, "zoom_from": 1.0, "zoom_to": 1.08},
+		{"tex": p.call("prens"), "fit": "center", "line": tr("Ve kendi kanından olanlar, sırasını bekliyor."), "hold": 2.1, "zoom_from": 1.0, "zoom_to": 1.08},
+		{"tex": _art("res://art/bg_desk.png"), "line": tr("Hepsi sana sadık olduğunu söylüyor."), "sub": tr("Bazıları yalan söylüyor."), "hold": 3.0, "zoom_from": 1.15, "zoom_to": 1.0},
+		{"tex": null, "line": tr("104 hafta."), "sub": tr("Tahtta kal."), "hold": 2.2},
 	]
 
 

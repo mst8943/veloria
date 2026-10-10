@@ -3373,3 +3373,114 @@ msgstr "Julian Valerius"
 
 msgid "Geç  »"
 msgstr "Skip  »"
+
+msgid "Hafta %d — %s » %s"
+msgstr "Week %d — %s » %s"
+
+msgid "Hafta %d — %s » (ertelendi)"
+msgstr "Week %d — %s » (deferred)"
+
+msgid "Veloria Krallığı."
+msgstr "The Kingdom of Veloria."
+
+msgid "Modern kurumlar. Eski bir taç."
+msgstr "Modern institutions. An old crown."
+
+msgid "Babanın cenazesinin üçüncü günü."
+msgstr "The third day after your father's funeral."
+
+msgid "Taç artık senin başında: Kral Adrian IV."
+msgstr "The crown is yours now: King Adrian IV."
+
+msgid "Generaller sana selam veriyor."
+msgstr "The generals salute you."
+
+msgid "Casuslar senin için dinliyor."
+msgstr "The spies are listening for you."
+
+msgid "Patronlar sana ekranlarını açıyor."
+msgstr "The magnates are opening their screens to you."
+
+msgid "Ve kendi kanından olanlar, sırasını bekliyor."
+msgstr "And your own blood waits its turn."
+
+msgid "Hepsi sana sadık olduğunu söylüyor."
+msgstr "They all say they are loyal to you."
+
+msgid "Bazıları yalan söylüyor."
+msgstr "Some of them are lying."
+
+msgid "104 hafta."
+msgstr "104 weeks."
+
+msgid "Tahtta kal."
+msgstr "Stay on the throne."
+
+msgid "%s · %s\nTıkla: kişiyi seç. Kenar rengi raporun söylediğidir, gerçek olmayabilir.%s"
+msgstr "%s · %s\nClick to select this person. The edge color reflects what the report says, which may not be true.%s"
+
+msgid "aksıyor"
+msgstr "struggling"
+
+msgid "yürüyor"
+msgstr "functioning"
+
+msgid "sağlam"
+msgstr "strong"
+
+msgid "[color=gray]Reaktif bir siyaset ve iktidar simülasyonu[/color]"
+msgstr "[color=gray]A reactive simulation of politics and power[/color]"
+
+msgid "[b]Yapım[/b]"
+msgstr "[b]Created by[/b]"
+
+msgid "[b]Tasarım ve geliştirme desteği[/b]"
+msgstr "[b]Design and development assistance[/b]"
+
+msgid "[b]Görseller[/b]"
+msgstr "[b]Artwork[/b]"
+
+msgid "Yapay zekâ ile üretilmiş özgün görseller. Tüm karakterler ve kurumlar kurgusaldır; gerçek kişi ve kurumlarla benzerlik tesadüftür."
+msgstr "Original artwork created with AI. All characters and institutions are fictional; any resemblance to real people or organizations is coincidental."
+
+msgid "[b]Yazı tipi[/b]"
+msgstr "[b]Fonts[/b]"
+
+msgid "İkisi de SIL Open Font License 1.1 altında kullanılmıştır (lisans metinleri oyun dosyalarında: game/fonts/OFL.txt, game/fonts/OFL_IBMPlexSans.txt)."
+msgstr "Both are used under the SIL Open Font License 1.1 (license texts are included in the game files: game/fonts/OFL.txt and game/fonts/OFL_IBMPlexSans.txt)."
+
+msgid "[b]Oyun motoru[/b]"
+msgstr "[b]Game engine[/b]"
+
+msgid "Bu oyun Godot Engine ile yapılmıştır ve aşağıdaki lisans altında kullanılmaktadır:"
+msgstr "This game is made with the Godot Engine and is used under the following license:"
+
+msgid "[b][font_size=26][color=#d6b25e]Nasıl oynanır[/color][/font_size][/b]"
+msgstr "[b][font_size=26][color=#d6b25e]How to play[/color][/font_size][/b]"
+
+msgid "• 104 hafta tahtta kal. Haftada [b]4 mesain[/b] var; kararlar, emirler ve operasyonlar mesai harcar."
+msgstr "• Stay on the throne for 104 weeks. You have [b]4 actions[/b] each week; decisions, orders and operations spend them."
+
+msgid "• Sayıları göremezsin; yalnızca [b]raporlar[/b] vardır ve herkes yalan söyleyebilir. Korktukça insanlar sana gerçeği söylemez; hepsi aynı cümleyi kurmaya başlar."
+msgstr "• You cannot see the numbers; you have only [b]reports[/b], and anyone can lie. The more afraid people become, the less they tell you the truth—and soon they all say the same thing."
+
+msgid "• Verdiğin güç sana dönebilir. Terfi, borç ve gizli ödemeler iz bırakır."
+msgstr "• The power you grant can turn against you. Promotions, debts and secret payments leave traces."
+
+msgid "• Söz vermek kolaydır; vadesi gelince ya tutarsın ya da bedelini ödersin. Aynı makamı iki kişiye vaat etmek er geç duyulur."
+msgstr "• Promises are easy to make; when one comes due, keep it or pay the price. Sooner or later, people will learn if you promised the same office to two people."
+
+msgid "• Herkesin bildiği bir sır, gizli bir sırdan çok daha tehlikelidir."
+msgstr "• A secret everyone knows is more dangerous than one kept hidden."
+
+msgid "• Her kararda [b]meclisten iki kişi[/b] görüş bildirir. Gerekçeleri doğrudur ama seçicidir; [color=#d08a3d]ÇIKARI VAR[/color] olanın önerisi tarafsız olmayabilir."
+msgstr "• [b]Two councilors[/b] advise you on every decision. Their reasons are true but selective; a [color=#d08a3d]CONFLICT OF INTEREST[/color] can make their advice biased."
+
+msgid "• Darbe bir sabah gelmez: önce [b]alametler[/b] görünür, kişi kartında [color=#d08a3d]ŞÜPHELİ[/color] yazar. Bir kısmı dedikodudur; [b]Huzura Çağır[/b] ile yoklayabilirsin. Darbe kapına dayandığında son kararı sen verirsin."
+msgstr "• A coup does not come without warning: first you see [b]signs[/b] and a [color=#d08a3d]SUSPECTED[/color] label on a person's card. Some signs are rumours; summon them to test their story. When a coup reaches your door, the final choice is yours."
+
+msgid "• Ertelediğin kararlar iki hafta sonra kendi kendine çözülür."
+msgstr "• Decisions you postpone resolve on their own after two weeks."
+
+msgid "• Oyun bittiğinde [b]Hakikat Dosyası[/b] sana kimin ne zaman yalan söylediğini gösterir."
+msgstr "• When the game ends, the [b]Truth File[/b] shows who lied to you, and when."

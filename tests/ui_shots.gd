@@ -35,7 +35,7 @@ func _boot() -> void:
 
 
 func _shot(file_name: String) -> void:
-	for i in 8:
+	for i in 30:
 		await process_frame
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_png(out.path_join(file_name + ".png"))
@@ -45,6 +45,41 @@ func _shot(file_name: String) -> void:
 func _run() -> void:
 	# Kişi paneli dolu görünsün: en güçlü kişiyi seç.
 	var sim0: Node = root.get_node("Sim")
+	if "--all-actions" in OS.get_cmdline_user_args():
+		main._sel.clear()
+		main._sel.append("arden")
+		main._refresh()
+		main._update_info()
+		for category in ["KAZAN", "SÖZ VER", "ÖĞREN", "EMRET", "BASKI", "OPERASYON", "DEVLET"]:
+			main._show_act_cat(category)
+			await _shot("action_" + category)
+		quit(0)
+		return
+	if "--files-journal" in OS.get_cmdline_user_args():
+		main._select_tab(main._files_tab)
+		await _shot("files")
+		main._select_tab(main._journal)
+		await _shot("journal")
+		quit(0)
+		return
+	if "--menu-modals" in OS.get_cmdline_user_args():
+		var menu_script: Script = main._menu.get_script()
+		for name in ["HOW_TO", "CREDITS"]:
+			main._show_modal(main._menu._translate_lines(str(menu_script.get_script_constant_map().get(name, ""))))
+			await _shot("modal_" + name)
+		main._show_chronicle()
+		await _shot("chronicle")
+		quit(0)
+		return
+	if "--week-curtain" in OS.get_cmdline_user_args():
+		root.get_node("Sfx").short_fx = true
+		main._end_week_pressed()
+		await create_timer(0.65).timeout
+		await _shot("week_curtain")
+		main._curtain_skip = true
+		for frame in 20: await process_frame
+		quit(0)
+		return
 	if "--u4b" in OS.get_cmdline_user_args():
 		main._tabs.current_tab = 0
 		for count in [1, 2, 3]:
