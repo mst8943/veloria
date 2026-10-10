@@ -184,6 +184,20 @@ func _run() -> void:
 	main._hide_menu()
 	main._show_modal("Test", "Tamam")
 	await _snap("x06_modal")
+	main._hide_menu()
+	main._modal.hide()
+	sim0.timeline.clear()
+	sim0.capacity_timeline.clear()
+	for w in range(1, 13):
+		sim0.timeline.append({"w": w * 8, "king": 70.0, "unrest": 30.0, "plot": 20.0, "foreign": 72.0, "heir": 75.0})
+		sim0.capacity_timeline.append({"w": w * 8, "maliye": 78.0, "hukuk": 78.0, "ordu": 78.0, "idare": 78.0, "holding": 35.0})
+	sim0.week = 105
+	sim0._end(true)
+	await _frames(20)
+	main._end_overlay.show()
+	for i in 5:
+		main._end_overlay.tabs.current_tab = i
+		await _snap("x07_son_%d" % i, 40)
 	var f := FileAccess.open(out.path_join("audit.txt"), FileAccess.WRITE)
 	f.store_string("\n".join(report))
 	f.close()

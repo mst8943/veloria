@@ -615,7 +615,7 @@ func _make_card(a) -> PanelContainer:
 	n.text = host._short_name(a.display_name)
 	n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	n.add_theme_font_override("font", UIKit.serif())
-	n.add_theme_font_size_override("font_size", host._fs(17))
+	n.add_theme_font_size_override("font_size", host._fs(18) if host._mobile else 17)
 	n.add_theme_color_override("font_color", Color("f3ead2"))
 	n.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.8))
 	n.add_theme_constant_override("shadow_outline_size", 4)
@@ -625,7 +625,7 @@ func _make_card(a) -> PanelContainer:
 	r.text = UIKit.tr_upper(tr("Düşman") if a.moved else tr(str(ROLE.get(a.domain, ""))))
 	r.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	r.add_theme_font_override("font", UIKit.caps())
-	r.add_theme_font_size_override("font_size", host._fs(10))
+	r.add_theme_font_size_override("font_size", host._fs(12) if host._mobile else host._fs(10))
 	r.add_theme_color_override("font_color", Color("ff8a7a") if a.moved else Color(UIKit.GOLD, 0.85))
 	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(r)
