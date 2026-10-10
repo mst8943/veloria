@@ -41,3 +41,17 @@
 4. Tüm testler: sim_test, event_check (tr/en), save_test (eski kayıt yükleme dahil), content_check (tr/en), i18n_check, en_leak_test, ui_input_test (masaüstü ve mobil), lang_switch_test, touch_scroll_test, tour_test. `--full` tr ve en AYNI: tohum 101, 104 hafta, TAHTTA, Medya Rejimi, 112 olay. Ölçüt probe tabanla birebir (68/80, 36/80, 16/80) tr ve en.
 5. Gözle: ui_shots/ux_audit ile EN masaüstü + mobil: Gündem, her eylem sekmesi, Dosyalar (sırlar), Günlük, Medya, Harita, menü künyesi, oyun sonu (5 sekme), hafta geçişi perdesi; PNG'leri aç, Türkçe kalmış satır var mı bak.
 6. Dili oyun sırasında değiştirme: `main.rebuild_ui()` (dil değişince arayüzü yeniden kurar) çalışıyor; saklanan metinlerin (dosya, haber, günlük) dil değişince de doğru dilde görünmesini sağla (kayıtlı Türkçe metni görüntüleme anında dile göre seç).
+
+## Kararlar
+
+- Sim'in ürettiği metinler Türkçe kaynak ile İngilizce karşılığını birlikte saklar. Eski kayıtlarda `text_en` yoksa eski kaynak metin güvenli geri dönüş olarak kalır; kayıt sürümü ve RNG akışı değişmedi.
+- İngilizce olay kaplaması yalnızca içerik verisi taşıdığı için mantık alanı eklenmedi. Olayla açılan dosya metinleri sabit olay kimliği üzerinden `FACT_TEXT_EN` ile eşlenir.
+- `Sim.ek()` İngilizce arayüzde yalın adı döndürür; Türkçe kayıt metni üretimi `ek_tr()` ile korunur. Eski danışman kimlikleri gerçek görünen adlara eşlenir.
+- Oyun sonu unvanı hem final panelinde hem sinema alt satırında etkin dilin çevirisinden gösterilir.
+
+## Kapı sonucu
+
+- `i18n_missing.py`: 0; masaüstü + mobil `en_dump` ve 12 kampanyalı `en_dump2`: 4.003 metin, `ŞÜPHELİ 0`; kalıcı sözlük-farkı testi: `EN LEAK SCAN: 5 campaigns, 0 unique leaks`.
+- `sim_test`, `event_check` (TR/EN 195/0), `save_test` (eski sürüm göçleri dahil), `content_check` (TR/EN), `i18n_check`, `ui_input_test` (masaüstü/mobil), `lang_switch_test`, `touch_scroll_test`, `tour_test`, `ui_logic_test` ve tempo testi geçti.
+- `--autoplay --full` TR/EN: `tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`. Ölçüt `advice_weighted`, 80 kampanya: iki dilde 68/80, 36/80, 16/80.
+- Görsel denetim: `C:/Users/USER/Desktop/sizinti_en_desktop` ve `C:/Users/USER/Desktop/sizinti_en_mobile`. Her klasörde `1_oyun`, `1_karar`, `1_masa`, `1_harita`, `1_medya*`, `action_KAZAN`, `action_SÖZ VER`, `action_ÖĞREN`, `action_EMRET`, `action_BASKI`, `action_OPERASYON`, `action_DEVLET`, `files`, `journal`, `modal_CREDITS`, `week_curtain` ve `5_son_0`–`5_son_4` açıldı; İngilizce metin, görünür başlıklar, seçenekler, dosya/günlük, künye ve oyun sonu unvanı kontrol edildi. Türkçe görünür satır bulunmadı.
