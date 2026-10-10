@@ -253,6 +253,21 @@ static func tex_box(name: String, margins: Array, content: Array = [], tint: Col
 	return sb
 
 
+## Kaydırıcı tutamacı: altın yuvarlak (dokunmaya uygun boyutta).
+static func _grabber_tex(radius: int) -> Texture2D:
+	var d := radius * 2
+	var img := Image.create(d, d, false, Image.FORMAT_RGBA8)
+	img.fill(Color(0, 0, 0, 0))
+	for x in d:
+		for y in d:
+			var dist := Vector2(x + 0.5 - radius, y + 0.5 - radius).length()
+			if dist <= radius - 1.0:
+				img.set_pixel(x, y, GOLD if dist > radius - 4.0 else Color("f1d98a"))
+			elif dist <= radius:
+				img.set_pixel(x, y, Color(GOLD, radius - dist))
+	return ImageTexture.create_from_image(img)
+
+
 static func _check_tex(checked: bool) -> Texture2D:
 	var img := Image.create(20, 20, false, Image.FORMAT_RGBA8)
 	img.fill(Color(0, 0, 0, 0.45))
@@ -364,7 +379,7 @@ static func build_theme(mobile := false) -> Theme:
 	t.set_stylebox("tab_selected", "TabContainer", _tab(Color(PANEL_HI, 0.95), GOLD, 2))
 	t.set_stylebox("tab_unselected", "TabContainer", _tab(Color(0, 0, 0, 0.25), Color(GOLD_DIM, 0.25), 1))
 	t.set_stylebox("tab_hovered", "TabContainer", _tab(Color(HOVER, 0.8), GOLD_DIM, 1))
-	var tp := tex_box("frame_panel_dark", [44, 44, 44, 44], [18, 16, 18, 16])
+	var tp := tex_box("frame_panel_dark", [44, 44, 44, 44], [24, 22, 24, 18])
 	if tp != null:
 		t.set_stylebox("panel", "TabContainer", tp)
 	var ta := tex_box("tab_active", [24, 20, 24, 8], [16, 8, 16, 6])
@@ -393,6 +408,9 @@ static func build_theme(mobile := false) -> Theme:
 	t.set_stylebox("background", "ProgressBar", box(Color(0, 0, 0, 0.5), Color(GOLD_DIM, 0.4), 3, 0))
 	t.set_stylebox("fill", "ProgressBar", box(GOLD, Color(0, 0, 0, 0), 3, 0))
 	# Kaydırıcı / onay kutusu
+	var gr := _grabber_tex(16 if mobile else 9)
+	t.set_icon("grabber", "HSlider", gr)
+	t.set_icon("grabber_highlight", "HSlider", gr)
 	t.set_stylebox("slider", "HSlider", box(Color(0, 0, 0, 0.5), Color(GOLD_DIM, 0.4), 3, 0))
 	t.set_stylebox("grabber_area", "HSlider", box(GOLD_DIM, Color(0, 0, 0, 0), 3, 0))
 	t.set_stylebox("grabber_area_highlight", "HSlider", box(GOLD, Color(0, 0, 0, 0), 3, 0))

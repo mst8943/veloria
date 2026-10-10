@@ -219,6 +219,8 @@ func _build() -> void:
 			continue
 		var cb := CheckBox.new()
 		cb.text = c[0]
+		if host._mobile:
+			cb.custom_minimum_size.y = 44
 		cb.button_pressed = c[1]
 		var apply: Callable = c[2]
 		cb.toggled.connect(func(on: bool) -> void:
@@ -330,6 +332,6 @@ func _slider(value: float, cb: Callable) -> HSlider:
 	s.max_value = 1.0
 	s.step = 0.05
 	s.value = value
-	s.custom_minimum_size = Vector2(120, 22)
+	s.custom_minimum_size = Vector2(120, 44 if host._mobile else 22)
 	s.value_changed.connect(cb)
 	return s

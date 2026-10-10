@@ -314,7 +314,7 @@ func _rebuild_agenda() -> void:
 		if tex:
 			# Görsel kendi çerçevesinde yavaşça hareket eder (yaşayan kart).
 			var frame := Control.new()
-			frame.custom_minimum_size = Vector2(250, 120) if host._mobile else Vector2(240, 135)
+			frame.custom_minimum_size = Vector2(320, 120) if host._mobile else Vector2(240, 135)
 			if host._mobile:
 				frame.size_flags_vertical = Control.SIZE_EXPAND_FILL   # görsel kart yüksekliğini doldurur (kırpılarak)
 			frame.clip_contents = true

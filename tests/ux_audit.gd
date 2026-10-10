@@ -39,9 +39,9 @@ func _frames(n := 8) -> void:
 		await process_frame
 
 
-func _snap(name: String) -> void:
+func _snap(name: String, wait := 10) -> void:
 	screen = name
-	await _frames(10)
+	await _frames(wait)
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_png(out.path_join(name + ".png"))
 	_measure(name)
@@ -167,20 +167,20 @@ func _run() -> void:
 		await _snap("d04_gunluk")
 		main._select_tab(main._scroll)
 	main._desk.open()
-	await _snap("x01_masa")
+	await _snap("x01_masa", 90)
 	main._desk.close_view()
 	main._city.open()
-	await _snap("x02_harita")
+	await _snap("x02_harita", 60)
 	main._city.close_view()
 	main._media.open("state")
-	await _snap("x03_medya")
+	await _snap("x03_medya", 60)
 	main._media.hide()
 	main._show_menu()
-	await _snap("x04_menu")
+	await _snap("x04_menu", 90)
 	for page in ["new", "settings", "help"]:
 		if main._menu.pages.has(page):
 			main._menu.show_page(page)
-			await _snap("x05_menu_" + page)
+			await _snap("x05_menu_" + page, 60)
 	main._hide_menu()
 	main._show_modal("Test", "Tamam")
 	await _snap("x06_modal")

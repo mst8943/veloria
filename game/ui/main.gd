@@ -69,6 +69,7 @@ var _curtain_img: TextureRect
 var _curtain_skip := false
 var _cinema: Control
 var _cutscenes: Array = []
+var _end_pulse: Tween
 var _ui_nodes: Array = []   # _build_ui/_build_fx'in eklediği düğümler (dil değişince yeniden kurulur)
 var _modal: Control   # bilgi/onay penceresi (modal.gd)
 var _promise_list: RichTextLabel
@@ -407,6 +408,8 @@ func _build_ui() -> void:
 		_tabs.remove_child(_journal)
 		_mobile_report_tabs = TabContainer.new()
 		_mobile_report_tabs.name = "Raporlar"
+		# İç içe çerçeve olmasın: alt sekme paneli sade kalır, dış panel zaten süslü.
+		_mobile_report_tabs.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.35), Color(UIKit.GOLD_DIM, 0.25), 4, 6))
 		_mobile_report_tabs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		_mobile_report_tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		_mobile_reports_page = VBoxContainer.new()
@@ -1259,6 +1262,7 @@ func _refresh() -> void:
 	elif _header_progress.value < Sim.week:
 		create_tween().tween_property(_header_progress, "value", float(Sim.week), 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_update_mesai_pips()
+	_pulse_end_button()
 	if _tabs != null:
 		var waiting := Sim.pending.size()
 		_tabs.set_tab_title(0, tr("Gündem") + ("  ·  %d" % waiting if waiting > 0 else ""))
@@ -1384,6 +1388,22 @@ func _flow_chip(text: String, col: Color, target: String) -> Control:
 	_wire(b)
 	b.pressed.connect(_on_flow.bind(target))
 	return b
+
+
+## Yapılacak başka bir şey kalmadıysa (karar yok, mesai bitti) "Haftayı bitir" yumuşakça nabız gibi parlar:
+## oyuncunun gözü bir sonraki adıma gider.
+func _pulse_end_button() -> void:
+	if _end_btn == null:
+		return
+	var ready: bool = Sim.pending.is_empty() and Sim.mesai == 0 and not Sim.ended and not _fast()
+	if ready and (_end_pulse == null or not _end_pulse.is_valid()):
+		_end_pulse = _end_btn.create_tween().set_loops()
+		_end_pulse.tween_property(_end_btn, "modulate", Color(1.25, 1.2, 1.05), 0.9).set_trans(Tween.TRANS_SINE)
+		_end_pulse.tween_property(_end_btn, "modulate", Color.WHITE, 0.9).set_trans(Tween.TRANS_SINE)
+	elif not ready and _end_pulse != null:
+		_end_pulse.kill()
+		_end_pulse = null
+		_end_btn.modulate = Color.WHITE
 
 
 func _on_flow(target: String) -> void:
