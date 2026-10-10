@@ -73,6 +73,10 @@ const TENDER_COOLDOWN := 3
 const HEIR_COOLDOWN := 6
 const DELEGATION_COOLDOWN := 4
 const FOREIGN_ENVOYS := {"claire": "asteria", "malenkov": "drakon", "lucien": "seravia"}
+const FACT_TEXT_EN := {"ihale_dosyasi": "Secret tender file granted to Sarne", "gazeteci_baskisi": "Pressure put on a journalist",
+	"prens_izleniyor": "The Prince placed under secret surveillance", "yargi_baskisi": "Pressure put on a judge",
+	"bakan_ihalesi": "Ministerial tender file", "bakan_ihalesi_2": "The ministerial tender file's link to the Palace",
+	"falk_mektubu": "The judge's resignation letter", "saglik_yalani": "Operation to deny the King's health rumor"}
 const HALDEN_MEDIA_UNREST := 0.6
 const HALDEN_MEDIA_KING := 0.25
 const HALDEN_MEDIA_REACH := [71.0, 71.0, 50.0]  # Yayın etkisinin ülke çapına eriştiği holding eşiği.
@@ -1288,7 +1292,8 @@ func _apply_effects(fx: Dictionary) -> void:
 				_bump(actors[aid], str(prop), float(af[aid][prop]))
 	if fx.has("fact"):
 		var fd: Dictionary = fx["fact"]
-		_add_fact(fd["id"], fd["text"], fd["subject"], fd["severity"], fd["knowers"], 1)
+		var fact_id := str(fd["id"])
+		_add_fact(fact_id, fd["text"], fd["subject"], fd["severity"], fd["knowers"], 1, 0.5, _fact_text_en(fact_id, str(fd["text"])))
 	if fx.has("flag"):
 		flags[fx["flag"]] = week
 	# Bir dosyayı herkesin bildiği hâle getir (eski karar geri döner).
@@ -2981,6 +2986,10 @@ func _phrase(a: Actor, value: float, echo: float) -> String:
 func _add_fact(id: String, text: String, subject: String, severity: float, knowers: Array, copies: int, leakiness: float = 0.5, text_en: String = "") -> void:
 	facts[id] = {"id": id, "text": text, "subject": subject, "severity": severity,
 		"text_en": text_en if text_en != "" else Loc.en(text), "knowers": knowers.duplicate(), "common": 0.0, "copies": copies, "leakiness": leakiness}
+
+
+func _fact_text_en(id: String, text: String) -> String:
+	return str(FACT_TEXT_EN.get(id, Loc.en(text)))
 
 
 func fact_text_for_display(fact: Variant) -> String:

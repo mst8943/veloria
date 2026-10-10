@@ -65,7 +65,6 @@
     "gazeteci_ihale":  {
                            "title":  "A reporter probes a secret tender",
                            "text":  "Leyla Sarn keeps finding the same company\u0027s name in state tenders: Sarne Holding.",
-			   "fx": {"fact": {"text": "Secret tender file granted to Sarne"}},
                            "choices":  [
                                            {
                                                "label":  "Warn Sarne",
@@ -73,8 +72,7 @@
                                            },
                                            {
                                                "label":  "Silence the reporter",
-							   "text":  "Leyla stopped writing. A frightened reporter does not forget.",
-							   "fx": {"fact": {"text": "Pressure put on a journalist"}}
+                                               "text":  "Leyla stopped writing. A frightened reporter does not forget."
                                            },
                                            {
                                                "label":  "Let it run",
@@ -162,8 +160,7 @@
                                        },
                                        {
                                            "label":  "Have Vale watch him",
-						   "text":  "Vale is taking notes.",
-						   "fx": {"fact": {"text": "The Prince placed under secret surveillance"}}
+                                           "text":  "Vale is taking notes."
                                        }
                                    ],
                        "ignore":  {
@@ -197,13 +194,11 @@
                          "choices":  [
                                          {
                                              "label":  "Apply pressure",
-							 "text":  "Renn backed off, but the pressure was put in writing.",
-							 "fx": {"fact": {"text": "Pressure put on a judge"}}
+                                             "text":  "Renn backed off, but the pressure was put in writing."
                                          },
                                          {
                                              "label":  "Let it proceed",
-							 "text":  "The case is moving forward. It may not protect you, but it will not tarnish your name either.",
-							 "fx": {"fact": {"text": "Ministerial tender file"}}
+                                             "text":  "The case is moving forward. It may not protect you, but it will not tarnish your name either."
                                          },
                                          {
                                              "label":  "Sacrifice the minister",
@@ -211,8 +206,7 @@
                                          }
                                      ],
                          "ignore":  {
-									"text":  "The case moved through the courts.",
-									"fx": {"fact": {"text": "The ministerial tender file's link to the Palace"}}
+                                        "text":  "The case moved through the courts."
                                     }
                      },
     "voss_dosyalar":  {
@@ -645,8 +639,7 @@
                                         },
                                         {
                                             "label":  "Turn up the pressure",
-							"text":  "Renn fell silent. A copy of the letter, however, is missing.",
-							"fx": {"fact": {"text": "The judge's resignation letter"}}
+                                            "text":  "Renn fell silent. A copy of the letter, however, is missing."
                                         }
                                     ],
                         "ignore":  {
