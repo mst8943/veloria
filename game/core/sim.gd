@@ -1338,7 +1338,7 @@ func public_action(action: String) -> String:
 			if public_rng.randf() < 0.1:
 				unrest = minf(100.0, unrest + 4.0)
 		"ceremony": consent += 2.0; public_fear = maxf(0.0, public_fear - 1.0)
-		"hide": consent = maxf(0.0, consent - 4.0); public_fear += 5.0; unrest = minf(100.0, unrest + 2.0)
+		"hide": consent = maxf(0.0, consent - 1.0); public_fear += 1.0
 	consent = clampf(consent, 0.0, 100.0)
 	public_fear = clampf(public_fear, 0.0, 100.0)
 	changed.emit()
@@ -1354,12 +1354,13 @@ func public_opinion_line() -> String:
 
 
 func respond_to_scandal(fid: String, response: String) -> String:
-	if not facts.has(fid) or not bool(facts[fid].get("public", false)) or facts[fid].get("subject", "") != "king":
+	if not facts.has(fid) or not bool(facts[fid].get("public", false)) or facts[fid].get("subject", "") != "king" or facts[fid].has("response"):
 		return ""
 	if response not in ["deny", "apologize", "scapegoat", "redirect"] or not spend_mesai():
 		return _no_mesai()
 	public_opinion_active = true
 	var fact: Dictionary = facts[fid]
+	fact["response"] = response
 	match response:
 		"deny":
 			consent -= 4.0
@@ -1393,7 +1394,7 @@ func _tick_public_opinion() -> void:
 	# The legacy unrest track stays untouched until the player opts into this system.
 	unrest = clampf((100.0 - consent) * 0.7 + public_fear * 0.6, 0.0, 100.0)
 	# Existing campaigns keep their event schedule until the player opts into public-opinion play.
-	if week % 8 != 0 or week == last_poll_week or pending.size() >= 3:
+	if week < maxi(8, last_poll_week + 8) or pending.size() >= 3:
 		return
 	last_poll_week = week
 	var sources := [tr("Sarne'nin anket şirketi"), tr("Leyla'nın gazetesi"), tr("bağımsız bir kurum")]

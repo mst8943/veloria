@@ -23,6 +23,10 @@ func _run() -> void:
 	sim.mesai = 4
 	sim.public_action("speech")
 	_expect(sim.consent > before_consent and sim.rng.state == main_rng, "rıza artışı ve ana RNG yalıtımı")
+	var before_fear: float = sim.public_fear
+	sim.mesai = 4
+	sim.public_action("hide")
+	_expect(sim.public_fear > before_fear and sim.rng.state == main_rng, "gizlenme korkusu ve RNG yalıtımı")
 	sim.week = 8
 	sim.pending.clear()
 	sim._tick_public_opinion()
@@ -35,6 +39,13 @@ func _run() -> void:
 	var before_apology: float = sim.consent
 	sim.respond_to_scandal("public_scandal_test", "apologize")
 	_expect(sim.consent > before_apology, "özür kamuoyu etkisi")
+	_expect(sim.respond_to_scandal("public_scandal_test", "deny") == "", "skandal yanıtı tek kullanımlık")
+	for response in ["deny", "scapegoat", "redirect"]:
+		var id: String = "public_scandal_" + response
+		sim._add_fact(id, "Test skandalı", "king", 20, ["vale"], 1)
+		sim.facts[id]["public"] = true
+		sim.mesai = 4
+		_expect(sim.respond_to_scandal(id, response) != "", response + " yanıtı")
 	_expect(sim.save_game(), "yeni alanları kaydet")
 	var saved_consent: float = sim.consent
 	sim.consent = 0.0
