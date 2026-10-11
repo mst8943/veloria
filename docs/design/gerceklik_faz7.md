@@ -54,3 +54,25 @@ Her dilimde denge kapısı: ölçüt botu (80 kampanya/zorluk) tabanın ±8 puan
 - Yeni RNG için AYRI üreteç (mevcut tohumlar kaymasın); `--full` tohum 101 etkilenirse değişim ve yeni taban belgelenir.
 - UI: Divan/rapor/Günlük satırları ve kriz kartı kalıpları yeniden kullanılır; "sayı yok" ilkesi; mobil 44 px; web'de glif kutusu çıkar.
 - Her sistem için `tests/<sistem>_test.gd` birim testi, probe'a ilgili sayaçlar (ör. enflasyon kaynaklı kayıplar), ölçüm tabloları belge sonunda "Ayar" bölümünde.
+
+## R1 Ayar
+
+80 kampanya/zorluk ölçümü (`advice_weighted`), referans hedefi ve farkı:
+
+| Zorluk | Hedef | Ölçüm | Fark |
+|---|---:|---:|---:|
+| Kolay | 62/80 (%77,50) | 61/80 (%76,25) | −1,25 puan |
+| Normal | 30/80 (%37,50) | 31/80 (%38,75) | +1,25 puan |
+| Zor | 13/80 (%16,25) | 14/80 (%17,50) | +1,25 puan |
+
+Uç bot kapısı (kazanma / 80; ölçüt botu kazanma sayısının en çok %70'i):
+
+| Zorluk | Ölçüt | Tavan | Hep kemer sıkı (`advice_austere`) | Sosyal hep yüksek (`advice_lavish`) |
+|---|---:|---:|---:|---:|
+| Kolay | 62 | 43,4 | 21 | 24 |
+| Normal | 30 | 21 | 14 | 18 |
+| Zor | 13 | 9,1 | 6 | 9 |
+
+Kalibrasyon: sosyal tahsis %25'i aştığında dış borç baskısı katsayısı 1,2; varsayılan dağılımda katsayı 0,04 olarak kaldı. Gecikmeli sosyal harcama hazineden pay başına 1,6 düşürüyor. Danışman bütçe önerisi, sosyal pay değişimini huzur değeri `0,045` ve hazine maliyeti `0,25` katsayılarıyla puanlıyor; genel `choice_value` ve başlangıçtaki varsayılan akış böylece değişmiyor. İlk sekiz haftadaki tempo en düşük 0,81 olay/hafta. EN sızıntı taraması ve eksik çeviri kapıları 0.
+
+`--full --seed=101` sonucu hem TR hem EN'de: 104 hafta / TAHTTA / Medya Rejimi / 112 olay.
