@@ -95,6 +95,7 @@ const FOREIGN_EFFECT_DIFF := [0.7, 1.0, 1.1]
 const EXT_PRESSURE_DECAY := 0.06
 const BORDER_WARNING_AT := 38.0
 const BORDER_CRISIS_AT := 62.0
+const SIEGE_CRISIS_AT := 62.0
 var actors: Dictionary = {}  # id -> Actor
 var facts: Dictionary = {}   # id -> Dictionary
 var flags: Dictionary = {}
@@ -1812,6 +1813,13 @@ func _tick_external_pressure() -> void:
 		_add_news("DIŞİŞLERİ: Malenkov sınır hattındaki temasların olağandışı arttığını bildirdi.", tr("DIŞİŞLERİ: Malenkov sınır hattındaki temasların olağandışı arttığını bildirdi."))
 	elif float(ext_pressure["drakon"]) < BORDER_WARNING_AT - 10.0:
 		warned.erase("border_drakon")
+	for power in ["asteria", "seravia"]:
+		if float(ext_pressure[power]) >= BORDER_WARNING_AT and not warned.get("siege_" + power, false):
+			warned["siege_" + power] = true
+			var name := "Asteria" if power == "asteria" else "Seravia"
+			_add_news("MALİYE: %s bankaları devlet teminatlarını yeniden inceliyor." % name, tr("MALİYE: %s bankaları devlet teminatlarını yeniden inceliyor.") % tr(name))
+		elif float(ext_pressure[power]) < BORDER_WARNING_AT - 10.0:
+			warned.erase("siege_" + power)
 
 
 func external_suspicion_level(envoy_id: String) -> int:
@@ -2559,7 +2567,7 @@ const OTHER_CONCEDE := [0.85, 0.5, 0.25]   # kabul/uzlaşma: ilki büyük olası
 
 var street_anger := 0.0            # bastırmanın biriktirdiği öfke (gizli)
 var legal_relief := 0.0            # uzlaşma/tasfiye/pazarlıkla düşülen yargı baskısı
-var other_crisis: Dictionary = {}  # {kind: "street"|"legal", week, failed?}
+var other_crisis: Dictionary = {}  # {kind: street|legal|border|siege|assassination, week, phase?, failed?}
 var warned: Dictionary = {}        # işaret satırları bir kez: {"street": true, "legal": true}
 
 
@@ -2614,6 +2622,8 @@ func _check_crises() -> void:
 		_open_other("legal")
 	elif float(ext_pressure.get("drakon", 0.0)) >= BORDER_CRISIS_AT:
 		_open_other("border")
+	elif maxf(float(ext_pressure.get("asteria", 0.0)), float(ext_pressure.get("seravia", 0.0))) >= SIEGE_CRISIS_AT and (treasury < 52.0 or float(capacity["maliye"]) < 42.0):
+		_open_other("siege")
 
 
 func other_chance(action: String) -> float:
@@ -2622,6 +2632,11 @@ func other_chance(action: String) -> float:
 			"force": return clampf((float(capacity["ordu"]) + _army_loyalty() + treasury - 120.0) / 200.0, 0.08, 0.78)
 			"concede": return clampf(0.85 - float(stats.get("border_concessions", 0)) * 0.35, 0.18, 0.85)
 			_: return clampf((float(foreign.get("asteria", 50.0)) + float(capacity["hukuk"]) - ext_pressure["asteria"]) / 200.0, 0.1, 0.8)
+	if str(other_crisis.get("kind", "")) == "siege":
+		match action:
+			"austerity": return clampf((treasury + float(capacity["maliye"]) - 30.0) / 150.0, 0.12, 0.78)
+			"capital": return clampf((float(actors["halden"].power if actors.has("halden") else 35.0) + float(capacity["maliye"])) / 160.0, 0.15, 0.82)
+			_: return clampf(0.85 - float(stats.get("siege_concessions", 0)) * 0.35, 0.18, 0.85)
 	var odds := _diff("crisis_odds")
 	match action:
 		"force":
@@ -2649,7 +2664,7 @@ func _open_other(kind: String) -> void:
 	else:
 		e = _external_event(kind)
 	pending.insert(0, {"event": e, "age": 0})
-	var crisis_news := "KRİZ: Meydanlar ayakta; sokak sarayın kapısında." if kind == "street" else ("KRİZ: Mahkeme kralın yetkilerini askıya almayı görüşüyor." if kind == "legal" else "KRİZ: Drakon sınır hattında ültimatom verdi.")
+	var crisis_news := "KRİZ: Meydanlar ayakta; sokak sarayın kapısında." if kind == "street" else ("KRİZ: Mahkeme kralın yetkilerini askıya almayı görüşüyor." if kind == "legal" else ("KRİZ: Asteria ve Seravia krediyi kesti; devlet ödeme planı istiyor." if kind == "siege" else "KRİZ: Drakon sınır hattında ültimatom verdi."))
 	_add_news(crisis_news, tr(crisis_news))
 	if kind in ["border", "siege", "assassination"]:
 		external_history.append({"week": week, "kind": kind, "action": "warning"})
@@ -2657,6 +2672,11 @@ func _open_other(kind: String) -> void:
 
 
 func _external_event(kind: String) -> Dictionary:
+	if kind == "siege":
+		var siege_id := "b1b_ambargo_notasi" if other_crisis.get("phase", "note") == "note" else "b1b_kredi_kesildi"
+		var siege_template := _event_template(siege_id)
+		if not siege_template.is_empty():
+			return siege_template
 	if kind == "border":
 		if other_crisis.get("phase", "note") == "note":
 			var note_template := _event_template("b1a_drakon_sinir_notasi")
@@ -2691,7 +2711,7 @@ func _event_template(id: String) -> Dictionary:
 			var result := event.duplicate(true)
 			result["crisis"] = true
 			result["crisis_kind"] = str(other_crisis.get("kind", ""))
-			result["banner"] = tr("SINIR NOTASI — Drakon bu hafta yanıt bekliyor.") if id == "b1a_drakon_sinir_notasi" else tr("SINIR ÜLTİMATOMU — bu hafta karar vermezsen Drakon birlikleri ilerleyecek.")
+			result["banner"] = tr("SINIR NOTASI — Drakon bu hafta yanıt bekliyor.") if id == "b1a_drakon_sinir_notasi" else (tr("AMBARGO NOTASI — alacaklılar bu hafta yanıt bekliyor.") if id == "b1b_ambargo_notasi" else (tr("KREDİ KESİLDİ — ödeme planını bu hafta belirle.") if id == "b1b_kredi_kesildi" else tr("SINIR ÜLTİMATOMU — bu hafta karar vermezsen Drakon birlikleri ilerleyecek.")))
 			return result
 	return {}
 
@@ -2785,6 +2805,35 @@ func _resolve_other(action: String) -> String:
 			foreign["asteria"] = minf(100.0, float(foreign["asteria"]) + 6.0)
 			private_wealth = maxf(0.0, private_wealth - 5.0)
 		return tr("Drakon geri çekildi; saray bu tavrın bedelini ve kime borçlandığını unutmayacak.")
+	if kind == "siege":
+		if other_crisis.get("phase", "") == "note":
+			external_history.append({"week": week, "kind": kind, "action": action, "phase": "note"})
+			other_crisis["phase"] = "crisis"
+			other_crisis["week"] = week + 1
+			return tr("Kredi görüşmeleri kesildi; alacaklılar haftaya ödeme planını bekliyor.")
+		external_history.append({"week": week, "kind": kind, "action": action, "success": ok})
+		if not ok:
+			flags["external_defeat"] = kind
+			_fail_other(tr("Devlet maaş ödeyemedi. Kredi kesildi ve maliye çöktü; elitler seni desteklemeyi bıraktı."))
+			return tr("Bankalar teminatlarını çekti. Başkentte memurların maaş kuyruğu uzarken, meclis saraya sırtını döndü.")
+		_close_other()
+		for power in ["asteria", "seravia"]:
+			ext_pressure[power] = maxf(0.0, float(ext_pressure[power]) - (32.0 if action == "concede" else 20.0))
+		if action == "austerity":
+			treasury = minf(100.0, treasury + 18.0)
+			economy = maxf(0.0, economy - 10.0)
+			unrest = minf(100.0, unrest + 12.0)
+		elif action == "capital":
+			treasury = minf(100.0, treasury + 22.0)
+			holding = minf(100.0, holding + 10.0)
+			if actors.has("halden"):
+				actors["halden"].power = minf(100.0, actors["halden"].power + 8.0)
+		else:
+			stats["siege_concessions"] = int(stats.get("siege_concessions", 0)) + 1
+			foreign["asteria"] = maxf(0.0, float(foreign["asteria"]) - 8.0)
+			foreign["seravia"] = maxf(0.0, float(foreign["seravia"]) - 8.0)
+			capacity["maliye"] = maxf(0.0, float(capacity["maliye"]) - 8.0)
+		return tr("Ödeme krizi ertelendi; devletin nefesi açıldı, fakat seçtiğin yol yeni bir bedel bıraktı.")
 	match action:
 		"force":
 			if not ok:
@@ -2931,6 +2980,10 @@ func _end(survived: bool) -> void:
 			title = "Çöken Egemen"
 			cause = "Saltanatının %d. haftasında Drakon sınırı geçti; elit koalisyonu seni teslim etti. Yabancı müdahalesi başkentin yönetimini sona erdirdi." % (week - 1)
 			cause_display = tr("Saltanatının %d. haftasında Drakon sınırı geçti; elit koalisyonu seni teslim etti. Yabancı müdahalesi başkentin yönetimini sona erdirdi.") % (week - 1)
+		elif external_cause == "siege":
+			title = "Mali Çöküş"
+			cause = "Saltanatının %d. haftasında kredi kesildi ve devlet maaş ödeyemedi. Mali çöküş elit koalisyonunu dağıttı." % (week - 1)
+			cause_display = tr("Saltanatının %d. haftasında kredi kesildi ve devlet maaş ödeyemedi. Mali çöküş elit koalisyonunu dağıttı.") % (week - 1)
 		elif coup_leader != "" and actors.has(coup_leader):
 			var l: Actor = actors[coup_leader]
 			var promo_week: int = flags.get(l.id.to_upper() + "_GUCLENDI", 0)
@@ -3059,6 +3112,8 @@ func _award_achievements(survived: bool, title: String, cause: String) -> Array:
 	else:
 		if str(flags.get("external_defeat", "")) == "border":
 			earned.append("yabanci_mudahale")
+		elif str(flags.get("external_defeat", "")) == "siege":
+			earned.append("mali_kusatma")
 		elif coup_leader != "" and actors.has(coup_leader):
 			earned.append("darbe")
 		elif unrest >= 100.0:

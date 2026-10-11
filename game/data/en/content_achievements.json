@@ -24,5 +24,6 @@
   "senaryo_darbe": ["Shadow of a Coup", "Finish the Coup-prone Kingdom scenario."],
   "senaryo_naiplik": ["The Regent's Test", "Finish the Regency scenario."],
   "senaryo_bos_kasa": ["Last Coin", "Finish the Empty Treasury scenario."],
-  "yabanci_mudahale": ["Broken Sovereign", "Fall from the throne to Drakon intervention."]
+  "yabanci_mudahale": ["Broken Sovereign", "Fall from the throne to Drakon intervention."],
+  "mali_kusatma": ["Credit Wall", "Fall from the throne in a financial collapse."]
 }

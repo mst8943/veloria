@@ -40,6 +40,32 @@ func _initialize() -> void:
 	sim.pending.clear()
 	sim._check_crises()
 	_check(str(sim.pending[0]["event"]["title"]) == "Drakon issues a border ultimatum", "ultimatum is localized in English")
+	Loc.set_lang("tr")
+	sim.new_game(303)
+	sim.pending.clear()
+	sim.treasury = 25.0
+	sim.ext_pressure["asteria"] = 70.0
+	sim._open_other("siege")
+	_check(str(sim.pending[0]["event"]["id"]) == "b1b_ambargo_notasi", "financial pressure opens the embargo note")
+	var siege_rng: int = sim.rng.state
+	sim.resolve_decision(0, 0)
+	_check(sim.other_crisis.get("phase", "") == "crisis" and sim.rng.state == siege_rng, "the credit-cut stage waits a week on its separate RNG")
+	sim.week += 1
+	sim.pending.clear()
+	sim._check_crises()
+	var credit_card: Dictionary = sim.pending[0]["event"]
+	_check(str(credit_card["id"]) == "b1b_kredi_kesildi" and credit_card["choices"].size() == 3, "credit-cut card has all three response paths")
+	Loc.set_lang("en")
+	sim.new_game(404)
+	sim.pending.clear()
+	sim.other_crisis = {"kind": "siege", "phase": "crisis", "week": sim.week}
+	sim.pending.append({"event": sim._external_event("siege"), "age": 0})
+	_check(str(sim.pending[0]["event"]["title"]) == "Credit is cut; payday is near", "credit-cut card is localized in English")
+	Loc.set_lang("tr")
+	sim.new_game(505)
+	sim.flags["external_defeat"] = "siege"
+	sim._check_end()
+	_check(str(sim.record["title"]) == "Mali Çöküş" and str(sim.record["cause"]).contains("Mali çöküş"), "financial defeat records its own cause and title")
 	if failures.is_empty():
 		print("EXTERNAL CRISIS: OK")
 		quit(0)

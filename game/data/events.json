@@ -3499,5 +3499,24 @@
     {"label": "Asteria'dan güvence iste", "text": "Drakon geri çekildi; saray bu tavrın bedelini unutmayacak.", "crisis": "guarantee", "fx": {}}
   ],
   "ignore": {"text": "Drakon birlikleri sınır kapılarına ilerledi.", "fx": {}}
+},
+{
+  "id": "b1b_ambargo_notasi", "scripted_only": true, "art": "butce_acigi", "title": "Asteria ve Seravia liman notası gönderdi",
+  "text": "İki elçilik de yeni kredilerin ve liman sigortasının duracağını bildirdi. Hazine bir sonraki maaş haftasını nasıl çıkaracağını soruyor.",
+  "choices": [
+    {"label": "Alacaklılarla görüşme iste", "text": "Alacaklılar yanıt verdi; kredi dosyaları haftaya kapanacak.", "crisis": "talk", "fx": {}},
+    {"label": "Notayı beklet", "text": "Alacaklılar yanıt verdi; kredi dosyaları haftaya kapanacak.", "crisis": "delay", "fx": {}}
+  ],
+  "ignore": {"text": "Kredi ve liman sigortası için verilen süre doldu.", "fx": {}}
+},
+{
+  "id": "b1b_kredi_kesildi", "scripted_only": true, "art": "butce_acigi", "title": "Kredi kesildi; maaş günü yaklaşıyor",
+  "text": "Asteria ve Seravia bankaları teminatlarını çekti. Maliye başkanı, memur maaşları için bu hafta karar verilmezse tahsilatın duracağını söylüyor.",
+  "choices": [
+    {"label": "Kemer sıkma kararnamesi çıkar", "text": "Ödeme krizi ertelendi; halk ve kurumlar bedelini taşıyacak.", "crisis": "austerity", "fx": {}},
+    {"label": "Sarne'nin sermayesini seferber et", "text": "Ödeme krizi ertelendi; Sarne devlet kasasında daha büyük pay aldı.", "crisis": "capital", "fx": {}},
+    {"label": "Liman ve ticaret için taviz paketi sun", "text": "Ödeme krizi ertelendi; dış baskı düştü, maliye kapasitesi zayıfladı.", "crisis": "concede", "fx": {}}
+  ],
+  "ignore": {"text": "Devlet maaş ödeyemedi; maliye çöktü.", "fx": {}}
 }
 ]

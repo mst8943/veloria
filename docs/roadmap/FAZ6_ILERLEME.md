@@ -41,6 +41,12 @@
 - Seed 101 `--autoplay --full`: TR/EN 104 / TAHTTA / Medya Rejimi / 112. Probe, TR ve EN aynı: Kolay 68/80 (%85), Normal 36/80 (%45), Zor 16/80 (%20). Bu alt dilimde dış kriz kaybı tetiklenmedi.
 - `en_dump` masaüstü/mobil + `en_dump2` sızıntı taraması: 4.052 metin, 0 şüpheli. Drakon nota/ültimatom kartı ekran görüntüleri TR/EN masaüstü (1280×720) ve mobil (1067×600) açılıp gözle kontrol edildi: `screenshots/faz6_b1a/{tr,en}/{desktop,mobile}`.
 
+### B1b — Mali kuşatma
+- Asteria/Seravia baskısı ve zayıf hazine/maliye ambargo notasını açıyor; sonraki hafta kredi kesintisi kartı geliyor. Kemer sıkma, Sarne sermayesi ve liman/ticaret tavizi ayrı başarı olasılıkları ve maliyetlerle çözülebiliyor; başarısızlık `Mali çöküş` finali ve `Mali Çöküş` ünvanını veriyor.
+- Kriz geçmişi, notalar, kredi kesintisi kartı, yeni başarım ve hata nedeni TR/EN. `external_crisis_test`, `sim_test`, event/save/content/i18n/leak, UI giriş (masaüstü/mobil), dil, dokunma, tur, ara sahne ve ses kapıları geçti. `i18n_missing.py`: 0; dump taraması: 4.035 metin, 0 şüpheli. Tempo en düşük dilimde 0,81 olay/hafta.
+- Seed 101 tam koşusu TR/EN yine 104 / TAHTTA / Medya Rejimi / 112. Probe (80 kampanya/zorluk), iki dilde: Kolay 68/80 (%85), Normal 36/80 (%45), Zor 16/80 (%20); dağılım B1a ile aynı, bu probe örnekleminde dış kriz kaybı yok.
+- Ambargo ve kredi kesintisi kartı ekran görüntüleri TR/EN masaüstü (1280×720) ve mobil (1067×600) açılıp gözle kontrol edildi: `screenshots/faz6_b1b/{tr,en}/{desktop,mobile}`.
+
 ## SIRADAKİ DİLİM
 
-DALGA A tamamlandı; B1a tamamlandı. Sıradaki: B1b — Mali kuşatma.
+DALGA A tamamlandı; B1a ve B1b tamamlandı. Sıradaki: B1c — Suikast.

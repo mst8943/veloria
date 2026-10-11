@@ -3864,3 +3864,87 @@ msgstr "\n[b][color=#d9b359][font_size=22]THE OUTSIDE WORLD — envoys' words an
 
 msgid "• Hafta %d — %s: %s\n"
 msgstr "• Week %d — %s: %s\n"
+
+msgid "Mali Çöküş"
+msgstr "Financial Collapse"
+
+msgid "Asteria ve Seravia liman notası gönderdi"
+msgstr "Asteria and Seravia send a port note"
+
+msgid "Kredi kesildi; maaş günü yaklaşıyor"
+msgstr "Credit is cut; payday is near"
+
+msgid "AMBARGO NOTASI — alacaklılar bu hafta yanıt bekliyor."
+msgstr "EMBARGO NOTE — creditors expect an answer this week."
+
+msgid "KREDİ KESİLDİ — ödeme planını bu hafta belirle."
+msgstr "CREDIT CUT — set a payment plan this week."
+
+msgid "Alacaklılarla görüşme iste"
+msgstr "Request talks with the creditors"
+
+msgid "Notayı beklet"
+msgstr "Set the note aside"
+
+msgid "Kemer sıkma kararnamesi çıkar"
+msgstr "Issue an austerity decree"
+
+msgid "Sarne'nin sermayesini seferber et"
+msgstr "Mobilize Sarne's capital"
+
+msgid "Liman ve ticaret için taviz paketi sun"
+msgstr "Offer a port and trade concession package"
+
+msgid "İki elçilik de yeni kredilerin ve liman sigortasının duracağını bildirdi. Hazine bir sonraki maaş haftasını nasıl çıkaracağını soruyor."
+msgstr "Both embassies announced that new credit and port insurance would stop. The treasury asks how it will make the next payroll."
+
+msgid "Asteria ve Seravia bankaları teminatlarını çekti. Maliye başkanı, memur maaşları için bu hafta karar verilmezse tahsilatın duracağını söylüyor."
+msgstr "Asterian and Seravian banks withdrew their guarantees. The finance minister says collections will stop unless you decide how to fund public salaries this week."
+
+msgid "Alacaklılar yanıt verdi; kredi dosyaları haftaya kapanacak."
+msgstr "The creditors answered; the credit files will close next week."
+
+msgid "Kredi ve liman sigortası için verilen süre doldu."
+msgstr "The deadline for credit and port insurance has passed."
+
+msgid "Ödeme krizi ertelendi; halk ve kurumlar bedelini taşıyacak."
+msgstr "The payment crisis was postponed; the people and institutions will bear the cost."
+
+msgid "Ödeme krizi ertelendi; Sarne devlet kasasında daha büyük pay aldı."
+msgstr "The payment crisis was postponed; Sarne gained a larger share of the state treasury."
+
+msgid "Ödeme krizi ertelendi; dış baskı düştü, maliye kapasitesi zayıfladı."
+msgstr "The payment crisis was postponed; foreign pressure fell, but fiscal capacity weakened."
+
+msgid "Devlet maaş ödeyemedi; maliye çöktü."
+msgstr "The state could not pay its staff; the treasury collapsed."
+
+msgid "Kredi görüşmeleri kesildi; alacaklılar haftaya ödeme planını bekliyor."
+msgstr "Credit talks ended; creditors expect a payment plan next week."
+
+msgid "Devlet maaş ödeyemedi. Kredi kesildi ve maliye çöktü; elitler seni desteklemeyi bıraktı."
+msgstr "The state could not pay its staff. Credit was cut and the treasury collapsed; the elites withdrew their support."
+
+msgid "Bankalar teminatlarını çekti. Başkentte memurların maaş kuyruğu uzarken, meclis saraya sırtını döndü."
+msgstr "The banks withdrew their guarantees. As public servants queued for their pay, parliament turned its back on the Palace."
+
+msgid "Ödeme krizi ertelendi; devletin nefesi açıldı, fakat seçtiğin yol yeni bir bedel bıraktı."
+msgstr "The payment crisis was postponed; the state can breathe, but the path you chose left a new cost."
+
+msgid "Saltanatının %d. haftasında kredi kesildi ve devlet maaş ödeyemedi. Mali çöküş elit koalisyonunu dağıttı."
+msgstr "In week %d of your reign, credit was cut and the state could not pay its staff. Financial collapse dissolved the elite coalition."
+
+msgid "Mali çöküş"
+msgstr "Financial collapse"
+
+msgid "siege"
+msgstr "financial siege"
+
+msgid "austerity"
+msgstr "austerity"
+
+msgid "capital"
+msgstr "Sarne's capital"
+
+msgid "MALİYE: %s bankaları devlet teminatlarını yeniden inceliyor."
+msgstr "FINANCE: %s banks are reviewing the state's guarantees."

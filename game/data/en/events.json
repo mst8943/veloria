@@ -3532,5 +3532,24 @@
             {"label": "Ask Asteria for a guarantee", "text": "Drakon withdrew; the court will remember the cost of this stance."}
         ],
         "ignore": {"text": "Drakon troops advanced toward the border gates."}
+    },
+    "b1b_ambargo_notasi": {
+        "title": "Asteria and Seravia send a port note",
+        "text": "Both embassies announced that new credit and port insurance would stop. The treasury asks how it will make the next payroll.",
+        "choices": [
+            {"label": "Request talks with the creditors", "text": "The creditors answered; the credit files will close next week."},
+            {"label": "Set the note aside", "text": "The creditors answered; the credit files will close next week."}
+        ],
+        "ignore": {"text": "The deadline for credit and port insurance has passed."}
+    },
+    "b1b_kredi_kesildi": {
+        "title": "Credit is cut; payday is near",
+        "text": "Asterian and Seravian banks withdrew their guarantees. The finance minister says collections will stop unless you decide how to fund public salaries this week.",
+        "choices": [
+            {"label": "Issue an austerity decree", "text": "The payment crisis was postponed; the people and institutions will bear the cost."},
+            {"label": "Mobilize Sarne's capital", "text": "The payment crisis was postponed; Sarne gained a larger share of the state treasury."},
+            {"label": "Offer a port and trade concession package", "text": "The payment crisis was postponed; foreign pressure fell, but fiscal capacity weakened."}
+        ],
+        "ignore": {"text": "The state could not pay its staff; the treasury collapsed."}
     }
 }
