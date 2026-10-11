@@ -91,3 +91,27 @@ Dört gizli meclis bloğu (Saray listesi, Muhalefet, Soylular, Bağımsızlar) e
 EN/TR masaüstü ve mobil teklif, günlük rapor ve Divan rapor ekranları incelendi: dört teklif seçeneği görünür, mobil düğmeler 44 px, rapor dili çevrilmiş ve oy sayısı yok. Mobilde ayrı Divan çekmecesi bulunmadığından mobil “Divan raporu” kontrolü Günlük rapor görünümünden yapıldı; mobil Divan penceresi hâlâ açık bir UI kapsamıdır. Ekran görüntüleri kontrol sonrası geçici dizinden silindi.
 
 Bu dilimde baskıyla geçirme huzursuzluğu 100'e taşır ve kral gücünü 14 azaltır; seçenek özellikle pahalıdır. PUSH yapılmadı.
+## DALGA R3 — R3b: Kalıcı yasa etkileri
+
+R3a tekliflerinin geçmesi artık yasayı yürürlüğe sokuyor. Basın, ordu bütçesi, vergi, erken seçim, af ve yargı yasalarının kalıcı etkileri eklendi. Oyuncu yürürlükteki yasaları Günlükte ve Divan'da nitel olarak görür; 26 haftalık gözden geçirmede bedel ödeyerek bir yasayı kaldırabilir. Kayıt sürümü 17; sürüm 16 ve öncesi yasa defterini boş başlatır. Meclis sonuçları mevcut ayrı `parliament_rng` ile sürer. R3c seçimi/güven oyu uygulanmadı.
+
+| Mantıksal adım | Commit |
+|---|---|
+| Yasa etkileri, kayıt göçü, kaldırma kararı, kuvvetli baskı eşiği ve testler | `e49f370` |
+| Günlük/Divan listesi, EN metinleri ve ekran kontrol yardımcısı | `ca1c3e1` |
+| Probe ayarı ve ilerleme kaydı | bu dokümantasyon commit'i |
+
+### Kapılar ve denge
+
+| Bot | Kolay | Normal | Zor |
+|---|---:|---:|---:|
+| Ölçüt (advice_weighted) | 56/80 | 33/80 | 19/80 |
+| Hep baskıyla geçir | 39/80 | 13/80 | 6/80 |
+| Hep geri çek | 41/80 | 7/80 | 4/80 |
+| Hiç oy verme | 33/80 | 5/80 | 1/80 |
+
+Ölçüt hedefi 62/30/13; fark −7,5/+3,75/+7,5 yüzde puan. %70 hedef tavanı 43,4/21/9,1; uç botlar altında. `pacing_test.gd`: en düşük 0,81 olay/hafta, en uzun olaysız seri 3 hafta. `--full --seed=101` TR ve EN: 104 hafta / TAHTTA / Medya Rejimi / 112 olay.
+
+Geçen testler: `save_test`, `sim_test`, `pacing_test`, `economy_test`, `external_crisis_test`, `scenario_test`, `public_opinion_test`, `dynasty_test`, `legacy_test`, `endless_test`, `parliament_laws_test`, `parliament_test`, `content_check` (TR/EN), `event_check` (TR/EN), `i18n_check`, `lang_switch_test`, `ui_logic_test`, `unit_tests` (399), `en_leak_test` (5 kampanya, 0 sızıntı), `audio_check`, `cutscene_check`, `daily_card_test`, `budget_ui_test` (masaüstü/mobil), `ui_input_test` (masaüstü/mobil), `touch_scroll_test`, `a11y_test` ve `tour_test`. `tools/i18n_missing.py`: 0. EN/TR masaüstü ve mobil yasa kartı/listesi gözle incelendi; metinler çevrilmiş, görünür taşma yok. Bazı Godot testlerinin kapanışında ObjectDB/resource cleanup uyarıları var; testler exit 0.
+
+`tests/title_shot.gd` bu oturumda çalıştırılmadı; `ux_audit.gd` ekran görüntüsü yığını oluşturacağı için çalıştırılmadı. `cause_probe.gd` tanı aracıdır, kapı değildir. PUSH yapılmadı; R3c yapılmadı.

@@ -107,3 +107,23 @@ Zorlama maliyeti baskı sayısıyla artar: hazine `10 + 6×tekrar`, özel servet
 Kalibrasyon: “gizlen” hamlesi başına rıza −1, korku +1; korku yüksek ve rıza düşük kaldıkça haftalık huzursuzluk ikisinden türetiliyor. Böylece tek başına gizlenme kazanma sağlamaz; etkisi anlık değil, birikimli. Halka çıkış eylemlerinin maliyeti 1 mesai; saha ziyaretindeki protesto riski kamuoyu RNG'sinden gelir. Anket kaynak farkı: Sarne +8, Leyla −8, bağımsız kurum ±12 puan gürültü; oyuncu yalnızca nitel destek bandını görür. R2 devre dışıyken R1'in mevcut huzursuzluk akışı ve ana RNG'si aynı kalır.
 
 Ölçüt R1 tabanının farkı: Kolay 0, Normal 0, Zor 0 puan. `public_out` ve `public_hide` tek yönlü botları hiçbir zorlukta ölçüt botunu geçmiyor. `--full --seed=101` TR/EN: 104 hafta / TAHTTA / Medya Rejimi / 112 olay. Tempo en düşük dilim 0,81; en uzun olaysız seri 3 hafta. EN leak taraması: 4.320 metin, şüpheli 0; `i18n_missing.py`: 0.
+## R3b Ayar
+
+Kanunlar yürürlüğe girdikten sonra kuralları kalıcı değiştirir; Günlük ve Divan yalnızca nitel etkiyi gösterir. Yürürlükten kaldırma, 26 haftalık gözden geçirmede verilen ve hazine/otorite/siyasi bedeli olan ayrı karardır. Vergi reformunun sokak yükü zorlukla artar; oranlar oyuncu arayüzünde görünmez. Baskıyla geçirme için hazine ve kişisel servet yanında en az orta düzey kraliyet otoritesi gerekir; bedeli R3a'nın tek başına baskı botu kapısını koruyacak biçimde kalibre edildi.
+
+80 kampanya/zorluk; hedef ölçüt 62/30/13. Fark, yüzde puan olarak ±8 sınırında:
+
+| Bot | Kolay | Normal | Zor |
+|---|---:|---:|---:|
+| Ölçüt (advice_weighted) | 56/80 | 33/80 | 19/80 |
+| Hep baskıyla geçir (parliament_force) | 39/80 | 13/80 | 6/80 |
+| Hep geri çek (parliament_withdraw) | 41/80 | 7/80 | 4/80 |
+| Hiç oy verme (parliament_abstain) | 33/80 | 5/80 | 1/80 |
+
+Ölçüt farkı: Kolay −7,5; Normal +3,75; Zor +7,5 yüzde puan. Hedefe göre %70 tavanları 43,4 / 21 / 9,1; üç uç bot da bu tavanların altında.
+
+Yasa etkileri: basın yasası Leyla'nın ücretsiz basın etkisini zayıflatırken rızayı azaltır; ordu yasası Arden'i güçlendirir ve R1 tahsisini en az %26 ordu payına bağlar; vergi reformu hazineye gelir eklerken düzenli kamuoyu baskısı üretir; seçim yasası erken seçim eşiğini düşürür; af ve yargı reformu hukuki baskıyı kalıcı olarak hafifletir. Yasa adları ve nitel özetleri Günlük ile Divan'da görünür. Kayıt şeması 17'ye yükseldi; sürüm 16 kayıtları boş yasa defteriyle yüklenir. Meclisin mevcut `parliament_rng` akışı ana oyun RNG'sinden ayrıdır.
+
+Tempo kapısı: ilk sekiz haftada en düşük dilim 0,81 olay/hafta; en uzun olaysız seri 3 hafta. `--full --seed=101`, TR ve EN: 104 hafta / TAHTTA / Medya Rejimi / 112 olay. `tests/*.gd` kapıları çalıştırıldı; `tests/title_shot.gd` ve `ux_audit.gd` bu kapsam dışında bırakıldı, ikincisi ekran görüntüsü yığını üretiyor. `en_leak_test.gd`: 5 kampanya, 0 sızıntı; `tools/i18n_missing.py`: 0.
+
+EN/TR masaüstü ve mobil ekranları açılıp gözle kontrol edildi: kanun teklifi kartı, Günlükte yürürlükteki yasa satırı ve masaüstü Divan listesindeki aynı satır. Çeviri, nitel etki metni ve mobilde satır/düğme taşması kontrol edildi. Geçici ekran görüntüleri inceleme sonrası silindi. `--full` kapanışında Godot'un bilinen ObjectDB/resource cleanup uyarıları görüldü; kapılar exit 0 ile geçti.
