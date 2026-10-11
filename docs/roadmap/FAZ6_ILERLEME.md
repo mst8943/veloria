@@ -55,6 +55,24 @@
 - `screenshots/faz6_b1c/{tr,en}/{desktop,mobile}/assassination_prep.png` görüntülerinin dördü de açılıp incelendi: hazırlık kartı, üç karar seçeneği, İngilizce/Türkçe tutarlılığı, metin okunurluğu, mobil taşma ve kırpılma kontrol edildi. B1a/B1b nota ve kriz kartı görüntüleri önceki alt dilimlerde ayrıca incelendi.
 - Godot bazı başsız testlerin sonunda var olan ObjectDB/RID/kaynak temizleme uyarılarını verdi; test sonuç kodları ve kapılar başarılıydı.
 
+### B2 — Miras ve hanedan
+- `game/data/legacy.json` ve İngilizce kaplaması eklendi. Gerçek kasa, Arden'in kariyer sadakati ve kapanmamış kral dosyalarından en çok üç miras etkisi üretiliyor; her pakette en az bir olumlu ve bir olumsuz etki var. Etkiler ayrı RNG çekmiyor; nesil başına aşınma uygulanıyor.
+- `Sim.new_game(seed, diff, scenario, legacy)` dördüncü, isteğe bağlı miras parametresini alıyor. Miras yokken seed 101 yolu değişmedi. Miraslı yeni hükümdar Julian Valerius olabilir; açık dosya tam fact şeması ve TR/EN metniyle taşınıyor.
+- `user://dynasty.cfg` nesil, saltanatlar, rejim, ünvan, hafta, puan ve sonraki mirası tutuyor. Yalnızca tahtta kalıp `halef_karari_1` seçen saltanat devamı açıyor; kayıp/halef yokluğu etkin nesli, puanı ve devam mirasını sıfırlıyor. Kampanya kayıt sürümü 12; v11 ve daha eski kayıt göçleri geçiyor.
+- Ana menüde uygun oyuncuya **Hanedan Devam**, her oyuncuya **Hanedan Defteri** var. Defter TR/EN nesil listesini ve sonraki mirası gösteriyor. Mobilde kaydırılabilir alan ve 44 px ya da daha büyük menü/geri hedefleri doğrulandı. `Kuşaklar Boyu`, `Üç Nesil`, `Beşinci Taç` başarımları eklendi.
+- `legacy_test`, `dynasty_test`, `save_test` (v11/v8/v1 göçleri), `sim_test`, `event_check` TR/EN, `content_check`, `i18n_check`, `i18n_missing.py` (0), `en_leak_test` (5 kampanya, 0 sızıntı), `lang_switch_test`, `touch_scroll_test`, `tour_test`, `cutscene_check`, `audio_check`, `ui_input_test` masaüstü/mobil ve autoplay kapıları geçti. Bazı Godot başsız testleri mevcut ObjectDB/RID kapanış uyarılarını verdi; testler `OK` döndü.
+- `--full` seed 101 TR/EN: `104 / TAHTTA / Medya Rejimi / 112`; mirassız ölçüt botu TR/EN: Kolay 62/80, Normal 30/80, Zor 13/80.
+- Ölçüt botu üç nesillik eşlenmiş denemesi (her zorlukta 80 seed × 3 saltanat; miras yalnızca önceki sonuç tahtta kalıp veliaht kararı verdiyse taşınır; kayıp seriyi sıfırlar):
+
+| Zorluk | Taban | Hanedan yolu | Fark | Devreden kampanya |
+| --- | ---: | ---: | ---: | ---: |
+| Kolay | 195/240 (%81,3) | 194/240 (%80,8) | −0,4 puan | 132 |
+| Normal | 95/240 (%39,6) | 107/240 (%44,6) | +5,0 puan | 71 |
+| Zor | 49/240 (%20,4) | 47/240 (%19,6) | −0,8 puan | 30 |
+
+- Hanedan defteri ve menü görüntüleri `screenshots/faz6_b2/{tr,en}/{desktop,mobile}/dynasty_{home,ledger}.png` altında üretildi. Dört dil/ekran boyutu grubundaki sekiz PNG açılıp gözle kontrol edildi: TR/EN metin tutarlılığı, uygunluk düğmesi, mobil kaydırma göstergesi, geri düğmesi erişimi, kesilme/taşma. Masaüstünde uzun miras listesi kaydırma alanında; mobilde de geçmiş ve miras satırları kaydırılarak görülüyor.
+- Commit: `1133967` miras veri/başlangıç etkileri; `af945bb` hanedan devamı, defter, kayıt göçü, başarımlar ve üç nesil probe kapısı.
+
 ## SIRADAKİ DİLİM
 
-DALGA A ve B1a/B1b/B1c uygulaması tamamlandı. B1'in darbe payı ölçütü açık kaldı; B2'ye geçmeden önce kayıp dağılımı yeniden kalibre edilmeli.
+DALGA A, B1a/B1b/B1c ve B2 uygulaması tamamlandı. B1'de darbe kayıplarının payı %75,6 ile ≤%65 kapısını geçmedi; yeni dalgaya geçmeden bu açık denge kapısı yeniden kalibre edilmeli.
