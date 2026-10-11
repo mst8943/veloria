@@ -115,3 +115,23 @@ R3a tekliflerinin geçmesi artık yasayı yürürlüğe sokuyor. Basın, ordu b�
 Geçen testler: `save_test`, `sim_test`, `pacing_test`, `economy_test`, `external_crisis_test`, `scenario_test`, `public_opinion_test`, `dynasty_test`, `legacy_test`, `endless_test`, `parliament_laws_test`, `parliament_test`, `content_check` (TR/EN), `event_check` (TR/EN), `i18n_check`, `lang_switch_test`, `ui_logic_test`, `unit_tests` (399), `en_leak_test` (5 kampanya, 0 sızıntı), `audio_check`, `cutscene_check`, `daily_card_test`, `budget_ui_test` (masaüstü/mobil), `ui_input_test` (masaüstü/mobil), `touch_scroll_test`, `a11y_test` ve `tour_test`. `tools/i18n_missing.py`: 0. EN/TR masaüstü ve mobil yasa kartı/listesi gözle incelendi; metinler çevrilmiş, görünür taşma yok. Bazı Godot testlerinin kapanışında ObjectDB/resource cleanup uyarıları var; testler exit 0.
 
 `tests/title_shot.gd` bu oturumda çalıştırılmadı; `ux_audit.gd` ekran görüntüsü yığını oluşturacağı için çalıştırılmadı. `cause_probe.gd` tanı aracıdır, kapı değildir. PUSH yapılmadı; R3c yapılmadı.
+
+## DALGA R3 — R3c: Seçim ve güven oyu
+
+Mevcut `secim_sonucu` olayı artık ayrı `government_rng` ile rıza, ekonomi, huzursuzluk, yasa geçmişi ve açık skandallardan nitel blok değişimi üretir; kesin oy/sandalye sayısı yoktur. Sonuç, farklı maliyetleri olan üç hükümet kurma kararına bağlanır. Veyra'nın koalisyon desteği kaybolunca destekle / hükümeti düşür / bedelli baskıyla kurtar güven oyu kartı çıkar. Hükümet düşerse Veyra, Kraliçe Helena veya Brandt için başbakan atama kararı gelir. Helena geçici mali rapor kaynağı olur; R1 bütçe akışı devam eder. Günlük ve Divan satırları hükümet/koalisyonu ve mali rapor sorumlusunu bildirir. Üç başarım eklendi. Kayıt sürümü 18; v17 ve eski kayıtlar için göç adımı var.
+
+| Mantıksal adım | Commit |
+|---|---|
+| Seçim, hükümet/güven oyu, mali rapor devri, kayıt göçü, TR/EN ve test | `7fd4955` |
+| Ölçüm botları ve seçim/güven oyu görüntü kapısı | `4ea1b6e` |
+| R3c ölçüm tablosu ve ilerleme notu | bu dokümantasyon commit'i |
+
+### Denge ve kapılar
+
+Ölçüt `advice_weighted`, 80 kampanya/zorluk: Kolay 62/80, Normal 31/80, Zor 17/80; hedef 62/30/13 sapması 0/+1/+4, ±4 kapısında. `confidence_force`: 38/10/3; `confidence_fall`: 37/11/3; `parliament_abstain`: 29/10/4. Ölçütün %70 tavanı her zorlukta 43,4/21,7/11,9; üç bot da tavan altında. `pacing_test.gd`: ilk 8 haftada 0,81 olay/hafta, en uzun olaysız seri 3.
+
+`--full --seed=101` TR ve EN: 104 hafta / TAHTTA / Medya Rejimi / 112 olay. `tests/en_leak_test.gd`: 5 kampanyada 0 benzersiz sızıntı; `tools/i18n_missing.py`: 0. `tests/election_test.gd`: seçim RNG/faktörleri, erken seçim eşiği, karar akışı, güven oyu maliyeti/izleri, rapor devri, R1 bütçe akışı, eski kayıt göçü ve başarımlar OK.
+
+Geçen testler: `a11y_test`, `audio_check`, `budget_ui_test`, `content_check`, `cutscene_check`, `daily_card_test`, `dynasty_test`, `economy_test`, `election_test`, `endless_test`, `en_leak_test`, `event_check`, `external_crisis_test`, `i18n_check`, `lang_switch_test`, `legacy_test`, `pacing_test`, `parliament_laws_test`, `parliament_test`, `public_opinion_test`, `save_test`, `scenario_test`, `sim_test`, `touch_scroll_test`, `tour_test`, `ui_input_test`, `ui_logic_test`, `unit_tests` (399 kontrol). `content_check` 5 dosya/8 bozuk örneği hata vermeden yakaladı; `event_check` 201 olayı 0 uyarıyla geçti. `daily_card_test` pencereli modda `DAILY CARD: OK` verdi. Bazı Godot testleri kapanışta ObjectDB/resource cleanup uyarıları yazdı, exit kodları 0.
+
+EN ve TR masaüstü/mobil ekranlarında seçim sonucu, hükümet kurma ve güven oyu kartlarının 12 görüntüsü açılarak incelendi. Sonuçta sayısal oy/sandalye yok; hükümette üç seçenek; güven kartında üç karar ve bedelli baskı seçeneği okunur, taşma görülmedi. Ekran görüntüleri doğrulama sonrasında geçici klasörden silindi. `tests/title_shot.gd` ve `game/ui/title_screen.gd` değiştirilmedi; `ux_audit.gd` görüntü yığını üreteceğinden çalıştırılmadı. `cause_probe.gd`, `en_dump.gd` ve `en_dump2.gd` tanı/döküm araçları olduğu için çalıştırılmadı. PUSH yapılmadı; R4'e geçilmedi.

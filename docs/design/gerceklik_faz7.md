@@ -146,3 +146,21 @@ Vergi yasası artık haftalık R1 geliri ve huzursuzluk yükünü zorlukla ölç
 Sonuçlar istenen 60–64 / 28–32 / 11–15 bantlarında. Uç botlar sırasıyla Kolay/Normal/Zor: baskıyla geçir 43/12/4, geri çekil 41/7/4, oy verme 33/5/1, `advice_austere` 18/11/2, `advice_lavish` 24/16/7. Ölçüt gerçek değerinin %70 tavanları 44,1/21/9,8; tümü altında. Tempo ilk dilimde 0,81 olay/hafta; en uzun olaysız seri 2 hafta. `--full --seed=101` TR/EN 104 hafta / TAHTTA / Medya Rejimi / 112 olay.
 
 EN masaüstü ve mobil üretim metin taramasındaki tek kaçak, bütçe olayıyla üretilebilen “Saray tahsisi büyüdü” olgusuydu; İngilizce karşılığı eklendikten sonra tarama 4.506 metinde 0 şüpheli verdi. `i18n_missing.py`: 0.
+
+
+## R3c Ayar
+
+Seçim sonucu rıza, ekonomi, huzursuzluk, yasa geçmişi ve açık skandallardan nitel blok kaymasına dönüştürülüyor; sonuçta kesin oy veya sandalye sayısı gösterilmiyor. Sonuç kartı hükümet kurma kararını açıyor. Veyra koalisyonunu sürdürme, Saray ve Bağımsızlar arasında uzlaşma ya da Brandt liderliğinde muhalefet hükümeti seçenekleri ayrı maliyet taşıyor. Koalisyon desteği zayıfladığında güven oyu kartı geliyor: Veyra'yı destekle, hükümeti düşür veya hazine/rıza/kral otoritesinden bedel ödeyip baskıyla kurtar. Düşüşte Kraliçe Helena mali raporlarını geçici olarak üstleniyor; yeni başbakan Veyra, Helena veya Brandt arasından seçiliyor. R1 bütçe kararları ve mali rapor akışı geçişte sürüyor.
+
+Seçim/güven oyu rastgeleliği `government_rng` üzerinden gidiyor; ana ve meclis üreteçlerinin durumu değişmiyor. Kayıt v18; v17 kayıtlarında mevcut kabine ve ayrı üreteç varsayılanları göç sırasında ekleniyor.
+
+| Bot / ölçüm (80 kampanya, Kolay / Normal / Zor) | Kolay | Normal | Zor | Ölçüt tavanının %70'i |
+|---|---:|---:|---:|---:|
+| Ölçüt (`advice_weighted`) | 62/80 | 31/80 | 17/80 | — |
+| Her güven oyunda baskıyla kurtar (`confidence_force`) | 38/80 | 10/80 | 3/80 | 43,4 / 21,7 / 11,9 |
+| Her güven oyunda hükümeti düşür (`confidence_fall`) | 37/80 | 11/80 | 3/80 | 43,4 / 21,7 / 11,9 |
+| Mecliste hiç oy verme (`parliament_abstain`) | 29/80 | 10/80 | 4/80 | 43,4 / 21,7 / 11,9 |
+
+Ölçüt hedefi 62/30/13; sapma 0/+1/+4, kapı ±4 içinde. Üç uç botun her biri ilgili ölçütün %70 tavanının altında. En düşük tempo ilk 8 haftada 0,81 olay/hafta; en uzun olaysız seri 3 hafta. `--full --seed=101` hem TR hem EN: 104 hafta / TAHTTA / Medya Rejimi / 112 olay, taban değişmedi. `tests/en_leak_test.gd`: 5 kampanyada 0 benzersiz sızıntı; `tools/i18n_missing.py`: 0 eksik çeviri.
+
+`tests/election_test.gd` seçim etkenlerini ve RNG yalıtımını, erken seçim yasası eşiğini, hükümet kurma/güven oyu geçişini, Helena'nın mali raporu devralmasını, bütçe akışını, v17→v18 göçünü ve üç başarımı denetler. Tam test paketi bu oturumda exit 0 ile tamamlandı; test adları ve görsel kapı notları `docs/roadmap/FAZ7_ILERLEME.md` içinde.
