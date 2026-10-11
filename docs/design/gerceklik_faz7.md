@@ -127,3 +127,22 @@ Yasa etkileri: basın yasası Leyla'nın ücretsiz basın etkisini zayıflatırk
 Tempo kapısı: ilk sekiz haftada en düşük dilim 0,81 olay/hafta; en uzun olaysız seri 3 hafta. `--full --seed=101`, TR ve EN: 104 hafta / TAHTTA / Medya Rejimi / 112 olay. `tests/*.gd` kapıları çalıştırıldı; `tests/title_shot.gd` ve `ux_audit.gd` bu kapsam dışında bırakıldı, ikincisi ekran görüntüsü yığını üretiyor. `en_leak_test.gd`: 5 kampanya, 0 sızıntı; `tools/i18n_missing.py`: 0.
 
 EN/TR masaüstü ve mobil ekranları açılıp gözle kontrol edildi: kanun teklifi kartı, Günlükte yürürlükteki yasa satırı ve masaüstü Divan listesindeki aynı satır. Çeviri, nitel etki metni ve mobilde satır/düğme taşması kontrol edildi. Geçici ekran görüntüleri inceleme sonrası silindi. `--full` kapanışında Godot'un bilinen ObjectDB/resource cleanup uyarıları görüldü; kapılar exit 0 ile geçti.
+
+## Kalibrasyon
+
+Önceki `advice_weighted` probe'unda Kolay 56/80, Normal 33/80, Zor 19/80 idi; Kolay'da yabancı müdahalesi 11/80 kayıp, Zor'da darbe dışı kayıplar 12/80'di. Vergi yasası haftada yalnızca 0,02 hazine getirirken huzursuzluğu Kolay/Normal/Zor'da 0,16/0,25/1,2 artırıyordu: gelir R1 kaynaklı dış baskıyı dengelemeye yetmiyor, huzursuzluk da Zor'daki darbe dışı kayıp yolunu belirliyordu. `_tick_external_pressure()` düşük hazineyi Asteria/Seravia baskısına, yasa kaynaklı huzursuzluk ise sokak ve meşruiyet kayıplarına taşır. Bu nedenle Easy'de vergi gelirini yükseltip yükü hafiflettim; Zor'da daha ağır yük uyguladım. Ordu yasasının Arden gücü artışı da askerî darbe baskısıdır; zorlukla 1/2/4'e ölçeklendi.
+
+Vergi yasası artık haftalık R1 geliri ve huzursuzluk yükünü zorlukla ölçekler: gelir 0,15/0,02/0,02; tek seferlik huzursuzluk 0/2/4; haftalık huzursuzluk 0/0,75/2,4. Son probe'da Easy yabancı müdahalesi 11'den 6'ya indi; Zor darbe dışı kayıp 12'den 16'ya çıktı ve ölçüt zor skoru hedefe yaklaştı.
+
+| Ölçüm (80 kampanya) | Önce | Kalibrasyon sonrası |
+|---|---:|---:|
+| Ölçüt Kolay | 56/80 | 63/80 |
+| Ölçüt Normal | 33/80 | 30/80 |
+| Ölçüt Zor | 19/80 | 14/80 |
+| Kolay yabancı müdahalesi kaybı | 11/80 | 6/80 |
+| Zor darbe dışı kayıp | 12/80 | 16/80 |
+| Zor darbe kaybı (askerî + saray) | 49/80 | 50/80 |
+
+Sonuçlar istenen 60–64 / 28–32 / 11–15 bantlarında. Uç botlar sırasıyla Kolay/Normal/Zor: baskıyla geçir 43/12/4, geri çekil 41/7/4, oy verme 33/5/1, `advice_austere` 18/11/2, `advice_lavish` 24/16/7. Ölçüt gerçek değerinin %70 tavanları 44,1/21/9,8; tümü altında. Tempo ilk dilimde 0,81 olay/hafta; en uzun olaysız seri 2 hafta. `--full --seed=101` TR/EN 104 hafta / TAHTTA / Medya Rejimi / 112 olay.
+
+EN masaüstü ve mobil üretim metin taramasındaki tek kaçak, bütçe olayıyla üretilebilen “Saray tahsisi büyüdü” olgusuydu; İngilizce karşılığı eklendikten sonra tarama 4.506 metinde 0 şüpheli verdi. `i18n_missing.py`: 0.

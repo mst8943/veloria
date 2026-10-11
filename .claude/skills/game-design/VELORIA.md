@@ -133,11 +133,13 @@ Tempo: 57–96 arası her dilim ≥0,8 olay/hafta. Kayıplar hâlâ ~%95 darbe (
 - Kayıpların çoğu hâlâ askerî darbe (artık kriz kartından geçerek). Ünvan çeşitliliği arttı ama hâlâ çoğu "… Kuklası".
 - Olay/hafta: ilk yıl ~1.2, ikinci yıl ~0.5; 71 olayın 6'sı 52.+ hafta.
 
-## Ölçülmüş durum (2026-10-11, R3a meclis teklifleri, 80 kampanya)
+## Ölçülmüş durum (2026-10-11, R3b sonrası denge kalibrasyonu, 80 kampanya)
 | Bot | Kolay | Normal | Zor |
 |---|---:|---:|---:|
-| advice_weighted (hedef 62/30/13) | 60/80 | 30/80 | 13/80 |
-| parliament_force | 43/80 | 9/80 | 6/80 |
+| advice_weighted (hedef 60–64/28–32/11–15) | 63/80 | 30/80 | 14/80 |
+| parliament_force | 43/80 | 12/80 | 4/80 |
 | parliament_withdraw | 41/80 | 7/80 | 4/80 |
 | parliament_abstain | 33/80 | 5/80 | 1/80 |
-Ölçüt farkı: −2,5/0/0 yüzde puan; uç botlar ölçütün %70 tavanını aşmadı. `--full --seed=101` TR/EN: 104 hafta / TAHTTA / Medya Rejimi / 112 olay.
+| advice_austere | 18/80 | 11/80 | 2/80 |
+| advice_lavish | 24/80 | 16/80 | 7/80 |
+Ölçüt hedefinden fark +1,25/0/1,25 yüzde puan; %70 tavanı 44,1/21/9,8, tüm uç botlar altında. Kolay yabancı müdahalesi 6/80; tempo en düşük 0,81, en uzun olaysız seri 2 hafta. `--full --seed=101` TR/EN: 104 hafta / TAHTTA / Medya Rejimi / 112 olay.
