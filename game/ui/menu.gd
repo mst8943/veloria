@@ -113,18 +113,30 @@ func _build() -> void:
 	box.custom_minimum_size.x = 560
 	box.add_theme_constant_override("separation", 12)
 	plate.add_child(box)
-	var title := Label.new()
-	title.text = tr("V E L O R İ A")
-	var shine := ShaderMaterial.new()
-	shine.shader = SHIMMER_SHADER
-	shine.set_shader_parameter("screen_w", 1067.0 if host._mobile else 1600.0)
-	title.material = shine
-	title.add_theme_font_override("font", UIKit.serif())
-	title.add_theme_font_size_override("font_size", host._fs(60 if host._mobile else 84))
-	title.add_theme_color_override("font_color", UIKit.GOLD)
-	title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.7))
-	title.add_theme_constant_override("shadow_offset_y", 4)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var title: Control
+	var logo_tex: Texture2D = host._art("res://art/logo_seffaf.png")
+	if logo_tex:
+		var logo := TextureRect.new()   # logonun şeffaf sürümü; menü zemini arkasından görünür
+		logo.texture = logo_tex
+		logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		logo.custom_minimum_size = Vector2(0, 150 if host._mobile else 250)
+		logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		title = logo
+	else:
+		var word := Label.new()
+		word.text = tr("V E L O R İ A")
+		var shine := ShaderMaterial.new()
+		shine.shader = SHIMMER_SHADER
+		shine.set_shader_parameter("screen_w", 1067.0 if host._mobile else 1600.0)
+		word.material = shine
+		word.add_theme_font_override("font", UIKit.serif())
+		word.add_theme_font_size_override("font_size", host._fs(60 if host._mobile else 84))
+		word.add_theme_color_override("font_color", UIKit.GOLD)
+		word.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.7))
+		word.add_theme_constant_override("shadow_offset_y", 4)
+		word.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		title = word
 	box.add_child(title)
 	var sub := Label.new()
 	sub.text = tr("Tahtta kalmak, ülkeyi yönetmekten daha zordur.")

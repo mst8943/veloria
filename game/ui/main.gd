@@ -6,6 +6,7 @@ const Loc := preload("res://game/core/loc.gd")
 const ATMOS_SHADER := preload("res://game/ui/atmosphere.gdshader")
 const VIBRANCY_SHADER := preload("res://game/ui/vibrancy.gdshader")
 const CINEMA := preload("res://game/ui/cinema.gd")
+const TITLE_SCREEN := preload("res://game/ui/title_screen.gd")
 const TOUCH_SCROLL := preload("res://game/ui/touch_scroll.gd")
 const MEDIA_VIEW := preload("res://game/ui/media_view.gd")
 const DESK_VIEW := preload("res://game/ui/desk_view.gd")
@@ -187,6 +188,8 @@ func _ready() -> void:
 	else:
 		_show_menu()
 		Sfx.start_music()
+		if not ProjectSettings.get_setting("veloria/dev_intro", false):
+			_show_title.call_deferred()
 		if ProjectSettings.get_setting("veloria/dev_intro", false):
 			Sim.record_chronicle = false
 			Sim.autosave = false
@@ -922,6 +925,15 @@ func _initial_art(id: String, size: Vector2, letter_size := 40) -> Control:
 
 
 # ---------------------------------------------------------------- Akış
+
+## Logo açılışından sonra gelen giriş ekranı; tıklanınca menüye düşer.
+func _show_title() -> void:
+	if get_tree().current_scene != self:
+		return   # yalnızca uygulama açılışında; testler ve geliştirme akışları atlar
+	var title := TITLE_SCREEN.new(self)
+	add_child(title)
+	title.grab_focus()
+
 
 func _show_menu() -> void:
 	_menu.show()

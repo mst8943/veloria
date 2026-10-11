@@ -297,6 +297,15 @@ msgstr "Not enough data."
 msgid "Tahtta kalmak, ülkeyi yönetmekten daha zordur."
 msgstr "Staying on the throne is harder than ruling the country."
 
+msgid "Tahtı korumak zordur."
+msgstr "Holding the throne is hard."
+
+msgid "Devam etmek için tıklayın"
+msgstr "Click to continue"
+
+msgid "Devam etmek için dokunun"
+msgstr "Tap to continue"
+
 msgid "Devam Et"
 msgstr "Continue"
 
