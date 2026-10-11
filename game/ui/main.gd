@@ -1711,6 +1711,7 @@ func _on_week(_w: int) -> void:
 				break
 	_journal.append_text("• %s\n" % Sim.economy_journal_line())
 	_journal.append_text("• %s\n" % Sim.parliament_report_line())
+	_journal.append_text("• %s\n" % Sim.parliament_laws_line())
 	_tabs.current_tab = 0
 
 

@@ -209,6 +209,32 @@ func _run() -> void:
 		await _shot("r3a_divan_report")
 		quit(0)
 		return
+	if "--parliament-laws" in OS.get_cmdline_user_args():
+		main._instant = true
+		sim0.pending.clear()
+		sim0.week = 10
+		sim0._tick_parliament()
+		main._refresh()
+		await _shot("r3b_law_offer")
+		sim0.pending[0]["event"]["proposal"]["bill"] = "press"
+		sim0.parliament_proposals.back()["bill"] = "press"
+		sim0.treasury = 60.0
+		sim0.private_wealth = 60.0
+		sim0.mesai = 4
+		sim0.resolve_decision(0, 3)
+		main._refresh()
+		main._journal.clear()
+		main._on_week(sim0.week)
+		main._select_tab(main._journal)
+		await _shot("r3b_laws_daily")
+		if main._mobile:
+			main._tabs.current_tab = 2
+			main._mobile_report_tabs.current_tab = 2
+		else:
+			main._divan.open()
+		await _shot("r3b_laws_divan")
+		quit(0)
+		return
 	if "--files-journal" in OS.get_cmdline_user_args():
 		main._select_tab(main._files_tab)
 		await _shot("files")

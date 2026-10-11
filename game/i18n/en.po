@@ -4303,6 +4303,93 @@ msgstr "Find a scapegoat"
 msgid "Gündem Değiştir"
 msgstr "Change the subject"
 
+msgid "Yürürlükteki yasalar: Yok."
+msgstr "Laws in force: None."
+
+msgid "Yürürlükteki yasalar: %s."
+msgstr "Laws in force: %s."
+
+msgid "%s — %s"
+msgstr "%s — %s"
+
+msgid "Vergi reformu"
+msgstr "Tax reform"
+
+msgid "Basın yasası"
+msgstr "Press law"
+
+msgid "Ordu bütçesi yasası"
+msgstr "Military budget act"
+
+msgid "Seçim yasası"
+msgstr "Election law"
+
+msgid "Af yasası"
+msgstr "Amnesty law"
+
+msgid "Yargı reformu"
+msgstr "Judicial reform"
+
+msgid "Hazine gelir buluyor; sokak yükünü hissediyor."
+msgstr "The treasury finds revenue; the streets feel the burden."
+
+msgid "Leyla'nın sesi daha az yankı buluyor; rıza aşındı."
+msgstr "Leyla's voice carries less weight; consent has eroded."
+
+msgid "Arden'in etkisi ve ordunun payı genişledi."
+msgstr "Arden's influence and the army's share have grown."
+
+msgid "Erken seçim için daha az meclis desteği yetiyor."
+msgstr "An early election now needs less Assembly support."
+
+msgid "Yargı baskısı bir miktar hafifledi."
+msgstr "Judicial pressure has eased somewhat."
+
+msgid "Mahkemelerin kapasitesi arttı; dosyalar daha düzenli ilerliyor."
+msgstr "Court capacity has grown; cases are moving more orderly."
+
+msgid "Bilinmeyen yasa"
+msgstr "Unknown law"
+
+msgid "Etki bilinmiyor."
+msgstr "The effect is unknown."
+
+msgid "Kabine, %s yasasının geri alınmasını tartışıyor. Bedeli hazineden karşılanmalı."
+msgstr "The cabinet is weighing repeal of the %s. The treasury must cover the cost."
+
+msgid "Yürürlükteki yasa gözden geçiriliyor"
+msgstr "A law in force is under review"
+
+msgid "Yasayı kaldır: %s"
+msgstr "Repeal: %s"
+
+msgid "Yasa yürürlükten kaldırıldı; siyasi bedeli ve hazine masrafı kayda geçti."
+msgstr "The law was repealed; its political and treasury costs were recorded."
+
+msgid "Yasayı koru"
+msgstr "Keep the law"
+
+msgid "Yasa yürürlükte kaldı."
+msgstr "The law remains in force."
+
+msgid "Yasa incelemesi ertelendi."
+msgstr "The law review was postponed."
+
+msgid "Meclis yürürlükteki bir yasayı gözden geçiriyor."
+msgstr "The Assembly is reviewing a law in force."
+
+msgid "Teklif kabul edildi ve yasa yürürlüğe girdi."
+msgstr "The bill passed and the law took effect."
+
+msgid "Teklif kabul edildi; yasa yürürlüğe girdi."
+msgstr "The bill passed; the law took effect."
+
+msgid "Bu yasa zaten yürürlükte değil."
+msgstr "This law is no longer in force."
+
+msgid "Yasayı kaldırmak için hazine yetersiz."
+msgstr "The treasury cannot cover the cost of repeal."
+
 msgid "Soyluların desteği sağlam."
 msgstr "The nobles remain firmly supportive."
 
@@ -4318,8 +4405,8 @@ msgstr "The independents will decide for themselves."
 msgid "Meclis: %s %s"
 msgstr "Assembly: %s %s"
 
-msgid "Baskı kurmak için hazine ve kişisel servet yetersiz."
-msgstr "The treasury and your personal funds are not enough to apply pressure."
+msgid "Baskı kurmak için hazine, kişisel servet ve yeterli otorite gerekir."
+msgstr "Applying pressure requires funds, personal wealth, and enough authority."
 
 msgid "Vergi reformu"
 msgstr "Tax reform"
