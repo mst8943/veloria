@@ -55,6 +55,8 @@ var king_name := KING_NAME
 var dynasty_generation := 1
 var unrest := 30.0
 var economy := 55.0
+var economy_metrics: Dictionary = {"inflation": 45.0, "jobs": 55.0, "debt": 45.0, "trade": 55.0, "growth": 55.0}
+var economy_rng := RandomNumberGenerator.new()
 var opposition := 20.0
 var private_wealth := 10.0
 var capacity: Dictionary = {"maliye": 55.0, "hukuk": 55.0, "ordu": 55.0, "idare": 55.0}
@@ -153,6 +155,7 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 		rng.randomize()
 	else:
 		rng.seed = seed_value
+	economy_rng.seed = rng.seed ^ 0xEC0A07
 	if diff >= 0:
 		difficulty = clampi(diff, 0, DIFFICULTY.size() - 1)
 	mesai_max = int(_diff("mesai"))
@@ -163,6 +166,7 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 	dynasty_generation = maxi(1, int(legacy.get("generation", 1)))
 	unrest = 30.0
 	economy = 55.0
+	economy_metrics = {"inflation": 45.0, "jobs": 55.0, "debt": 45.0, "trade": 55.0, "growth": 55.0}
 	opposition = 20.0
 	private_wealth = 10.0
 	var state_rng := RandomNumberGenerator.new()
@@ -501,11 +505,11 @@ func save_summary() -> String:
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
 ## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Sarne ve kadro günlüğü
-const SAVE_VERSION := 12
+const SAVE_VERSION := 13
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
-	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation"]
+	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -592,6 +596,13 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 	if from < 12:
 		d["king_name"] = KING_NAME
 		d["dynasty_generation"] = 1
+	if from < 13:
+		var old_economy := float(d.get("economy", 55.0))
+		d["economy_metrics"] = {"inflation": 100.0 - old_economy, "jobs": old_economy, "debt": 100.0 - float(d.get("treasury", 55.0)),
+			"trade": old_economy, "growth": old_economy}
+		var old_economy_rng := RandomNumberGenerator.new()
+		old_economy_rng.seed = int(d.get("seed", 1)) ^ 0xEC0A07
+		d["economy_rng"] = old_economy_rng.state
 	if not d.has("foreign"):
 		d["foreign"] = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
 	if not d.has("foreign_hint_until"):
@@ -631,7 +642,8 @@ func save_game() -> bool:
 		"lena_boost_until": lena_boost_until, "kadro_log": kadro_log, "heir_maturity": heir_maturity,
 		"foreign": foreign, "foreign_hint_until": foreign_hint_until, "lang": Loc.lang, "scenario": scenario_id,
 		"ext_pressure": ext_pressure, "ext_rng": ext_rng.state, "external_history": external_history,
-		"endless": endless, "king_name": king_name, "dynasty_generation": dynasty_generation, "version": SAVE_VERSION}
+		"endless": endless, "king_name": king_name, "dynasty_generation": dynasty_generation,
+		"economy_metrics": economy_metrics, "economy_rng": economy_rng.state, "version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -719,6 +731,8 @@ func load_game() -> bool:
 	foreign = d["foreign"]
 	foreign_hint_until = int(d["foreign_hint_until"])
 	ext_pressure = d["ext_pressure"]
+	economy_metrics = d.get("economy_metrics", {"inflation": 100.0 - economy, "jobs": economy, "debt": 100.0 - treasury, "trade": economy, "growth": economy})
+	economy_rng.state = int(d.get("economy_rng", int(d.get("seed", 1)) ^ 0xEC0A07))
 	external_history = d["external_history"]
 	for id in d["actors"]:
 		if actors.has(id):
@@ -1845,6 +1859,7 @@ func _world_tick() -> void:
 	_tick_holding()
 	_tick_foreign()
 	_tick_external_pressure()
+	_update_economy_metrics()
 	if heir_maturity >= 70.0 and actors.has("julian") and not actors["julian"].moved:
 		unrest = maxf(0.0, unrest - 0.015)
 		king_strength = minf(100.0, king_strength + 0.0075)
@@ -3453,7 +3468,7 @@ func echo_level() -> float:
 func _domain_truth(domain: String) -> float:
 	match domain:
 		"economy":
-			return economy * 0.7 + treasury * 0.3
+			return _economy_health() * 0.7 + treasury * 0.3
 		"army":
 			return clampf(unrest * 0.5 + maxf(0.0, 55.0 - _army_loyalty()), 0.0, 100.0)
 		"gate":
@@ -3474,6 +3489,45 @@ func _domain_truth(domain: String) -> float:
 			return 100.0 - _foreign_average()
 		_:
 			return unrest
+
+
+func _economy_health() -> float:
+	return clampf((100.0 - float(economy_metrics.get("inflation", 45.0))) * 0.18
+		+ float(economy_metrics.get("jobs", economy)) * 0.25
+		+ (100.0 - float(economy_metrics.get("debt", 45.0))) * 0.15
+		+ float(economy_metrics.get("trade", economy)) * 0.12
+		+ float(economy_metrics.get("growth", economy)) * 0.30, 0.0, 100.0)
+
+
+func _update_economy_metrics() -> void:
+	# Keep the old summary as the weighted target while the separate RNG supplies noisy detail.
+	var target := economy
+	var jitter := economy_rng.randf_range(-3.0, 3.0)
+	economy_metrics["inflation"] = clampf(lerpf(float(economy_metrics["inflation"]), 100.0 - target + unrest * 0.16 + jitter, 0.35), 0.0, 100.0)
+	economy_metrics["jobs"] = clampf(lerpf(float(economy_metrics["jobs"]), target - unrest * 0.12 + jitter, 0.3), 0.0, 100.0)
+	economy_metrics["debt"] = clampf(lerpf(float(economy_metrics["debt"]), 100.0 - treasury + jitter, 0.3), 0.0, 100.0)
+	economy_metrics["trade"] = clampf(lerpf(float(economy_metrics["trade"]), (float(foreign["asteria"]) + float(foreign["seravia"])) * 0.5 + jitter, 0.3), 0.0, 100.0)
+	var known := ((100.0 - float(economy_metrics["inflation"])) * 0.18 + float(economy_metrics["jobs"]) * 0.25
+		+ (100.0 - float(economy_metrics["debt"])) * 0.15 + float(economy_metrics["trade"]) * 0.12)
+	economy_metrics["growth"] = clampf((target - known) / 0.30, 0.0, 100.0)
+	economy = _economy_health()
+
+
+func economy_report(source: String) -> String:
+	var flattering: float = actors[source].flattery() * 0.35 if source == "kessler" and actors.has(source) else 0.0
+	var noise: float = economy_rng.randf_range(-9.0, 9.0)
+	var prices: float = float(economy_metrics["inflation"]) - flattering * 12.0 + noise
+	var jobs_value: float = float(economy_metrics["jobs"]) + flattering * 8.0 + noise * 0.5
+	var debt_value: float = float(economy_metrics["debt"]) - flattering * 10.0 - noise * 0.4
+	var trade_value: float = float(economy_metrics["trade"]) + noise * (0.35 if source == "halden" else 0.15)
+	var growth_value: float = float(economy_metrics["growth"]) + noise * 0.5
+	var lines: Array[String] = [
+		tr("Fiyatlar %s.") % tr("tırmanıyor" if prices >= 65.0 else ("oynak" if prices >= 42.0 else "sakin")),
+		tr("İş piyasası %s.") % tr("daralıyor" if jobs_value < 38.0 else ("yavaşlıyor" if jobs_value < 58.0 else "canlı")),
+		tr("Borç yükü %s.") % tr("ağır" if debt_value >= 68.0 else ("hissediliyor" if debt_value >= 42.0 else "hafif")),
+		tr("Ticaret %s, üretim %s.") % [tr("geriliyor" if trade_value < 40.0 else ("temkinli" if trade_value < 60.0 else "akıyor")), tr("yavaş" if growth_value < 40.0 else ("ılımlı" if growth_value < 60.0 else "genişliyor"))]
+	]
+	return " ".join(lines)
 
 
 func _army_loyalty() -> float:
@@ -3544,6 +3598,8 @@ func _generate_reports() -> void:
 		var rb := _band(a, reported)
 		var tb := _band(a, _domain_truth(a.domain))
 		var line: String = _phrase(a, reported, echo)
+		if a.domain == "economy":
+			line += " " + economy_report(a.id)
 		if echo <= 0.75 and INSTITUTION_HEADS.has(a.id):
 			var institution: String = INSTITUTION_HEADS[a.id]
 			var variants: Array = REPORT_CONTENT["state"][institution][capacity_band(institution)]

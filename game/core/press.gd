@@ -147,7 +147,12 @@ static func edition(sim: Node, outlet: String) -> Dictionary:
 	out["lead"] = sub
 	out["art"] = art
 	var cols: Array = []
-	var eb := _band(_seen(sim.economy, true, f), true)
+	var economy_view := (float(sim.economy_metrics["growth"]) * 0.35 + float(sim.economy_metrics["jobs"]) * 0.25
+		+ (100.0 - float(sim.economy_metrics["inflation"])) * 0.2 + (100.0 - float(sim.economy_metrics["debt"])) * 0.2)
+	if outlet == "free":
+		economy_view = ((100.0 - float(sim.economy_metrics["inflation"])) * 0.45 + float(sim.economy_metrics["jobs"]) * 0.25
+			+ (100.0 - float(sim.economy_metrics["debt"])) * 0.3)
+	var eb := _band(_seen(economy_view, true, f), true)
 	cols.append({"title": "EKONOMİ", "head": ECON[outlet][eb][0], "body": ECON[outlet][eb][1]})
 	var sb := _band(_seen(sim.unrest, false, f), false)
 	cols.append({"title": "SOKAK", "head": STREET[outlet][sb][0], "body": STREET[outlet][sb][1]})
