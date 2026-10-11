@@ -13,8 +13,8 @@
   "claire": {"name": "Claire Duvall", "title": "Ambassador of Asteria", "weak_point": "Her old secret meetings with the Palace"},
   "malenkov": {"name": "Viktor Malenkov", "title": "Ambassador of Drakon", "weak_point": "The list of his Capital intermediaries"},
   "lucien": {"name": "Lucien Vale", "title": "Economic Envoy of Seravia", "weak_point": "His port partners' hidden stake"},
-  "governor_capital": {"name": "Mira Solen", "title": "Governor of the Capital", "red_line": "Use of force against civilians", "weak_point": "Her old ties to the Palace"},
-  "governor_industry": {"name": "Tarin Vey", "title": "Governor of the Industrial Belt", "red_line": "Crushing the workers", "weak_point": "An old strike file"},
-  "governor_farmland": {"name": "Nera Aven", "title": "Governor of the Farming Plains", "red_line": "Evicting villages", "weak_point": "A land dispute"},
-  "governor_border": {"name": "Oren Dask", "title": "Governor of the Border Provinces", "red_line": "Abandoning border villages", "weak_point": "An old smuggling inquiry"}
+  "governor_capital": {"name": "Mira Solen", "title": "Governor of the Capital", "weak_point": "Her old ties to the Palace"},
+  "governor_industry": {"name": "Tarin Vey", "title": "Governor of the Industrial Belt", "weak_point": "An old strike file"},
+  "governor_farmland": {"name": "Nera Aven", "title": "Governor of the Farming Plains", "weak_point": "A land dispute"},
+  "governor_border": {"name": "Oren Dask", "title": "Governor of the Border Provinces", "weak_point": "An old smuggling inquiry"}
 }
