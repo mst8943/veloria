@@ -906,7 +906,7 @@ func _initial_art(id: String, size: Vector2, letter_size := 40) -> Control:
 	else:
 		var hue := float(absi(id.hash()) % 360) / 360.0
 		var c := ColorRect.new()
-		c.color = Color.from_hsv(hue, 0.35, 0.34)
+		c.color = Color.from_hsv(hue, 0.12 if id.begins_with("governor_") else 0.35, 0.22 if id.begins_with("governor_") else 0.34)
 		c.set_anchors_preset(Control.PRESET_FULL_RECT)
 		c.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		box.add_child(c)

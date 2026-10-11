@@ -252,7 +252,8 @@ func _place(card: Control, target: Node) -> void:
 	if card.get_parent() != null:
 		card.get_parent().remove_child(card)
 	target.add_child(card)
-	card.custom_minimum_size = Vector2(76, 76) if target == strip else Vector2(108, 96)
+	var compact_governor: bool = not host._mobile and str(card.get_meta("id", "")).begins_with("governor_")
+	card.custom_minimum_size = Vector2(76, 76) if target == strip else (Vector2(78, 70) if compact_governor else Vector2(108, 96))
 
 
 func open() -> void:
