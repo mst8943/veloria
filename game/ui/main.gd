@@ -928,7 +928,9 @@ func _show_menu() -> void:
 	# İlk düğme duruma göre: oyun sürüyorsa "Oyuna Dön", yoksa kayıttan "Devam Et".
 	var b_first := _menu.get_meta("first") as Button
 	var b_new := _menu.get_meta("new") as Button
+	var b_dynasty := _menu.get_meta("dynasty") as Button
 	var in_game: bool = not Sim.ended and not Sim.actors.is_empty()
+	b_dynasty.visible = not in_game and Sim.can_continue_dynasty()
 	if in_game:
 		b_first.text = tr("Oyuna Dön")
 		b_first.disabled = false
@@ -972,6 +974,18 @@ func _request_new_game() -> void:
 		_start_new(0, -1, false, selected_scenario)
 
 
+func _request_dynasty_game() -> void:
+	if not Sim.can_continue_dynasty():
+		return
+	var legacy := Sim.dynasty_legacy()
+	var in_progress: bool = not Sim.actors.is_empty() and not Sim.ended and Sim.week > 1
+	if in_progress or (Sim.actors.is_empty() and Sim.has_save()):
+		_show_modal(tr("Süren ya da kayıtlı bir saltanat var. Hanedan devam ederse bu kayıt üzerine yazılacak."),
+			tr("Hanedan Devam"), _start_new.bind(0, Sfx.difficulty, false, "", legacy))
+	else:
+		_start_new(0, Sfx.difficulty, false, "", legacy)
+
+
 func _request_daily_game() -> void:
 	var in_progress: bool = not Sim.actors.is_empty() and not Sim.ended and Sim.week > 1
 	if in_progress or (Sim.actors.is_empty() and Sim.has_save()):
@@ -987,10 +1001,10 @@ func _begin_daily_game() -> void:
 	_start_new(_daily_seed, 1, true)
 
 
-func _start_new(seed_value := 0, diff := -1, daily := false, scenario := "") -> void:
+func _start_new(seed_value := 0, diff := -1, daily := false, scenario := "", legacy: Dictionary = {}) -> void:
 	_daily_run = daily
 	Sim.save_path = Sim.DEFAULT_SAVE_PATH
-	Sim.new_game(seed_value, diff if diff >= 0 else Sfx.difficulty, scenario)
+	Sim.new_game(seed_value, diff if diff >= 0 else Sfx.difficulty, scenario, legacy)
 	if Sim.content_error != "":
 		_show_modal(tr("[b]İçerik yüklenemedi[/b]\n\n%s") % Sim.content_error)
 		return

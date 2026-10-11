@@ -21,10 +21,12 @@ const EVENTS_PATH := "res://game/data/events.json"
 const CHRONICLE_PATH := "user://veloria_chronicle.txt"
 const DAILY_PATH := "user://daily.cfg"
 const LEGACY_PATH := "res://game/data/legacy.json"
+const DYNASTY_PATH := "user://dynasty.cfg"
 const DEFAULT_SAVE_PATH := "user://veloria_save.txt"
 const EXTENSION_SAVE_PATH := "user://veloria_extension_save.txt"
 const EXTENSION_ACHIEVEMENTS_PATH := "user://veloria_extension_achievements.txt"
 var save_path := "user://veloria_save.txt"   # testler kendi dosyasını kullanır, oyuncunun kaydına dokunmaz
+var dynasty_path := DYNASTY_PATH
 var record_chronicle := true                 # testlerde ve otomatik oynatmada arşive yazılmaz
 var autosave := true                         # her hafta sonunda otomatik kayıt
 var timeline: Array = []                     # haftalık gerçek durum (oyun sonunda gösterilir)
@@ -50,6 +52,7 @@ var week := 1
 var mesai := MESAI_PER_WEEK
 var king_strength := 60.0   # gerçek güç (oyuncu görmez)
 var king_name := KING_NAME
+var dynasty_generation := 1
 var unrest := 30.0
 var economy := 55.0
 var opposition := 20.0
@@ -157,6 +160,7 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 	mesai = mesai_max
 	king_strength = 60.0
 	king_name = str(legacy.get("next_king", KING_NAME))
+	dynasty_generation = maxi(1, int(legacy.get("generation", 1)))
 	unrest = 30.0
 	economy = 55.0
 	opposition = 20.0
@@ -263,8 +267,10 @@ func _apply_legacy(legacy: Dictionary) -> void:
 				"debt":
 					treasury = clampf(treasury + amount, 0.0, 100.0)
 					foreign["seravia"] = clampf(float(foreign.get("seravia", 50.0)) - 3.0, 0.0, 100.0)
-				"open_case": facts["legacy_open_case"] = {"id": "legacy_open_case", "text": tr("Önceki saltanattan kalan açık dosya"), "subject": "king", "severity": 12.0, "public": false, "knowers": ["vale"]}
-				"regime": flags["LEGACY_REGIME_SHADOW"] = str(legacy.get("regime", ""))
+				"open_case": facts["legacy_open_case"] = {"id": "legacy_open_case", "text": "Önceki saltanattan kalan açık dosya", "text_en": Loc.en("Önceki saltanattan kalan açık dosya"), "subject": "king", "severity": 12.0, "public": false, "knowers": ["vale"], "common": 0.0, "copies": 1, "leakiness": 0.5}
+				"regime":
+					flags["LEGACY_REGIME_SHADOW"] = str(legacy.get("regime", ""))
+					treasury = minf(100.0, treasury + 1.0)
 				"wear": king_strength = clampf(king_strength + amount * float(maxi(1, int(legacy.get("generation", 1)))), 0.0, 100.0)
 			break
 
@@ -279,16 +285,71 @@ func legacy_for_next_reign(generation: int) -> Dictionary:
 		if str(fact.get("subject", "")) == "king" and not bool(fact.get("resolved", false)):
 			has_open_case = true
 			break
-	if has_open_case:
-		effects.append("open_case")
-	elif effects.has("treasury_full") and effects.has("army_loyal"):
-		effects.append("reign_wear")
-	elif effects.has("treasury_debt") and effects.has("army_resentful"):
+	if effects.has("treasury_debt") and effects.has("army_resentful"):
 		effects.append("regime_shadow")
+	elif has_open_case:
+		effects.append("open_case")
 	else:
 		effects.append("reign_wear")
 	return {"generation": generation, "ruler": king_name, "next_king": "Julian Valerius" if flags.has("halef_karari_1") else king_name,
 		"effects": effects, "title": str(record.get("title", "")), "regime": regime}
+
+
+func dynasty_record() -> Dictionary:
+	var cfg := ConfigFile.new()
+	if cfg.load(dynasty_path) != OK:
+		return {"generations": 0, "eligible": false, "legacy": {}, "entries": []}
+	return {"generations": int(cfg.get_value("dynasty", "generations", 0)),
+		"eligible": bool(cfg.get_value("dynasty", "eligible", false)),
+		"score": int(cfg.get_value("dynasty", "score", 0)),
+		"legacy": cfg.get_value("dynasty", "legacy", {}), "entries": cfg.get_value("dynasty", "entries", [])}
+
+
+func dynasty_legacy() -> Dictionary:
+	return dynasty_record().get("legacy", {})
+
+
+func legacy_effect(effect_id: String) -> Dictionary:
+	var file := FileAccess.open(LEGACY_PATH, FileAccess.READ)
+	var rows: Variant = JSON.parse_string(file.get_as_text()) if file else null
+	if not rows is Array:
+		return {}
+	for row: Dictionary in rows:
+		if str(row.get("id", "")) == effect_id:
+			if Loc.lang == "en":
+				var overlay_file := FileAccess.open("res://game/data/en/legacy.json", FileAccess.READ)
+				var overlay: Variant = JSON.parse_string(overlay_file.get_as_text()) if overlay_file else null
+				if overlay is Dictionary and overlay.has(effect_id):
+					row.merge(overlay[effect_id], true)
+			return row
+	return {}
+
+
+func can_continue_dynasty() -> bool:
+	return bool(dynasty_record().get("eligible", false)) and dynasty_legacy().size() > 0
+
+
+func _record_dynasty(result: Dictionary) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(dynasty_path)
+	var entries: Array = cfg.get_value("dynasty", "entries", [])
+	var total_score := int(cfg.get_value("dynasty", "score", 0))
+	var continue_allowed := bool(result.get("survived", false)) and flags.has("halef_karari_1")
+	var generations := dynasty_generation if continue_allowed else 0
+	if continue_allowed:
+		var title := str(result.get("title", ""))
+		var regime_title := str(result.get("regime", ""))
+		var score := int(result.get("weeks", 0)) + (20 if result.get("survived", false) else 0)
+		entries.append({"generation": dynasty_generation, "king": str(result.get("king", KING_NAME)), "title": title, "title_en": Loc.en(title),
+			"regime": regime_title, "regime_en": Loc.en(regime_title), "weeks": int(result.get("weeks", 0)), "score": score})
+		total_score += score
+	var legacy := legacy_for_next_reign(dynasty_generation + 1) if continue_allowed else {}
+	cfg.set_value("dynasty", "generations", generations)
+	cfg.set_value("dynasty", "score", total_score if continue_allowed else 0)
+	cfg.set_value("dynasty", "eligible", continue_allowed)
+	cfg.set_value("dynasty", "legacy", legacy)
+	cfg.set_value("dynasty", "entries", entries.slice(maxi(0, entries.size() - 50)))
+	cfg.save(dynasty_path)
 
 
 ## Türkçe ek uyumu: özel isme kesme işaretiyle doğru eki ekler.
@@ -440,11 +501,11 @@ func save_summary() -> String:
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
 ## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Sarne ve kadro günlüğü
-const SAVE_VERSION := 11
+const SAVE_VERSION := 12
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
-	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history"]
+	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -528,6 +589,9 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 		old_ext_rng.seed = int(d.get("seed", 1)) ^ 0xB1E710
 		d["ext_rng"] = old_ext_rng.state
 		d["external_history"] = []
+	if from < 12:
+		d["king_name"] = KING_NAME
+		d["dynasty_generation"] = 1
 	if not d.has("foreign"):
 		d["foreign"] = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
 	if not d.has("foreign_hint_until"):
@@ -567,7 +631,7 @@ func save_game() -> bool:
 		"lena_boost_until": lena_boost_until, "kadro_log": kadro_log, "heir_maturity": heir_maturity,
 		"foreign": foreign, "foreign_hint_until": foreign_hint_until, "lang": Loc.lang, "scenario": scenario_id,
 		"ext_pressure": ext_pressure, "ext_rng": ext_rng.state, "external_history": external_history,
-		"endless": endless, "version": SAVE_VERSION}
+		"endless": endless, "king_name": king_name, "dynasty_generation": dynasty_generation, "version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -625,6 +689,8 @@ func load_game() -> bool:
 			load_error = "Kayıt dosyası eksik ya da bozuk ('%s' yok)." % k
 			return false
 	new_game(int(d.get("seed", 1)), int(d.get("diff", 1)))
+	king_name = str(d["king_name"])
+	dynasty_generation = maxi(1, int(d["dynasty_generation"]))
 	scenario_id = str(d.get("scenario", ""))
 	endless = bool(d.get("endless", false))
 	if scenario_id != "":
@@ -2939,7 +3005,7 @@ func _resolve_other(action: String) -> String:
 		flags["ASSASSINATION_SURVIVED"] = week
 		king_strength = maxf(0.0, king_strength - 12.0)
 		_add_fact("saldiri_gecesi_%d" % week, "Hükümdar saldırı gecesinden yaralı kurtuldu", "king", 35, ["voss", "arden", "elena"], 1)
-		plot_log.append({"w": week, "name": KING_NAME, "text": "suikast girişiminden yaralı kurtuldu"})
+		plot_log.append({"w": week, "name": king_name, "text": "suikast girişiminden yaralı kurtuldu"})
 		if action == "security" and actors.has("voss"):
 			actors["voss"].power = maxf(0.0, actors["voss"].power - 5.0)
 		elif action == "route":
@@ -3150,6 +3216,7 @@ func _end(survived: bool) -> void:
 		"scenario": scenario_id, "scenario_name": scenario_name, "endless": endless, "external_history": external_history.duplicate(true)}
 	record["new_achievements"] = _award_achievements(survived, title, cause) if record_chronicle else []
 	if record_chronicle:
+		_record_dynasty(record)
 		_append_chronicle(record)
 	# Biten saltanata kayıttan geri dönülmez: tarih tek yönlüdür.
 	if autosave and FileAccess.file_exists(save_path):
@@ -3219,6 +3286,12 @@ func _award_achievements(survived: bool, title: String, cause: String) -> Array:
 	var earned: Array = ["ilk_saltanat"]
 	if survived:
 		earned.append("tahtta_kal")
+		if dynasty_generation >= 2:
+			earned.append("kusaklar")
+		if dynasty_generation >= 3:
+			earned.append("uc_nesil")
+		if dynasty_generation >= 5:
+			earned.append("bes_nesil")
 		if difficulty == 2:
 			earned.append("zor_zafer")
 		if int(stats.get("bribes", 0)) == 0 and int(stats.get("blackmails", 0)) == 0 and int(stats.get("written", 0)) == 0:

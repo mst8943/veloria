@@ -17,6 +17,15 @@ func _init() -> void:
 	_check("miras ayrı RNG tüketmiyor", plain.rng.state == inherited.rng.state)
 	_check("miras etkileri ve nesil aşınması", inherited.king_name == "Julian Valerius" and inherited.treasury > plain.treasury
 		and inherited.actors["arden"].loyalty["career"] > plain.actors["arden"].loyalty["career"] and inherited.king_strength == 54.0)
+	var open_case = SimScript.new()
+	open_case.record_chronicle = false
+	open_case.autosave = false
+	open_case.new_game(101, -1, "", {"generation": 2, "effects": ["open_case"]})
+	_check("açık dosya iki dilde ve geçerli şemayla taşınır", open_case.facts.has("legacy_open_case")
+		and open_case.facts["legacy_open_case"].common == 0.0 and open_case.facts["legacy_open_case"].text_en != "")
+	var overlay_file := FileAccess.open("res://game/data/en/legacy.json", FileAccess.READ)
+	var overlay: Dictionary = JSON.parse_string(overlay_file.get_as_text())
+	_check("legacy etkilerinin EN adları tamam", overlay.size() == 7)
 	plain.flags["halef_karari_1"] = 100
 	var plan: Dictionary = plain.legacy_for_next_reign(1)
 	var effects: Array = plan["effects"]
@@ -33,6 +42,7 @@ func _init() -> void:
 	_check("halef sonucu Julian'ı seçiyor", plan["next_king"] == "Julian Valerius")
 	plain.free()
 	inherited.free()
+	open_case.free()
 	print("LEGACY: OK" if _ok else "LEGACY: FAIL")
 	quit(0 if _ok else 1)
 

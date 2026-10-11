@@ -24,6 +24,8 @@ var sim: Node
 var rng := RandomNumberGenerator.new()
 const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "advice_patron", "advice_veliaht", "advice_heyet", "advice_bloc", "visible_wise", "omniscient"]
 var style := ""   # advice_soft / advice_dirty oyun tarzı
+var dynasty_probe := false
+var dynasty_cap_ok := true
 
 
 func _initialize() -> void:
@@ -44,11 +46,58 @@ func _initialize() -> void:
 			diffs = [0, 1, 2]
 		elif a.begins_with("--bots="):
 			bots = Array(a.substr(7).split(","))
+	if "--dynasty-cap" in OS.get_cmdline_user_args():
+		for d in diffs:
+			_run_dynasty_cap(d, n)
+		quit(0 if dynasty_cap_ok else 1)
+		return
 	for d in diffs:
 		print("=== Zorluk: %s ===" % sim.DIFFICULTY[d]["name"])
 		for bot in bots:
 			_run(bot, d, n)
 	quit(0)
+
+
+func _run_dynasty_cap(diff: int, n: int) -> void:
+	var base_wins := 0
+	var dynasty_wins := 0
+	var carried_runs := 0
+	dynasty_probe = true
+	for seed in range(1, n + 1):
+		var inherited: Dictionary = {}
+		for generation in range(1, 4):
+			var campaign_seed := seed + (generation - 1) * n
+			carried_runs += 1 if not inherited.is_empty() else 0
+			sim.new_game(campaign_seed, diff, "", inherited)
+			rng.seed = campaign_seed * 131 + 7
+			while not sim.ended:
+				_play("advice_weighted")
+				sim.end_week()
+			if sim.record.get("survived", false):
+				dynasty_wins += 1
+				if sim.flags.has("halef_karari_1"):
+					inherited = sim.legacy_for_next_reign(generation + 1)
+				else:
+					inherited = {}
+			else:
+				inherited = {}
+			# Eşlenmiş taban: aynı tohum, aynı bot, miras parametresi olmadan.
+			dynasty_probe = false
+			sim.new_game(campaign_seed, diff)
+			rng.seed = campaign_seed * 131 + 7
+			while not sim.ended:
+				_play("advice_weighted")
+				sim.end_week()
+			if sim.record.get("survived", false):
+				base_wins += 1
+			dynasty_probe = true
+	var base_rate := 100.0 * float(base_wins) / float(n * 3)
+	var dynasty_rate := 100.0 * float(dynasty_wins) / float(n * 3)
+	dynasty_cap_ok = dynasty_cap_ok and dynasty_rate - base_rate <= 8.0
+	print("DYNASTY_CAP %s n=%d base=%d/%d (%.1f%%) dynasty=%d/%d (%.1f%%) delta=%+.1fpp limit=+8pp" % [
+		str(sim.DIFFICULTY[diff]["name"]), n * 3, base_wins, n * 3, base_rate, dynasty_wins, n * 3, dynasty_rate, dynasty_rate - base_rate])
+	print("  inherited campaigns=%d; three sequential campaigns per seed, failed reign resets the streak" % carried_runs)
+	dynasty_probe = false
 
 
 func _run(bot: String, diff: int, n: int) -> void:
@@ -167,7 +216,9 @@ func _decide(bot: String) -> void:
 		guard += 1
 		var ev: Dictionary = sim.pending[0]["event"]
 		var ci: int = rng.randi() % ev["choices"].size()
-		if ev.get("crisis", false):
+		if dynasty_probe and str(ev.get("id", "")) == "halef_karari":
+			ci = 1
+		elif ev.get("crisis", false):
 			ci = _crisis_choice(bot, ev, ci)
 		elif ev.get("kind", "") == "budget" and bot == "advice_austere" and (sim.difficulty != 2 or sim.week != 91):
 			ci = 0

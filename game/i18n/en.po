@@ -3999,3 +3999,36 @@ msgstr "public appearance"
 
 msgid "Önceki saltanattan kalan açık dosya"
 msgstr "An open file carried over from the previous reign"
+
+msgid "Hanedan Devam"
+msgstr "Continue dynasty"
+
+msgid "Hanedan Defteri"
+msgstr "Dynasty ledger"
+
+msgid "HANEDAN DEFTERİ"
+msgstr "DYNASTY LEDGER"
+
+msgid "Tahtta kalıp veliaht kararını veren her nesil burada kayda geçer."
+msgstr "Each generation that keeps the throne and names an heir is recorded here."
+
+msgid "Henüz hanedan kaydı yok."
+msgstr "There are no dynasty records yet."
+
+msgid "Etkin nesil: %d\n\n"
+msgstr "Current generation: %d\n\n"
+
+msgid "Nesil %d"
+msgstr "Generation %d"
+
+msgid "Rejim kaydı yok"
+msgstr "No regime recorded"
+
+msgid "Sonraki saltanatın mirası"
+msgstr "Legacy for the next reign"
+
+msgid "Süren ya da kayıtlı bir saltanat var. Hanedan devam ederse bu kayıt üzerine yazılacak."
+msgstr "A reign is in progress or saved. Continuing the dynasty will overwrite that save."
+
+msgid "Etkin nesil: %d · Hanedan puanı: %d\n\n"
+msgstr "Current generation: %d · Dynasty score: %d\n\n"

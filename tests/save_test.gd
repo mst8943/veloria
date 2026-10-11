@@ -30,6 +30,8 @@ func _init() -> void:
 	var cap: Dictionary = sim.capacity.duplicate()
 	var holding_before: float = sim.holding
 	var heir_before: float = sim.heir_maturity
+	sim.king_name = "Julian Valerius"
+	sim.dynasty_generation = 3
 	var foreign_before: Dictionary = sim.foreign.duplicate()
 	sim.ext_pressure["drakon"] = 41.0
 	sim.ext_rng.randf()
@@ -42,7 +44,8 @@ func _init() -> void:
 	_check("gidiş-dönüş", loaded and sim.week == wk and sim.week_changes.size() == changes and same_cap and sim.capacity_timeline.size() == sim.timeline.size()
 		and not sim.capacity_timeline.is_empty() and sim.capacity_timeline[-1].has("holding")
 		and absf(sim.holding - holding_before) < 0.001 and sim.halden_hostile_until == 21 and sim.halden_demands == 2 and sim.lena_boost_until == 15 and sim.kadro_log.size() == 1
-		and absf(sim.heir_maturity - heir_before) < 0.001 and sim.actors.has("julian") and sim.actors.has("elena"))
+		and absf(sim.heir_maturity - heir_before) < 0.001 and sim.actors.has("julian") and sim.actors.has("elena")
+		and sim.king_name == "Julian Valerius" and sim.dynasty_generation == 3)
 	var same_foreign: bool = sim.foreign.size() == foreign_before.size()
 	for power in foreign_before:
 		same_foreign = same_foreign and sim.foreign.has(power) and is_equal_approx(float(sim.foreign[power]), float(foreign_before[power]))
@@ -52,6 +55,12 @@ func _init() -> void:
 	var d: Dictionary = str_to_var(f.get_as_text())
 	f.close()
 	_check("sürüm yazıldı", int(d.get("version", 0)) == sim.SAVE_VERSION)
+	var v11 := d.duplicate(true)
+	v11["version"] = 11
+	v11.erase("king_name")
+	v11.erase("dynasty_generation")
+	_write(sim.save_path, v11)
+	_check("v11 hanedan alanları göçü", sim.load_game() and sim.king_name == sim.KING_NAME and sim.dynasty_generation == 1)
 	var v8_i18n := d.duplicate(true)
 	v8_i18n["version"] = 8
 	v8_i18n.erase("lang")

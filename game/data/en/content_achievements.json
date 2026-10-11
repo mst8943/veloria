@@ -27,5 +27,8 @@
   "yabanci_mudahale": ["Broken Sovereign", "Fall from the throne to Drakon intervention."],
   "mali_kusatma": ["Credit Wall", "Fall from the throne in a financial collapse."],
   "suikast": ["Midnight", "Fall from the throne on the night of an assassination."],
-  "yarali_egemen": ["Wounded Sovereign", "Survive an assassination attempt and complete your reign."]
+  "yarali_egemen": ["Wounded Sovereign", "Survive an assassination attempt and complete your reign."],
+  "kusaklar": ["Across Generations", "Complete a second generation through Continue dynasty."],
+  "uc_nesil": ["Three Generations", "Complete a third generation through Continue dynasty."],
+  "bes_nesil": ["The Fifth Crown", "Complete a fifth generation through Continue dynasty."]
 }

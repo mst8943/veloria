@@ -113,6 +113,37 @@ func _run() -> void:
 		await _shot("chronicle")
 		quit(0)
 		return
+	if "--dynasty-ledger" in OS.get_cmdline_user_args():
+		sim0.dynasty_path = "user://dynasty_ui_test.cfg"
+		var cfg := ConfigFile.new()
+		cfg.set_value("dynasty", "generations", 2)
+		cfg.set_value("dynasty", "score", 208)
+		cfg.set_value("dynasty", "eligible", true)
+		cfg.set_value("dynasty", "legacy", {"generation": 3, "regime": "medya", "effects": ["treasury_full", "army_loyal", "reign_wear"]})
+		cfg.set_value("dynasty", "entries", [
+			{"generation": 1, "king": "Adrian IV", "title": "Medya Rejimi", "regime": "Medya Rejimi", "weeks": 104, "score": 124},
+			{"generation": 2, "king": "Julian Valerius", "title": "Liyakat Kralı", "regime": "Medya Rejimi", "weeks": 84, "score": 84}])
+		cfg.save(sim0.dynasty_path)
+		sim0.save_path = "user://dynasty_ui_save_test.txt"
+		sim0.ended = true
+		main._instant = true
+		main._show_menu()
+		if not (main._menu.get_meta("dynasty") as Button).visible:
+			push_error("Hanedan Devam uygun oyuncuya görünmedi")
+			quit(1)
+			return
+		await _shot("dynasty_home")
+		main._menu.show_page("dynasty")
+		await _shot("dynasty_ledger")
+		var ledger_scroll := main._menu.pages["dynasty"].get_child(1) as ScrollContainer
+		var back_button := main._menu.pages["dynasty"].get_child(2) as Button
+		if back_button.custom_minimum_size.y < 44 or ("--mobile" in OS.get_cmdline_user_args() and ledger_scroll.get_v_scroll_bar().max_value <= ledger_scroll.get_v_scroll_bar().page):
+			push_error("Hanedan defteri mobil kaydırma/44px geri düğmesi kapısı başarısız")
+			quit(1)
+			return
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(sim0.dynasty_path))
+		quit(0)
+		return
 	if "--week-curtain" in OS.get_cmdline_user_args():
 		root.get_node("Sfx").short_fx = true
 		main._end_week_pressed()

@@ -114,5 +114,17 @@
   "yarali_egemen": [
     "Yaralı Egemen",
     "Suikast girişiminden yaralı kurtul ve saltanatı tamamla."
+  ],
+  "kusaklar": [
+    "Kuşaklar Boyu",
+    "Hanedan Devam ile ikinci nesli tamamla."
+  ],
+  "uc_nesil": [
+    "Üç Nesil",
+    "Hanedan Devam ile üçüncü nesli tamamla."
+  ],
+  "bes_nesil": [
+    "Beşinci Taç",
+    "Hanedan Devam ile beşinci nesli tamamla."
   ]
 }

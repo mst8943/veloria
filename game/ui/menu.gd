@@ -48,6 +48,7 @@ var items: Array = []        # açılış animasyonu sırası
 var pages: Dictionary = {}
 var page_now := "main"
 var _daily_status: Label
+var _dynasty_text: RichTextLabel
 var scenario_id := ""
 
 
@@ -147,6 +148,8 @@ func _build() -> void:
 		else:
 			host._continue())
 	var b_new := _btn(main_page, tr("Yeni Oyun"), func() -> void: show_page("new"))
+	var b_dynasty := _btn(main_page, tr("Hanedan Devam"), host._request_dynasty_game, true)
+	b_dynasty.visible = false
 	var b_daily := _btn(main_page, tr("Günlük saltanat"), host._request_daily_game, true)
 	b_daily.add_theme_font_override("font", UIKit.serif())
 	b_daily.add_theme_font_size_override("font_size", host._fs(20))
@@ -162,7 +165,7 @@ func _build() -> void:
 	b_tour.theme_type_variation = "GhostButton"
 	var b_quit := _btn(main_page, tr("Çıkış"), func() -> void: get_tree().quit())
 	b_quit.visible = not OS.has_feature("web")   # tarayıcıda çıkış anlamsız
-	for b in [b_first, b_new, b_set, b_tour, b_quit]:
+	for b in [b_first, b_new, b_dynasty, b_daily, b_set, b_tour, b_quit]:
 		b.custom_minimum_size.y = 50 if host._mobile else 58
 		b.add_theme_font_override("font", UIKit.serif())
 		b.add_theme_font_size_override("font_size", host._fs(21))
@@ -170,14 +173,15 @@ func _build() -> void:
 	links.alignment = BoxContainer.ALIGNMENT_CENTER
 	links.add_theme_constant_override("separation", 6)
 	main_page.add_child(links)
-	for l in [[tr("Nasıl Oynanır"), func() -> void: host._show_modal(_translate_lines(HOW_TO))], [tr("Hükümdarlık Arşivi"), host._show_chronicle], [tr("Hakkında"), func() -> void: host._show_modal(_translate_lines(CREDITS))]]:
+	for l in [[tr("Nasıl Oynanır"), func() -> void: host._show_modal(_translate_lines(HOW_TO))], [tr("Hükümdarlık Arşivi"), host._show_chronicle], [tr("Hanedan Defteri"), func() -> void: show_page("dynasty")], [tr("Hakkında"), func() -> void: host._show_modal(_translate_lines(CREDITS))]]:
 		var lb := Button.new()
 		lb.text = l[0]
 		lb.theme_type_variation = "GhostButton"
-		lb.custom_minimum_size.y = 40
+		lb.custom_minimum_size.y = 44 if host._mobile else 40
 		host._wire(lb)
 		lb.pressed.connect(l[1])
 		links.add_child(lb)
+	set_meta("dynasty", b_dynasty)
 
 	# --- Yeni oyun: zorluk seçimi
 	var new_page := _page("new", box)
@@ -230,6 +234,23 @@ func _build() -> void:
 	var b_go := _btn(nrow, tr("Tahta Çık"), host._request_new_game, true)
 	b_go.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	b_go.size_flags_stretch_ratio = 2.0
+
+	var dynasty_page := _page("dynasty", box)
+	dynasty_page.add_child(_heading(tr("HANEDAN DEFTERİ")))
+	var dynasty_scroll := ScrollContainer.new()
+	dynasty_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	dynasty_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	dynasty_scroll.custom_minimum_size.y = 220 if host._mobile else 340
+	dynasty_page.add_child(dynasty_scroll)
+	_dynasty_text = RichTextLabel.new()
+	_dynasty_text.bbcode_enabled = true
+	_dynasty_text.fit_content = true
+	_dynasty_text.scroll_active = true
+	_dynasty_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_dynasty_text.add_theme_font_size_override("normal_font_size", host._fs(16))
+	dynasty_scroll.add_child(_dynasty_text)
+	var dynasty_back := _btn(dynasty_page, tr("Geri"), func() -> void: show_page("main"))
+	dynasty_back.theme_type_variation = "GhostButton"
 
 	# --- Ayarlar
 	var set_page := _page("settings", box)
@@ -319,7 +340,7 @@ func _build() -> void:
 	var b_back2 := _btn(set_page, tr("Geri"), func() -> void: show_page("main"))
 	b_back2.theme_type_variation = "GhostButton"
 
-	items = [title, mdiv, sub, b_first, b_new, b_daily, b_set, b_tour, b_quit, links]
+	items = [title, mdiv, sub, b_first, b_new, b_dynasty, b_daily, b_set, b_tour, b_quit, links]
 	set_meta("first", b_first)
 	set_meta("new", b_new)
 	var ver := Label.new()
@@ -376,10 +397,39 @@ func show_page(page_name: String) -> void:
 	page_now = page_name
 	if page_name == "main":
 		refresh_daily_result()
+	elif page_name == "dynasty":
+		refresh_dynasty()
 	for k in pages:
 		(pages[k] as Control).visible = k == page_name
 	if not host._fast():
 		UIKit.fade_in(pages[page_name], 0.25)
+
+
+func refresh_dynasty() -> void:
+	if _dynasty_text == null:
+		return
+	var data: Dictionary = Sim.dynasty_record()
+	var entries: Array = data.get("entries", [])
+	var text := "[b]%s[/b]\n\n" % tr("Tahtta kalıp veliaht kararını veren her nesil burada kayda geçer.")
+	if entries.is_empty():
+		text += tr("Henüz hanedan kaydı yok.")
+	else:
+		text += tr("Etkin nesil: %d · Hanedan puanı: %d\n\n") % [int(data.get("generations", 0)), int(data.get("score", 0))]
+		for i in range(entries.size() - 1, -1, -1):
+			var entry: Dictionary = entries[i]
+			var title := tr(str(entry.get("title", "")))
+			var regime := tr(str(entry.get("regime", "")))
+			text += "[color=#d6b25e][b]%s · %s[/b][/color]\n%s · %s · %s\n\n" % [tr("Nesil %d") % int(entry.get("generation", 0)), str(entry.get("king", "")), title,
+				regime if regime != "" else tr("Rejim kaydı yok"), Loc.ntr("%d hafta", int(entry.get("weeks", 0))) % int(entry.get("weeks", 0))]
+	var legacy: Dictionary = data.get("legacy", {})
+	if bool(data.get("eligible", false)):
+		text += "[b][color=#d6b25e]%s[/color][/b]\n" % tr("Sonraki saltanatın mirası")
+		for id in legacy.get("effects", []):
+			var effect := Sim.legacy_effect(str(id))
+			if not effect.is_empty():
+				text += "• [b]%s[/b] — %s\n" % [str(effect.get("name", id)), str(effect.get("desc", ""))]
+	_dynasty_text.clear()
+	_dynasty_text.append_text(text)
 
 
 func refresh_daily_result() -> void:
