@@ -22,7 +22,7 @@ extends SceneTree
 
 var sim: Node
 var rng := RandomNumberGenerator.new()
-const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "advice_patron", "advice_veliaht", "advice_heyet", "advice_bloc", "visible_wise", "omniscient"]
+const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "advice_patron", "advice_veliaht", "advice_heyet", "advice_bloc", "visible_wise", "omniscient", "public_out", "public_hide"]
 var style := ""   # advice_soft / advice_dirty oyun tarzı
 var dynasty_probe := false
 var dynasty_cap_ok := true
@@ -180,6 +180,9 @@ func _cause_kind(c: String) -> String:
 func _play(bot: String) -> void:
 	if bot == "idle":
 		return
+	if bot in ["public_out", "public_hide"] and sim.mesai > 0:
+		var action: String = "hide" if bot == "public_hide" else ["speech", "visit", "ceremony"][sim.week % 3]
+		sim.public_action(action)
 	_decide(bot)
 	match bot:
 		"random":
@@ -216,6 +219,8 @@ func _decide(bot: String) -> void:
 		guard += 1
 		var ev: Dictionary = sim.pending[0]["event"]
 		var ci: int = rng.randi() % ev["choices"].size()
+		if str(ev.get("kind", "")) == "public_poll" and bot in ["public_out", "public_hide"]:
+			ci = 0 if bot == "public_out" else 1
 		if dynasty_probe and str(ev.get("id", "")) == "halef_karari":
 			ci = 1
 		elif ev.get("crisis", false):
