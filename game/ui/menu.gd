@@ -257,7 +257,8 @@ func _build() -> void:
 	_dynasty_text = RichTextLabel.new()
 	_dynasty_text.bbcode_enabled = true
 	_dynasty_text.fit_content = true
-	_dynasty_text.scroll_active = true
+	_dynasty_text.scroll_active = false
+	_dynasty_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_dynasty_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_dynasty_text.add_theme_font_size_override("normal_font_size", host._fs(16))
 	dynasty_scroll.add_child(_dynasty_text)
