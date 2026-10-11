@@ -58,6 +58,7 @@ var economy := 55.0
 var economy_metrics: Dictionary = {"inflation": 45.0, "jobs": 55.0, "debt": 45.0, "trade": 55.0, "growth": 55.0}
 var economy_rng := RandomNumberGenerator.new()
 var parliament_rng := RandomNumberGenerator.new()
+var government_rng := RandomNumberGenerator.new()
 var consent := 70.0
 var public_fear := 20.0
 var public_rng := RandomNumberGenerator.new()
@@ -70,6 +71,10 @@ var parliament_proposals: Array = []
 var last_parliament_bill_week := 0
 var parliament_laws: Dictionary = {}
 var last_parliament_review_week := 0
+var government_pm := "kessler"
+var government_coalition: Array[String] = ["royal", "nobles"]
+var finance_report_source := "kessler"
+var last_confidence_week := 0
 var private_wealth := 10.0
 var capacity: Dictionary = {"maliye": 55.0, "hukuk": 55.0, "ordu": 55.0, "idare": 55.0}
 var treasury := 55.0
@@ -176,6 +181,7 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 		rng.seed = seed_value
 	economy_rng.seed = rng.seed ^ 0xEC0A07
 	parliament_rng.seed = rng.seed ^ 0xA77E31
+	government_rng.seed = rng.seed ^ 0x60A3E71
 	if diff >= 0:
 		difficulty = clampi(diff, 0, DIFFICULTY.size() - 1)
 	mesai_max = int(_diff("mesai"))
@@ -199,6 +205,10 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 	last_parliament_bill_week = 0
 	parliament_laws.clear()
 	last_parliament_review_week = 0
+	government_pm = "kessler"
+	government_coalition = ["royal", "nobles"]
+	finance_report_source = "kessler"
+	last_confidence_week = 0
 	private_wealth = 10.0
 	var state_rng := RandomNumberGenerator.new()
 	state_rng.seed = rng.seed ^ 0x5A17E
@@ -251,7 +261,9 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 	promises.clear()
 	timeline.clear()
 	stats = {"ops": 0, "bribes": 0, "promotes": 0, "leaks": 0, "dismissals": 0, "written": 0, "hints": 0, "checks": 0,
-		"investigations": 0, "blackmails": 0, "promises": 0, "kept": 0, "broken": 0}
+		"investigations": 0, "blackmails": 0, "promises": 0, "kept": 0, "broken": 0,
+		"elections": 0, "government_formations": 0, "confidence_offers": 0, "confidence_votes": 0,
+		"confidence_supports": 0, "confidence_falls": 0, "confidence_forced": 0}
 	regime = ""
 	ended = false
 	record = {}
@@ -541,11 +553,11 @@ func save_summary() -> String:
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
 ## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Sarne ve kadro günlüğü
-const SAVE_VERSION := 17
+const SAVE_VERSION := 18
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
-	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng", "budget_allocation", "delayed_economy", "consent", "public_fear", "public_rng", "public_opinion_active", "last_poll_week", "parliament_base_opposition", "parliament_blocs", "parliament_proposals", "last_parliament_bill_week", "parliament_rng", "parliament_laws", "last_parliament_review_week"]
+	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng", "budget_allocation", "delayed_economy", "consent", "public_fear", "public_rng", "public_opinion_active", "last_poll_week", "parliament_base_opposition", "parliament_blocs", "parliament_proposals", "last_parliament_bill_week", "parliament_rng", "parliament_laws", "last_parliament_review_week", "government_rng", "government_pm", "government_coalition", "finance_report_source", "last_confidence_week"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -661,6 +673,14 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 	if from < 17:
 		d["parliament_laws"] = {}
 		d["last_parliament_review_week"] = 0
+	if from < 18:
+		var government_rng_migration := RandomNumberGenerator.new()
+		government_rng_migration.seed = int(d.get("seed", 1)) ^ 0x60A3E71
+		d["government_rng"] = government_rng_migration.state
+		d["government_pm"] = "kessler"
+		d["government_coalition"] = ["royal", "nobles"]
+		d["finance_report_source"] = "kessler"
+		d["last_confidence_week"] = 0
 	if not d.has("foreign"):
 		d["foreign"] = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
 	if not d.has("foreign_hint_until"):
@@ -708,6 +728,8 @@ func save_game() -> bool:
 		"parliament_blocs": parliament_blocs, "parliament_proposals": parliament_proposals,
 		"last_parliament_bill_week": last_parliament_bill_week, "parliament_rng": parliament_rng.state,
 		"parliament_laws": parliament_laws, "last_parliament_review_week": last_parliament_review_week,
+		"government_rng": government_rng.state, "government_pm": government_pm, "government_coalition": government_coalition,
+		"finance_report_source": finance_report_source, "last_confidence_week": last_confidence_week,
 		"version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
@@ -835,6 +857,11 @@ func load_game() -> bool:
 	rng.state = d["rng"]
 	ext_rng.state = d["ext_rng"]
 	parliament_rng.state = int(d.get("parliament_rng", int(d.get("seed", 1)) ^ 0xA77E31))
+	government_rng.state = int(d.get("government_rng", int(d.get("seed", 1)) ^ 0x60A3E71))
+	government_pm = str(d.get("government_pm", "kessler"))
+	government_coalition.assign(d.get("government_coalition", ["royal", "nobles"]))
+	finance_report_source = str(d.get("finance_report_source", "kessler"))
+	last_confidence_week = int(d.get("last_confidence_week", 0))
 	_refresh_parliament_opposition()
 	_generate_reports()
 	report_prev = d.get("report_prev", {})   # _generate_reports'un üzerine yazdığı geçen hafta
@@ -1421,7 +1448,21 @@ func parliament_report_line() -> String:
 	var independents: Dictionary = parliament_blocs.get("independents", {})
 	var noble_line := tr("Soyluların desteği sağlam.") if float(nobles.get("loyalty", 50.0)) >= 65.0 else tr("Soyluların desteği pazarlığa açık.")
 	var independent_line := tr("Bağımsızlar temkinli.") if float(independents.get("pressure", 0.0)) >= 35.0 else tr("Bağımsızlar kendi kararını verecek.")
-	return tr("Meclis: %s %s") % [noble_line, independent_line]
+	return tr("Meclis: %s %s") % [noble_line, independent_line] + " " + government_status_line()
+
+
+func government_status_line() -> String:
+	var pm_name := str(actors[government_pm].display_name) if actors.has(government_pm) else tr("Başbakanlık boş.")
+	var finance_name := str(actors[finance_report_source].display_name) if actors.has(finance_report_source) else tr("Saray hazinesi")
+	var coalition_names: Array[String] = []
+	for bloc in government_coalition:
+		coalition_names.append(_parliament_bloc_name(bloc))
+	var coalition := " + ".join(coalition_names) if not coalition_names.is_empty() else tr("geçici yönetim")
+	return tr("Hükümet: %s; %s. Maliye raporunu %s üstleniyor.") % [pm_name, coalition, finance_name]
+
+
+func _parliament_bloc_name(bloc: String) -> String:
+	return tr(str({"royal": "Saray listesi", "opposition": "Muhalefet", "nobles": "Soylular", "independents": "Bağımsızlar"}.get(bloc, "Meclis")))
 
 
 func parliament_laws_line() -> String:
@@ -1743,12 +1784,16 @@ func dismiss(id: String) -> String:
 		a.moved = true
 		a.ready = true
 		a.plot_stage = 3
+		if id == finance_report_source:
+			finance_report_source = "dorn" if id != "dorn" and actors.has("dorn") and not actors["dorn"].moved else "kessler"
 		king_strength -= 12.0
 		_add_fact("sizinti_%s" % id, "%s kralın sırlarını sızdırıyor" % a.display_name, "king", 60, [id], 1, 0.9,
 			"%s is leaking the King's secrets" % a.display_name)
 		changed.emit()
 		return tr("%s görevden alındı ama kralın sırlarını biliyordu ve konuşmaya başladı!") % a.display_name
 	actors.erase(id)
+	if id == finance_report_source:
+		finance_report_source = "dorn" if id != "dorn" and actors.has("dorn") and not actors["dorn"].moved else "kessler"
 	if coup_crisis.get("leader", "") == id:
 		_close_crisis()
 		plot_log.append({"w": week, "name": a.display_name, "text": "darbe gecesi görevden alındı; komplo başsız kaldı"})
@@ -1808,6 +1853,11 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 		return _resolve_parliament_bill(e, choice_index)
 	if e.get("kind", "") == "parliament_repeal":
 		return _resolve_parliament_repeal(e, choice_index)
+	if e.get("kind", "") in ["election_result", "government_formation", "confidence_vote", "government_appointment"]:
+		var government_result := _resolve_r3c_decision(e, choice_index)
+		history.append(tr("Hafta %d — %s » %s") % [week, e["title"], ch["label"]])
+		changed.emit()
+		return government_result
 	_extra_msgs.clear()
 	_apply_effects(fx)
 	history.append(tr("Hafta %d — %s » %s") % [week, e["title"], ch["label"]])
@@ -1941,6 +1991,7 @@ func end_week() -> void:
 	weekly_moves.clear()
 	# Ertelenen kararlar kendi kendine çözülür (olgunlaşır).
 	var keep: Array = []
+	var government_fell := false
 	for p in pending:
 		p["age"] += 1
 		if p["age"] >= 2:
@@ -1951,6 +2002,15 @@ func end_week() -> void:
 				proposal["status"] = "lapsed"
 				proposal["result"] = tr("Teklif oylanmadan gündemden düştü.")
 				_fail_parliament_proposal()
+			if e.get("kind", "") == "confidence_vote":
+				government_pm = ""
+				government_coalition.clear()
+				finance_report_source = "dorn"
+				stats["confidence_falls"] = int(stats.get("confidence_falls", 0)) + 1
+				government_fell = true
+			elif e.get("kind", "") == "government_appointment":
+				_set_government("dorn", ["royal", "independents"])
+				_apply_effects({"king": -8.0, "treasury": -5.0, "unrest": 5.0, "opp": 3.0})
 			flags[str(e["id"]) + "_ertelendi"] = week
 			_apply_effects(ig.get("fx", {}))
 			var line := "ERTELENDİ — %s: %s" % [e["title"], ig.get("text", "")]
@@ -1959,6 +2019,8 @@ func end_week() -> void:
 		else:
 			keep.append(p)
 	pending = keep
+	if government_fell:
+		_queue_government_appointment()
 	week += 1
 	mesai = mesai_max
 	_world_tick()
@@ -2519,6 +2581,45 @@ func _choose_regime() -> String:
 	return best
 
 
+func _prepare_election_result(source: Dictionary) -> Dictionary:
+	var e: Dictionary = source.duplicate(true)
+	var scandal_load := 0
+	for fact: Dictionary in facts.values():
+		if fact.get("subject", "") == "king" and bool(fact.get("public", false)):
+			scandal_load += 1
+	var law_legacy := 0.0
+	for proposal: Dictionary in parliament_proposals:
+		if str(proposal.get("status", "")) in ["passed", "passed_under_pressure"]:
+			law_legacy += 1.0 if str(proposal.get("bill", "")) in ["amnesty", "judicial"] else -0.5
+	var score := (consent - 50.0) * 0.32 + (economy - 50.0) * 0.22 + (50.0 - unrest) * 0.18
+	score += law_legacy - float(scandal_load) * 3.0 + government_rng.randf_range(-4.0, 4.0)
+	var shift := clampf(score * 0.35, -12.0, 12.0)
+	parliament_blocs["royal"]["loyalty"] = clampf(float(parliament_blocs["royal"]["loyalty"]) + shift, 0.0, 100.0)
+	parliament_blocs["opposition"]["loyalty"] = clampf(float(parliament_blocs["opposition"]["loyalty"]) - shift, 0.0, 100.0)
+	parliament_blocs["nobles"]["loyalty"] = clampf(float(parliament_blocs["nobles"]["loyalty"]) + shift * 0.2, 0.0, 100.0)
+	parliament_blocs["independents"]["loyalty"] = clampf(float(parliament_blocs["independents"]["loyalty"]) + shift * 0.25 + government_rng.randf_range(-3.0, 3.0), 0.0, 100.0)
+	_refresh_parliament_opposition()
+	stats["elections"] = int(stats.get("elections", 0)) + 1
+	var result := tr("Meclis sonucu Saray listesine alan açtı; Soylular hükümet pazarlığında ağırlık kazandı.") if score >= 12.0 else (
+		tr("Muhalefet güç topladı; meclis dengesi hükümet pazarlığını zorlaştırıyor.") if score <= -10.0 else
+		tr("Hiçbir blok tek başına öne çıkamadı; hükümet pazarlığı belirleyici olacak."))
+	e["kind"] = "election_result"
+	e["advisors"] = ["kessler", "dorn"]
+	e["text"] = result
+	e["choices"] = [{"label": tr("Sonucu kabul et ve hükümet görüşmelerini başlat"), "text": tr("Meclis yeni hükümetin kuruluşu için toplandı."), "fx": {}}]
+	return e
+
+
+func _queue_government_formation(result: String) -> void:
+	var e := {"id": "hukumet_kurma_%d" % week, "kind": "government_formation", "title": tr("Yeni hükümeti kur"),
+		"text": tr("Seçim sonucu: %s") % result, "advisors": ["kessler", "dorn"], "choices": [
+		{"label": tr("Saray ve Soylularla hükümet kur"), "text": tr("Veyra başbakan kalır. Saray hazine ve atama nüfuzundan pay verir."), "formation": "royal_nobles", "fx": {"treasury": -4.0, "wealth": -2.0}},
+		{"label": tr("Saray ve Bağımsızlarla uzlaş"), "text": tr("Veyra hükümeti sürer; bağımsızlara söz ve bütçede alan açılır."), "formation": "royal_independents", "fx": {"treasury": -3.0, "consent": 2.0}},
+		{"label": tr("Muhalefet ve Bağımsızlara hükümet kurdur"), "text": tr("Brandt başbakan olur; Saray karar alanının bir bölümünü paylaşır."), "formation": "opposition_independents", "available": actors.has("brandt") and not actors["brandt"].moved, "fx": {"king": -5.0, "consent": 5.0, "treasury": -2.0}}],
+		"ignore": {"text": tr("Meclis hükümet görüşmelerini erteledi."), "fx": {"opp": 3.0}}}
+	pending.append({"event": e, "age": 0})
+
+
 func _fire_events() -> void:
 	var pool: Array = []
 	for e: Dictionary in _events:
@@ -2532,6 +2633,10 @@ func _fire_events() -> void:
 	var added := 0
 	for item in pool:
 		var e: Dictionary = item[1]
+		if str(e.get("id", "")) == "secim_sonucu":
+			if pending.size() >= 3 or added >= 2:
+				continue
+			e = _prepare_election_result(e)
 		if e.has("choices"):
 			if pending.size() >= 3 or added >= 2:
 				continue
@@ -2559,8 +2664,9 @@ func _fire_budget() -> void:
 		return
 	var note := ""
 	for report: Dictionary in reports:
-		if report["source"] == "kessler":
-			note = tr(" Veyra'nın son raporu: ") + str(report["text"])
+		if report["source"] == finance_report_source:
+			var source_name := str(actors[finance_report_source].display_name) if actors.has(finance_report_source) else tr("Saray hazinesi")
+			note = " " + tr("%s'nın son raporu: ") % source_name + str(report["text"])
 			break
 	var choices: Array = [
 		{"label": tr("Sıkı bütçe"), "text": tr("Harcama kısılır; kurumlar ve sokak bunun bedelini gecikmeli hisseder."),
@@ -2573,7 +2679,7 @@ func _fire_budget() -> void:
 			"fx": {"budget_custom": true, "budget_allocation": {"army": 10.0, "social": 70.0, "industry": 10.0, "palace": 10.0}, "budget_stance": 0, "court_share": false}}
 	]
 	var e := {"id": "ceyrek_butce", "title": STATE_CONTENT["title"], "text": str(STATE_CONTENT["text"]) + note,
-		"art": "butce_acigi", "advisors": ["kessler", "dorn"], "kind": "budget", "choices": choices,
+		"art": "butce_acigi", "advisors": [finance_report_source, "dorn"], "kind": "budget", "choices": choices,
 		"ignore": {"text": STATE_CONTENT["ignore"], "fx": {"budget_stance": 0, "court_share": false}}}
 	pending.append({"event": e, "age": 0})
 	weekly_news.append("OLAY: " + str(e["title"]))
@@ -2664,6 +2770,9 @@ func _fire_patronage() -> void:
 
 
 func _tick_parliament() -> void:
+	if pending.is_empty() and government_pm == "kessler" and week - last_confidence_week >= 8 and _government_support_lost():
+		_queue_confidence_vote()
+		return
 	if not pending.is_empty():
 		return
 	if not parliament_laws.is_empty() and week - last_parliament_review_week >= 26:
@@ -2829,6 +2938,97 @@ func _fail_parliament_proposal() -> void:
 func _register_failed_parliament_vote() -> void:
 	parliament_blocs["opposition"]["loyalty"] = maxf(0.0, float(parliament_blocs["opposition"]["loyalty"]) - 2.0)
 	_refresh_parliament_opposition()
+
+
+func _government_support_lost() -> bool:
+	if government_coalition.is_empty():
+		return true
+	var support := 0.0
+	for bloc in government_coalition:
+		var data: Dictionary = parliament_blocs.get(bloc, {})
+		support += float(data.get("loyalty", 50.0)) - float(data.get("pressure", 0.0)) * 0.25
+	var recent_failures := 0
+	for i in range(maxi(0, parliament_proposals.size() - 3), parliament_proposals.size()):
+		if str(parliament_proposals[i].get("status", "")) in ["failed", "lapsed", "withdrawn"]:
+			recent_failures += 1
+	return support / float(government_coalition.size()) < 88.5 or recent_failures >= 2
+
+
+func _queue_confidence_vote() -> void:
+	last_confidence_week = week
+	stats["confidence_offers"] = int(stats.get("confidence_offers", 0)) + 1
+	var pm_name := str(actors[government_pm].display_name) if actors.has(government_pm) else tr("Başbakan")
+	var e := {"id": "guven_oyu_%d" % week, "kind": "confidence_vote", "title": tr("Hükümet güven oylamasında"),
+		"text": tr("%s'nın koalisyon desteği çözülüyor. Kararın hükümeti ayakta tutabilir, düşürebilir ya da Saray'a bedel ödetebilir.") % pm_name,
+		"advisors": [government_pm if actors.has(government_pm) else "dorn", "dorn"],
+		"choices": [
+			{"label": tr("Veyra'yı destekle"), "text": tr("Koalisyon şimdilik korunuyor; tavizlerin yükü sürüyor."), "confidence_action": "support", "fx": {"king": 5.0, "treasury": -5.0, "consent": 4.0, "opp": -4.0}},
+			{"label": tr("Hükümet düşsün"), "text": tr("Başbakan istifa ediyor. Yeni hükümet için son sözü sen söyleyeceksin."), "confidence_action": "fall", "fx": {"king": -35.0, "treasury": -8.0, "consent": -10.0, "unrest": 20.0, "opp": 12.0}},
+			{"label": tr("Baskıyla kurtar"), "text": tr("Hükümet ayakta kalıyor; hazine, meşruiyet ve iz bırakıyor."), "confidence_action": "force",
+				"available": king_strength >= 35.0 and treasury >= 25.0 and private_wealth >= 4.0, "fx": {"king": -30.0, "treasury": -20.0, "wealth": -4.0, "consent": -10.0, "unrest": 14.0, "fear": 8.0}}],
+		"ignore": {"text": tr("Güven oylaması sonuçsuz kaldı; hükümet desteğini yitirdi."), "fx": {}}}
+	pending.append({"event": e, "age": 0})
+	weekly_news.append("OLAY: " + str(e["title"]))
+
+
+func _queue_government_appointment() -> void:
+	var e := {"id": "basbakan_atamasi_%d" % week, "kind": "government_appointment", "title": tr("Yeni hükümetin başbakanı"),
+		"text": tr("Veyra'nın hükümeti düştü. Maliye raporlarını Kraliçe Helena geçici olarak üstlendi; şimdi yeni başbakanı ve meclis dayanağını seç."),
+		"advisors": ["dorn", "brandt"], "choices": [
+			{"label": tr("Veyra'ya bir şans daha ver"), "text": tr("Veyra döner; Saray ve Soylular yeniden sorumluluk alır."), "pm": "kessler", "coalition": ["royal", "nobles"], "fx": {"treasury": -3.0}},
+			{"label": tr("Helena'yı geçici başbakan yap"), "text": tr("Helena maliye raporlarını da sürdürür; Bağımsızlarla uzlaşma gerekir."), "pm": "dorn", "coalition": ["royal", "independents"], "fx": {"king": -2.0, "consent": 2.0}},
+			{"label": tr("Brandt'a hükümeti kurdur"), "text": tr("Muhalefet ve Bağımsızlar hükümete girer; Saray yetkisinden taviz verir."), "pm": "brandt", "coalition": ["opposition", "independents"], "fx": {"king": -5.0, "consent": 5.0, "treasury": -2.0}}],
+		"ignore": {"text": tr("Helena geçici başbakan olarak kaldı."), "fx": {}}}
+	pending.append({"event": e, "age": 0})
+
+
+func _set_government(pm: String, coalition: Array) -> void:
+	if not actors.has(pm) or actors[pm].moved:
+		pm = "dorn" if actors.has("dorn") and not actors["dorn"].moved else "kessler"
+	government_pm = pm
+	government_coalition.assign(coalition)
+	finance_report_source = "kessler" if pm == "kessler" else "dorn"
+	if actors.has(finance_report_source) and actors[finance_report_source].moved:
+		finance_report_source = "dorn" if actors.has("dorn") and not actors["dorn"].moved else "kessler"
+	stats["government_formations"] = int(stats.get("government_formations", 0)) + 1
+
+
+func _resolve_r3c_decision(event: Dictionary, choice: int) -> String:
+	var selected: Dictionary = event["choices"][choice]
+	_apply_effects(selected.get("fx", {}))
+	match str(event.get("kind", "")):
+		"election_result":
+			_queue_government_formation(str(event.get("text", "")))
+		"government_formation":
+			match str(selected.get("formation", "")):
+				"royal_nobles": _set_government("kessler", ["royal", "nobles"])
+				"royal_independents": _set_government("kessler", ["royal", "independents"])
+				"opposition_independents": _set_government("brandt", ["opposition", "independents"])
+			_add_news("MECLİS: Yeni hükümet Saray'da kuruldu.", Loc.en("MECLİS: Yeni hükümet Saray'da kuruldu."))
+		"confidence_vote":
+			stats["confidence_votes"] = int(stats.get("confidence_votes", 0)) + 1
+			match str(selected.get("confidence_action", "")):
+				"support":
+					stats["confidence_supports"] = int(stats.get("confidence_supports", 0)) + 1
+					for bloc in government_coalition:
+						parliament_blocs[bloc]["loyalty"] = minf(100.0, float(parliament_blocs[bloc]["loyalty"]) + 10.0)
+					last_confidence_week = week
+				"fall":
+					stats["confidence_falls"] = int(stats.get("confidence_falls", 0)) + 1
+					government_pm = ""
+					government_coalition.clear()
+					finance_report_source = "dorn"
+					_queue_government_appointment()
+				"force":
+					stats["confidence_forced"] = int(stats.get("confidence_forced", 0)) + 1
+					parliament_blocs["royal"]["loyalty"] = minf(100.0, float(parliament_blocs["royal"]["loyalty"]) + 4.0)
+					parliament_blocs["opposition"]["pressure"] = minf(100.0, float(parliament_blocs["opposition"]["pressure"]) + 8.0)
+					flags["CONFIDENCE_FORCE_TRACE_%d" % week] = true
+					_add_fact("confidence_force_%d" % week, "Hükümet güveni baskıyla korundu", "king", 35.0, ["dorn", "brandt"], 1, 0.5,
+						"The government survived a confidence vote by force")
+		"government_appointment":
+			_set_government(str(selected.get("pm", "dorn")), selected.get("coalition", ["royal", "independents"]))
+	return str(selected.get("text", ""))
 
 
 func _resolve_parliament_bill(event: Dictionary, choice: int) -> String:
@@ -3853,6 +4053,12 @@ func load_achievements(extension := false) -> Dictionary:
 ## Saltanat sonunda kazanılan yeni başarımları kaydeder ve döndürür.
 func _award_achievements(survived: bool, title: String, cause: String) -> Array:
 	var earned: Array = ["ilk_saltanat"]
+	if int(stats.get("elections", 0)) > 0:
+		earned.append("sandik_mandati")
+	if int(stats.get("government_formations", 0)) > 0:
+		earned.append("koalisyon_mimari")
+	if int(stats.get("confidence_votes", 0)) > 0:
+		earned.append("guven_oyunu")
 	if survived:
 		earned.append("tahtta_kal")
 		earned.append_array(_economy_achievement_ids())
@@ -4098,7 +4304,7 @@ func economy_report(source: String) -> String:
 
 func economy_journal_line() -> String:
 	for report: Dictionary in reports:
-		if str(report.get("source", "")) == "kessler":
+		if str(report.get("source", "")) == finance_report_source:
 			return tr("Maliye: ") + str(report.get("text", ""))
 	return tr("Maliye raporu bu hafta masaya ulaşmadı.")
 
@@ -4171,7 +4377,7 @@ func _generate_reports() -> void:
 		var rb := _band(a, reported)
 		var tb := _band(a, _domain_truth(a.domain))
 		var line: String = _phrase(a, reported, echo)
-		if a.domain == "economy":
+		if a.id == finance_report_source:
 			line += " " + economy_report(a.id)
 		if echo <= 0.75 and INSTITUTION_HEADS.has(a.id):
 			var institution: String = INSTITUTION_HEADS[a.id]

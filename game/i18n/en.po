@@ -4306,6 +4306,135 @@ msgstr "Find a scapegoat"
 msgid "Gündem Değiştir"
 msgstr "Change the subject"
 
+msgid "Sonucu kabul et ve hükümet görüşmelerini başlat"
+msgstr "Accept the result and begin government talks"
+
+msgid "Meclis yeni hükümetin kuruluşu için toplandı."
+msgstr "The Assembly convened to form a new government."
+
+msgid "Yeni hükümeti kur"
+msgstr "Form the new government"
+
+msgid "Meclis hükümet görüşmelerini erteledi."
+msgstr "The Assembly postponed government talks."
+
+msgid "Başbakanlık boş."
+msgstr "The office of prime minister is vacant."
+
+msgid "Saray hazinesi"
+msgstr "the Royal Treasury"
+
+msgid "Hükümet: %s; %s. Maliye raporunu %s üstleniyor."
+msgstr "Government: %s; %s. %s now delivers the finance report."
+
+msgid "geçici yönetim"
+msgstr "caretaker administration"
+
+msgid "Saray listesi"
+msgstr "Royal List"
+
+msgid "Muhalefet"
+msgstr "Opposition"
+
+msgid "Soylular"
+msgstr "Nobles"
+
+msgid "Bağımsızlar"
+msgstr "Independents"
+
+msgid "Meclis sonucu Saray listesine alan açtı; Soylular hükümet pazarlığında ağırlık kazandı."
+msgstr "The Royal List gained ground, while the Nobles gained leverage in government talks."
+
+msgid "Muhalefet güç topladı; meclis dengesi hükümet pazarlığını zorlaştırıyor."
+msgstr "The Opposition gained ground, making coalition talks more difficult."
+
+msgid "Hiçbir blok tek başına öne çıkamadı; hükümet pazarlığı belirleyici olacak."
+msgstr "No bloc emerged as a clear leader; coalition talks will decide the next government."
+
+msgid "Seçim sonucu: %s"
+msgstr "Election result: %s"
+
+msgid "Saray ve Soylularla hükümet kur"
+msgstr "Form a government with the Royal List and Nobles"
+
+msgid "Veyra başbakan kalır. Saray hazine ve atama nüfuzundan pay verir."
+msgstr "Veyra remains prime minister. The Palace gives up treasury and appointment influence."
+
+msgid "Saray ve Bağımsızlarla uzlaş"
+msgstr "Make terms with the Royal List and Independents"
+
+msgid "Veyra hükümeti sürer; bağımsızlara söz ve bütçede alan açılır."
+msgstr "Veyra stays in office; the Independents gain a voice in policy and the budget."
+
+msgid "Muhalefet ve Bağımsızlara hükümet kurdur"
+msgstr "Let the Opposition and Independents form a government"
+
+msgid "Brandt başbakan olur; Saray karar alanının bir bölümünü paylaşır."
+msgstr "Brandt becomes prime minister; the Palace shares some of its decision-making power."
+
+msgid "%s'nın son raporu: "
+msgstr "%s's latest report: "
+
+msgid "Başbakan"
+msgstr "Prime minister"
+
+msgid "Hükümet güven oylamasında"
+msgstr "The government faces a confidence vote"
+
+msgid "%s'nın koalisyon desteği çözülüyor. Kararın hükümeti ayakta tutabilir, düşürebilir ya da Saray'a bedel ödetebilir."
+msgstr "%s's coalition is coming apart. Your decision can keep the government in office, let it fall, or make the Palace pay to save it."
+
+msgid "Veyra'yı destekle"
+msgstr "Back Veyra"
+
+msgid "Koalisyon şimdilik korunuyor; tavizlerin yükü sürüyor."
+msgstr "The coalition holds for now, though its concessions remain."
+
+msgid "Hükümet düşsün"
+msgstr "Let the government fall"
+
+msgid "Başbakan istifa ediyor. Yeni hükümet için son sözü sen söyleyeceksin."
+msgstr "The prime minister resigns. You will choose who forms the next government."
+
+msgid "Baskıyla kurtar"
+msgstr "Force a rescue"
+
+msgid "Hükümet ayakta kalıyor; hazine, meşruiyet ve iz bırakıyor."
+msgstr "The government survives, at a cost to the treasury and its legitimacy, leaving a trace."
+
+msgid "Güven oylaması sonuçsuz kaldı; hükümet desteğini yitirdi."
+msgstr "The confidence vote lapsed, and the government lost its support."
+
+msgid "Yeni hükümetin başbakanı"
+msgstr "Choose the next prime minister"
+
+msgid "Veyra'nın hükümeti düştü. Maliye raporlarını Kraliçe Helena geçici olarak üstlendi; şimdi yeni başbakanı ve meclis dayanağını seç."
+msgstr "Veyra's government has fallen. Queen Helena is handling the finance reports for now; choose a new prime minister and parliamentary base."
+
+msgid "Veyra'ya bir şans daha ver"
+msgstr "Give Veyra another chance"
+
+msgid "Veyra döner; Saray ve Soylular yeniden sorumluluk alır."
+msgstr "Veyra returns, with the Royal List and Nobles taking responsibility again."
+
+msgid "Helena'yı geçici başbakan yap"
+msgstr "Appoint Helena as caretaker prime minister"
+
+msgid "Helena maliye raporlarını da sürdürür; Bağımsızlarla uzlaşma gerekir."
+msgstr "Helena continues the finance reports, with a deal needed from the Independents."
+
+msgid "Brandt'a hükümeti kurdur"
+msgstr "Ask Brandt to form a government"
+
+msgid "Muhalefet ve Bağımsızlar hükümete girer; Saray yetkisinden taviz verir."
+msgstr "The Opposition and Independents join the government, and the Palace yields authority."
+
+msgid "Helena geçici başbakan olarak kaldı."
+msgstr "Helena remains caretaker prime minister."
+
+msgid "Hükümet güveni baskıyla korundu"
+msgstr "The government survived a confidence vote by force"
+
 msgid "Yürürlükteki yasalar: Yok."
 msgstr "Laws in force: None."
 

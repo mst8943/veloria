@@ -1,4 +1,7 @@
 {
+  "sandik_mandati": ["Mandate at the Ballot", "Form a government after an early election."],
+  "koalisyon_mimari": ["Coalition Builder", "Form a new governing coalition."],
+  "guven_oyunu": ["Confidence Held", "See a government through a confidence vote."],
   "ilk_saltanat": ["First Reign", "Carry a reign to its end—or fall."],
   "tahtta_kal": ["Two Years", "Complete 104 weeks on the throne."],
   "butce_dengesi": ["Balanced Treasury", "Keep a strong treasury and low debt while staying on the throne."],

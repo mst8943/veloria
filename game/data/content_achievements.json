@@ -1,4 +1,7 @@
 {
+  "sandik_mandati": ["Sandık Mandatı", "Erken seçimden sonra hükümet kur."],
+  "koalisyon_mimari": ["Koalisyon Mimarı", "Yeni bir hükümet koalisyonu kur."],
+  "guven_oyunu": ["Güven Oylaması", "Bir hükümet güven oylamasından sağ çık."],
   "ilk_saltanat": [
     "İlk Saltanat",
     "Bir saltanatı sonuna kadar götür (ya da düş)."
