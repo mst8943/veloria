@@ -24,10 +24,12 @@
     "id": "bos_kasa",
     "name": "Boş kasa",
     "desc": "Saray kasası ve maliye kapasitesi düşük başlıyor.",
-    "overrides": {
-      "wealth": 2,
-      "capacity": {"maliye": 28},
-      "flags": {"SENARYO_BOS_KASA": true},
+      "overrides": {
+        "wealth": 2,
+        "capacity": {"maliye": 28},
+        "treasury": 72,
+        "debt": 28,
+        "flags": {"SENARYO_BOS_KASA": true},
       "first_events": ["ilk_butce"]
     }
   }

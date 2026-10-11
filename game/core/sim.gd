@@ -465,6 +465,9 @@ func _apply_scenario(id: String) -> bool:
 			if not capacity.has(key):
 				return false
 			capacity[key] = overrides["capacity"][key]
+		treasury = float(overrides.get("treasury", treasury))
+		if overrides.has("debt"):
+			economy_metrics["debt"] = float(overrides["debt"])
 		private_wealth = float(overrides.get("wealth", private_wealth))
 		heir_maturity = float(overrides.get("heir_maturity", heir_maturity))
 		mesai_max = int(overrides.get("mesai_max", mesai_max))

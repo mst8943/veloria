@@ -84,7 +84,8 @@ func _run() -> void:
 	sim.new_game(432, 1, "naiplik")
 	_expect(is_equal_approx(sim.heir_maturity, 12.0) and is_equal_approx(sim.actors["dorn"].power, 70.0), "naiplik başlangıç değerleri")
 	sim.new_game(433, 1, "bos_kasa")
-	_expect(is_equal_approx(sim.private_wealth, 2.0) and is_equal_approx(sim.capacity["maliye"], 28.0), "boş kasa başlangıç değerleri")
+	_expect(is_equal_approx(sim.private_wealth, 2.0) and is_equal_approx(sim.capacity["maliye"], 28.0)
+		and is_equal_approx(sim.treasury, 72.0) and is_equal_approx(sim.economy_metrics["debt"], 28.0), "boş kasa başlangıç değerleri")
 
 	for scenario: Dictionary in options:
 		var scenario_id := str(scenario["id"])
