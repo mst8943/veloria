@@ -73,6 +73,6 @@ Uç bot kapısı (kazanma / 80; ölçüt botu kazanma sayısının en çok %70'i
 | Normal | 30 | 21 | 14 | 18 |
 | Zor | 13 | 9,1 | 6 | 9 |
 
-Kalibrasyon: sosyal tahsis %25'i aştığında dış borç baskısı katsayısı 1,2; varsayılan dağılımda katsayı 0,04 olarak kaldı. Gecikmeli sosyal harcama hazineden pay başına 1,6 düşürüyor. Danışman bütçe önerisi, sosyal pay değişimini huzur değeri `0,045` ve hazine maliyeti `0,25` katsayılarıyla puanlıyor; genel `choice_value` ve başlangıçtaki varsayılan akış böylece değişmiyor. İlk sekiz haftadaki tempo en düşük 0,81 olay/hafta. EN sızıntı taraması ve eksik çeviri kapıları 0.
+Kalibrasyon: sosyal tahsis %25'i aştığında dış borç baskısı katsayısı 1,2; varsayılan dağılımda katsayı 0,04 olarak kaldı. Gecikmeli sosyal harcama hazineden pay başına 1,6 düşürüyor. Danışman bütçe önerisi, sosyal pay değişimini huzur değeri `0,045` ve hazine maliyeti `0,25` katsayılarıyla puanlıyor; genel `choice_value` ve başlangıçtaki varsayılan akış böylece değişmiyor. Özel dağılım penceresi 10/70/10/10 ile başlar; oyuncu dört payı düzenleyebilir ve toplam 100 değilse uygulayamaz. İlk sekiz haftadaki tempo en düşük 0,81 olay/hafta. EN sızıntı taraması ve eksik çeviri kapıları 0.
 
 `--full --seed=101` sonucu hem TR hem EN'de: 104 hafta / TAHTTA / Medya Rejimi / 112 olay.
