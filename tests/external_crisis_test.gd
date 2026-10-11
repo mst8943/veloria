@@ -55,6 +55,46 @@ func _initialize() -> void:
 	sim._check_crises()
 	var credit_card: Dictionary = sim.pending[0]["event"]
 	_check(str(credit_card["id"]) == "b1b_kredi_kesildi" and credit_card["choices"].size() == 3, "credit-cut card has all three response paths")
+	sim.new_game(605)
+	sim.week = 20
+	var assassination_main_rng: int = sim.rng.state
+	sim.pending.clear()
+	sim.other_crisis.clear()
+	sim.flags.erase("SUIKAST_OMEN_DUE")
+	sim._check_crises()
+	_check(sim.other_crisis.is_empty() and sim.rng.state == assassination_main_rng, "assassination cannot open without a warning and leaves main RNG untouched")
+	sim.other_crisis.clear()
+	sim.crisis_cooldown = 0
+	sim.week = 20
+	sim.flags["SUIKAST_OMEN_DUE"] = sim.week + 1
+	sim.week += 1
+	sim.pending.clear()
+	sim._check_crises()
+	var assassination_card: Dictionary = sim.pending[0]["event"]
+	_check(str(assassination_card["id"]) == "b1c_kortej_plani" and sim.other_crisis.get("phase", "") == "prep" and assassination_card["choices"].size() == 3, "assassination warning opens its preparation card one week later with three choices")
+	var attack_rng: int = sim.rng.state
+	sim.king_strength = 100.0
+	sim.resolve_decision(0, 1)
+	_check(sim.rng.state == attack_rng, "assassination resolution consumes only its separate RNG")
+	_check(sim.flags.has("SUIKAST_ATLATILDI") and sim.pending.is_empty(), "successful route change leaves the ruler wounded and survives the night")
+	var aftermath := {}
+	for event: Dictionary in sim._events:
+		if str(event.get("id", "")) == "suikast_sonrasi":
+			aftermath = event
+	_check(str(aftermath.get("needs_flag", "")) == "SUIKAST_ATLATILDI" and aftermath.get("choices", []).size() == 2, "survival unlocks the two-choice Palace aftermath event")
+	sim._end(true)
+	var earned: Array = sim._award_achievements(true, str(sim.record["title"]), str(sim.record["cause"]))
+	_check(str(sim.record["title"]) == "Yaralı Egemen" and "yarali_egemen" in earned, "surviving the assassination grants its wounded sovereign ending and achievement")
+	Loc.set_lang("en")
+	sim.new_game(606)
+	sim._open_other("assassination")
+	var english_assassination: Dictionary = sim.pending[0]["event"]
+	_check(str(english_assassination["title"]) == "The procession route changed" and english_assassination["choices"].size() == 3, "assassination preparation card is fully localized in English")
+	Loc.set_lang("tr")
+	sim.new_game(607)
+	sim.flags["external_defeat"] = "assassination"
+	sim._check_end()
+	_check(str(sim.record["title"]) == "Suikast" and str(sim.record["cause"]).contains("Suikast"), "assassination defeat records its own ending")
 	Loc.set_lang("en")
 	sim.new_game(404)
 	sim.pending.clear()

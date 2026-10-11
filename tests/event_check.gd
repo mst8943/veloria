@@ -28,7 +28,7 @@ const FACT_KEYS := ["id", "text", "subject", "severity", "knowers"]
 ## Oyun kodunun (sim.gd) kendisinin koyduğu bayraklar; <AKTÖR>_GITTI, _GUCLENDI, HUZUR_<AKTÖR> kalıpları ayrıca.
 const CODE_FLAGS := ["DARBE_BASTIRILDI", "DARBE_HALK", "DARBE_TAVIZ",
 	"REJIM_GUVENLIKCI", "REJIM_POPULIST", "REJIM_PATRONAJCI", "REJIM_OLIGARK", "REJIM_MEDYA", "REJIM_ISTIHBARAT",
-	"KADRO_SADIK_ORDU", "KADRO_LIYAKATLI_HUKUK", "KADRO_LIYAKATLI_IDARE", "HALDEN_SAVCI_SIZDI", "SARAY_PAYI_BASLADI", "VELIAHT_YETISTI", "DOGRULA_ELENA", "HEYET_GONDER"]
+	"KADRO_SADIK_ORDU", "KADRO_LIYAKATLI_HUKUK", "KADRO_LIYAKATLI_IDARE", "HALDEN_SAVCI_SIZDI", "SARAY_PAYI_BASLADI", "VELIAHT_YETISTI", "DOGRULA_ELENA", "HEYET_GONDER", "SUIKAST_ATLATILDI"]
 const PATRONAGE_FLAGS := ["halden_ihale_0", "halden_ihale_1", "halden_ihale_2", "halden_fatura_0", "halden_fatura_1", "halden_fatura_2"]
 
 var errors: Array[String] = []

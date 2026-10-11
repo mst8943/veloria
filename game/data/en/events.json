@@ -3551,5 +3551,24 @@
             {"label": "Offer a port and trade concession package", "text": "The payment crisis was postponed; foreign pressure fell, but fiscal capacity weakened."}
         ],
         "ignore": {"text": "The state could not pay its staff; the treasury collapsed."}
+    },
+    "b1c_kortej_plani": {
+        "title": "The procession route changed",
+        "text": "Vale could not confirm the change in the guard roster. Trust Vale and purge the guards, secretly change the route, or appear before the people.",
+        "choices": [
+            {"label": "Trust Vale; purge the security detail", "text": "The night of the attack began."},
+            {"label": "Change the route and keep it secret", "text": "The night of the attack began."},
+            {"label": "Appear before the people", "text": "The night of the attack began."}
+        ],
+        "ignore": {"text": "The procession plan went unanswered; the guards kept the old route."}
+    },
+    "suikast_sonrasi": {
+        "title": "The Palace talks about the attack",
+        "text": "The doctors say your wound can be hidden. Vale reminded you that you are the only one who should see the guard logs.",
+        "choices": [
+            {"label": "Authorize Vale to investigate the night", "text": "Vale took the logs; a secret is now hidden in the Palace."},
+            {"label": "Seal the procession records", "text": "The records were sealed; no one will trace the attack."}
+        ],
+        "ignore": {"text": "The doctors dressed the wound; everyone at the Palace pretended to hear something else."}
     }
 }

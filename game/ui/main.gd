@@ -1376,7 +1376,7 @@ func _refresh() -> void:
 	_update_mesai_pips()
 	_pulse_end_button()
 	if _tabs != null:
-		var waiting := Sim.pending.size()
+		var waiting: int = Sim.pending.size()
 		_tabs.set_tab_title(0, tr("Gündem") + ("  ·  %d" % waiting if waiting > 0 else ""))
 	var mb := _buttons.get("media") as Button
 	if mb:

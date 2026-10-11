@@ -106,5 +106,13 @@
   "mali_kusatma": [
     "Kredi Duvarı",
     "Mali çöküşle tahttan düş."
+  ],
+  "suikast": [
+    "Gece Yarısı",
+    "Bir suikast gecesinde tahttan düş."
+  ],
+  "yarali_egemen": [
+    "Yaralı Egemen",
+    "Suikast girişiminden yaralı kurtul ve saltanatı tamamla."
   ]
 }

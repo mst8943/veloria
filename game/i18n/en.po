@@ -3948,3 +3948,51 @@ msgstr "Sarne's capital"
 
 msgid "MALİYE: %s bankaları devlet teminatlarını yeniden inceliyor."
 msgstr "FINANCE: %s banks are reviewing the state's guarantees."
+
+msgid "GÜVENLİK: Saray nöbetçileri değişti; gece arabaları doğu kapısında bekliyor."
+msgstr "SECURITY: The Palace guard roster changed; night carriages are waiting at the east gate."
+
+msgid "KRİZ: Kortej planı bu gece uygulanacak."
+msgstr "CRISIS: The procession plan takes effect tonight."
+
+msgid "KORTEJ PLANI — saldırı bu gece bekleniyor."
+msgstr "PROCESSION PLAN — an attack is expected tonight."
+
+msgid "Kortej planı değişti"
+msgstr "The procession route changed"
+
+msgid "Saldırganlar korteji buldu; muhafızlar seni koruyamadı."
+msgstr "The attackers found the procession; the guards could not protect you."
+
+msgid "Gece yarısı kapılar kapandı. Sabah olduğunda saray, hükümdarsız kaldı."
+msgstr "The gates closed at midnight. By morning, the Palace had no ruler."
+
+msgid "Saldırı gecesi yaralı kurtuldun. Sarayda artık kimin gece arabalarını gönderdiğine dair bir sır var."
+msgstr "You escaped the night of the attack wounded. A secret now lingers at the Palace about who sent the night carriages."
+
+msgid "Saltanatının %d. haftasında saldırganlar korteji buldu; muhafızlar seni koruyamadı. Suikast sarayı başsız bıraktı."
+msgstr "In week %d of your reign, the attackers found the procession; the guards could not protect you. The assassination left the Palace without a ruler."
+
+msgid "104 haftalık saltanatın sonunda tahtını korudun; suikast gecesinden yaralı kurtuldun."
+msgstr "You kept the throne through a 104-week reign and escaped the assassination night wounded."
+
+msgid "Yaralı Egemen"
+msgstr "Wounded Sovereign"
+
+msgid "Suikast"
+msgstr "Assassination"
+
+msgid "assassination"
+msgstr "assassination"
+
+msgid "omen"
+msgstr "warning sign"
+
+msgid "security"
+msgstr "security purge"
+
+msgid "route"
+msgstr "route change"
+
+msgid "public"
+msgstr "public appearance"

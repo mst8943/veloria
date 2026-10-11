@@ -47,6 +47,14 @@
 - Seed 101 tam koşusu TR/EN yine 104 / TAHTTA / Medya Rejimi / 112. Probe (80 kampanya/zorluk), iki dilde: Kolay 68/80 (%85), Normal 36/80 (%45), Zor 16/80 (%20); dağılım B1a ile aynı, bu probe örnekleminde dış kriz kaybı yok.
 - Ambargo ve kredi kesintisi kartı ekran görüntüleri TR/EN masaüstü (1280×720) ve mobil (1067×600) açılıp gözle kontrol edildi: `screenshots/faz6_b1b/{tr,en}/{desktop,mobile}`.
 
+### B1c — Suikast
+- Ayrı dış RNG'siyle düşük olasılıklı alamet açılıyor; yalnızca sonraki haftada ve alamet bayrağı varsa Kortej Planı krizi çıkıyor. Güvenlik, rota ve halka görünme seçenekleri saldırı gecesini çözüyor. Başarılı rota değişiminde yaralı kurtuluş, Hakikat Dosyası sırrı, koşullu Saray sonrası olayı ve `Yaralı Egemen` ünvan/başarımı; başarısızlıkta `Suikast` finali ve başarımı var. Eski kayıt biçimi korunuyor.
+- `external_crisis_test`, `sim_test`, `event_check` TR/EN (201 olay, 0 uyarı), `save_test` (v10 göçü dahil), `content_check` TR/EN, `i18n_check`, `i18n_missing.py` (0), `en_leak_test` (5 kampanya, 0 sızıntı), `pacing_test` (en düşük dilim 0,81), UI giriş masaüstü/mobil ve `lang_switch`, `touch_scroll`, `tour`, `cutscene`, `audio`, `a11y`, `scenario`, `endless`, `ui_logic`, `unit_tests` (399 kontrol) geçti.
+- `--full` tohum 101 TR/EN: `104 / TAHTTA / Medya Rejimi / 112`; aynı ekran sonucu. `advice_weighted` 80 kampanya/zorluk probe'u iki dilde birebir: Kolay 62/80, Normal 30/80, Zor 13/80 (tabana göre −7,5 / −7,5 / −3,75 puan).
+- Kayıp dağılımı: toplam 135 kaybın 102'si darbe (**%75,6**, ≤%65 hedefi geçmedi); dış kriz 20 (**%14,8**) ve her tür %2 üzerinde: müdahale 3 (%2,2), mali 8 (%5,9), suikast 9 (%6,7). Kampanyaların tümüne göre dış kriz kaybı %8,3. Bu nedenle uygulama tamamlanmış olsa da B1 toplam denge kapısı AÇIK olarak işaretlendi.
+- `screenshots/faz6_b1c/{tr,en}/{desktop,mobile}/assassination_prep.png` görüntülerinin dördü de açılıp incelendi: hazırlık kartı, üç karar seçeneği, İngilizce/Türkçe tutarlılığı, metin okunurluğu, mobil taşma ve kırpılma kontrol edildi. B1a/B1b nota ve kriz kartı görüntüleri önceki alt dilimlerde ayrıca incelendi.
+- Godot bazı başsız testlerin sonunda var olan ObjectDB/RID/kaynak temizleme uyarılarını verdi; test sonuç kodları ve kapılar başarılıydı.
+
 ## SIRADAKİ DİLİM
 
-DALGA A tamamlandı; B1a ve B1b tamamlandı. Sıradaki: B1c — Suikast.
+DALGA A ve B1a/B1b/B1c uygulaması tamamlandı. B1'in darbe payı ölçütü açık kaldı; B2'ye geçmeden önce kayıp dağılımı yeniden kalibre edilmeli.

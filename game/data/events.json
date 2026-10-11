@@ -3518,5 +3518,25 @@
     {"label": "Liman ve ticaret için taviz paketi sun", "text": "Ödeme krizi ertelendi; dış baskı düştü, maliye kapasitesi zayıfladı.", "crisis": "concede", "fx": {}}
   ],
   "ignore": {"text": "Devlet maaş ödeyemedi; maliye çöktü.", "fx": {}}
+},
+{
+  "id": "b1c_kortej_plani", "scripted_only": true, "art": "yabanci_elci", "title": "Kortej planı değişti",
+  "text": "Vale, nöbet çizelgesindeki değişikliği doğrulayamadı. Vale'ye güvenip muhafızları tasfiye edebilir, rotayı gizlice değiştirebilir ya da halkın önüne çıkabilirsin.",
+  "choices": [
+    {"label": "Vale'ye güven; güvenliği tasfiye et", "text": "Saldırı gecesi başladı.", "crisis": "security", "fx": {}},
+    {"label": "Rotayı değiştir ve gizle", "text": "Saldırı gecesi başladı.", "crisis": "route", "fx": {}},
+    {"label": "Halkın karşısına çık", "text": "Saldırı gecesi başladı.", "crisis": "public", "fx": {}}
+  ],
+  "ignore": {"text": "Kortej planı yanıtsız kaldı; muhafızlar eski rotayı korudu.", "fx": {}}
+},
+{
+  "id": "suikast_sonrasi", "rng_pool": "external", "needs_flag": "SUIKAST_ATLATILDI", "art": "yargic_dosya",
+  "title": "Saray saldırı gecesini konuşuyor",
+  "text": "Doktorlar yaranı saklayabileceğini söylüyor. Vale, nöbet kayıtlarını görmesi gereken tek kişinin sen olduğunu hatırlattı.",
+  "choices": [
+    {"label": "Vale'ye geceyi araştırma yetkisi ver", "text": "Vale kayıtları aldı; artık sarayda saklanan bir sır var.", "fx": {"flag": "SUIKAST_SIRRI_ACILDI"}},
+    {"label": "Kortej kayıtlarını kapat", "text": "Kayıtlar mühürlendi; kimse saldırının izini sürmeyecek.", "fx": {"king": 2, "flag": "SUIKAST_KAYITLARI_GIZLENDI"}}
+  ],
+  "ignore": {"text": "Doktorlar yarayı sardı; sarayda herkes başka bir şey duymuş gibi davrandı.", "fx": {}}
 }
 ]

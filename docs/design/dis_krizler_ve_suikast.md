@@ -43,3 +43,15 @@ Her biri: alamet (haber) → AŞAMA 1 nota (karar kartı, soft) → AŞAMA 2 kri
 - Yeni durum alanları kayda (SAVE_VERSION artır, eski kayıt göçü), `Sim.ext_pressure`, `other_crisis` kalıbı (kind: "border"|"siege"|"assassination"), mevcut `_start_other/_resolve_other/_fail_other` ve kriz kartı kalıbı yeniden kullanılsın.
 - Metinler çift dilli üretilsin (bkz. docs/i18n/sizinti_gorevi.md "Kararlar"); içerik `game/data/events.json` + `game/data/en/events.json`.
 - Testler: sim_test'e dış baskı birim testleri, event_check, save_test (eski kayıt), probe_template'e dış kriz kayıp sayacı, en_leak_test.
+
+## Ayar
+
+Probe: `advice_weighted`, 80 kampanya/zorluk, tohum dizisi 1–80; TR ve EN aynı. Başlangıç tabanı Kolay 68/80, Normal 36/80, Zor 16/80 idi. İlk ayarda sınır ve mali baskı kampanyaların çoğunda kriz eşiğine ulaşmadı; Drakon beslemesi ×2,6, Asteria/Seravia beslemesi ×1,5 olarak kalibre edildi. Seed 101'in 79. haftasında kredi krizi açılıp tam koşuyu değiştirdiği için mali kriz eşiği 62'den 65'e çıkarıldı. Suikast alameti olasılığı uygun haftada %3,5; saldırı kartı yalnızca önceki hafta alamet kaydı varsa açılıyor.
+
+| Zorluk | Taban kazanma | Son kazanma (TR = EN) | Fark | Son kayıplar: darbe / yabancı / mali / suikast / diğer |
+|---|---:|---:|---:|---|
+| Kolay | 68/80 (%85) | 62/80 (%77,5) | −7,5 puan | 11 / 1 / 3 / 3 / 0 |
+| Normal | 36/80 (%45) | 30/80 (%37,5) | −7,5 puan | 33 / 2 / 3 / 4 / 8 |
+| Zor | 16/80 (%20) | 13/80 (%16,25) | −3,75 puan | 58 / 0 / 2 / 2 / 5 |
+
+Toplam 240 kampanyada 135 kayıp var: darbe (askerî + saray) 102/135 = **%75,6**; dış kriz 20/135 = **%14,8** (tüm kampanyaların %8,3'ü). Dış kriz alt türleri: yabancı müdahalesi 3/135 = **%2,2**, mali çöküş 8/135 = **%5,9**, suikast 9/135 = **%6,7**. Kazanma oranı ve dış kriz dağılımı hedef bantlarında; **darbe payı ≤%65 kapısı geçmedi**. Eşikler ve içerik bu sonucu gizlemeyecek şekilde kaydedildi; B1'in toplam denge kapısı bu ölçümle açık kalıyor.
