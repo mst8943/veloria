@@ -138,3 +138,32 @@ EN ve TR masaüstü/mobil ekranlarında seçim sonucu, hükümet kurma ve güven
 
 
 Test notu: daily_card_test.gd ilk kez headless çalıştırıldığında beklemede kaldı; pencereli tekrar DAILY CARD: OK verdi ve 2099 tarihli test kaydı temizlendi. İlk denemeden önce var olan günlük sonuç kontrol edilmediğinden, önceki bir günlük kaydı varsa geri yüklenememiş olabilir.
+
+
+## DALGA R4 — R4a: Bölge verisi ve raporlar
+
+R4a tamamlandı; R4b ve R4c'ye geçilmedi. Eklendi: Başkent, Sanayi Kuşağı, Tarım Ovaları ve Sınır İlleri için gizli huzursuzluk/bağlılık/ekonomi, ağırlıklar %35/%30/%22/%13 ve her bölgeye supporting çevresel vali. Ulusal huzursuzluk ile ekonomi bu bölgelerin ağırlıklı özeti; yerel sapmalar `region_rng` kullanır ve ana RNG akışını tüketmez. Kayıt v19; v18 göçü eski ulusal değerleri korur. Günlük ve Divan'da nitel bölge satırı, Divan'ın Devlet grubunda vali kartları, mobilde ayrı Divan çekmecesi bulunur. R4a'da yatırım eylemi yoktur.
+
+| Mantıksal adım | Commit |
+|---|---|
+| Cila: görselsiz kart boşluğu | `fef32d5` |
+| Cila: hanedan defteri sarım/kaydırma | `1654714` |
+| Cila: suikast kartı görseli | `c26ee58` |
+| Bölge durumu, v19 göçü, ayrı RNG, vali aktörleri ve test | `d31efff` |
+| Günlük/Divan bölge raporu, vali kartları ve mobil Divan | `c940fe1` |
+| Vali kırmızı çizgileri EN çevirisi ve kaplama şema uyumu | `8805050`, `33f8cc5` |
+| R4a ölçümleri, kapılar ve gözlem notları | bu dokümantasyon commit'i |
+
+### Ölçüm ve kapılar
+
+`advice_weighted`, 80 kampanya/zorluk; hedef 62/30/13, ±4 kampanya kapısı:
+
+| Ölçüt | Kolay | Normal | Zor | Hedeften fark |
+|---|---:|---:|---:|---:|
+| Ölçüt botu | 62/80 | 31/80 | 17/80 | 0 / +1 / +4 |
+
+Yatırım kararları R4b'ye bırakıldığı için tek bölge yatırım / hiç yatırım botları bu dilimde çalışmıyor; dört bölgenin yatırım sayacı 0 kaldı (`regions_test.gd`). Tempo: ilk 8 haftada 0,81 olay/hafta; en uzun olaysız seri 3 hafta. TR ve EN `--full --seed=101`: 104 hafta / TAHTTA / Medya Rejimi / 112 olay.
+
+Geçen testler (her biri exit 0): `a11y_test`, `audio_check`, `budget_ui_test`, `content_check`, `cutscene_check`, `daily_card_test`, `dynasty_test`, `economy_test`, `election_test`, `endless_test`, `en_leak_test`, `event_check`, `external_crisis_test`, `i18n_check`, `lang_switch_test`, `legacy_test`, `pacing_test`, `parliament_laws_test`, `parliament_test`, `public_opinion_test`, `regions_test`, `save_test`, `scenario_test`, `sim_test`, `touch_scroll_test`, `tour_test`, `ui_input_test`, `ui_logic_test`, `unit_tests` (399 kontrol). `en_leak_test`: 5 kampanyada 0 kaçak; EN metin dökümü 3.623 metinde `i18n_leak_scan.py`: 0 şüpheli; `i18n_missing.py`: 0. İçerik kapısı 5 dosya/8 bozuk örneği doğru saptadı; olay kapısı 201 olay/0 uyarı.
+
+EN/TR masaüstü ve mobil görüntülerde Günlük bölge satırı ve Divan raporu/vali kartları açılıp incelendi. Bölge alanları nitel, sayısal değer yok; rapor satırları sarılıyor, kartlar ekrana sığıyor. Mobil kişi ekranındaki yinelenen yardım satırı kaldırıldı. Cila bekleyen dört konu tamamlandı. Godot kapanışında bazı süreçler ObjectDB/resource cleanup uyarısı yazdı, ancak test ve tam koşu çıkış kodları başarılıydı. Ekran görüntüleri kontrol sonrası geçici klasörden silindi. `tests/title_shot.gd` ve `game/ui/title_screen.gd` değişmedi. PUSH yapılmadı; R4b/R4c'ye geçilmedi.

@@ -148,6 +148,25 @@ Sonuçlar istenen 60–64 / 28–32 / 11–15 bantlarında. Uç botlar sırasıy
 EN masaüstü ve mobil üretim metin taramasındaki tek kaçak, bütçe olayıyla üretilebilen “Saray tahsisi büyüdü” olgusuydu; İngilizce karşılığı eklendikten sonra tarama 4.506 metinde 0 şüpheli verdi. `i18n_missing.py`: 0.
 
 
+## R4 Ayar
+
+R4a dört bölgeyi (Başkent %35, Sanayi Kuşağı %30, Tarım Ovaları %22, Sınır İlleri %13) tanımlar. Her bölgede gizli huzursuzluk, bağlılık ve ekonomi alanı ile supporting vali aktörü vardır. Yeni başlangıçlarda bölgesel sapmalar ayrı `region_rng` ile üretilir ve ulusal huzursuzluk/ekonomi ağırlıklı ortalamaları korunur. V18 kayıt göçü, önceki ulusal değerleri dört bölgeye dağıtarak korur; v19 kayıtlarında bölge verisi ve üreteç durumu saklanır. Her hafta var olan ulusal simülasyon delta kaynağı kalır; yerel değerler bu ulusal hedefe göre eşit kaydırılarak sınırlar içinde ağırlıklı özeti verir.
+
+80 kampanya/zorluk (`advice_weighted`); R4a hedefi 62/30/13, kapı ±4 kampanya:
+
+| Zorluk | Hedef | Ölçüm | Fark |
+|---|---:|---:|---:|
+| Kolay | 62/80 | 62/80 | 0 |
+| Normal | 30/80 | 31/80 | +1 |
+| Zor | 13/80 | 17/80 | +4 |
+
+Bu dilimde bölgesel yatırım eylemi henüz yok; bu nedenle tek bölgeye yatırım ve hiç yatırım botları uygulanabilir değil. Her dört bölgenin `regional_investments` sayacı 0 ve bu durum `regions_test.gd` ile doğrulanıyor. `pacing_test.gd`: ilk sekiz haftada 0,81 olay/hafta; en uzun olaysız seri 3 hafta. `--full --seed=101`, TR ve EN: 104 hafta / TAHTTA / Medya Rejimi / 112 olay; önceki taban değişmedi.
+
+`tests/en_leak_test.gd`: 5 kampanyada 0 sızıntı. İngilizce üretim metin dökümü 3.623 metinde `tools/i18n_leak_scan.py` ile 0 şüpheli verdi; `tools/i18n_missing.py`: 0. R4a ekranları EN/TR masaüstü ve mobilde açılıp incelendi: Günlük bölge satırı, Divan rapor satırı ve Devlet grubundaki vali kartları. Nitel değerler sayı göstermiyor; rapor metni satır sarıyor, kartlar kesilmiyor. `tests/title_shot.gd` ve `game/ui/title_screen.gd` değiştirilmedi.
+
+R4a ile birlikte cila bekleyen dört arayüz konusu giderildi: görselsiz anket kartındaki üst boşluk, hanedan defteri metninin kaydırılması/sarılması, suikast kartı görseli ve mobilde ayrı Divan çekmecesi. Mobilde yinelenen yardım satırı da kaldırıldı.
+
+
 ## R3c Ayar
 
 Seçim sonucu rıza, ekonomi, huzursuzluk, yasa geçmişi ve açık skandallardan nitel blok kaymasına dönüştürülüyor; sonuçta kesin oy veya sandalye sayısı gösterilmiyor. Sonuç kartı hükümet kurma kararını açıyor. Veyra koalisyonunu sürdürme, Saray ve Bağımsızlar arasında uzlaşma ya da Brandt liderliğinde muhalefet hükümeti seçenekleri ayrı maliyet taşıyor. Koalisyon desteği zayıfladığında güven oyu kartı geliyor: Veyra'yı destekle, hükümeti düşür veya hazine/rıza/kral otoritesinden bedel ödeyip baskıyla kurtar. Düşüşte Kraliçe Helena mali raporlarını geçici olarak üstleniyor; yeni başbakan Veyra, Helena veya Brandt arasından seçiliyor. R1 bütçe kararları ve mali rapor akışı geçişte sürüyor.

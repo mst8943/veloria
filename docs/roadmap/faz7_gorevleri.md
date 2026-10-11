@@ -32,5 +32,8 @@ Tasarım: "R5"; R4'ün garnizon/bölge verisini kullanır. R4 bitince ayrı otur
 ## KALICI KURAL — Gözlem (her dilimde, hepsi için geçerli)
 Her dilimde kapılara ek olarak ürünü eleştirel gözle de değerlendir: **iyileştirme, tutarsızlık, eksik özellik, UI/UX sorunu** (ekran görüntüsü aç; kesilen/çakışan metin, tıklama yutan öğe, kafa karıştırıcı akış, mobil/EN farkı, diğer sistemlerle çelişki, istismar yolu). Küçük ve güvenli olanları aynı dilimde düzelt (ayrı commit). Büyük/tasarım gerektirenleri `docs/roadmap/GOZLEMLER.md` dosyasına tarih, dilim, ekran/konum, öneri ve önem (düşük/orta/yüksek) ile ekle. Raporda ayrı bir "Gözlemler" başlığı aç: bulduğun, düzelttiğin ve ertelediğin. Hiçbir şey bulamadıysan bile hangi ekranlara baktığını yaz.
 
-## Cila bekleyenler (R4a ile birlikte küçük commit'lerle bitir)
-Kamuoyu araştırması kartında başlık üst çerçeveye değiyor (görselsiz karar kartlarında üst boşluk); hanedan defterinde kesik satır; suikast kartı görseli eksik; mobilde ayrı Divan çekmecesi yok (Divan'a mobilde Günlük'ten ulaşılıyor).
+## Cila bekleyenler (R4a'da tamamlandı)
+- [x] Kamuoyu araştırması kartında görselsiz kart başlığına üst boşluk eklendi.
+- [x] Hanedan defterinde metin sarımı ve kaydırma düzeltildi.
+- [x] Suikast kartı doğru görsele bağlandı.
+- [x] Mobilde ayrı Divan çekmecesi eklendi; yinelenen alt yardım satırı kaldırıldı.
