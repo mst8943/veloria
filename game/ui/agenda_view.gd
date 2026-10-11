@@ -375,7 +375,9 @@ func _rebuild_agenda() -> void:
 		if host._mobile:
 			d.add_theme_font_size_override("font_size", host._fs(13))
 		vb.add_child(d)
-		var council := _add_council(vb, pi)
+		var council: Dictionary = {}
+		if e.get("kind", "") != "parliament_bill":
+			council = _add_council(vb, pi)
 		if crisis:
 			var hush := Label.new()
 			hush.text = tr("Meclis susuyor. Bu kararı yalnız vereceksin.")
@@ -386,8 +388,9 @@ func _rebuild_agenda() -> void:
 		for ci in e["choices"].size():
 			var b := Button.new()
 			b.text = "  %s   %s" % [["I", "II", "III", "IV"][mini(ci, 3)], str(e["choices"][ci]["label"])]
-			b.disabled = Sim.mesai < 1 or not e["choices"][ci].get("available", true) or (e.get("kind", "") == "patronage" and ci == 2 and Sim.private_wealth < 6.0)
-			b.tooltip_text = tr("Bu seçenek için gerekli kişi ya da servet yok.") if b.disabled and Sim.mesai >= 1 else (tr("Bu karar 1 mesai harcar.") if Sim.mesai >= 1 else tr("Bu hafta mesain kalmadı. Haftayı bitir; karar bir hafta daha bekleyebilir."))
+			var no_action_cost: bool = e.get("kind", "") == "parliament_bill"
+			b.disabled = (Sim.mesai < 1 and not no_action_cost) or not e["choices"][ci].get("available", true) or (e.get("kind", "") == "patronage" and ci == 2 and Sim.private_wealth < 6.0)
+			b.tooltip_text = tr("Oylama mesai harcamaz; zorla geçirmek bedel ve iz bırakır.") if no_action_cost else (tr("Bu seçenek için gerekli kişi ya da servet yok.") if b.disabled and Sim.mesai >= 1 else (tr("Bu karar 1 mesai harcar.") if Sim.mesai >= 1 else tr("Bu hafta mesain kalmadı. Haftayı bitir; karar bir hafta daha bekleyebilir.")))
 			if council.has(ci):
 				b.tooltip_text += "\n\n" + "\n".join(council[ci])
 			b.alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -566,6 +569,12 @@ func _add_week_ledger(animated: Array[Control]) -> void:
 		host._week_log.clear()
 		host._week_log_week = Sim.week
 	target.add_child(host._section(tr("BU HAFTA"), tr("yaptıkların ve sonuçları")))
+	var assembly := Label.new()
+	assembly.text = Sim.parliament_report_line()
+	assembly.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	assembly.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+	assembly.add_theme_font_size_override("font_size", host._fs(12))
+	target.add_child(assembly)
 	if host._week_log.is_empty():
 		var empty := Label.new()
 		empty.text = (tr("Henüz bir şey yapmadın. Bir güç merkezine tıkla, Eylemler panelinden mesai harca.") if Sim.mesai > 0

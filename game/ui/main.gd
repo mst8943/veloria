@@ -1698,6 +1698,7 @@ func _on_week(_w: int) -> void:
 					UIKit.shake(_stage, 7.0, 0.45)
 				break
 	_journal.append_text("• %s\n" % Sim.economy_journal_line())
+	_journal.append_text("• %s\n" % Sim.parliament_report_line())
 	_tabs.current_tab = 0
 
 

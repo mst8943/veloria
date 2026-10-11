@@ -24,6 +24,7 @@ var parked: Control
 var guide_hint: Label
 var finance_label: Label
 var public_label: Label
+var parliament_label: Label
 var opened := false
 var last_id := ""
 var visible_ids: Array = []
@@ -95,6 +96,11 @@ func build(right: VBoxContainer) -> void:
 	public_label.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 	public_label.add_theme_font_size_override("font_size", host._fs(12))
 	body.add_child(public_label)
+	parliament_label = Label.new()
+	parliament_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	parliament_label.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+	parliament_label.add_theme_font_size_override("font_size", host._fs(12))
+	body.add_child(parliament_label)
 	var close_button := Button.new()
 	close_button.text = tr("Kapat")
 	close_button.theme_type_variation = "GhostButton"
@@ -150,6 +156,8 @@ func refresh() -> void:
 		finance_label.text = Sim.economy_journal_line()
 	if is_instance_valid(public_label):
 		public_label.text = Sim.public_opinion_line()
+	if is_instance_valid(parliament_label):
+		parliament_label.text = Sim.parliament_report_line()
 	if host._mobile or host._cards.is_empty():
 		return
 	var advisors := []

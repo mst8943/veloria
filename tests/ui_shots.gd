@@ -187,6 +187,28 @@ func _run() -> void:
 			await _shot("r2_scandal_response_lower")
 		quit(0)
 		return
+	if "--parliament" in OS.get_cmdline_user_args():
+		main._instant = true
+		sim0.pending.clear()
+		sim0.week = 10
+		sim0._tick_parliament()
+		main._refresh()
+		await _shot("r3a_bill_offer")
+		sim0.mesai = 4
+		sim0.resolve_decision(0, 0)
+		main._refresh()
+		main._journal.clear()
+		main._on_week(sim0.week)
+		main._select_tab(main._journal)
+		await _shot("r3a_daily_report")
+		if main._mobile:
+			main._tabs.current_tab = 2
+			main._mobile_report_tabs.current_tab = 2
+		else:
+			main._divan.open()
+		await _shot("r3a_divan_report")
+		quit(0)
+		return
 	if "--files-journal" in OS.get_cmdline_user_args():
 		main._select_tab(main._files_tab)
 		await _shot("files")
