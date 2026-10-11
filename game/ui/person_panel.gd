@@ -50,6 +50,10 @@ const TIPS := {
 	"tender": "İhale Ver (1 mesai)\nSarne'nin şirketlerine yeni bir devlet işi ver. Sözleşmenin sonuçları zamanla ortaya çıkar.",
 	"train_heir": "Veliahdı Yetiştir (1 mesai)\nJulian için eğitim ve halkla buluşma programı hazırla. Sürekli öne çıkarmak saraydaki başka isimleri rahatsız edebilir.",
 	"delegation": "Heyet Gönder (1 mesai)\nSeçili elçiyi başkente davet et. Yakınlık diğer iki elçiliği tedirgin eder.",
+	"tax_raise": "Vergiyi artır (1 mesai)\nHazineye kaynak sağlar; pazar ve sokak bedelini hisseder.",
+	"tax_relief": "Vergiyi hafiflet (1 mesai)\nPazara nefes verir; hazine gelirinden vazgeçer.",
+	"austerity": "Kemer sık (1 mesai)\nKasayı korur; iş ve huzur üzerindeki bedeli büyür.",
+	"incentive": "Teşvik paketi (1 mesai)\nBugün kasaya yük olur; istihdam ve üretime sonra destek verir.",
 }
 
 ## Eylem kategorileri (eylem panelindeki sekmeler).
@@ -60,7 +64,7 @@ const CAT_TIPS := {
 	"EMRET": "Emret\nHuzursuzluğu bastırma emri. Kanal seçimi sonucu ve inkâr edilebilirliği belirler.",
 	"BASKI": "Baskı\nŞantaj ve görevden alma. Güçlü araçlar, ama geri tepebilirler.",
 	"OPERASYON": "Operasyon (2 mesai)\n1–3 kişiyle gizli iş. Çemberi kurmak için Çoklu seçim'i aç ya da Ctrl ile kişi ekle.",
-	"DEVLET": "Devlet\nKadro kararnameleri, ihale, veliaht eğitimi ve elçilik heyetleri.",
+	"DEVLET": "Devlet\nMaliye kararları, kadro kararnameleri, ihale ve elçilik heyetleri.",
 }
 
 const HINT_DEFAULT := "[color=#8f7a45]Bir eylemin üzerine gel ya da dokun: ne yaptığını ve bedelini burada görürsün.[/color]"
@@ -236,7 +240,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		["EMRET", [["o_yaz", "Yazılı Emir"], ["o_soz", "Sözlü Emir"], ["o_ima", "İma"]]],
 		["BASKI", [["blackmail", "Şantaj"], ["dismiss", "Görevden Al"]]],
 		["OPERASYON", [["op_dikkat", "Dikkat Dağıt"], ["op_bol", "Muhalefeti Böl"], ["op_zayif", "Rakibi Zayıflat"], ["op_dus", "Birbirine Düşür"]]],
-		["DEVLET", [["appoint_loyal", "Sadık Ata"], ["appoint_merit", "Liyakatli Ata"], ["tender", "İhale Ver"], ["train_heir", "Veliahdı Yetiştir"], ["delegation", "Heyet Gönder"]]],
+		["DEVLET", [["tax_raise", "Vergiyi Artır"], ["tax_relief", "Vergiyi Hafiflet"], ["austerity", "Kemer Sık"], ["incentive", "Teşvik Paketi"], ["appoint_loyal", "Sadık Ata"], ["appoint_merit", "Liyakatli Ata"], ["tender", "İhale Ver"], ["train_heir", "Veliahdı Yetiştir"], ["delegation", "Heyet Gönder"]]],
 	]
 	var actions := {
 		"summon": func() -> void: host._act(func(id: String) -> String: return Sim.summon(id)),
@@ -259,6 +263,10 @@ func _build_ui(cols: HBoxContainer) -> void:
 		"tender": func() -> void: host._act(func(id: String) -> String: return Sim.give_tender(id)),
 		"train_heir": func() -> void: host._act(func(id: String) -> String: return Sim.train_heir(id)),
 		"delegation": func() -> void: host._act(func(id: String) -> String: return Sim.send_delegation(id)),
+		"tax_raise": func() -> void: host._act(func(_id: String) -> String: return Sim.economy_policy("tax_raise")),
+		"tax_relief": func() -> void: host._act(func(_id: String) -> String: return Sim.economy_policy("tax_relief")),
+		"austerity": func() -> void: host._act(func(_id: String) -> String: return Sim.economy_policy("austerity")),
+		"incentive": func() -> void: host._act(func(_id: String) -> String: return Sim.economy_policy("incentive")),
 	}
 	for i in Sim.PRIZES.size():
 		var prize: String = Sim.PRIZES[i]
@@ -289,12 +297,21 @@ func _build_ui(cols: HBoxContainer) -> void:
 		host._wire(cb)
 		cat_row.add_child(cb)
 		host._cat_btns[g[0]] = cb
-		var row := HBoxContainer.new()
-		row.add_theme_constant_override("separation", 6)
+		var row: Control = VBoxContainer.new() if g[0] == "DEVLET" else HBoxContainer.new()
+		row.add_theme_constant_override("separation", 4 if g[0] == "DEVLET" else 6)
 		av.add_child(row)
 		host._cat_rows[g[0]] = row
-		for item in g[1]:
-			_add_btn(row, item[0], item[1], actions[item[0]])
+		for item_index in g[1].size():
+			var item: Array = g[1][item_index]
+			var button_row: Control = row
+			if g[0] == "DEVLET":
+				if item_index % 3 == 0:
+					button_row = HBoxContainer.new()
+					button_row.add_theme_constant_override("separation", 6)
+					row.add_child(button_row)
+				else:
+					button_row = row.get_child(row.get_child_count() - 1)
+			_add_btn(button_row, item[0], item[1], actions[item[0]])
 			var btn := host._buttons[item[0]] as Button
 			btn.add_theme_font_size_override("font_size", host._fs(13))
 			btn.clip_text = true
@@ -430,6 +447,10 @@ const ACTION_META := {
 	"tender": ["İhale Ver", 1, 0.0, 0, 0],
 	"train_heir": ["Veliahdı Yetiştir", 1, 0.0, 0, 0],
 	"delegation": ["Heyet Gönder", 1, 0.0, 0, 0],
+	"tax_raise": ["Vergiyi Artır", 1, 0.0, 0, 1],
+	"tax_relief": ["Vergiyi Hafiflet", 1, 0.0, 0, 1],
+	"austerity": ["Kemer Sık", 1, 0.0, 0, 2],
+	"incentive": ["Teşvik Paketi", 1, 0.0, 0, 1],
 }
 const TRACE_NAMES := ["iz yok", "inkâr edilebilir", "iz bırakır", "kanıt bırakır"]
 const RISK_NAMES := ["düşük", "orta", "yüksek"]
@@ -714,7 +735,7 @@ func _style_cards(hover_id := "") -> void:
 		card.add_theme_stylebox_override("panel", UIKit.box(bg, border, 6, 3, 2 if selected else 1))
 
 
-const PERSON_ACTIONS := ["summon", "promote", "bribe", "p_0", "p_1", "p_2", "cross", "investigate", "o_sor", "o_yaz", "o_soz", "o_ima", "blackmail", "dismiss", "appoint_loyal", "appoint_merit", "tender", "train_heir", "delegation"]
+const PERSON_ACTIONS := ["summon", "promote", "bribe", "p_0", "p_1", "p_2", "cross", "investigate", "o_sor", "o_yaz", "o_soz", "o_ima", "blackmail", "dismiss", "appoint_loyal", "appoint_merit", "tender", "train_heir", "delegation", "tax_raise", "tax_relief", "austerity", "incentive"]
 const OP_ACTIONS := ["op_dikkat", "op_bol", "op_zayif", "op_dus"]
 
 

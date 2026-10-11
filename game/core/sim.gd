@@ -1267,6 +1267,34 @@ func rival_wait(ids: Array) -> int:
 	return maxi(0, int(flags.get(_rival_key(ids), -100)) + RIVAL_COOLDOWN - week)
 
 
+func economy_policy(policy: String) -> String:
+	if ended or mesai < 1 or policy not in ["tax_raise", "tax_relief", "austerity", "incentive"]:
+		return _no_mesai() if mesai < 1 else ""
+	if not spend_mesai():
+		return _no_mesai()
+	var key := "economy_policy_" + policy
+	var uses := int(stats.get(key, 0))
+	var scale := 1.0 / (1.0 + uses * 0.75)
+	stats[key] = uses + 1
+	match policy:
+		"tax_raise":
+			treasury = clampf(treasury + 4.0 * scale, 0.0, 100.0)
+			economy = clampf(economy - 1.6 * scale, 0.0, 100.0)
+			unrest = clampf(unrest + 0.7 * scale, 0.0, 100.0)
+		"tax_relief":
+			treasury = clampf(treasury - 3.0 * scale, 0.0, 100.0)
+			economy = clampf(economy + 1.2 * scale, 0.0, 100.0)
+			unrest = clampf(unrest - 0.3 * scale, 0.0, 100.0)
+		"austerity":
+			treasury = clampf(treasury + 3.5 * scale, 0.0, 100.0)
+			economy = clampf(economy - 1.0 * scale, 0.0, 100.0)
+			unrest = clampf(unrest + 1.8 * scale, 0.0, 100.0)
+		"incentive":
+			treasury = clampf(treasury - 4.0 * scale, 0.0, 100.0)
+			delayed_economy.append({"due": week + 6, "sector": "industry", "share": 25.0 + 30.0 * scale})
+	return tr("Maliye kararının etkisi başladı; aynı yöndeki her yeni hamle daha az sonuç verecek.")
+
+
 func _rival_key(ids: Array) -> String:
 	var parts: Array = []
 	for i in ids:

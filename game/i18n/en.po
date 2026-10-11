@@ -4113,3 +4113,33 @@ msgstr "An equal share for all four lines, with no single priority."
 
 msgid "Kurumlara ve sokağa nefes verir; kasanın bedeli haftalara yayılır."
 msgstr "It gives institutions and the streets room to breathe; the Treasury pays over several weeks."
+
+msgid "Vergiyi artır (1 mesai)\nHazineye kaynak sağlar; pazar ve sokak bedelini hisseder."
+msgstr "Raise taxes (1 action)\nIt funds the Treasury; markets and streets feel the cost."
+
+msgid "Vergiyi hafiflet (1 mesai)\nPazara nefes verir; hazine gelirinden vazgeçer."
+msgstr "Ease taxes (1 action)\nIt gives markets room to breathe, at the cost of Treasury revenue."
+
+msgid "Kemer sık (1 mesai)\nKasayı korur; iş ve huzur üzerindeki bedeli büyür."
+msgstr "Impose austerity (1 action)\nIt protects the Treasury, while jobs and public calm pay the price."
+
+msgid "Teşvik paketi (1 mesai)\nBugün kasaya yük olur; istihdam ve üretime sonra destek verir."
+msgstr "Incentive package (1 action)\nIt burdens the Treasury now and supports jobs and production later."
+
+msgid "Vergiyi Artır"
+msgstr "Raise Taxes"
+
+msgid "Vergiyi Hafiflet"
+msgstr "Ease Taxes"
+
+msgid "Kemer Sık"
+msgstr "Impose Austerity"
+
+msgid "Teşvik Paketi"
+msgstr "Incentive Package"
+
+msgid "Devlet\nMaliye kararları, kadro kararnameleri, ihale ve elçilik heyetleri."
+msgstr "State\nFiscal policy, appointments, tenders, and diplomatic missions."
+
+msgid "Maliye kararının etkisi başladı; aynı yöndeki her yeni hamle daha az sonuç verecek."
+msgstr "The fiscal policy has taken effect; each repeated measure in the same direction will have less impact."

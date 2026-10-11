@@ -39,6 +39,16 @@ func _initialize() -> void:
 	var due: Array = sim.delayed_economy.map(func(item: Dictionary) -> int: return int(item["due"]) - sim.week)
 	due.sort()
 	_check(due == [4, 6, 8, 12], "budget effects are scheduled four to twelve weeks later")
+	sim.new_game(202)
+	sim.treasury = 40.0
+	sim.economy_policy("tax_raise")
+	var first_tax_gain: float = sim.treasury - 40.0
+	sim.treasury = 40.0
+	sim.economy_policy("tax_raise")
+	_check(first_tax_gain > sim.treasury - 40.0 and sim.stats["economy_policy_tax_raise"] == 2, "repeated tax measures have diminishing returns")
+	var queued_before: int = sim.delayed_economy.size()
+	sim.economy_policy("incentive")
+	_check(sim.delayed_economy.size() == queued_before + 1 and sim.delayed_economy[-1]["due"] == sim.week + 6, "incentives arrive later rather than immediately")
 	if failures.is_empty():
 		print("ECONOMY: OK")
 		quit(0)
