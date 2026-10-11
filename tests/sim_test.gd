@@ -457,10 +457,12 @@ func _test_newcomer_rng() -> bool:
 		var perceived: float = 60.0 + old_rng.randf_range(-5.0, 5.0)
 		good = good and is_equal_approx(a.ambition, ambition) and is_equal_approx(a.honesty, honesty) and is_equal_approx(a.perceived_king, perceived)
 	var heir = sim.actors["julian"]
-	good = good and sim.actors.size() == 14 and heir.insider and not heir.royal and heir.supporting and heir.power <= 15.0
+	good = good and sim.actors.size() == 18 and heir.insider and not heir.royal and heir.supporting and heir.power <= 15.0
 	good = good and sim.heir_maturity >= 25.0 and sim.heir_maturity <= 35.0
 	good = good and sim.foreign.size() == 3 and sim.foreign.values().all(func(v: float) -> bool: return v >= 45.0 and v <= 55.0)
 	for aid in ["claire", "malenkov", "lucien"]:
+		good = good and sim.actors.has(aid) and not sim.actors[aid].insider and sim.actors[aid].supporting
+	for aid in ["governor_capital", "governor_industry", "governor_farmland", "governor_border"]:
 		good = good and sim.actors.has(aid) and not sim.actors[aid].insider and sim.actors[aid].supporting
 	good = good and sim._eligible({"id": "heir_ok", "min_heir": 25, "max_heir": 35})
 	good = good and not sim._eligible({"id": "heir_low", "max_heir": 24})

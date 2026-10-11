@@ -55,6 +55,10 @@ var king_name := KING_NAME
 var dynasty_generation := 1
 var unrest := 30.0
 var economy := 55.0
+const REGION_WEIGHTS := {"capital": 0.35, "industry": 0.30, "farmland": 0.22, "border": 0.13}
+const REGION_NAMES := {"capital": "Başkent", "industry": "Sanayi Kuşağı", "farmland": "Tarım Ovaları", "border": "Sınır İlleri"}
+var regions: Dictionary = {}
+var region_rng := RandomNumberGenerator.new()
 var economy_metrics: Dictionary = {"inflation": 45.0, "jobs": 55.0, "debt": 45.0, "trade": 55.0, "growth": 55.0}
 var economy_rng := RandomNumberGenerator.new()
 var parliament_rng := RandomNumberGenerator.new()
@@ -180,6 +184,7 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 	else:
 		rng.seed = seed_value
 	economy_rng.seed = rng.seed ^ 0xEC0A07
+	region_rng.seed = rng.seed ^ 0xA4E610
 	parliament_rng.seed = rng.seed ^ 0xA77E31
 	government_rng.seed = rng.seed ^ 0x60A3E71
 	if diff >= 0:
@@ -192,6 +197,7 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 	dynasty_generation = maxi(1, int(legacy.get("generation", 1)))
 	unrest = 30.0
 	economy = 55.0
+	regions = _new_regions(unrest, economy)
 	economy_metrics = {"inflation": 45.0, "jobs": 55.0, "debt": 45.0, "trade": 55.0, "growth": 55.0}
 	consent = 70.0
 	public_fear = 20.0
@@ -263,7 +269,8 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 	stats = {"ops": 0, "bribes": 0, "promotes": 0, "leaks": 0, "dismissals": 0, "written": 0, "hints": 0, "checks": 0,
 		"investigations": 0, "blackmails": 0, "promises": 0, "kept": 0, "broken": 0,
 		"elections": 0, "government_formations": 0, "confidence_offers": 0, "confidence_votes": 0,
-		"confidence_supports": 0, "confidence_falls": 0, "confidence_forced": 0}
+		"confidence_supports": 0, "confidence_falls": 0, "confidence_forced": 0,
+		"regional_investments": {"capital": 0, "industry": 0, "farmland": 0, "border": 0}}
 	regime = ""
 	ended = false
 	record = {}
@@ -275,7 +282,7 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 		var a := Actor.new()
 		a.setup(d)
 		# Her kampanyada gizli özellikler değişir (tekrar oynanabilirlik).
-		var actor_rng: RandomNumberGenerator = newcomer_rng if a.supporting else rng
+		var actor_rng: RandomNumberGenerator = region_rng if a.id.begins_with("governor_") else (newcomer_rng if a.supporting else rng)
 		a.ambition += actor_rng.randf_range(-12.0, 12.0)
 		a.honesty = clampf(a.honesty + actor_rng.randf_range(-0.15, 0.15), 0.05, 1.0)
 		a.perceived_king = king_strength + actor_rng.randf_range(-5.0, 5.0)
@@ -553,11 +560,11 @@ func save_summary() -> String:
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
 ## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Sarne ve kadro günlüğü
-const SAVE_VERSION := 18
+const SAVE_VERSION := 19
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
-	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng", "budget_allocation", "delayed_economy", "consent", "public_fear", "public_rng", "public_opinion_active", "last_poll_week", "parliament_base_opposition", "parliament_blocs", "parliament_proposals", "last_parliament_bill_week", "parliament_rng", "parliament_laws", "last_parliament_review_week", "government_rng", "government_pm", "government_coalition", "finance_report_source", "last_confidence_week"]
+	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng", "budget_allocation", "delayed_economy", "consent", "public_fear", "public_rng", "public_opinion_active", "last_poll_week", "parliament_base_opposition", "parliament_blocs", "parliament_proposals", "last_parliament_bill_week", "parliament_rng", "parliament_laws", "last_parliament_review_week", "government_rng", "government_pm", "government_coalition", "finance_report_source", "last_confidence_week", "regions", "region_rng"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -681,6 +688,10 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 		d["government_coalition"] = ["royal", "nobles"]
 		d["finance_report_source"] = "kessler"
 		d["last_confidence_week"] = 0
+	if from < 19:
+		region_rng.seed = int(d.get("seed", 1)) ^ 0xA4E610
+		d["regions"] = _new_regions(float(d.get("unrest", 30.0)), float(d.get("economy", 55.0)))
+		d["region_rng"] = region_rng.state
 	if not d.has("foreign"):
 		d["foreign"] = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
 	if not d.has("foreign_hint_until"):
@@ -730,7 +741,8 @@ func save_game() -> bool:
 		"parliament_laws": parliament_laws, "last_parliament_review_week": last_parliament_review_week,
 		"government_rng": government_rng.state, "government_pm": government_pm, "government_coalition": government_coalition,
 		"finance_report_source": finance_report_source, "last_confidence_week": last_confidence_week,
-		"version": SAVE_VERSION}
+		"regions": regions, "region_rng": region_rng.state,
+	"version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -862,6 +874,8 @@ func load_game() -> bool:
 	government_coalition.assign(d.get("government_coalition", ["royal", "nobles"]))
 	finance_report_source = str(d.get("finance_report_source", "kessler"))
 	last_confidence_week = int(d.get("last_confidence_week", 0))
+	regions = d.get("regions", _new_regions(unrest, economy))
+	region_rng.state = int(d.get("region_rng", int(d.get("seed", 1)) ^ 0xA4E610))
 	_refresh_parliament_opposition()
 	_generate_reports()
 	report_prev = d.get("report_prev", {})   # _generate_reports'un üzerine yazdığı geçen hafta
@@ -2049,6 +2063,7 @@ func end_week() -> void:
 			week_changes.pop_back()
 		week_changes.append({"tone": 0, "actor": "", "text": tr("Yönetimin %s bir rejim olarak anılmaya başladı.") % tr(regime_name())})
 	_check_end()
+	_sync_regions_to_national()
 	if autosave and not ended:
 		save_game()
 	for n in weekly_news:
@@ -4332,6 +4347,78 @@ func _foreign_average() -> float:
 	for power in ["asteria", "drakon", "seravia"]:
 		total += float(foreign.get(power, 50.0))
 	return total / 3.0
+
+
+func _new_regions(start_unrest: float, start_economy: float) -> Dictionary:
+	var result := {}
+	var unrest_offsets := {}
+	var economy_offsets := {}
+	var mean_unrest := 0.0
+	var mean_economy := 0.0
+	for id in REGION_WEIGHTS:
+		unrest_offsets[id] = region_rng.randf_range(-4.0, 4.0)
+		economy_offsets[id] = region_rng.randf_range(-6.0, 6.0)
+		mean_unrest += float(unrest_offsets[id]) * float(REGION_WEIGHTS[id])
+		mean_economy += float(economy_offsets[id]) * float(REGION_WEIGHTS[id])
+	var unrest_scale := _regional_offset_scale(unrest_offsets, mean_unrest, start_unrest)
+	var economy_scale := _regional_offset_scale(economy_offsets, mean_economy, start_economy)
+	for id in REGION_WEIGHTS:
+		var governor := "governor_" + str(id)
+		result[id] = {"unrest": clampf(start_unrest + (float(unrest_offsets[id]) - mean_unrest) * unrest_scale, 0.0, 100.0),
+			"loyalty": clampf(55.0 + region_rng.randf_range(-8.0, 8.0), 0.0, 100.0),
+			"economy": clampf(start_economy + (float(economy_offsets[id]) - mean_economy) * economy_scale, 0.0, 100.0), "governor": governor}
+	return result
+
+
+func _regional_offset_scale(offsets: Dictionary, mean: float, center: float) -> float:
+	var largest := 0.0
+	for id in REGION_WEIGHTS:
+		largest = maxf(largest, absf(float(offsets[id]) - mean))
+	return minf(1.0, minf(center, 100.0 - center) / largest) if largest > 0.0 else 1.0
+
+
+func _sync_regions_to_national() -> void:
+	# R4a keeps the established national simulation as the delta source while regions hold local state.
+	var target_unrest := unrest
+	var target_economy := economy
+	_set_region_mean("unrest", target_unrest)
+	_set_region_mean("economy", target_economy)
+	var weighted_unrest := 0.0
+	var weighted_economy := 0.0
+	for id in REGION_WEIGHTS:
+		weighted_unrest += float(regions[id]["unrest"]) * float(REGION_WEIGHTS[id])
+		weighted_economy += float(regions[id]["economy"]) * float(REGION_WEIGHTS[id])
+	unrest = weighted_unrest
+	economy = weighted_economy
+
+
+func _set_region_mean(field: String, target: float) -> void:
+	var low := -100.0
+	var high := 100.0
+	for _step in 24:
+		var offset := (low + high) * 0.5
+		var mean := 0.0
+		for id in REGION_WEIGHTS:
+			mean += clampf(float(regions[id].get(field, target)) + offset, 0.0, 100.0) * float(REGION_WEIGHTS[id])
+		if mean < target:
+			low = offset
+		else:
+			high = offset
+	var final_offset := (low + high) * 0.5
+	for id in REGION_WEIGHTS:
+		regions[id][field] = clampf(float(regions[id].get(field, target)) + final_offset, 0.0, 100.0)
+
+
+func region_report_line() -> String:
+	var lines: Array[String] = []
+	for id in REGION_WEIGHTS:
+		var region: Dictionary = regions.get(id, {})
+		var unrest_tone := tr("huzurlu") if float(region.get("unrest", 0.0)) < 35.0 else (tr("huzursuz") if float(region.get("unrest", 0.0)) < 65.0 else tr("gergin"))
+		var economy_tone := tr("canlı") if float(region.get("economy", 0.0)) >= 60.0 else (tr("durgun") if float(region.get("economy", 0.0)) >= 40.0 else tr("daralmış"))
+		var loyalty := float(region.get("loyalty", 50.0))
+		var loyalty_tone := tr("sağlam") if loyalty >= 62.0 else (tr("tereddütlü") if loyalty >= 42.0 else tr("zayıf"))
+		lines.append(tr("%s: %s, pazar %s, bağlılık %s") % [tr(str(REGION_NAMES[id])), unrest_tone, economy_tone, loyalty_tone])
+	return tr("Bölgeler: %s.") % "; ".join(lines)
 
 
 func _foreign_report_value(power: String, verified: bool) -> float:

@@ -82,5 +82,9 @@
     "power": 11, "ambition": 26, "fear": 12, "honesty": 0.6, "threshold": 0.9, "insider": false, "supporting": true,
     "loyalty": {"money": 20, "fear": 5, "ideology": 10, "career": 30, "complicity": 0},
     "red_line": "Seravia ticaretinin keyfî kesilmesi", "weak_point": "Liman ortaklarının gizli payı"
-  }
+  },
+  {"id":"governor_capital","name":"Mira Solen","title":"Başkent Valisi","domain":"army","power":12,"ambition":20,"fear":18,"honesty":0.82,"threshold":0.9,"insider":false,"supporting":true,"loyalty":{"money":0,"fear":0,"ideology":20,"career":20,"complicity":0},"red_line":"Sivillere müdahale","weak_point":"Sarayla eski bağı"},
+  {"id":"governor_industry","name":"Tarin Vey","title":"Sanayi Valisi","domain":"army","power":12,"ambition":20,"fear":18,"honesty":0.82,"threshold":0.9,"insider":false,"supporting":true,"loyalty":{"money":0,"fear":0,"ideology":20,"career":20,"complicity":0},"red_line":"İşçilerin ezilmesi","weak_point":"Eski grev dosyası"},
+  {"id":"governor_farmland","name":"Nera Aven","title":"Ovalar Valisi","domain":"army","power":12,"ambition":20,"fear":18,"honesty":0.82,"threshold":0.9,"insider":false,"supporting":true,"loyalty":{"money":0,"fear":0,"ideology":20,"career":20,"complicity":0},"red_line":"Köylerin boşaltılması","weak_point":"Toprak anlaşmazlığı"},
+  {"id":"governor_border","name":"Oren Dask","title":"Sınır Valisi","domain":"army","power":12,"ambition":20,"fear":18,"honesty":0.82,"threshold":0.9,"insider":false,"supporting":true,"loyalty":{"money":0,"fear":0,"ideology":20,"career":20,"complicity":0},"red_line":"Sınır köylerinin terk edilmesi","weak_point":"Eski kaçakçılık soruşturması"}
 ]

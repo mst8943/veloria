@@ -4306,6 +4306,60 @@ msgstr "Find a scapegoat"
 msgid "Gündem Değiştir"
 msgstr "Change the subject"
 
+msgid "Başkent"
+msgstr "Capital"
+
+msgid "Sanayi Kuşağı"
+msgstr "Industrial Belt"
+
+msgid "Tarım Ovaları"
+msgstr "Farming Plains"
+
+msgid "Sınır İlleri"
+msgstr "Border Provinces"
+
+msgid "huzurlu"
+msgstr "calm"
+
+msgid "huzursuz"
+msgstr "unsettled"
+
+msgid "gergin"
+msgstr "tense"
+
+msgid "canlı"
+msgstr "active"
+
+msgid "durgun"
+msgstr "sluggish"
+
+msgid "daralmış"
+msgstr "contracting"
+
+msgid "sağlam"
+msgstr "firm"
+
+msgid "tereddütlü"
+msgstr "uncertain"
+
+msgid "zayıf"
+msgstr "weak"
+
+msgid "%s: %s, pazar %s, bağlılık %s"
+msgstr "%s: %s, markets %s, loyalty %s"
+
+msgid "Bölgeler: %s."
+msgstr "Regions: %s."
+
+msgid "Divan'ı aç"
+msgstr "Open the Council"
+
+msgid "Vali"
+msgstr "Governor"
+
+msgid "Yüksek Mahkemenin tasfiye edilmesi"
+msgstr "Dissolution of the High Court"
+
 msgid "Sonucu kabul et ve hükümet görüşmelerini başlat"
 msgstr "Accept the result and begin government talks"
 
