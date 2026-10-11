@@ -87,6 +87,52 @@ func _run() -> void:
 		await _shot("tour_%02d" % requested_step)
 		quit(0)
 		return
+	if "--economy" in OS.get_cmdline_user_args():
+		main._instant = true
+		sim0.pending.clear()
+		sim0.week = 13
+		sim0._fire_budget()
+		main._refresh()
+		main._on_flow("gundem")
+		if main._mobile:
+			for frame in 3:
+				await process_frame
+			var agenda_bar: VScrollBar = main._scroll.get_v_scroll_bar()
+			main._scroll.scroll_vertical = maxi(0, int(agenda_bar.max_value - agenda_bar.page) - 18)
+			await process_frame
+		await _shot("r1_budget")
+		main._scroll.scroll_vertical = 0
+		sim0.pending.clear()
+		sim0.reports = [{"source": "kessler", "name": sim0.actors["kessler"].display_name,
+			"title": sim0.actors["kessler"].title, "text": sim0.economy_report("kessler"), "band": 1}]
+		main._tabs.current_tab = 2
+		if main._mobile:
+			main._mobile_report_tabs.current_tab = 0
+		main._refresh()
+		await _shot("r1_finance_report")
+		main._tabs.current_tab = 1
+		if main._mobile:
+			(main._person_panel._mobile_group_buttons["state"] as Button).pressed.emit()
+			await process_frame
+		main._sel.clear()
+		main._sel.append("kessler")
+		main._style_cards()
+		main._update_info()
+		main._show_act_cat("DEVLET")
+		if main._mobile:
+			await process_frame
+			var profile_bar: VScrollBar = main._person_panel._mobile_person_scroll.get_v_scroll_bar()
+			main._person_panel._mobile_person_scroll.scroll_vertical = int(profile_bar.max_value - profile_bar.page)
+		await _shot("r1_state_actions")
+		main._journal.clear()
+		main._on_week(sim0.week)
+		main._select_tab(main._journal)
+		await _shot("r1_daily")
+		if not main._mobile:
+			main._divan.open()
+			await _shot("r1_divan")
+		quit(0)
+		return
 	if "--all-actions" in OS.get_cmdline_user_args():
 		main._sel.clear()
 		main._sel.append("arden")

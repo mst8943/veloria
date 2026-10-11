@@ -2915,7 +2915,7 @@ msgid "Normal"
 msgstr "Normal"
 
 msgid "Yazı boyutu"
-msgstr "Text size"
+msgstr "Text scale"
 
 msgid "Büyük"
 msgstr "Large"
@@ -4036,6 +4036,12 @@ msgstr "Current generation: %d · Dynasty score: %d\n\n"
 msgid "Fiyatlar %s."
 msgstr "Prices are %s."
 
+msgid "Maliye: "
+msgstr "Treasury: "
+
+msgid "Maliye raporu bu hafta masaya ulaşmadı."
+msgstr "No finance report reached the desk this week."
+
 msgid "tırmanıyor"
 msgstr "climbing"
 
@@ -4093,8 +4099,8 @@ msgstr "expanding"
 msgid "Özel tahsis"
 msgstr "Custom allocation"
 
-msgid "Özel dağılımı uygula; sarayın payı da hesaba katılır."
-msgstr "Apply the custom allocation, including a Palace allowance."
+msgid "Özel dağılımda sosyal harcama öne çıkar; sanayi ve saray payı azalır."
+msgstr "Social spending takes priority; industry and palace shares shrink."
 
 msgid "Sıkı bütçe"
 msgstr "Austerity"

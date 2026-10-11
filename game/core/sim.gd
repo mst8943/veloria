@@ -1984,7 +1984,8 @@ func _tick_external_pressure() -> void:
 	var seravia_feed := maxf(0.0, 40.0 - float(foreign["seravia"])) * 0.12
 	seravia_feed += maxf(0.0, 25.0 - treasury) * 0.12
 	seravia_feed += maxf(0.0, 42.0 - float(capacity["maliye"])) * 0.06
-	var debt_stress := maxf(0.0, float(economy_metrics["debt"]) - 85.0) * 0.04
+	var debt_rate := 1.2 if float(budget_allocation.get("social", 25.0)) > 25.0 else 0.04
+	var debt_stress := maxf(0.0, float(economy_metrics["debt"]) - 85.0) * debt_rate
 	asteria_feed += debt_stress
 	seravia_feed += debt_stress
 	drakon_feed *= 2.6
@@ -2333,8 +2334,8 @@ func _fire_budget() -> void:
 			"fx": {"budget_allocation": {"army": 25.0, "social": 25.0, "industry": 25.0, "palace": 25.0}, "budget_stance": 0, "court_share": false}},
 		{"label": tr("Cömert bütçe"), "text": tr("Kurumlara ve sokağa nefes verir; kasanın bedeli haftalara yayılır."),
 			"fx": {"budget_allocation": {"army": 25.0, "social": 25.0, "industry": 25.0, "palace": 25.0}, "budget_stance": 1, "court_share": false}},
-		{"label": tr("Özel tahsis"), "text": tr("Özel dağılımı uygula; sarayın payı da hesaba katılır."),
-			"fx": {"budget_custom": true, "budget_stance": 0, "court_share": true}}
+		{"label": tr("Özel tahsis"), "text": tr("Özel dağılımda sosyal harcama öne çıkar; sanayi ve saray payı azalır."),
+			"fx": {"budget_allocation": {"army": 10.0, "social": 70.0, "industry": 10.0, "palace": 10.0}, "budget_stance": 0, "court_share": false}}
 	]
 	var e := {"id": "ceyrek_butce", "title": STATE_CONTENT["title"], "text": str(STATE_CONTENT["text"]) + note,
 		"art": "butce_acigi", "advisors": ["kessler", "dorn"], "kind": "budget", "choices": choices,
@@ -2367,7 +2368,7 @@ func _tick_budget_effects() -> void:
 		match str(item["sector"]):
 			"social":
 				unrest = clampf(unrest - amount * 0.045, 0.0, 100.0)
-				treasury = clampf(treasury - amount * 0.04, 0.0, 100.0)
+				treasury = clampf(treasury - amount * 1.6, 0.0, 100.0)
 			"industry":
 				economy = clampf(economy + amount * 0.07, 0.0, 100.0)
 				treasury = clampf(treasury - maxf(0.0, amount) * 0.02, 0.0, 100.0)
@@ -3392,6 +3393,7 @@ func _award_achievements(survived: bool, title: String, cause: String) -> Array:
 	var earned: Array = ["ilk_saltanat"]
 	if survived:
 		earned.append("tahtta_kal")
+		earned.append_array(_economy_achievement_ids())
 		if dynasty_generation >= 2:
 			earned.append("kusaklar")
 		if dynasty_generation >= 3:
@@ -3468,6 +3470,17 @@ func _award_achievements(survived: bool, title: String, cause: String) -> Array:
 		if f:
 			f.store_string(var_to_str(have))
 	return fresh
+
+
+func _economy_achievement_ids() -> Array[String]:
+	var earned: Array[String] = []
+	if treasury >= 60.0 and float(economy_metrics.get("debt", 100.0)) <= 40.0:
+		earned.append("butce_dengesi")
+	if float(economy_metrics.get("jobs", 0.0)) >= 70.0 and float(economy_metrics.get("growth", 0.0)) >= 65.0:
+		earned.append("uretim_atilimi")
+	if float(economy_metrics.get("trade", 0.0)) >= 70.0 and float(economy_metrics.get("inflation", 100.0)) <= 35.0:
+		earned.append("fiyat_istikrari")
+	return earned
 
 
 ## Hükümdarlık arşivi: biten her saltanat kalıcı olarak kaydedilir.
@@ -3619,6 +3632,13 @@ func economy_report(source: String) -> String:
 		tr("Ticaret %s, üretim %s.") % [tr("geriliyor" if trade_value < 40.0 else ("temkinli" if trade_value < 60.0 else "akıyor")), tr("yavaş" if growth_value < 40.0 else ("ılımlı" if growth_value < 60.0 else "genişliyor"))]
 	]
 	return " ".join(lines)
+
+
+func economy_journal_line() -> String:
+	for report: Dictionary in reports:
+		if str(report.get("source", "")) == "kessler":
+			return tr("Maliye: ") + str(report.get("text", ""))
+	return tr("Maliye raporu bu hafta masaya ulaşmadı.")
 
 
 func _army_loyalty() -> float:

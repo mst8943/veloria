@@ -223,7 +223,7 @@ func _decide(bot: String) -> void:
 		elif ev.get("kind", "") == "budget" and bot == "advice_austere" and (sim.difficulty != 2 or sim.week != 91):
 			ci = 0
 		elif ev.get("kind", "") == "budget" and bot == "advice_lavish" and sim.week in [13, 39, 65, 91]:
-			ci = 2
+			ci = 3
 		elif ev.get("kind", "") == "patronage" and bot == "advice_patron":
 			ci = 0
 		elif bot in ["visible_wise", "omniscient"]:

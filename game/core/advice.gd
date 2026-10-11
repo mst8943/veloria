@@ -62,6 +62,14 @@ func choice_value(fx: Dictionary) -> float:
 	return s
 
 
+func _advice_value(fx: Dictionary) -> float:
+	var value := choice_value(fx)
+	if fx.has("budget_allocation"):
+		var social_delta := float(fx["budget_allocation"].get("social", 25.0)) - 25.0
+		value += social_delta * 0.045 - social_delta * 0.25
+	return value
+
+
 ## choice_value'nun terimleri: boyut -> katkı. Kişi terimleri "actor:<id>" anahtarıyla.
 func _value_terms(fx: Dictionary) -> Dictionary:
 	var t := {}
@@ -247,7 +255,7 @@ func _advise(a: Actor, e: Dictionary, r: RandomNumberGenerator) -> Dictionary:
 	var available: Array[int] = []
 	for ch: Dictionary in choices:
 		var fx: Dictionary = ch.get("fx", {})
-		scores.append(k * (choice_value(fx) + r.randfn(0.0, sigma)) + w * _self_interest(a, fx))
+		scores.append(k * (_advice_value(fx) + r.randfn(0.0, sigma)) + w * _self_interest(a, fx))
 		if ch.get("available", true):
 			available.append(scores.size() - 1)
 	var best := available[0]

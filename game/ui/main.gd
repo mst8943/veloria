@@ -1575,6 +1575,7 @@ func _on_week(_w: int) -> void:
 				if not _fast():
 					UIKit.shake(_stage, 7.0, 0.45)
 				break
+	_journal.append_text("• %s\n" % Sim.economy_journal_line())
 	_tabs.current_tab = 0
 
 

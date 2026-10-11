@@ -1,6 +1,9 @@
 {
   "ilk_saltanat": ["First Reign", "Carry a reign to its end—or fall."],
   "tahtta_kal": ["Two Years", "Complete 104 weeks on the throne."],
+  "butce_dengesi": ["Balanced Treasury", "Keep a strong treasury and low debt while staying on the throne."],
+  "uretim_atilimi": ["Production Boom", "Keep employment and growth high while staying on the throne."],
+  "fiyat_istikrari": ["Stable Markets", "Keep trade lively and prices stable while staying on the throne."],
   "zor_zafer": ["Iron Will", "Stay on the throne at the hard difficulty."],
   "temiz_eller": ["Clean Hands", "Stay on the throne without a secret payment, blackmail, or written order."],
   "sozunun_eri": ["A Word Kept", "Keep at least two promises, break none, and stay on the throne."],

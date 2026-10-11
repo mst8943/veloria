@@ -7,6 +7,18 @@
     "İki Yıl",
     "104 haftayı tahtta tamamla."
   ],
+  "butce_dengesi": [
+    "Denk Hazine",
+    "Tahtta kalırken güçlü hazine ve düşük borcu koru."
+  ],
+  "uretim_atilimi": [
+    "Üretim Atılımı",
+    "Tahtta kalırken istihdamı ve büyümeyi yüksek tut."
+  ],
+  "fiyat_istikrari": [
+    "İstikrarlı Pazar",
+    "Tahtta kalırken ticareti canlı, fiyatları istikrarlı tut."
+  ],
   "zor_zafer": [
     "Demir İrade",
     "Zor seviyede tahtta kal."
