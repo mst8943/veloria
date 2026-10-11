@@ -326,6 +326,8 @@ func _rebuild_agenda() -> void:
 		hb.add_theme_constant_override("separation", 6 if host._mobile else 14)
 		card.add_child(hb)
 		var tex: Texture2D = host._event_art(str(e.get("art", e["id"])))
+		if tex == null:
+			card_box.content_margin_top = 20 if host._mobile else 16
 		if tex:
 			# Görsel kendi çerçevesinde yavaşça hareket eder (yaşayan kart).
 			var frame := Control.new()
