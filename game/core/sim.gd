@@ -1984,6 +1984,9 @@ func _tick_external_pressure() -> void:
 	var seravia_feed := maxf(0.0, 40.0 - float(foreign["seravia"])) * 0.12
 	seravia_feed += maxf(0.0, 25.0 - treasury) * 0.12
 	seravia_feed += maxf(0.0, 42.0 - float(capacity["maliye"])) * 0.06
+	var debt_stress := maxf(0.0, float(economy_metrics["debt"]) - 85.0) * 0.04
+	asteria_feed += debt_stress
+	seravia_feed += debt_stress
 	drakon_feed *= 2.6
 	asteria_feed *= 1.5
 	seravia_feed *= 1.5

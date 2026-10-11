@@ -49,6 +49,25 @@ func _initialize() -> void:
 	var queued_before: int = sim.delayed_economy.size()
 	sim.economy_policy("incentive")
 	_check(sim.delayed_economy.size() == queued_before + 1 and sim.delayed_economy[-1]["due"] == sim.week + 6, "incentives arrive later rather than immediately")
+	var low_debt: Node = load("res://game/core/sim.gd").new()
+	low_debt.new_game(303)
+	low_debt.economy_metrics["debt"] = 0.0
+	sim.new_game(303)
+	sim.economy_metrics["debt"] = 90.0
+	sim.ext_rng.seed = 555
+	low_debt.ext_rng.seed = 555
+	var ext_main_rng: int = sim.rng.state
+	sim._tick_external_pressure()
+	low_debt._tick_external_pressure()
+	_check(sim.ext_pressure["asteria"] > low_debt.ext_pressure["asteria"] and sim.rng.state == ext_main_rng, "debt raises foreign pressure on the separate stream")
+	sim.pending.clear()
+	sim.other_crisis.clear()
+	sim.week = 40
+	sim.crisis_cooldown = 0
+	sim.treasury = 40.0
+	sim.ext_pressure["asteria"] = 65.0
+	sim._check_crises()
+	_check(sim.other_crisis.get("kind", "") == "siege", "debt pressure converges on the financial siege crisis")
 	if failures.is_empty():
 		print("ECONOMY: OK")
 		quit(0)
