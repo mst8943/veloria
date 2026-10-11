@@ -101,6 +101,10 @@ func _initialize() -> void:
 	sim.other_crisis = {"kind": "siege", "phase": "crisis", "week": sim.week}
 	sim.pending.append({"event": sim._external_event("siege"), "age": 0})
 	_check(str(sim.pending[0]["event"]["title"]) == "Credit is cut; payday is near", "credit-cut card is localized in English")
+	sim.weekly_news.clear()
+	sim.weekly_news_localized.clear()
+	sim._open_other("siege")
+	_check(str(sim.weekly_news_localized.values()[0]).begins_with("CRISIS: Asteria and Seravia cut credit"), "financial crisis news is localized in English")
 	Loc.set_lang("tr")
 	sim.new_game(505)
 	sim.flags["external_defeat"] = "siege"

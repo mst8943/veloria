@@ -2224,6 +2224,9 @@ msgstr "CRISIS: The squares are in revolt; the streets are at the palace gates."
 msgid "KRİZ: Mahkeme kralın yetkilerini askıya almayı görüşüyor."
 msgstr "CRISIS: The court is considering suspending the king's powers."
 
+msgid "KRİZ: Asteria ve Seravia krediyi kesti; devlet ödeme planı istiyor."
+msgstr "CRISIS: Asteria and Seravia cut credit; the state needs a payment plan."
+
 msgid "Komutanlar halka ateş açma emrini tartışıyor; kimse ilk adımı atmak istemiyor."
 msgstr "The commanders are debating an order to fire on the people; no one wants to make the first move."
 
