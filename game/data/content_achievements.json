@@ -1,4 +1,7 @@
 {
+  "regional_steward": ["Bölge Emanetçisi", "Bir saltanatta en az dört bölgesel karar al."],
+  "regional_balance": ["Dengeli Taç", "En az üç farklı bölgeye yatırım ya da garnizon gönder."],
+  "regional_voice": ["Yerel Sesler", "En az üç bölgede yerel yayını destekle."],
   "sandik_mandati": ["Sandık Mandatı", "Erken seçimden sonra hükümet kur."],
   "koalisyon_mimari": ["Koalisyon Mimarı", "Yeni bir hükümet koalisyonu kur."],
   "guven_oyunu": ["Güven Oylaması", "Bir hükümet güven oylamasından sağ çık."],

@@ -22,7 +22,7 @@ extends SceneTree
 
 var sim: Node
 var rng := RandomNumberGenerator.new()
-const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "advice_patron", "advice_veliaht", "advice_heyet", "advice_bloc", "visible_wise", "omniscient", "public_out", "public_hide", "parliament_force", "parliament_withdraw", "parliament_abstain", "confidence_force", "confidence_fall"]
+const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "advice_patron", "advice_veliaht", "advice_heyet", "advice_bloc", "visible_wise", "omniscient", "public_out", "public_hide", "parliament_force", "parliament_withdraw", "parliament_abstain", "confidence_force", "confidence_fall", "region_invest_one", "region_invest_none", "region_garrison_capital"]
 var style := ""   # advice_soft / advice_dirty oyun tarzı
 var dynasty_probe := false
 var dynasty_cap_ok := true
@@ -189,6 +189,8 @@ func _cause_kind(c: String) -> String:
 func _play(bot: String) -> void:
 	if bot == "idle":
 		return
+	if bot in ["region_invest_one", "region_garrison_capital"] and sim.mesai > 0 and sim.pending.is_empty() and sim.week - sim.last_region_action_week >= 12:
+		sim.request_regional_decision()
 	if bot in ["public_out", "public_hide"] and sim.mesai > 0:
 		var action: String = "hide" if bot == "public_hide" else ["speech", "visit", "ceremony"][sim.week % 3]
 		sim.public_action(action)
@@ -228,7 +230,17 @@ func _decide(bot: String) -> void:
 	while not sim.pending.is_empty() and (sim.mesai > 0 or sim.pending[0]["event"].get("kind", "") == "parliament_bill") and guard < 6:
 		guard += 1
 		var ev: Dictionary = sim.pending[0]["event"]
+		if ev.get("kind", "") == "regional_action" and bot == "region_invest_none":
+			break
 		var ci: int = 0 if str(ev.get("kind", "")) == "parliament_bill" else rng.randi() % ev["choices"].size()
+		if ev.get("kind", "") == "regional_action" and bot in ["region_invest_one", "region_garrison_capital"]:
+			if ev["choices"][0].get("action", "") == "select_region":
+				for i in ev["choices"].size():
+					if str(ev["choices"][i].get("region", "")) == ("capital" if bot == "region_garrison_capital" else "industry"):
+						ci = i
+						break
+			else:
+				ci = 1 if bot == "region_garrison_capital" else 0
 		var parliament_bot := bot in ["parliament_force", "parliament_withdraw", "parliament_abstain"]
 		if parliament_bot and str(ev.get("kind", "")) == "parliament_bill":
 			if bot == "parliament_abstain":
@@ -288,10 +300,10 @@ func _advice_choice(bot: String, adv: Array, fallback: int) -> int:
 				return int(it["rec"])
 	var votes := {}
 	for it: Dictionary in adv:
-		var wgt := 0.5 if it["stake"] else 1.0
-		if int(it["rec"]) >= 0:
+		var wgt := 0.5 if bool(it.get("stake", false)) else 1.0
+		if int(it.get("rec", -1)) >= 0:
 			votes[int(it["rec"])] = float(votes.get(int(it["rec"]), 0.0)) + wgt
-		if int(it["warn"]) >= 0:
+		if int(it.get("warn", -1)) >= 0:
 			votes[int(it["warn"])] = float(votes.get(int(it["warn"]), 0.0)) - wgt
 	var best := fallback
 	var best_v := float(votes.get(fallback, 0.0))

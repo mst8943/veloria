@@ -261,6 +261,9 @@ func _advise(a: Actor, e: Dictionary, r: RandomNumberGenerator) -> Dictionary:
 		scores.append(k * (_advice_value(fx) + r.randfn(0.0, sigma)) + w * _self_interest(a, fx))
 		if ch.get("available", true):
 			available.append(scores.size() - 1)
+	if available.is_empty():
+		item["kind"] = "flat"
+		return item
 	var best := available[0]
 	var worst := available[0]
 	for i in available:

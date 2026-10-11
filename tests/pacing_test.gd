@@ -29,6 +29,7 @@ func _init() -> void:
 		while not sim.ended:
 			var before: int = sim.fired_events.size()
 			var demands_before: int = sim.halden_demands
+			var regional_before: int = int(sim.stats.get("regional_events", 0))
 			var repeat_before := 0
 			for k in sim.fired_events:
 				repeat_before += int(sim.fired_events[k])
@@ -42,6 +43,7 @@ func _init() -> void:
 				if int(sim.fired_events[k]) == sim.week and not str(k).begins_with("hamle_"):
 					new_this_week += 1
 			new_this_week += sim.halden_demands - demands_before
+			new_this_week += int(sim.stats.get("regional_events", 0)) - regional_before
 			var b := int((sim.week - 1) / BUCKET)
 			buckets[b] = int(buckets.get(b, 0)) + new_this_week
 			alive_weeks[b] = int(alive_weeks.get(b, 0)) + 1

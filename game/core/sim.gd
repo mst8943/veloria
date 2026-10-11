@@ -59,6 +59,11 @@ const REGION_WEIGHTS := {"capital": 0.35, "industry": 0.30, "farmland": 0.22, "b
 const REGION_NAMES := {"capital": "Başkent", "industry": "Sanayi Kuşağı", "farmland": "Tarım Ovaları", "border": "Sınır İlleri"}
 var regions: Dictionary = {}
 var region_rng := RandomNumberGenerator.new()
+var region_sync_unrest := 30.0
+var region_sync_economy := 55.0
+var regional_effects: Array[Dictionary] = []
+var last_region_action_week := 0
+var last_region_crisis_week := 0
 var economy_metrics: Dictionary = {"inflation": 45.0, "jobs": 55.0, "debt": 45.0, "trade": 55.0, "growth": 55.0}
 var economy_rng := RandomNumberGenerator.new()
 var parliament_rng := RandomNumberGenerator.new()
@@ -198,6 +203,11 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 	unrest = 30.0
 	economy = 55.0
 	regions = _new_regions(unrest, economy)
+	region_sync_unrest = unrest
+	region_sync_economy = economy
+	regional_effects.clear()
+	last_region_action_week = 0
+	last_region_crisis_week = 0
 	economy_metrics = {"inflation": 45.0, "jobs": 55.0, "debt": 45.0, "trade": 55.0, "growth": 55.0}
 	consent = 70.0
 	public_fear = 20.0
@@ -270,7 +280,9 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 		"investigations": 0, "blackmails": 0, "promises": 0, "kept": 0, "broken": 0,
 		"elections": 0, "government_formations": 0, "confidence_offers": 0, "confidence_votes": 0,
 		"confidence_supports": 0, "confidence_falls": 0, "confidence_forced": 0,
-		"regional_investments": {"capital": 0, "industry": 0, "farmland": 0, "border": 0}}
+		"regional_investments": {"capital": 0, "industry": 0, "farmland": 0, "border": 0},
+		"regional_garrisons": {"capital": 0, "industry": 0, "farmland": 0, "border": 0},
+		"regional_media": {"capital": 0, "industry": 0, "farmland": 0, "border": 0}, "regional_governors": 0, "regional_actions": 0, "regional_events": 0}
 	regime = ""
 	ended = false
 	record = {}
@@ -560,11 +572,11 @@ func save_summary() -> String:
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
 ## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Sarne ve kadro günlüğü
-const SAVE_VERSION := 19
+const SAVE_VERSION := 20
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
-	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng", "budget_allocation", "delayed_economy", "consent", "public_fear", "public_rng", "public_opinion_active", "last_poll_week", "parliament_base_opposition", "parliament_blocs", "parliament_proposals", "last_parliament_bill_week", "parliament_rng", "parliament_laws", "last_parliament_review_week", "government_rng", "government_pm", "government_coalition", "finance_report_source", "last_confidence_week", "regions", "region_rng"]
+	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng", "budget_allocation", "delayed_economy", "consent", "public_fear", "public_rng", "public_opinion_active", "last_poll_week", "parliament_base_opposition", "parliament_blocs", "parliament_proposals", "last_parliament_bill_week", "parliament_rng", "parliament_laws", "last_parliament_review_week", "government_rng", "government_pm", "government_coalition", "finance_report_source", "last_confidence_week", "regions", "region_rng", "regional_effects", "last_region_action_week", "last_region_crisis_week", "region_sync_unrest", "region_sync_economy"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -692,6 +704,23 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 		region_rng.seed = int(d.get("seed", 1)) ^ 0xA4E610
 		d["regions"] = _new_regions(float(d.get("unrest", 30.0)), float(d.get("economy", 55.0)))
 		d["region_rng"] = region_rng.state
+	if from < 20:
+		d["regional_effects"] = []
+		d["last_region_action_week"] = 0
+		d["last_region_crisis_week"] = 0
+		d["region_sync_unrest"] = float(d.get("unrest", 30.0))
+		d["region_sync_economy"] = float(d.get("economy", 55.0))
+		var migrated_stats: Dictionary = d.get("stats", {})
+		migrated_stats["regional_investments"] = {"capital": 0, "industry": 0, "farmland": 0, "border": 0}
+		migrated_stats["regional_garrisons"] = {"capital": 0, "industry": 0, "farmland": 0, "border": 0}
+		migrated_stats["regional_media"] = {"capital": 0, "industry": 0, "farmland": 0, "border": 0}
+		migrated_stats["regional_governors"] = 0
+		migrated_stats["regional_actions"] = 0
+		migrated_stats["regional_events"] = 0
+		d["stats"] = migrated_stats
+		for id in REGION_WEIGHTS:
+			d["regions"][id]["garrison"] = 0.0
+			d["regions"][id]["media"] = 0.0
 	if not d.has("foreign"):
 		d["foreign"] = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
 	if not d.has("foreign_hint_until"):
@@ -741,7 +770,9 @@ func save_game() -> bool:
 		"parliament_laws": parliament_laws, "last_parliament_review_week": last_parliament_review_week,
 		"government_rng": government_rng.state, "government_pm": government_pm, "government_coalition": government_coalition,
 		"finance_report_source": finance_report_source, "last_confidence_week": last_confidence_week,
-		"regions": regions, "region_rng": region_rng.state,
+		"regions": regions, "region_rng": region_rng.state, "regional_effects": regional_effects,
+		"last_region_action_week": last_region_action_week, "last_region_crisis_week": last_region_crisis_week,
+		"region_sync_unrest": region_sync_unrest, "region_sync_economy": region_sync_economy,
 	"version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
@@ -875,6 +906,11 @@ func load_game() -> bool:
 	finance_report_source = str(d.get("finance_report_source", "kessler"))
 	last_confidence_week = int(d.get("last_confidence_week", 0))
 	regions = d.get("regions", _new_regions(unrest, economy))
+	region_sync_unrest = float(d.get("region_sync_unrest", unrest))
+	region_sync_economy = float(d.get("region_sync_economy", economy))
+	regional_effects.assign(d.get("regional_effects", []))
+	last_region_action_week = int(d.get("last_region_action_week", 0))
+	last_region_crisis_week = int(d.get("last_region_crisis_week", 0))
 	region_rng.state = int(d.get("region_rng", int(d.get("seed", 1)) ^ 0xA4E610))
 	_refresh_parliament_opposition()
 	_generate_reports()
@@ -1837,13 +1873,18 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 	var fx: Dictionary = ch.get("fx", {})
 	if float(fx.get("wealth", 0)) + private_wealth < 0.0:
 		return tr("Kişisel servetin yetersiz.")
+	if e.get("kind", "") == "regional_action" and str(ch.get("action", "")) == "select_region":
+		pending.remove_at(pending_index)
+		_queue_region_action_options(str(ch.get("region", "")))
+		changed.emit()
+		return tr("Bölge seçildi; şimdi tahsis türünü belirle.")
 	if e.get("kind", "") != "parliament_bill" and not spend_mesai():
 		return _no_mesai()
 	if e.get("crisis", false):
 		pending.remove_at(pending_index)
 		history.append(tr("Hafta %d — %s » %s") % [week, e["title"], ch["label"]])
 		var kind := str(e.get("crisis_kind", "coup"))
-		var crisis_text := _resolve_crisis(str(ch.get("crisis", ""))) if kind == "coup" else _resolve_other(str(ch.get("crisis", "")))
+		var crisis_text := _resolve_crisis(str(ch.get("crisis", ""))) if kind == "coup" else (_resolve_regional_crisis(ch) if kind == "regional" else _resolve_other(str(ch.get("crisis", ""))))
 		if coup_crisis.get("failed", false) or other_crisis.get("failed", false):
 			end_week()  # kapılar açıldı: kriz bu gece sonuçlanır
 		changed.emit()
@@ -1867,6 +1908,11 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 		return _resolve_parliament_bill(e, choice_index)
 	if e.get("kind", "") == "parliament_repeal":
 		return _resolve_parliament_repeal(e, choice_index)
+	if e.get("kind", "") == "regional_action":
+		var region_result := _resolve_region_action(ch)
+		history.append(tr("Hafta %d — %s » %s") % [week, e["title"], ch["label"]])
+		changed.emit()
+		return region_result
 	if e.get("kind", "") in ["election_result", "government_formation", "confidence_vote", "government_appointment"]:
 		var government_result := _resolve_r3c_decision(e, choice_index)
 		history.append(tr("Hafta %d — %s » %s") % [week, e["title"], ch["label"]])
@@ -2040,6 +2086,7 @@ func end_week() -> void:
 	_world_tick()
 	_tick_public_opinion()
 	_tick_budget_effects()
+	_tick_region_systems()
 	_state_warnings()
 	_decay_facts()
 	_fire_events()
@@ -4077,6 +4124,7 @@ func _award_achievements(survived: bool, title: String, cause: String) -> Array:
 	if survived:
 		earned.append("tahtta_kal")
 		earned.append_array(_economy_achievement_ids())
+		earned.append_array(_region_achievement_ids())
 		if dynasty_generation >= 2:
 			earned.append("kusaklar")
 		if dynasty_generation >= 3:
@@ -4163,6 +4211,24 @@ func _economy_achievement_ids() -> Array[String]:
 		earned.append("uretim_atilimi")
 	if float(economy_metrics.get("trade", 0.0)) >= 70.0 and float(economy_metrics.get("inflation", 100.0)) <= 35.0:
 		earned.append("fiyat_istikrari")
+	return earned
+
+
+func _region_achievement_ids() -> Array[String]:
+	var earned: Array[String] = []
+	if int(stats.get("regional_actions", 0)) >= 4:
+		earned.append("regional_steward")
+	var spread := 0
+	var voice := 0
+	for id in REGION_WEIGHTS:
+		if int(stats.get("regional_investments", {}).get(id, 0)) > 0 or int(stats.get("regional_garrisons", {}).get(id, 0)) > 0:
+			spread += 1
+		if int(stats.get("regional_media", {}).get(id, 0)) > 0:
+			voice += 1
+	if spread >= 3:
+		earned.append("regional_balance")
+	if voice >= 3:
+		earned.append("regional_voice")
 	return earned
 
 
@@ -4366,7 +4432,8 @@ func _new_regions(start_unrest: float, start_economy: float) -> Dictionary:
 		var governor := "governor_" + str(id)
 		result[id] = {"unrest": clampf(start_unrest + (float(unrest_offsets[id]) - mean_unrest) * unrest_scale, 0.0, 100.0),
 			"loyalty": clampf(55.0 + region_rng.randf_range(-8.0, 8.0), 0.0, 100.0),
-			"economy": clampf(start_economy + (float(economy_offsets[id]) - mean_economy) * economy_scale, 0.0, 100.0), "governor": governor}
+			"economy": clampf(start_economy + (float(economy_offsets[id]) - mean_economy) * economy_scale, 0.0, 100.0),
+			"governor": governor, "garrison": 0.0, "media": 0.0}
 	return result
 
 
@@ -4378,11 +4445,14 @@ func _regional_offset_scale(offsets: Dictionary, mean: float, center: float) -> 
 
 
 func _sync_regions_to_national() -> void:
-	# R4a keeps the established national simulation as the delta source while regions hold local state.
-	var target_unrest := unrest
-	var target_economy := economy
-	_set_region_mean("unrest", target_unrest)
-	_set_region_mean("economy", target_economy)
+	# National changes apply across regions; local changes return through the weighted summary.
+	var local_unrest_mean := 0.0
+	var local_economy_mean := 0.0
+	for id in REGION_WEIGHTS:
+		local_unrest_mean += float(regions[id]["unrest"]) * float(REGION_WEIGHTS[id])
+		local_economy_mean += float(regions[id]["economy"]) * float(REGION_WEIGHTS[id])
+	_set_region_mean("unrest", local_unrest_mean + unrest - region_sync_unrest)
+	_set_region_mean("economy", local_economy_mean + economy - region_sync_economy)
 	var weighted_unrest := 0.0
 	var weighted_economy := 0.0
 	for id in REGION_WEIGHTS:
@@ -4390,6 +4460,8 @@ func _sync_regions_to_national() -> void:
 		weighted_economy += float(regions[id]["economy"]) * float(REGION_WEIGHTS[id])
 	unrest = weighted_unrest
 	economy = weighted_economy
+	region_sync_unrest = unrest
+	region_sync_economy = economy
 
 
 func _set_region_mean(field: String, target: float) -> void:
@@ -4410,15 +4482,187 @@ func _set_region_mean(field: String, target: float) -> void:
 
 
 func region_report_line() -> String:
-	var lines: Array[String] = []
+	var lead := "capital"
 	for id in REGION_WEIGHTS:
-		var region: Dictionary = regions.get(id, {})
-		var unrest_tone := tr("huzurlu") if float(region.get("unrest", 0.0)) < 35.0 else (tr("huzursuz") if float(region.get("unrest", 0.0)) < 65.0 else tr("gergin"))
-		var economy_tone := tr("canlı") if float(region.get("economy", 0.0)) >= 60.0 else (tr("durgun") if float(region.get("economy", 0.0)) >= 40.0 else tr("daralmış"))
-		var loyalty := float(region.get("loyalty", 50.0))
-		var loyalty_tone := tr("sağlam") if loyalty >= 62.0 else (tr("tereddütlü") if loyalty >= 42.0 else tr("zayıf"))
-		lines.append(tr("%s: %s, pazar %s, bağlılık %s") % [tr(str(REGION_NAMES[id])), unrest_tone, economy_tone, loyalty_tone])
-	return tr("Bölgeler: %s.") % "; ".join(lines)
+		if float(regions.get(id, {}).get("unrest", 0.0)) > float(regions.get(lead, {}).get("unrest", 0.0)):
+			lead = id
+	var region: Dictionary = regions.get(lead, {})
+	var unrest_tone := tr("huzurlu") if float(region.get("unrest", 0.0)) < 35.0 else (tr("huzursuz") if float(region.get("unrest", 0.0)) < 65.0 else tr("gergin"))
+	var economy_tone := tr("canlı") if float(region.get("economy", 0.0)) >= 60.0 else (tr("durgun") if float(region.get("economy", 0.0)) >= 40.0 else tr("daralmış"))
+	var loyalty := float(region.get("loyalty", 50.0))
+	var loyalty_tone := tr("sağlam") if loyalty >= 62.0 else (tr("tereddütlü") if loyalty >= 42.0 else tr("zayıf"))
+	return tr("Bölgeler: %s öne çıkıyor — %s, pazar %s, bağlılık %s; diğer bölgeler izleniyor.") % [tr(str(REGION_NAMES[lead])), unrest_tone, economy_tone, loyalty_tone]
+
+
+func _tick_region_systems() -> void:
+	var keep: Array[Dictionary] = []
+	for effect: Dictionary in regional_effects:
+		if int(effect["due"]) > week:
+			keep.append(effect)
+			continue
+		var region: Dictionary = regions[str(effect["region"])]
+		match str(effect["field"]):
+			"economy": region["economy"] = clampf(float(region["economy"]) + float(effect["amount"]), 0.0, 100.0)
+			"loyalty": region["loyalty"] = clampf(float(region["loyalty"]) + float(effect["amount"]), 0.0, 100.0)
+			"unrest": region["unrest"] = clampf(float(region["unrest"]) + float(effect["amount"]), 0.0, 100.0)
+	regional_effects = keep
+	if other_crisis.is_empty() and coup_crisis.is_empty() and week - last_region_crisis_week >= 6 and pending.is_empty():
+		_check_regional_crisis()
+
+
+func request_regional_decision() -> String:
+	if mesai < 1 or not pending.is_empty() or week - last_region_action_week < 12:
+		return tr("Yeni bölgesel tahsis için karar sırası ve hazineyi beklemelisin.")
+	_queue_region_action()
+	return tr("Bölgesel tahsis gündeme alındı; bir bölge seç.")
+
+
+func _queue_region_action() -> void:
+	var choices: Array = []
+	for id in REGION_WEIGHTS:
+		choices.append({"label": tr(str(REGION_NAMES[id])), "action": "select_region", "region": id, "fx": {}})
+	last_region_action_week = week
+	stats["regional_events"] = int(stats.get("regional_events", 0)) + 1
+	pending.append({"event": {"id": "region_action_%d" % week, "kind": "regional_action", "title": tr("Bölgesel tahsis ve atama kararı"),
+		"text": tr("R1 bütçe payları hangi bölgeye ulaşsın? Yatırımlar ve garnizonlar gecikmeli sonuç verir; yerel yayın desteği R2 rızasını etkiler."),
+		"advisors": ["kessler", "dorn"], "choices": choices, "ignore": {"text": tr("Bu hafta bölgesel tahsis yapılmadı."), "fx": {}}}, "age": 0})
+	_add_news("OLAY: Bölgesel tahsis ve atama kararı.", Loc.en("OLAY: Bölgesel tahsis ve atama kararı."))
+
+
+func _queue_region_action_options(id: String) -> void:
+	if not regions.has(id): return
+	var choices: Array = [
+		{"label": tr("Altyapı yatırımı"), "action": "invest", "region": id, "available": float(budget_allocation.get("industry", 25.0)) >= 15.0 and treasury >= 8.0, "fx": {}},
+		{"label": tr("Garnizon takviyesi"), "action": "garrison", "region": id, "available": float(budget_allocation.get("army", 25.0)) >= 15.0 and treasury >= 6.0, "fx": {}},
+		{"label": tr("Yerel yayın desteği"), "action": "media", "region": id, "available": float(budget_allocation.get("social", 25.0)) >= 15.0 and treasury >= 5.0, "fx": {}}]
+	var governor := str(regions[id].get("governor", ""))
+	if governor != "":
+		choices.append({"label": tr("Valiyi azlet"), "action": "dismiss", "region": id, "available": treasury >= 5.0, "fx": {}})
+	else:
+		for actor_id in actors:
+			if str(actor_id).begins_with("governor_") and not _governor_assigned(str(actor_id)):
+				choices.append({"label": tr("%s'i vali ata") % actors[actor_id].display_name, "action": "appoint", "region": id, "actor": actor_id, "available": treasury >= 8.0, "fx": {}})
+	pending.append({"event": {"id": "region_options_%d" % week, "kind": "regional_action", "title": tr("%s için karar") % tr(str(REGION_NAMES[id])),
+		"text": tr("Bütçe tahsisi, yerel rıza ya da vali ataması arasında seçim yap."), "advisors": ["kessler", "dorn"], "choices": choices,
+		"ignore": {"text": tr("Bölge için bu hafta karar alınmadı."), "fx": {}}}, "age": 0})
+
+
+func _governor_assigned(actor_id: String) -> bool:
+	for region: Dictionary in regions.values():
+		if str(region.get("governor", "")) == actor_id:
+			return true
+	return false
+
+
+func _resolve_region_action(choice: Dictionary) -> String:
+	var id := str(choice.get("region", ""))
+	if not regions.has(id):
+		return ""
+	var region: Dictionary = regions[id]
+	match str(choice.get("action", "")):
+		"invest":
+			if float(budget_allocation.get("industry", 25.0)) < 15.0 or treasury < 8.0:
+				return tr("Sanayi tahsisi ya da hazine bu yatırımı karşılayamadı.")
+			treasury -= 8.0
+			regional_effects.append({"due": week + 4, "region": id, "field": "economy", "amount": 3.0 + float(budget_allocation["industry"]) * 0.05})
+			stats["regional_investments"][id] = int(stats["regional_investments"][id]) + 1
+			stats["regional_actions"] = int(stats.get("regional_actions", 0)) + 1
+			return tr("%s için altyapı ödeneği ayrıldı; pazar etkisi birkaç hafta sonra görülecek.") % tr(str(REGION_NAMES[id]))
+		"garrison":
+			if float(budget_allocation.get("army", 25.0)) < 15.0 or treasury < 6.0:
+				return tr("Ordu tahsisi ya da hazine bu takviyeyi karşılayamadı.")
+			treasury -= 6.0
+			region["garrison"] = minf(100.0, float(region.get("garrison", 0.0)) + 15.0 + float(budget_allocation["army"]) * 0.1)
+			regional_effects.append({"due": week + 3, "region": id, "field": "unrest", "amount": -2.5})
+			stats["regional_garrisons"][id] = int(stats["regional_garrisons"][id]) + 1
+			stats["regional_actions"] = int(stats.get("regional_actions", 0)) + 1
+			return tr("Garnizon %s iline konuşlandı; kısa vadede sükûnet, uzun vadede askerî nüfuz getirir.") % tr(str(REGION_NAMES[id]))
+		"media":
+			if float(budget_allocation.get("social", 25.0)) < 15.0 or treasury < 5.0:
+				return tr("Sosyal tahsis ya da hazine yerel yayını destekleyemedi.")
+			treasury -= 5.0
+			region["media"] = minf(100.0, float(region.get("media", 0.0)) + 12.0)
+			regional_effects.append({"due": week + 2, "region": id, "field": "loyalty", "amount": 3.0 + float(budget_allocation["social"]) * 0.03})
+			consent = clampf(consent + 1.0, 0.0, 100.0)
+			stats["regional_media"][id] = int(stats["regional_media"][id]) + 1
+			stats["regional_actions"] = int(stats.get("regional_actions", 0)) + 1
+			return tr("Yerel yayın desteği %s'de duyuruldu; rıza artarken editoryal bağımsızlık daralıyor.") % tr(str(REGION_NAMES[id]))
+		"dismiss":
+			if str(region.get("governor", "")) == "" or treasury < 5.0:
+				return tr("Vali görevde değil ya da azil bedeli karşılanamıyor.")
+			region["governor"] = ""
+			treasury -= 5.0
+			holding = maxf(0.0, holding - 2.0)
+			parliament_blocs["royal"]["loyalty"] = maxf(0.0, float(parliament_blocs["royal"]["loyalty"]) - 4.0)
+			parliament_blocs["nobles"]["pressure"] = minf(100.0, float(parliament_blocs["nobles"]["pressure"]) + 6.0)
+			_refresh_parliament_opposition()
+			stats["regional_governors"] = int(stats.get("regional_governors", 0)) + 1
+			stats["regional_actions"] = int(stats.get("regional_actions", 0)) + 1
+			return tr("%s valisi azledildi. Saray listesi desteğini yitirdi; soylular karşılık bekliyor.") % tr(str(REGION_NAMES[id]))
+		"appoint":
+			var actor_id := str(choice.get("actor", ""))
+			if str(region.get("governor", "")) != "" or not actors.has(actor_id) or _governor_assigned(actor_id) or treasury < 8.0:
+				return tr("Vali ataması için boş makam, aday ve hazine gerekir.")
+			region["governor"] = actor_id
+			treasury -= 8.0
+			holding = minf(100.0, holding + 2.0)
+			parliament_blocs["royal"]["loyalty"] = minf(100.0, float(parliament_blocs["royal"]["loyalty"]) + 2.0)
+			parliament_blocs["nobles"]["pressure"] = minf(100.0, float(parliament_blocs["nobles"]["pressure"]) + 2.0)
+			_refresh_parliament_opposition()
+			stats["regional_governors"] = int(stats.get("regional_governors", 0)) + 1
+			stats["regional_actions"] = int(stats.get("regional_actions", 0)) + 1
+			return tr("%s, %s valisi oldu; atama bedeli patronaj defterine işlendi.") % [actors[actor_id].display_name, tr(str(REGION_NAMES[id]))]
+	return ""
+
+
+func _check_regional_crisis() -> void:
+	var candidates: Array[String] = []
+	for id in REGION_WEIGHTS:
+		var region: Dictionary = regions[id]
+		if id == "industry" and (float(region["unrest"]) >= 72.0 or float(region["economy"]) <= 30.0): candidates.append("strike")
+		elif id == "farmland" and float(region["economy"]) <= 27.0: candidates.append("famine")
+		elif id == "border" and float(region["unrest"]) >= 68.0: candidates.append("border")
+		elif id == "capital" and float(region["unrest"]) >= 78.0: candidates.append("disorder")
+	if candidates.is_empty() or region_rng.randf() > 0.2:
+		return
+	var kind: String = str(candidates[region_rng.randi_range(0, candidates.size() - 1)])
+	var id: String = str({"strike": "industry", "famine": "farmland", "border": "border", "disorder": "capital"}[kind])
+	last_region_crisis_week = week
+	stats["regional_events"] = int(stats.get("regional_events", 0)) + 1
+	if kind == "border":
+		ext_pressure["drakon"] = minf(100.0, float(ext_pressure["drakon"]) + 12.0)
+	var title: String = str({"strike": tr("Sanayi Kuşağı'nda grev"), "famine": tr("Tarım Ovaları'nda kıtlık"), "border": tr("Sınır İlleri'nde gerilim"), "disorder": tr("Başkent'te karışıklık")}[kind])
+	var choices := [
+		{"label": tr("Yerel talepleri karşıla"), "regional_crisis_action": "concede", "region": id, "regional_kind": kind},
+		{"label": tr("Garnizona ve yönetime dayan"), "regional_crisis_action": "force", "region": id, "regional_kind": kind}]
+	var e := {"id": "regional_crisis_%d" % week, "kind": "regional_crisis", "crisis": true, "crisis_kind": "regional",
+		"title": title, "text": tr("Vali, yerel kurumların desteğinin çözülmekte olduğunu bildirdi. Ulusal baskı ve bölgenin koşulları krizi büyütebilir."),
+		"advisors": [str(regions[id].get("governor", "dorn")), "kessler"], "choices": choices,
+		"ignore": {"text": tr("Bölgedeki talepler yanıtsız kaldı."), "fx": {"unrest": 4.0}}}
+	pending.insert(0, {"event": e, "age": 0})
+	_add_news("KRİZ: " + str(title), "CRISIS: " + Loc.en(str(title)))
+
+
+func _resolve_regional_crisis(choice: Dictionary) -> String:
+	var id := str(choice.get("region", ""))
+	if not regions.has(id): return ""
+	var region: Dictionary = regions[id]
+	var action := str(choice.get("regional_crisis_action", ""))
+	var kind := str(choice.get("regional_kind", ""))
+	var ok := region_rng.randf() < (0.55 + float(region.get("loyalty", 50.0)) / 300.0 if action == "concede" else 0.35 + float(region.get("garrison", 0.0)) / 200.0 + float(budget_allocation.get("army", 25.0)) / 250.0)
+	if action == "concede":
+		treasury = maxf(0.0, treasury - (9.0 if kind == "famine" else 6.0))
+		region["unrest"] = maxf(0.0, float(region["unrest"]) - (12.0 if ok else 3.0))
+		region["loyalty"] = minf(100.0, float(region["loyalty"]) + (7.0 if kind == "famine" and ok else (5.0 if ok else 1.0)))
+	else:
+		region["unrest"] = clampf(float(region["unrest"]) + (4.0 if ok else 15.0), 0.0, 100.0)
+		if id == "border": ext_pressure["drakon"] = minf(100.0, float(ext_pressure["drakon"]) + 8.0)
+		if kind == "strike" and actors.has("arden"): actors["arden"].power = minf(100.0, actors["arden"].power + 2.0)
+	if kind == "disorder": unrest = clampf(unrest + (2.0 if action == "force" and not ok else -2.0), 0.0, 100.0)
+	if not ok: region["economy"] = maxf(0.0, float(region["economy"]) - 5.0)
+	if id == "border" and other_crisis.is_empty() and float(ext_pressure["drakon"]) >= BORDER_CRISIS_AT:
+		other_crisis = {"kind": "border", "week": week, "phase": "crisis"}
+	return tr("Bölgesel kriz yatıştı; %s etkisini birkaç hafta daha hissettirecek.") % tr(str(REGION_NAMES[id])) if ok else tr("Bölgedeki düzen bozuldu; ulusal yönetim ve yerel pazar baskı altında.")
 
 
 func _foreign_report_value(power: String, verified: bool) -> float:

@@ -4306,6 +4306,156 @@ msgstr "Find a scapegoat"
 msgid "Gündem Değiştir"
 msgstr "Change the subject"
 
+msgid "Bölgeler: %s öne çıkıyor — %s, pazar %s, bağlılık %s; diğer bölgeler izleniyor."
+msgstr "Regions: %s stands out — %s, markets %s, loyalty %s; the other regions remain under review."
+
+msgid "%s — altyapı yatırımı"
+msgstr "%s — infrastructure investment"
+
+msgid "%s — garnizon takviyesi"
+msgstr "%s — reinforce the garrison"
+
+msgid "%s — yerel yayın desteği"
+msgstr "%s — support local media"
+
+msgid "%s valisini azlet"
+msgstr "Dismiss the governor of %s"
+
+msgid "%s valisi olarak %s'i ata"
+msgstr "Appoint %s as governor of %s"
+
+msgid "Altyapı yatırımı"
+msgstr "Infrastructure investment"
+
+msgid "Garnizon takviyesi"
+msgstr "Reinforce the garrison"
+
+msgid "Yerel yayın desteği"
+msgstr "Support local media"
+
+msgid "Valiyi azlet"
+msgstr "Dismiss the governor"
+
+msgid "%s'i vali ata"
+msgstr "Appoint %s as governor"
+
+msgid "%s için karar"
+msgstr "Decision for %s"
+
+msgid "Bütçe tahsisi, yerel rıza ya da vali ataması arasında seçim yap."
+msgstr "Choose between a budget allocation, local consent, or a governor appointment."
+
+msgid "Bölge için bu hafta karar alınmadı."
+msgstr "No decision was made for this region this week."
+
+msgid "Bölge seçildi; şimdi tahsis türünü belirle."
+msgstr "Region selected; now choose the allocation."
+
+msgid "Atanmamış"
+msgstr "Unassigned"
+
+msgid "Bölge Yönetimi"
+msgstr "Regional management"
+
+msgid "Bölge Yönetimi (1 mesai)\nR1 tahsisine göre altyapı yatırımı ya da garnizon seç; yerel medya ve vali kararları da aynı bölgesel sicile işlenir."
+msgstr "Regional management (1 action point)\nChoose an infrastructure investment or garrison based on the R1 allocation; local media and governor decisions are recorded for the region too."
+
+msgid "Yeni bölgesel tahsis için karar sırası ve hazineyi beklemelisin."
+msgstr "Wait for an open decision slot and treasury before making another regional allocation."
+
+msgid "Bölgesel tahsis gündeme alındı; bir bölge seç."
+msgstr "Regional funding is on the agenda; select a region."
+
+msgid "Bölgesel tahsis ve atama kararı"
+msgstr "Regional funding and appointment decision"
+
+msgid "R1 bütçe payları hangi bölgeye ulaşsın? Yatırımlar ve garnizonlar gecikmeli sonuç verir; yerel yayın desteği R2 rızasını etkiler."
+msgstr "Where should the R1 budget reach? Investment and garrisons take time to work; local media support affects R2 consent."
+
+msgid "Bu hafta bölgesel tahsis yapılmadı."
+msgstr "No regional allocation was made this week."
+
+msgid "Bölgesel tahsis ve atama kararı."
+msgstr "Regional funding and appointment decision."
+
+msgid "Sanayi tahsisi ya da hazine bu yatırımı karşılayamadı."
+msgstr "The industry allocation or treasury cannot cover this investment."
+
+msgid "%s için altyapı ödeneği ayrıldı; pazar etkisi birkaç hafta sonra görülecek."
+msgstr "Infrastructure funds were set aside for %s; the market effect will take a few weeks."
+
+msgid "Ordu tahsisi ya da hazine bu takviyeyi karşılayamadı."
+msgstr "The army allocation or treasury cannot cover this reinforcement."
+
+msgid "Garnizon %s iline konuşlandı; kısa vadede sükûnet, uzun vadede askerî nüfuz getirir."
+msgstr "The garrison moved into %s: calm in the short term, greater military influence over time."
+
+msgid "Sosyal tahsis ya da hazine yerel yayını destekleyemedi."
+msgstr "The social allocation or treasury cannot support local media."
+
+msgid "Yerel yayın desteği %s'de duyuruldu; rıza artarken editoryal bağımsızlık daralıyor."
+msgstr "Local media support was announced in %s; consent may rise as editorial independence narrows."
+
+msgid "Vali görevde değil ya da azil bedeli karşılanamıyor."
+msgstr "There is no serving governor, or the dismissal cost cannot be covered."
+
+msgid "%s valisi azledildi. Saray listesi desteğini yitirdi; soylular karşılık bekliyor."
+msgstr "The governor of %s was dismissed. The royal bloc lost support, and the nobles expect a return."
+
+msgid "Vali ataması için boş makam, aday ve hazine gerekir."
+msgstr "Appointing a governor requires a vacant post, a candidate, and treasury funds."
+
+msgid "%s, %s valisi oldu; atama bedeli patronaj defterine işlendi."
+msgstr "%s became governor of %s; the appointment cost was entered in the patronage ledger."
+
+msgid "Sanayi Kuşağı'nda grev"
+msgstr "Strike in the Industrial Belt"
+
+msgid "Tarım Ovaları'nda kıtlık"
+msgstr "Famine in the Farming Plains"
+
+msgid "Sınır İlleri'nde gerilim"
+msgstr "Tension in the Border Provinces"
+
+msgid "Başkent'te karışıklık"
+msgstr "Disorder in the Capital"
+
+msgid "Yerel talepleri karşıla"
+msgstr "Meet local demands"
+
+msgid "Garnizona ve yönetime dayan"
+msgstr "Rely on the garrison and administration"
+
+msgid "Vali, yerel kurumların desteğinin çözülmekte olduğunu bildirdi. Ulusal baskı ve bölgenin koşulları krizi büyütebilir."
+msgstr "The governor reports that local institutions are losing support. National pressure and local conditions could deepen the crisis."
+
+msgid "Bölgedeki talepler yanıtsız kaldı."
+msgstr "The region's demands went unanswered."
+
+msgid "Bölgesel kriz yatıştı; %s etkisini birkaç hafta daha hissettirecek."
+msgstr "The regional crisis eased; %s will feel its effects for several more weeks."
+
+msgid "Bölgedeki düzen bozuldu; ulusal yönetim ve yerel pazar baskı altında."
+msgstr "Order broke down in the region; the national government and local market are under pressure."
+
+msgid "Bölge Emanetçisi"
+msgstr "Keeper of the Regions"
+
+msgid "Bir saltanatta en az dört bölgesel karar al."
+msgstr "Make at least four regional decisions in one reign."
+
+msgid "Dengeli Taç"
+msgstr "Balanced Crown"
+
+msgid "En az üç farklı bölgeye yatırım ya da garnizon gönder."
+msgstr "Invest or garrison at least three different regions."
+
+msgid "Yerel Sesler"
+msgstr "Local Voices"
+
+msgid "En az üç bölgede yerel yayını destekle."
+msgstr "Support local media in at least three regions."
+
 msgid "Başkent"
 msgstr "Capital"
 

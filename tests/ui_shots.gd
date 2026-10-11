@@ -70,6 +70,37 @@ func _run() -> void:
 		await _shot("border_ultimatum" if crisis_kind == "border" else "siege_credit_cut")
 		quit(0)
 		return
+	if "--r4b-action" in OS.get_cmdline_user_args():
+		sim0.pending.clear()
+		sim0.week = 12
+		sim0._queue_region_action()
+		main._refresh()
+		await _shot("r4b_region_choice")
+		sim0.resolve_decision(0, 0)
+		main._refresh()
+		await _shot("r4b_investment_choice")
+		quit(0)
+		return
+	if "--r4b-crisis" in OS.get_cmdline_user_args():
+		sim0.pending.clear()
+		sim0.regions["industry"]["economy"] = 20.0
+		for seed in range(1, 50):
+			sim0.region_rng.seed = seed
+			sim0._check_regional_crisis()
+			if not sim0.pending.is_empty(): break
+		main._refresh()
+		await _shot("r4b_regional_crisis")
+		quit(0)
+		return
+	if "--r4b-governor-dismiss" in OS.get_cmdline_user_args() or "--r4b-governor-appoint" in OS.get_cmdline_user_args():
+		sim0.pending.clear()
+		var appoint := "--r4b-governor-appoint" in OS.get_cmdline_user_args()
+		if appoint: sim0.regions["capital"]["governor"] = ""
+		sim0._queue_region_action_options("capital")
+		main._refresh()
+		await _shot("r4b_governor_%s" % ("appoint" if appoint else "dismiss"))
+		quit(0)
+		return
 	if "--tour" in OS.get_cmdline_user_args():
 		var requested_step := 0
 		for arg in OS.get_cmdline_user_args():

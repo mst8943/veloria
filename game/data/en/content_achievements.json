@@ -1,4 +1,7 @@
 {
+  "regional_steward": ["Keeper of the Regions", "Make at least four regional decisions in one reign."],
+  "regional_balance": ["Balanced Crown", "Invest or garrison at least three different regions."],
+  "regional_voice": ["Local Voices", "Support local media in at least three regions."],
   "sandik_mandati": ["Mandate at the Ballot", "Form a government after an early election."],
   "koalisyon_mimari": ["Coalition Builder", "Form a new governing coalition."],
   "guven_oyunu": ["Confidence Held", "See a government through a confidence vote."],

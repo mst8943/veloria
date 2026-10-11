@@ -54,6 +54,7 @@ const TIPS := {
 	"tax_relief": "Vergiyi hafiflet (1 mesai)\nPazara nefes verir; hazine gelirinden vazgeçer.",
 	"austerity": "Kemer sık (1 mesai)\nKasayı korur; iş ve huzur üzerindeki bedeli büyür.",
 	"incentive": "Teşvik paketi (1 mesai)\nBugün kasaya yük olur; istihdam ve üretime sonra destek verir.",
+	"region_management": "Bölge Yönetimi (1 mesai)\nR1 tahsisine göre altyapı yatırımı ya da garnizon seç; yerel medya ve vali kararları da aynı bölgesel sicile işlenir.",
 	"king_speech": "Halka konuş (1 mesai)\nRıza kazanır, korkuyu hafifletir.",
 	"king_visit": "Saha ziyareti (1 mesai)\nİnsanlarla yüz yüze gel; görünürlük riskini göze al.",
 	"king_ceremony": "Tören düzenle (1 mesai)\nTahtın görünürlüğünü artır; etkisi sınırlı kalır.",
@@ -244,7 +245,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		["EMRET", [["o_yaz", "Yazılı Emir"], ["o_soz", "Sözlü Emir"], ["o_ima", "İma"]]],
 		["BASKI", [["blackmail", "Şantaj"], ["dismiss", "Görevden Al"]]],
 		["OPERASYON", [["op_dikkat", "Dikkat Dağıt"], ["op_bol", "Muhalefeti Böl"], ["op_zayif", "Rakibi Zayıflat"], ["op_dus", "Birbirine Düşür"]]],
-		["DEVLET", [["tax_raise", "Vergiyi Artır"], ["tax_relief", "Vergiyi Hafiflet"], ["austerity", "Kemer Sık"], ["incentive", "Teşvik Paketi"], ["appoint_loyal", "Sadık Ata"], ["appoint_merit", "Liyakatli Ata"], ["tender", "İhale Ver"], ["train_heir", "Veliahdı Yetiştir"], ["delegation", "Heyet Gönder"]]],
+		["DEVLET", [["tax_raise", "Vergiyi Artır"], ["tax_relief", "Vergiyi Hafiflet"], ["austerity", "Kemer Sık"], ["incentive", "Teşvik Paketi"], ["appoint_loyal", "Sadık Ata"], ["appoint_merit", "Liyakatli Ata"], ["tender", "İhale Ver"], ["train_heir", "Veliahdı Yetiştir"], ["delegation", "Heyet Gönder"], ["region_management", "Bölge Yönetimi"]]],
 		["KAMUOYU", [["king_speech", "Halka Konuş"], ["king_visit", "Saha Ziyareti"], ["king_ceremony", "Tören"], ["king_hide", "Gizlen"]]],
 	]
 	var actions := {
@@ -272,6 +273,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		"tax_relief": func() -> void: host._act(func(_id: String) -> String: return Sim.economy_policy("tax_relief")),
 		"austerity": func() -> void: host._act(func(_id: String) -> String: return Sim.economy_policy("austerity")),
 		"incentive": func() -> void: host._act(func(_id: String) -> String: return Sim.economy_policy("incentive")),
+		"region_management": func() -> void: host._act(func(_id: String) -> String: return Sim.request_regional_decision()),
 		"king_speech": func() -> void: _public_action("speech"),
 		"king_visit": func() -> void: _public_action("visit"),
 		"king_ceremony": func() -> void: _public_action("ceremony"),
@@ -402,7 +404,7 @@ func _group_for_actor(id: String) -> String:
 
 
 func _role_for_actor(a) -> String:
-	return tr("Vali") if a.id.begins_with("governor_") else tr(str(ROLE.get(a.domain, "")))
+	return tr("Vali") if a.id.begins_with("governor_") and Sim._governor_assigned(a.id) else (tr("Atanmamış") if a.id.begins_with("governor_") else tr(str(ROLE.get(a.domain, ""))))
 
 
 func _show_act_cat(cat: String) -> void:
@@ -469,6 +471,7 @@ const ACTION_META := {
 	"tax_relief": ["Vergiyi Hafiflet", 1, 0.0, 0, 1],
 	"austerity": ["Kemer Sık", 1, 0.0, 0, 2],
 	"incentive": ["Teşvik Paketi", 1, 0.0, 0, 1],
+	"region_management": ["Bölge Yönetimi", 1, 0.0, 0, 0],
 }
 const TRACE_NAMES := ["iz yok", "inkâr edilebilir", "iz bırakır", "kanıt bırakır"]
 const RISK_NAMES := ["düşük", "orta", "yüksek"]
@@ -623,13 +626,14 @@ func _card_fade() -> Texture2D:
 
 func _make_card(a) -> PanelContainer:
 	var card := PanelContainer.new()
-	card.custom_minimum_size = Vector2(108, 96) if not host._mobile else Vector2(150, 132)
+	var compact_governor: bool = not host._mobile and str(a.id).begins_with("governor_")
+	card.custom_minimum_size = Vector2(78, 70) if compact_governor else (Vector2(108, 96) if not host._mobile else Vector2(150, 132))
 	card.clip_contents = true
 	card.mouse_filter = Control.MOUSE_FILTER_STOP
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	card.tooltip_text = "%s\n%s" % [a.display_name, a.title]
 	# Portre kartı tam doldurur; ad ve rol, portrenin altındaki karartmanın üstünde.
-	var card_art: Control = host._initial_art(a.id, Vector2(92, 88) if not host._mobile else Vector2(130, 120), 36)
+	var card_art: Control = host._initial_art(a.id, Vector2(68, 62) if compact_governor else (Vector2(92, 88) if not host._mobile else Vector2(130, 120)), 28 if compact_governor else 36)
 	card.add_child(card_art)
 	var fade := TextureRect.new()
 	fade.texture = _card_fade()
@@ -753,7 +757,7 @@ func _style_cards(hover_id := "") -> void:
 		card.add_theme_stylebox_override("panel", UIKit.box(bg, border, 6, 3, 2 if selected else 1))
 
 
-const PERSON_ACTIONS := ["summon", "promote", "bribe", "p_0", "p_1", "p_2", "cross", "investigate", "o_sor", "o_yaz", "o_soz", "o_ima", "blackmail", "dismiss", "appoint_loyal", "appoint_merit", "tender", "train_heir", "delegation", "tax_raise", "tax_relief", "austerity", "incentive"]
+const PERSON_ACTIONS := ["summon", "promote", "bribe", "p_0", "p_1", "p_2", "cross", "investigate", "o_sor", "o_yaz", "o_soz", "o_ima", "blackmail", "dismiss", "appoint_loyal", "appoint_merit", "tender", "train_heir", "delegation", "tax_raise", "tax_relief", "austerity", "incentive", "region_management"]
 const OP_ACTIONS := ["op_dikkat", "op_bol", "op_zayif", "op_dus"]
 
 
