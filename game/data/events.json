@@ -3520,7 +3520,7 @@
   "ignore": {"text": "Devlet maaş ödeyemedi; maliye çöktü.", "fx": {}}
 },
 {
-  "id": "b1c_kortej_plani", "scripted_only": true, "art": "yabanci_elci", "title": "Kortej planı değişti",
+  "id": "b1c_kortej_plani", "scripted_only": true, "art": "suikast", "title": "Kortej planı değişti",
   "text": "Vale, nöbet çizelgesindeki değişikliği doğrulayamadı. Vale'ye güvenip muhafızları tasfiye edebilir, rotayı gizlice değiştirebilir ya da halkın önüne çıkabilirsin.",
   "choices": [
     {"label": "Vale'ye güven; güvenliği tasfiye et", "text": "Saldırı gecesi başladı.", "crisis": "security", "fx": {}},
