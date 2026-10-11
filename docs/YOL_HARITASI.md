@@ -104,3 +104,14 @@ Claude tasarlar ve doğrular; Codex kodlar (`docs/roadmap/faz6_gorevleri.md`).
 | B1 | Dış krizler ve suikast (yeni kayıp yolları), `docs/design/dis_krizler_ve_suikast.md` | ⬜ tasarım hazır |
 | B2 | Miras ve hanedan, `docs/design/miras_ve_hanedan.md` | ⬜ tasarım hazır |
 | C | Google Play yayını, üçüncü dil, Steam, bulut kayıt | 👤 karar |
+
+## 7. Faz 7 — Gerçekçilik (2026-10-11)
+Tasarım: `docs/design/gerceklik_faz7.md`, görevler: `docs/roadmap/faz7_gorevleri.md`.
+
+| Dilim | İçerik | Durum |
+|---|---|---|
+| R1 | Ekonomi ve bütçe (beş gösterge, çeyreklik bütçe kararı) | ⬜ sırada |
+| R2 | Kamuoyu ve meşruiyet (rıza/korku, anketler, skandal yanıtı) | ⬜ |
+| R3 | Meclis ve kanunlar (bloklar, kanun teklifleri, seçim, güven oyu) | ⬜ |
+| R4 | Bölgeler (dört bölge, valiler, bölgesel krizler) | ⬜ |
+| R5 | Ordu iç yapısı (birlikler, komuta zinciri) | ⬜ |
