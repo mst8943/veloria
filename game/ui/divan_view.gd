@@ -5,7 +5,7 @@ const StripOrder := preload("res://game/ui/strip_order.gd")
 
 const GROUPS := [
 	["Hanedan", ["dorn", "prens", "julian"]],
-	["Devlet", ["arden", "voss", "kessler", "falk"]],
+	["Devlet", ["arden", "voss", "kessler", "falk", "governor_capital", "governor_industry", "governor_farmland", "governor_border"]],
 	["Güç ve kamuoyu", ["halden", "lena", "brandt"]],
 	["Dış ilişkiler", ["elena", "claire", "malenkov", "lucien"]],
 ]
@@ -16,6 +16,7 @@ var tile: Button
 var layer: CanvasLayer
 var shade: ColorRect
 var drawer: PanelContainer
+var drawer_scroll: ScrollContainer
 var motion: Tween
 var focus_button: Button
 var groups: Array[GridContainer] = []
@@ -26,6 +27,7 @@ var finance_label: Label
 var public_label: Label
 var parliament_label: Label
 var laws_label: Label
+var regions_label: Label
 var opened := false
 var last_id := ""
 var visible_ids: Array = []
@@ -44,11 +46,19 @@ func build(right: VBoxContainer) -> void:
 	tile.custom_minimum_size = Vector2(76, 76)
 	tile.pressed.connect(open)
 	host._wire(tile)
-	strip.add_child(tile)
+	if host._mobile:
+		tile.text = tr("Divan'ı aç")
+		tile.theme_type_variation = "Button"
+		tile.custom_minimum_size = Vector2(0, 44)
+		tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		right.add_child(tile)
+	else:
+		strip.add_child(tile)
 	guide_hint = Label.new()
 	guide_hint.text = tr("Diğer kişiler Divan'da")
 	guide_hint.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-	right.add_child(guide_hint)
+	if not host._mobile:
+		right.add_child(guide_hint)
 	parked = Control.new()
 	parked.visible = false
 	parked.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -69,18 +79,18 @@ func build(right: VBoxContainer) -> void:
 			close())
 	overlay.add_child(shade)
 	drawer = PanelContainer.new()
-	drawer.anchor_left = 0.51 if DisplayServer.window_get_size().x < 1200 else 0.55
+	drawer.anchor_left = 0.08 if host._mobile else (0.51 if DisplayServer.window_get_size().x < 1200 else 0.55)
 	drawer.anchor_right = 1.0
 	drawer.anchor_bottom = 1.0
 	drawer.add_theme_stylebox_override("panel", UIKit.box(UIKit.PANEL, UIKit.GOLD_DIM, UIKit.RADIUS, 14))
 	overlay.add_child(drawer)
-	var scroll := ScrollContainer.new()
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	drawer.add_child(scroll)
+	drawer_scroll = ScrollContainer.new()
+	drawer_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	drawer.add_child(drawer_scroll)
 	var body := VBoxContainer.new()
 	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	body.add_theme_constant_override("separation", 10)
-	scroll.add_child(body)
+	drawer_scroll.add_child(body)
 	var heading := HBoxContainer.new()
 	body.add_child(heading)
 	var title: Control = host._section(tr("DİVAN"))
@@ -107,6 +117,11 @@ func build(right: VBoxContainer) -> void:
 	laws_label.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 	laws_label.add_theme_font_size_override("font_size", host._fs(12))
 	body.add_child(laws_label)
+	regions_label = Label.new()
+	regions_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	regions_label.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+	regions_label.add_theme_font_size_override("font_size", host._fs(12))
+	body.add_child(regions_label)
 	var close_button := Button.new()
 	close_button.text = tr("Kapat")
 	close_button.theme_type_variation = "GhostButton"
@@ -166,7 +181,20 @@ func refresh() -> void:
 		parliament_label.text = Sim.parliament_report_line()
 	if is_instance_valid(laws_label):
 		laws_label.text = Sim.parliament_laws_line()
-	if host._mobile or host._cards.is_empty():
+	if is_instance_valid(regions_label):
+		regions_label.text = Sim.region_report_line()
+	if host._mobile:
+		if opened:
+			for i in GROUPS.size():
+				for id in GROUPS[i][1]:
+					if host._cards.has(id):
+						_place(host._cards[id], groups[i])
+		else:
+			for id in host._cards:
+				_place(host._cards[id], host._person_panel._mobile_card_row)
+			host._person_panel._set_mobile_group(host._person_panel._mobile_group)
+		return
+	if host._cards.is_empty():
 		return
 	var advisors := []
 	for i in Sim.pending.size():

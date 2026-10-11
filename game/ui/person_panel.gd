@@ -13,7 +13,7 @@ var _mobile_group_buttons: Dictionary = {}
 var _mobile_person_scroll: ScrollContainer
 const MOBILE_GROUPS := {
 	"dynasty": ["dorn", "prens", "julian"],
-	"state": ["arden", "voss", "kessler", "falk"],
+	"state": ["arden", "voss", "kessler", "falk", "governor_capital", "governor_industry", "governor_farmland", "governor_border"],
 	"power": ["halden", "lena", "brandt"],
 	"foreign": ["elena", "claire", "malenkov", "lucien"],
 }
@@ -167,8 +167,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		left.pressed.connect(func() -> void: card_scroll.scroll_horizontal = maxi(0, card_scroll.scroll_horizontal - 220))
 		right_arrow.pressed.connect(func() -> void: card_scroll.scroll_horizontal += 220)
 		_set_mobile_group("dynasty")
-	if not host._mobile:
-		host._divan.build(right)
+	host._divan.build(right)
 	selection_hint = Label.new()
 	selection_hint.text = tr("Bir kişi seç. Sayıları göremezsin; yalnızca davranışlarından tahmin edebilirsin.")
 	selection_hint.add_theme_color_override("font_color", UIKit.TEXT_DIM)
@@ -400,6 +399,10 @@ func _set_mobile_group(key: String) -> void:
 func _group_for_actor(id: String) -> String:
 	var domain := str(Sim.actors[id].domain)
 	return str(MOBILE_DOMAIN_GROUP.get(domain, "dynasty"))
+
+
+func _role_for_actor(a) -> String:
+	return tr("Vali") if a.id.begins_with("governor_") else tr(str(ROLE.get(a.domain, "")))
 
 
 func _show_act_cat(cat: String) -> void:
@@ -658,7 +661,7 @@ func _make_card(a) -> PanelContainer:
 	n.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(n)
 	var r := Label.new()
-	r.text = UIKit.tr_upper(tr("Düşman") if a.moved else tr(str(ROLE.get(a.domain, ""))))
+	r.text = UIKit.tr_upper(tr("Düşman") if a.moved else _role_for_actor(a))
 	r.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	r.add_theme_font_override("font", UIKit.caps())
 	r.add_theme_font_size_override("font_size", host._fs(12) if host._mobile else host._fs(10))
@@ -734,7 +737,7 @@ func _style_cards(hover_id := "") -> void:
 			var lvl := Sim.suspicion_level(id)
 			var rl := card.get_meta("role", null) as Label
 			if rl != null:
-				var role := tr(str(ROLE.get(a.domain, "")))
+				var role := _role_for_actor(a)
 				var external_lvl := Sim.external_suspicion_level(id) if Sim.FOREIGN_ENVOYS.has(id) else 0
 				var external_hint := external_lvl >= 2
 				rl.text = UIKit.tr_upper(tr("Dış temas şüphesi") if external_hint else (role if lvl < 2 else "%s · %s" % [role, Sim.SUSPICION_NAMES[lvl]]))

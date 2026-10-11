@@ -263,6 +263,28 @@ func _run() -> void:
 		await _shot("r3c_confidence_vote")
 		quit(0)
 		return
+	if "--regions" in OS.get_cmdline_user_args():
+		main._instant = true
+		sim0.pending.clear()
+		main._refresh()
+		main._journal.clear()
+		main._on_week(sim0.week)
+		main._select_tab(main._journal)
+		await _shot("r4a_regional_daily")
+		if main._mobile:
+			main._tabs.current_tab = 1
+			(main._person_panel._mobile_group_buttons["state"] as Button).pressed.emit()
+			await process_frame
+			main._person_panel._mobile_person_scroll.scroll_vertical = 0
+			await _shot("r4a_mobile_divan_entry")
+			main._divan.tile.pressed.emit()
+		else:
+			main._divan.open()
+		if main._mobile:
+			main._divan.drawer_scroll.scroll_vertical = 365
+		await _shot("r4a_governors_divan")
+		quit(0)
+		return
 	if "--files-journal" in OS.get_cmdline_user_args():
 		main._select_tab(main._files_tab)
 		await _shot("files")
