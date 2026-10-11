@@ -79,6 +79,9 @@ func _run() -> void:
 	main._instant = true
 	main._divan.open()
 	await process_frame
+	main._divan.drawer_scroll.ensure_control_visible(main._cards["elena"])   # valiler Devlet grubunu uzattı; çekmece kaydırılır
+	await process_frame
+	await process_frame
 	_click_at(main._cards["elena"].get_global_rect().get_center())
 	await process_frame
 	if main._divan.opened or main._sel != ["elena"]:
@@ -192,7 +195,7 @@ func _run_mobile() -> void:
 		printerr("UI INPUT: mobil ana sekmeler hatalı")
 		quit(1)
 		return
-	var expected := {"dynasty": ["dorn", "prens", "julian"], "state": ["arden", "voss", "kessler", "falk"], "power": ["halden", "lena", "brandt"], "foreign": ["elena", "claire", "malenkov", "lucien"]}
+	var expected := {"dynasty": ["dorn", "prens", "julian"], "state": ["arden", "voss", "kessler", "falk", "governor_capital", "governor_industry", "governor_farmland", "governor_border"], "power": ["halden", "lena", "brandt"], "foreign": ["elena", "claire", "malenkov", "lucien"]}
 	main._tabs.current_tab = 1
 	for key in expected:
 		(main._person_panel._mobile_group_buttons[key] as Button).pressed.emit()
@@ -202,7 +205,7 @@ func _run_mobile() -> void:
 				printerr("UI INPUT: mobil grup kişiyi göstermedi: ", key, " / ", id)
 				quit(1)
 				return
-	if main._cards.size() != 14:
+	if main._cards.size() != 18:
 		printerr("UI INPUT: mobil kişi erişimi eksik: ", main._cards.size())
 		quit(1)
 		return
