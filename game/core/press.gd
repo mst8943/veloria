@@ -85,7 +85,7 @@ static func _flattery(sim: Node, outlet: String) -> float:
 	var a = sim.actors[owner]
 	if outlet == "state":
 		return clampf(0.35 + a.flattery() * 0.5 + a.power / 400.0, 0.0, 0.85)
-	return clampf(a.flattery() * 0.6, 0.0, 0.7)
+	return clampf(a.flattery() * 0.6 + (0.28 if sim.parliament_laws.has("press") else 0.0), 0.0, 0.7)
 
 
 ## Haftanın gazetesi.
