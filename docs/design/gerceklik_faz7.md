@@ -76,3 +76,17 @@ Uç bot kapısı (kazanma / 80; ölçüt botu kazanma sayısının en çok %70'i
 Kalibrasyon: sosyal tahsis %25'i aştığında dış borç baskısı katsayısı 1,2; varsayılan dağılımda katsayı 0,04 olarak kaldı. Gecikmeli sosyal harcama hazineden pay başına 1,6 düşürüyor. Danışman bütçe önerisi, sosyal pay değişimini huzur değeri `0,045` ve hazine maliyeti `0,25` katsayılarıyla puanlıyor; genel `choice_value` ve başlangıçtaki varsayılan akış böylece değişmiyor. Özel dağılım penceresi 10/70/10/10 ile başlar; oyuncu dört payı düzenleyebilir ve toplam 100 değilse uygulayamaz. İlk sekiz haftadaki tempo en düşük 0,81 olay/hafta. EN sızıntı taraması ve eksik çeviri kapıları 0.
 
 `--full --seed=101` sonucu hem TR hem EN'de: 104 hafta / TAHTTA / Medya Rejimi / 112 olay.
+
+## R2 Ayar
+
+Ölçüt ve görünürlük botları, 80 kampanya/zorluk (`advice_weighted`, `public_out`, `public_hide`):
+
+| Zorluk | R1 tabanı | Ölçüt | Hep halka çık | Hep gizlen |
+|---|---:|---:|---:|---:|
+| Kolay | 61/80 (%76,25) | 61/80 (%76,25) | 23/80 (%28,75) | 0/80 (0%) |
+| Normal | 31/80 (%38,75) | 31/80 (%38,75) | 15/80 (%18,75) | 0/80 (0%) |
+| Zor | 14/80 (%17,50) | 14/80 (%17,50) | 1/80 (%1,25) | 0/80 (0%) |
+
+Kalibrasyon: “gizlen” hamlesi başına rıza −1, korku +1; korku yüksek ve rıza düşük kaldıkça haftalık huzursuzluk ikisinden türetiliyor. Böylece tek başına gizlenme kazanma sağlamaz; etkisi anlık değil, birikimli. Halka çıkış eylemlerinin maliyeti 1 mesai; saha ziyaretindeki protesto riski kamuoyu RNG'sinden gelir. Anket kaynak farkı: Sarne +8, Leyla −8, bağımsız kurum ±12 puan gürültü; oyuncu yalnızca nitel destek bandını görür. R2 devre dışıyken R1'in mevcut huzursuzluk akışı ve ana RNG'si aynı kalır.
+
+Ölçüt R1 tabanının farkı: Kolay 0, Normal 0, Zor 0 puan. `public_out` ve `public_hide` tek yönlü botları hiçbir zorlukta ölçüt botunu geçmiyor. `--full --seed=101` TR/EN: 104 hafta / TAHTTA / Medya Rejimi / 112 olay. Tempo en düşük dilim 0,81; en uzun olaysız seri 3 hafta. EN leak taraması: 4.320 metin, şüpheli 0; `i18n_missing.py`: 0.

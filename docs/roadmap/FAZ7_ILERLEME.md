@@ -26,4 +26,48 @@ R1'in a–e parçaları tamamlandı. Başlangıç economy metrikleri, eski kayı
 
 `tests/daily_card_test.gd` headless çalışmada kart kaydetme adımında uzun süre çıktı üretmeden bekledi; bu R1 kapısı olmadığı için yalnızca başlatılan test süreci durduruldu. Geçen Godot testlerinin kapanışında ObjectDB/resource cleanup uyarıları görülebiliyor.
 
-R2–R5 bu çalışmada başlatılmadı. PUSH yapılmadı.
+R1 ilk uygulama oturumunda burada durduruldu; R2 tamamlanma kaydı aşağıdadır. PUSH yapılmadı.
+
+## R1 senaryo kapısı düzeltmesi
+
+R1'in borç baskısı “Boş kasa” senaryosunu Normal'de 12/80'e düşürüyordu. Senaryoya özel başlangıç kamu hazinesi 72 ve borç göstergesi 28 verildi; özel servet 2 ve maliye kapasitesi 28 olarak kaldı. Böylece boş saray kasası duygusu korunurken R1'in yüksek borç kaynaklı dış baskı sarmalı başlamıyor. Varsayılan senaryoya etkisi yok.
+
+| Senaryo | Kolay | Normal | Zor |
+|---|---:|---:|---:|
+| Darbeye açık krallık | 51/80 | 21/80 | 18/80 |
+| Naiplik | 49/80 | 24/80 | 21/80 |
+| Boş kasa | 35/80 | 22/80 | 20/80 |
+
+Commit: `5862e0c` (`fix: tune empty treasury scenario for R1 debt`). `tests/scenario_test.gd`: OK.
+
+## DALGA B — R2 Kamuoyu ve meşruiyet
+
+Rıza ve korku gizli kayda eklenip ayrı `public_rng` ile anket kaynağı yanlılığı/risk ayrıldı. Oyuncu görünürlük eylemlerinden birini seçince R2 devreye girer; böylece eski kampanyaların RNG ve hafta akışı aynı kalır. Sekiz haftada bir Sarne, Leyla veya bağımsız kurumun nitel bantta sonuç veren anket kartı çıkar. Kamuya açılmış kral sırları için inkâr, özür, kurban bulma ve gündem değiştirme yanıtları bir kez kullanılabilir. Divan'da sayı göstermeyen kamuoyu satırı var. Kayıt sürümü 15'e çıktı ve eski kayıt göçü eklendi.
+
+| Mantıksal adım | Commit |
+|---|---|
+| R2 durum alanları, ayrı RNG, anket ve kayıt göçü | `b678808` |
+| Kamuoyu eylemleri, Divan satırı, skandal yanıtları ve TR/EN metinler | `50847ee` |
+| Sadece görünür ol / sürekli gizlen botları için ölçüm | `d5384bf` |
+| Korku/rıza kaybı kalibrasyonu, tek kullanımlık skandal yanıtı ve test | `d79c83e` |
+| Eski muhalefet finansmanı dosyası İngilizce sızıntı düzeltmesi/regresyon | `06b3f5e` |
+
+### R2 denge ve kapı sonuçları
+
+80 kampanya/zorluk, ölçüt botu `advice_weighted`; görünürlük botları her hafta bir mesaiyi kamuoyu hamlesine ayırır:
+
+| Bot | Kolay | Normal | Zor |
+|---|---:|---:|---:|
+| Ölçüt (`advice_weighted`) | 61/80 | 31/80 | 14/80 |
+| Hep halka çık (`public_out`) | 23/80 | 15/80 | 1/80 |
+| Hep gizlen (`public_hide`) | 0/80 | 0/80 | 0/80 |
+
+Ölçüt R1 tabanı 61/31/14 ile aynı. R2'nin iki tek yönlü stratejisi de tek başına kazanma yolu olmadı. `--full --seed=101`, TR ve EN: 104 hafta / TAHTTA / Medya Rejimi / 112 olay. Tempo: en düşük 8 haftalık dilim 0,81 olay/hafta; en kötü olaysız seri 3 hafta.
+
+### R2 doğrulama
+
+`tests/*.gd` içindeki 30 dosya tek tek çalıştırıldı; hepsi exit 0. `daily_card_test.gd` pencereli modda `DAILY CARD: OK`; `scenario_test.gd` bütün senaryo/zorluk koşularıyla `SCENARIO: OK`; `public_opinion_test.gd`, `sim_test.gd`, `save_test.gd` ve diğerleri geçti. `content_check` ve `event_check` TR/EN; `ui_input_test` masaüstü/mobil çalıştırıldı. `tools/i18n_missing.py`: 0. EN masaüstü dökümü, mobil dökümü ve oyun metni dökümü: 4.320 metin tarandı, şüpheli 0.
+
+EN/TR masaüstü ve mobil R2 ekranları `screenshots/faz7_r2/` altında üretildi ve açılarak kontrol edildi: `r2_visibility_actions`, `r2_poll_card`, `r2_scandal_response` (mobilde ek olarak `r2_scandal_response_lower`). Metin dili, nitel anket bandı, eylem seçenekleri, dört skandal yanıtı ve mobil 44 px düğme yüksekliği kontrol edildi; görünür taşma/sızıntı yok.
+
+Bilinen test notu: Bazı Godot testleri exit 0 ile tamamlanırken kapanışta ObjectDB/resource cleanup uyarıları yazıyor. PUSH yapılmadı.
