@@ -27,6 +27,12 @@ func _run() -> void:
 	if had_daily:
 		var old := FileAccess.open(sim.DAILY_PATH, FileAccess.READ)
 		old_daily = old.get_buffer(old.get_length())
+		old = null
+		var stale := ConfigFile.new()
+		if stale.load(sim.DAILY_PATH) == OK and str(stale.get_value("daily", "date", "")) == "2099-02-03":
+			# Önceki yarım kalmış test koşusunun sahte günlük sonucu: oyuncuya ait değil, sil.
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(sim.DAILY_PATH))
+			had_daily = false
 	var date := "2099-02-03"
 	var seed: int = sim.daily_seed(date)
 	_expect(seed == 20990203 and seed == sim.daily_seed(date))
