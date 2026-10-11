@@ -57,6 +57,11 @@ var unrest := 30.0
 var economy := 55.0
 var economy_metrics: Dictionary = {"inflation": 45.0, "jobs": 55.0, "debt": 45.0, "trade": 55.0, "growth": 55.0}
 var economy_rng := RandomNumberGenerator.new()
+var consent := 70.0
+var public_fear := 20.0
+var public_rng := RandomNumberGenerator.new()
+var public_opinion_active := false
+var last_poll_week := 0
 var opposition := 20.0
 var private_wealth := 10.0
 var capacity: Dictionary = {"maliye": 55.0, "hukuk": 55.0, "ordu": 55.0, "idare": 55.0}
@@ -169,6 +174,11 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 	unrest = 30.0
 	economy = 55.0
 	economy_metrics = {"inflation": 45.0, "jobs": 55.0, "debt": 45.0, "trade": 55.0, "growth": 55.0}
+	consent = 70.0
+	public_fear = 20.0
+	public_rng.seed = rng.seed ^ 0xC0A5E17
+	public_opinion_active = false
+	last_poll_week = 0
 	opposition = 20.0
 	private_wealth = 10.0
 	var state_rng := RandomNumberGenerator.new()
@@ -512,11 +522,11 @@ func save_summary() -> String:
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
 ## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Sarne ve kadro günlüğü
-const SAVE_VERSION := 14
+const SAVE_VERSION := 15
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
-	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng", "budget_allocation", "delayed_economy"]
+	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng", "budget_allocation", "delayed_economy", "consent", "public_fear", "public_rng", "public_opinion_active", "last_poll_week"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -613,6 +623,14 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 	if from < 14:
 		d["budget_allocation"] = {"army": 25.0, "social": 25.0, "industry": 25.0, "palace": 25.0}
 		d["delayed_economy"] = []
+	if from < 15:
+		d["consent"] = 100.0 - float(d.get("unrest", 30.0))
+		d["public_fear"] = 20.0
+		var public_rng_migration := RandomNumberGenerator.new()
+		public_rng_migration.seed = int(d.get("seed", 1)) ^ 0xC0A5E17
+		d["public_rng"] = public_rng_migration.state
+		d["public_opinion_active"] = false
+		d["last_poll_week"] = 0
 	if not d.has("foreign"):
 		d["foreign"] = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
 	if not d.has("foreign_hint_until"):
@@ -654,6 +672,8 @@ func save_game() -> bool:
 		"ext_pressure": ext_pressure, "ext_rng": ext_rng.state, "external_history": external_history,
 		"endless": endless, "king_name": king_name, "dynasty_generation": dynasty_generation,
 		"economy_metrics": economy_metrics, "economy_rng": economy_rng.state, "budget_allocation": budget_allocation,
+		"consent": consent, "public_fear": public_fear, "public_rng": public_rng.state,
+		"public_opinion_active": public_opinion_active, "last_poll_week": last_poll_week,
 		"delayed_economy": delayed_economy, "version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
@@ -743,6 +763,11 @@ func load_game() -> bool:
 	foreign_hint_until = int(d["foreign_hint_until"])
 	ext_pressure = d["ext_pressure"]
 	economy_metrics = d.get("economy_metrics", {"inflation": 100.0 - economy, "jobs": economy, "debt": 100.0 - treasury, "trade": economy, "growth": economy})
+	consent = float(d.get("consent", 100.0 - unrest))
+	public_fear = float(d.get("public_fear", 20.0))
+	public_rng.state = int(d.get("public_rng", public_rng.state))
+	public_opinion_active = bool(d.get("public_opinion_active", false))
+	last_poll_week = int(d.get("last_poll_week", 0))
 	economy_rng.state = int(d.get("economy_rng", int(d.get("seed", 1)) ^ 0xEC0A07))
 	budget_allocation = d.get("budget_allocation", {"army": 25.0, "social": 25.0, "industry": 25.0, "palace": 25.0})
 	delayed_economy.assign(d.get("delayed_economy", []))
@@ -1298,6 +1323,89 @@ func economy_policy(policy: String) -> String:
 	return tr("Maliye kararının etkisi başladı; aynı yöndeki her yeni hamle daha az sonuç verecek.")
 
 
+func public_action(action: String) -> String:
+	if ended or mesai < 1 or action not in ["speech", "visit", "ceremony", "hide"]:
+		return _no_mesai() if mesai < 1 else ""
+	if not spend_mesai():
+		return _no_mesai()
+	public_opinion_active = true
+	match action:
+		"speech": consent += 5.0; public_fear = maxf(0.0, public_fear - 2.0); unrest = maxf(0.0, unrest - 2.0)
+		"visit":
+			consent += 4.0
+			public_fear = maxf(0.0, public_fear - 3.0)
+			unrest = maxf(0.0, unrest - 1.0)
+			if public_rng.randf() < 0.1:
+				unrest = minf(100.0, unrest + 4.0)
+		"ceremony": consent += 2.0; public_fear = maxf(0.0, public_fear - 1.0)
+		"hide": consent = maxf(0.0, consent - 4.0); public_fear += 5.0; unrest = minf(100.0, unrest + 2.0)
+	consent = clampf(consent, 0.0, 100.0)
+	public_fear = clampf(public_fear, 0.0, 100.0)
+	changed.emit()
+	return tr("Halkla kurduğun mesafe değişti; etkisi haftalara yayılacak.")
+
+
+func public_opinion_line() -> String:
+	if not public_opinion_active:
+		return tr("Kamuoyu: Sarayın sesi henüz ölçülmedi.")
+	var consent_band := tr("rıza sağlam") if consent >= 62.0 else (tr("rıza dalgalı") if consent >= 38.0 else tr("rıza zayıf"))
+	var fear_band := tr("korku belirgin") if public_fear >= 55.0 else (tr("korku hissediliyor") if public_fear >= 30.0 else tr("korku düşük"))
+	return tr("Kamuoyu: %s; %s.") % [consent_band, fear_band]
+
+
+func respond_to_scandal(fid: String, response: String) -> String:
+	if not facts.has(fid) or not bool(facts[fid].get("public", false)) or facts[fid].get("subject", "") != "king":
+		return ""
+	if response not in ["deny", "apologize", "scapegoat", "redirect"] or not spend_mesai():
+		return _no_mesai()
+	public_opinion_active = true
+	var fact: Dictionary = facts[fid]
+	match response:
+		"deny":
+			consent -= 4.0
+			public_fear += 3.0
+			fact["leakiness"] = minf(1.0, float(fact.get("leakiness", 0.5)) + 0.2)
+		"apologize":
+			consent += 5.0
+			public_fear = maxf(0.0, public_fear - 2.0)
+			opposition = minf(100.0, opposition + 2.0)
+		"scapegoat":
+			consent += 1.0
+			for id in fact.get("knowers", []):
+				if actors.has(id) and not actors[id].supporting:
+					actors[id].power = maxf(5.0, actors[id].power - 8.0)
+					flags["SCANDAL_REVENGE_" + str(id)] = week
+					break
+		"redirect":
+			consent -= 1.0
+			fact["common"] = maxf(0.5, float(fact.get("common", 0.5)) - 0.1)
+	consent = clampf(consent, 0.0, 100.0)
+	public_fear = clampf(public_fear, 0.0, 100.0)
+	changed.emit()
+	return tr("Yanıtın kamuoyundaki yankısı başladı.")
+
+
+func _tick_public_opinion() -> void:
+	if not public_opinion_active:
+		return
+	consent = clampf(consent + (king_strength - 60.0) * 0.015 - maxf(0.0, unrest - 35.0) * 0.025, 0.0, 100.0)
+	public_fear = clampf(public_fear - 0.08 + (echo_level() - 0.5) * 0.06, 0.0, 100.0)
+	# The legacy unrest track stays untouched until the player opts into this system.
+	unrest = clampf((100.0 - consent) * 0.7 + public_fear * 0.6, 0.0, 100.0)
+	# Existing campaigns keep their event schedule until the player opts into public-opinion play.
+	if week % 8 != 0 or week == last_poll_week or pending.size() >= 3:
+		return
+	last_poll_week = week
+	var sources := [tr("Sarne'nin anket şirketi"), tr("Leyla'nın gazetesi"), tr("bağımsız bir kurum")]
+	var source := str(sources[public_rng.randi_range(0, 2)])
+	var estimate := consent + (8.0 if source == sources[0] else (-8.0 if source == sources[1] else public_rng.randf_range(-12.0, 12.0)))
+	var band := tr("desteğin güçlü görünüyor") if estimate >= 62.0 else (tr("desteğin dalgalanıyor") if estimate >= 38.0 else tr("desteğin zayıflıyor"))
+	var title := tr("Kamuoyu araştırması")
+	pending.append({"event": {"id": "public_poll_%d" % week, "title": title, "text": tr("%s: %s. Anketi yayımlamak algıyı etkiler.") % [tr(source), band], "kind": "public_poll",
+		"choices": [{"label": tr("Yayımla"), "text": tr("Rapor meydanlara ulaştı."), "fx": {"consent": 3.0, "fear": -1.0}},
+			{"label": tr("İçeride tut"), "text": tr("Sonuç yalnızca sarayda kaldı."), "fx": {"consent": 1.0, "fear": 1.0}}], "ignore": {"text": tr("Anket yayımlanmadı."), "fx": {}}}, "age": 0})
+
+
 func _rival_key(ids: Array) -> String:
 	var parts: Array = []
 	for i in ids:
@@ -1582,6 +1690,12 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 			end_week()  # kapılar açıldı: kriz bu gece sonuçlanır
 		changed.emit()
 		return crisis_text
+	if e.get("kind", "") == "public_poll":
+		pending.remove_at(pending_index)
+		_apply_effects(fx)
+		history.append(tr("Hafta %d — %s » %s") % [week, e["title"], ch["label"]])
+		changed.emit()
+		return str(ch.get("text", ""))
 	_log_advice(e, advice_for(pending_index), choice_index)
 	pending.remove_at(pending_index)
 	flags["%s_%d" % [e["id"], choice_index]] = week
@@ -1605,6 +1719,8 @@ func _apply_effects(fx: Dictionary) -> void:
 	economy = clampf(economy + float(fx.get("economy", 0)), 0.0, 100.0)
 	king_strength = clampf(king_strength + float(fx.get("king", 0)), 0.0, 100.0)
 	opposition = clampf(opposition + float(fx.get("opp", 0)), 0.0, 100.0)
+	consent = clampf(consent + float(fx.get("consent", 0)), 0.0, 100.0)
+	public_fear = clampf(public_fear + float(fx.get("fear", 0)), 0.0, 100.0)
 	private_wealth = maxf(0.0, private_wealth + float(fx.get("wealth", 0)))
 	treasury = clampf(treasury + float(fx.get("treasury", 0)), 0.0, 100.0)
 	holding = clampf(holding + float(fx.get("holding", 0)), 0.0, 100.0)
@@ -1737,6 +1853,7 @@ func end_week() -> void:
 	week += 1
 	mesai = mesai_max
 	_world_tick()
+	_tick_public_opinion()
 	_tick_budget_effects()
 	_state_warnings()
 	_decay_facts()
