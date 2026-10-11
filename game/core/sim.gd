@@ -93,7 +93,10 @@ const ATTRITION := 0.04
 const STANCE_CAP := 0.23
 const TREASURY_COST := 0.15
 const TREASURY_DIFF := [0.8, 1.0, 1.8]
-const TAX_LAW_UNREST := [0.16, 0.25, 1.2]
+const ARMY_LAW_POWER := [1.0, 2.0, 4.0]
+const TAX_LAW_REVENUE := [0.15, 0.02, 0.02]
+const TAX_LAW_UPFRONT_UNREST := [0.0, 2.0, 4.0]
+const TAX_LAW_UNREST := [0.0, 0.75, 2.4]
 const STATE_REPORT_NOISE := 110.0
 const STATE_RALLY_DENOM := [400.0, 400.0, 250.0]
 const INSTITUTION_HEADS := {"kessler": "maliye", "falk": "hukuk", "arden": "ordu", "dorn": "idare"}
@@ -2145,7 +2148,7 @@ func _tick_state() -> void:
 	economy = clampf(economy + (float(capacity["maliye"]) - 55.0) * STATE_ECON_MALIYE
 		+ (float(capacity["hukuk"]) - 55.0) * STATE_ECON_HUKUK + budget_stance * 0.08, 0.0, 100.0)
 	treasury = clampf(treasury + (economy - 50.0) * 0.05 + (float(capacity["maliye"]) - 55.0) * 0.03
-		+ (0.02 if parliament_laws.has("tax") else 0.0)
+		+ (TAX_LAW_REVENUE[difficulty] if parliament_laws.has("tax") else 0.0)
 		- TREASURY_COST * TREASURY_DIFF[difficulty] - budget_stance * 0.9 - (0.6 if court_share else 0.0), 0.0, 100.0)
 	unrest = clampf(unrest + maxf(0.0, 55.0 - float(capacity["hukuk"])) * 0.01 - budget_stance * 0.15
 		+ (TAX_LAW_UNREST[difficulty] if parliament_laws.has("tax") else 0.0), 0.0, 100.0)
@@ -2731,11 +2734,11 @@ func _enact_parliament_law(law: String) -> void:
 			consent = maxf(0.0, consent - 8.0)
 		"army":
 			if actors.has("arden"):
-				actors["arden"].power = minf(100.0, actors["arden"].power + 1.0)
+				actors["arden"].power = minf(100.0, actors["arden"].power + ARMY_LAW_POWER[difficulty])
 			_set_budget_allocation(budget_allocation.duplicate())
 		"tax":
 			treasury = minf(100.0, treasury + 3.0)
-			unrest = minf(100.0, unrest + 2.0)
+			unrest = minf(100.0, unrest + TAX_LAW_UPFRONT_UNREST[difficulty])
 		"amnesty":
 			consent = minf(100.0, consent + 0.5)
 			unrest = maxf(0.0, unrest - 1.0)
@@ -2752,7 +2755,7 @@ func _repeal_parliament_law(law: String) -> void:
 			consent = minf(100.0, consent + 4.0)
 		"army":
 			if actors.has("arden"):
-				actors["arden"].power = maxf(5.0, actors["arden"].power - 1.0)
+				actors["arden"].power = maxf(5.0, actors["arden"].power - ARMY_LAW_POWER[difficulty])
 		"tax":
 			unrest = maxf(0.0, unrest - 2.0)
 

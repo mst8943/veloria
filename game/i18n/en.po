@@ -2602,6 +2602,9 @@ msgstr "The Free Quill could not be printed this week either. The press is seale
 msgid "Saraydan sert yalanlama"
 msgstr "Palace issues a forceful denial"
 
+msgid "Saray tahsisi büyüdü"
+msgstr "The palace allocation grew"
+
 msgid "Saray, son günlerde yayılan iddiaların 'krallığı yıpratmaya yönelik bir karalama' olduğunu açıkladı."
 msgstr "The palace called recent allegations 'a smear campaign aimed at weakening the kingdom.'"
 

@@ -58,11 +58,19 @@ func _run() -> void:
 	var arden_power: float = sim.actors["arden"].power
 	sim._set_budget_allocation({"army": 10.0, "social": 70.0, "industry": 10.0, "palace": 10.0})
 	sim._enact_parliament_law("army")
-	_check(sim.actors["arden"].power == arden_power + 1.0 and sim.budget_allocation["army"] >= 26.0, "army law strengthens Arden and raises the R1 allocation floor")
+	_check(sim.actors["arden"].power == arden_power + 2.0 and sim.budget_allocation["army"] >= 26.0, "army law strengthens Arden and raises the R1 allocation floor")
 	sim._set_budget_allocation({"army": 10.0, "social": 70.0, "industry": 10.0, "palace": 10.0})
 	_check(sim.budget_allocation["army"] >= 26.0 and is_equal_approx(sim.budget_allocation.values().reduce(func(a: float, b: float) -> float: return a + b, 0.0), 100.0), "later budget choices preserve the law's army floor and total")
 	sim._repeal_parliament_law("army")
 	_check(sim.actors["arden"].power == arden_power, "repealing the army law removes its lasting authority bonus")
+	sim.new_game(17041, 0)
+	var easy_arden_power: float = sim.actors["arden"].power
+	sim._enact_parliament_law("army")
+	_check(sim.actors["arden"].power == easy_arden_power + 1.0, "easy army law uses its lighter Arden risk")
+	sim.new_game(17042, 2)
+	var hard_arden_power: float = sim.actors["arden"].power
+	sim._enact_parliament_law("army")
+	_check(sim.actors["arden"].power == hard_arden_power + 4.0, "hard army law carries its heavier coup risk")
 
 	sim.new_game(17034, 1)
 	sim._enact_parliament_law("tax")
@@ -75,10 +83,36 @@ func _run() -> void:
 	tax_control.capacity = sim.capacity.duplicate()
 	sim._tick_state()
 	tax_control._tick_state()
-	_check(is_equal_approx(sim.treasury - tax_control.treasury, 0.02) and is_equal_approx(sim.unrest - tax_control.unrest, 2.25), "tax reform adds R1 revenue while its recurring burden feeds unrest")
+	_check(is_equal_approx(sim.treasury - tax_control.treasury, 0.02) and is_equal_approx(sim.unrest - tax_control.unrest, 2.75), "tax reform adds R1 revenue while its difficulty-scaled burden feeds unrest")
 	sim._repeal_parliament_law("tax")
 	_check(not sim.parliament_laws.has("tax"), "tax law can be withdrawn")
 	tax_control.free()
+
+	sim.new_game(17039, 0)
+	sim._enact_parliament_law("tax")
+	var easy_tax: Node = load("res://game/core/sim.gd").new()
+	easy_tax.new_game(17039, 0)
+	sim.week = easy_tax.week
+	sim.treasury = easy_tax.treasury
+	sim.economy = easy_tax.economy
+	sim.capacity = easy_tax.capacity.duplicate()
+	sim._tick_state()
+	easy_tax._tick_state()
+	_check(is_equal_approx(sim.treasury - easy_tax.treasury, 0.15) and is_equal_approx(sim.unrest - easy_tax.unrest, 0.0), "easy tax law funds the treasury without a street surcharge")
+	easy_tax.free()
+
+	sim.new_game(17040, 2)
+	sim._enact_parliament_law("tax")
+	var hard_tax: Node = load("res://game/core/sim.gd").new()
+	hard_tax.new_game(17040, 2)
+	sim.week = hard_tax.week
+	sim.treasury = hard_tax.treasury
+	sim.economy = hard_tax.economy
+	sim.capacity = hard_tax.capacity.duplicate()
+	sim._tick_state()
+	hard_tax._tick_state()
+	_check(is_equal_approx(sim.treasury - hard_tax.treasury, 0.02) and is_equal_approx(sim.unrest - hard_tax.unrest, 6.4), "hard tax law retains its heavier upfront and recurring cost")
+	hard_tax.free()
 
 	sim.new_game(17035, 1)
 	sim.facts.clear()
