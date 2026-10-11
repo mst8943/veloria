@@ -21,13 +21,18 @@ Kapı (her alt dilim): tüm testler (yeni tests/parliament_test.gd, R3b/R3c içi
 
 ## R4 — Bölgeler (SIRADAKİ)
 Tasarım: gerceklik_faz7.md "R4" (R1–R3 ile bağlanır: bölgesel ekonomi R1'e, bölgesel rıza R2'ye, vali ve vekil dağılımı R3'e). Üç alt dilim, SIRAYLA; her oturumda yalnızca SIRADAKİ alt dilimi bitir.
-- **R4a — Bölge verisi ve raporlar (SIRADAKİ):** dört bölge (Başkent, Sanayi Kuşağı, Tarım Ovaları, Sınır İlleri), her birinde gizli `unrest/loyalty/economy`; ulusal `unrest/economy` bölgelerin ağırlıklı özeti olur (geriye dönük uyum, kayıt göçü, SAVE_VERSION artır). Her bölgeye bir vali (supporting aktör, çevresel; ana RNG'yi tüketmez, ayrı üreteç). Bölge raporu satırları (Günlük/Divan, nitel, "sayı yok"); Divan'da "Devlet" grubunda vali kartı. Bölge dağılımı varsayılanda dengeyi KAYDIRMAMALI (ulusal değerler eski türetmeyle ±küçük).
-- **R4b — Kararlar ve bölgesel krizler:** yatırım ve garnizon dağılımı kararları; bölgesel krizler (sanayi grevi, tarım kıtlığı, sınır gerilimi → mevcut dış kriz sistemiyle birleşir); vali ataması/azli; bölgesel medya etkisi.
+- **R4a — Bölge verisi ve raporlar (TAMAM):** dört bölge (Başkent, Sanayi Kuşağı, Tarım Ovaları, Sınır İlleri), her birinde gizli `unrest/loyalty/economy`; ulusal `unrest/economy` bölgelerin ağırlıklı özeti olur (geriye dönük uyum, kayıt göçü, SAVE_VERSION artır). Her bölgeye bir vali (supporting aktör, çevresel; ana RNG'yi tüketmez, ayrı üreteç). Bölge raporu satırları (Günlük/Divan, nitel, "sayı yok"); Divan'da "Devlet" grubunda vali kartı. Bölge dağılımı varsayılanda dengeyi KAYDIRMAMALI (ulusal değerler eski türetmeyle ±küçük).
+- **R4b — Kararlar ve bölgesel krizler (SIRADAKİ):** yatırım ve garnizon dağılımı kararları; bölgesel krizler (sanayi grevi, tarım kıtlığı, sınır gerilimi → mevcut dış kriz sistemiyle birleşir); vali ataması/azli; bölgesel medya etkisi.
 - **R4c — Harita katmanı:** Başkent haritasına bölge katmanı (renksiz nitel simgeler), bölge seçimi ve bölge paneli, mobil düzen.
 Kapı (her alt dilim): tüm testler (yeni tests/regions_test.gd), ölçüt probe Kolay 62 / Normal 30 / Zor 13 (/80) ±4 puan içinde, "hep tek bölgeye yatırım" ve "hiç yatırım yapma" uç botları tek başına kazanmasın (ölçütün en çok %70'i), tempo ≥ 0,8, `--full --seed=101` TR=EN 104 hafta / TAHTTA / Medya Rejimi / 112 olay (değişirse yeni tabanı belgele), sızıntı kapıları 0, EN+TR masaüstü ve mobil ekran görüntüleri gözle; ölçümler "R4 Ayar" bölümüne.
 
 ## R5 — Ordu iç yapısı
 Tasarım: "R5"; R4'ün garnizon/bölge verisini kullanır. R4 bitince ayrı oturumlarda, alt dilimlere bölünerek.
+
+## Denge tabanı (R3c+R4a sonrası, güncel): Kolay 62/80, Normal 31/80, Zor 17/80 (advice_weighted). Zor taban 13'ün +4 üstünde; daha fazla kolaylaşmasına izin verme, mümkünse 14-15'e çek.
+
+## KALICI KURAL — Rapor dürüstlüğü
+Raporda "X testi geçti" yazdığın her test için çıktının son satırını (ör. `UI INPUT: OK`) aynen yaz; çalıştırmadığın testi geçti diye yazma. Yeni sistem Divan, kişi kartı, harita gibi ortak arayüzü değiştiriyorsa `ui_input_test` (masaüstü + `-- --mobile`), `ui_logic_test`, `touch_scroll_test`, `a11y_test`, `tour_test`, `lang_switch_test` dahil HEPSİNİ çalıştır; kırılan testi koda uydurmadan önce kodun mu testin mi güncel olduğuna karar ver.
 
 ## KALICI KURAL — Gözlem (her dilimde, hepsi için geçerli)
 Her dilimde kapılara ek olarak ürünü eleştirel gözle de değerlendir: **iyileştirme, tutarsızlık, eksik özellik, UI/UX sorunu** (ekran görüntüsü aç; kesilen/çakışan metin, tıklama yutan öğe, kafa karıştırıcı akış, mobil/EN farkı, diğer sistemlerle çelişki, istismar yolu). Küçük ve güvenli olanları aynı dilimde düzelt (ayrı commit). Büyük/tasarım gerektirenleri `docs/roadmap/GOZLEMLER.md` dosyasına tarih, dilim, ekran/konum, öneri ve önem (düşük/orta/yüksek) ile ekle. Raporda ayrı bir "Gözlemler" başlığı aç: bulduğun, düzelttiğin ve ertelediğin. Hiçbir şey bulamadıysan bile hangi ekranlara baktığını yaz.
