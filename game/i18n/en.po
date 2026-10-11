@@ -4360,6 +4360,18 @@ msgstr "Governor"
 msgid "Yüksek Mahkemenin tasfiye edilmesi"
 msgstr "Dissolution of the High Court"
 
+msgid "Sivillere müdahale"
+msgstr "Use of force against civilians"
+
+msgid "İşçilerin ezilmesi"
+msgstr "Crushing the workers"
+
+msgid "Köylerin boşaltılması"
+msgstr "Evicting villages"
+
+msgid "Sınır köylerinin terk edilmesi"
+msgstr "Abandoning border villages"
+
 msgid "Sonucu kabul et ve hükümet görüşmelerini başlat"
 msgstr "Accept the result and begin government talks"
 

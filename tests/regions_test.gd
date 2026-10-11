@@ -45,7 +45,7 @@ func _initialize() -> void:
 	Loc.set_lang("en")
 	sim.new_game(102)
 	_check(sim.actors["governor_capital"].display_name == "Mira Solen"
-		and sim.actors["governor_capital"].red_line == "Use of force against civilians"
+		and tr(sim.actors["governor_capital"].red_line) == "Use of force against civilians"
 		and sim.region_report_line().contains("Capital"),
 		"governor and regional report content are localized in English")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(sim.save_path))
