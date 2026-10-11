@@ -77,6 +77,23 @@ Kalibrasyon: sosyal tahsis %25'i aştığında dış borç baskısı katsayısı
 
 `--full --seed=101` sonucu hem TR hem EN'de: 104 hafta / TAHTTA / Medya Rejimi / 112 olay.
 
+## R3a Ayar
+
+80 kampanya/zorluk ölçümü (`advice_weighted`); hedefler 62/30/13. Blokların başlangıç toplam sadakati 80 olduğundan ilk muhalefet değeri 20 olarak kalır. Meclis teklifleri ayrı `parliament_rng` kullanır ve yaklaşık 10 haftada bir açılır. Sonuç ve blok raporu nitel gösterilir; kesin oy sayısı üretilmez.
+
+| Bot | Kolay | Normal | Zor |
+|---|---:|---:|---:|
+| Ölçüt (`advice_weighted`) | 60/80 | 30/80 | 13/80 |
+| Hep baskıyla geçir (`parliament_force`) | 43/80 | 9/80 | 6/80 |
+| Hep geri çek (`parliament_withdraw`) | 41/80 | 7/80 | 4/80 |
+| Hiç oy verme (`parliament_abstain`) | 33/80 | 5/80 | 1/80 |
+
+Ölçüt hedefinden fark: Kolay −2,5 yüzde puan; Normal 0; Zor 0 (±8 puan kapısı içinde). Tek yönlü stratejilerin tavanları ölçüt botunun %70'i: Kolay 43,4; Normal 21; Zor 9,1. Üç bot da her zorlukta tavanın altında kaldı.
+
+Zorlama maliyeti baskı sayısıyla artar: hazine `10 + 6×tekrar`, özel servet `7 + 3×tekrar`, huzursuzluk `100 + 30×tekrar`, kral gücü −14. Başarısız olağan oylama blok sadakatini değiştirir ve muhalefeti −2 etkiler; geri çekme/sona erme daha ağır sonuç verir. Tempo kontrolünde ilk sekiz haftanın en düşük olay oranı 0,81/hafta, en uzun olaysız seri 3 haftadır.
+
+`--full --seed=101`: TR ve EN 104 hafta / TAHTTA / Medya Rejimi / 112 olay. EN sızıntı taraması 4.532 metin, 0 şüpheli; `tools/i18n_missing.py`: 0.
+
 ## R2 Ayar
 
 Ölçüt ve görünürlük botları, 80 kampanya/zorluk (`advice_weighted`, `public_out`, `public_hide`):

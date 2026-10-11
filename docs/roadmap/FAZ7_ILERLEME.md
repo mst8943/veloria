@@ -71,3 +71,23 @@ Rıza ve korku gizli kayda eklenip ayrı `public_rng` ile anket kaynağı yanlı
 EN/TR masaüstü ve mobil R2 ekranları `screenshots/faz7_r2/` altında üretildi ve açılarak kontrol edildi: `r2_visibility_actions`, `r2_poll_card`, `r2_scandal_response` (mobilde ek olarak `r2_scandal_response_lower`). Metin dili, nitel anket bandı, eylem seçenekleri, dört skandal yanıtı ve mobil 44 px düğme yüksekliği kontrol edildi; görünür taşma/sızıntı yok.
 
 Bilinen test notu: Bazı Godot testleri exit 0 ile tamamlanırken kapanışta ObjectDB/resource cleanup uyarıları yazıyor. PUSH yapılmadı.
+
+## DALGA R3 — R3a: Bloklar ve kanun teklifleri
+
+Dört gizli meclis bloğu (Saray listesi, Muhalefet, Soylular, Bağımsızlar) eklendi; muhalefet ve patronaj blok sadakati/baskısından besleniyor. Yaklaşık 10 haftada bir altı teklif türünden biri açılıyor. Destekleme, değiştirme, geri çekme ve baskıyla geçirme kararları var; sonuçlar ayrı `parliament_rng` ile belirleniyor. Haftalık kayıt, Günlük ve Divan nitel rapor veriyor, kesin oy sayısı göstermiyor. Kayıt sürümü 16; eski kayıtların muhalefeti korunup bloklar ve ayrı üreteç göç sırasında başlatılıyor. R3b yasa etkileri ve R3c seçim/güven oyu bu dilimin kapsamında değil.
+
+| Mantıksal adım | Commit |
+|---|---|
+| R3a mekaniği, kayıt göçü, metin ve test | `37a4b26` |
+| R3a masaüstü/mobil rapor sunumu | `7daa7ba` |
+| R3a ayar tablosu ve ilerleme kaydı | bu dokümantasyon commit'i |
+
+### Denge ve kapılar
+
+80 kampanya/zorluk; ölçüt hedefi 62/30/13, sonuç tablosu ve uç botlar tasarım belgesinin sonundaki **R3a Ayar** bölümünde. Ölçüt 60/30/13 (fark −2,5/0/0 yüzde puan); baskıyla geçir 43/9/6, geri çek 41/7/4, hiç oy verme 33/5/1. Üç uç bot da ölçüt kazanma tavanının %70 altında. Tempo en düşük 0,81 olay/hafta, en uzun olaysız seri 3.
+
+`--full --seed=101` TR/EN: 104 hafta / TAHTTA / Medya Rejimi / 112 olay. EN kaçak taraması 4.532 metinde 0 şüpheli, `tools/i18n_missing.py`: 0. `tests/parliament_test.gd`, `sim_test.gd`, `pacing_test.gd`, `economy_test.gd`, `external_crisis_test.gd`, `scenario_test.gd`, `daily_card_test.gd`, `save_test.gd`, `public_opinion_test.gd`, `dynasty_test.gd`, `legacy_test.gd`, `endless_test.gd`, UI/giriş/erişilebilirlik testleri, `unit_tests.gd`, içerik/olay dil kontrolleri çalıştırıldı. `ux_audit.gd` ekran görüntüsü yığını üreteceği için, `cause_probe.gd` tanı aracı olduğu için çalıştırılmadı. Godot kapanışında bazı testlerde ObjectDB/resource cleanup uyarısı var.
+
+EN/TR masaüstü ve mobil teklif, günlük rapor ve Divan rapor ekranları incelendi: dört teklif seçeneği görünür, mobil düğmeler 44 px, rapor dili çevrilmiş ve oy sayısı yok. Mobilde ayrı Divan çekmecesi bulunmadığından mobil “Divan raporu” kontrolü Günlük rapor görünümünden yapıldı; mobil Divan penceresi hâlâ açık bir UI kapsamıdır. Ekran görüntüleri kontrol sonrası geçici dizinden silindi.
+
+Bu dilimde baskıyla geçirme huzursuzluğu 100'e taşır ve kral gücünü 14 azaltır; seçenek özellikle pahalıdır. PUSH yapılmadı.
