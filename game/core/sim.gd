@@ -97,7 +97,8 @@ const FOREIGN_ENVOYS := {"claire": "asteria", "malenkov": "drakon", "lucien": "s
 const FACT_TEXT_EN := {"ihale_dosyasi": "Secret tender file granted to Sarne", "gazeteci_baskisi": "Pressure put on a journalist",
 	"prens_izleniyor": "The Prince placed under secret surveillance", "yargi_baskisi": "Pressure put on a judge",
 	"bakan_ihalesi": "Ministerial tender file", "bakan_ihalesi_2": "The ministerial tender file's link to the Palace",
-	"falk_mektubu": "The judge's resignation letter", "saglik_yalani": "Operation to deny the King's health rumor"}
+	"falk_mektubu": "The judge's resignation letter", "saglik_yalani": "Operation to deny the King's health rumor",
+	"muhalefet_finansmani": "Secret funds used to split the opposition"}
 const HALDEN_MEDIA_UNREST := 0.6
 const HALDEN_MEDIA_KING := 0.25
 const HALDEN_MEDIA_REACH := [71.0, 71.0, 50.0]  # Yayın etkisinin ülke çapına eriştiği holding eşiği.
@@ -3878,7 +3879,7 @@ func _phrase(a: Actor, value: float, echo: float) -> String:
 
 func _add_fact(id: String, text: String, subject: String, severity: float, knowers: Array, copies: int, leakiness: float = 0.5, text_en: String = "") -> void:
 	facts[id] = {"id": id, "text": text, "subject": subject, "severity": severity,
-		"text_en": text_en if text_en != "" else Loc.en(text), "knowers": knowers.duplicate(), "common": 0.0, "copies": copies, "leakiness": leakiness}
+		"text_en": text_en if text_en != "" else _fact_text_en(id, text), "knowers": knowers.duplicate(), "common": 0.0, "copies": copies, "leakiness": leakiness}
 
 
 func _fact_text_en(id: String, text: String) -> String:

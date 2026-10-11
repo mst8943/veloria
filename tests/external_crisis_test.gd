@@ -34,6 +34,8 @@ func _initialize() -> void:
 	_check(legacy.get("ext_pressure", {}).get("drakon", -1.0) == 0.0 and legacy.get("external_history", null) is Array and int(legacy.get("version", 0)) == sim.SAVE_VERSION, "version 10 saves receive safe defaults")
 	Loc.set_lang("en")
 	sim.new_game(202)
+	sim._add_fact("muhalefet_finansmani", "Muhalefeti bölmek için verilen gizli para", "king", 30.0, ["voss"], 1)
+	_check(sim.fact_text_for_display(sim.facts["muhalefet_finansmani"]) == "Secret funds used to split the opposition", "old scandal fact displays in English")
 	sim._open_other("border")
 	_check(str(sim.pending[0]["event"]["title"]) == "Drakon begins a border exercise", "border note is localized in English")
 	sim.other_crisis["phase"] = "crisis"
