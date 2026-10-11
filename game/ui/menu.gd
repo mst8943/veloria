@@ -264,7 +264,6 @@ func _build() -> void:
 		[tr("Tam ekran (F11)"), Sfx.fullscreen, func(on: bool) -> void: Sfx.set_fullscreen(on), not host._mobile],
 		[tr("Kısa geçişler"), Sfx.short_fx, func(on: bool) -> void: Sfx.short_fx = on, true],
 		[tr("Danışman ipuçları"), Sfx.tips, func(on: bool) -> void: Sfx.tips = on, true],
-		[tr("Açılış sineması"), Sfx.intro, func(on: bool) -> void: Sfx.intro = on, true],
 		[tr("Haftaya masadan başla"), Sfx.desk_start, func(on: bool) -> void: Sfx.desk_start = on, true],
 		[tr("İlk açılış turu"), Sfx.tour_enabled, func(on: bool) -> void: Sfx.tour_enabled = on, true],
 	]

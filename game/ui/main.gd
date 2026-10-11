@@ -1010,7 +1010,7 @@ func _start_new(seed_value := 0, diff := -1, daily := false, scenario := "", leg
 	if Sim.content_error != "":
 		_show_modal(tr("[b]İçerik yüklenemedi[/b]\n\n%s") % Sim.content_error)
 		return
-	if not _fast() and Sfx.intro:
+	if not _instant and Sfx.intro:   # kısa geçişlerde de oynar; sahne "Geç" ile atlanır
 		_menu.hide()
 		_end_overlay.hide()
 		await _cinema.play(_intro_shots())

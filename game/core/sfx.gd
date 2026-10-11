@@ -14,7 +14,7 @@ var fullscreen := false
 var short_fx := false      # kısa geçişler (animasyonları hızlandırır)
 var difficulty := 1        # 0 Kolay, 1 Normal, 2 Zor
 var tips := true           # ilk haftalarda danışman ipuçları
-var intro := true          # yeni oyunda açılış sineması
+var intro := true          # yeni oyunda açılış sineması (her zaman açık; yalnızca testler kapatır, ayara yazılmaz)
 var desk_start := true     # her haftaya çalışma masasından başla
 var tour_enabled := true
 var tour_done := false
@@ -99,7 +99,6 @@ func save_settings() -> void:
 	c.set_value("video", "short_fx", short_fx)
 	c.set_value("game", "difficulty", difficulty)
 	c.set_value("game", "tips", tips)
-	c.set_value("game", "intro", intro)
 	c.set_value("game", "desk_start", desk_start)
 	c.set_value("game", "language", language)
 	c.set_value("game", "tour_enabled", tour_enabled)
@@ -122,7 +121,6 @@ func _load_settings() -> void:
 	short_fx = c.get_value("video", "short_fx", false)
 	difficulty = c.get_value("game", "difficulty", 1)
 	tips = c.get_value("game", "tips", true)
-	intro = c.get_value("game", "intro", true)
 	desk_start = c.get_value("game", "desk_start", true)
 	tour_enabled = c.get_value("game", "tour_enabled", true)
 	tour_done = c.get_value("game", "tour_done", false)

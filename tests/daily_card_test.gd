@@ -43,6 +43,7 @@ func _run() -> void:
 	_expect(not sim.save_daily_result(date, {"title": "changed", "weeks": 99, "survived": true}, seed))
 	_expect(sim.daily_result(date)["title"] == result["title"])
 
+	var old_short_fx: bool = sfx.short_fx
 	sfx.short_fx = true
 	sim.autosave = false
 	sim.record_chronicle = false
@@ -78,6 +79,7 @@ func _run() -> void:
 		var image_en := Image.new()
 		_expect(image_en.load(card_path) == OK and image_en.get_width() == 1080 and image_en.get_height() == 1350)
 		image_en.save_png("screenshots/faz6_a3_card_%s.png" % other_lang)
+	sfx.short_fx = old_short_fx   # set_language ayarı kaydeder; test bayrağı oyuncunun ayarına sızmasın
 	sfx.set_language(old_language)
 	if FileAccess.file_exists(card_path):
 		DirAccess.remove_absolute(card_path)
