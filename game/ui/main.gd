@@ -78,6 +78,8 @@ var _end_pulse: Tween
 var _headline_expanded := false
 var _ui_nodes: Array = []   # _build_ui/_build_fx'in eklediği düğümler (dil değişince yeniden kurulur)
 var _modal: Control   # bilgi/onay penceresi (modal.gd)
+var _budget_editor: Control
+var _budget_editor_spins: Array[SpinBox] = []
 var _promise_list: RichTextLabel
 var _multi_btn: Button
 var _act_cat := "KAZAN"            # eylem panelinde açık kategori
@@ -1347,6 +1349,123 @@ func _play_cutscene(event_id: String, choice_index: int) -> void:
 		await _cinema.play(shots)
 		_busy = false
 		return
+
+
+func _open_budget_editor(pending_index: int, choice_index: int) -> void:
+	if _budget_editor != null or pending_index < 0 or pending_index >= Sim.pending.size():
+		return
+	var overlay := Control.new()
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 100
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.78)
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(dim)
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(center)
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 24 if _mobile else 120)
+	margin.add_theme_constant_override("margin_right", 24 if _mobile else 120)
+	margin.add_theme_constant_override("margin_top", 18)
+	margin.add_theme_constant_override("margin_bottom", 18)
+	center.add_child(margin)
+	var panel := PanelContainer.new()
+	panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PLATE, 0.98), UIKit.GOLD, 10, 22))
+	margin.add_child(panel)
+	var body := VBoxContainer.new()
+	body.add_theme_constant_override("separation", 8)
+	panel.add_child(body)
+	var title := Label.new()
+	title.text = tr("Özel bütçe dağılımı")
+	title.add_theme_font_override("font", UIKit.serif())
+	title.add_theme_font_size_override("font_size", _fs(22))
+	title.add_theme_color_override("font_color", UIKit.GOLD)
+	body.add_child(title)
+	var sectors := ["army", "social", "industry", "palace"]
+	var labels := [tr("Ordu ve güvenlik"), tr("Sosyal harcama"), tr("Altyapı ve sanayi"), tr("Saray ve vakıf")]
+	var fx: Dictionary = Sim.pending[pending_index]["event"]["choices"][choice_index].get("fx", {})
+	var starting: Dictionary = fx.get("budget_allocation", Sim.budget_allocation)
+	_budget_editor_spins.clear()
+	for i in sectors.size():
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 12)
+		row.custom_minimum_size.y = 44
+		body.add_child(row)
+		var label := Label.new()
+		label.text = labels[i]
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		label.add_theme_font_size_override("font_size", _fs(15))
+		row.add_child(label)
+		var share := SpinBox.new()
+		share.min_value = 0
+		share.max_value = 100
+		share.step = 1
+		share.rounded = true
+		share.custom_minimum_size = Vector2(112, 44)
+		share.value = float(starting.get(sectors[i], 25.0))
+		share.add_theme_font_size_override("font_size", _fs(15))
+		row.add_child(share)
+		_budget_editor_spins.append(share)
+	var total := Label.new()
+	total.add_theme_font_size_override("font_size", _fs(14))
+	body.add_child(total)
+	var buttons := HBoxContainer.new()
+	buttons.add_theme_constant_override("separation", 10)
+	body.add_child(buttons)
+	var apply := Button.new()
+	apply.text = tr("Dağılımı uygula")
+	apply.custom_minimum_size.y = 44
+	apply.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	apply.theme_type_variation = "PrimaryButton"
+	_wire(apply)
+	buttons.add_child(apply)
+	var cancel := Button.new()
+	cancel.text = tr("Vazgeç")
+	cancel.custom_minimum_size.y = 44
+	cancel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cancel.theme_type_variation = "GhostButton"
+	_wire(cancel)
+	buttons.add_child(cancel)
+	for share in _budget_editor_spins:
+		share.value_changed.connect(func(_value: float) -> void: _update_budget_editor_total(total, apply))
+	apply.pressed.connect(func() -> void: _apply_budget_editor(pending_index, choice_index, sectors))
+	cancel.pressed.connect(_close_budget_editor)
+	_budget_editor = overlay
+	add_child(overlay)
+	_update_budget_editor_total(total, apply)
+
+
+func _update_budget_editor_total(total: Label, apply: Button) -> void:
+	var sum := 0
+	for share in _budget_editor_spins:
+		sum += int(share.value)
+	total.text = tr("Toplam: %d") % sum if sum == 100 else tr("Dört kalemin toplamı 100 olmalı.") + "  (%d)" % sum
+	apply.disabled = sum != 100
+
+
+func _apply_budget_editor(pending_index: int, choice_index: int, sectors: Array) -> void:
+	if pending_index >= Sim.pending.size() or _budget_editor_spins.size() != sectors.size():
+		return
+	var allocation := {}
+	for i in sectors.size():
+		allocation[sectors[i]] = float(_budget_editor_spins[i].value)
+	var event: Dictionary = Sim.pending[pending_index]["event"]
+	var choice: Dictionary = event["choices"][choice_index]
+	var fx: Dictionary = choice.get("fx", {}).duplicate(true)
+	fx["budget_allocation"] = allocation
+	fx.erase("budget_custom")
+	choice["fx"] = fx
+	event["choices"][choice_index] = choice
+	_close_budget_editor()
+	_choose(pending_index, choice_index)
+
+
+func _close_budget_editor() -> void:
+	if is_instance_valid(_budget_editor):
+		_budget_editor.queue_free()
+	_budget_editor = null
+	_budget_editor_spins.clear()
 
 
 func _choose(pending_index: int, choice_index: int) -> void:

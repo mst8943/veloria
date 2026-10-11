@@ -381,7 +381,10 @@ func _rebuild_agenda() -> void:
 				b.custom_minimum_size.y = 44
 				b.add_theme_font_size_override("font_size", host._fs(13))
 			host._wire(b)
-			b.pressed.connect(host._choose.bind(pi, ci))
+			if e["choices"][ci].get("fx", {}).get("budget_custom", false):
+				b.pressed.connect(host._open_budget_editor.bind(pi, ci))
+			else:
+				b.pressed.connect(host._choose.bind(pi, ci))
 			vb.add_child(b)
 			host._decision_buttons.append(b)
 	if Sim.pending.size() > 1:

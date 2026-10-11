@@ -2334,8 +2334,8 @@ func _fire_budget() -> void:
 			"fx": {"budget_allocation": {"army": 25.0, "social": 25.0, "industry": 25.0, "palace": 25.0}, "budget_stance": 0, "court_share": false}},
 		{"label": tr("Cömert bütçe"), "text": tr("Kurumlara ve sokağa nefes verir; kasanın bedeli haftalara yayılır."),
 			"fx": {"budget_allocation": {"army": 25.0, "social": 25.0, "industry": 25.0, "palace": 25.0}, "budget_stance": 1, "court_share": false}},
-		{"label": tr("Özel tahsis"), "text": tr("Özel dağılımda sosyal harcama öne çıkar; sanayi ve saray payı azalır."),
-			"fx": {"budget_allocation": {"army": 10.0, "social": 70.0, "industry": 10.0, "palace": 10.0}, "budget_stance": 0, "court_share": false}}
+		{"label": tr("Özel tahsis"), "text": tr("Dört kalemin payını kendin belirle; başlangıç dağılımı sosyal harcamayı öne çıkarır."),
+			"fx": {"budget_custom": true, "budget_allocation": {"army": 10.0, "social": 70.0, "industry": 10.0, "palace": 10.0}, "budget_stance": 0, "court_share": false}}
 	]
 	var e := {"id": "ceyrek_butce", "title": STATE_CONTENT["title"], "text": str(STATE_CONTENT["text"]) + note,
 		"art": "butce_acigi", "advisors": ["kessler", "dorn"], "kind": "budget", "choices": choices,

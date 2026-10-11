@@ -101,6 +101,10 @@ func _run() -> void:
 			main._scroll.scroll_vertical = maxi(0, int(agenda_bar.max_value - agenda_bar.page) - 18)
 			await process_frame
 		await _shot("r1_budget")
+		main._decision_buttons[3].pressed.emit()
+		await process_frame
+		await _shot("r1_custom_budget")
+		main._close_budget_editor()
 		main._scroll.scroll_vertical = 0
 		sim0.pending.clear()
 		sim0.reports = [{"source": "kessler", "name": sim0.actors["kessler"].display_name,

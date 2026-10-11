@@ -45,7 +45,7 @@ func _initialize() -> void:
 			budget = candidate
 	var choices: Array = budget.get("choices", [])
 	_check(choices.size() == 4 and choices[0].get("fx", {}).has("budget_allocation"), "quarterly budget offers three packages and custom allocation")
-	_check(float(choices[3]["fx"]["budget_allocation"]["social"]) == 70.0 and choices[3]["fx"]["budget_allocation"].values().reduce(func(a: float, b: float) -> float: return a + b, 0.0) == 100.0, "custom budget is a high-social split totaling one hundred")
+	_check(choices[3]["fx"].get("budget_custom", false) and float(choices[3]["fx"]["budget_allocation"]["social"]) == 70.0 and choices[3]["fx"]["budget_allocation"].values().reduce(func(a: float, b: float) -> float: return a + b, 0.0) == 100.0, "custom budget editor starts from a high-social split totaling one hundred")
 	_check(sim._advice._advice_value(choices[3]["fx"]) < sim.choice_value(choices[1]["fx"]), "council values delayed social debt before recommending a budget")
 	_check(int(choices[2]["fx"]["budget_stance"]) == 1, "generous budget keeps its baseline stance effect")
 	sim.resolve_decision(budget_index, 3)

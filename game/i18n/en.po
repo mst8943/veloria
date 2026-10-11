@@ -4102,8 +4102,32 @@ msgstr "expanding"
 msgid "Özel tahsis"
 msgstr "Custom allocation"
 
-msgid "Özel dağılımda sosyal harcama öne çıkar; sanayi ve saray payı azalır."
-msgstr "Social spending takes priority; industry and palace shares shrink."
+msgid "Dört kalemin payını kendin belirle; başlangıç dağılımı sosyal harcamayı öne çıkarır."
+msgstr "Set the four shares yourself; the starting allocation favors social spending."
+
+msgid "Özel bütçe dağılımı"
+msgstr "Custom budget allocation"
+
+msgid "Dört kalemin toplamı 100 olmalı."
+msgstr "The four shares must add up to 100."
+
+msgid "Toplam: %d"
+msgstr "Total: %d"
+
+msgid "Ordu ve güvenlik"
+msgstr "Army and security"
+
+msgid "Sosyal harcama"
+msgstr "Social spending"
+
+msgid "Altyapı ve sanayi"
+msgstr "Infrastructure and industry"
+
+msgid "Saray ve vakıf"
+msgstr "Palace and foundations"
+
+msgid "Dağılımı uygula"
+msgstr "Apply allocation"
 
 msgid "Sıkı bütçe"
 msgstr "Austerity"
