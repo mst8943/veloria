@@ -22,7 +22,7 @@ extends SceneTree
 
 var sim: Node
 var rng := RandomNumberGenerator.new()
-const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "advice_patron", "advice_veliaht", "advice_heyet", "advice_bloc", "visible_wise", "omniscient", "public_out", "public_hide", "parliament_force", "parliament_withdraw", "parliament_abstain"]
+const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "advice_patron", "advice_veliaht", "advice_heyet", "advice_bloc", "visible_wise", "omniscient", "public_out", "public_hide", "parliament_force", "parliament_withdraw", "parliament_abstain", "confidence_force", "confidence_fall"]
 var style := ""   # advice_soft / advice_dirty oyun tarzı
 var dynasty_probe := false
 var dynasty_cap_ok := true
@@ -113,6 +113,10 @@ func _run(bot: String, diff: int, n: int) -> void:
 	var hostile_broadcasts := 0
 	var hostile_weeks := 0
 	var final_wealth := 0.0
+	var confidence_offers := 0
+	var confidence_supports := 0
+	var confidence_falls := 0
+	var confidence_forced := 0
 	var regimes := {}
 	for s in range(1, n + 1):
 		sim.new_game(s, diff)
@@ -121,6 +125,10 @@ func _run(bot: String, diff: int, n: int) -> void:
 			_play(bot)
 			sim.end_week()
 		var r: Dictionary = sim.record
+		confidence_offers += int(sim.stats.get("confidence_offers", 0))
+		confidence_supports += int(sim.stats.get("confidence_supports", 0))
+		confidence_falls += int(sim.stats.get("confidence_falls", 0))
+		confidence_forced += int(sim.stats.get("confidence_forced", 0))
 		hostile_broadcasts += 1 if sim.fired_events.has("halden_yayin_kesti") else 0
 		hostile_weeks += int(sim.stats.get("halden_hostile_weeks", 0))
 		final_wealth += sim.private_wealth
@@ -154,6 +162,7 @@ func _run(bot: String, diff: int, n: int) -> void:
 	print("  ort. son kapasite %.1f | Arden girişimi %d/%d | Arden hazırlığı %d/%d | Arden zaferi %d/%d" % [final_cap / n, arden_attempts, n, arden_prepared, n, arden_coups, n])
 	print("  Prens Marcus girişimi %d/%d" % [prince_attempts, n])
 	print("  düşman yayın olayı %.2f/oyun | düşman yayın haftası %.1f/oyun | ort. son servet %.1f" % [float(hostile_broadcasts) / n, float(hostile_weeks) / n, final_wealth / n])
+	print("  gÃ¼ven oyu: kart %d | destek %d | dÃ¼ÅŸÃ¼ÅŸ %d | baskÄ± %d" % [confidence_offers, confidence_supports, confidence_falls, confidence_forced])
 	print("  rejimler ", regimes)
 
 
@@ -200,7 +209,7 @@ func _play(bot: String) -> void:
 				sim.give_tender("halden")
 			if bot == "advice_patron" and sim.private_wealth > 11.0 and sim.mesai > 0 and sim.actors.has("dorn") and not sim.actors["dorn"].moved:
 				sim.bribe("dorn")
-			var decision_bot := "advice_weighted" if bot in ["parliament_force", "parliament_withdraw", "parliament_abstain"] else bot
+			var decision_bot := "advice_weighted" if bot in ["parliament_force", "parliament_withdraw", "parliament_abstain", "confidence_force", "confidence_fall"] else bot
 			var cycle := 16 if bot == "advice_loyal" else 20
 			var start := 16 if bot == "advice_loyal" else 12
 			if bot in ["advice_loyal", "advice_merit"] and sim.week >= start and (sim.week - start) % cycle in [0, 1]:
@@ -227,7 +236,14 @@ func _decide(bot: String) -> void:
 			ci = 3 if bot == "parliament_force" else 2
 			if not ev["choices"][ci].get("available", true):
 				ci = 0
-		var decision_bot := "advice_weighted" if parliament_bot else bot
+		if str(ev.get("kind", "")) == "confidence_vote":
+			if bot == "parliament_abstain":
+				break
+			elif bot == "confidence_force":
+				ci = 2
+			elif bot == "confidence_fall":
+				ci = 1
+		var decision_bot := "advice_weighted" if parliament_bot or bot in ["confidence_force", "confidence_fall"] else bot
 		if str(ev.get("kind", "")) == "public_poll" and bot in ["public_out", "public_hide"]:
 			ci = 0 if bot == "public_out" else 1
 		if dynasty_probe and str(ev.get("id", "")) == "halef_karari":
@@ -246,6 +262,13 @@ func _decide(bot: String) -> void:
 			ci = _advice_choice("advice_weighted" if decision_bot in ["advice_soft", "advice_dirty", "advice_scheme"] else decision_bot, sim.advice_for(0), ci)
 		if parliament_bot and str(ev.get("kind", "")) == "parliament_bill":
 			ci = 3 if bot == "parliament_force" else 2
+		if str(ev.get("kind", "")) == "confidence_vote":
+			if bot == "confidence_force":
+				ci = 2
+			elif bot == "confidence_fall":
+				ci = 1
+		if str(ev.get("kind", "")) == "confidence_vote" and bot == "confidence_force" and not ev["choices"][2].get("available", true):
+			ci = 1
 		if not ev["choices"][ci].get("available", true) or sim.private_wealth + float(ev["choices"][ci].get("fx", {}).get("wealth", 0)) < 0.0:
 			ci = 1 if ev.get("kind", "") == "patronage" else 0
 		sim.resolve_decision(0, ci)

@@ -235,6 +235,34 @@ func _run() -> void:
 		await _shot("r3b_laws_divan")
 		quit(0)
 		return
+	if "--election" in OS.get_cmdline_user_args():
+		main._instant = true
+		sim0.pending.clear()
+		sim0.week = 58
+		var source: Dictionary = {}
+		for event: Dictionary in sim0._events:
+			if str(event.get("id", "")) == "secim_sonucu":
+				source = event
+				break
+		sim0.pending = [{"event": sim0._prepare_election_result(source), "age": 0}]
+		main._refresh()
+		await _shot("r3c_election_result")
+		sim0.mesai = 4
+		sim0.resolve_decision(0, 0)
+		main._refresh()
+		await _shot("r3c_government_formation")
+		sim0.pending.clear()
+		sim0.government_pm = "kessler"
+		sim0.government_coalition.assign(["royal", "nobles"])
+		sim0.parliament_blocs["royal"]["loyalty"] = 0.0
+		sim0.parliament_blocs["royal"]["pressure"] = 100.0
+		sim0.parliament_blocs["nobles"]["loyalty"] = 0.0
+		sim0.parliament_blocs["nobles"]["pressure"] = 100.0
+		sim0._queue_confidence_vote()
+		main._refresh()
+		await _shot("r3c_confidence_vote")
+		quit(0)
+		return
 	if "--files-journal" in OS.get_cmdline_user_args():
 		main._select_tab(main._files_tab)
 		await _shot("files")
