@@ -57,12 +57,17 @@ var unrest := 30.0
 var economy := 55.0
 var economy_metrics: Dictionary = {"inflation": 45.0, "jobs": 55.0, "debt": 45.0, "trade": 55.0, "growth": 55.0}
 var economy_rng := RandomNumberGenerator.new()
+var parliament_rng := RandomNumberGenerator.new()
 var consent := 70.0
 var public_fear := 20.0
 var public_rng := RandomNumberGenerator.new()
 var public_opinion_active := false
 var last_poll_week := 0
 var opposition := 20.0
+var parliament_base_opposition := 20.0
+var parliament_blocs: Dictionary = {}
+var parliament_proposals: Array = []
+var last_parliament_bill_week := 0
 var private_wealth := 10.0
 var capacity: Dictionary = {"maliye": 55.0, "hukuk": 55.0, "ordu": 55.0, "idare": 55.0}
 var treasury := 55.0
@@ -164,6 +169,7 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 	else:
 		rng.seed = seed_value
 	economy_rng.seed = rng.seed ^ 0xEC0A07
+	parliament_rng.seed = rng.seed ^ 0xA77E31
 	if diff >= 0:
 		difficulty = clampi(diff, 0, DIFFICULTY.size() - 1)
 	mesai_max = int(_diff("mesai"))
@@ -181,6 +187,10 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 	public_opinion_active = false
 	last_poll_week = 0
 	opposition = 20.0
+	parliament_base_opposition = opposition
+	parliament_blocs = _default_parliament_blocs()
+	parliament_proposals.clear()
+	last_parliament_bill_week = 0
 	private_wealth = 10.0
 	var state_rng := RandomNumberGenerator.new()
 	state_rng.seed = rng.seed ^ 0x5A17E
@@ -523,11 +533,11 @@ func save_summary() -> String:
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
 ## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Sarne ve kadro günlüğü
-const SAVE_VERSION := 15
+const SAVE_VERSION := 16
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
-	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng", "budget_allocation", "delayed_economy", "consent", "public_fear", "public_rng", "public_opinion_active", "last_poll_week"]
+	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng", "budget_allocation", "delayed_economy", "consent", "public_fear", "public_rng", "public_opinion_active", "last_poll_week", "parliament_base_opposition", "parliament_blocs", "parliament_proposals", "last_parliament_bill_week", "parliament_rng"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -632,6 +642,14 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 		d["public_rng"] = public_rng_migration.state
 		d["public_opinion_active"] = false
 		d["last_poll_week"] = 0
+	if from < 16:
+		d["parliament_base_opposition"] = float(d.get("opp", 20.0))
+		d["parliament_blocs"] = _default_parliament_blocs()
+		d["parliament_proposals"] = []
+		d["last_parliament_bill_week"] = 0
+		var parliament_rng_migration := RandomNumberGenerator.new()
+		parliament_rng_migration.seed = int(d.get("seed", 1)) ^ 0xA77E31
+		d["parliament_rng"] = parliament_rng_migration.state
 	if not d.has("foreign"):
 		d["foreign"] = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
 	if not d.has("foreign_hint_until"):
@@ -675,7 +693,10 @@ func save_game() -> bool:
 		"economy_metrics": economy_metrics, "economy_rng": economy_rng.state, "budget_allocation": budget_allocation,
 		"consent": consent, "public_fear": public_fear, "public_rng": public_rng.state,
 		"public_opinion_active": public_opinion_active, "last_poll_week": last_poll_week,
-		"delayed_economy": delayed_economy, "version": SAVE_VERSION}
+		"delayed_economy": delayed_economy, "parliament_base_opposition": parliament_base_opposition,
+		"parliament_blocs": parliament_blocs, "parliament_proposals": parliament_proposals,
+		"last_parliament_bill_week": last_parliament_bill_week, "parliament_rng": parliament_rng.state,
+		"version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -748,6 +769,10 @@ func load_game() -> bool:
 	unrest = d["unrest"]
 	economy = d["economy"]
 	opposition = d["opp"]
+	parliament_base_opposition = float(d.get("parliament_base_opposition", opposition))
+	parliament_blocs = d.get("parliament_blocs", _default_parliament_blocs())
+	parliament_proposals = d.get("parliament_proposals", [])
+	last_parliament_bill_week = int(d.get("last_parliament_bill_week", 0))
 	private_wealth = d["wealth"]
 	capacity = d["capacity"]
 	treasury = float(d["treasury"])
@@ -795,6 +820,8 @@ func load_game() -> bool:
 	timeline = d.get("timeline", [])
 	rng.state = d["rng"]
 	ext_rng.state = d["ext_rng"]
+	parliament_rng.state = int(d.get("parliament_rng", int(d.get("seed", 1)) ^ 0xA77E31))
+	_refresh_parliament_opposition()
 	_generate_reports()
 	report_prev = d.get("report_prev", {})   # _generate_reports'un üzerine yazdığı geçen hafta
 	week_changes = d.get("week_changes", [])
@@ -1255,10 +1282,10 @@ func operation(kind: String, ids: Array) -> String:
 				text = tr("Operasyon amatörce kaldı; kimse inanmadı.")
 		"bol":
 			if ok:
-				opposition = maxf(0.0, opposition - 15.0)
+				_set_parliament_base_opposition(parliament_base_opposition - 15.0)
 				text = tr("Muhalefet kanatları birbirine düştü.")
 			else:
-				opposition += 5.0
+				_set_parliament_base_opposition(parliament_base_opposition + 5.0)
 				text = tr("Muhalefet planı fark etti ve birleşme hızlandı.")
 		"zayiflat":
 			var target: Actor = null
@@ -1354,6 +1381,35 @@ func public_opinion_line() -> String:
 	return tr("Kamuoyu: %s; %s.") % [consent_band, fear_band]
 
 
+func _default_parliament_blocs() -> Dictionary:
+	return {
+		"royal": {"loyalty": 96.0, "pressure": 28.0},
+		"opposition": {"loyalty": 56.0, "pressure": 18.0},
+		"nobles": {"loyalty": 100.0, "pressure": 38.0},
+		"independents": {"loyalty": 48.0, "pressure": 12.0}}
+
+
+func _refresh_parliament_opposition() -> void:
+	var weight := {"royal": 0.4, "opposition": 0.3, "nobles": 0.2, "independents": 0.1}
+	var loyalty := 0.0
+	for bloc in weight:
+		loyalty += float(parliament_blocs.get(bloc, {}).get("loyalty", 50.0)) * float(weight[bloc])
+	opposition = clampf(parliament_base_opposition + (80.0 - loyalty) * 0.1, 0.0, 100.0)
+
+
+func _set_parliament_base_opposition(value: float) -> void:
+	parliament_base_opposition = clampf(value, 0.0, 100.0)
+	_refresh_parliament_opposition()
+
+
+func parliament_report_line() -> String:
+	var nobles: Dictionary = parliament_blocs.get("nobles", {})
+	var independents: Dictionary = parliament_blocs.get("independents", {})
+	var noble_line := tr("Soyluların desteği sağlam.") if float(nobles.get("loyalty", 50.0)) >= 65.0 else tr("Soyluların desteği pazarlığa açık.")
+	var independent_line := tr("Bağımsızlar temkinli.") if float(independents.get("pressure", 0.0)) >= 35.0 else tr("Bağımsızlar kendi kararını verecek.")
+	return tr("Meclis: %s %s") % [noble_line, independent_line]
+
+
 func respond_to_scandal(fid: String, response: String) -> String:
 	if not facts.has(fid) or not bool(facts[fid].get("public", false)) or facts[fid].get("subject", "") != "king" or facts[fid].has("response"):
 		return ""
@@ -1370,7 +1426,7 @@ func respond_to_scandal(fid: String, response: String) -> String:
 		"apologize":
 			consent += 5.0
 			public_fear = maxf(0.0, public_fear - 2.0)
-			opposition = minf(100.0, opposition + 2.0)
+			_set_parliament_base_opposition(parliament_base_opposition + 2.0)
 		"scapegoat":
 			consent += 1.0
 			for id in fact.get("knowers", []):
@@ -1678,10 +1734,12 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 			return tr("Leyla artık bağımsız yayın kuramıyor.")
 		if choice_index == 3 and (not actors.has("falk") or actors["falk"].moved):
 			return tr("Renn artık savcılığa başvuramıyor.")
+	if e.get("kind", "") == "parliament_bill" and str(ch.get("bill_action", "")) == "force" and not _can_force_parliament():
+		return tr("Baskı kurmak için hazine ve kişisel servet yetersiz.")
 	var fx: Dictionary = ch.get("fx", {})
 	if float(fx.get("wealth", 0)) + private_wealth < 0.0:
 		return tr("Kişisel servetin yetersiz.")
-	if not spend_mesai():
+	if e.get("kind", "") != "parliament_bill" and not spend_mesai():
 		return _no_mesai()
 	if e.get("crisis", false):
 		pending.remove_at(pending_index)
@@ -1703,9 +1761,12 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 	flags["%s_%d" % [e["id"], choice_index]] = week
 	if e.get("kind", "") == "patronage":
 		var patronage_text := _resolve_patronage(choice_index, int(e["level"]))
+		_adjust_parliament_patronage(choice_index)
 		history.append(tr("Hafta %d — %s » %s") % [week, e["title"], ch["label"]])
 		changed.emit()
 		return patronage_text
+	if e.get("kind", "") == "parliament_bill":
+		return _resolve_parliament_bill(e, choice_index)
 	_extra_msgs.clear()
 	_apply_effects(fx)
 	history.append(tr("Hafta %d — %s » %s") % [week, e["title"], ch["label"]])
@@ -1720,7 +1781,7 @@ func _apply_effects(fx: Dictionary) -> void:
 	unrest = clampf(unrest + float(fx.get("unrest", 0)), 0.0, 100.0)
 	economy = clampf(economy + float(fx.get("economy", 0)), 0.0, 100.0)
 	king_strength = clampf(king_strength + float(fx.get("king", 0)), 0.0, 100.0)
-	opposition = clampf(opposition + float(fx.get("opp", 0)), 0.0, 100.0)
+	_set_parliament_base_opposition(parliament_base_opposition + float(fx.get("opp", 0)))
 	consent = clampf(consent + float(fx.get("consent", 0)), 0.0, 100.0)
 	public_fear = clampf(public_fear + float(fx.get("fear", 0)), 0.0, 100.0)
 	private_wealth = maxf(0.0, private_wealth + float(fx.get("wealth", 0)))
@@ -1844,6 +1905,11 @@ func end_week() -> void:
 		if p["age"] >= 2:
 			var e: Dictionary = p["event"]
 			var ig: Dictionary = e.get("ignore", {"text": "Karar ertelendi.", "fx": {"unrest": 3}})
+			if e.get("kind", "") == "parliament_bill":
+				var proposal: Dictionary = e.get("proposal", {})
+				proposal["status"] = "lapsed"
+				proposal["result"] = tr("Teklif oylanmadan gündemden düştü.")
+				_fail_parliament_proposal()
 			flags[str(e["id"]) + "_ertelendi"] = week
 			_apply_effects(ig.get("fx", {}))
 			var line := "ERTELENDİ — %s: %s" % [e["title"], ig.get("text", "")]
@@ -1862,6 +1928,7 @@ func end_week() -> void:
 	_fire_events()
 	_fire_budget()
 	_fire_patronage()
+	_tick_parliament()
 	if regime == "" and week >= 60:
 		regime = _choose_regime()
 		flags["REJIM_" + regime.to_upper()] = week
@@ -2013,7 +2080,7 @@ func _world_tick() -> void:
 			a.loyalty["fear"] = maxf(0.0, a.loyalty["fear"] - 0.15)
 		a.fear = maxf(0.0, a.fear - 0.2)
 	var opp_push := (unrest - 40.0) * 0.05 + (brandt.power * 0.01 if brandt else 0.0) - 0.15
-	opposition = clampf(opposition + opp_push, 0.0, 100.0)
+	_set_parliament_base_opposition(parliament_base_opposition + opp_push)
 	unrest = clampf(unrest + rng.randf_range(-3.0, 3.0) + (50.0 - economy) * 0.05 + (opposition - 40.0) * 0.01 - (unrest - 30.0) * 0.06, 0.0, 100.0)
 	street_anger *= STREET_ANGER_DECAY
 	unrest = clampf(unrest + street_anger * STREET_FEED, 0.0, 100.0)
@@ -2540,6 +2607,136 @@ func _fire_patronage() -> void:
 		"choices": choices, "ignore": {"text": PATRONAGE_CONTENT["ignore"], "fx": {}}}
 	pending.append({"event": e, "age": 0})
 	weekly_news.append("OLAY: " + str(e["title"]))
+
+
+func _tick_parliament() -> void:
+	if week - last_parliament_bill_week < 10 or not pending.is_empty():
+		return
+	last_parliament_bill_week = week
+	var bills := [
+		["tax", tr("Vergi reformu"), tr("Vergi yükünün dağılımı ve sarayın payı yeniden tartışılıyor.")],
+		["press", tr("Basın yasası"), tr("Yayın özgürlüğü ile sarayın denetimi karşı karşıya.")],
+		["army", tr("Ordu bütçesi"), tr("Kışla, güvenlik ve sivil harcama arasında yeni bir pay aranıyor.")],
+		["election", tr("Seçim yasası"), tr("Sandığın kuralları ve temsilin sınırları mecliste tartışılıyor.")],
+		["amnesty", tr("Af yasası"), tr("Siyasi tutuklular ve eski suçlar için af önerisi sunuldu.")],
+		["judicial", tr("Yargı reformu"), tr("Mahkemelerin bağımsızlığı ve sarayın yetkisi yeniden masada.")]]
+	var bill: Array = bills[parliament_rng.randi_range(0, bills.size() - 1)]
+	var proposal := {"id": "bill_%d_%s" % [week, bill[0]], "bill": bill[0], "week": week, "status": "pending"}
+	var force_costs := _parliament_force_costs()
+	var e := {"id": "kanun_teklifi_%d" % week, "kind": "parliament_bill", "proposal": proposal,
+		"title": tr("Meclise kanun teklifi sunuldu"), "text": tr("%s: %s") % [str(bill[1]), str(bill[2])],
+		"choices": [
+			{"label": tr("Destekle"), "text": tr("Teklif oylamaya gitti. Kulislerde çoğunluğun yönü hâlâ belirsiz."), "bill_action": "support", "fx": {"opp": -1.0}},
+			{"label": tr("Değiştir"), "text": tr("Uzlaşma için değişiklik yaptın; bazı vekillerin desteği kazanıldı."), "bill_action": "amend", "fx": {"opp": -1.0}},
+			{"label": tr("Geri çek"), "text": tr("Teklif geri çekildi. Muhalefet bunu geri adım olarak anlatacak."), "bill_action": "withdraw", "fx": {"opp": 3.0, "unrest": 10.0}},
+			{"label": tr("Baskıyla geçir"), "text": tr("Teklif baskıyla kabul edildi. Kulislerde kimin bedel ödediği konuşuluyor."), "bill_action": "force",
+				"fx": {"treasury": -float(force_costs["treasury"]), "wealth": -float(force_costs["wealth"]), "unrest": float(force_costs["unrest"]), "king": -14.0},
+				"available": _can_force_parliament()}],
+		"ignore": {"text": tr("Teklif bu hafta gündemden düştü."), "fx": {}}}
+	pending.append({"event": e, "age": 0})
+	parliament_proposals.append(proposal)
+	var bill_news := tr("Meclis yeni bir kanun teklifini görüşmeye başladı.")
+	_add_news("OLAY: " + bill_news, "EVENT: " + Loc.en(bill_news))
+
+
+func _bill_support_score(bill: String) -> float:
+	var stance := {
+		"tax": {"royal": -4.0, "opposition": -8.0, "nobles": -14.0, "independents": 0.0},
+		"press": {"royal": -10.0, "opposition": 15.0, "nobles": -4.0, "independents": 8.0},
+		"army": {"royal": 8.0, "opposition": -12.0, "nobles": 5.0, "independents": -5.0},
+		"election": {"royal": -10.0, "opposition": 12.0, "nobles": -7.0, "independents": 4.0},
+		"amnesty": {"royal": 0.0, "opposition": 12.0, "nobles": -10.0, "independents": 5.0},
+		"judicial": {"royal": -8.0, "opposition": 10.0, "nobles": -3.0, "independents": 8.0}}
+	var weights := {"royal": 0.4, "opposition": 0.3, "nobles": 0.2, "independents": 0.1}
+	var score := 0.0
+	for bloc in weights:
+		var data: Dictionary = parliament_blocs.get(bloc, {})
+		var lean: float = float(stance.get(bill, {}).get(bloc, 0.0))
+		var pressure_weight := 0.18 if bloc in ["royal", "nobles"] else 0.08
+		score += weights[bloc] * clampf(float(data.get("loyalty", 50.0)) + float(data.get("pressure", 0.0)) * pressure_weight + lean, 0.0, 100.0)
+	return score
+
+
+func _parliament_force_costs() -> Dictionary:
+	var times := int(stats.get("parliament_forced", 0))
+	return {"treasury": 10.0 + times * 6.0, "wealth": 7.0 + times * 3.0, "unrest": 100.0 + times * 30.0}
+
+
+func _can_force_parliament() -> bool:
+	var costs := _parliament_force_costs()
+	return treasury >= float(costs["treasury"]) and private_wealth >= float(costs["wealth"])
+
+
+func _adjust_parliament_patronage(choice: int) -> void:
+	match choice:
+		0:
+			parliament_blocs["royal"]["pressure"] = minf(100.0, float(parliament_blocs["royal"]["pressure"]) + 4.0)
+			parliament_blocs["nobles"]["pressure"] = minf(100.0, float(parliament_blocs["nobles"]["pressure"]) + 3.0)
+		1:
+			parliament_blocs["opposition"]["pressure"] = minf(100.0, float(parliament_blocs["opposition"]["pressure"]) + 3.0)
+			parliament_blocs["independents"]["pressure"] = minf(100.0, float(parliament_blocs["independents"]["pressure"]) + 4.0)
+		2:
+			parliament_blocs["independents"]["loyalty"] = minf(100.0, float(parliament_blocs["independents"]["loyalty"]) + 2.0)
+			parliament_blocs["independents"]["pressure"] = maxf(0.0, float(parliament_blocs["independents"]["pressure"]) - 4.0)
+		3:
+			parliament_blocs["royal"]["loyalty"] = maxf(0.0, float(parliament_blocs["royal"]["loyalty"]) - 2.0)
+			parliament_blocs["nobles"]["pressure"] = maxf(0.0, float(parliament_blocs["nobles"]["pressure"]) - 4.0)
+	_refresh_parliament_opposition()
+
+
+func _fail_parliament_proposal() -> void:
+	parliament_blocs["opposition"]["loyalty"] = maxf(0.0, float(parliament_blocs["opposition"]["loyalty"]) - 20.0)
+	parliament_blocs["royal"]["loyalty"] = maxf(0.0, float(parliament_blocs["royal"]["loyalty"]) - 6.0)
+	unrest = clampf(unrest + 10.0, 0.0, 100.0)
+	_refresh_parliament_opposition()
+
+
+func _register_failed_parliament_vote() -> void:
+	parliament_blocs["opposition"]["loyalty"] = maxf(0.0, float(parliament_blocs["opposition"]["loyalty"]) - 2.0)
+	_refresh_parliament_opposition()
+
+
+func _resolve_parliament_bill(event: Dictionary, choice: int) -> String:
+	var proposal: Dictionary = event["proposal"]
+	var action := str(event["choices"][choice].get("bill_action", "support"))
+	var passed := false
+	match action:
+		"withdraw":
+			_fail_parliament_proposal()
+			proposal["status"] = "withdrawn"
+			proposal["result"] = tr("Teklif geri çekildi.")
+		"force":
+			var costs := _parliament_force_costs()
+			_apply_effects({"treasury": -float(costs["treasury"]), "wealth": -float(costs["wealth"]), "unrest": float(costs["unrest"]), "king": -14.0})
+			parliament_blocs["opposition"]["loyalty"] = maxf(0.0, float(parliament_blocs["opposition"]["loyalty"]) - 12.0)
+			parliament_blocs["royal"]["pressure"] = minf(100.0, float(parliament_blocs["royal"]["pressure"]) + 8.0)
+			parliament_blocs["nobles"]["pressure"] = minf(100.0, float(parliament_blocs["nobles"]["pressure"]) + 5.0)
+			stats["parliament_forced"] = int(stats.get("parliament_forced", 0)) + 1
+			flags["PARLIAMENT_FORCE_TRACE_%d" % week] = true
+			proposal["status"] = "passed_under_pressure"
+			proposal["result"] = tr("Baskıyla geçirildi; hazine, huzur ve kral otoritesinden bedel aldı.")
+			passed = true
+		_:
+			var score := _bill_support_score(str(proposal["bill"])) + (12.0 if action == "amend" else 0.0)
+			passed = parliament_rng.randf() < clampf(0.52 + (score - 55.0) / 100.0, 0.12, 0.9)
+			if passed:
+				parliament_blocs["royal"]["loyalty"] = minf(100.0, float(parliament_blocs["royal"]["loyalty"]) + 1.0)
+				parliament_blocs["independents"]["loyalty"] = minf(100.0, float(parliament_blocs["independents"]["loyalty"]) + (2.0 if action == "amend" else 0.0))
+				proposal["status"] = "passed"
+				proposal["result"] = tr("Teklif kabul edildi; yürürlük etkileri sonraki aşamada uygulanacak.")
+			else:
+				_register_failed_parliament_vote()
+				proposal["status"] = "failed"
+				proposal["result"] = tr("Teklif reddedildi; muhalefet safları sıklaştırdı.")
+	_refresh_parliament_opposition()
+	proposal["result"] = str(proposal.get("result", tr("Teklif bu hafta görüşüldü.")))
+	proposal["result"] = str(event["choices"][choice]["text"]) + " " + str(proposal["result"])
+	proposal["week_resolved"] = week
+	history.append(tr("Hafta %d — %s » %s") % [week, event["title"], event["choices"][choice]["label"]])
+	var result_news := tr("Teklif kabul edildi; yeni kurallar henüz yürürlüğe girmedi.") if passed else tr("Meclis teklifinde uzlaşma sağlanamadı.")
+	_add_news("OLAY: " + result_news, "EVENT: " + Loc.en(result_news))
+	changed.emit()
+	return str(proposal["result"])
 
 
 func _resolve_patronage(choice: int, level: int) -> String:
@@ -3265,7 +3462,7 @@ func _resolve_other(action: String) -> String:
 			street_anger = maxf(0.0, street_anger - 30.0)
 			economy = clampf(economy - 10.0, 0.0, 100.0)
 			king_strength = clampf(king_strength - 6.0, 0.0, 100.0)
-			opposition = clampf(opposition + 6.0, 0.0, 100.0)
+			_set_parliament_base_opposition(parliament_base_opposition + 6.0)
 			return tr("Fiyatlar donduruldu, iki bakan istifa etti. Barikatlar söküldü; muhalefet bu geceyi zafer sayıyor.")
 		"appeal":
 			if not ok:
@@ -3285,7 +3482,7 @@ func _resolve_other(action: String) -> String:
 			if actors.has("falk"):
 				flags["FALK_GITTI"] = week
 				actors.erase("falk")
-			opposition = clampf(opposition + 8.0, 0.0, 100.0)
+			_set_parliament_base_opposition(parliament_base_opposition + 8.0)
 			unrest = clampf(unrest + 6.0, 0.0, 100.0)
 			_add_fact("yargi_tasfiyesi_%d" % week, "Yüksek Mahkemenin tasfiye edilmesi", "king", 40, ["brandt", "lena"], 1)
 			return tr("Yeni yargıçlar yemin etti. Dosyalar rafa kalktı; ama rafın nerede olduğunu herkes biliyor.")
@@ -3305,7 +3502,7 @@ func _resolve_other(action: String) -> String:
 			_close_other()
 			legal_relief += 35.0
 			private_wealth = maxf(0.0, private_wealth - 5.0)
-			opposition = clampf(opposition + 5.0, 0.0, 100.0)
+			_set_parliament_base_opposition(parliament_base_opposition + 5.0)
 			return tr("Dokunulmazlık yasası birkaç oy farkla geçti. Bazı vekiller bu hafta yeni arabalarla geldi.")
 	return ""
 

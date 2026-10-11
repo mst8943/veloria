@@ -4294,6 +4294,135 @@ msgstr "Find a scapegoat"
 msgid "Gündem Değiştir"
 msgstr "Change the subject"
 
+msgid "Soyluların desteği sağlam."
+msgstr "The nobles remain firmly supportive."
+
+msgid "Soyluların desteği pazarlığa açık."
+msgstr "The nobles' support is open to negotiation."
+
+msgid "Bağımsızlar temkinli."
+msgstr "The independents are cautious."
+
+msgid "Bağımsızlar kendi kararını verecek."
+msgstr "The independents will decide for themselves."
+
+msgid "Meclis: %s %s"
+msgstr "Assembly: %s %s"
+
+msgid "Baskı kurmak için hazine ve kişisel servet yetersiz."
+msgstr "The treasury and your personal funds are not enough to apply pressure."
+
+msgid "Vergi reformu"
+msgstr "Tax reform"
+
+msgid "Vergi yükünün dağılımı ve sarayın payı yeniden tartışılıyor."
+msgstr "The distribution of the tax burden and the Palace's share are under debate again."
+
+msgid "Basın yasası"
+msgstr "Press act"
+
+msgid "Yayın özgürlüğü ile sarayın denetimi karşı karşıya."
+msgstr "Press freedom and the Palace's control are at odds."
+
+msgid "Ordu bütçesi"
+msgstr "Army budget"
+
+msgid "Kışla, güvenlik ve sivil harcama arasında yeni bir pay aranıyor."
+msgstr "A new balance is being sought between the barracks, security, and civilian spending."
+
+msgid "Seçim yasası"
+msgstr "Election act"
+
+msgid "Sandığın kuralları ve temsilin sınırları mecliste tartışılıyor."
+msgstr "The Assembly is debating the rules of the ballot and the limits of representation."
+
+msgid "Af yasası"
+msgstr "Amnesty act"
+
+msgid "Siyasi tutuklular ve eski suçlar için af önerisi sunuldu."
+msgstr "An amnesty has been proposed for political prisoners and past offenses."
+
+msgid "Yargı reformu"
+msgstr "Judicial reform"
+
+msgid "Mahkemelerin bağımsızlığı ve sarayın yetkisi yeniden masada."
+msgstr "The courts' independence and the Palace's authority are back on the table."
+
+msgid "Meclise kanun teklifi sunuldu"
+msgstr "A bill has been introduced to the Assembly"
+
+msgid "%s: %s %s"
+msgstr "%s: %s %s"
+
+msgid "Destekle"
+msgstr "Support"
+
+msgid "Teklif oylamaya gitti. Kulislerde çoğunluğun yönü hâlâ belirsiz."
+msgstr "The bill went to a vote. The whispers still cannot tell which way the majority leans."
+
+msgid "Değiştir"
+msgstr "Amend"
+
+msgid "Uzlaşma için değişiklik yaptın; bazı vekillerin desteği kazanıldı."
+msgstr "You offered a compromise; some members have been won over."
+
+msgid "Geri çek"
+msgstr "Withdraw"
+
+msgid "Teklif geri çekildi. Muhalefet bunu geri adım olarak anlatacak."
+msgstr "The bill was withdrawn. The opposition will call it a retreat."
+
+msgid "Baskıyla geçir"
+msgstr "Force it through"
+
+msgid "Teklif baskıyla kabul edildi. Kulislerde kimin bedel ödediği konuşuluyor."
+msgstr "The bill passed under pressure. The corridors are already asking who paid the price."
+
+msgid "Teklif bu hafta gündemden düştü."
+msgstr "The bill fell off the agenda this week."
+
+msgid "Meclis yeni bir kanun teklifini görüşmeye başladı."
+msgstr "The Assembly began debating a new bill."
+
+msgid "Teklif geri çekildi."
+msgstr "The bill was withdrawn."
+
+msgid "Baskıyla geçirildi; hazine, huzur ve kral otoritesinden bedel aldı."
+msgstr "It was forced through, costing treasury, public order, and royal authority."
+
+msgid "Bütçe açığının gizlenmesi"
+msgstr "The budget deficit is being concealed"
+
+msgid "KRİZ: Drakon sınır hattında ültimatom verdi."
+msgstr "CRISIS: Drakon issued an ultimatum at the border."
+
+msgid "Teklif kabul edildi; yürürlük etkileri sonraki aşamada uygulanacak."
+msgstr "The bill passed; its effects will be implemented in a later phase."
+
+msgid "Teklif reddedildi; muhalefet safları sıklaştırdı."
+msgstr "The bill failed, and the opposition closed ranks."
+
+msgid "Teklif bu hafta görüşüldü."
+msgstr "The bill was debated this week."
+
+msgid "Teklif kabul edildi; yeni kurallar henüz yürürlüğe girmedi."
+msgstr "The bill passed; its rules have not taken effect yet."
+
+msgid "Meclis teklifinde uzlaşma sağlanamadı."
+msgstr "The Assembly could not agree on the bill."
+
+msgid "Hazine ve kişisel servet yetersiz."
+msgstr "The treasury and personal funds are insufficient."
+
+msgid "Meclis"
+msgstr "The Assembly"
+
+msgid "Teklif oylanmadan gündemden düştü."
+msgstr "The bill fell off the agenda without a vote."
+
+msgid "Oylama mesai harcamaz; zorla geçirmek bedel ve iz bırakır."
+msgstr "Voting costs no action; forcing a bill through has a price and leaves a trace."
+
 msgid "Kamuoyu"
 msgstr "Public opinion"
 

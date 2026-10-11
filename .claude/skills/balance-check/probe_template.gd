@@ -22,7 +22,7 @@ extends SceneTree
 
 var sim: Node
 var rng := RandomNumberGenerator.new()
-const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "advice_patron", "advice_veliaht", "advice_heyet", "advice_bloc", "visible_wise", "omniscient", "public_out", "public_hide"]
+const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "advice_patron", "advice_veliaht", "advice_heyet", "advice_bloc", "visible_wise", "omniscient", "public_out", "public_hide", "parliament_force", "parliament_withdraw", "parliament_abstain"]
 var style := ""   # advice_soft / advice_dirty oyun tarzı
 var dynasty_probe := false
 var dynasty_cap_ok := true
@@ -200,6 +200,7 @@ func _play(bot: String) -> void:
 				sim.give_tender("halden")
 			if bot == "advice_patron" and sim.private_wealth > 11.0 and sim.mesai > 0 and sim.actors.has("dorn") and not sim.actors["dorn"].moved:
 				sim.bribe("dorn")
+			var decision_bot := "advice_weighted" if bot in ["parliament_force", "parliament_withdraw", "parliament_abstain"] else bot
 			var cycle := 16 if bot == "advice_loyal" else 20
 			var start := 16 if bot == "advice_loyal" else 12
 			if bot in ["advice_loyal", "advice_merit"] and sim.week >= start and (sim.week - start) % cycle in [0, 1]:
@@ -208,17 +209,25 @@ func _play(bot: String) -> void:
 					sim.appoint(id, "loyal" if bot == "advice_loyal" else "merit")
 			if bot == "advice_scheme":
 				_scheme()
-			_act_visible(bot.begins_with("advice_") and bot != "advice_quiet")
+			_act_visible(decision_bot.begins_with("advice_") and decision_bot != "advice_quiet")
 
 
 # ---------------------------------------------------------------- Kararlar
 
 func _decide(bot: String) -> void:
 	var guard := 0
-	while not sim.pending.is_empty() and sim.mesai > 0 and guard < 6:
+	while not sim.pending.is_empty() and (sim.mesai > 0 or sim.pending[0]["event"].get("kind", "") == "parliament_bill") and guard < 6:
 		guard += 1
 		var ev: Dictionary = sim.pending[0]["event"]
-		var ci: int = rng.randi() % ev["choices"].size()
+		var ci: int = 0 if str(ev.get("kind", "")) == "parliament_bill" else rng.randi() % ev["choices"].size()
+		var parliament_bot := bot in ["parliament_force", "parliament_withdraw", "parliament_abstain"]
+		if parliament_bot and str(ev.get("kind", "")) == "parliament_bill":
+			if bot == "parliament_abstain":
+				break
+			ci = 3 if bot == "parliament_force" else 2
+			if not ev["choices"][ci].get("available", true):
+				ci = 0
+		var decision_bot := "advice_weighted" if parliament_bot else bot
 		if str(ev.get("kind", "")) == "public_poll" and bot in ["public_out", "public_hide"]:
 			ci = 0 if bot == "public_out" else 1
 		if dynasty_probe and str(ev.get("id", "")) == "halef_karari":
@@ -231,10 +240,12 @@ func _decide(bot: String) -> void:
 			ci = 3
 		elif ev.get("kind", "") == "patronage" and bot == "advice_patron":
 			ci = 0
-		elif bot in ["visible_wise", "omniscient"]:
+		elif decision_bot in ["visible_wise", "omniscient"]:
 			ci = _wise_choice(ev)
-		elif bot.begins_with("advice_"):
-			ci = _advice_choice("advice_weighted" if bot in ["advice_soft", "advice_dirty", "advice_scheme"] else bot, sim.advice_for(0), ci)
+		elif decision_bot.begins_with("advice_"):
+			ci = _advice_choice("advice_weighted" if decision_bot in ["advice_soft", "advice_dirty", "advice_scheme"] else decision_bot, sim.advice_for(0), ci)
+		if parliament_bot and str(ev.get("kind", "")) == "parliament_bill":
+			ci = 3 if bot == "parliament_force" else 2
 		if not ev["choices"][ci].get("available", true) or sim.private_wealth + float(ev["choices"][ci].get("fx", {}).get("wealth", 0)) < 0.0:
 			ci = 1 if ev.get("kind", "") == "patronage" else 0
 		sim.resolve_decision(0, ci)

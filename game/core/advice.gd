@@ -226,6 +226,9 @@ func advice_for(pending_index: int) -> Array:
 	if p.has("advice"):
 		return p["advice"]
 	var e: Dictionary = p["event"]
+	if e.get("kind", "") == "parliament_bill":
+		p["advice"] = []
+		return []
 	var out: Array = []
 	var born := week - int(p.get("age", 0))
 	for aid: String in _pick_advisors(e):
@@ -334,7 +337,7 @@ func _log_advice(e: Dictionary, advice: Array, chosen: int) -> void:
 			continue
 		var a: Actor = actors.get(it["actor"])
 		advice_log.append({"w": week, "event": e["title"], "actor": it["actor"],
-			"name": a.display_name if a else str(it["actor"]), "followed": rec == chosen,
+			"name": a.display_name if a else ("Renn" if str(it["actor"]) == "falk" else str(it["actor"])), "followed": rec == chosen,
 			"rec": str(choices[rec]["label"]), "best": str(choices[best]["label"]),
 			"gap": snappedf(choice_value(choices[best].get("fx", {})) - choice_value(choices[rec].get("fx", {})), 0.1)})
 
