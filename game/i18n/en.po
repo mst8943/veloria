@@ -4089,3 +4089,27 @@ msgstr "moderate"
 
 msgid "genişliyor"
 msgstr "expanding"
+
+msgid "Özel tahsis"
+msgstr "Custom allocation"
+
+msgid "Özel dağılımı uygula; sarayın payı da hesaba katılır."
+msgstr "Apply the custom allocation, including a Palace allowance."
+
+msgid "Sıkı bütçe"
+msgstr "Austerity"
+
+msgid "Dengeli bütçe"
+msgstr "Balanced budget"
+
+msgid "Cömert bütçe"
+msgstr "Generous budget"
+
+msgid "Harcama kısılır; kurumlar ve sokak bunun bedelini gecikmeli hisseder."
+msgstr "Spending tightens; institutions and the streets feel the cost later."
+
+msgid "Dört kaleme eşit pay; belirgin bir öncelik yok."
+msgstr "An equal share for all four lines, with no single priority."
+
+msgid "Kurumlara ve sokağa nefes verir; kasanın bedeli haftalara yayılır."
+msgstr "It gives institutions and the streets room to breathe; the Treasury pays over several weeks."

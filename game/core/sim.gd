@@ -63,6 +63,8 @@ var capacity: Dictionary = {"maliye": 55.0, "hukuk": 55.0, "ordu": 55.0, "idare"
 var treasury := 55.0
 var budget_stance := 0
 var court_share := false
+var budget_allocation: Dictionary = {"army": 25.0, "social": 25.0, "industry": 25.0, "palace": 25.0}
+var delayed_economy: Array[Dictionary] = []
 var capacity_timeline: Array = []
 var holding := 40.0
 var halden_hostile_until := 0
@@ -176,6 +178,8 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 	treasury = 55.0
 	budget_stance = 0
 	court_share = false
+	budget_allocation = {"army": 25.0, "social": 25.0, "industry": 25.0, "palace": 25.0}
+	delayed_economy.clear()
 	capacity_timeline.clear()
 	holding = 40.0
 	halden_hostile_until = 0
@@ -505,11 +509,11 @@ func save_summary() -> String:
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
 ## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Sarne ve kadro günlüğü
-const SAVE_VERSION := 13
+const SAVE_VERSION := 14
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
-	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng"]
+	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng", "budget_allocation", "delayed_economy"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -603,6 +607,9 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 		var old_economy_rng := RandomNumberGenerator.new()
 		old_economy_rng.seed = int(d.get("seed", 1)) ^ 0xEC0A07
 		d["economy_rng"] = old_economy_rng.state
+	if from < 14:
+		d["budget_allocation"] = {"army": 25.0, "social": 25.0, "industry": 25.0, "palace": 25.0}
+		d["delayed_economy"] = []
 	if not d.has("foreign"):
 		d["foreign"] = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
 	if not d.has("foreign_hint_until"):
@@ -643,7 +650,8 @@ func save_game() -> bool:
 		"foreign": foreign, "foreign_hint_until": foreign_hint_until, "lang": Loc.lang, "scenario": scenario_id,
 		"ext_pressure": ext_pressure, "ext_rng": ext_rng.state, "external_history": external_history,
 		"endless": endless, "king_name": king_name, "dynasty_generation": dynasty_generation,
-		"economy_metrics": economy_metrics, "economy_rng": economy_rng.state, "version": SAVE_VERSION}
+		"economy_metrics": economy_metrics, "economy_rng": economy_rng.state, "budget_allocation": budget_allocation,
+		"delayed_economy": delayed_economy, "version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -733,6 +741,8 @@ func load_game() -> bool:
 	ext_pressure = d["ext_pressure"]
 	economy_metrics = d.get("economy_metrics", {"inflation": 100.0 - economy, "jobs": economy, "debt": 100.0 - treasury, "trade": economy, "growth": economy})
 	economy_rng.state = int(d.get("economy_rng", int(d.get("seed", 1)) ^ 0xEC0A07))
+	budget_allocation = d.get("budget_allocation", {"army": 25.0, "social": 25.0, "industry": 25.0, "palace": 25.0})
+	delayed_economy.assign(d.get("delayed_economy", []))
 	external_history = d["external_history"]
 	for id in d["actors"]:
 		if actors.has(id):
@@ -1583,6 +1593,10 @@ func _apply_effects(fx: Dictionary) -> void:
 			_add_fact("saray_payi_%d" % week, "saray payı devlet kasasından ayrılıyor", "king", 18, ["kessler", "dorn"], 1)
 		else:
 			flags.erase("SARAY_PAYI_BASLADI")
+	if fx.has("budget_allocation"):
+		_set_budget_allocation(fx["budget_allocation"])
+	elif bool(fx.get("budget_custom", false)):
+		_set_budget_allocation(budget_allocation.duplicate())
 	var af: Dictionary = fx.get("actors", {})
 	for aid in af:
 		if actors.has(aid):
@@ -1692,6 +1706,7 @@ func end_week() -> void:
 	week += 1
 	mesai = mesai_max
 	_world_tick()
+	_tick_budget_effects()
 	_state_warnings()
 	_decay_facts()
 	_fire_events()
@@ -2280,15 +2295,60 @@ func _fire_budget() -> void:
 		if report["source"] == "kessler":
 			note = tr(" Veyra'nın son raporu: ") + str(report["text"])
 			break
-	var choices: Array = []
-	for option: Dictionary in STATE_CONTENT["choices"]:
-		choices.append({"label": option["label"], "text": option["text"], "fx":
-			{"budget_stance": option["stance"], "court_share": option["court_share"]}})
+	var choices: Array = [
+		{"label": tr("Sıkı bütçe"), "text": tr("Harcama kısılır; kurumlar ve sokak bunun bedelini gecikmeli hisseder."),
+			"fx": {"budget_allocation": {"army": 25.0, "social": 10.0, "industry": 20.0, "palace": 45.0}, "budget_stance": -1, "court_share": false}},
+		{"label": tr("Dengeli bütçe"), "text": tr("Dört kaleme eşit pay; belirgin bir öncelik yok."),
+			"fx": {"budget_allocation": {"army": 25.0, "social": 25.0, "industry": 25.0, "palace": 25.0}, "budget_stance": 0, "court_share": false}},
+		{"label": tr("Cömert bütçe"), "text": tr("Kurumlara ve sokağa nefes verir; kasanın bedeli haftalara yayılır."),
+			"fx": {"budget_allocation": {"army": 25.0, "social": 25.0, "industry": 25.0, "palace": 25.0}, "budget_stance": 1, "court_share": false}},
+		{"label": tr("Özel tahsis"), "text": tr("Özel dağılımı uygula; sarayın payı da hesaba katılır."),
+			"fx": {"budget_custom": true, "budget_stance": 0, "court_share": true}}
+	]
 	var e := {"id": "ceyrek_butce", "title": STATE_CONTENT["title"], "text": str(STATE_CONTENT["text"]) + note,
 		"art": "butce_acigi", "advisors": ["kessler", "dorn"], "kind": "budget", "choices": choices,
 		"ignore": {"text": STATE_CONTENT["ignore"], "fx": {"budget_stance": 0, "court_share": false}}}
 	pending.append({"event": e, "age": 0})
 	weekly_news.append("OLAY: " + str(e["title"]))
+
+
+func _set_budget_allocation(value: Dictionary) -> void:
+	var total := 0.0
+	for sector in ["army", "social", "industry", "palace"]:
+		var share := clampf(float(value.get(sector, 0.0)), 0.0, 100.0)
+		budget_allocation[sector] = share
+		total += share
+	if not is_equal_approx(total, 100.0):
+		return
+	for sector in budget_allocation:
+		if not is_equal_approx(float(budget_allocation[sector]), 25.0):
+			delayed_economy.append({"due": week + {"social": 4, "palace": 6, "army": 8, "industry": 12}[sector],
+				"sector": sector, "share": budget_allocation[sector]})
+
+
+func _tick_budget_effects() -> void:
+	var keep: Array[Dictionary] = []
+	for item in delayed_economy:
+		if int(item["due"]) > week:
+			keep.append(item)
+			continue
+		var amount := float(item["share"]) - 25.0
+		match str(item["sector"]):
+			"social":
+				unrest = clampf(unrest - amount * 0.045, 0.0, 100.0)
+				treasury = clampf(treasury - amount * 0.04, 0.0, 100.0)
+			"industry":
+				economy = clampf(economy + amount * 0.07, 0.0, 100.0)
+				treasury = clampf(treasury - maxf(0.0, amount) * 0.02, 0.0, 100.0)
+			"army":
+				if actors.has("arden"):
+					actors["arden"].power = clampf(actors["arden"].power + amount * 0.08, 5.0, 100.0)
+				capacity["ordu"] = clampf(float(capacity["ordu"]) + amount * 0.025, 5.0, 100.0)
+			"palace":
+				private_wealth = maxf(0.0, private_wealth + amount * 0.025)
+				if amount >= 12.0 and economy_rng.randf() < 0.08:
+					_add_fact("palace_budget_%d" % week, "Saray tahsisi büyüdü", "king", 12, ["kessler", "dorn"], 1)
+	delayed_economy = keep
 
 
 func _fire_patronage() -> void:
