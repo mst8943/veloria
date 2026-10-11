@@ -166,6 +166,29 @@ Bu dilimde bölgesel yatırım eylemi henüz yok; bu nedenle tek bölgeye yatır
 
 R4a ile birlikte cila bekleyen dört arayüz konusu giderildi: görselsiz anket kartındaki üst boşluk, hanedan defteri metninin kaydırılması/sarılması, suikast kartı görseli ve mobilde ayrı Divan çekmecesi. Mobilde yinelenen yardım satırı da kaldırıldı.
 
+## R4b Ayar
+
+R4b, bölge yönetimini Devlet eyleminden oyuncunun isteğiyle açar; normal haftalara zorunlu kart eklemez. Bölge seçimi ve ardından yatırım, garnizon, yerel medya veya vali kararı alır. Yatırım R1 sanayi payına, garnizon ordu payına, yerel yayın sosyal payına ve hepsi hazine/mesaiye bağlıdır; yatırımın pazar, garnizonun sükûnet ve yerel yayının bağlılık etkisi gecikmeli uygulanır. Vali atama/azli hazine, Saray listesi-soylular blok desteği ve patronaj yükünü değiştirir.
+
+Grev, kıtlık, sınır gerilimi ve başkent karışıklığı yalnız ilgili yerel eşikler oluştuğunda `region_rng` ile belirlenir. Sınır gerilimi Drakon baskısını yükseltip var olan dış kriz olayına bağlanır. Bölgesel RNG ayrı kayıt alanıdır; bu değişiklik tam tohum yolunu etkilemedi. Kayıt sürümü v20'ye çıkarıldı; eski ulusal ve bölgesel değerler korunarak yeni sayaç, gecikmeli etki, garnizon ve medya alanları göçte ekleniyor.
+
+R4a gözlemleri düzeltildi: Günlükte yalnız en huzursuz bölge öne çıkıyor ve diğerleri özetleniyor; vali yer tutucu renkleri karartılıp desatüre edildi; masaüstü Divan vali kartları küçültüldü; günlük rapor satırı kısaltıldı. EN/TR masaüstü ve yatay mobil ekranlarında yatırım/bölge seçimi, kriz, vali azli ve atama kartları açıldı. Metin taşması veya seçenek çakışması görülmedi. `tests/ui_shots.gd` vali azli ve atamasını ayrı dosyalara kaydediyor.
+
+80 kampanya, zorluk başına; R4b tabanı 62/31/17, kapı ±3:
+
+| Bot | Kolay | Normal | Zor | Ölçüt tavanının %70'i |
+|---|---:|---:|---:|---:|
+| Ölçüt (`advice_weighted`) | 60/80 | 29/80 | 17/80 | — |
+| Tek bölgeye yatırım (`region_invest_one`) | 7/80 | 1/80 | 0/80 | 42 / 20 / 11 |
+| Bölgeye hiç yatırım yapma (`region_invest_none`) | 14/80 | 1/80 | 1/80 | 42 / 20 / 11 |
+| Garnizonu başkentte tut (`region_garrison_capital`) | 17/80 | 1/80 | 0/80 | 42 / 20 / 11 |
+
+Ölçüt taban farkı: Kolay −2,5, Normal −2,5, Zor 0 yüzde puan; üçü de ±3 puan kapısında. Uç botların hepsi ilgili ölçütün %70 tavanının altında. Pacing ilk sekiz hafta 0,81 olay/hafta; en uzun olaysız seri 3 hafta. `--full --seed=101` TR ve EN: 104 hafta / TAHTTA / Medya Rejimi / 112 olay.
+
+`tests/en_leak_test.gd`: 5 kampanya, 0 sızıntı; `tools/i18n_missing.py`: 0 eksik `tr()` kaynağı. İçerik denetimi 5 dosyada başarılı, olay denetimi 201 olayı 0 uyarıyla geçti. Tüm testler exit 0. `ui_input_test.gd`: masaüstü `UI INPUT: OK`, mobil `UI INPUT: OK (mobile)`. `a11y_test.gd` çıktısı `A11Y: OK`; Godot kapanışında iki testte RID/resource temizleme uyarısı var. Tam stdout son satırları ilerleme belgesindeki R4b test tablosunda tutuluyor.
+
+TR/EN masaüstü ve mobilde bölge seçimi, yatırım, bölgesel kriz, vali azli ve atama görüntüleri açılıp incelendi. Seçenekler ve uzun kriz metni yatay mobilde taşmıyor; başlık ve karar düğmeleri görünür. Görüntüler kontrol sonrası silindi.
+
 
 ## R3c Ayar
 

@@ -25,3 +25,21 @@ TR ve EN masaüstü/mobil Günlük bölge satırları ile Divan rapor ve vali ka
 - **Düşük — Bölge satırı Günlükte çok uzun** (4 bölge x 3 terim). R4b'de özetlenmeli.
 - **Süreç — ui_input_test.** R4a raporu "ui_input_test geçti" dedi ama test hem masaüstünde hem mobilde başarısızdı (Divan'da kart ekran dışı, mobilde kart sayısı 14 beklentisi). Claude düzeltti. Kural: rapora yazılan her test için çıktının son satırı raporda aynen gösterilsin.
 - **Denge notu.** R3c sonrası ölçüt 62/31/17 (Zor taban 13'e göre +4, sınırda). R4a bunu değiştirmedi. R4b için taban artık 62/31/17; Zor'un daha da kolaylaşmasına izin verme.
+
+## 2026-10-12 — R4b
+
+### Düzeltilen
+
+- **Orta — Tekdüze bölge satırı.** Günlük ve Divan satırı artık en huzursuz bölgeyi nitel kelimelerle vurguluyor, kalan bölgeleri özetliyor; tüm bölgeleri aynı biçimde sıralamıyor ve sayı vermiyor.
+- **Düşük — Vali kartı rengi ve Divan yüksekliği.** Yer tutucu kart zeminleri koyu/desatüre oldu; vali kartları masaüstünde küçültülerek Devlet grubunun yüksekliği azaltıldı.
+- **Düşük — Günlük satırı uzunluğu.** Dört bölgenin ayrı ayrı tekrarlanan değerleri tek öne çıkan satıra indirildi.
+- **Düşük — Görsel test adları.** Vali azli ve atama görüntüleri artık ayrı ad alıyor; denetim bir görselin diğerinin üstüne yazılmasını önlüyor.
+
+### Ertelenen
+
+- **Orta — Vali portreleri.** R4a'da mevcut olan genel vali görselleri korunuyor; atama adayları birbirinden daha iyi ayırt edilsin diye her valiye ayrı portre/kimlik tasarımı gerekebilir. Bu sanat çalışması R4b kapsamına alınmadı.
+- **Düşük — Bölge yatırımının maliyeti.** Yatırım tek seferlik hazine ve mesai tüketiyor, R1 tahsis eşiğine bağlı; eylem sıklığı için 12 haftalık bekleme var. Yeni bir kampanya başına birden fazla bölge yatırımını teşvik etme ihtiyacı ölçümde görülmedi; gerçek oyuncu telemetrisi yok.
+
+### Ekran gözlemi
+
+TR/EN masaüstü ve yatay mobil kartları açıldı: bölge seçimi, yatırım/garnizon/medya kararı, grev krizi, vali azli ve ataması. Kartların sınırları, metin sarımı, düğme görünürlüğü, mobil yatay yerleşim ve EN/TR çeviri uzunlukları kontrol edildi; taşma görülmedi. Gerçek oyuncu oturumlarında vali/yerel medya kararlarının anlaşılırlığı telemetriyle doğrulanmadı.

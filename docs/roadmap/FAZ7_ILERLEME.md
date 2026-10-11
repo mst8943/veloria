@@ -167,3 +167,71 @@ Yatırım kararları R4b'ye bırakıldığı için tek bölge yatırım / hiç y
 Geçen testler (her biri exit 0): `a11y_test`, `audio_check`, `budget_ui_test`, `content_check`, `cutscene_check`, `daily_card_test`, `dynasty_test`, `economy_test`, `election_test`, `endless_test`, `en_leak_test`, `event_check`, `external_crisis_test`, `i18n_check`, `lang_switch_test`, `legacy_test`, `pacing_test`, `parliament_laws_test`, `parliament_test`, `public_opinion_test`, `regions_test`, `save_test`, `scenario_test`, `sim_test`, `touch_scroll_test`, `tour_test`, `ui_input_test`, `ui_logic_test`, `unit_tests` (399 kontrol). `en_leak_test`: 5 kampanyada 0 kaçak; EN metin dökümü 3.623 metinde `i18n_leak_scan.py`: 0 şüpheli; `i18n_missing.py`: 0. İçerik kapısı 5 dosya/8 bozuk örneği doğru saptadı; olay kapısı 201 olay/0 uyarı.
 
 EN/TR masaüstü ve mobil görüntülerde Günlük bölge satırı ve Divan raporu/vali kartları açılıp incelendi. Bölge alanları nitel, sayısal değer yok; rapor satırları sarılıyor, kartlar ekrana sığıyor. Mobil kişi ekranındaki yinelenen yardım satırı kaldırıldı. Cila bekleyen dört konu tamamlandı. Godot kapanışında bazı süreçler ObjectDB/resource cleanup uyarısı yazdı, ancak test ve tam koşu çıkış kodları başarılıydı. Ekran görüntüleri kontrol sonrası geçici klasörden silindi. `tests/title_shot.gd` ve `game/ui/title_screen.gd` değişmedi. PUSH yapılmadı; R4b/R4c'ye geçilmedi.
+
+## DALGA R4 — R4b: Kararlar ve bölgesel krizler
+
+R4b tamamlandı. Bölge yönetimi, oyuncunun Devlet eyleminden isteğe bağlı karar olarak açılıyor; bölge seçiminin ardından yatırım, garnizon, yerel medya, vali atama/azli seçenekleri geliyor. Yatırım sanayi bütçesi, garnizon ordu bütçesi, yerel medya sosyal bütçesi ve hazineye bağlı; hepsi bir mesai harcıyor. Yatırım/pazar, garnizon/sükûnet ve medya/bağlılık etkileri gecikmeli uygulanıyor. Vali atama ve azli hazine, Saray listesi/soylular blokları, kraliyet otoritesi ve patronaj göstergelerine bedelli etki ediyor. Grev, kıtlık, sınır gerilimi ve başkent karışıklığı yerel eşiklerde yalnız `region_rng` kullanıyor; sınır krizi Drakon baskısı ve mevcut dış kriz akışına bağlandı. Yeni gizli alanlar ve eylem/kriz sayaçları için kayıt v20 göçü eklendi; TR/EN içerik ve üç bölge başarımı eklendi.
+
+| Mantıksal adım | Commit |
+|---|---|
+| Bölgesel kararlar/krizler, v20 göçü, TR/EN, test ve ölçüm botları | `fd8a5ec` |
+| Bölge satırı, vali kartı paleti ve masaüstü Divan cila düzeltmeleri | `23d6490` |
+| Ölçüm/ilerleme/gözlem belgeleri | bu dokümantasyon commit'i |
+
+### Denge ve diğer kapılar
+
+80 kampanya/zorluk; R4b sonrası taban 62/31/17 ve kapı ±3:
+
+| Bot | Kolay | Normal | Zor |
+|---|---:|---:|---:|
+| Ölçüt (`advice_weighted`) | 60/80 | 29/80 | 17/80 |
+| Tek bölge yatırım (`region_invest_one`) | 7/80 | 1/80 | 0/80 |
+| Hiç bölge yatırımı (`region_invest_none`) | 14/80 | 1/80 | 1/80 |
+| Garnizon yalnız başkentte (`region_garrison_capital`) | 17/80 | 1/80 | 0/80 |
+
+Ölçüt sapması yüzde puan olarak −2,5/−2,5/0; hedef bandında. Uç botların hepsi kendi ölçütünün %70 tavanının altında. `pacing_test`: ilk sekiz haftada 0,81 olay/hafta, en uzun olaysız seri 3 hafta. TR/EN `--full --seed=101`: 104 hafta / TAHTTA / Medya Rejimi / 112 olay. `en_leak_test`: 5 kampanya, 0 sızıntı; `i18n_missing.py`: 0 eksik `tr()` kaynağı.
+
+### Test çıktıları
+
+Tüm test süreçleri exit 0 ile bitti. Tablodaki satırlar testlerin birebir başarı çıktılarıdır; Godot kapanış uyarıları ayrıca aşağıda belirtilmiştir:
+
+| Test | Son çıktı satırı |
+|---|---|
+| `a11y_test` | `A11Y: OK` |
+| `audio_check` | `AUDIO: OK` |
+| `budget_ui_test` | `BUDGET UI: OK` |
+| `content_check` | `CONTENT: OK (5 dosya, 8 bozuk örnek)` |
+| `cutscene_check` | `CUTSCENE: OK` |
+| `daily_card_test` | `DAILY CARD: OK` |
+| `dynasty_test` | `DYNASTY: OK` |
+| `economy_test` | `ECONOMY: OK` |
+| `election_test` | `ELECTION: OK` |
+| `endless_test` | `ENDLESS: OK` |
+| `en_leak_test` | `EN LEAK SCAN: 5 campaigns, 0 unique leaks` |
+| `event_check` | `EVENTS: OK (201 olay, 0 uyarı)` |
+| `external_crisis_test` | `EXTERNAL CRISIS: OK` |
+| `i18n_check` | `I18N: OK` |
+| `lang_switch_test` | `LANG: OK` |
+| `legacy_test` | `LEGACY: OK` |
+| `pacing_test` | `En uzun olaysız seri (medyan / en kötü): 2 / 3 hafta` |
+| `parliament_laws_test` | `PARLIAMENT LAWS: OK` |
+| `parliament_test` | `PARLIAMENT: OK` |
+| `public_opinion_test` | `PUBLIC OPINION: OK` |
+| `regions_test` | `REGIONS: OK` |
+| `save_test` | `SAVE: OK` |
+| `scenario_test` | `SCENARIO: OK` |
+| `sim_test` | `TEST: OK` |
+| `touch_scroll_test` | `TOUCH: OK` |
+| `tour_test` | `TOUR: OK` |
+| `ui_input_test` masaüstü | `UI INPUT: OK` |
+| `ui_input_test` mobil (`-- --mobile`) | `UI INPUT: OK (mobile)` |
+| `ui_logic_test` | `UI LOGIC: OK` |
+| `unit_tests` | `[unit] all 399 checks passed` |
+
+Godot bazı kapanışlarda RID/ObjectDB/resource temizleme uyarıları bastı (özellikle `a11y_test`, `regions_test` ve mobil `ui_input_test`); bu uyarılara rağmen her süreç exit 0 ve yukarıdaki sonuç satırı başarılıydı. `tools/i18n_missing.py`: `0 tr() kaynağı en.po'da yok`.
+
+### Ekran ve ürün gözlemi
+
+EN/TR masaüstü ve yatay mobil ekran görüntüleri açılıp kontrol edildi: bölge seçimi, yatırım/garnizon/medya kararı, bölgesel kriz, vali azli ve vali ataması. Metin sarımı, görünür seçenekler, kriz çerçevesi, EN/TR uzunluk farkı ve 1067×600 yerleşim kontrol edildi; taşma yok. Vali azli ve ataması için görüntü yardımcısının aynı dosyaya yazması düzeltilip dosya adları ayrıldı. R4a'nın tekdüze/uzun Günlük satırı, vali kartı renkleri ve Divan yüksekliği düzeltildi. Ertelenen: vali adaylarına ayrı sanatsal portre kimliği ve gerçek oyuncu oturumlarında bölgesel medya/atama akışının anlaşılabilirlik ölçümü. Ekran görüntüleri ve probe logları kontrol sonrası `C:\temp\veloria_r4b` içinden temizlenecek.
+
+`tests/title_shot.gd` ve `game/ui/title_screen.gd` değiştirilmedi. PUSH yapılmadı. R4c'ye geçmeden önce R4a/R4b geçmişi `git log` ile denetlenmeli.
