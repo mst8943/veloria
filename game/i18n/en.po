@@ -3996,3 +3996,6 @@ msgstr "route change"
 
 msgid "public"
 msgstr "public appearance"
+
+msgid "Önceki saltanattan kalan açık dosya"
+msgstr "An open file carried over from the previous reign"

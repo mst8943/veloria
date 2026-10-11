@@ -1,0 +1,9 @@
+[
+  {"id":"treasury_full","name":"Dolu hazine","desc":"Önceki saltanatın güçlü maliyesinden kalan küçük bir başlangıç payı.","type":"treasury","amount":5,"positive":true},
+  {"id":"treasury_debt","name":"Borç","desc":"Önceki saltanatın borçları kasayı ve Seravia ilişkilerini zorluyor.","type":"debt","amount":-5,"positive":false},
+  {"id":"army_loyal","name":"Sadık ordu","desc":"Arden'in ordudaki itibarı yeni tahta destek oluyor.","type":"army","loyalty":"career","amount":4,"positive":true},
+  {"id":"army_resentful","name":"Küskün ordu","desc":"Önceki saltanatın orduyla gerilimi sürüyor.","type":"army","loyalty":"career","amount":-4,"positive":false},
+  {"id":"open_case","name":"Açık dosya","desc":"Önceki saltanattan kalan sır yeni komploları besliyor.","type":"open_case","amount":12,"positive":false},
+  {"id":"regime_shadow","name":"Rejim gölgesi","desc":"Önceki rejimin izi ilk haftalara taşınıyor.","type":"regime","positive":true},
+  {"id":"reign_wear","name":"Taç yorgunluğu","desc":"Her yeni nesil, mirasın sağladığı rahatlığı biraz aşındırıyor.","type":"wear","amount":-2,"positive":false}
+]

@@ -20,6 +20,7 @@ const ACTORS_PATH := "res://game/data/actors.json"
 const EVENTS_PATH := "res://game/data/events.json"
 const CHRONICLE_PATH := "user://veloria_chronicle.txt"
 const DAILY_PATH := "user://daily.cfg"
+const LEGACY_PATH := "res://game/data/legacy.json"
 const DEFAULT_SAVE_PATH := "user://veloria_save.txt"
 const EXTENSION_SAVE_PATH := "user://veloria_extension_save.txt"
 const EXTENSION_ACHIEVEMENTS_PATH := "user://veloria_extension_achievements.txt"
@@ -48,6 +49,7 @@ var rng := RandomNumberGenerator.new()
 var week := 1
 var mesai := MESAI_PER_WEEK
 var king_strength := 60.0   # gerçek güç (oyuncu görmez)
+var king_name := KING_NAME
 var unrest := 30.0
 var economy := 55.0
 var opposition := 20.0
@@ -139,7 +141,7 @@ func _init() -> void:
 	_load_content()
 
 
-func new_game(seed_value: int = 0, diff: int = -1, scenario := "") -> void:
+func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dictionary = {}) -> void:
 	_load_content()
 	if content_error != "":
 		push_error(content_error)
@@ -154,6 +156,7 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "") -> void:
 	week = 1
 	mesai = mesai_max
 	king_strength = 60.0
+	king_name = str(legacy.get("next_king", KING_NAME))
 	unrest = 30.0
 	economy = 55.0
 	opposition = 20.0
@@ -225,6 +228,7 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "") -> void:
 		a.perceived_king = king_strength + actor_rng.randf_range(-5.0, 5.0)
 		actors[a.id] = a
 		karne[a.id] = {"ok": 0, "bad": 0}
+	_apply_legacy(legacy)
 	_events = _content_loader.load_events(EVENTS_PATH)
 	_fire_events()
 	if scenario != "":
@@ -234,6 +238,57 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "") -> void:
 	_generate_reports()
 	_record_timeline()
 	changed.emit()
+
+
+func _apply_legacy(legacy: Dictionary) -> void:
+	if legacy.is_empty():
+		return
+	var file := FileAccess.open(LEGACY_PATH, FileAccess.READ)
+	var rows: Variant = JSON.parse_string(file.get_as_text()) if file else null
+	if not rows is Array:
+		return
+	var selected: Array = legacy.get("effects", [])
+	var erosion := maxf(0.25, 1.0 - 0.2 * float(maxi(0, int(legacy.get("generation", 1)) - 1)))
+	for effect_id in selected:
+		for effect: Dictionary in rows:
+			if str(effect.get("id", "")) != str(effect_id):
+				continue
+			var amount := float(effect.get("amount", 0.0))
+			match str(effect.get("type", "")):
+				"treasury": treasury = clampf(treasury + amount * erosion, 0.0, 100.0)
+				"army":
+					if actors.has("arden"):
+						var key := str(effect.get("loyalty", "career"))
+						actors["arden"].loyalty[key] = clampf(float(actors["arden"].loyalty.get(key, 0.0)) + amount * erosion, 0.0, 100.0)
+				"debt":
+					treasury = clampf(treasury + amount, 0.0, 100.0)
+					foreign["seravia"] = clampf(float(foreign.get("seravia", 50.0)) - 3.0, 0.0, 100.0)
+				"open_case": facts["legacy_open_case"] = {"id": "legacy_open_case", "text": tr("Önceki saltanattan kalan açık dosya"), "subject": "king", "severity": 12.0, "public": false, "knowers": ["vale"]}
+				"regime": flags["LEGACY_REGIME_SHADOW"] = str(legacy.get("regime", ""))
+				"wear": king_strength = clampf(king_strength + amount * float(maxi(1, int(legacy.get("generation", 1)))), 0.0, 100.0)
+			break
+
+
+func legacy_for_next_reign(generation: int) -> Dictionary:
+	var effects: Array[String] = []
+	effects.append("treasury_full" if treasury >= 65.0 else "treasury_debt")
+	var army_loyalty := float(actors["arden"].loyalty.get("career", 0.0)) if actors.has("arden") else 0.0
+	effects.append("army_loyal" if army_loyalty >= 25.0 else "army_resentful")
+	var has_open_case := false
+	for fact: Dictionary in facts.values():
+		if str(fact.get("subject", "")) == "king" and not bool(fact.get("resolved", false)):
+			has_open_case = true
+			break
+	if has_open_case:
+		effects.append("open_case")
+	elif effects.has("treasury_full") and effects.has("army_loyal"):
+		effects.append("reign_wear")
+	elif effects.has("treasury_debt") and effects.has("army_resentful"):
+		effects.append("regime_shadow")
+	else:
+		effects.append("reign_wear")
+	return {"generation": generation, "ruler": king_name, "next_king": "Julian Valerius" if flags.has("halef_karari_1") else king_name,
+		"effects": effects, "title": str(record.get("title", "")), "regime": regime}
 
 
 ## Türkçe ek uyumu: özel isme kesme işaretiyle doğru eki ekler.
@@ -3086,7 +3141,7 @@ func _end(survived: bool) -> void:
 			cause_display = tr("104 haftalık saltanatın sonunda tahtını korudun; suikast gecesinden yaralı kurtuldun.")
 	record = {"survived": survived, "title": title, "weeks": week - 1, "cause": cause,
 		"top_actor": top.display_name if top else "", "history": history.duplicate(), "cause_display": cause_display,
-		"lies": _top_lies(), "king": KING_NAME,
+		"lies": _top_lies(), "king": king_name,
 		"regime": str(REGIME_NAMES.get(regime, "")) if regime != "" else "", "threat": str(REGIME_THREATS.get(regime, "")) if regime != "" else "",
 		"promises": "%d söz verdin: %d tutuldu, %d bozuldu." % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
 		"promises_display": Loc.ntr("%d söz verdin: %d tutuldu, %d bozuldu.", int(stats.get("promises", 0))) % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],

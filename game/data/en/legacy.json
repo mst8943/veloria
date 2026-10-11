@@ -1,0 +1,9 @@
+{
+  "treasury_full":{"name":"Full treasury","desc":"A modest starting reserve from the previous reign's strong finances."},
+  "treasury_debt":{"name":"Debt","desc":"The previous reign's debts strain the treasury and relations with Seravia."},
+  "army_loyal":{"name":"Loyal army","desc":"Arden's standing in the army supports the new throne."},
+  "army_resentful":{"name":"Resentful army","desc":"Tensions with the army carry over from the previous reign."},
+  "open_case":{"name":"Open file","desc":"A secret from the previous reign feeds a new conspiracy."},
+  "regime_shadow":{"name":"Regime's shadow","desc":"The previous regime leaves a mark on the opening weeks."},
+  "reign_wear":{"name":"Worn crown","desc":"Each generation slightly erodes the comfort inherited from the last."}
+}
