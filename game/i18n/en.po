@@ -4176,3 +4176,207 @@ msgstr "State\nFiscal policy, appointments, tenders, and diplomatic missions."
 
 msgid "Maliye kararının etkisi başladı; aynı yöndeki her yeni hamle daha az sonuç verecek."
 msgstr "The fiscal policy has taken effect; each repeated measure in the same direction will have less impact."
+
+msgid "Kamuoyu"
+msgstr "Public opinion"
+
+msgid "Halk"
+msgstr "PUBLIC"
+
+msgid "KAMUOYU"
+msgstr "PUBLIC OPINION"
+
+msgid "Kamuoyu\nHükümdarın görünürlüğü ve halkın güveni."
+msgstr "Public opinion\nThe ruler's visibility and the public's trust."
+
+msgid "Halka Konuş"
+msgstr "Address the public"
+
+msgid "Saha Ziyareti"
+msgstr "Visit the provinces"
+
+msgid "Tören"
+msgstr "Hold a ceremony"
+
+msgid "Gizlen"
+msgstr "Keep out of sight"
+
+msgid "Halka konuş (1 mesai)\nRıza kazanır, korkuyu hafifletir."
+msgstr "Address the public (1 action)\nBuilds consent and eases fear."
+
+msgid "Saha ziyareti (1 mesai)\nİnsanlarla yüz yüze gel; görünürlük riskini göze al."
+msgstr "Visit the provinces (1 action)\nMeet people face to face and accept the risks of visibility."
+
+msgid "Tören düzenle (1 mesai)\nTahtın görünürlüğünü artır; etkisi sınırlı kalır."
+msgstr "Hold a ceremony (1 action)\nRaise the throne's visibility; the effect is modest."
+
+msgid "Gizlen (1 mesai)\nKorkuyu artırır; uzun vadede rızayı aşındırır."
+msgstr "Keep out of sight (1 action)\nRaises fear and wears down consent over time."
+
+msgid "Kamuoyu araştırması"
+msgstr "Public opinion poll"
+
+msgid "Sarne'nin anket şirketi"
+msgstr "Sarne's polling firm"
+
+msgid "Leyla'nın gazetesi"
+msgstr "Leyla's newspaper"
+
+msgid "bağımsız bir kurum"
+msgstr "an independent institute"
+
+msgid "desteğin güçlü görünüyor"
+msgstr "your support appears strong"
+
+msgid "desteğin dalgalanıyor"
+msgstr "your support is wavering"
+
+msgid "desteğin zayıflıyor"
+msgstr "your support is slipping"
+
+msgid "%s: %s. Anketi yayımlamak algıyı etkiler."
+msgstr "%s: %s. Publishing the poll will shape perceptions."
+
+msgid "Yayımla"
+msgstr "Publish"
+
+msgid "İçeride tut"
+msgstr "Keep it private"
+
+msgid "Rapor meydanlara ulaştı."
+msgstr "The findings reached the streets."
+
+msgid "Sonuç yalnızca sarayda kaldı."
+msgstr "The findings stayed within the palace."
+
+msgid "Anket yayımlanmadı."
+msgstr "The poll was not published."
+
+msgid "Halkla kurduğun mesafe değişti; etkisi haftalara yayılacak."
+msgstr "Your distance from the public has shifted; the effects will unfold over time."
+
+msgid "Kamuoyu: Sarayın sesi henüz ölçülmedi."
+msgstr "Public opinion: the palace has not yet taken its measure."
+
+msgid "Kamuoyu: %s; %s."
+msgstr "Public opinion: %s; %s."
+
+msgid "rıza sağlam"
+msgstr "consent is steady"
+
+msgid "rıza dalgalı"
+msgstr "consent is wavering"
+
+msgid "rıza zayıf"
+msgstr "consent is weak"
+
+msgid "korku belirgin"
+msgstr "fear is pronounced"
+
+msgid "korku hissediliyor"
+msgstr "fear is present"
+
+msgid "korku düşük"
+msgstr "fear is low"
+
+msgid "Yanıtın kamuoyundaki yankısı başladı."
+msgstr "Your response is beginning to shape public opinion."
+
+msgid "İnkâr"
+msgstr "Deny it"
+
+msgid "Özür Dile"
+msgstr "Apologize"
+
+msgid "Kurban Bul"
+msgstr "Find a scapegoat"
+
+msgid "Gündem Değiştir"
+msgstr "Change the subject"
+
+msgid "Kamuoyu"
+msgstr "Public opinion"
+
+msgid "Kamuoyu\nHükümdarın görünürlüğü ve halkın güveni."
+msgstr "Public opinion\nThe ruler's visibility and the public's trust."
+
+msgid "Halka Konuş"
+msgstr "Address the public"
+
+msgid "Saha Ziyareti"
+msgstr "Visit the provinces"
+
+msgid "Tören"
+msgstr "Hold a ceremony"
+
+msgid "Gizlen"
+msgstr "Keep out of sight"
+
+msgid "Halka konuş (1 mesai)\nRıza kazanır, korkuyu hafifletir."
+msgstr "Address the public (1 action)\nBuilds consent and eases fear."
+
+msgid "Saha ziyareti (1 mesai)\nİnsanlarla yüz yüze gel; görünürlük riskini göze al."
+msgstr "Visit the provinces (1 action)\nMeet people face to face and accept the risks of visibility."
+
+msgid "Tören düzenle (1 mesai)\nTahtın görünürlüğünü artır; etkisi sınırlı kalır."
+msgstr "Hold a ceremony (1 action)\nRaise the throne's visibility; the effect is modest."
+
+msgid "Gizlen (1 mesai)\nKorkuyu artırır; uzun vadede rızayı aşındırır."
+msgstr "Keep out of sight (1 action)\nRaises fear and wears down consent over time."
+
+msgid "Kamuoyu araştırması"
+msgstr "Public opinion poll"
+
+msgid "Sarne'nin anket şirketi"
+msgstr "Sarne's polling firm"
+
+msgid "Leyla'nın gazetesi"
+msgstr "Leyla's newspaper"
+
+msgid "bağımsız bir kurum"
+msgstr "an independent institute"
+
+msgid "desteğin güçlü görünüyor"
+msgstr "your support appears strong"
+
+msgid "desteğin dalgalanıyor"
+msgstr "your support is wavering"
+
+msgid "desteğin zayıflıyor"
+msgstr "your support is slipping"
+
+msgid "%s: %s. Anketi yayımlamak algıyı etkiler."
+msgstr "%s: %s. Publishing the poll will shape perceptions."
+
+msgid "Yayımla"
+msgstr "Publish"
+
+msgid "İçeride tut"
+msgstr "Keep it private"
+
+msgid "Rapor meydanlara ulaştı."
+msgstr "The findings reached the streets."
+
+msgid "Sonuç yalnızca sarayda kaldı."
+msgstr "The findings stayed within the palace."
+
+msgid "Anket yayımlanmadı."
+msgstr "The poll was not published."
+
+msgid "Halkla kurduğun mesafe değişti; etkisi haftalara yayılacak."
+msgstr "Your distance from the public has shifted; the effects will unfold over time."
+
+msgid "Yanıtın kamuoyundaki yankısı başladı."
+msgstr "Your response is beginning to shape public opinion."
+
+msgid "İnkâr"
+msgstr "Deny it"
+
+msgid "Özür Dile"
+msgstr "Apologize"
+
+msgid "Kurban Bul"
+msgstr "Find a scapegoat"
+
+msgid "Gündem Değiştir"
+msgstr "Change the subject"

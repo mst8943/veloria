@@ -1311,6 +1311,9 @@ func _fact_act(kind: String, fid: String) -> void:
 			_log(Sim.leak_fact(fid))
 		"hush":
 			_log(Sim.suppress_fact(fid))
+		"deny", "apologize", "scapegoat", "redirect":
+			_acted_week = Sim.week
+			_log(Sim.respond_to_scandal(fid, kind))
 		_:
 			_log(Sim.destroy_evidence(fid))
 

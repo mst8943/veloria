@@ -54,6 +54,10 @@ const TIPS := {
 	"tax_relief": "Vergiyi hafiflet (1 mesai)\nPazara nefes verir; hazine gelirinden vazgeçer.",
 	"austerity": "Kemer sık (1 mesai)\nKasayı korur; iş ve huzur üzerindeki bedeli büyür.",
 	"incentive": "Teşvik paketi (1 mesai)\nBugün kasaya yük olur; istihdam ve üretime sonra destek verir.",
+	"king_speech": "Halka konuş (1 mesai)\nRıza kazanır, korkuyu hafifletir.",
+	"king_visit": "Saha ziyareti (1 mesai)\nİnsanlarla yüz yüze gel; görünürlük riskini göze al.",
+	"king_ceremony": "Tören düzenle (1 mesai)\nTahtın görünürlüğünü artır; etkisi sınırlı kalır.",
+	"king_hide": "Gizlen (1 mesai)\nKorkuyu artırır; uzun vadede rızayı aşındırır.",
 }
 
 ## Eylem kategorileri (eylem panelindeki sekmeler).
@@ -65,6 +69,7 @@ const CAT_TIPS := {
 	"BASKI": "Baskı\nŞantaj ve görevden alma. Güçlü araçlar, ama geri tepebilirler.",
 	"OPERASYON": "Operasyon (2 mesai)\n1–3 kişiyle gizli iş. Çemberi kurmak için Çoklu seçim'i aç ya da Ctrl ile kişi ekle.",
 	"DEVLET": "Devlet\nMaliye kararları, kadro kararnameleri, ihale ve elçilik heyetleri.",
+	"KAMUOYU": "Kamuoyu\nHükümdarın görünürlüğü ve halkın güveni.",
 }
 
 const HINT_DEFAULT := "[color=#8f7a45]Bir eylemin üzerine gel ya da dokun: ne yaptığını ve bedelini burada görürsün.[/color]"
@@ -241,6 +246,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		["BASKI", [["blackmail", "Şantaj"], ["dismiss", "Görevden Al"]]],
 		["OPERASYON", [["op_dikkat", "Dikkat Dağıt"], ["op_bol", "Muhalefeti Böl"], ["op_zayif", "Rakibi Zayıflat"], ["op_dus", "Birbirine Düşür"]]],
 		["DEVLET", [["tax_raise", "Vergiyi Artır"], ["tax_relief", "Vergiyi Hafiflet"], ["austerity", "Kemer Sık"], ["incentive", "Teşvik Paketi"], ["appoint_loyal", "Sadık Ata"], ["appoint_merit", "Liyakatli Ata"], ["tender", "İhale Ver"], ["train_heir", "Veliahdı Yetiştir"], ["delegation", "Heyet Gönder"]]],
+		["KAMUOYU", [["king_speech", "Halka Konuş"], ["king_visit", "Saha Ziyareti"], ["king_ceremony", "Tören"], ["king_hide", "Gizlen"]]],
 	]
 	var actions := {
 		"summon": func() -> void: host._act(func(id: String) -> String: return Sim.summon(id)),
@@ -267,6 +273,10 @@ func _build_ui(cols: HBoxContainer) -> void:
 		"tax_relief": func() -> void: host._act(func(_id: String) -> String: return Sim.economy_policy("tax_relief")),
 		"austerity": func() -> void: host._act(func(_id: String) -> String: return Sim.economy_policy("austerity")),
 		"incentive": func() -> void: host._act(func(_id: String) -> String: return Sim.economy_policy("incentive")),
+		"king_speech": func() -> void: _public_action("speech"),
+		"king_visit": func() -> void: _public_action("visit"),
+		"king_ceremony": func() -> void: _public_action("ceremony"),
+		"king_hide": func() -> void: _public_action("hide"),
 	}
 	for i in Sim.PRIZES.size():
 		var prize: String = Sim.PRIZES[i]
@@ -278,7 +288,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 	var cat_group := ButtonGroup.new()
 	for g in groups:
 		var cb := Button.new()
-		cb.text = tr(str(g[0]))
+		cb.text = tr("Halk") if g[0] == "KAMUOYU" else tr(str(g[0]))
 		cb.toggle_mode = true
 		cb.button_group = cat_group
 		cb.theme_type_variation = "GhostButton"
@@ -398,6 +408,11 @@ func _show_act_cat(cat: String) -> void:
 		(host._cat_rows[k] as Control).visible = k == cat
 	for k in host._cat_btns:
 		(host._cat_btns[k] as Button).set_pressed_no_signal(k == cat)   # koddan değişince ButtonGroup diğerini bırakmıyor
+
+
+func _public_action(action: String) -> void:
+	host._acted_week = Sim.week
+	host._log(Sim.public_action(action))
 
 
 func _add_btn(parent: Node, key: String, text: String, cb: Callable) -> void:

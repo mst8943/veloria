@@ -198,6 +198,21 @@ func _rebuild_facts() -> void:
 				host._wire(b)
 				b.pressed.connect(host._fact_act.bind(kind[0], fid))
 				br.add_child(b)
+		elif mine and not f.has("response"):
+			var response_row := GridContainer.new()
+			response_row.columns = 2 if host._mobile else 4
+			response_row.add_theme_constant_override("separation", 4)
+			v.add_child(response_row)
+			for response in [["deny", tr("İnkâr")], ["apologize", tr("Özür Dile")], ["scapegoat", tr("Kurban Bul")], ["redirect", tr("Gündem Değiştir")]]:
+				var response_button := Button.new()
+				response_button.text = response[1]
+				response_button.custom_minimum_size.y = 44 if host._mobile else 0
+				response_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				response_button.add_theme_font_size_override("font_size", host._fs(12))
+				response_button.disabled = Sim.mesai < 1
+				response_button.pressed.connect(host._fact_act.bind(response[0], fid))
+				host._wire(response_button)
+				response_row.add_child(response_button)
 
 
 func _rebuild_agenda() -> void:

@@ -142,9 +142,49 @@ func _run() -> void:
 		main._sel.append("arden")
 		main._refresh()
 		main._update_info()
-		for category in ["KAZAN", "SÖZ VER", "ÖĞREN", "EMRET", "BASKI", "OPERASYON", "DEVLET"]:
+		for category in ["KAZAN", "SÖZ VER", "ÖĞREN", "EMRET", "BASKI", "OPERASYON", "DEVLET", "KAMUOYU"]:
 			main._show_act_cat(category)
 			await _shot("action_" + category)
+		quit(0)
+		return
+	if "--public-opinion" in OS.get_cmdline_user_args():
+		main._sel.clear()
+		main._sel.append("arden")
+		main._style_cards()
+		main._update_info()
+		if main._mobile:
+			main._tabs.current_tab = 1
+			(main._person_panel._mobile_group_buttons["state"] as Button).pressed.emit()
+		else:
+			main._tabs.current_tab = 0
+		main._show_act_cat("KAMUOYU")
+		if main._mobile:
+			await process_frame
+			var action_bar: VScrollBar = main._person_panel._mobile_person_scroll.get_v_scroll_bar()
+			main._person_panel._mobile_person_scroll.scroll_vertical = int(action_bar.max_value - action_bar.page)
+		await _shot("r2_visibility_actions")
+		sim0.public_opinion_active = true
+		sim0.week = 8
+		sim0.pending.clear()
+		sim0._tick_public_opinion()
+		main._refresh()
+		main._tabs.current_tab = 0
+		await _shot("r2_poll_card")
+		sim0.pending.clear()
+		sim0._add_fact("r2_shot_scandal", "Sarayın gizli ödemesi", "king", 25.0, ["vale"], 1, 0.5, "Secret palace payment")
+		sim0.facts["r2_shot_scandal"]["public"] = true
+		if main._mobile:
+			main._tabs.current_tab = 2
+			main._mobile_report_tabs.current_tab = 1
+		else:
+			main._tabs.current_tab = 1
+		main._refresh()
+		await _shot("r2_scandal_response")
+		if main._mobile:
+			var files_scroll := main._mobile_report_tabs.get_child(1).get_child(1) as ScrollContainer
+			var report_scroll := files_scroll.get_v_scroll_bar()
+			files_scroll.scroll_vertical = int(report_scroll.max_value - report_scroll.page)
+			await _shot("r2_scandal_response_lower")
 		quit(0)
 		return
 	if "--files-journal" in OS.get_cmdline_user_args():
