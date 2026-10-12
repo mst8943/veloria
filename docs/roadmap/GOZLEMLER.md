@@ -135,3 +135,11 @@ EN yatay mobil harita katmanı ve bölge paneli ekranları açıldı; Capital Re
 ### Ekran gözlemi
 
 EN/TR masaüstü ve 1067×600 yatay mobilde ordu karar kartı, Günlük birlik satırı, Divan ve komutan kartlarını açtım (16 görüntü). Önizlemeleri, nitel/sayısız değerleri, portre ve etiket okunurluğunu, kaydırmayı kontrol ettim. Görseller TEMP'de kaldı; doğrulanmış yollar için Remove-Item çağrıları araç politikası tarafından reddedildi.
+
+## 2026-10-13 — R5b (Claude doğrulama gözlemleri)
+
+- **Orta — Türkçe ek hatası ordu emri kartında.** "Başkent garnizonu'nin", "Sınır kolordusu'nin", "Jandarma ve güvenlik'in görevini devralsın": iyelik eki yanlış (doğrusu "Başkent garnizonunun", "Sınır kolordusunun", "Jandarma ve güvenliğin"). Ek üretimi için Sim.ek(isim, "in") kullanılmalı ya da birim adlarının tamlama biçimi içerikte ayrı alan olmalı. TR/EN testine örnek eklenmeli.
+- **Orta — Kompakt vali/komutan kartlarında yüz yine kesiliyor.** "Üstten hizalı" kırpma yalnızca alın ve gözleri gösteriyor (burun-ağız yok); isim şeridi çeneyi kapatıyor. Portrelerin yüz merkezi görüntünün yaklaşık %35–45 yüksekliğinde; kırpma yüz merkezli olmalı ya da kart yüksekliği ~84–90 px'e çıkarılmalı. Hedef: Solen/Vey/Aven/Dask/Rell/Kest/Nadir kartlarında göz+burun+ağız görünsün, isim yüzün altında kalsın.
+- **Orta — Ordu emri kartında yalnızca komutan değişimi seçenekleri var (6 permütasyon).** Ödenek, garnizon yer değiştirme, komuta zinciri bölme seçenekleri bu kartta yok ve eşit görünen altı komutan-değişimi seçeneği karar yükünü artırıyor. Kart ya tek tür eylemi tek seçenekle sunmalı ya da seçenekleri gruplayıp en fazla 3-4 göstermeli.
+- **Düşük — "Ordu emri" başlığı kartın üst çerçevesine değiyor** (aynı görselsiz karar kartı boşluk sorunu geri gelmiş).
+- **Denge notu.** R5b sonrası ölçüt 58/27/15 (Claude doğruladı): Zor tabana yaklaştı (+2) ama Kolay −4, Normal −3 hedefin altında; Kolay'da yabancı müdahale kaybı 10. R5c'de Kolay ≈ 60–62, Normal ≈ 29–30'a geri çek.
