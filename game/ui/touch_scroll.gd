@@ -4,11 +4,16 @@ extends Node
 ## bırakınca kısa bir ivme (atalet) eklenir. Dokunuş eşiğin altındaysa hiçbir şey yutulmaz: normal tıklama.
 
 const DRAG_START := 9.0
+const TAP_MOVE_LIMIT := 11.0
+const TAP_TIME_LIMIT_MS := 480
+const PRESS_FEEDBACK_MS := 80
 const COAST_MIN := 160.0      # px/sn: bunun altında ivme yok
 const COAST_DECAY := 4.2
 const LONG_PRESS_MS := 480    # uzun basış: ipucu balonu (dokunmatikte "üzerine gelme" yok)
 const TIP_SECONDS := 3.6
-const UIKit := preload("res://game/ui/ui_kit.gd")
+const TOUCH_GOLD := Color("d6b25e")
+const TOUCH_PLATE := Color("0c0b09")
+const TOUCH_TEXT := Color("e9e4d6")
 
 var _pressing := false
 var _dragging := false
@@ -30,10 +35,21 @@ var _tip_panel: PanelContainer
 var _tip_label: Label
 var _tip_timer := 0.0
 const SYNTH_POS := Vector2(-4000, -4000)   # iptal için gönderilen sahte bırakma olayının konumu
+static var dispatching_touch := false
+var _touch_active := false
+var _touch_cancelled := false
+var _touch_moved := false
+var _touch_started_ms := 0
+var _touch_start := Vector2.ZERO
+var _touch_last := Vector2.ZERO
+var _touch_feedback_target: Control
+var _touch_feedback_layer: CanvasLayer
+var _touch_feedback: Panel
 
 
 func _ready() -> void:
 	process_priority = -100
+	Input.emulate_mouse_from_touch = false
 	get_tree().node_added.connect(_on_node_added)
 	_walk(get_tree().root)
 
@@ -51,7 +67,20 @@ func _on_node_added(n: Node) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if event is InputEventScreenTouch:
+		_handle_screen_touch(event as InputEventScreenTouch)
+		get_viewport().set_input_as_handled()
+		return
+	if event is InputEventScreenDrag:
+		_handle_screen_drag(event as InputEventScreenDrag)
+		get_viewport().set_input_as_handled()
+		return
+	if dispatching_touch:
+		return
 	var mb := event as InputEventMouseButton
+	if mb != null and mb.device == -1:
+		get_viewport().set_input_as_handled()
+		return
 	if mb != null and mb.position.x < -1000.0:   # sahte iptal olayı (pencere ölçeğiyle çarpılmış olabilir)
 		return
 	if mb != null and mb.button_index == MOUSE_BUTTON_LEFT:
@@ -119,7 +148,135 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
+func _handle_screen_touch(event: InputEventScreenTouch) -> void:
+	if event.pressed:
+		_touch_active = true
+		_touch_cancelled = false
+		_touch_moved = false
+		_touch_start = event.position
+		_touch_last = event.position
+		_touch_started_ms = Time.get_ticks_msec()
+		_vel = Vector2.ZERO
+		_horizontal = null
+		_vertical = null
+		_axis = ""
+		_touch_feedback_target = _control_at(event.position)
+		_hide_touch_feedback()
+		return
+	if not _touch_active:
+		return
+	var valid_tap := not _touch_cancelled and not _touch_moved and Time.get_ticks_msec() - _touch_started_ms < TAP_TIME_LIMIT_MS
+	var was_dragging := _touch_cancelled and _touch_moved
+	_touch_active = false
+	_hide_touch_feedback()
+	if valid_tap:
+		_dispatch_touch_click.call_deferred(event.position)
+	elif was_dragging and _vel.length() > COAST_MIN:
+		_coast = _vel
+		_coast_h = _horizontal if _axis == "h" else null
+		_coast_v = _vertical if _axis == "v" else null
+
+
+func _handle_screen_drag(event: InputEventScreenDrag) -> void:
+	if not _touch_active:
+		return
+	var delta_from_start := event.position - _touch_start
+	if delta_from_start.length() > 3.0:
+		_touch_moved = true
+		_hide_touch_feedback()
+	if not _touch_cancelled and delta_from_start.length() >= TAP_MOVE_LIMIT:
+		_touch_cancelled = true
+		_find_targets(_touch_start)
+		_axis = "h" if absf(delta_from_start.x) > absf(delta_from_start.y) else "v"
+		if (_axis == "h" and _horizontal == null) or (_axis == "v" and _vertical == null):
+			if _axis == "h" and _vertical != null:
+				_axis = "v"
+			elif _axis == "v" and _horizontal != null:
+				_axis = "h"
+		_touch_last = _touch_start
+	if _touch_cancelled:
+		var delta := event.position - _touch_last
+		var target := _horizontal if _axis == "h" else _vertical
+		if target != null:
+			_scroll(target, _axis == "h", -(delta.x if _axis == "h" else delta.y))
+			var dt := maxf(get_process_delta_time(), 0.001)
+			_vel = _vel.lerp(delta / dt, 0.35)
+		_touch_last = event.position
+
+
+func _dispatch_touch_click(pos: Vector2) -> void:
+	dispatching_touch = true
+	var press := InputEventMouseButton.new()
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.pressed = true
+	press.device = 0
+	press.position = pos
+	press.global_position = pos
+	var release := press.duplicate() as InputEventMouseButton
+	release.pressed = false
+	get_viewport().push_input(press, true)
+	get_viewport().push_input(release, true)
+	dispatching_touch = false
+
+
+func _control_at(pos: Vector2) -> Control:
+	var found: Array = [-1, -1, null]
+	var seq := [0]
+	_collect_hit(get_tree().root, pos, 0, seq, found)
+	return found[2] as Control
+
+
+func _collect_hit(n: Node, pos: Vector2, layer: int, seq: Array, found: Array) -> void:
+	if n is CanvasItem and not (n as CanvasItem).visible:
+		return
+	var l := layer
+	if n is CanvasLayer:
+		l = (n as CanvasLayer).layer
+	if n is Control:
+		seq[0] += 1
+		var c := n as Control
+		if c.mouse_filter != Control.MOUSE_FILTER_IGNORE and c.get_global_rect().has_point(pos):
+			if _better(l, seq[0], found):
+				found[0] = l
+				found[1] = seq[0]
+				found[2] = c
+	for ch in n.get_children():
+		_collect_hit(ch, pos, l, seq, found)
+
+
+func _show_touch_feedback() -> void:
+	if _touch_feedback_target == null or not is_instance_valid(_touch_feedback_target):
+		return
+	if _touch_feedback_layer == null:
+		_touch_feedback_layer = CanvasLayer.new()
+		_touch_feedback_layer.layer = 199
+		add_child(_touch_feedback_layer)
+		_touch_feedback = Panel.new()
+		_touch_feedback.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color(TOUCH_GOLD, 0.12)
+		style.border_color = TOUCH_GOLD
+		style.set_border_width_all(2)
+		style.set_corner_radius_all(4)
+		_touch_feedback.add_theme_stylebox_override("panel", style)
+		_touch_feedback_layer.add_child(_touch_feedback)
+	var rect := _touch_feedback_target.get_global_rect()
+	_touch_feedback.position = rect.position
+	_touch_feedback.size = rect.size
+	_touch_feedback.show()
+
+
+func _hide_touch_feedback() -> void:
+	if _touch_feedback != null:
+		_touch_feedback.hide()
+
+
 func _process(delta: float) -> void:
+	if _touch_active and not _touch_cancelled and not _touch_moved and Time.get_ticks_msec() - _touch_started_ms >= TAP_TIME_LIMIT_MS:
+		_touch_cancelled = true
+		_hide_touch_feedback()
+	if _touch_active and not _touch_cancelled and not _touch_moved and Time.get_ticks_msec() - _touch_started_ms >= PRESS_FEEDBACK_MS:
+		_show_touch_feedback()
 	if _tip_timer > 0.0:
 		_tip_timer -= delta
 		if _tip_timer <= 0.0:
@@ -279,13 +436,19 @@ func _show_tip(text: String, at: Vector2) -> void:
 		add_child(_tip_layer)
 		_tip_panel = PanelContainer.new()
 		_tip_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_tip_panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PLATE, 0.97), UIKit.GOLD, 5, 12, 2))
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color(TOUCH_PLATE, 0.97)
+		style.border_color = TOUCH_GOLD
+		style.set_border_width_all(2)
+		style.set_corner_radius_all(5)
+		style.set_content_margin_all(12)
+		_tip_panel.add_theme_stylebox_override("panel", style)
 		_tip_layer.add_child(_tip_panel)
 		_tip_label = Label.new()
 		_tip_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_tip_label.custom_minimum_size.x = 340
 		_tip_label.add_theme_font_size_override("font_size", 18)
-		_tip_label.add_theme_color_override("font_color", UIKit.TEXT)
+		_tip_label.add_theme_color_override("font_color", TOUCH_TEXT)
 		_tip_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		_tip_panel.add_child(_tip_label)
 	_tip_label.text = text

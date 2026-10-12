@@ -2,6 +2,7 @@ extends RefCounted
 
 const UIKit := preload("res://game/ui/ui_kit.gd")
 const Loc := preload("res://game/core/loc.gd")
+const TOUCH_SCROLL := preload("res://game/ui/touch_scroll.gd")
 
 var host: Control
 var person_block: VBoxContainer
@@ -303,7 +304,8 @@ func _build_ui(cols: HBoxContainer) -> void:
 				cb.add_theme_color_override(c, UIKit.DANGER.lightened(0.15))
 		var ctip: String = tr(CAT_TIPS[g[0]])
 		cb.tooltip_text = ctip
-		cb.mouse_entered.connect(func() -> void: _hint(ctip))
+		cb.mouse_entered.connect(func() -> void:
+			if not TOUCH_SCROLL.dispatching_touch: _hint(ctip))
 		cb.pressed.connect(_show_act_cat.bind(str(g[0])))
 		host._wire(cb)
 		cat_row.add_child(cb)
@@ -433,10 +435,12 @@ func _add_btn(parent: Node, key: String, text: String, cb: Callable) -> void:
 		var tip: String = tr(TIPS[key])
 		b.tooltip_text = tip
 		if ACTION_META.has(key):
-			b.mouse_entered.connect(_preview.bind(key))
+			b.mouse_entered.connect(func() -> void:
+				if not TOUCH_SCROLL.dispatching_touch: _preview(key))
 			b.button_down.connect(_preview.bind(key))
 		else:
-			b.mouse_entered.connect(func() -> void: _hint(tip))
+			b.mouse_entered.connect(func() -> void:
+				if not TOUCH_SCROLL.dispatching_touch: _hint(tip))
 			b.button_down.connect(func() -> void: _hint(tip))
 	host._wire(b)
 	parent.add_child(b)
@@ -692,11 +696,13 @@ func _make_card(a) -> PanelContainer:
 	# Üzerine gelince portre çerçevesinin içinde hafifçe yakınlaşır.
 	var portrait_img: Control = card_art.get_child(0)
 	card.mouse_entered.connect(func() -> void:
+		if TOUCH_SCROLL.dispatching_touch: return
 		Sfx.play("hover", -14.0)
 		_style_cards(a.id)
 		portrait_img.pivot_offset = portrait_img.size / 2.0
 		portrait_img.create_tween().tween_property(portrait_img, "scale", Vector2(1.1, 1.1), 0.35).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT))
 	card.mouse_exited.connect(func() -> void:
+		if TOUCH_SCROLL.dispatching_touch: return
 		_style_cards()
 		portrait_img.create_tween().tween_property(portrait_img, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_SINE))
 	return card

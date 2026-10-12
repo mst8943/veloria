@@ -417,8 +417,8 @@ msgstr "Menu"
 msgid "Henüz tamamlanmış bir saltanat yok. İlk hükümdarlığın burada anılacak."
 msgstr "There is no completed reign yet. Your first will be remembered here."
 
-msgid "Saltanat sayısı: %d   ·   Tahtta kalan: %d   ·   En uzun saltanat: %d hafta\n\n"
-msgstr "Reigns: %d   ·   Stayed on the throne: %d   ·   Longest reign (weeks): %d\n\n"
+msgid "Saltanat sayısı: %d   ·   Tahtta kalan: %d   ·   En uzun saltanat: %s\n\n"
+msgstr "Reigns: %d   ·   Stayed on the throne: %d   ·   Longest reign: %s\n\n"
 
 msgid "Oyuna Dön"
 msgstr "Return to Game"
@@ -5086,3 +5086,15 @@ msgstr "uneasy"
 
 msgid "zorlanıyor"
 msgstr "strained"
+
+msgid "TAHTTA"
+msgstr "ON THE THRONE"
+
+msgid "DÜŞTÜ"
+msgstr "DEPOSED"
+
+msgid "%d hafta"
+msgstr "%d weeks"
+
+msgid "Sebep eski arşiv kaydında özgün hâliyle saklanıyor."
+msgstr "The cause remains in the original archive entry."

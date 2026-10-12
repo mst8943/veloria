@@ -8,6 +8,7 @@ signal request(target: String)
 const UIKit := preload("res://game/ui/ui_kit.gd")
 const Loc := preload("res://game/core/loc.gd")
 const Press := preload("res://game/core/press.gd")
+const TOUCH_SCROLL := preload("res://game/ui/touch_scroll.gd")
 
 const LIT_SHADER := preload("res://game/ui/desk_lit.gdshader")
 const SHADOW_SHADER := preload("res://game/ui/desk_shadow.gdshader")
@@ -222,6 +223,7 @@ func _make_object(id: String) -> void:
 	holder.add_child(_plate(id, str(spec[1]), r.size))
 	var visual: Control = body.get_child(body.get_child_count() - 1)
 	holder.mouse_entered.connect(func() -> void:
+		if TOUCH_SCROLL.dispatching_touch: return
 		Sfx.play("hover", -10.0)
 		# Üzerine gelince nesne masadan hafifçe kalkar: gölgesi uzaklaşır ve yumuşar.
 		var tw := holder.create_tween().set_parallel(true).set_trans(Tween.TRANS_SINE)
@@ -232,6 +234,7 @@ func _make_object(id: String) -> void:
 			tw.tween_property(cast, "shader_parameter/opacity", 0.32, 0.18)
 			tw.tween_property(cast, "shader_parameter/blur", 0.07, 0.18))
 	holder.mouse_exited.connect(func() -> void:
+		if TOUCH_SCROLL.dispatching_touch: return
 		var tw := holder.create_tween().set_parallel(true).set_trans(Tween.TRANS_SINE)
 		tw.tween_property(visual, "position:y", 0.0, 0.2)
 		if lit:

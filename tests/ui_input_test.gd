@@ -432,6 +432,8 @@ func _check_city_dismiss() -> bool:
 	tap.position = Vector2(24, 400)
 	tap.pressed = true
 	root.push_input(tap, true)
+	tap.pressed = false
+	root.push_input(tap, true)
 	await process_frame
 	if main._city._drawer.visible:
 		printerr("UI INPUT: dış dokunuş kurum çekmecesini kapatmadı")

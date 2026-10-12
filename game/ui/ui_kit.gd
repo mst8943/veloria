@@ -2,6 +2,7 @@ extends RefCounted
 ## Tema ve animasyon yardımcıları (tüm arayüz buradaki palete ve hareket diline bağlı).
 
 const Loc := preload("res://game/core/loc.gd")
+const TOUCH_SCROLL := preload("res://game/ui/touch_scroll.gd")
 
 # Nötrler sıcak kömür tonunda (kırmızı >= yeşil >= mavi): altın ve parşömenle çatışmaz (docs/ux/gorsel_dil_v2.md).
 const BG := Color("0e0c0a")
@@ -490,10 +491,12 @@ static func hover_pop(c: Control, amount := 1.03) -> void:
 	if reduce_motion:
 		return
 	c.mouse_entered.connect(func() -> void:
+		if TOUCH_SCROLL.dispatching_touch: return
 		c.pivot_offset = c.size / 2.0
 		var tw := c.create_tween()
 		tw.tween_property(c, "scale", Vector2(amount, amount), 0.12).set_trans(Tween.TRANS_SINE))
 	c.mouse_exited.connect(func() -> void:
+		if TOUCH_SCROLL.dispatching_touch: return
 		var tw := c.create_tween()
 		tw.tween_property(c, "scale", Vector2.ONE, 0.16).set_trans(Tween.TRANS_SINE))
 

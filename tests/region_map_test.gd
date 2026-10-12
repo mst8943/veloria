@@ -52,6 +52,12 @@ func _run() -> void:
 		_expect(marker.visible and marker.focus_mode == Control.FOCUS_ALL, "region marker is not visible/focusable: " + str(id))
 		_expect(marker.custom_minimum_size.x >= 44.0 and marker.custom_minimum_size.y >= 44.0, "region marker is below 44 px: " + str(id))
 		var marker_name: Label = marker.find_child("RegionName", true, false)
+		if city.mobile and str(id) == "capital":
+			_expect(marker_name.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART and marker_name.custom_minimum_size.y >= 28.0,
+				"mobile Capital Region marker wraps without clipping")
+		if city.mobile and str(id) == "capital":
+			_expect(marker_name.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART and marker_name.custom_minimum_size.y >= 28.0,
+				"mobile Capital Region marker wraps without clipping")
 		_expect((marker_name.text.begins_with("★") if str(id) == sim.featured_region_id() else not marker_name.text.begins_with("★")),
 			"map does not match the featured region highlight: " + str(id))
 		for site_id in city.plates:

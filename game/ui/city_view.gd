@@ -5,6 +5,7 @@ extends Control
 signal request(target: String, arg: String)
 
 const UIKit := preload("res://game/ui/ui_kit.gd")
+const TOUCH_SCROLL := preload("res://game/ui/touch_scroll.gd")
 
 const SITES := {
 	"saray": {"pos": Vector2(0.5, 0.16), "title": "SARAY", "sub": "Çalışma odası ve taht", "actor": "dorn", "art": "toren"},
@@ -248,12 +249,14 @@ func _make_site(id: String) -> void:
 	blink.tween_property(dot, "modulate:a", 0.4, 0.9 + randf() * 0.5)
 	blink.tween_property(dot, "modulate:a", 1.0, 0.9)
 	plate.mouse_entered.connect(func() -> void:
+		if TOUCH_SCROLL.dispatching_touch: return
 		Sfx.play("hover", -10.0)
 		sb.border_color = UIKit.GOLD
 		sb.bg_color = Color(0.1, 0.08, 0.05, 0.92)
 		plate.pivot_offset = plate.size / 2.0
 		plate.create_tween().tween_property(plate, "scale", Vector2(1.06, 1.06), 0.15))
 	plate.mouse_exited.connect(func() -> void:
+		if TOUCH_SCROLL.dispatching_touch: return
 		sb.border_color = Color(UIKit.GOLD, 0.55)
 		sb.bg_color = Color(UIKit.PLATE, 0.86)
 		plate.create_tween().tween_property(plate, "scale", Vector2.ONE, 0.15))
@@ -305,6 +308,8 @@ func _make_region_marker(id: String) -> void:
 	name.text = ("★ " if id == Sim.featured_region_id() else "") + _region_compact_name(id)
 	name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	name.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if mobile else TextServer.AUTOWRAP_OFF
+	if mobile and id == "capital": name.custom_minimum_size.y = 28
 	name.add_theme_font_size_override("font_size", 12 if mobile else 14)
 	name.add_theme_color_override("font_color", Color("f1e6c8"))
 	name.mouse_filter = Control.MOUSE_FILTER_IGNORE

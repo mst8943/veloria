@@ -768,25 +768,25 @@ func _show_chronicle() -> void:
 		for r in list:
 			wins += 1 if r["survived"] else 0
 			best = maxi(best, int(r["weeks"]))
-		t += tr("Saltanat sayısı: %d   ·   Tahtta kalan: %d   ·   En uzun saltanat: %d hafta\n\n") % [list.size(), wins, best]
+		t += tr("Saltanat sayısı: %d   ·   Tahtta kalan: %d   ·   En uzun saltanat: %s\n\n") % [list.size(), wins, tr("%d hafta") % best]
 		for i in range(list.size() - 1, -1, -1):
 			var r: Dictionary = list[i]
-			var mark := "[color=#7fae7a]TAHTTA[/color]" if r["survived"] else "[color=#c0504a]DÜŞTÜ[/color]"
-			t += "%s  [b]%s[/b]   [color=gray]%s · %s · %d hafta[/color]\n     %s\n" % [mark, r["title"], r["date"], tr(str(r["difficulty"])), r["weeks"], r["cause"]]
+			var mark := "[color=#7fae7a]%s[/color]" % tr("TAHTTA") if r["survived"] else "[color=#c0504a]%s[/color]" % tr("DÜŞTÜ")
+			t += "%s  [b]%s[/b]   [color=gray]%s · %s · %s[/color]\n     %s\n" % [mark, tr(str(r["title"])), r["date"], tr(str(r["difficulty"])), tr("%d hafta") % int(r["weeks"]), Sim.chronicle_cause(r)]
 	var have: Dictionary = Sim.load_achievements()
 	t += tr("\n[b][font_size=%d][color=#d6b25e]BAŞARIMLAR  ·  %d / %d[/color][/font_size][/b]\n") % [_fs(24), have.size(), Sim.ACHIEVEMENTS.size()]
 	for id in Sim.ACHIEVEMENTS:
 		var info: Array = Sim.ACHIEVEMENTS[id]
 		if have.has(id):
-			t += "[color=#d6b25e]»[/color]  [b]%s[/b]  [color=gray]%s · %s[/color]\n" % [info[0], info[1], have[id]]
+			t += "[color=#d6b25e]»[/color]  [b]%s[/b]  [color=gray]%s · %s[/color]\n" % [tr(str(info[0])), tr(str(info[1])), have[id]]
 		else:
-			t += "[color=#55524c]·  %s  ·  %s[/color]\n" % [info[0], info[1]]
+			t += "[color=#55524c]·  %s  ·  %s[/color]\n" % [tr(str(info[0])), tr(str(info[1]))]
 	var extension_have: Dictionary = Sim.load_achievements(true)
 	if not extension_have.is_empty():
 		t += tr("\n[b][font_size=%d][color=#d6b25e]UZATMA BAŞARIMLARI[/color][/font_size][/b]\n") % _fs(24)
 		for id in extension_have:
 			var info: Array = Sim.ACHIEVEMENTS.get(id, [id, ""])
-			t += "[color=#d6b25e]»[/color]  [b]%s[/b]  [color=gray]%s · %s[/color]\n" % [info[0], info[1], extension_have[id]]
+			t += "[color=#d6b25e]»[/color]  [b]%s[/b]  [color=gray]%s · %s[/color]\n" % [tr(str(info[0])), tr(str(info[1])), extension_have[id]]
 	_show_modal(t)
 
 
@@ -808,7 +808,8 @@ func _event_art(id: String) -> Texture2D:
 
 
 func _wire(b: BaseButton) -> void:
-	b.mouse_entered.connect(func() -> void: Sfx.play("hover", -12.0))
+	b.mouse_entered.connect(func() -> void:
+		if not TOUCH_SCROLL.dispatching_touch: Sfx.play("hover", -12.0))
 	b.pressed.connect(func() -> void: Sfx.play("click"))
 	b.focus_mode = Control.FOCUS_NONE
 

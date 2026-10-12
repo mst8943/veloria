@@ -24,12 +24,41 @@ func _boot() -> void:
 	sfx = root.get_node("Sfx")
 	main = (load("res://game/ui/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
+	_seed_archive()
 	for frame in 10:
 		await process_frame
 	main._start_new()
 	await _scan_game_ui()
+	await _check_archive_tr()
 	await _scan_campaigns()
+	var sim: Node = root.get_node("Sim")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(sim.chronicle_path))
 	_finish()
+
+
+func _seed_archive() -> void:
+	var sim: Node = root.get_node("Sim")
+	sim.chronicle_path = "user://en_leak_test_chronicle.txt"
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(sim.chronicle_path))
+	sim.difficulty = 1
+	sim._append_chronicle({"title": "Liyakat Kralı", "weeks": 104, "survived": true,
+		"cause": "104 haftalık saltanatın sonunda tahtını korudun.",
+		"cause_key": "104 haftalık saltanatın sonunda tahtını korudun.", "cause_args": [],
+		"cause_plural": false, "cause_note_key": ""})
+	sim._append_chronicle({"title": "Devrilen Kral", "weeks": 9, "survived": false,
+		"cause": "Saltanatının 9. haftasında halk ayaklanması sarayı kuşattı."})
+
+
+func _check_archive_tr() -> void:
+	root.get_node("Sfx").set_language("tr")
+	main._show_chronicle()
+	var text := str(main._modal.text.get_parsed_text())
+	if not text.contains("104 haftalık saltanatın sonunda tahtını korudun.") or not text.contains("Saltanatının 9. haftasında halk ayaklanması sarayı kuşattı."):
+		failures.append("archive | TR archive entries were not preserved")
+	root.get_node("Sfx").set_language("en")
+	main._show_chronicle()
+	await process_frame
+	_collect(main._modal, "Chronicle with saved TR/EN and legacy entries")
 
 func _scan_game_ui() -> void:
 	for i in main._tabs.get_tab_count():

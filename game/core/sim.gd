@@ -27,6 +27,8 @@ const EXTENSION_SAVE_PATH := "user://veloria_extension_save.txt"
 const EXTENSION_ACHIEVEMENTS_PATH := "user://veloria_extension_achievements.txt"
 var save_path := "user://veloria_save.txt"   # testler kendi dosyasını kullanır, oyuncunun kaydına dokunmaz
 var dynasty_path := DYNASTY_PATH
+var chronicle_path := CHRONICLE_PATH
+var daily_path := DAILY_PATH
 var record_chronicle := true                 # testlerde ve otomatik oynatmada arşive yazılmaz
 var autosave := true                         # her hafta sonunda otomatik kayıt
 var timeline: Array = []                     # haftalık gerçek durum (oyun sonunda gösterilir)
@@ -268,6 +270,7 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 	advice_log.clear()
 	plot_log.clear()
 	crisis_note = ""
+	crisis_note_key = ""
 	coup_crisis = {}
 	crisis_cooldown = 0
 	weekly_news.clear()
@@ -593,7 +596,7 @@ static func daily_seed(date: String) -> int:
 
 func daily_result(date := Time.get_date_string_from_system(true)) -> Dictionary:
 	var cfg := ConfigFile.new()
-	if cfg.load(DAILY_PATH) != OK or str(cfg.get_value("daily", "date", "")) != date:
+	if cfg.load(daily_path) != OK or str(cfg.get_value("daily", "date", "")) != date:
 		return {}
 	return {"title": str(cfg.get_value("daily", "title", "")), "weeks": int(cfg.get_value("daily", "weeks", 0)),
 		"survived": bool(cfg.get_value("daily", "survived", false)), "seed": int(cfg.get_value("daily", "seed", 0))}
@@ -608,7 +611,7 @@ func save_daily_result(date: String, result: Dictionary, seed: int) -> bool:
 	cfg.set_value("daily", "weeks", int(result.get("weeks", 0)))
 	cfg.set_value("daily", "survived", bool(result.get("survived", false)))
 	cfg.set_value("daily", "seed", seed)
-	return cfg.save(DAILY_PATH) == OK
+	return cfg.save(daily_path) == OK
 
 
 ## Eski bir kaydı bugünkü şemaya taşır (adım adım: 1 -> 2 -> ...).
@@ -3236,6 +3239,7 @@ var coup_crisis: Dictionary = {}   # {leader, week, failed?}: kriz kartı bekliy
 var crisis_cooldown := 0           # bu haftadan önce yeni kriz açılmaz
 var plot_log: Array = []           # gerçek komplo kronolojisi {w, name, text} (oyun sonunda açılır)
 var crisis_note := ""              # darbe gecesinin özeti (kayıp metnine eklenir)
+var crisis_note_key := ""
 
 
 ## Eşik kaskadı: her aktörün "kaç kişi kıpırdarsa ben de kıpırdarım" eşiği vardır.
@@ -3248,7 +3252,7 @@ func _run_cascade() -> void:
 		_close_crisis()
 		if lead != null:
 			if crisis_note == "":
-				crisis_note = tr("Darbe kapına dayandığında karar veremedin.")
+				_set_crisis_note("Darbe kapına dayandığında karar veremedin.")
 			_coup_now(lead)
 			return
 	var drop := _public_weakness()
@@ -3491,12 +3495,12 @@ func _resolve_crisis(action: String) -> String:
 				_add_fact("darbe_bastirma_%d" % week, "Darbe girişiminin gece yarısı sert biçimde bastırılması", "king", 25, knowers, 1)
 				return tr("Sadık birlikler gece yarısı karargâhı bastı. %s tutuklandı. Komplocular sindi; ama bu gecenin izi kalacak.") % nm
 			coup_crisis["failed"] = true
-			crisis_note = tr("Darbe gecesi sadık birlikleri toplamaya çalıştın; muhafızlar silahlarını indirdi.")
+			_set_crisis_note("Darbe gecesi sadık birlikleri toplamaya çalıştın; muhafızlar silahlarını indirdi.")
 			return tr("Muhafızlar silahlarını indirdi. %s kapıdan girdiğinde salonda senden başka kimse yoktu.") % nm
 		"concede":
 			if rng.randf() >= crisis_chance("concede"):
 				coup_crisis["failed"] = true
-				crisis_note = tr("Darbe gecesi bir kez daha taviz vermeyi denedin; bu kez kimse sözüne inanmadı.")
+				_set_crisis_note("Darbe gecesi bir kez daha taviz vermeyi denedin; bu kez kimse sözüne inanmadı.")
 				return tr("%s teklifini dinledi, sonra güldü: 'Bunu geçen sefer de söylemiştiniz, Majesteleri.'") % nm
 			stats["concessions"] = int(stats.get("concessions", 0)) + 1
 			_close_crisis()
@@ -3528,7 +3532,7 @@ func _resolve_crisis(action: String) -> String:
 				return tr("Meydan doldu. Kalabalık adını haykırırken %s yanındakilerin birer birer telefonu kapattığını gördü.") % nm
 			unrest = clampf(unrest + 15.0, 0.0, 100.0)
 			coup_crisis["failed"] = true
-			crisis_note = tr("Darbe gecesi halka seslendin; meydan boş kaldı.")
+			_set_crisis_note("Darbe gecesi halka seslendin; meydan boş kaldı.")
 			return tr("Balkona çıktığında meydan yarı boştu. Gelenler de senin için değil, ne olacağını görmek için gelmişti.")
 
 
@@ -3567,7 +3571,7 @@ func _check_crises() -> void:
 			flags["external_defeat"] = kind
 		_close_other()
 		if crisis_note == "":
-			crisis_note = tr("Kriz kapına dayandığında karar veremedin.")
+			_set_crisis_note("Kriz kapına dayandığında karar veremedin.")
 		if kind == "street":
 			unrest = 100.0
 		else:
@@ -3778,9 +3782,14 @@ func _close_other() -> void:
 			pending.remove_at(i)
 
 
-func _fail_other(note: String) -> void:
+func _set_crisis_note(key: String) -> void:
+	crisis_note_key = key
+	crisis_note = tr(key)
+
+
+func _fail_other(note_key: String) -> void:
 	other_crisis["failed"] = true
-	crisis_note = note
+	_set_crisis_note(note_key)
 
 
 func _resolve_other(action: String) -> String:
@@ -3800,7 +3809,7 @@ func _resolve_other(action: String) -> String:
 		external_history.append({"week": week, "kind": kind, "action": action, "success": ok})
 		if not ok:
 			flags["external_defeat"] = kind
-			_fail_other(tr("Drakon birlikleri sınırı geçti; elit koalisyonu seni teslim etti."))
+			_fail_other("Drakon birlikleri sınırı geçti; elit koalisyonu seni teslim etti.")
 			return tr("Tatbikat gerçek bir ilerleyişe dönüştü. Başkentten gelen raporlar artık emir değil, mazeret taşıyor.")
 		_close_other()
 		var relief := 34.0 if action == "concede" else (26.0 if action == "guarantee" else 20.0)
@@ -3828,7 +3837,7 @@ func _resolve_other(action: String) -> String:
 		external_history.append({"week": week, "kind": kind, "action": action, "success": ok})
 		if not ok:
 			flags["external_defeat"] = kind
-			_fail_other(tr("Devlet maaş ödeyemedi. Kredi kesildi ve maliye çöktü; elitler seni desteklemeyi bıraktı."))
+			_fail_other("Devlet maaş ödeyemedi. Kredi kesildi ve maliye çöktü; elitler seni desteklemeyi bıraktı.")
 			return tr("Bankalar teminatlarını çekti. Başkentte memurların maaş kuyruğu uzarken, meclis saraya sırtını döndü.")
 		_close_other()
 		for power in ["asteria", "seravia"]:
@@ -3852,7 +3861,7 @@ func _resolve_other(action: String) -> String:
 		external_history.append({"week": week, "kind": kind, "action": action, "success": ok})
 		if not ok:
 			flags["external_defeat"] = kind
-			_fail_other(tr("Saldırganlar korteji buldu; muhafızlar seni koruyamadı."))
+			_fail_other("Saldırganlar korteji buldu; muhafızlar seni koruyamadı.")
 			return tr("Gece yarısı kapılar kapandı. Sabah olduğunda saray, hükümdarsız kaldı.")
 		_close_other()
 		flags["SUIKAST_ATLATILDI"] = week
@@ -3871,7 +3880,7 @@ func _resolve_other(action: String) -> String:
 	match action:
 		"force":
 			if not ok:
-				_fail_other(tr("Ayaklanma gecesi orduyu sokağa sürdün; askerler kalabalığa katıldı."))
+				_fail_other("Ayaklanma gecesi orduyu sokağa sürdün; askerler kalabalığa katıldı.")
 				return tr("Askerler barikata vardı ve durdu. Biri miğferini çıkardı; sonra hepsi.")
 			_close_other()
 			unrest = clampf(unrest - 30.0, 0.0, 100.0)
@@ -3883,7 +3892,7 @@ func _resolve_other(action: String) -> String:
 			return tr("Meydanlar sabaha temizlendi. Kimse sayıyı söylemiyor; herkes biliyor.")
 		"concede":
 			if not ok:
-				_fail_other(tr("Ayaklanma gecesi yine söz verdin; kimse inanmadı."))
+				_fail_other("Ayaklanma gecesi yine söz verdin; kimse inanmadı.")
 				return tr("Talepleri kabul ettiğini duyurdun. Meydandan gelen cevap bir kahkahaydı.")
 			_close_other()
 			stats["street_concessions"] = int(stats.get("street_concessions", 0)) + 1
@@ -3895,7 +3904,7 @@ func _resolve_other(action: String) -> String:
 			return tr("Fiyatlar donduruldu, iki bakan istifa etti. Barikatlar söküldü; muhalefet bu geceyi zafer sayıyor.")
 		"appeal":
 			if not ok:
-				_fail_other(tr("Ayaklanma gecesi meydana indin; kalabalık seni dinlemedi."))
+				_fail_other("Ayaklanma gecesi meydana indin; kalabalık seni dinlemedi.")
 				return tr("Meydana indiğinde sesin uğultuda kayboldu. Muhafızların seni geri çekmesi gerekti.")
 			_close_other()
 			unrest = clampf(unrest - 18.0, 0.0, 100.0)
@@ -3904,7 +3913,7 @@ func _resolve_other(action: String) -> String:
 			return tr("Meydanda konuştun. Kalabalık önce sustu, sonra dağıldı. Bu gece kimse kazanmadı; kimse de kaybetmedi.")
 		"purge":
 			if not ok:
-				_fail_other(tr("Yetki krizinde mahkemeyi tasfiye etmeye kalktın; meclis ve sokak mahkemenin arkasında durdu."))
+				_fail_other("Yetki krizinde mahkemeyi tasfiye etmeye kalktın; meclis ve sokak mahkemenin arkasında durdu.")
 				return tr("Tasfiye kararnamesini meclis bir saat içinde iptal etti. Yargıçlar kürsüde, sen saraydasın; ama ne kadar?")
 			_close_other()
 			legal_relief += 45.0
@@ -3917,7 +3926,7 @@ func _resolve_other(action: String) -> String:
 			return tr("Yeni yargıçlar yemin etti. Dosyalar rafa kalktı; ama rafın nerede olduğunu herkes biliyor.")
 		"testify":
 			if not ok:
-				_fail_other(tr("Yetki krizinde mahkemeyle yeniden uzlaşmaya çalıştın; bu kez sözüne itibar edilmedi."))
+				_fail_other("Yetki krizinde mahkemeyle yeniden uzlaşmaya çalıştın; bu kez sözüne itibar edilmedi.")
 				return tr("İfade verdin. Yargıçlar dinledi, not aldı ve kararı yine de okudu.")
 			_close_other()
 			stats["legal_concessions"] = int(stats.get("legal_concessions", 0)) + 1
@@ -3926,7 +3935,7 @@ func _resolve_other(action: String) -> String:
 			return tr("Mahkemede saatlerce ifade verdin. Karar ertelendi; tacın ağırlığı bir parça hafifledi, bir parça da azaldı.")
 		_:  # bargain
 			if not ok:
-				_fail_other(tr("Yetki krizinde meclisle dokunulmazlık pazarlığına girdin; meclis pazarlığı reddetti."))
+				_fail_other("Yetki krizinde meclisle dokunulmazlık pazarlığına girdin; meclis pazarlığı reddetti.")
 				return tr("Dokunulmazlık yasası oylamada düştü. Muhalefet sıralarında alkış vardı.")
 			_close_other()
 			legal_relief += 35.0
@@ -4010,61 +4019,84 @@ func _end(survived: bool) -> void:
 			top = a
 	var cause := ""
 	var cause_display := ""
+	var cause_key := ""
+	var cause_args: Array = []
+	var cause_plural := false
 	var title := ""
 	if not survived:
 		title = "Devrilen Kral"
 		var external_cause := str(flags.get("external_defeat", ""))
 		if external_cause == "border":
 			title = "Çöken Egemen"
-			cause = "Saltanatının %d. haftasında Drakon sınırı geçti; elit koalisyonu seni teslim etti. Yabancı müdahalesi başkentin yönetimini sona erdirdi." % (week - 1)
-			cause_display = tr("Saltanatının %d. haftasında Drakon sınırı geçti; elit koalisyonu seni teslim etti. Yabancı müdahalesi başkentin yönetimini sona erdirdi.") % (week - 1)
+			cause_key = "Saltanatının %d. haftasında Drakon sınırı geçti; elit koalisyonu seni teslim etti. Yabancı müdahalesi başkentin yönetimini sona erdirdi."
+			cause_args = [week - 1]
+			cause = cause_key % cause_args
+			cause_display = tr(cause_key) % cause_args
 		elif external_cause == "siege":
 			title = "Mali Çöküş"
-			cause = "Saltanatının %d. haftasında kredi kesildi ve devlet maaş ödeyemedi. Mali çöküş elit koalisyonunu dağıttı." % (week - 1)
-			cause_display = tr("Saltanatının %d. haftasında kredi kesildi ve devlet maaş ödeyemedi. Mali çöküş elit koalisyonunu dağıttı.") % (week - 1)
+			cause_key = "Saltanatının %d. haftasında kredi kesildi ve devlet maaş ödeyemedi. Mali çöküş elit koalisyonunu dağıttı."
+			cause_args = [week - 1]
+			cause = cause_key % cause_args
+			cause_display = tr(cause_key) % cause_args
 		elif external_cause == "assassination":
 			title = "Suikast"
-			cause = "Saltanatının %d. haftasında saldırganlar korteji buldu; muhafızlar seni koruyamadı. Suikast sarayı başsız bıraktı." % (week - 1)
-			cause_display = tr("Saltanatının %d. haftasında saldırganlar korteji buldu; muhafızlar seni koruyamadı. Suikast sarayı başsız bıraktı.") % (week - 1)
+			cause_key = "Saltanatının %d. haftasında saldırganlar korteji buldu; muhafızlar seni koruyamadı. Suikast sarayı başsız bıraktı."
+			cause_args = [week - 1]
+			cause = cause_key % cause_args
+			cause_display = tr(cause_key) % cause_args
 		elif coup_leader != "" and actors.has(coup_leader):
 			var l: Actor = actors[coup_leader]
 			var promo_week: int = flags.get(l.id.to_upper() + "_GUCLENDI", 0)
 			if promo_week > 0:
 				var promo_gap := week - promo_week
-				cause = "Saltanatının %d. haftasında %s görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti." % [week - 1, "Askerî darbeyle" if l.military else "Saray darbesiyle", l.display_name, week - promo_week]
-				cause_display = Loc.ntr("Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti.", promo_gap) % [week - 1, l.display_name, promo_gap] if l.military else Loc.ntr("Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti.", promo_gap) % [week - 1, l.display_name, promo_gap]
+				cause_key = "Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti." if l.military else "Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti."
+				cause_args = [week - 1, l.display_name, promo_gap]
+				cause_plural = true
+				cause = "Saltanatının %d. haftasında %s görevden alındı. Darbenin lideri %s, yalnızca %d hafta önce kendisi tarafından terfi ettirilmişti." % [week - 1, "Askerî darbeyle" if l.military else "Saray darbesiyle", l.display_name, promo_gap]
+				cause_display = Loc.ntr(cause_key, promo_gap) % cause_args
 			else:
+				cause_key = "Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı." if l.military else "Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı."
+				cause_args = [week - 1, l.display_name]
 				cause = "Saltanatının %d. haftasında %s görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı." % [week - 1, "Askerî darbeyle" if l.military else "Saray darbesiyle", l.display_name]
-				cause_display = tr("Saltanatının %d. haftasında Askerî darbeyle görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı.") % [week - 1, l.display_name] if l.military else tr("Saltanatının %d. haftasında Saray darbesiyle görevden alındı. Darbenin lideri %s. Onu hiç terfi ettirmemiştin; gücünü sen başka işlerle uğraşırken kendi başına topladı.") % [week - 1, l.display_name]
+				cause_display = tr(cause_key) % cause_args
 			if crisis_note != "":
 				cause += " " + crisis_note
 				cause_display += " " + crisis_note
 		elif unrest >= 100.0:
-			cause = "Saltanatının %d. haftasında halk ayaklanması sarayı kuşattı." % (week - 1)
-			cause_display = tr("Saltanatının %d. haftasında halk ayaklanması sarayı kuşattı.") % (week - 1)
+			cause_key = "Saltanatının %d. haftasında halk ayaklanması sarayı kuşattı."
+			cause_args = [week - 1]
+			cause = cause_key % cause_args
+			cause_display = tr(cause_key) % cause_args
 			if crisis_note != "":
 				cause += " " + crisis_note
 				cause_display += " " + crisis_note
 		elif legal_pressure() >= 100.0 or flags.has("YETKI_KAYBI"):
-			cause = "Saltanatının %d. haftasında Meclis ve yüksek mahkeme, biriken skandallar nedeniyle seni yetkisiz bıraktı." % (week - 1)
-			cause_display = tr("Saltanatının %d. haftasında Meclis ve yüksek mahkeme, biriken skandallar nedeniyle seni yetkisiz bıraktı.") % (week - 1)
+			cause_key = "Saltanatının %d. haftasında Meclis ve yüksek mahkeme, biriken skandallar nedeniyle seni yetkisiz bıraktı."
+			cause_args = [week - 1]
+			cause = cause_key % cause_args
+			cause_display = tr(cause_key) % cause_args
 			if crisis_note != "":
 				cause += " " + crisis_note
 				cause_display += " " + crisis_note
 		else:
-			cause = "Saltanatının %d. haftasında elit koalisyonu desteğini çekti; tahtta kimse seni savunmadı." % (week - 1)
-			cause_display = tr("Saltanatının %d. haftasında elit koalisyonu desteğini çekti; tahtta kimse seni savunmadı.") % (week - 1)
+			cause_key = "Saltanatının %d. haftasında elit koalisyonu desteğini çekti; tahtta kimse seni savunmadı."
+			cause_args = [week - 1]
+			cause = cause_key % cause_args
+			cause_display = tr(cause_key) % cause_args
 	else:
-		cause = "104 haftalık saltanatın sonunda tahtını korudun."
-		cause_display = tr("104 haftalık saltanatın sonunda tahtını korudun.")
+		cause_key = "104 haftalık saltanatın sonunda tahtını korudun."
+		cause = cause_key
+		cause_display = tr(cause_key)
 		var state_title := _survivor_title(top)
 		title = state_title if state_title in ["Harap Devletin Kralı", "Liyakat Kralı"] else str(REGIME_TITLES.get(regime, state_title))
 		if flags.has("ASSASSINATION_SURVIVED"):
 			title = "Yaralı Egemen"
-			cause = "104 haftalık saltanatın sonunda tahtını korudun; suikast gecesinden yaralı kurtuldun."
-			cause_display = tr("104 haftalık saltanatın sonunda tahtını korudun; suikast gecesinden yaralı kurtuldun.")
+			cause_key = "104 haftalık saltanatın sonunda tahtını korudun; suikast gecesinden yaralı kurtuldun."
+			cause = cause_key
+			cause_display = tr(cause_key)
 	record = {"survived": survived, "title": title, "weeks": week - 1, "cause": cause,
 		"top_actor": top.display_name if top else "", "history": history.duplicate(), "cause_display": cause_display,
+		"cause_key": cause_key, "cause_args": cause_args, "cause_plural": cause_plural, "cause_note_key": crisis_note_key,
 		"lies": _top_lies(), "king": king_name,
 		"regime": str(REGIME_NAMES.get(regime, "")) if regime != "" else "", "threat": str(REGIME_THREATS.get(regime, "")) if regime != "" else "",
 		"promises": "%d söz verdin: %d tutuldu, %d bozuldu." % [int(stats.get("promises", 0)), int(stats.get("kept", 0)), int(stats.get("broken", 0))],
@@ -4261,9 +4293,9 @@ func _region_achievement_ids() -> Array[String]:
 
 ## Hükümdarlık arşivi: biten her saltanat kalıcı olarak kaydedilir.
 func load_chronicle() -> Array:
-	if not FileAccess.file_exists(CHRONICLE_PATH):
+	if not FileAccess.file_exists(chronicle_path):
 		return []
-	var f := FileAccess.open(CHRONICLE_PATH, FileAccess.READ)
+	var f := FileAccess.open(chronicle_path, FileAccess.READ)
 	var d: Variant = str_to_var(f.get_as_text())
 	return d if d is Array else []
 
@@ -4271,11 +4303,27 @@ func load_chronicle() -> Array:
 func _append_chronicle(r: Dictionary) -> void:
 	var list := load_chronicle()
 	list.append({"date": Time.get_date_string_from_system(), "title": r["title"], "weeks": r["weeks"],
-		"survived": r["survived"], "cause": r["cause"], "difficulty": tr("Uzatma") if endless else DIFFICULTY[difficulty]["name"],
+		"survived": r["survived"], "cause": r["cause"], "cause_key": r.get("cause_key", ""),
+		"cause_args": r.get("cause_args", []), "cause_plural": r.get("cause_plural", false),
+		"cause_note_key": r.get("cause_note_key", ""), "difficulty": tr("Uzatma") if endless else DIFFICULTY[difficulty]["name"],
 		"extension": endless, "scenario": scenario_id})
-	var f := FileAccess.open(CHRONICLE_PATH, FileAccess.WRITE)
+	var f := FileAccess.open(chronicle_path, FileAccess.WRITE)
 	if f:
 		f.store_string(var_to_str(list.slice(maxi(0, list.size() - 50))))
+
+
+func chronicle_cause(r: Dictionary) -> String:
+	var key := str(r.get("cause_key", ""))
+	if key == "":
+		return str(r.get("cause", "")) if Loc.lang != "en" else tr("Sebep eski arşiv kaydında özgün hâliyle saklanıyor.")
+	var args: Array = r.get("cause_args", [])
+	var text := Loc.ntr(key, int(args.back())) if r.get("cause_plural", false) else tr(key)
+	if not args.is_empty():
+		text %= args
+	var note := str(r.get("cause_note_key", ""))
+	if note != "":
+		text += " " + tr(note)
+	return text
 
 
 func _survivor_title(top: Actor) -> String:
