@@ -637,9 +637,9 @@ func _card_fade() -> Texture2D:
 
 func _make_card(a) -> PanelContainer:
 	var card := PanelContainer.new()
-	var compact_governor: bool = not host._mobile and str(a.id).begins_with("governor_")
-	var compact_state_card: bool = compact_governor or (not host._mobile and str(a.id).begins_with("commander_"))
-	card.custom_minimum_size = Vector2(78, 82) if compact_state_card else (Vector2(108, 96) if not host._mobile else Vector2(150, 132))
+	var compact_governor: bool = str(a.id).begins_with("governor_")
+	var compact_state_card: bool = compact_governor or str(a.id).begins_with("commander_")
+	card.custom_minimum_size = Vector2(82, 98) if compact_state_card else (Vector2(108, 96) if not host._mobile else Vector2(150, 132))
 	card.clip_contents = true
 	card.mouse_filter = Control.MOUSE_FILTER_STOP
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -649,7 +649,7 @@ func _make_card(a) -> PanelContainer:
 		compact_body = VBoxContainer.new()
 		compact_body.add_theme_constant_override("separation", 0)
 		card.add_child(compact_body)
-	var card_art: Control = host._initial_art(a.id, Vector2(72, 48) if compact_state_card else (Vector2(92, 88) if not host._mobile else Vector2(130, 120)), 28 if compact_state_card else 36)
+	var card_art: Control = host._initial_art(a.id, Vector2(72, 66) if compact_state_card else (Vector2(92, 88) if not host._mobile else Vector2(130, 120)), 28 if compact_state_card else 36)
 	if compact_state_card:
 		compact_body.add_child(card_art)
 	else:
@@ -749,13 +749,20 @@ func _on_card_input(ev: InputEvent, id: String) -> void:
 func _style_cards(hover_id := "") -> void:
 	for id in host._cards:
 		var card: PanelContainer = host._cards[id]
+		var compact_state_card: bool = str(id).begins_with("governor_") or str(id).begins_with("commander_")
 		if host._mobile:
 			var compact: bool = not host._sel.is_empty()
-			card.custom_minimum_size = Vector2(120, 104) if compact else Vector2(150, 132)
-			var portrait := card.get_child(0) as Control
-			portrait.custom_minimum_size = Vector2(100, 92) if compact else Vector2(130, 120)
-			var labels := card.get_meta("card_labels") as VBoxContainer
-			labels.offset_top = -42 if compact else -52
+			if compact_state_card:
+				card.custom_minimum_size = Vector2(150, 132)
+				var body := card.get_child(0) as Control
+				var portrait := body.get_child(0) as Control
+				portrait.custom_minimum_size = Vector2(120, 88)
+			else:
+				card.custom_minimum_size = Vector2(120, 104) if compact else Vector2(150, 132)
+				var portrait := card.get_child(0) as Control
+				portrait.custom_minimum_size = Vector2(100, 92) if compact else Vector2(130, 120)
+				var labels := card.get_meta("card_labels") as VBoxContainer
+				labels.offset_top = -42 if compact else -52
 		var a = Sim.actors.get(id)
 		var selected: bool = host._sel.has(id)
 		var primary: bool = not host._sel.is_empty() and host._sel[0] == id
