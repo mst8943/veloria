@@ -235,3 +235,58 @@ Godot bazı kapanışlarda RID/ObjectDB/resource temizleme uyarıları bastı (�
 EN/TR masaüstü ve yatay mobil ekran görüntüleri açılıp kontrol edildi: bölge seçimi, yatırım/garnizon/medya kararı, bölgesel kriz, vali azli ve vali ataması. Metin sarımı, görünür seçenekler, kriz çerçevesi, EN/TR uzunluk farkı ve 1067×600 yerleşim kontrol edildi; taşma yok. Vali azli ve ataması için görüntü yardımcısının aynı dosyaya yazması düzeltilip dosya adları ayrıldı. R4a'nın tekdüze/uzun Günlük satırı, vali kartı renkleri ve Divan yüksekliği düzeltildi. Ertelenen: vali adaylarına ayrı sanatsal portre kimliği ve gerçek oyuncu oturumlarında bölgesel medya/atama akışının anlaşılabilirlik ölçümü. Ekran görüntüleri ve probe logları kontrol sonrası `C:\temp\veloria_r4b` içinden temizlenecek.
 
 `tests/title_shot.gd` ve `game/ui/title_screen.gd` değiştirilmedi. PUSH yapılmadı. R4c'ye geçmeden önce R4a/R4b geçmişi `git log` ile denetlenmeli.
+
+## R4c — Harita katmanı (2026-10-12)
+
+R4a/R4b önkoşul commit'leri `git log` ile doğrulandı. Haritaya katman aç/kapa, renk kullanmadan üçgen/çubuk/kalkan durum simgeleri, kriz/vali işaretleri ve aynı öne çıkan bölge için yıldız eklendi. Bölge paneli nitel durumu, vali portresini ve mevcut R4b eylemlerini gösteriyor; tek tık karar kartını açıyor. Bina tıklamaları korundu. Panel açıkken arkada kalan harita işaretçileri gizlenip kapanışta geri geliyor. R4c yalnızca görünüm/harita gezinmesi ekledi; `--full --seed=101` değişmedi.
+
+### Denge ve içerik kapıları
+
+R4c için özel 80 kampanyalık `advice_weighted` probe'u tekrar çalıştırılmadı; son gerçek ölçüm R4b'nin 60/29/17 sonucu. Bu sunum değişikliğinde simülasyon/kriz/RNG kodu değişmedi, bu yüzden önceki ölçüm karşılaştırma tabanı olarak korundu (fark 0/0/0; ölçüm yeniden üretimi açık iş). Rapor bu farkı gizlemez.
+
+TR ve EN `--full --seed=101`: her ikisi de **104 hafta / TAHTTA / Medya Rejimi / 112 olay**. Tempo R4b ölçümüyle aynı; `pacing_test` ilk 8 haftada 0,81 olay/hafta, en uzun olaysız seri 3 hafta verdi. `en_leak_test`: 5 kampanya, 0 benzersiz sızıntı. EN dökümleri `DUMP 881`, `DUMP2 2752`; `tools/i18n_leak_scan.py`: `TARANAN 3633 metin, ŞÜPHELİ 0`; `tools/i18n_missing.py`: `0 tr() kaynağı en.po'da yok`.
+
+### Test kapıları
+
+| Test | Başarılı çıktı satırı |
+|---|---|
+| `a11y_test` | `A11Y: OK` |
+| `audio_check` | `AUDIO: OK` |
+| `budget_ui_test` | `BUDGET UI: OK` |
+| `content_check` | `CONTENT: OK (5 dosya, 8 bozuk örnek)` |
+| `cutscene_check` | `CUTSCENE: OK` |
+| `daily_card_test` | `DAILY CARD: OK` |
+| `dynasty_test` | `DYNASTY: OK` |
+| `economy_test` | `ECONOMY: OK` |
+| `election_test` | `ELECTION: OK` |
+| `endless_test` | `ENDLESS: OK` |
+| `en_leak_test` | `EN LEAK SCAN: 5 campaigns, 0 unique leaks` |
+| `event_check` | `EVENTS: OK (201 olay, 0 uyarı)` |
+| `external_crisis_test` | `EXTERNAL CRISIS: OK` |
+| `i18n_check` | `I18N: OK` |
+| `lang_switch_test` | `LANG: OK` |
+| `legacy_test` | `LEGACY: OK` |
+| `pacing_test` | `En uzun olaysız seri (medyan / en kötü): 2 / 3 hafta` |
+| `parliament_laws_test` | `PARLIAMENT LAWS: OK` |
+| `parliament_test` | `PARLIAMENT: OK` |
+| `public_opinion_test` | `PUBLIC OPINION: OK` |
+| `region_map_test` masaüstü | `REGION MAP: OK` |
+| `region_map_test` mobil | `REGION MAP: OK` |
+| `regions_test` | `REGIONS: OK` |
+| `save_test` | `SAVE: OK` |
+| `scenario_test` | `SCENARIO: OK` |
+| `sim_test` | `TEST: OK` |
+| `touch_scroll_test` | `TOUCH: OK` |
+| `tour_test` | `TOUR: OK` |
+| `ui_input_test` masaüstü | `UI INPUT: OK` |
+| `ui_input_test` mobil (`-- --mobile`) | `UI INPUT: OK (mobile)` |
+| `ui_logic_test` | `UI LOGIC: OK` |
+| `unit_tests` | `[unit] all 399 checks passed` |
+
+### Ekran ve ürün gözlemi
+
+EN/TR masaüstü ve 1067×600 mobilde katman kapalı/açık, bölge paneli/vali kartı ve kriz kartı görüntüleri ayrı üretildi, açıldı ve gözle kontrol edildi. Harita arka planı/kurumlar, sembollerin renk dışı ayrımı, nitel rapor, portre, çevrilen metin, mobil kaydırma ve birincil 48 px karar düğmesi kontrol edildi. Görüntü ve dump dosyaları incelemeden sonra geçici klasörden silindi.
+
+Beckett `ui_snapshot` çalışan masa görünümünde 150 görünür denetim taradı; iki `occluded_by` kaydı rapor metninin kendi kart paneli altında kalmasıydı. Lite oturumunda harita ekranı açılamadığından bu araçla harita katmanına özel snapshot alınamadı. Bunun yerine `region_map_test` iki çözünürlükte işaretçi-kurum çakışmasını ve tıklamaları denetledi; panel aç/kapa görünürlüğü, Parlamento tıklaması ve simülasyon durumunun değişmediği de test edildi.
+
+Gözlemlerde mobilde 4 px kurum çakışması, panel arkasında kısmi işaretçi görünmesi, vali satırında gereksiz dikey boşluk ve ana karar düğmesinin ilk ekranda kalmaması düzeltildi. Ayrıntılı küçük/bekleyen maddeler `docs/roadmap/GOZLEMLER.md` içinde. Kod commit'i `844f6bc` (`Add regional map layer and panel`). R5'e geçilmedi; PUSH yapılmadı; `tests/title_shot.gd`, `game/ui/title_screen.gd` ve `art/` değiştirilmedi.

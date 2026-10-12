@@ -43,3 +43,17 @@ TR ve EN masaüstü/mobil Günlük bölge satırları ile Divan rapor ve vali ka
 ### Ekran gözlemi
 
 TR/EN masaüstü ve yatay mobil kartları açıldı: bölge seçimi, yatırım/garnizon/medya kararı, grev krizi, vali azli ve ataması. Kartların sınırları, metin sarımı, düğme görünürlüğü, mobil yatay yerleşim ve EN/TR çeviri uzunlukları kontrol edildi; taşma görülmedi. Gerçek oyuncu oturumlarında vali/yerel medya kararlarının anlaşılırlığı telemetriyle doğrulanmadı.
+
+## 2026-10-12 — R4c
+
+### Düzeltilen
+
+- **Orta — Harita işaretçisi/kurum çakışması (yatay mobil, 1067×600).** İlk yerleşimde bölge hedefleri Maliye/Asteria ve Genelkurmay etiketlerine değiyordu. İşaretçi koordinatları düzeltildi; `region_map_test` masaüstü ve mobilde hedef dikdörtgenlerinin kurumlarla kesişmediğini ve tıklamaların çalıştığını denetliyor.
+- **Düşük — Panel arkasında görünen işaretçiler.** Sağ çekmece açılınca bazı işaretçiler kenardan görünüyordu. Çekmece açıkken tüm bölge işaretçileri gizleniyor, kapanınca katman durumuna göre geri geliyor.
+- **Düşük — Vali satırındaki fazla boşluk ve mobil eylem akışı.** Vali adı için RichTextLabel'ın dikey boşluğu kaldırıldı; ana bölge karar düğmesi açıklama listesinin üstüne alındı ve ilk mobil görünümde kalıyor.
+- **Düşük — Günlük/harita odak tutarsızlığı.** Haritadaki yıldız artık Günlük/Divan'ın kullandığı aynı öne çıkan bölgeyi işaretliyor; nitel durum kelimeleri ortak Sim yardımcısından geliyor.
+
+### Ertelenen
+
+- **Düşük — Harita ekranına özel Beckett `ui_snapshot`.** Lite oturumu harita ekranını açamadı; çalışan masa görünümündeki tarama harita katmanına ait değildi. `region_map_test` geometri ve tıklama kontrollerini iki çözünürlükte yaptı; Beckett ile özel harita snapshot'ı alınmadı.
+- **Düşük — Uzun bölge panelinde alt eylem listesi.** Mobil panelde açıklama ve eylem listesi kaydırılıyor; kapatma düğmesinin uzun içerikte alt kısma düşmesi olası. Çekmece üstündeki kapatma kontrolü mevcut. Gerçek cihazda uzun liste ergonomisi ayrıca incelenebilir.

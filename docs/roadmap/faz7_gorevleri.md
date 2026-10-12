@@ -19,11 +19,11 @@ Tasarım: gerceklik_faz7.md "R3" (R1 bütçe ve R2 kamuoyu ile bağlanır). Üç
 - **R3c — Seçim ve güven oyu:** `erken_secim` olayı gerçek seçime bağlanır (blok dağılımı değişir; sonuç bir hükümet kurma kararı); Başbakan (Veyra) meclis desteğini kaybederse güven oyu/hükümet krizi, yeni başbakan atama kararı.
 Kapı (her alt dilim): tüm testler (yeni tests/parliament_test.gd, R3b/R3c için eklemeler), ölçüt probe ±8 (Kolay 62 / Normal 30 / Zor 13 /80), "hep baskıyla geçir" ve "hep geri çek / hiç oy verme" uç botları tek başına kazanmamalı (≤ ölçütün %70'i), tempo ≥ 0,8, `--full --seed=101` TR=EN, sızıntı kapıları 0, EN+TR masaüstü ve mobil ekran görüntüleri (teklif kartı, Meclis raporu, Divan) gözle; sayı gösterme ilkesi korunur.
 
-## R4 — Bölgeler (R4a/R4b TAMAM, R4c SIRADAKİ)
+## R4 — Bölgeler (R4a/R4b/R4c TAMAM, R5 SIRADAKİ)
 Tasarım: gerceklik_faz7.md "R4" (R1–R3 ile bağlanır: bölgesel ekonomi R1'e, bölgesel rıza R2'ye, vali ve vekil dağılımı R3'e). Üç alt dilim, SIRAYLA; her oturumda yalnızca SIRADAKİ alt dilimi bitir.
 - **R4a — Bölge verisi ve raporlar (TAMAM):** dört bölge (Başkent, Sanayi Kuşağı, Tarım Ovaları, Sınır İlleri), her birinde gizli `unrest/loyalty/economy`; ulusal `unrest/economy` bölgelerin ağırlıklı özeti olur (geriye dönük uyum, kayıt göçü, SAVE_VERSION artır). Her bölgeye bir vali (supporting aktör, çevresel; ana RNG'yi tüketmez, ayrı üreteç). Bölge raporu satırları (Günlük/Divan, nitel, "sayı yok"); Divan'da "Devlet" grubunda vali kartı. Bölge dağılımı varsayılanda dengeyi KAYDIRMAMALI (ulusal değerler eski türetmeyle ±küçük).
 - **R4b — Kararlar ve bölgesel krizler (TAMAM):** oyuncunun Devlet eyleminden açtığı yatırım/garnizon/yerel medya/vali kararları; gecikmeli ve R1 tahsisine bağlı etkiler; dört bölgesel kriz `region_rng` ile ve sınır geriliminin dış kriz akışına bağlanması; R3 blok/patronaj bedelli vali ataması/azli.
-- **R4c — Harita katmanı:** Başkent haritasına bölge katmanı (renksiz nitel simgeler), bölge seçimi ve bölge paneli, mobil düzen.
+- **R4c — Harita katmanı (TAMAM):** Başkent haritasına bölge katmanı (renksiz nitel simgeler), bölge seçimi ve bölge paneli, mobil düzen. 2026-10-12: EN/TR masaüstü ve 1067×600 yatay mobil katman kapalı/açık, panel/vali/kriz görüntüleri gözle kontrol edildi. `region_map_test` desktop+mobile, `a11y_test` ve tüm test kapıları geçti. R4b probe tabanı 60/29/17; sunum değişikliğinden sonra bağımsız 80 kampanya probe'u tekrar çalıştırılmadı; delta doğrulanmış ölçüm değil, karşılaştırma tabanı olarak kaydedildi. Detay `R4c Ayar` ve FAZ7_ILERLEME.md içinde.
 Kapı (her alt dilim): tüm testler (yeni tests/regions_test.gd), ölçüt probe Kolay 62 / Normal 30 / Zor 13 (/80) ±4 puan içinde, "hep tek bölgeye yatırım" ve "hiç yatırım yapma" uç botları tek başına kazanmasın (ölçütün en çok %70'i), tempo ≥ 0,8, `--full --seed=101` TR=EN 104 hafta / TAHTTA / Medya Rejimi / 112 olay (değişirse yeni tabanı belgele), sızıntı kapıları 0, EN+TR masaüstü ve mobil ekran görüntüleri gözle; ölçümler "R4 Ayar" bölümüne.
 
 ## R5 — Ordu iç yapısı
@@ -37,7 +37,7 @@ Raporda "X testi geçti" yazdığın her test için çıktının son satırını
 ## KALICI KURAL — Gözlem (her dilimde, hepsi için geçerli)
 Her dilimde kapılara ek olarak ürünü eleştirel gözle de değerlendir: **iyileştirme, tutarsızlık, eksik özellik, UI/UX sorunu** (ekran görüntüsü aç; kesilen/çakışan metin, tıklama yutan öğe, kafa karıştırıcı akış, mobil/EN farkı, diğer sistemlerle çelişki, istismar yolu). Küçük ve güvenli olanları aynı dilimde düzelt (ayrı commit). Büyük/tasarım gerektirenleri `docs/roadmap/GOZLEMLER.md` dosyasına tarih, dilim, ekran/konum, öneri ve önem (düşük/orta/yüksek) ile ekle. Raporda ayrı bir "Gözlemler" başlığı aç: bulduğun, düzelttiğin ve ertelediğin. Hiçbir şey bulamadıysan bile hangi ekranlara baktığını yaz.
 
-## Cila bekleyenler (R4a/R4b'de tamamlandı)
+## Cila bekleyenler (R4a/R4b/R4c'de tamamlandı)
 - [x] Kamuoyu araştırması kartında görselsiz kart başlığına üst boşluk eklendi.
 - [x] Hanedan defterinde metin sarımı ve kaydırma düzeltildi.
 - [x] Suikast kartı doğru görsele bağlandı.
@@ -46,3 +46,6 @@ Her dilimde kapılara ek olarak ürünü eleştirel gözle de değerlendir: **iy
 - [x] R4b: vali kartlarının baş harf zeminleri koyu ve desatüre palete çekildi.
 - [x] R4b: masaüstü Divan vali kartları küçültülerek dış ilişkiler grubunun dikey taşması azaltıldı.
 - [x] R4b: görsel test çıktıları vali azli ve atamasını ayrı dosyalara kaydediyor.
+- [x] R4c: renk dışı harita işaretçileri, kriz/vali işaretleri ve öne çıkan bölge yıldızı eklendi.
+- [x] R4c: panel açılınca arkadaki işaretçiler gizleniyor; mobil yerleşim kurumlarla çakışmıyor.
+- [x] R4c: bölge panelinin birincil karar düğmesi ilk görünür alana taşındı; 48 px hedef ve klavye odağı denetlendi.

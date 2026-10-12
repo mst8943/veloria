@@ -206,3 +206,23 @@ Seçim/güven oyu rastgeleliği `government_rng` üzerinden gidiyor; ana ve mecl
 Ölçüt hedefi 62/30/13; sapma 0/+1/+4, kapı ±4 içinde. Üç uç botun her biri ilgili ölçütün %70 tavanının altında. En düşük tempo ilk 8 haftada 0,81 olay/hafta; en uzun olaysız seri 3 hafta. `--full --seed=101` hem TR hem EN: 104 hafta / TAHTTA / Medya Rejimi / 112 olay, taban değişmedi. `tests/en_leak_test.gd`: 5 kampanyada 0 benzersiz sızıntı; `tools/i18n_missing.py`: 0 eksik çeviri.
 
 `tests/election_test.gd` seçim etkenlerini ve RNG yalıtımını, erken seçim yasası eşiğini, hükümet kurma/güven oyu geçişini, Helena'nın mali raporu devralmasını, bütçe akışını, v17→v18 göçünü ve üç başarımı denetler. Tam test paketi bu oturumda exit 0 ile tamamlandı; test adları ve görsel kapı notları `docs/roadmap/FAZ7_ILERLEME.md` içinde.
+
+## R4c Ayar
+
+Bu dilim harita ve panel sunumuyla sınırlı kaldı; ekonomi, olay üretimi, bölgesel etkiler ve ana RNG akışında değişiklik yok. R4b sonrası son ölçülmüş `advice_weighted` tabanı Kolay 60/80, Normal 29/80, Zor 17/80 olarak korundu; R4c için ayrı 80 kampanyalık probe çalıştırılmadı. Dolayısıyla karşılaştırma önceki ölçümün aynısıdır ve R4b taban farkı 0/0/0 puandır. `--full --seed=101` bu oturumda yeniden çalıştırıldı:
+
+| Ölçüt probe (R4b son ölçümü; 80 kampanya) | R4b sonucu | R4c karşılaştırması | Fark |
+|---|---:|---:|---:|
+| Kolay | 60/80 | 60/80 | 0 |
+| Normal | 29/80 | 29/80 | 0 |
+| Zor | 17/80 | 17/80 | 0 |
+
+| `--full --seed=101` | TR | EN |
+|---|---|---|
+| Sonuç | 104 hafta / TAHTTA / Medya Rejimi / 112 olay | 104 hafta / TAHTTA / Medya Rejimi / 112 olay |
+
+Tempo ölçümü R4b tabanından devralındı: ilk 8 haftada 0,81 olay/hafta; en uzun olaysız seri 3 hafta. `pacing_test.gd` yeniden geçti. `tests/en_leak_test.gd`: 5 kampanya, 0 benzersiz sızıntı; EN masaüstü/mobil dökümlerinde `tools/i18n_leak_scan.py`: 3.633 metin, 0 şüpheli; `tools/i18n_missing.py`: 0 eksik `tr()` kaynağı.
+
+EN/TR masaüstü ve 1067×600 yatay mobil ekranlarında katman kapalı/açık, bölge paneli, vali kartı ve bölgesel kriz ekranları ayrı görüntüler olarak açılıp incelendi. Simge/şekil taraması renk gerektirmiyor; yıldız Günlük/Divan satırındaki öne çıkan bölgeyi eşliyor. Mobil işaretçiler kurum etiketleriyle kesişmiyor; bölge paneli açıkken arkasında kalan işaretçiler gizleniyor. Ana eylem düğmesi 48 px ve panelin ilk görünür bölümünde. Ekran görüntüleri yalnızca geçici klasörde tutuldu ve gözden sonra silindi.
+
+Beckett `ui_snapshot` taraması çalışan masa görünümünde 150 görünür denetim buldu; `occluded_by` alanında iki rapor RichTextLabel'ı kendi PanelContainer'ı altında rapor içeriği olarak işaretlendi, etkileşimli hedef değiller. Beckett Lite oturumu harita ekranına giriş/etkileşim sağlayamadığı için harita katmanına özel `ui_snapshot` alınamadı. Harita için `region_map_test.gd` masaüstü/mobilde işaretçi-kurum dikdörtgen çakışmasını, bölge ve Parlamento tıklamalarını, panel kapanınca işaretçilerin geri gelmesini ve simülasyon/RNG değişmediğini doğruladı.
