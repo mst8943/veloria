@@ -389,10 +389,13 @@ func _rebuild_agenda() -> void:
 			vb.add_child(hush)
 		for ci in e["choices"].size():
 			var b := Button.new()
-			b.text = "  %s   %s" % [["I", "II", "III", "IV"][mini(ci, 3)], str(e["choices"][ci]["label"])]
+			var marker: String = ["I", "II", "III", "IV"][ci] if e["choices"].size() <= 4 else "•"
+			b.text = "  %s   %s" % [marker, str(e["choices"][ci]["label"])]
 			var no_action_cost: bool = e.get("kind", "") == "parliament_bill"
 			b.disabled = (Sim.mesai < 1 and not no_action_cost) or not e["choices"][ci].get("available", true) or (e.get("kind", "") == "patronage" and ci == 2 and Sim.private_wealth < 6.0)
 			b.tooltip_text = tr("Oylama mesai harcamaz; zorla geçirmek bedel ve iz bırakır.") if no_action_cost else (tr("Bu seçenek için gerekli kişi ya da servet yok.") if b.disabled and Sim.mesai >= 1 else (tr("Bu karar 1 mesai harcar.") if Sim.mesai >= 1 else tr("Bu hafta mesain kalmadı. Haftayı bitir; karar bir hafta daha bekleyebilir.")))
+			if str(e["choices"][ci].get("preview", "")) != "":
+				b.tooltip_text += "\n\n" + tr(str(e["choices"][ci]["preview"]))
 			if council.has(ci):
 				b.tooltip_text += "\n\n" + "\n".join(council[ci])
 			b.alignment = HORIZONTAL_ALIGNMENT_LEFT

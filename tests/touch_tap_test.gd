@@ -34,6 +34,11 @@ func _run() -> void:
 	var map_plate := _custom_surface(ui, Vector2(440, 40))
 	var news_strip := _custom_surface(ui, Vector2(640, 40))
 	var person_card := _custom_surface(ui, Vector2(840, 40))
+	var volume := HSlider.new()
+	volume.position = Vector2(40, 150)
+	volume.size = Vector2(220, 44)
+	volume.max_value = 100.0
+	ui.add_child(volume)
 	for frame in 2: await process_frame
 	await _check_button_tap(button)
 	await _send_screen_touch(Vector2(300, 60), true)
@@ -62,6 +67,10 @@ func _run() -> void:
 	await _send_screen_touch(drag_pos + Vector2(40, 0), false)
 	_check(button_presses == before_drag, "dragging across a button cancels the touch")
 	_check(hover_events == 0, "touch does not trigger pointer hover")
+	await _send_screen_touch(volume.get_global_rect().position + Vector2(12, 22), true)
+	await _send_screen_drag(volume.get_global_rect().position + Vector2(205, 22))
+	await _send_screen_touch(volume.get_global_rect().position + Vector2(205, 22), false)
+	_check(volume.value >= 75.0, "touch drag adjusts volume sliders instead of being treated as a scroll")
 	var before_mouse := custom_mouse_downs
 	var mouse_pos := desk_object.get_global_rect().get_center()
 	await _send_mouse(mouse_pos, true)

@@ -18,6 +18,7 @@ func _run() -> void:
 		backup = old.get_buffer(old.get_length())
 	var main := (load("res://game/ui/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
+	var mobile_at_start: bool = main._mobile
 	var ok := true
 	var old_values := [sfx.text_size, sfx.colorblind_mode, sfx.reduce_motion, sfx.vibration, sfx.high_contrast]
 	sfx.text_size = 2
@@ -27,7 +28,7 @@ func _run() -> void:
 	sfx.high_contrast = true
 	UIKit.configure_accessibility(sfx.text_size, sfx.high_contrast, sfx.reduce_motion)
 	main.theme = UIKit.build_theme(false)
-	if main._fs(20) != 26 or main.theme.default_font_size != 19:
+	if main._fs(20) != (31 if mobile_at_start else 26) or main.theme.default_font_size != 19:
 		printerr("A11Y: yazı boyutu ölçeklenmedi")
 		ok = false
 	main._mobile = true
@@ -52,7 +53,8 @@ func _run() -> void:
 	if motion_target.scale != Vector2.ONE:
 		printerr("A11Y: azaltılmış harekette nabız açık")
 		ok = false
-	main._mobile = false   # ekran masaüstü kuruldu; mobil satırı olmadan yenilenmesin
+	if not mobile_at_start:
+		main._mobile = false
 	root.get_node("Sim").new_game(7, 0)
 	main._mobile = true
 	main._city.mobile = true

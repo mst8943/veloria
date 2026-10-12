@@ -45,6 +45,7 @@ var _touch_last := Vector2.ZERO
 var _touch_feedback_target: Control
 var _touch_feedback_layer: CanvasLayer
 var _touch_feedback: Panel
+var _touch_range_target: Range
 
 
 func _ready() -> void:
@@ -156,6 +157,12 @@ func _handle_screen_touch(event: InputEventScreenTouch) -> void:
 		_touch_start = event.position
 		_touch_last = event.position
 		_touch_started_ms = Time.get_ticks_msec()
+		_touch_range_target = null
+		var target := _control_at(event.position)
+		if target is Range:
+			_touch_range_target = target as Range
+			_push_touch_mouse(event.position, true)
+			return
 		_vel = Vector2.ZERO
 		_horizontal = null
 		_vertical = null
@@ -164,6 +171,11 @@ func _handle_screen_touch(event: InputEventScreenTouch) -> void:
 		_hide_touch_feedback()
 		return
 	if not _touch_active:
+		return
+	if _touch_range_target != null:
+		_push_touch_mouse(event.position, false)
+		_touch_range_target = null
+		_touch_active = false
 		return
 	var valid_tap := not _touch_cancelled and not _touch_moved and Time.get_ticks_msec() - _touch_started_ms < TAP_TIME_LIMIT_MS
 	var was_dragging := _touch_cancelled and _touch_moved
@@ -179,6 +191,10 @@ func _handle_screen_touch(event: InputEventScreenTouch) -> void:
 
 func _handle_screen_drag(event: InputEventScreenDrag) -> void:
 	if not _touch_active:
+		return
+	if _touch_range_target != null:
+		_touch_moved = true
+		_push_touch_mouse(event.position, true, true)
 		return
 	var delta_from_start := event.position - _touch_start
 	if delta_from_start.length() > 3.0:
@@ -216,6 +232,25 @@ func _dispatch_touch_click(pos: Vector2) -> void:
 	release.pressed = false
 	get_viewport().push_input(press, true)
 	get_viewport().push_input(release, true)
+	dispatching_touch = false
+
+
+func _push_touch_mouse(pos: Vector2, pressed: bool, motion := false) -> void:
+	dispatching_touch = true
+	if motion:
+		var move := InputEventMouseMotion.new()
+		move.position = pos
+		move.global_position = pos
+		move.button_mask = MOUSE_BUTTON_MASK_LEFT
+		get_viewport().push_input(move, true)
+	else:
+		var button := InputEventMouseButton.new()
+		button.button_index = MOUSE_BUTTON_LEFT
+		button.pressed = pressed
+		button.device = 0
+		button.position = pos
+		button.global_position = pos
+		get_viewport().push_input(button, true)
 	dispatching_touch = false
 
 
