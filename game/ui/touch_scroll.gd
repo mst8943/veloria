@@ -160,7 +160,7 @@ func _handle_screen_touch(event: InputEventScreenTouch) -> void:
 		_horizontal = null
 		_vertical = null
 		_axis = ""
-		_touch_feedback_target = _control_at(event.position)
+		_touch_feedback_target = _tappable_or_null(_control_at(event.position))
 		_hide_touch_feedback()
 		return
 	if not _touch_active:
@@ -242,6 +242,23 @@ func _collect_hit(n: Node, pos: Vector2, layer: int, seq: Array, found: Array) -
 				found[2] = c
 	for ch in n.get_children():
 		_collect_hit(ch, pos, l, seq, found)
+
+
+## Basılı durum vurgusu yalnızca gerçekten dokunulabilir ve ekrana göre küçük öğelerde gösterilir;
+## tam ekran kapsayıcı/arka plan boyanmaz.
+func _tappable_or_null(c: Control) -> Control:
+	if c == null:
+		return null
+	if c is BaseButton:
+		if (c as BaseButton).disabled:
+			return null
+	elif c.get_signal_connection_list("gui_input").is_empty():
+		return null
+	var area := c.get_global_rect().size
+	var screen := get_viewport().get_visible_rect().size
+	if area.x * area.y > screen.x * screen.y * 0.35:
+		return null
+	return c
 
 
 func _show_touch_feedback() -> void:
