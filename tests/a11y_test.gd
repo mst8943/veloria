@@ -52,7 +52,9 @@ func _run() -> void:
 	if motion_target.scale != Vector2.ONE:
 		printerr("A11Y: azaltılmış harekette nabız açık")
 		ok = false
+	main._mobile = false   # ekran masaüstü kuruldu; mobil satırı olmadan yenilenmesin
 	root.get_node("Sim").new_game(7, 0)
+	main._mobile = true
 	main._city.mobile = true
 	main._city.open()
 	main._city._set_region_layer(true)
