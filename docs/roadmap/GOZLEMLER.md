@@ -115,3 +115,22 @@ TR/EN masaüstü ve yatay mobil kartları açıldı: bölge seçimi, yatırım/g
 ### Ekran gözlemi
 
 EN yatay mobil harita katmanı ve bölge paneli ekranları açıldı; Capital Region işaretçi kesilmesi sarma düzeltmesinden sonra tekrar açılarak kontrol edildi. İşaretçi simgeleri renk dışında şekil/doku ile ayırt ediliyor; panelde vali portresi, nitel durum ve eylem girişi görünür. Geçici görüntüler gözlem sonrası silindi.
+
+
+## 2026-10-13 — R5b
+
+### Düzeltilen
+
+- **Komutan portreleri:** `commander_*.png` kartlarda kullanılıyor; art dosyalarına dokunulmadı. Kompakt Divan kartlarında portre yukarı hizalı, isim/rol altta; etiket çeneyi kapatmıyor.
+- **Uzun karar listeleri:** dördüncü seçenekten sonra tekrar eden IV işareti madde işaretine çevrildi.
+- **Dokunmatik ses çubukları:** HSlider/Range dokunuşu kaydırma sayılmıyor; basma, sürükleme ve bırakma slider'a iletiliyor. Sentetik kontrol eklendi.
+- **Bayat eylem raporu:** son ordu kararı dört hafta sonra nitel rapor satırından kalkıyor; geçmiş kaydı duruyor.
+- **Mobil erişilebilirlik testi:** test başlangıç kipini gözetiyor; masaüstü ve `--mobile` geçiyor.
+
+### Ertelenen
+
+- **Düşük — Mobil Divan yoğunluğu.** Hanedan, devlet, komutanlar ve dış ilişkiler tek uzun kaydırma alanında; taşma yok ve kaydırma çalışıyor. Komutanlara ulaşmak için aşağı kaydırmak gerekiyor. İleride ayrı komuta filtresi akışı sadeleştirebilir.
+
+### Ekran gözlemi
+
+EN/TR masaüstü ve 1067×600 yatay mobilde ordu karar kartı, Günlük birlik satırı, Divan ve komutan kartlarını açtım (16 görüntü). Önizlemeleri, nitel/sayısız değerleri, portre ve etiket okunurluğunu, kaydırmayı kontrol ettim. Görüntüler inceleme sonrası temizlendi.

@@ -242,3 +242,82 @@ Taban ±3 kapısı sağlandı ve varsayılan denge değişmedi. R5 kapısındaki
 `--full --seed=101` TR ve EN: **104 hafta / TAHTTA / Medya Rejimi / 112 olay**. Her iki dil de aynı sonucu verdi. R5a'nın yeni içerikleri TR/EN aktör verisinde ve `en.po` kataloğunda yer alıyor; birlik raporu sayı göstermez ve birliği nitel olarak vurgular.
 
 EN/TR masaüstü ve 1067×600 mobilde Günlük raporu, Divan raporu ve komutan kartları ayrı ayrı açıldı. Günlük ile Divan'daki birlik cümlesi aynı; raporda sayısal gizli değer yok. Komutan kartları kompakt ve isim/rol kırpılmıyor; mobil kaydırmada erişiliyor. Masaüstü ve mobil yer tutucu zeminleri portre paletine yaklaştırıldı. Görüntüler incelemeden sonra silindi.
+
+## R5b Ayar
+
+R5b eylemleri `army_rng` kullanır; ana RNG akışı değiştirilmedi. R1 ordu tahsisi yetersizse ek ödenek kapalıdır; hazine bedeli tekrarlandıkça artar, gecikmeli moral/ikmal/sadakat getirisi azalır. Sadakat artışı Arden'in birliklerden türetilen gücüne de yansır. Bu yüzden ölçüt botu, Zor'da Arden'in görünür darbe aşaması en üst seviyeye ulaştığında bir kez komuta zincirini bölüyor: Arden'in gücü düşer, kapasite kaybı ve artan öfke/tansiyon karşılığında darbe baskısı da artar. Bot gizli sadakat değerlerine bakmıyor.
+
+İlk R5b ölçümü, periyodik ek ödenek kararıyla 58/27/17 verdi. Sadakat getirisi 0,25'ten 0,5'e yükseltilince Zor 18'e çıktı; uyarı görünür olur olmaz komuta bölmek Zor'u 8'e, bir önceki aşamada bölmek 12'ye indirdi. Eylem etkisini/karar zamanını kök neden üzerinden kalibre edip yalnızca en yüksek görünür darbe uyarısında bölme kararı seçilince hedef aralığa dönüldü.
+
+| `advice_weighted`, 80 kampanya | R5a tabanı | R5b sonucu | Fark |
+|---|---:|---:|---:|
+| Kolay | 60/80 | 58/80 | −2 |
+| Normal | 29/80 | 27/80 | −2 |
+| Zor | 17/80 | 15/80 | −2 |
+
+| Uç bot (80 kampanya) | Kolay | Normal | Zor |
+|---|---:|---:|---:|
+| Hep ordu ödeneği artır (`army_allowance`) | 14/80 | 3/80 | 0/80 |
+| Hep komuta zincirini böl (`army_split`) | 11/80 | 4/80 | 0/80 |
+| Garnizonu hep başkente çek (`army_garrison_capital`) | 13/80 | 2/80 | 0/80 |
+| Hiç ordu kararı verme (`army_none`) | 14/80 | 2/80 | 0/80 |
+
+Ölçüt sapması −2/−2/−2 puan; R5 kapısındaki tabana ±3 şartı ve Zor ≤16 kapısı geçti. En yüksek uç bot sonucu 14/80; %70 tavanları ölçüte göre Kolay 40,6, Normal 18,9, Zor 10,5 galibiyettir ve tüm uçlar altında kaldı. `pacing_test`: ilk 8 haftada 0,81 olay/hafta; en uzun olaysız seri 3 hafta.
+
+`--full --seed=101` TR ve EN çıktısı:
+
+```text
+FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true
+FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true
+```
+
+Her iki dilde sonuç 104 hafta / TAHTTA / Medya Rejimi / 112 olay olarak aynı kaldı. `EN LEAK SCAN: 5 campaigns, 0 unique leaks`; `tools/i18n_missing.py`: `0 tr() kaynağı en.po'da yok`.
+
+`SAVE_VERSION` 21'den 22'ye çıktı. v21 kayıtlarında birlik bölgeleri, eylem durumu ve sayaçları güvenli varsayılanlarla ekleniyor; mevcut birlik/Arden gücü korunuyor. Belgeye alınan denge ve olay akışı ölçümleri R5b eylemlerini kullanan `advice_weighted` botuna aittir.
+
+EN/TR masaüstü ve 1067×600 yatay mobilde eylem kartı, Günlük birlik raporu, Divan ve komutan kartları ayrı ayrı açılıp incelendi (toplam 16 görüntü). Dört dil/yerleşim birleşiminde metin taşması, gizli seçenek veya yüzü kapatan etiket görülmedi. Askerî değerler nitel; kart ve raporlarda gizli sayılar yok. Görüntüler geçici klasörden inceleme sonrası silindi.
+
+### R5b test çıktıları
+
+Her test `tools/run_test_isolated.ps1` ile ayrı geçici kullanıcı profili altında çalıştırıldı; çıkış kodları 0.
+
+| Test | Başarı çıktısı |
+|---|---|
+| `a11y_test` masaüstü | `A11Y: OK` |
+| `a11y_test --mobile` | `A11Y: OK` |
+| `audio_check` | `AUDIO: OK` |
+| `army_actions_test` | `ARMY ACTIONS: OK` |
+| `army_test` | `ARMY TEST: OK` |
+| `budget_ui_test` | `BUDGET UI: OK` |
+| `content_check` | `CONTENT: OK (5 dosya, 8 bozuk örnek)` |
+| `cutscene_check` | `CUTSCENE: OK` |
+| `daily_card_test` | `DAILY CARD: OK` |
+| `dynasty_test` | `DYNASTY: OK` |
+| `economy_test` | `ECONOMY: OK` |
+| `election_test` | `ELECTION: OK` |
+| `endless_test` | `ENDLESS: OK` |
+| `en_leak_test` | `EN LEAK SCAN: 5 campaigns, 0 unique leaks` |
+| `event_check` | `EVENTS: OK (201 olay, 0 uyarı)` |
+| `external_crisis_test` | `EXTERNAL CRISIS: OK` |
+| `i18n_check` | `I18N: OK` |
+| `lang_switch_test` | `LANG: OK` |
+| `legacy_test` | `LEGACY: OK` |
+| `pacing_test` | `H  1-  8        0.81        (280)`; `En uzun olaysız seri (medyan / en kötü): 2 / 3 hafta` |
+| `parliament_laws_test` | `PARLIAMENT LAWS: OK` |
+| `parliament_test` | `PARLIAMENT: OK` |
+| `public_opinion_test` | `PUBLIC OPINION: OK` |
+| `region_map_test` masaüstü | `REGION MAP: OK` |
+| `region_map_test --mobile` | `REGION MAP: OK` |
+| `regions_test` | `REGIONS: OK` |
+| `save_test` | `SAVE: OK` |
+| `scenario_test` | `SCENARIO: OK` |
+| `sim_test` | `Meclis görüşleri: OK`; `Darbe aşamaları: OK`; `TEST: OK` |
+| `touch_scroll_test` | `TOUCH: OK` |
+| `touch_tap_test` | `TOUCH TAP: OK` |
+| `tour_test` | `TOUR: OK` |
+| `ui_input_test` masaüstü | `UI INPUT: OK` |
+| `ui_input_test --mobile` | `UI INPUT: OK (mobile)` |
+| `ui_logic_test` | `UI LOGIC: OK` |
+| `unit_tests` | `[unit] all 399 checks passed` |
+
+Birçok Godot süreci başarılı test özetinden sonra kapanışta RID/ObjectDB/resource temizleme uyarıları verdi; tüm test çıkış kodları yine de 0 oldu.

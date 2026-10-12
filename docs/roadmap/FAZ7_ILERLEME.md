@@ -410,3 +410,22 @@ Headless Godot bazı UI testleri kapanırken RID/ObjectDB temizleme uyarıları 
 ### Gözlemler
 
 Dokunmatik giriş ve İngilizce arşiv sızıntısı R5a'da raporlanan biçimde giderildi. Eski `cause_key` içermeyen arşiv kayıtlarının İngilizcede ayrıntılı sebebi henüz çözümlenemiyor; kayıt korunuyor, İngilizcede genel uyumluluk cümlesi gösteriliyor (orta, gelecekte arşiv şeması çalışması). Komutan portreleri (4 isim + prompt) sanat işi olduğundan M1 dışında bırakıldı; `art/` değiştirilmedi. Boşluk dışı dokunmayla başkent kurum çekmecesini kapatma ve masaüstü fare akışı `ui_input_test` ile yeniden kontrol edildi.
+
+
+## R5b — Eylemler (2026-10-13)
+
+R5a önkoşulu git geçmişinde doğrulandı. R5b tamamlandı; R5c'ye geçilmedi. Subay tayini, başkent/sınır garnizonu aktarımı, R1 tahsisine bağlı ve azalan getirili gecikmeli maaş/ikmal desteği ve bedelli komuta bölme kararları eklendi. Her eylem mesai ve nitel önizleme kullanıyor; rastgelelik ayrı `army_rng` üretecinden geliyor. Yeni komutan sadakat belirsizliği, eski subayın tepkisi, garnizon dengesi, Arden gücü/ordu kapasitesi/tansiyonu, Günlük/Divan raporu ve üç başarım işlendi. SAVE_VERSION 22; v21 göçü eski Arden gücünü koruyor.
+
+Ayrı commit'ler: cila `8b3ee11`, özellikler/ölçüm botu/testi `ea49676`. Cila uzun karar kartı işaretlerini, dokunmatik slider sürüklemesini, kompakt komutan portrelerini, bayat eylem raporunu ve mobil a11y testinin kip varsayımını düzeltti.
+
+### Kapı sonuçları
+
+`advice_weighted`, 80 kampanya: Kolay 58/80, Normal 27/80, Zor 15/80 (R5a tabanına göre −2/−2/−2; ±3 ve Zor ≤16 geçti). Uç bot galibiyetleri Kolay/Normal/Zor: ordu ödeneği 14/3/0, komuta bölme 11/4/0, başkente garnizon 13/2/0, ordu kararı vermeme 14/2/0; tümü ölçütün %70 tavanının altında. Tempo: ilk 8 hafta 0,81 olay/hafta; en uzun olaysız seri 3 hafta.
+
+`--full --seed=101` TR ve EN: `FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`. EN sızıntısı: 5 kampanyada 0; eksik çeviri: 0. EN/TR masaüstü ve 1067×600 mobilde 16 eylem, Günlük, Divan ve komutan kartı görüntüsü açılıp kontrol edildi; taşma veya yüzü kapatan etiket görülmedi, dosyalar silindi.
+
+`tools/run_test_isolated.ps1` ile son ağaçta 36 test çalıştı; hepsinin çıkış kodu 0. Test adları ve tam başarı satırları tasarım belgesindeki **R5b test çıktıları** tablosunda. Bazı Godot kapanışlarında RID/ObjectDB/resource uyarıları var. R5c'ye geçilmedi; `tests/title_shot.gd`, `game/ui/title_screen.gd` ve `art/` değiştirilmedi.
+
+### Gözlemler
+
+Kompakt komutan kartları portre yüzü ile ad/rolü ayırıyor; uzun karar listeleri artık madde işaretli. Mobil Divan'da komutan kartları aşağı kaydırma gerektiriyor; taşma yok, yoğunluğu ileride azaltmak değerlendirilebilir. Ayrıntı `docs/roadmap/GOZLEMLER.md` içindeki 2026-10-13 R5b kaydında.
