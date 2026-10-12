@@ -4312,6 +4312,27 @@ msgstr "Capital Region"
 msgid "Aşağıdaki liste bilgi amaçlıdır; seçimler karar kartında yapılır."
 msgstr "The list below is for reference; make your choice in the decision card."
 
+msgid "Harita simgelerinin açıklamasını aç"
+msgstr "Open the map symbol legend"
+
+msgid "Harita simgeleri"
+msgstr "Map symbols"
+
+msgid "Üçgen: huzursuzluk"
+msgstr "Triangle: unrest"
+
+msgid "Sütunlar: pazar"
+msgstr "Columns: market"
+
+msgid "Kalkan: bağlılık"
+msgstr "Shield: loyalty"
+
+msgid "Ünlem: bekleyen kriz"
+msgstr "Exclamation mark: pending crisis"
+
+msgid "Kişi simgesi: vali"
+msgstr "Person icon: governor"
+
 msgid "%s: %s; pazar %s; bağlılık %s"
 msgstr "%s: %s; market %s; loyalty %s"
 

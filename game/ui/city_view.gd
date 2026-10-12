@@ -43,6 +43,7 @@ var _mobile_region_positions: Dictionary = {}
 var _region_buttons: Dictionary = {}
 var _regions_visible := false
 var _region_toggle: Button
+var _legend_button: Button
 var _region_action_button: Button
 var _region_panel_id := ""
 var plates: Dictionary = {}   # kurum id -> etiket (test ve konumlandırma için)
@@ -169,6 +170,13 @@ func _build() -> void:
 	var sp := Control.new()
 	sp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(sp)
+	_legend_button = Button.new()
+	_legend_button.text = "?"
+	_legend_button.tooltip_text = tr("Harita simgelerinin açıklamasını aç")
+	_legend_button.custom_minimum_size = Vector2(44, 44)
+	_legend_button.focus_mode = Control.FOCUS_ALL
+	_legend_button.pressed.connect(_show_map_legend)
+	top.add_child(_legend_button)
 	_region_toggle = Button.new()
 	_region_toggle.toggle_mode = true
 	_region_toggle.text = tr("Bölgeler: Kapalı")
@@ -533,6 +541,28 @@ func show_region(id: String) -> void:
 	_drawer.show()
 	_drawer.modulate.a = 0.0
 	_drawer.create_tween().tween_property(_drawer, "modulate:a", 1.0, 0.25)
+	Sfx.play("paper", -6.0)
+
+
+func _show_map_legend() -> void:
+	_region_panel_id = ""
+	for c in _drawer_body.get_children():
+		c.queue_free()
+	var title := Label.new()
+	title.text = tr("Harita simgeleri")
+	title.add_theme_font_override("font", UIKit.serif())
+	title.add_theme_font_size_override("font_size", 28)
+	title.add_theme_color_override("font_color", UIKit.GOLD)
+	_drawer_body.add_child(title)
+	for line in [tr("Üçgen: huzursuzluk"), tr("Sütunlar: pazar"), tr("Kalkan: bağlılık"), tr("Ünlem: bekleyen kriz"), tr("Kişi simgesi: vali")]:
+		_drawer_body.add_child(_text(line))
+	var close := _btn(tr("Kapat"), func() -> void: _drawer.hide())
+	close.custom_minimum_size.y = 48
+	close.focus_mode = Control.FOCUS_ALL
+	_drawer_body.add_child(close)
+	_drawer.show()
+	_drawer.modulate.a = 1.0
+	close.grab_focus.call_deferred()
 	Sfx.play("paper", -6.0)
 
 

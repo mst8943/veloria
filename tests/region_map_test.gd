@@ -35,6 +35,13 @@ func _run() -> void:
 	for i in 3: await process_frame
 	_expect(city.plates.size() == city.SITES.size(), "institution plates were not built")
 	_expect(city._region_buttons.size() == 4, "four region markers were not built")
+	_expect(city._legend_button.custom_minimum_size == Vector2(44, 44) and city._legend_button.focus_mode == Control.FOCUS_ALL, "map legend control is not touch/keyboard accessible")
+	city._legend_button.pressed.emit()
+	await process_frame
+	_expect(city._drawer.visible and (city._drawer_body.get_child(0) as Label).text == tr("Harita simgeleri"), "map legend did not open")
+	_expect(city._drawer_body.get_child_count() == 7, "map legend entries are incomplete")
+	city._unhandled_key_input(_escape())
+	await process_frame
 	for id in city._region_buttons:
 		_expect(not city._region_buttons[id].visible, "region markers should start hidden")
 	city._region_toggle.button_pressed = true
