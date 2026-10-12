@@ -4309,6 +4309,9 @@ msgstr "Change the subject"
 msgid "Başkent Bölgesi"
 msgstr "Capital Region"
 
+msgid "Aşağıdaki liste bilgi amaçlıdır; seçimler karar kartında yapılır."
+msgstr "The list below is for reference; make your choice in the decision card."
+
 msgid "%s: %s; pazar %s; bağlılık %s"
 msgstr "%s: %s; market %s; loyalty %s"
 

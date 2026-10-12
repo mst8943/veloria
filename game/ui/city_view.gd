@@ -520,6 +520,7 @@ func show_region(id: String) -> void:
 	_region_action_button.focus_mode = Control.FOCUS_ALL
 	_region_action_button.tooltip_text = tr("Bu bölge için R1 bütçesi ve mesai kullanan kararları aç")
 	_drawer_body.add_child(_region_action_button)
+	_drawer_body.add_child(_text(tr("Aşağıdaki liste bilgi amaçlıdır; seçimler karar kartında yapılır.")))
 	for option: Dictionary in Sim.region_action_choices(id):
 		var label := str(option["label"])
 		if not bool(option.get("available", true)):
