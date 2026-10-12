@@ -4306,6 +4306,9 @@ msgstr "Find a scapegoat"
 msgid "Gündem Değiştir"
 msgstr "Change the subject"
 
+msgid "Başkent Bölgesi"
+msgstr "Capital Region"
+
 msgid "%s: %s; pazar %s; bağlılık %s"
 msgstr "%s: %s; market %s; loyalty %s"
 

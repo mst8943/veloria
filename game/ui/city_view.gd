@@ -357,7 +357,7 @@ func _draw_region_symbols(control: Control, levels: Dictionary, has_crisis: bool
 
 func _region_compact_name(id: String) -> String:
 	match id:
-		"capital": return tr("Başkent")
+		"capital": return tr("Başkent Bölgesi")
 		"industry": return tr("Sanayi")
 		"farmland": return tr("Tarım")
 		_: return tr("Sınır")
