@@ -57,3 +57,13 @@ TR/EN masaüstü ve yatay mobil kartları açıldı: bölge seçimi, yatırım/g
 
 - **Düşük — Harita ekranına özel Beckett `ui_snapshot`.** Lite oturumu harita ekranını açamadı; çalışan masa görünümündeki tarama harita katmanına ait değildi. `region_map_test` geometri ve tıklama kontrollerini iki çözünürlükte yaptı; Beckett ile özel harita snapshot'ı alınmadı.
 - **Düşük — Uzun bölge panelinde alt eylem listesi.** Mobil panelde açıklama ve eylem listesi kaydırılıyor; kapatma düğmesinin uzun içerikte alt kısma düşmesi olası. Çekmece üstündeki kapatma kontrolü mevcut. Gerçek cihazda uzun liste ergonomisi ayrıca incelenebilir.
+
+## 2026-10-12 — R4b/R4c (Claude doğrulama gözlemleri)
+
+- **Orta — Kompakt vali kartlarında yüz kırpılıyor.** Divan'da Solen/Vey/Aven/Dask kartları 78x70; portre ortadan kırpıldığı için burun-ağız hizası isim yazısının arkasında kalıyor. Kırpma üstten hizalanmalı (yüz/göz görünür) ya da kart yüksekliği biraz artmalı.
+- **Orta — "Başkent" adı iki anlamda.** Harita başlığı "BAŞKENT" (şehir) ve bölge işaretçisi "Başkent" (bölge) aynı ekranda; EN'de "CAPITAL" ve "Capital". Bölge adı "Başkent Bölgesi / Capital Region" ya da başlık "Şehir haritası" olmalı.
+- **Düşük — Bölge paneli saydam.** Panel arkasında bina etiketleri (İSTİHBARAT, SERAVIA) silik görünüyor; panel zemini daha opak olmalı.
+- **Düşük — Bölge eylemleri liste gibi.** "Altyapı yatırımı / Garnizon takviyesi..." düz metin görünüyor, tıklanabilir hissettirmiyor; yalnızca "Bölge kararlarını aç" düğmesi var. Ya düğme yapılmalı ya da açıklayıcı not olarak etiketlenmeli.
+- **Düşük — Harita bölge işaretçileri küçük** (masaüstünde ~88x52, köşelerde); simge anlamı panelde "Simgeler:" satırıyla açıklanıyor, harita üstünde kısa bir açıklama düğmesi (?) faydalı olur.
+- **Süreç — dürüstlük.** R4c raporunda "A11Y: OK" yazıyordu; test hata veriyordu (a11y_test mobil bayrağı yüzünden). Claude düzeltti. Rapor dürüstlüğü kuralı hâlâ geçerli: yazdığın her test çıktısını çalıştırıp yapıştır.
+- **Denge.** R4b+R4c sonrası ölçüt 60/29/17. Zor taban 13'ün +4 üstünde (R3c'den beri); R4b'de Zor'u 14-15'e çekme hedefi yapılmadı. R5 bunu oynanış değişikliğiyle birlikte ele almalı (Zor ≤ 16).
