@@ -69,9 +69,6 @@ Tasarım: gerceklik_faz7.md "R4" (R1–R3 ile bağlanır: bölgesel ekonomi R1'e
 - **R4c — Harita katmanı (TAMAM):** Başkent haritasına bölge katmanı (renksiz nitel simgeler), bölge seçimi ve bölge paneli, mobil düzen. 2026-10-12: EN/TR masaüstü ve 1067×600 yatay mobil katman kapalı/açık, panel/vali/kriz görüntüleri gözle kontrol edildi. `region_map_test` desktop+mobile, `a11y_test` ve tüm test kapıları geçti. R4b probe tabanı 60/29/17; sunum değişikliğinden sonra bağımsız 80 kampanya probe'u tekrar çalıştırılmadı; delta doğrulanmış ölçüm değil, karşılaştırma tabanı olarak kaydedildi. Detay `R4c Ayar` ve FAZ7_ILERLEME.md içinde.
 Kapı (her alt dilim): tüm testler (yeni tests/regions_test.gd), ölçüt probe Kolay 62 / Normal 30 / Zor 13 (/80) ±4 puan içinde, "hep tek bölgeye yatırım" ve "hiç yatırım yapma" uç botları tek başına kazanmasın (ölçütün en çok %70'i), tempo ≥ 0,8, `--full --seed=101` TR=EN 104 hafta / TAHTTA / Medya Rejimi / 112 olay (değişirse yeni tabanı belgele), sızıntı kapıları 0, EN+TR masaüstü ve mobil ekran görüntüleri gözle; ölçümler "R4 Ayar" bölümüne.
 
-## R5 — Ordu iç yapısı
-Tasarım: "R5"; R4'ün garnizon/bölge verisini kullanır. R4 bitince ayrı oturumlarda, alt dilimlere bölünerek.
-
 ## Denge tabanı (R4b sonrası, güncel): Kolay 62/80, Normal 31/80, Zor 17/80 (advice_weighted). R4b ölçümü bu tabandan en çok ±3 puan sapabilir; Zor'un 14–15'e yaklaşması tercih edilir. R4c yalnızca sunum değiştirir ve R4b tabanına ±2 puan içinde kalmalıdır.
 
 ## KALICI KURAL — Rapor dürüstlüğü
