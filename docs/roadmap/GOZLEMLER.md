@@ -94,7 +94,8 @@ TR/EN masaüstü ve yatay mobil kartları açıldı: bölge seçimi, yatırım/g
 
 - **Yüksek — Mobil dokunma hissiyatı kötü (kullanıcı geri bildirimi, telefonda).** Parmak ekrana değdiği anda masa nesneleri (telefon, kitap), harita levhaları ve kartlar tetikleniyor; parmak basılı gezdirilirken geçilen her öğe hover/sesi/seçimi çalıştırıyor; kullanıcı kaydırmak isterken seçim oluyor. Kod nedenleri: masa nesneleri ve harita levhaları `InputEventMouseButton.pressed` anında harekete geçiyor (desk_view.gd ~243, city_view.gd ~261, main.gd haber şeridi ~394), `mouse_entered/exited` hover animasyonu ve sesi dokunmatik cihazda da çalışıyor (desk_view ~224, city_view ~250, main.gd ~811, ui_kit ~492). touch_scroll.gd yalnızca ScrollContainer içindeki düğmeleri ele alıyor.
 - **Orta — Hükümdarlık Arşivi İngilizcede Türkçe gösteriyor.** `Sim` kayda `cause` alanını Türkçe yazıyor ve arşiv ekranı bunu çevirmeden gösteriyor (satır sonundaki "When the coup reached your door…" cümlesi İngilizce, başı Türkçe karışık). Daha önce arşiv boş olduğu için en_leak_test 0 diyordu; arşivde kayıt olunca test "1 unique leaks" veriyor. Çözüm: kayıt `cause`'ı dilden bağımsız saklasın (anahtar + argümanlar ya da gösterimde çevrilebilir kalıp) ve arşiv gösterimde çevirsin.
-- **Orta — Testler oyuncunun profilini kirletiyor.** `%APPDATA%\Godotpp_userdata\Veloriaeloria_chronicle.txt`, `veloria_achievements.txt`, `army_test.sav`, `test_save.txt` gibi dosyalara test koşuları yazıyor (5 sahte saltanat kaydı ve başarım tarihleri bugüne işlenmiş). Testler `user://` yerine geçici profil/yol kullanmalı ya da dosyaları yedekleyip geri yüklemeli; `record_chronicle=false` ve `autosave=false` varsayılan olmalı. daily_card_test takılması da bununla ilgili olabilir.
+- **Orta — Testler oyuncunun profilini kirletiyor.** `%APPDATA%\Godotpp_userdata\Veloria
+eloria_chronicle.txt`, `veloria_achievements.txt`, `army_test.sav`, `test_save.txt` gibi dosyalara test koşuları yazıyor (5 sahte saltanat kaydı ve başarım tarihleri bugüne işlenmiş). Testler `user://` yerine geçici profil/yol kullanmalı ya da dosyaları yedekleyip geri yüklemeli; `record_chronicle=false` ve `autosave=false` varsayılan olmalı. daily_card_test takılması da bununla ilgili olabilir.
 - **Orta — Komutan portreleri gerekiyor** (Codex notu; Claude promptları hazırlayacak).
 - **Denge.** R5a sonrası ölçüt 60/29/17 (Claude bağımsız doğruladı). Zor ≤ 16 hedefi hâlâ tutmuyor.
 
@@ -133,4 +134,4 @@ EN yatay mobil harita katmanı ve bölge paneli ekranları açıldı; Capital Re
 
 ### Ekran gözlemi
 
-EN/TR masaüstü ve 1067×600 yatay mobilde ordu karar kartı, Günlük birlik satırı, Divan ve komutan kartlarını açtım (16 görüntü). Önizlemeleri, nitel/sayısız değerleri, portre ve etiket okunurluğunu, kaydırmayı kontrol ettim. Görüntüler inceleme sonrası temizlendi.
+EN/TR masaüstü ve 1067×600 yatay mobilde ordu karar kartı, Günlük birlik satırı, Divan ve komutan kartlarını açtım (16 görüntü). Önizlemeleri, nitel/sayısız değerleri, portre ve etiket okunurluğunu, kaydırmayı kontrol ettim. Görseller TEMP'de kaldı; doğrulanmış yollar için Remove-Item çağrıları araç politikası tarafından reddedildi.

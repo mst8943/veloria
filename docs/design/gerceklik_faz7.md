@@ -275,7 +275,7 @@ Her iki dilde sonuç 104 hafta / TAHTTA / Medya Rejimi / 112 olay olarak aynı k
 
 `SAVE_VERSION` 21'den 22'ye çıktı. v21 kayıtlarında birlik bölgeleri, eylem durumu ve sayaçları güvenli varsayılanlarla ekleniyor; mevcut birlik/Arden gücü korunuyor. Belgeye alınan denge ve olay akışı ölçümleri R5b eylemlerini kullanan `advice_weighted` botuna aittir.
 
-EN/TR masaüstü ve 1067×600 yatay mobilde eylem kartı, Günlük birlik raporu, Divan ve komutan kartları ayrı ayrı açılıp incelendi (toplam 16 görüntü). Dört dil/yerleşim birleşiminde metin taşması, gizli seçenek veya yüzü kapatan etiket görülmedi. Askerî değerler nitel; kart ve raporlarda gizli sayılar yok. Görüntüler geçici klasörden inceleme sonrası silindi.
+EN/TR masaüstü ve 1067×600 yatay mobilde eylem kartı, Günlük birlik raporu, Divan ve komutan kartları ayrı ayrı açılıp incelendi (toplam 16 görüntü). Dört dil/yerleşim birleşiminde metin taşması, gizli seçenek veya yüzü kapatan etiket görülmedi. Askerî değerler nitel; kart ve raporlarda gizli sayılar yok. Görüntüleri TEMP'den silme girişimlerini araç politikası engelledi; geçici klasör hâlâ duruyor.
 
 ### R5b test çıktıları
 
