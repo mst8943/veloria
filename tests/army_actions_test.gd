@@ -24,7 +24,10 @@ func _initialize() -> void:
 	var previews := true
 	for choice: Dictionary in sim.pending[0]["event"]["choices"]:
 		previews = previews and str(choice.get("preview", "")) != ""
-	_check(previews, "each officer option has a qualitative preview")
+	_check(previews and sim.pending[0]["event"]["choices"].size() <= 4, "each grouped officer option has a qualitative preview")
+	sim.resolve_decision(0, 0)
+	_check(sim.pending[0]["event"]["choices"].size() == 2, "officer pair opens only two direction choices")
+	_check(not str(sim.pending[0]["event"]["choices"][0]["label"]).contains("garnizonu'nin"), "officer order uses correct Turkish case")
 	sim.resolve_decision(0, 0)
 	_check(sim.mesai == mesai - 1 and sim.stats["army_officer_changes"] == 1, "officer assignment costs one work and changes command")
 	_check(sim.army_units["capital"]["commander"] == "commander_border", "the selected new officer takes command")

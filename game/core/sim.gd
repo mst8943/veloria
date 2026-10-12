@@ -1934,6 +1934,11 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 		_queue_army_action_options(str(ch.get("army_action", "")))
 		changed.emit()
 		return tr("Ordu kararı hazırlandı; uygulama biçimini seç.")
+	if e.get("kind", "") == "army_action" and str(ch.get("action", "")) == "officer_pair":
+		pending.remove_at(pending_index)
+		_queue_army_action_options("officer_direction", str(ch.get("unit", "capital")), str(ch.get("other", "border")))
+		changed.emit()
+		return tr("Komutan değişimi için yön seç.")
 	if e.get("kind", "") != "parliament_bill" and not spend_mesai():
 		return _no_mesai()
 	if e.get("crisis", false):
@@ -4560,21 +4565,23 @@ func request_army_decision() -> String:
 	return tr("Ordu düzeni kararı gündeme alındı.")
 
 
-func _queue_army_action_options(action: String) -> void:
+func _queue_army_action_options(action: String, pair_unit := "capital", pair_other := "border") -> void:
 	var choices: Array = []
 	match action:
 		"officer":
-			for id in ["capital", "border", "security"]:
-				for other in ["capital", "border", "security"]:
-					if id == other:
-						continue
-					var current: String = str(army_units[id].get("commander", ""))
-					var replacement: String = str(army_units[other].get("commander", ""))
-					if not actors.has(current) or not actors.has(replacement):
-						continue
-					choices.append({"label": tr("%s, %s'nin görevini devralsın") % [actors[replacement].display_name, tr(str(_army_unit_name(id)))],
-						"action": "officer", "unit": id, "other": other, "available": week - int(army_units[id].get("appointed_week", -20)) >= 8,
-						"preview": tr("Komutanlıklar yer değiştirir; gelen subayın bağlılığı belirsiz, görevden alınan komutanın tepkisi izlenir."), "fx": {}})
+			for pair in [["capital", "border"], ["capital", "security"], ["border", "security"]]:
+				choices.append({"label": tr("%s ve %s komutanlarını değiştir") % [tr(_army_unit_name(pair[0])), tr(_army_unit_name(pair[1]))],
+					"action": "officer_pair", "unit": pair[0], "other": pair[1], "fx": {},
+					"preview": tr("İki görevden birini seç; gelen subayın bağlılığı belirsiz, eski komutanın tepkisi izlenir.")})
+		"officer_direction":
+			for direction in [[pair_unit, pair_other], [pair_other, pair_unit]]:
+				var current: String = str(army_units[direction[0]].get("commander", ""))
+				var replacement: String = str(army_units[direction[1]].get("commander", ""))
+				if not actors.has(current) or not actors.has(replacement):
+					continue
+				choices.append({"label": tr("Komutan %s olsun; %s görevini devralsın") % [ek(actors[replacement].display_name, "in"), tr(_army_unit_name(direction[0]))],
+					"action": "officer", "unit": direction[0], "other": direction[1], "available": week - int(army_units[direction[0]].get("appointed_week", -20)) >= 8,
+					"preview": tr("Komutanlıklar yer değiştirir; yeni bağlılık belirsiz, eski komutanın tepkisi izlenir."), "fx": {}})
 		"redeploy":
 			for id in ["capital", "border"]:
 				var unit: Dictionary = army_units[id]
@@ -4601,6 +4608,9 @@ func _resolve_army_action(choice: Dictionary) -> String:
 	var action := str(choice.get("action", ""))
 	if action == "cancel":
 		return tr("Ordu emri verilmedi.")
+	if action == "officer_pair":
+		_queue_army_action_options("officer_direction", str(choice.get("unit", "capital")), str(choice.get("other", "border")))
+		return tr("Komutan değişimi için yön seç.")
 	match action:
 		"officer":
 			var id := str(choice.get("unit", ""))

@@ -5239,3 +5239,18 @@ msgstr "Quartermaster"
 
 msgid "Bir saltanatta üç kez ek maaş ve ikmal ayır."
 msgstr "Fund three army pay and supply grants in one reign."
+
+msgid "%s ve %s komutanlarını değiştir"
+msgstr "Swap the %s and %s commanders"
+
+msgid "İki görevden birini seç; gelen subayın bağlılığı belirsiz, eski komutanın tepkisi izlenir."
+msgstr "Choose which post to fill; the incoming officer's loyalty is uncertain, and the former commander's reaction will be watched."
+
+msgid "Komutan %s olsun; %s görevini devralsın"
+msgstr "Put %s in command; have them take over the %s post"
+
+msgid "Komutanlıklar yer değiştirir; yeni bağlılık belirsiz, eski komutanın tepkisi izlenir."
+msgstr "The commands will be swapped; the new loyalty is uncertain, and the former commander's reaction will be watched."
+
+msgid "Komutan değişimi için yön seç."
+msgstr "Choose which way to make the command change."
