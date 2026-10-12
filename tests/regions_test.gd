@@ -109,7 +109,7 @@ func _initialize() -> void:
 		_check(sim.actors.has(governor_id) and sim.actors[governor_id].supporting and not sim.actors[governor_id].insider,
 			"%s governor is a supporting environmental actor" % id)
 	var report: String = sim.region_report_line()
-	_check(report.contains("öne çıkıyor") and report.contains("diğer bölgeler") and not report.contains("30.0"), "regional report highlights one region and summarizes the rest without numbers")
+	_check(report.to_lower().contains("öne çıkıyor") and report.to_lower().contains("diğer bölgeler") and not report.contains("30.0"), "regional report highlights one region and summarizes the rest without numbers")
 	var old_save := {"version": 18, "seed": 101, "unrest": 27.5, "economy": 61.25}
 	var migrated: Dictionary = sim._migrate_save(old_save, 18)
 	_check(int(migrated["version"]) == 20 and absf(_weighted_data(migrated["regions"], "unrest") - 27.5) < 0.001,

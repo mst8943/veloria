@@ -52,6 +52,25 @@ func _run() -> void:
 	if motion_target.scale != Vector2.ONE:
 		printerr("A11Y: azaltılmış harekette nabız açık")
 		ok = false
+	root.get_node("Sim").new_game(7, 0)
+	main._city.mobile = true
+	main._city.open()
+	main._city._set_region_layer(true)
+	for region_marker: Button in main._city._region_buttons.values():
+		if region_marker.custom_minimum_size.x < 44.0 or region_marker.custom_minimum_size.y < 44.0 or region_marker.focus_mode != Control.FOCUS_ALL:
+			printerr("A11Y: bölge işaretçisi 44 px veya klavye odağı kuralını karşılamıyor")
+			ok = false
+		var glyphs := region_marker.find_child("StatusSymbols", true, false) as Control
+		if glyphs == null or glyphs.mouse_filter != Control.MOUSE_FILTER_IGNORE:
+			printerr("A11Y: bölge simgeleri işaretçi tıklamasını yutuyor")
+			ok = false
+	if main._city._region_toggle.custom_minimum_size.y < 44.0 or main._city._region_toggle.focus_mode == Control.FOCUS_NONE:
+		printerr("A11Y: bölge katmanı anahtarı erişilebilir değil")
+		ok = false
+	main._city.show_region("capital")
+	if main._city._region_action_button.custom_minimum_size.y < 44.0 or main._city._region_action_button.focus_mode == Control.FOCUS_NONE:
+		printerr("A11Y: bölge eylem düğmesi erişilebilir değil")
+		ok = false
 	sfx.save_settings()
 	var saved := ConfigFile.new()
 	if saved.load(Sfx.SETTINGS_PATH) != OK or int(saved.get_value("accessibility", "text_size", -1)) != 2 or bool(saved.get_value("accessibility", "vibration", true)):

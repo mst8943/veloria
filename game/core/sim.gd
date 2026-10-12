@@ -4481,17 +4481,40 @@ func _set_region_mean(field: String, target: float) -> void:
 		regions[id][field] = clampf(float(regions[id].get(field, target)) + final_offset, 0.0, 100.0)
 
 
-func region_report_line() -> String:
+func featured_region_id() -> String:
 	var lead := "capital"
 	for id in REGION_WEIGHTS:
 		if float(regions.get(id, {}).get("unrest", 0.0)) > float(regions.get(lead, {}).get("unrest", 0.0)):
 			lead = id
-	var region: Dictionary = regions.get(lead, {})
+	return lead
+
+
+func region_state_words(id: String) -> Dictionary:
+	var region: Dictionary = regions.get(id, {})
 	var unrest_tone := tr("huzurlu") if float(region.get("unrest", 0.0)) < 35.0 else (tr("huzursuz") if float(region.get("unrest", 0.0)) < 65.0 else tr("gergin"))
 	var economy_tone := tr("canlı") if float(region.get("economy", 0.0)) >= 60.0 else (tr("durgun") if float(region.get("economy", 0.0)) >= 40.0 else tr("daralmış"))
 	var loyalty := float(region.get("loyalty", 50.0))
 	var loyalty_tone := tr("sağlam") if loyalty >= 62.0 else (tr("tereddütlü") if loyalty >= 42.0 else tr("zayıf"))
-	return tr("Bölgeler: %s öne çıkıyor — %s, pazar %s, bağlılık %s; diğer bölgeler izleniyor.") % [tr(str(REGION_NAMES[lead])), unrest_tone, economy_tone, loyalty_tone]
+	return {"unrest": unrest_tone, "economy": economy_tone, "loyalty": loyalty_tone}
+
+
+func region_status_line(id: String) -> String:
+	var words := region_state_words(id)
+	return tr("%s: %s; pazar %s; bağlılık %s") % [tr(str(REGION_NAMES.get(id, id))), words["unrest"], words["economy"], words["loyalty"]]
+
+
+func region_has_pending_crisis(id: String) -> bool:
+	for entry: Dictionary in pending:
+		var event: Dictionary = entry.get("event", {})
+		if str(event.get("crisis_kind", "")) == "regional" and str(event.get("region", "")) == id:
+			return true
+	return false
+
+
+func region_report_line() -> String:
+	var lead := featured_region_id()
+	var words := region_state_words(lead)
+	return tr("Bölgeler: %s öne çıkıyor — %s; pazar %s; bağlılık %s. Diğer bölgeler izleniyor.") % [tr(str(REGION_NAMES[lead])), words["unrest"], words["economy"], words["loyalty"]]
 
 
 func _tick_region_systems() -> void:
@@ -4510,9 +4533,16 @@ func _tick_region_systems() -> void:
 		_check_regional_crisis()
 
 
-func request_regional_decision() -> String:
+func request_regional_decision(region_id: String = "") -> String:
 	if mesai < 1 or not pending.is_empty() or week - last_region_action_week < 12:
 		return tr("Yeni bölgesel tahsis için karar sırası ve hazineyi beklemelisin.")
+	if region_id != "":
+		if not regions.has(region_id):
+			return tr("Bölge bulunamadı.")
+		last_region_action_week = week
+		stats["regional_events"] = int(stats.get("regional_events", 0)) + 1
+		_queue_region_action_options(region_id)
+		return tr("%s için bölge eylemleri karar sırasına alındı.") % tr(str(REGION_NAMES[region_id]))
 	_queue_region_action()
 	return tr("Bölgesel tahsis gündeme alındı; bir bölge seç.")
 
@@ -4531,6 +4561,14 @@ func _queue_region_action() -> void:
 
 func _queue_region_action_options(id: String) -> void:
 	if not regions.has(id): return
+	var choices := region_action_choices(id)
+	pending.append({"event": {"id": "region_options_%d" % week, "kind": "regional_action", "title": tr("%s için karar") % tr(str(REGION_NAMES[id])),
+		"text": tr("Bütçe tahsisi, yerel rıza ya da vali ataması arasında seçim yap."), "advisors": ["kessler", "dorn"], "choices": choices,
+		"ignore": {"text": tr("Bölge için bu hafta karar alınmadı."), "fx": {}}}, "age": 0})
+
+
+func region_action_choices(id: String) -> Array:
+	if not regions.has(id): return []
 	var choices: Array = [
 		{"label": tr("Altyapı yatırımı"), "action": "invest", "region": id, "available": float(budget_allocation.get("industry", 25.0)) >= 15.0 and treasury >= 8.0, "fx": {}},
 		{"label": tr("Garnizon takviyesi"), "action": "garrison", "region": id, "available": float(budget_allocation.get("army", 25.0)) >= 15.0 and treasury >= 6.0, "fx": {}},
@@ -4542,9 +4580,7 @@ func _queue_region_action_options(id: String) -> void:
 		for actor_id in actors:
 			if str(actor_id).begins_with("governor_") and not _governor_assigned(str(actor_id)):
 				choices.append({"label": tr("%s'i vali ata") % actors[actor_id].display_name, "action": "appoint", "region": id, "actor": actor_id, "available": treasury >= 8.0, "fx": {}})
-	pending.append({"event": {"id": "region_options_%d" % week, "kind": "regional_action", "title": tr("%s için karar") % tr(str(REGION_NAMES[id])),
-		"text": tr("Bütçe tahsisi, yerel rıza ya da vali ataması arasında seçim yap."), "advisors": ["kessler", "dorn"], "choices": choices,
-		"ignore": {"text": tr("Bölge için bu hafta karar alınmadı."), "fx": {}}}, "age": 0})
+	return choices
 
 
 func _governor_assigned(actor_id: String) -> bool:

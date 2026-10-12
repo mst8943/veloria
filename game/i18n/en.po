@@ -4306,6 +4306,81 @@ msgstr "Find a scapegoat"
 msgid "Gündem Değiştir"
 msgstr "Change the subject"
 
+msgid "%s: %s; pazar %s; bağlılık %s"
+msgstr "%s: %s; market %s; loyalty %s"
+
+msgid "Bölgeler: %s öne çıkıyor — %s; pazar %s; bağlılık %s. Diğer bölgeler izleniyor."
+msgstr "Regions: %s stands out — %s; market %s; loyalty %s. The others remain under watch."
+
+msgid "Bölge bulunamadı."
+msgstr "Region not found."
+
+msgid "%s için bölge eylemleri karar sırasına alındı."
+msgstr "Regional actions for %s have been placed in the decision queue."
+
+msgid "Bölgeler"
+msgstr "Regions"
+
+msgid "Bölge katmanını aç/kapat"
+msgstr "Show or hide the regional layer"
+
+msgid "Bölgeler: Açık"
+msgstr "Regions: On"
+
+msgid "Bölgeler: Kapalı"
+msgstr "Regions: Off"
+
+msgid "Huzursuzluk %s; pazar %s; bağlılık %s"
+msgstr "Unrest %s; market %s; loyalty %s"
+
+msgid "Öne çıkan bölge"
+msgstr "Region in focus"
+
+msgid "Bölgede karar bekleyen kriz var."
+msgstr "A regional crisis is awaiting a decision."
+
+msgid "Bölgede bekleyen kriz yok."
+msgstr "No regional crisis is awaiting a decision."
+
+msgid "Vali atanmamış"
+msgstr "No governor appointed"
+
+msgid "Açık bölge eylemleri"
+msgstr "Available regional actions"
+
+msgid "bütçe payı veya hazine yetersiz"
+msgstr "budget allocation or treasury is insufficient"
+
+msgid "Bölge kararlarını aç"
+msgstr "Open regional decisions"
+
+msgid "Bu bölge için R1 bütçesi ve mesai kullanan kararları aç"
+msgstr "Open R1 budget and action point decisions for this region"
+
+msgid "Kriz bekliyor"
+msgstr "Crisis pending"
+
+msgid "Kriz yok"
+msgstr "No crisis"
+
+msgid "Vali atanmış"
+msgstr "Governor appointed"
+
+msgid "Bölgeyi aç: %s"
+msgstr "Open region: %s"
+
+msgid "Simgeler: üçgen huzursuzluğu, sütunlar pazarı, kalkan bağlılığı gösterir; ünlem kriz, kişi vali demektir."
+msgstr "Symbols: the triangle shows unrest, bars the market, and shield loyalty; an exclamation marks crisis and a figure marks a governor."
+
+msgid "Sanayi"
+msgstr "Industry"
+
+msgid "Tarım"
+msgstr "Farmland"
+
+msgid "Sınır"
+msgstr "Border"
+
 msgid "Bölgeler: %s öne çıkıyor — %s, pazar %s, bağlılık %s; diğer bölgeler izleniyor."
 msgstr "Regions: %s stands out — %s, markets %s, loyalty %s; the other regions remain under review."
 

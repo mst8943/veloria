@@ -81,6 +81,33 @@ func _run() -> void:
 		await _shot("r4b_investment_choice")
 		quit(0)
 		return
+	if "--r4c-map" in OS.get_cmdline_user_args():
+		sim0.pending.clear()
+		sim0.week = 12
+		main._refresh()
+		main._city.open()
+		await _shot("r4c_map_layer_off")
+		main._city._region_toggle.button_pressed = true
+		main._city._region_toggle.toggled.emit(true)
+		await _shot("r4c_map_layer_on")
+		main._city.show_region("industry")
+		await _shot("r4c_region_panel")
+		await _shot("r4c_governor_card")
+		quit(0)
+		return
+	if "--r4c-crisis" in OS.get_cmdline_user_args():
+		sim0.pending.clear()
+		sim0.week = 12
+		sim0.regions["industry"]["economy"] = 20.0
+		for seed in range(1, 100):
+			sim0.region_rng.seed = seed
+			sim0._check_regional_crisis()
+			if not sim0.pending.is_empty():
+				break
+		main._refresh()
+		await _shot("r4c_region_crisis")
+		quit(0)
+		return
 	if "--r4b-crisis" in OS.get_cmdline_user_args():
 		sim0.pending.clear()
 		sim0.regions["industry"]["economy"] = 20.0

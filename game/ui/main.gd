@@ -1140,6 +1140,12 @@ func _on_desk_request(target: String) -> void:
 
 func _on_city_request(target: String, arg: String) -> void:
 	match target:
+		"region":
+			var pending_before := Sim.pending.size()
+			_toast_msg(Sim.request_regional_decision(arg))
+			if Sim.pending.size() > pending_before:
+				_city.close_view()
+				_refresh()
 		"media":
 			_open_media()
 		"files":
