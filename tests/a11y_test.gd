@@ -89,6 +89,7 @@ func _run() -> void:
 		restore.store_buffer(backup)
 	else:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(Sfx.SETTINGS_PATH))
-	main.free()
+	main.queue_free()
+	await process_frame
 	print("A11Y: OK" if ok else "A11Y: FAIL")
 	quit(0 if ok else 1)

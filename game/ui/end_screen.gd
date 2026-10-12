@@ -19,6 +19,7 @@ var timeline: Array = []
 var chart_drawn := false
 var _record: Dictionary = {}
 var _continue_btn: Button
+var card_output_directory := "user://cards"
 
 
 func _history_text(value: String) -> String:
@@ -429,11 +430,16 @@ func _save_card() -> void:
 	footer.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 	content.add_child(footer)
 	vp.add_child(root)
-	await RenderingServer.frame_post_draw
-	await RenderingServer.frame_post_draw
-	var dir := ProjectSettings.globalize_path("user://cards")
+	if DisplayServer.get_name() == "headless":
+		for frame in 2: await get_tree().process_frame
+		vp.queue_free()
+		return
+	else:
+		await RenderingServer.frame_post_draw
+		await RenderingServer.frame_post_draw
+	var dir := ProjectSettings.globalize_path(card_output_directory)
 	DirAccess.make_dir_recursive_absolute(dir)
-	var out := "user://cards/veloria_%s_%d.png" % [date, seed]
+	var out := card_output_directory.path_join("veloria_%s_%d.png" % [date, seed])
 	var err := vp.get_texture().get_image().save_png(out)
 	vp.queue_free()
 	host._show_modal(tr("Kart kaydedildi: %s") % ProjectSettings.globalize_path(out) if err == OK else tr("Kart kaydedilemedi."))
