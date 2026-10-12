@@ -1258,25 +1258,37 @@ func _wait_skip(t: float) -> void:
 ## Karar mühürü: kartın üstüne kırmızı balmumu mühür basılır.
 func _stamp_seal(card: Control) -> void:
 	var sz := 96.0 if not _mobile else 110.0
-	var seal := PanelContainer.new()
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color("7a1f1a")
-	sb.set_corner_radius_all(int(sz / 2.0))
-	sb.border_color = Color("c9a24f")
-	sb.set_border_width_all(3)
-	sb.shadow_color = Color(0, 0, 0, 0.55)
-	sb.shadow_size = 10
-	sb.anti_aliasing = true
-	seal.add_theme_stylebox_override("panel", sb)
-	seal.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var l := Label.new()
-	l.text = "V"
-	l.add_theme_font_override("font", UIKit.serif())
-	l.add_theme_font_size_override("font_size", int(sz * 0.55))
-	l.add_theme_color_override("font_color", Color("f1d9a0"))
-	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	seal.add_child(l)
+	var seal: Control
+	var seal_tex: Texture2D = _art("res://art/damga.png")
+	if seal_tex:
+		sz *= 1.7   # damga halkası ve yazısıyla daha büyük görünür
+		var img := TextureRect.new()
+		img.texture = seal_tex
+		img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		seal = img
+	else:
+		var disk := PanelContainer.new()
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color("7a1f1a")
+		sb.set_corner_radius_all(int(sz / 2.0))
+		sb.border_color = Color("c9a24f")
+		sb.set_border_width_all(3)
+		sb.shadow_color = Color(0, 0, 0, 0.55)
+		sb.shadow_size = 10
+		sb.anti_aliasing = true
+		disk.add_theme_stylebox_override("panel", sb)
+		disk.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var l := Label.new()
+		l.text = "V"
+		l.add_theme_font_override("font", UIKit.serif())
+		l.add_theme_font_size_override("font_size", int(sz * 0.55))
+		l.add_theme_color_override("font_color", Color("f1d9a0"))
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		disk.add_child(l)
+		seal = disk
 	_stage.add_child(seal)
 	seal.size = Vector2(sz, sz)
 	var rect := card.get_global_rect()
