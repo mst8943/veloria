@@ -97,3 +97,21 @@ TR/EN masaüstü ve yatay mobil kartları açıldı: bölge seçimi, yatırım/g
 - **Orta — Testler oyuncunun profilini kirletiyor.** `%APPDATA%\Godotpp_userdata\Veloriaeloria_chronicle.txt`, `veloria_achievements.txt`, `army_test.sav`, `test_save.txt` gibi dosyalara test koşuları yazıyor (5 sahte saltanat kaydı ve başarım tarihleri bugüne işlenmiş). Testler `user://` yerine geçici profil/yol kullanmalı ya da dosyaları yedekleyip geri yüklemeli; `record_chronicle=false` ve `autosave=false` varsayılan olmalı. daily_card_test takılması da bununla ilgili olabilir.
 - **Orta — Komutan portreleri gerekiyor** (Codex notu; Claude promptları hazırlayacak).
 - **Denge.** R5a sonrası ölçüt 60/29/17 (Claude bağımsız doğruladı). Zor ≤ 16 hedefi hâlâ tutmuyor.
+
+## 2026-10-12 — M1 takip
+
+### Düzeltilen
+
+- **Yüksek — Mobil dokunma hissiyatı.** Dokunmatik etkileşimler artık ortak `touch_scroll.gd` kapısından geçiyor: kısa dokunma bırakmada etkinleşir; 11 px sürükleme ve uzun basma iptal edilir; hover sesi/animasyonu dokunmada bastırılır. `touch_tap_test` ve masaüstü/mobil `ui_input_test` ile kontrol edildi.
+- **Orta — Hükümdarlık Arşivi EN sızıntısı.** Yeni kayıtların sebebi dil anahtarı ve argümanlarla saklanıp görüntülemede çevriliyor. Arşiv dolu iken `en_leak_test` artık 0 sızıntı veriyor.
+- **Orta — Testlerin gerçek profili kirletmesi ve günlük testinin takılması.** Günlük test kendi dosya/klasörünü kullanıyor; test çalıştırıcısı her süreç için geçici `APPDATA` profili oluşturup temizliyor. Headless günlük kartı, render dokusu bulunmadığında beklemek ya da hata vermek yerine temiz çıkıyor. Bugünkü sahte arşiv/başarım kayıtları silinmedi.
+- **Düşük — Dar mobil Capital Region etiketi.** EN 1067×600 harita ekranında işaretçi adı kesiliyordu. Mobil etiket satıra sarılıyor; `region_map_test --mobile` kontrol ediyor.
+
+### Ertelenen
+
+- **Orta — Eski arşiv sebebinin ayrıntılı EN çevirisi.** Eski kayıtlarda `cause_key` ve biçim argümanları yok. Kayıtlar korunuyor; EN'de Türkçe sebebi sızdırmamak için genel uyumluluk cümlesi gösteriliyor. Eski kayıt biçimini tanıyıp ayrıntılı çevirecek göç/haritalama ayrı çalışma gerektiriyor.
+- **Orta — Komutan portreleri (4 isim + prompt).** Sanat varlığı işi M1 kapsamı dışında kaldı; `art/` değiştirilmedi.
+
+### Ekran gözlemi
+
+EN yatay mobil harita katmanı ve bölge paneli ekranları açıldı; Capital Region işaretçi kesilmesi sarma düzeltmesinden sonra tekrar açılarak kontrol edildi. İşaretçi simgeleri renk dışında şekil/doku ile ayırt ediliyor; panelde vali portresi, nitel durum ve eylem girişi görünür. Geçici görüntüler gözlem sonrası silindi.

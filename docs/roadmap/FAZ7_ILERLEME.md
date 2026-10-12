@@ -344,3 +344,69 @@ Her test başarılı çıktı satırını verdi. Toplu headless koşuda `daily_c
 ### Ekranlar ve gözlemler
 
 TR/EN masaüstü ve yatay mobilde Günlük birlik satırı, Divan raporu ve komutan kartlarının 12 ekranı açılıp incelendi. Birlik adı/rapor dili eşleşiyor, gizli sayılar görünmüyor, portresiz kartlarda komutan adları ve rolleri kırpılmıyor. Görüntüler inceleme sonrası silindi. R4b/R4c cila maddeleri ayrı commit'lerle kapatıldı (`7a1c89d`, `ddedf75`, `6e6468d`, `68b80a5`, `4134d48`). Komutanlar için dört ayrı portre gerekiyor; isimler ve üretim promptu `GOZLEMLER.md` içine eklendi. `tests/title_shot.gd`, `game/ui/title_screen.gd` ve `art/` değiştirilmedi; kullanıcı profili testlerden sonra geri yüklendi, kendi Godot test süreçleri kapandı. PUSH yapılmadı.
+
+## 2026-10-12 — M1 Dokunma, arşiv ve test hijyeni
+
+Yalnızca M1 uygulandı; R5b'ye geçilmedi. Dokunmatik giriş `touch_scroll.gd` içinde merkezileştirildi: kısa dokunuş bırakınca etkinleşiyor, 11 px hareket veya 480 ms basılı tutma dokunuşu iptal ediyor, dokunma hover ses/animasyonlarını bastırıyor ve 80 ms sonra hareketle iptal edilen kısa basılı geri bildirim gösteriyor. Masaüstü fare akışı aynı kaldı. `touch_tap_test.gd`, masa nesnesi/harita levhası/haber şeridi/kart yüzeyi, düğme, iptal edilen sürükleme, gecikmeli geri bildirim ve fare davranışını denetliyor.
+
+Hükümdarlık Arşivi yeni kayıtlarda `cause_key`/argüman/plural metadatası saklıyor ve ekranda seçili dile çeviriyor. Anahtar içermeyen eski Türkçe kayıtlar bozulmadan kalıyor; İngilizce görünümde genel bir uyumluluk cümlesi gösteriliyor. Arşivde yeni ve eski kayıt bulunan `en_leak_test` 0 benzersiz sızıntı verdi. `daily_card_test`, kendine ait `user://` günlük yolu ve kart klasörünü kullanıyor; headless kipte rendering backend doku üretmediği için kartı kaydetmeden temiz çıkıyor ve toplu testte takılmıyor. `run_test_isolated.ps1` her testin `APPDATA` profilini geçici alana yönlendirip tamamlanınca temizliyor. Gerçek kullanıcı profilindeki bugünkü sahte saltanat/başarım kayıtlarına dokunulmadı.
+
+Gözlem sırasında EN 1067×600 harita katmanı ekranında “Capital Region” işaretçisi dar alanda kesiliyordu. Ad etiketi mobilde satıra sarıldı; `region_map_test --mobile` bunu denetliyor. Görsel, değişiklikten sonra yeniden açılıp kontrol edildi. Geçici görüntü klasörü silindi.
+
+### Denge ve çalışma sonucu
+
+80 kampanyalık `advice_weighted` ölçümü: Kolay 60/80, Normal 29/80, Zor 17/80 (60/29/17 tabanından fark 0/0/0; ±1 kapısı geçti). Tempo `pacing_test` ilk dilimi 0,81 olay/hafta, en uzun olaysız seri 3 hafta. `--full --seed=101`:
+
+```text
+FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true
+FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true
+```
+
+İlk satır EN, ikinci satır TR çalıştırmasıdır. `tools/i18n_missing.py` çıktısı: `0 tr() kaynağı en.po'da yok`.
+
+### Test çıktıları
+
+Her satır çalıştırılan testin başarılı özet çıktısıdır; pencereli screenshot/dump/diagnostic yardımcıları (title_shot, ui_shots, ux_audit, en_dump, cause_probe) üretilen görüntü yığını kuralı nedeniyle çalıştırılmadı.
+
+| Test | Başarılı çıktı satırı |
+|---|---|
+| `a11y_test` | `A11Y: OK` |
+| `army_test` | `ARMY TEST: OK` |
+| `audio_check` | `AUDIO: OK` |
+| `budget_ui_test` | `BUDGET UI: OK` |
+| `content_check` | `CONTENT: OK (5 dosya, 8 bozuk örnek)` |
+| `cutscene_check` | `CUTSCENE: OK` |
+| `daily_card_test` | `DAILY CARD: OK` |
+| `dynasty_test` | `DYNASTY: OK` |
+| `economy_test` | `ECONOMY: OK` |
+| `election_test` | `ELECTION: OK` |
+| `endless_test` | `ENDLESS: OK` |
+| `en_leak_test` | `EN LEAK SCAN: 5 campaigns, 0 unique leaks` |
+| `event_check` | `EVENTS: OK (201 olay, 0 uyarı)` |
+| `external_crisis_test` | `EXTERNAL CRISIS: OK` |
+| `i18n_check` | `I18N: OK` |
+| `lang_switch_test` | `LANG: OK` |
+| `legacy_test` | `LEGACY: OK` |
+| `pacing_test` | `H  1-  8        0.81        (280)`; `En uzun olaysız seri (medyan / en kötü): 2 / 3 hafta` |
+| `parliament_laws_test` | `PARLIAMENT LAWS: OK` |
+| `parliament_test` | `PARLIAMENT: OK` |
+| `public_opinion_test` | `PUBLIC OPINION: OK` |
+| `region_map_test` desktop | `REGION MAP: OK` |
+| `region_map_test` mobil | `REGION MAP: OK` |
+| `regions_test` | `REGIONS: OK` |
+| `save_test` | `SAVE: OK` |
+| `scenario_test` | `SCENARIO: OK` |
+| `sim_test` | `TEST: OK` |
+| `touch_scroll_test` | `TOUCH: OK` |
+| `touch_tap_test` | `TOUCH TAP: OK` |
+| `tour_test` | `TOUR: OK` |
+| `ui_input_test` desktop | `UI INPUT: OK` |
+| `ui_input_test --mobile` | `UI INPUT: OK (mobile)` |
+| `ui_logic_test` | `UI LOGIC: OK` |
+| `unit_tests` | `[unit] all 399 checks passed` |
+
+Headless Godot bazı UI testleri kapanırken RID/ObjectDB temizleme uyarıları verdi; test çıkış kodları 0 ve özet satırları başarılıydı. `a11y_test` anlık `main.free()` ile motoru düşürüyordu; ağaçtan `queue_free()` edip bir kare bekleyecek şekilde düzeltilince çıkış kodu 0 oldu.
+
+### Gözlemler
+
+Dokunmatik giriş ve İngilizce arşiv sızıntısı R5a'da raporlanan biçimde giderildi. Eski `cause_key` içermeyen arşiv kayıtlarının İngilizcede ayrıntılı sebebi henüz çözümlenemiyor; kayıt korunuyor, İngilizcede genel uyumluluk cümlesi gösteriliyor (orta, gelecekte arşiv şeması çalışması). Komutan portreleri (4 isim + prompt) sanat işi olduğundan M1 dışında bırakıldı; `art/` değiştirilmedi. Boşluk dışı dokunmayla başkent kurum çekmecesini kapatma ve masaüstü fare akışı `ui_input_test` ile yeniden kontrol edildi.
