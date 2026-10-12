@@ -67,3 +67,25 @@ TR/EN masaüstü ve yatay mobil kartları açıldı: bölge seçimi, yatırım/g
 - **Düşük — Harita bölge işaretçileri küçük** (masaüstünde ~88x52, köşelerde); simge anlamı panelde "Simgeler:" satırıyla açıklanıyor, harita üstünde kısa bir açıklama düğmesi (?) faydalı olur.
 - **Süreç — dürüstlük.** R4c raporunda "A11Y: OK" yazıyordu; test hata veriyordu (a11y_test mobil bayrağı yüzünden). Claude düzeltti. Rapor dürüstlüğü kuralı hâlâ geçerli: yazdığın her test çıktısını çalıştırıp yapıştır.
 - **Denge.** R4b+R4c sonrası ölçüt 60/29/17. Zor taban 13'ün +4 üstünde (R3c'den beri); R4b'de Zor'u 14-15'e çekme hedefi yapılmadı. R5 bunu oynanış değişikliğiyle birlikte ele almalı (Zor ≤ 16).
+
+## 2026-10-12 — R4b/R4c cila kapanışı
+
+### Düzeltilen
+
+- **Orta — Vali kartında yüz kırpılması:** kart 78×82'ye büyütüldü, portre `KEEP_ASPECT_CENTERED` ile yerleştirildi (`7a1c89d`).
+- **Orta — “Başkent” ad çakışması:** bölge adı Başkent Bölgesi / Capital Region yapıldı (`ddedf75`).
+- **Düşük — Bölge paneli saydamlığı:** çekmece zemini opaklaştırıldı (`6e6468d`).
+- **Düşük — Bölge eylemlerinin tıklanabilir görünmesi:** eylem listesinin yalnızca açıklama olduğu açıkça yazıldı (`68b80a5`).
+- **Düşük — Harita işaretçisi açıklaması:** renk dışı simgeler için 44 px erişilebilir açıklama düğmesi eklendi (`4134d48`).
+
+## 2026-10-12 — R5a
+
+### Düzeltilen küçük sorunlar
+
+- Komutanların portresiz yer tutucu kartları vali kartlarıyla aynı koyu, düşük doygunluklu paleti kullanıyor; masaüstü ve mobil Divan'da ad/rol görünür.
+- Birlik raporu Günlük ve Divan'da aynı nitel satırla gösteriliyor; bir öne çıkan birliği belirtip diğerlerini özetliyor.
+
+### Ertelenen
+
+- **Orta — Komutan portreleri gerekiyor (4 isim + prompt).** İsimler: Marcus Arden (Genelkurmay), Ilyan Rell (Başkent garnizonu), Sera Kest (Sınır kolordusu), Marek Nadir (Jandarma ve güvenlik). Önerilen sanat promptu: “Create four distinct, fictional senior military commander portraits for a restrained political strategy game. Chest-up, direct but understated expression, realistic painterly editorial illustration, muted bronze and charcoal palette, soft architectural background, consistent framing and lighting, readable at small card size; no insignia text, no flags, no weapons, no real public figures. Marcus Arden is a silver-haired general in his late fifties; Ilyan Rell is a disciplined capital officer in his forties; Sera Kest is a composed border corps commander in her forties; Marek Nadir is a watchful gendarmerie commander in his fifties.” Portre üretimi sonraki sanat çalışmasına bırakıldı; `art/` değiştirilmedi.
+- **Denge kapısı:** R5a ölçümü 60/29/17 ile tabanı aynen korudu; R5 kapısındaki Zor ≤16 hedefi bir galibiyetle kaçtı. R5a'da ordu eylemi bulunmadığından R5b uç botları henüz ölçülemez. Dengeyi koruma şartı nedeniyle yapay zorluk ayarı yapılmadı.

@@ -290,3 +290,57 @@ EN/TR masaüstü ve 1067×600 mobilde katman kapalı/açık, bölge paneli/vali 
 Beckett `ui_snapshot` çalışan masa görünümünde 150 görünür denetim taradı; iki `occluded_by` kaydı rapor metninin kendi kart paneli altında kalmasıydı. Lite oturumunda harita ekranı açılamadığından bu araçla harita katmanına özel snapshot alınamadı. Bunun yerine `region_map_test` iki çözünürlükte işaretçi-kurum çakışmasını ve tıklamaları denetledi; panel aç/kapa görünürlüğü, Parlamento tıklaması ve simülasyon durumunun değişmediği de test edildi.
 
 Gözlemlerde mobilde 4 px kurum çakışması, panel arkasında kısmi işaretçi görünmesi, vali satırında gereksiz dikey boşluk ve ana karar düğmesinin ilk ekranda kalmaması düzeltildi. Ayrıntılı küçük/bekleyen maddeler `docs/roadmap/GOZLEMLER.md` içinde. Kod commit'i `844f6bc` (`Add regional map layer and panel`). R5'e geçilmedi; PUSH yapılmadı; `tests/title_shot.gd`, `game/ui/title_screen.gd` ve `art/` değiştirilmedi.
+
+## 2026-10-12 — R5a Ordu iç yapısı
+
+R4a/R4b/R4c ve cila commit'leri `git log` ile doğrulandı. R5a ayrı kod commit'i `a8ca5d2` (`Add army units and commanders`) olarak eklendi; R5b/R5c'ye geçilmedi. Üç birliğin sadakati, morali ve ikmali gizli tutuluyor; birlik komutanları çevresel aktörler ve `army_rng` ile ana RNG'den ayrılıyor. Arden'in mevcut gücü birlik sadakatlerinin ortalamasından türetiliyor. v20 kayıtları v21'e göçerken her birliğe eski Arden değeri atanıyor, böylece eski güç korunuyor. Günlük ve Divan aynı nitel, sayısız birliği raporluyor; yalnızca öne çıkan/endişe verici birlik vurgulanıyor.
+
+### Kapılar
+
+`advice_weighted` 80 kampanya ölçümü R4b tabanını aynen korudu (Kolay 60/80, Normal 29/80, Zor 17/80; fark 0/0/0). ±3 kapısı ve varsayılan denge şartı sağlandı. Fazın ayrıca istediği `Zor ≤ 16` hedefi 17/80 ile bir galibiyet farkla kaçtı; R5a'da ordu eylemi olmadığı ve dengeyi kaydırmama kuralı bulunduğu için yapay ayar yapılmadı. Ordu ödeneği/komuta bölme uç botları R5a'da eylem bulunmadığından uygulanamaz; R5b'ye bırakıldı.
+
+`--full --seed=101` çıktısı her iki dilde de 104 hafta / TAHTTA / Medya Rejimi / 112 olay. Tempo: ilk sekiz haftada 0,81 olay/hafta (`H  1-  8        0.81        (280)`); en uzun olaysız seri (medyan/en kötü) 2/3 hafta. `en_leak_test`: 5 kampanya, 0 benzersiz sızıntı. `tools/i18n_missing.py`: `0 tr() kaynağı en.po'da yok`.
+
+### Testler
+
+Her test başarılı çıktı satırını verdi. Toplu headless koşuda `daily_card_test` takıldığı için o alt süreç durduruldu; test hemen ardından pencereli ve profil yedeği korumalı tekil koşuda yeniden çalıştırıldı ve geçti. Diğer tüm satırlar toplu koşudaki sonuçlardır.
+
+| Test | Başarılı çıktı satırı |
+|---|---|
+| `a11y_test` | `A11Y: OK` |
+| `army_test` | `ARMY TEST: OK` |
+| `audio_check` | `AUDIO: OK` |
+| `budget_ui_test` | `BUDGET UI: OK` |
+| `content_check` | `CONTENT: OK (5 dosya, 8 bozuk örnek)` |
+| `cutscene_check` | `CUTSCENE: OK` |
+| `daily_card_test` (pencereli tekil koşu) | `DAILY CARD: OK` |
+| `dynasty_test` | `DYNASTY: OK` |
+| `economy_test` | `ECONOMY: OK` |
+| `election_test` | `ELECTION: OK` |
+| `endless_test` | `ENDLESS: OK` |
+| `en_leak_test` | `EN LEAK SCAN: 5 campaigns, 0 unique leaks` |
+| `event_check` | `EVENTS: OK (201 olay, 0 uyarı)` |
+| `external_crisis_test` | `EXTERNAL CRISIS: OK` |
+| `i18n_check` | `I18N: OK` |
+| `lang_switch_test` | `LANG: OK` |
+| `legacy_test` | `LEGACY: OK` |
+| `pacing_test` | `H  1-  8        0.81        (280)`; `En uzun olaysız seri (medyan / en kötü): 2 / 3 hafta` |
+| `parliament_laws_test` | `PARLIAMENT LAWS: OK` |
+| `parliament_test` | `PARLIAMENT: OK` |
+| `public_opinion_test` | `PUBLIC OPINION: OK` |
+| `region_map_test` masaüstü | `REGION MAP: OK` |
+| `region_map_test` mobil | `REGION MAP: OK` |
+| `regions_test` | `REGIONS: OK` |
+| `save_test` | `SAVE: OK` |
+| `scenario_test` | `SCENARIO: OK` |
+| `sim_test` | `TEST: OK` |
+| `touch_scroll_test` | `TOUCH: OK` |
+| `tour_test` | `TOUR: OK` |
+| `ui_input_test` masaüstü | `UI INPUT: OK` |
+| `ui_input_test` mobil (`-- --mobile`) | `UI INPUT: OK (mobile)` |
+| `ui_logic_test` | `UI LOGIC: OK` |
+| `unit_tests` | `[unit] all 399 checks passed` |
+
+### Ekranlar ve gözlemler
+
+TR/EN masaüstü ve yatay mobilde Günlük birlik satırı, Divan raporu ve komutan kartlarının 12 ekranı açılıp incelendi. Birlik adı/rapor dili eşleşiyor, gizli sayılar görünmüyor, portresiz kartlarda komutan adları ve rolleri kırpılmıyor. Görüntüler inceleme sonrası silindi. R4b/R4c cila maddeleri ayrı commit'lerle kapatıldı (`7a1c89d`, `ddedf75`, `6e6468d`, `68b80a5`, `4134d48`). Komutanlar için dört ayrı portre gerekiyor; isimler ve üretim promptu `GOZLEMLER.md` içine eklendi. `tests/title_shot.gd`, `game/ui/title_screen.gd` ve `art/` değiştirilmedi; kullanıcı profili testlerden sonra geri yüklendi, kendi Godot test süreçleri kapandı. PUSH yapılmadı.

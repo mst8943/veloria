@@ -226,3 +226,19 @@ Tempo ölçümü R4b tabanından devralındı: ilk 8 haftada 0,81 olay/hafta; en
 EN/TR masaüstü ve 1067×600 yatay mobil ekranlarında katman kapalı/açık, bölge paneli, vali kartı ve bölgesel kriz ekranları ayrı görüntüler olarak açılıp incelendi. Simge/şekil taraması renk gerektirmiyor; yıldız Günlük/Divan satırındaki öne çıkan bölgeyi eşliyor. Mobil işaretçiler kurum etiketleriyle kesişmiyor; bölge paneli açıkken arkasında kalan işaretçiler gizleniyor. Ana eylem düğmesi 48 px ve panelin ilk görünür bölümünde. Ekran görüntüleri yalnızca geçici klasörde tutuldu ve gözden sonra silindi.
 
 Beckett `ui_snapshot` taraması çalışan masa görünümünde 150 görünür denetim buldu; `occluded_by` alanında iki rapor RichTextLabel'ı kendi PanelContainer'ı altında rapor içeriği olarak işaretlendi, etkileşimli hedef değiller. Beckett Lite oturumu harita ekranına giriş/etkileşim sağlayamadığı için harita katmanına özel `ui_snapshot` alınamadı. Harita için `region_map_test.gd` masaüstü/mobilde işaretçi-kurum dikdörtgen çakışmasını, bölge ve Parlamento tıklamalarını, panel kapanınca işaretçilerin geri gelmesini ve simülasyon/RNG değişmediğini doğruladı.
+
+## R5a Ayar
+
+R5a üç çevresel birlik ve komutanlarını ekledi. `army_rng`, ana RNG'den ayrı tutuluyor. Birim sadakati ortalaması Arden gücünü verir; eski kayıtlarda her birimin sadakati eski Arden gücüne eşlenerek başlangıç değerleri korunur. Birlik morali/ikmali ve komutan özellikleri yeni üreteçten gelir. R5a karar/eylem eklemediğinden savaş gücü katsayısı, oyun zorluğu veya olay akışı ayarlanmadı.
+
+| `advice_weighted`, 80 kampanya | R4b tabanı | R5a sonucu | Fark |
+|---|---:|---:|---:|
+| Kolay | 60/80 | 60/80 | 0 |
+| Normal | 29/80 | 29/80 | 0 |
+| Zor | 17/80 | 17/80 | 0 |
+
+Taban ±3 kapısı sağlandı ve varsayılan denge değişmedi. R5 kapısındaki `Zor ≤ 16` şartı 17/80 ile bir galibiyet farkla sağlanmadı; R5a'nın “varsayılan dengeyi kaydırma” kuralı nedeniyle bu ölçümü yapay olarak aşağı çekmedim. Ordu ödeneğini artırma/komuta zincirini bölme uç botları için R5a'da karar bulunmuyor; bu bot ölçümleri R5b kapsamındaki eylemler eklenmeden uygulanabilir değil.
+
+`--full --seed=101` TR ve EN: **104 hafta / TAHTTA / Medya Rejimi / 112 olay**. Her iki dil de aynı sonucu verdi. R5a'nın yeni içerikleri TR/EN aktör verisinde ve `en.po` kataloğunda yer alıyor; birlik raporu sayı göstermez ve birliği nitel olarak vurgular.
+
+EN/TR masaüstü ve 1067×600 mobilde Günlük raporu, Divan raporu ve komutan kartları ayrı ayrı açıldı. Günlük ile Divan'daki birlik cümlesi aynı; raporda sayısal gizli değer yok. Komutan kartları kompakt ve isim/rol kırpılmıyor; mobil kaydırmada erişiliyor. Masaüstü ve mobil yer tutucu zeminleri portre paletine yaklaştırıldı. Görüntüler incelemeden sonra silindi.
