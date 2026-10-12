@@ -22,7 +22,7 @@ extends SceneTree
 
 var sim: Node
 var rng := RandomNumberGenerator.new()
-const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "advice_patron", "advice_veliaht", "advice_heyet", "advice_bloc", "visible_wise", "omniscient", "public_out", "public_hide", "parliament_force", "parliament_withdraw", "parliament_abstain", "confidence_force", "confidence_fall", "region_invest_one", "region_invest_none", "region_garrison_capital"]
+const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "advice_kessler", "advice_soft", "advice_dirty", "advice_scheme", "advice_loyal", "advice_merit", "advice_austere", "advice_lavish", "advice_patron", "advice_veliaht", "advice_heyet", "advice_bloc", "visible_wise", "omniscient", "public_out", "public_hide", "parliament_force", "parliament_withdraw", "parliament_abstain", "confidence_force", "confidence_fall", "region_invest_one", "region_invest_none", "region_garrison_capital", "army_allowance", "army_split", "army_garrison_capital", "army_none"]
 var style := ""   # advice_soft / advice_dirty oyun tarzı
 var dynasty_probe := false
 var dynasty_cap_ok := true
@@ -117,6 +117,10 @@ func _run(bot: String, diff: int, n: int) -> void:
 	var confidence_supports := 0
 	var confidence_falls := 0
 	var confidence_forced := 0
+	var army_actions := 0
+	var army_allowances := 0
+	var army_splits := 0
+	var army_redeployments := 0
 	var regimes := {}
 	for s in range(1, n + 1):
 		sim.new_game(s, diff)
@@ -129,6 +133,10 @@ func _run(bot: String, diff: int, n: int) -> void:
 		confidence_supports += int(sim.stats.get("confidence_supports", 0))
 		confidence_falls += int(sim.stats.get("confidence_falls", 0))
 		confidence_forced += int(sim.stats.get("confidence_forced", 0))
+		army_actions += int(sim.stats.get("army_actions", 0))
+		army_allowances += int(sim.stats.get("army_allowances", 0))
+		army_splits += int(sim.stats.get("army_splits", 0))
+		army_redeployments += int(sim.stats.get("army_redeployments", 0))
 		hostile_broadcasts += 1 if sim.fired_events.has("halden_yayin_kesti") else 0
 		hostile_weeks += int(sim.stats.get("halden_hostile_weeks", 0))
 		final_wealth += sim.private_wealth
@@ -163,6 +171,7 @@ func _run(bot: String, diff: int, n: int) -> void:
 	print("  Prens Marcus girişimi %d/%d" % [prince_attempts, n])
 	print("  düşman yayın olayı %.2f/oyun | düşman yayın haftası %.1f/oyun | ort. son servet %.1f" % [float(hostile_broadcasts) / n, float(hostile_weeks) / n, final_wealth / n])
 	print("  gÃ¼ven oyu: kart %d | destek %d | dÃ¼ÅŸÃ¼ÅŸ %d | baskÄ± %d" % [confidence_offers, confidence_supports, confidence_falls, confidence_forced])
+	print("  ordu kararları: toplam %d | ek ödenek %d | komuta bölme %d | yer değiştirme %d" % [army_actions, army_allowances, army_splits, army_redeployments])
 	print("  rejimler ", regimes)
 
 
@@ -189,6 +198,19 @@ func _cause_kind(c: String) -> String:
 func _play(bot: String) -> void:
 	if bot == "idle":
 		return
+	if bot in ["advice_weighted", "army_allowance", "army_split", "army_garrison_capital"] and sim.mesai > 0 and sim.pending.is_empty():
+		var ask_army := false
+		if bot == "advice_weighted":
+			var visible_arden_warning: bool = sim.difficulty == 2 and sim.actors.has("arden") and sim.actors["arden"].plot_stage >= 3
+			ask_army = (visible_arden_warning and not sim.army_command_split and sim.treasury >= 8.0) or (sim.week in [20, 52, 84] and float(sim.budget_allocation.get("army", 0.0)) >= 18.0 and sim.treasury >= 8.0 + float(sim.stats.get("army_allowance_uses", 0)) * 4.0)
+		elif bot == "army_allowance":
+			ask_army = sim.week % 12 == 0 and float(sim.budget_allocation.get("army", 0.0)) >= 18.0 and sim.treasury >= 8.0 + float(sim.stats.get("army_allowance_uses", 0)) * 4.0
+		elif bot == "army_split":
+			ask_army = sim.week % 12 == 0 and not sim.army_command_split
+		else:
+			ask_army = sim.week % 12 == 0 and str(sim.army_units.get("border", {}).get("region", "border")) == "border"
+		if ask_army:
+			sim.request_army_decision()
 	if bot in ["region_invest_one", "region_garrison_capital"] and sim.mesai > 0 and sim.pending.is_empty() and sim.week - sim.last_region_action_week >= 12:
 		sim.request_regional_decision()
 	if bot in ["public_out", "public_hide"] and sim.mesai > 0:
@@ -211,7 +233,7 @@ func _play(bot: String) -> void:
 				sim.give_tender("halden")
 			if bot == "advice_patron" and sim.private_wealth > 11.0 and sim.mesai > 0 and sim.actors.has("dorn") and not sim.actors["dorn"].moved:
 				sim.bribe("dorn")
-			var decision_bot := "advice_weighted" if bot in ["parliament_force", "parliament_withdraw", "parliament_abstain", "confidence_force", "confidence_fall"] else bot
+			var decision_bot := "advice_weighted" if bot in ["parliament_force", "parliament_withdraw", "parliament_abstain", "confidence_force", "confidence_fall", "army_allowance", "army_split", "army_garrison_capital", "army_none"] else bot
 			var cycle := 16 if bot == "advice_loyal" else 20
 			var start := 16 if bot == "advice_loyal" else 12
 			if bot in ["advice_loyal", "advice_merit"] and sim.week >= start and (sim.week - start) % cycle in [0, 1]:
@@ -230,9 +252,28 @@ func _decide(bot: String) -> void:
 	while not sim.pending.is_empty() and (sim.mesai > 0 or sim.pending[0]["event"].get("kind", "") == "parliament_bill") and guard < 6:
 		guard += 1
 		var ev: Dictionary = sim.pending[0]["event"]
+		var ci: int = 0 if str(ev.get("kind", "")) == "parliament_bill" else rng.randi() % ev["choices"].size()
+		if str(ev.get("kind", "")) == "army_action":
+			if ev["choices"].size() > 0 and ev["choices"][0].get("action", "") == "open_army_action":
+				var visible_arden_warning: bool = sim.difficulty == 2 and sim.actors.has("arden") and sim.actors["arden"].plot_stage >= 3
+				var wanted := ("split" if visible_arden_warning else "allowance") if bot == "advice_weighted" else ("allowance" if bot == "army_allowance" else ("split" if bot == "army_split" else "redeploy"))
+				for i in ev["choices"].size():
+					if str(ev["choices"][i].get("army_action", "")) == wanted:
+						ci = i
+						break
+			else:
+				match bot:
+					"army_allowance", "advice_weighted":
+						for i in ev["choices"].size():
+							if str(ev["choices"][i].get("action", "")) == "allowance": ci = i; break
+					"army_split":
+						for i in ev["choices"].size():
+							if str(ev["choices"][i].get("action", "")) == "split": ci = i; break
+					"army_garrison_capital":
+						for i in ev["choices"].size():
+							if str(ev["choices"][i].get("action", "")) == "redeploy" and str(ev["choices"][i].get("destination", "")) == "capital": ci = i; break
 		if ev.get("kind", "") == "regional_action" and bot == "region_invest_none":
 			break
-		var ci: int = 0 if str(ev.get("kind", "")) == "parliament_bill" else rng.randi() % ev["choices"].size()
 		if ev.get("kind", "") == "regional_action" and bot in ["region_invest_one", "region_garrison_capital"]:
 			if ev["choices"][0].get("action", "") == "select_region":
 				for i in ev["choices"].size():
@@ -270,7 +311,7 @@ func _decide(bot: String) -> void:
 			ci = 0
 		elif decision_bot in ["visible_wise", "omniscient"]:
 			ci = _wise_choice(ev)
-		elif decision_bot.begins_with("advice_"):
+		elif decision_bot.begins_with("advice_") and str(ev.get("kind", "")) != "army_action":
 			ci = _advice_choice("advice_weighted" if decision_bot in ["advice_soft", "advice_dirty", "advice_scheme"] else decision_bot, sim.advice_for(0), ci)
 		if parliament_bot and str(ev.get("kind", "")) == "parliament_bill":
 			ci = 3 if bot == "parliament_force" else 2

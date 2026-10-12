@@ -112,7 +112,7 @@ func _initialize() -> void:
 	_check(report.to_lower().contains("öne çıkıyor") and report.to_lower().contains("diğer bölgeler") and not report.contains("30.0"), "regional report highlights one region and summarizes the rest without numbers")
 	var old_save := {"version": 18, "seed": 101, "unrest": 27.5, "economy": 61.25}
 	var migrated: Dictionary = sim._migrate_save(old_save, 18)
-	_check(int(migrated["version"]) == 21 and absf(_weighted_data(migrated["regions"], "unrest") - 27.5) < 0.001,
+	_check(int(migrated["version"]) == 22 and absf(_weighted_data(migrated["regions"], "unrest") - 27.5) < 0.001,
 		"v18 migration preserves the national unrest level")
 	_check(absf(_weighted_data(migrated["regions"], "economy") - 61.25) < 0.001, "v18 migration preserves the national economy level")
 	var v19_regions: Dictionary = sim._new_regions(27.5, 61.25)

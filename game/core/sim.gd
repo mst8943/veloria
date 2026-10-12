@@ -63,6 +63,10 @@ var regions: Dictionary = {}
 var region_rng := RandomNumberGenerator.new()
 var army_rng := RandomNumberGenerator.new()
 var army_units: Dictionary = {}
+var army_effects: Array[Dictionary] = []
+var army_tension := 0.0
+var army_command_split := false
+var army_action_note: Dictionary = {}
 var region_sync_unrest := 30.0
 var region_sync_economy := 55.0
 var regional_effects: Array[Dictionary] = []
@@ -209,6 +213,10 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 	economy = 55.0
 	regions = _new_regions(unrest, economy)
 	army_units.clear()
+	army_effects.clear()
+	army_tension = 0.0
+	army_command_split = false
+	army_action_note.clear()
 	region_sync_unrest = unrest
 	region_sync_economy = economy
 	regional_effects.clear()
@@ -290,6 +298,8 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 		"regional_investments": {"capital": 0, "industry": 0, "farmland": 0, "border": 0},
 		"regional_garrisons": {"capital": 0, "industry": 0, "farmland": 0, "border": 0},
 		"regional_media": {"capital": 0, "industry": 0, "farmland": 0, "border": 0}, "regional_governors": 0, "regional_actions": 0, "regional_events": 0}
+	stats.merge({"army_actions": 0, "army_officer_changes": 0, "army_redeployments": 0, "army_allowances": 0, "army_splits": 0,
+		"army_allowance_uses": 0}, true)
 	regime = ""
 	ended = false
 	record = {}
@@ -581,11 +591,11 @@ func save_summary() -> String:
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
 ## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Sarne ve kadro günlüğü
-const SAVE_VERSION := 21
+const SAVE_VERSION := 22
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
-	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng", "budget_allocation", "delayed_economy", "consent", "public_fear", "public_rng", "public_opinion_active", "last_poll_week", "parliament_base_opposition", "parliament_blocs", "parliament_proposals", "last_parliament_bill_week", "parliament_rng", "parliament_laws", "last_parliament_review_week", "government_rng", "government_pm", "government_coalition", "finance_report_source", "last_confidence_week", "regions", "region_rng", "regional_effects", "last_region_action_week", "last_region_crisis_week", "region_sync_unrest", "region_sync_economy", "army_units", "army_rng"]
+	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng", "budget_allocation", "delayed_economy", "consent", "public_fear", "public_rng", "public_opinion_active", "last_poll_week", "parliament_base_opposition", "parliament_blocs", "parliament_proposals", "last_parliament_bill_week", "parliament_rng", "parliament_laws", "last_parliament_review_week", "government_rng", "government_pm", "government_coalition", "finance_report_source", "last_confidence_week", "regions", "region_rng", "regional_effects", "last_region_action_week", "last_region_crisis_week", "region_sync_unrest", "region_sync_economy", "army_units", "army_rng", "army_effects", "army_tension", "army_command_split", "army_action_note"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -736,6 +746,20 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 		var old_army_rng := RandomNumberGenerator.new()
 		old_army_rng.seed = int(d.get("seed", 1)) ^ 0xA4B2E
 		d["army_rng"] = old_army_rng.state
+	if from < 22:
+		var upgraded_units: Dictionary = d.get("army_units", {})
+		for id in ["capital", "border", "security"]:
+			if upgraded_units.has(id):
+				upgraded_units[id]["region"] = "border" if id == "border" else "capital"
+		d["army_units"] = upgraded_units
+		d["army_effects"] = []
+		d["army_tension"] = 0.0
+		d["army_command_split"] = false
+		d["army_action_note"] = {}
+		var army_stats: Dictionary = d.get("stats", {})
+		for key in ["army_actions", "army_officer_changes", "army_redeployments", "army_allowances", "army_splits", "army_allowance_uses"]:
+			army_stats[key] = 0
+		d["stats"] = army_stats
 	if not d.has("foreign"):
 		d["foreign"] = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
 	if not d.has("foreign_hint_until"):
@@ -788,7 +812,8 @@ func save_game() -> bool:
 		"regions": regions, "region_rng": region_rng.state, "regional_effects": regional_effects,
 		"last_region_action_week": last_region_action_week, "last_region_crisis_week": last_region_crisis_week,
 		"region_sync_unrest": region_sync_unrest, "region_sync_economy": region_sync_economy,
-		"army_units": army_units, "army_rng": army_rng.state,
+		"army_units": army_units, "army_rng": army_rng.state, "army_effects": army_effects, "army_tension": army_tension,
+		"army_command_split": army_command_split, "army_action_note": army_action_note,
 	"version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
@@ -930,6 +955,10 @@ func load_game() -> bool:
 	region_rng.state = int(d.get("region_rng", int(d.get("seed", 1)) ^ 0xA4E610))
 	army_rng.state = int(d.get("army_rng", int(d.get("seed", 1)) ^ 0xA4B2E))
 	army_units = d.get("army_units", _new_army_save(float(actors.get("arden").power) if actors.has("arden") else 45.0))
+	army_effects.assign(d.get("army_effects", []))
+	army_tension = float(d.get("army_tension", 0.0))
+	army_command_split = bool(d.get("army_command_split", false))
+	army_action_note = d.get("army_action_note", {})
 	_sync_arden_power()
 	_refresh_parliament_opposition()
 	_generate_reports()
@@ -1900,6 +1929,11 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 		_queue_region_action_options(str(ch.get("region", "")))
 		changed.emit()
 		return tr("Bölge seçildi; şimdi tahsis türünü belirle.")
+	if e.get("kind", "") == "army_action" and str(ch.get("action", "")) == "open_army_action":
+		pending.remove_at(pending_index)
+		_queue_army_action_options(str(ch.get("army_action", "")))
+		changed.emit()
+		return tr("Ordu kararı hazırlandı; uygulama biçimini seç.")
 	if e.get("kind", "") != "parliament_bill" and not spend_mesai():
 		return _no_mesai()
 	if e.get("crisis", false):
@@ -1935,6 +1969,11 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 		history.append(tr("Hafta %d — %s » %s") % [week, e["title"], ch["label"]])
 		changed.emit()
 		return region_result
+	if e.get("kind", "") == "army_action":
+		var army_result := _resolve_army_action(ch)
+		history.append(tr("Hafta %d — %s » %s") % [week, e["title"], ch["label"]])
+		changed.emit()
+		return army_result
 	if e.get("kind", "") in ["election_result", "government_formation", "confidence_vote", "government_appointment"]:
 		var government_result := _resolve_r3c_decision(e, choice_index)
 		history.append(tr("Hafta %d — %s » %s") % [week, e["title"], ch["label"]])
@@ -2111,6 +2150,7 @@ func end_week() -> void:
 	_world_tick()
 	_tick_public_opinion()
 	_tick_budget_effects()
+	_tick_army_effects()
 	_tick_region_systems()
 	_state_warnings()
 	_decay_facts()
@@ -2821,6 +2861,23 @@ func _tick_budget_effects() -> void:
 	delayed_economy = keep
 
 
+func _tick_army_effects() -> void:
+	var keep: Array[Dictionary] = []
+	for effect: Dictionary in army_effects:
+		if int(effect.get("due", week + 1)) > week:
+			keep.append(effect)
+			continue
+		var gain := float(effect.get("amount", 0.0))
+		for id in army_units:
+			var unit: Dictionary = army_units[id]
+			unit["morale"] = clampf(float(unit.get("morale", 50.0)) + gain, 0.0, 100.0)
+			unit["supply"] = clampf(float(unit.get("supply", 50.0)) + gain * 0.8, 0.0, 100.0)
+			unit["loyalty"] = clampf(float(unit.get("loyalty", 50.0)) + gain * 0.5, 0.0, 100.0)
+	army_effects = keep
+	army_tension = maxf(0.0, army_tension - 0.5)
+	_sync_arden_power()
+
+
 func _fire_patronage() -> void:
 	if week < 18 or pending.size() >= 3 or not actors.has("halden") or actors["halden"].moved:
 		return
@@ -3259,21 +3316,21 @@ func _run_cascade() -> void:
 	var pressure_steps := maxi(0, week - MAX_WEEKS - 1) / 26 if endless else 0
 	var rd := _diff("ready_drive") - pressure_steps * 2.0
 	for a: Actor in actors.values():
-		if a.insider and not a.supporting and not a.ready and a.rebellion_drive() > rd:
+		if a.insider and not a.supporting and not a.ready and _army_adjusted_drive(a) > rd:
 			a.ready = true
 	var changed_any := true
 	while changed_any:
 		changed_any = false
 		var share := _ready_power_share()
 		for a: Actor in actors.values():
-			if a.insider and not a.supporting and not a.ready and share >= maxf(0.05, a.threshold - drop) and a.rebellion_drive() > 12.0:
+			if a.insider and not a.supporting and not a.ready and share >= maxf(0.05, a.threshold - drop) and _army_adjusted_drive(a) > 12.0:
 				a.ready = true
 				changed_any = true
 	# Çekilme: ne kendi öfkesi ne de kaskadın çekimi tutuyorsa komplocu birkaç hafta içinde geri çekilir.
 	for a: Actor in actors.values():
 		if not a.ready or a.moved or not a.insider or a.supporting:
 			continue
-		var d := a.rebellion_drive()
+		var d := _army_adjusted_drive(a)
 		var held := d > rd - _diff("leave_gap") or (_ready_share_without(a) >= maxf(0.05, a.threshold - drop) and d > PLOT_CASCADE_MIN)
 		if held:
 			a.plot_calm = 0
@@ -3290,7 +3347,7 @@ func _run_cascade() -> void:
 		var st := 0
 		if a.ready:
 			st = 3 if share_now >= _diff("coup_share") - pressure_steps * 0.02 - PLOT_PREP_MARGIN else 2
-		elif a.rebellion_drive() >= rd - PLOT_UNEASY_GAP:
+		elif _army_adjusted_drive(a) >= rd - PLOT_UNEASY_GAP:
 			st = 1
 		if st != a.plot_stage:
 			_log_plot(a, a.plot_stage, st)
@@ -3304,6 +3361,10 @@ func _run_cascade() -> void:
 			striker = true
 	if coup_crisis.is_empty() and week >= int(_diff("grace")) and week >= crisis_cooldown and share_now >= _diff("coup_share") - pressure_steps * 0.02 and striker:
 		_open_crisis()
+
+
+func _army_adjusted_drive(actor: Actor) -> float:
+	return actor.rebellion_drive() + (army_tension * 0.12 if actor.id == "arden" else 0.0)
 
 
 func _ready_share_without(x: Actor) -> float:
@@ -4184,6 +4245,7 @@ func _award_achievements(survived: bool, title: String, cause: String) -> Array:
 		earned.append("tahtta_kal")
 		earned.append_array(_economy_achievement_ids())
 		earned.append_array(_region_achievement_ids())
+		earned.append_array(_army_achievement_ids())
 		if dynasty_generation >= 2:
 			earned.append("kusaklar")
 		if dynasty_generation >= 3:
@@ -4288,6 +4350,17 @@ func _region_achievement_ids() -> Array[String]:
 		earned.append("regional_balance")
 	if voice >= 3:
 		earned.append("regional_voice")
+	return earned
+
+
+func _army_achievement_ids() -> Array[String]:
+	var earned: Array[String] = []
+	if int(stats.get("army_officer_changes", 0)) >= 2:
+		earned.append("komuta_ustasi")
+	if int(stats.get("army_redeployments", 0)) >= 2:
+		earned.append("garnizon_hatti")
+	if int(stats.get("army_allowances", 0)) >= 3:
+		earned.append("ordu_ikmalcisi")
 	return earned
 
 
@@ -4470,10 +4543,150 @@ func _army_loyalty() -> float:
 	return a.total_loyalty() if a else 50.0
 
 
+func request_army_decision() -> String:
+	if ended or mesai < 1 or not pending.is_empty():
+		return _no_mesai() if mesai < 1 else tr("Önce bekleyen kararları çözmelisin.")
+	var choices: Array = []
+	for action in ["officer", "redeploy", "allowance", "split"]:
+		choices.append({"label": tr(str({"officer": "Subay tayini", "redeploy": "Garnizonu yer değiştir", "allowance": "Maaş ve ikmal ödeneği", "split": "Komuta zincirini böl"}[action])),
+			"action": "open_army_action", "army_action": action, "fx": {},
+			"preview": tr(str({"officer": "Komutanları değiş tokuş et; yeni bağlılık belirsiz, eski subay küsebilir.",
+				"redeploy": "Başkent ile sınır hattı arasındaki güvenlik boşluğu yer değiştirir.",
+				"allowance": "R1 ordu payı ve hazine gerekir; moral etkisi gecikir, tekrarlar azalır.",
+				"split": "Arden zayıflar ama emir birliği bozulur ve öfkesi artar."}[action]))})
+	pending.append({"event": {"id": "army_action_%d" % week, "kind": "army_action", "title": tr("Ordu komuta ve ikmal kararı"),
+		"text": tr("Subay, konuşlanma, ikmal ya da komuta dengesi için bir yol seç. Her emir mesai ve siyasi ya da hazine bedeli taşır; sonuçların bir bölümü gecikmeli gelir."),
+		"advisors": ["arden", "dorn"], "choices": choices, "ignore": {"text": tr("Bu hafta ordu düzenine dokunulmadı."), "fx": {}}}, "age": 0})
+	return tr("Ordu düzeni kararı gündeme alındı.")
+
+
+func _queue_army_action_options(action: String) -> void:
+	var choices: Array = []
+	match action:
+		"officer":
+			for id in ["capital", "border", "security"]:
+				for other in ["capital", "border", "security"]:
+					if id == other:
+						continue
+					var current: String = str(army_units[id].get("commander", ""))
+					var replacement: String = str(army_units[other].get("commander", ""))
+					if not actors.has(current) or not actors.has(replacement):
+						continue
+					choices.append({"label": tr("%s, %s'nin görevini devralsın") % [actors[replacement].display_name, tr(str(_army_unit_name(id)))],
+						"action": "officer", "unit": id, "other": other, "available": week - int(army_units[id].get("appointed_week", -20)) >= 8,
+						"preview": tr("Komutanlıklar yer değiştirir; gelen subayın bağlılığı belirsiz, görevden alınan komutanın tepkisi izlenir."), "fx": {}})
+		"redeploy":
+			for id in ["capital", "border"]:
+				var unit: Dictionary = army_units[id]
+				var destination := "border" if str(unit.get("region", id)) == "capital" else "capital"
+				choices.append({"label": tr("%s: %s") % [tr(_army_unit_name(id)), tr("Sınır hattına gönder" if destination == "border" else "Başkente çek")],
+					"action": "redeploy", "unit": id, "destination": destination,
+					"preview": tr("Birliklerin bölgesel ağırlığı değişir; merkezdeki nöbet ile sınır güvenliği arasında ödünleşme doğar."), "fx": {}})
+		"allowance":
+			var uses := int(stats.get("army_allowance_uses", 0))
+			var cost := 8.0 + 4.0 * uses
+			choices.append({"label": tr("Ek maaş ve ikmal ayır"), "action": "allowance", "available": float(budget_allocation.get("army", 0.0)) >= 18.0 and treasury >= cost,
+				"preview": tr("Ordu tahsisi ve hazine yeterli olmalı. Moral, bağlılık ve ikmal gecikmeli yükselir; yinelenen ödenek daha az etkili olur."), "fx": {}})
+		"split":
+			choices.append({"label": tr("Komuta yetkisini dağıt"), "action": "split", "available": not army_command_split and treasury >= 8.0,
+				"preview": tr("Arden'in gücü azalır; ordu kapasitesi ve emir birliği de zedelenir, generalin öfkesi darbe riskini büyütür."), "fx": {}})
+	if choices.is_empty():
+		choices.append({"label": tr("Geri dön"), "action": "cancel", "fx": {}, "preview": tr("Şu an uygulanabilir tayin yok.")})
+	pending.append({"event": {"id": "army_options_%d_%s" % [week, action], "kind": "army_action", "title": tr("Ordu emri"),
+		"text": tr("Önizlemeyi seçenek üzerinde basılı tut ya da üzerine gelerek oku. Gizli bağlılık ve ikmal değerleri gösterilmez."),
+		"advisors": ["arden", "dorn"], "choices": choices, "ignore": {"text": tr("Emir verilmedi."), "fx": {}}}, "age": 0})
+
+
+func _resolve_army_action(choice: Dictionary) -> String:
+	var action := str(choice.get("action", ""))
+	if action == "cancel":
+		return tr("Ordu emri verilmedi.")
+	match action:
+		"officer":
+			var id := str(choice.get("unit", ""))
+			var other := str(choice.get("other", ""))
+			if not army_units.has(id) or not army_units.has(other) or week - int(army_units[id].get("appointed_week", -20)) < 8:
+				return tr("Bu tayin artık uygulanamıyor.")
+			var old_id := str(army_units[id]["commander"])
+			var new_id := str(army_units[other]["commander"])
+			army_units[id]["commander"] = new_id
+			army_units[other]["commander"] = old_id
+			var loyalty_shift := army_rng.randf_range(-8.0, 4.0)
+			army_units[id]["loyalty"] = clampf(float(army_units[id]["loyalty"]) + loyalty_shift, 0.0, 100.0)
+			army_units[id]["appointed_week"] = week
+			army_units[other]["appointed_week"] = week
+			army_units[other]["loyalty"] = clampf(float(army_units[other]["loyalty"]) - 2.0, 0.0, 100.0)
+			army_tension = minf(100.0, army_tension + 8.0)
+			if actors.has(old_id):
+				actors[old_id].ambition += 4.0
+				actors[old_id].loyalty["career"] = maxf(0.0, float(actors[old_id].loyalty.get("career", 0.0)) - 5.0)
+			stats["army_officer_changes"] = int(stats.get("army_officer_changes", 0)) + 1
+			army_action_note = {"kind": "officer", "unit": id, "week": week}
+		"redeploy":
+			var destination := str(choice.get("destination", ""))
+			if destination not in ["capital", "border"]:
+				return tr("Konuşlanma emri geçersiz.")
+			var unit_id := str(choice.get("unit", "capital"))
+			if not army_units.has(unit_id): return tr("Birlik konuşlanma emri geçersiz.")
+			var unit: Dictionary = army_units[unit_id]
+			var old_region := str(unit.get("region", "capital"))
+			if old_region == destination: return tr("Başkent garnizonu zaten bu hatta.")
+			regions[old_region]["garrison"] = maxf(0.0, float(regions[old_region].get("garrison", 0.0)) - 22.0)
+			regions[destination]["garrison"] = minf(100.0, float(regions[destination].get("garrison", 0.0)) + 22.0)
+			unit["region"] = destination
+			army_tension = minf(100.0, army_tension + (8.0 if destination == "border" else 2.0))
+			stats["army_redeployments"] = int(stats.get("army_redeployments", 0)) + 1
+			army_action_note = {"kind": "redeploy", "destination": destination, "unit": unit_id, "week": week}
+		"allowance":
+			var uses := int(stats.get("army_allowance_uses", 0))
+			var cost := 8.0 + 4.0 * uses
+			if float(budget_allocation.get("army", 0.0)) < 18.0 or treasury < cost:
+				return tr("Ordu tahsisi ya da hazine ek ödeneği karşılayamadı.")
+			treasury -= cost
+			var amount := maxf(1.0, 6.0 - 1.5 * uses)
+			army_effects.append({"due": week + 2, "amount": amount})
+			stats["army_allowance_uses"] = uses + 1
+			stats["army_allowances"] = int(stats.get("army_allowances", 0)) + 1
+			army_action_note = {"kind": "allowance", "week": week}
+		"split":
+			if army_command_split or treasury < 8.0:
+				return tr("Komuta reformu yeniden uygulanamıyor ya da hazineyi aşıyor.")
+			treasury -= 8.0
+			army_command_split = true
+			army_tension = minf(100.0, army_tension + 22.0)
+			capacity["ordu"] = maxf(5.0, float(capacity["ordu"]) - 8.0)
+			if actors.has("arden"):
+				actors["arden"].ambition += 12.0
+			for id in army_units:
+				army_units[id]["loyalty"] = maxf(5.0, float(army_units[id].get("loyalty", 50.0)) - 12.0)
+			stats["army_splits"] = int(stats.get("army_splits", 0)) + 1
+			army_action_note = {"kind": "split", "week": week}
+		_:
+			return ""
+	stats["army_actions"] = int(stats.get("army_actions", 0)) + 1
+	_sync_arden_power()
+	return army_action_line()
+
+
+func _army_unit_name(id: String) -> String:
+	return {"capital": "Başkent garnizonu", "border": "Sınır kolordusu", "security": "Jandarma ve güvenlik"}.get(id, "Ordu birliği")
+
+
+func army_action_line() -> String:
+	if army_action_note.is_empty() or week - int(army_action_note.get("week", week)) >= 4:
+		return ""
+	match str(army_action_note.get("kind", "")):
+		"officer": return tr("Ordu kararı: %s komutanlığı yeniden düzenlendi; eski subayın tepkisi izleniyor.") % tr(_army_unit_name(str(army_action_note.get("unit", ""))))
+		"redeploy": return tr("Ordu kararı: %s %s hattına kaydırıldı; merkez ve sınırdaki denge değişti.") % [tr(_army_unit_name(str(army_action_note.get("unit", "capital")))), tr(str(REGION_NAMES.get(str(army_action_note.get("destination", "")), "Sınır İlleri")))]
+		"allowance": return tr("Ordu kararı: Ek maaş ve ikmal ayrıldı; moral etkisi gecikmeli, tekrarlar daha az karşılık verir.")
+		"split": return tr("Ordu kararı: Komuta zinciri bölündü; Arden'in öfkesi ve emir birliği riski sürüyor.")
+	return ""
+
+
 func _new_army_save(arden_power: float) -> Dictionary:
 	var units := {}
 	for id in ["capital", "border", "security"]:
-		units[id] = {"commander": "commander_" + id, "loyalty": arden_power, "morale": 50.0, "supply": 50.0}
+		units[id] = {"commander": "commander_" + id, "loyalty": arden_power, "morale": 50.0, "supply": 50.0, "region": "border" if id == "border" else "capital", "appointed_week": -20}
 	return units
 
 
@@ -4514,7 +4727,9 @@ func army_report_line() -> String:
 		return tr("Ordu: Birlikler düzenini koruyor; komutanlar nöbette.")
 	var unit: Dictionary = army_units.get(featured, {})
 	var tone := tr("sağlam") if concern < 15.0 else (tr("tedirgin") if concern < 30.0 else tr("zorlanıyor"))
-	return tr("Ordu: %s öne çıkıyor; bağlılık %s, moral %s, ikmal %s. Diğer birlikler izleniyor.") % [tr(str({"capital": "Başkent garnizonu", "border": "Sınır kolordusu", "security": "Jandarma ve güvenlik"}[featured])), tone, _army_band(float(unit.get("morale", 50.0))), _army_band(float(unit.get("supply", 50.0)))]
+	var line := tr("Ordu: %s öne çıkıyor; bağlılık %s, moral %s, ikmal %s. Diğer birlikler izleniyor.") % [tr(_army_unit_name(featured)), tone, _army_band(float(unit.get("morale", 50.0))), _army_band(float(unit.get("supply", 50.0)))]
+	var action_line := army_action_line()
+	return line + ("\n" + action_line if action_line != "" else "")
 
 
 func _army_band(value: float) -> String:

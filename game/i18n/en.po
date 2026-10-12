@@ -5098,3 +5098,144 @@ msgstr "%d weeks"
 
 msgid "Sebep eski arşiv kaydında özgün hâliyle saklanıyor."
 msgstr "The cause remains in the original archive entry."
+
+msgid "Ordu Düzeni (1 mesai)\nSubay, garnizon, ikmal ya da komuta zinciri hakkında nitel önizlemeli karar kartı aç."
+msgstr "Army Command (1 work)\nOpen a decision card with qualitative previews for officers, deployments, supplies, or command structure."
+
+msgid "Ordu kararı hazırlandı; uygulama biçimini seç."
+msgstr "The army decision is ready; choose how to proceed."
+
+msgid "Önce bekleyen kararları çözmelisin."
+msgstr "Resolve the pending decisions first."
+
+msgid "Ordu komuta ve ikmal kararı"
+msgstr "Army command and supply decision"
+
+msgid "Subay, konuşlanma, ikmal ya da komuta dengesi için bir yol seç. Her emir mesai ve siyasi ya da hazine bedeli taşır; sonuçların bir bölümü gecikmeli gelir."
+msgstr "Choose an officer, deployment, supply, or command option. Each order costs work and carries a political or treasury price; some effects arrive later."
+
+msgid "Bu hafta ordu düzenine dokunulmadı."
+msgstr "The army's arrangement was left untouched this week."
+
+msgid "Ordu düzeni kararı gündeme alındı."
+msgstr "An army command decision has been added to the agenda."
+
+msgid "Subay tayini"
+msgstr "Officer reassignment"
+
+msgid "Garnizonu yer değiştir"
+msgstr "Redeploy a garrison"
+
+msgid "Maaş ve ikmal ödeneği"
+msgstr "Pay and supply allowance"
+
+msgid "Komuta zincirini böl"
+msgstr "Split the chain of command"
+
+msgid "Komutanları değiş tokuş et; yeni bağlılık belirsiz, eski subay küsebilir."
+msgstr "Exchange commanders; the new commander's loyalty is uncertain, and the former officer may resent the move."
+
+msgid "Başkent ile sınır hattı arasındaki güvenlik boşluğu yer değiştirir."
+msgstr "The security gap shifts between the capital and the border."
+
+msgid "R1 ordu payı ve hazine gerekir; moral etkisi gecikir, tekrarlar azalır."
+msgstr "The R1 army allocation and treasury must cover it; morale effects are delayed and repeated grants bring less."
+
+msgid "Arden zayıflar ama emir birliği bozulur ve öfkesi artar."
+msgstr "Arden loses influence, but unity of command suffers and his anger grows."
+
+msgid "%s, %s'nin görevini devralsın"
+msgstr "Let %s take command of the %s"
+
+msgid "Komutanlıklar yer değiştirir; gelen subayın bağlılığı belirsiz, görevden alınan komutanın tepkisi izlenir."
+msgstr "The commands change hands; the incoming officer's loyalty is uncertain, and the displaced commander's response bears watching."
+
+msgid "Sınır hattına gönder"
+msgstr "Send to the border"
+
+msgid "Başkente çek"
+msgstr "Move to the capital"
+
+msgid "Birliklerin bölgesel ağırlığı değişir; merkezdeki nöbet ile sınır güvenliği arasında ödünleşme doğar."
+msgstr "The units' regional presence shifts, trading central security against border coverage."
+
+msgid "Ek maaş ve ikmal ayır"
+msgstr "Grant extra pay and supplies"
+
+msgid "Ordu tahsisi ve hazine yeterli olmalı. Moral, bağlılık ve ikmal gecikmeli yükselir; yinelenen ödenek daha az karşılık verir."
+msgstr "The army allocation and treasury must suffice. Morale, loyalty, and supply improve later; repeated grants bring diminishing returns."
+
+msgid "Komuta yetkisini dağıt"
+msgstr "Distribute command authority"
+
+msgid "Arden'in gücü azalır; ordu kapasitesi ve emir birliği de zedelenir, generalin öfkesi darbe riskini büyütür."
+msgstr "Arden's power falls, but army capacity and unity of command suffer; the general's anger raises coup risk."
+
+msgid "Geri dön"
+msgstr "Go back"
+
+msgid "Şu an uygulanabilir tayin yok."
+msgstr "No reassignment is currently available."
+
+msgid "Ordu emri"
+msgstr "Army order"
+
+msgid "Önizlemeyi seçenek üzerinde basılı tut ya da üzerine gelerek oku. Gizli bağlılık ve ikmal değerleri gösterilmez."
+msgstr "Read the preview by hovering over an option or pressing and holding it. Hidden loyalty and supply values are not shown."
+
+msgid "Emir verilmedi."
+msgstr "No order was issued."
+
+msgid "Ordu emri verilmedi."
+msgstr "No army order was issued."
+
+msgid "Bu tayin artık uygulanamıyor."
+msgstr "This reassignment is no longer available."
+
+msgid "Konuşlanma emri geçersiz."
+msgstr "The deployment order is invalid."
+
+msgid "Birlik konuşlanma emri geçersiz."
+msgstr "The unit deployment order is invalid."
+
+msgid "Başkent garnizonu zaten bu hatta."
+msgstr "That garrison is already at this post."
+
+msgid "Ordu tahsisi ya da hazine ek ödeneği karşılayamadı."
+msgstr "The army allocation or treasury cannot cover the supplement."
+
+msgid "Komuta reformu yeniden uygulanamıyor ya da hazineyi aşıyor."
+msgstr "The command reform has already been enacted or exceeds the treasury."
+
+msgid "Ordu kararı: %s komutanlığı yeniden düzenlendi; eski subayın tepkisi izleniyor."
+msgstr "Army decision: command over the %s was reassigned; the former officer's response bears watching."
+
+msgid "Ordu kararı: %s %s hattına kaydırıldı; merkez ve sınırdaki denge değişti."
+msgstr "Army decision: the %s moved to the %s line, shifting the balance between the capital and the border."
+
+msgid "Ordu kararı: Ek maaş ve ikmal ayrıldı; moral etkisi gecikmeli, tekrarlar daha az karşılık verir."
+msgstr "Army decision: extra pay and supplies were granted; morale effects are delayed and repeated grants bring less."
+
+msgid "Ordu kararı: Komuta zinciri bölündü; Arden'in öfkesi ve emir birliği riski sürüyor."
+msgstr "Army decision: the chain of command was split; Arden's anger and the loss of unity remain risks."
+
+msgid "Ordu tahsisi ve hazine yeterli olmalı. Moral, bağlılık ve ikmal gecikmeli yükselir; yinelenen ödenek daha az etkili olur."
+msgstr "The army allocation and treasury must suffice. Morale, loyalty, and supply improve later; repeated grants bring diminishing returns."
+
+msgid "Komuta Ustası"
+msgstr "Command Steward"
+
+msgid "Bir saltanatta iki subay tayini yap."
+msgstr "Reassign two officers in one reign."
+
+msgid "Garnizon Hattı"
+msgstr "Garrison Line"
+
+msgid "Bir saltanatta iki birlik konuşlandırmasını değiştir."
+msgstr "Change two unit deployments in one reign."
+
+msgid "Ordu İkmalcisi"
+msgstr "Quartermaster"
+
+msgid "Bir saltanatta üç kez ek maaş ve ikmal ayır."
+msgstr "Fund three army pay and supply grants in one reign."

@@ -56,6 +56,7 @@ const TIPS := {
 	"austerity": "Kemer sık (1 mesai)\nKasayı korur; iş ve huzur üzerindeki bedeli büyür.",
 	"incentive": "Teşvik paketi (1 mesai)\nBugün kasaya yük olur; istihdam ve üretime sonra destek verir.",
 	"region_management": "Bölge Yönetimi (1 mesai)\nR1 tahsisine göre altyapı yatırımı ya da garnizon seç; yerel medya ve vali kararları da aynı bölgesel sicile işlenir.",
+	"army_management": "Ordu Düzeni (1 mesai)\nSubay, garnizon, ikmal ya da komuta zinciri hakkında nitel önizlemeli karar kartı aç.",
 	"king_speech": "Halka konuş (1 mesai)\nRıza kazanır, korkuyu hafifletir.",
 	"king_visit": "Saha ziyareti (1 mesai)\nİnsanlarla yüz yüze gel; görünürlük riskini göze al.",
 	"king_ceremony": "Tören düzenle (1 mesai)\nTahtın görünürlüğünü artır; etkisi sınırlı kalır.",
@@ -246,7 +247,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		["EMRET", [["o_yaz", "Yazılı Emir"], ["o_soz", "Sözlü Emir"], ["o_ima", "İma"]]],
 		["BASKI", [["blackmail", "Şantaj"], ["dismiss", "Görevden Al"]]],
 		["OPERASYON", [["op_dikkat", "Dikkat Dağıt"], ["op_bol", "Muhalefeti Böl"], ["op_zayif", "Rakibi Zayıflat"], ["op_dus", "Birbirine Düşür"]]],
-		["DEVLET", [["tax_raise", "Vergiyi Artır"], ["tax_relief", "Vergiyi Hafiflet"], ["austerity", "Kemer Sık"], ["incentive", "Teşvik Paketi"], ["appoint_loyal", "Sadık Ata"], ["appoint_merit", "Liyakatli Ata"], ["tender", "İhale Ver"], ["train_heir", "Veliahdı Yetiştir"], ["delegation", "Heyet Gönder"], ["region_management", "Bölge Yönetimi"]]],
+		["DEVLET", [["tax_raise", "Vergiyi Artır"], ["tax_relief", "Vergiyi Hafiflet"], ["austerity", "Kemer Sık"], ["incentive", "Teşvik Paketi"], ["appoint_loyal", "Sadık Ata"], ["appoint_merit", "Liyakatli Ata"], ["tender", "İhale Ver"], ["train_heir", "Veliahdı Yetiştir"], ["delegation", "Heyet Gönder"], ["region_management", "Bölge Yönetimi"], ["army_management", "Ordu Düzeni"]]],
 		["KAMUOYU", [["king_speech", "Halka Konuş"], ["king_visit", "Saha Ziyareti"], ["king_ceremony", "Tören"], ["king_hide", "Gizlen"]]],
 	]
 	var actions := {
@@ -275,6 +276,9 @@ func _build_ui(cols: HBoxContainer) -> void:
 		"austerity": func() -> void: host._act(func(_id: String) -> String: return Sim.economy_policy("austerity")),
 		"incentive": func() -> void: host._act(func(_id: String) -> String: return Sim.economy_policy("incentive")),
 		"region_management": func() -> void: host._act(func(_id: String) -> String: return Sim.request_regional_decision()),
+		"army_management": func() -> void:
+			host._acted_week = Sim.week
+			host._log(Sim.request_army_decision()),
 		"king_speech": func() -> void: _public_action("speech"),
 		"king_visit": func() -> void: _public_action("visit"),
 		"king_ceremony": func() -> void: _public_action("ceremony"),
@@ -478,6 +482,7 @@ const ACTION_META := {
 	"austerity": ["Kemer Sık", 1, 0.0, 0, 2],
 	"incentive": ["Teşvik Paketi", 1, 0.0, 0, 1],
 	"region_management": ["Bölge Yönetimi", 1, 0.0, 0, 0],
+	"army_management": ["Ordu Düzeni", 1, 0.0, 0, 1],
 }
 const TRACE_NAMES := ["iz yok", "inkâr edilebilir", "iz bırakır", "kanıt bırakır"]
 const RISK_NAMES := ["düşük", "orta", "yüksek"]
@@ -639,11 +644,16 @@ func _make_card(a) -> PanelContainer:
 	card.mouse_filter = Control.MOUSE_FILTER_STOP
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	card.tooltip_text = "%s\n%s" % [a.display_name, a.title]
-	# Portre kartı tam doldurur; ad ve rol, portrenin altındaki karartmanın üstünde.
-	var card_art: Control = host._initial_art(a.id, Vector2(68, 74) if compact_state_card else (Vector2(92, 88) if not host._mobile else Vector2(130, 120)), 28 if compact_state_card else 36)
-	if compact_state_card and card_art.get_child_count() > 0 and card_art.get_child(0) is TextureRect:
-		(card_art.get_child(0) as TextureRect).stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	card.add_child(card_art)
+	var compact_body: VBoxContainer
+	if compact_state_card:
+		compact_body = VBoxContainer.new()
+		compact_body.add_theme_constant_override("separation", 0)
+		card.add_child(compact_body)
+	var card_art: Control = host._initial_art(a.id, Vector2(72, 48) if compact_state_card else (Vector2(92, 88) if not host._mobile else Vector2(130, 120)), 28 if compact_state_card else 36)
+	if compact_state_card:
+		compact_body.add_child(card_art)
+	else:
+		card.add_child(card_art)
 	var fade := TextureRect.new()
 	fade.texture = _card_fade()
 	fade.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -652,22 +662,28 @@ func _make_card(a) -> PanelContainer:
 	fade.anchor_right = 1.0
 	fade.anchor_bottom = 1.0
 	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	card_art.add_child(fade)
+	if not compact_state_card:
+		card_art.add_child(fade)
 	var v := VBoxContainer.new()
 	card.set_meta("card_labels", v)
 	v.add_theme_constant_override("separation", -2)
-	v.anchor_top = 1.0
-	v.anchor_right = 1.0
-	v.anchor_bottom = 1.0
-	v.offset_top = -40 if not host._mobile else -52
-	v.offset_bottom = -3
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	card_art.add_child(v)
+	if compact_state_card:
+		v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		v.custom_minimum_size.y = 31
+		compact_body.add_child(v)
+	else:
+		v.anchor_top = 1.0
+		v.anchor_right = 1.0
+		v.anchor_bottom = 1.0
+		v.offset_top = -40 if not host._mobile else -52
+		v.offset_bottom = -3
+		card_art.add_child(v)
 	var n := Label.new()
 	n.text = host._short_name(a.display_name)
 	n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	n.add_theme_font_override("font", UIKit.serif())
-	n.add_theme_font_size_override("font_size", host._fs(18) if host._mobile else 17)
+	n.add_theme_font_size_override("font_size", 13 if compact_state_card else (host._fs(18) if host._mobile else 17))
 	n.add_theme_color_override("font_color", Color("f3ead2"))
 	n.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.8))
 	n.add_theme_constant_override("shadow_outline_size", 4)
@@ -677,7 +693,7 @@ func _make_card(a) -> PanelContainer:
 	r.text = UIKit.tr_upper(tr("Düşman") if a.moved else _role_for_actor(a))
 	r.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	r.add_theme_font_override("font", UIKit.caps())
-	r.add_theme_font_size_override("font_size", host._fs(12) if host._mobile else host._fs(10))
+	r.add_theme_font_size_override("font_size", 9 if compact_state_card else (host._fs(12) if host._mobile else host._fs(10)))
 	r.add_theme_color_override("font_color", Color("ff8a7a") if a.moved else Color(UIKit.GOLD, 0.85))
 	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(r)
@@ -768,7 +784,7 @@ func _style_cards(hover_id := "") -> void:
 		card.add_theme_stylebox_override("panel", UIKit.box(bg, border, 6, 3, 2 if selected else 1))
 
 
-const PERSON_ACTIONS := ["summon", "promote", "bribe", "p_0", "p_1", "p_2", "cross", "investigate", "o_sor", "o_yaz", "o_soz", "o_ima", "blackmail", "dismiss", "appoint_loyal", "appoint_merit", "tender", "train_heir", "delegation", "tax_raise", "tax_relief", "austerity", "incentive", "region_management"]
+const PERSON_ACTIONS := ["summon", "promote", "bribe", "p_0", "p_1", "p_2", "cross", "investigate", "o_sor", "o_yaz", "o_soz", "o_ima", "blackmail", "dismiss", "appoint_loyal", "appoint_merit", "tender", "train_heir", "delegation", "tax_raise", "tax_relief", "austerity", "incentive", "region_management", "army_management"]
 const OP_ACTIONS := ["op_dikkat", "op_bol", "op_zayif", "op_dus"]
 
 
@@ -804,6 +820,8 @@ func _update_action_states() -> void:
 				off = true
 			if k == "delegation" and id != "" and (not Sim.FOREIGN_ENVOYS.has(id) or Sim.actors[id].moved or Sim.delegation_wait() > 0):
 				off = true
+			if k == "army_management":
+				off = busy or Sim.mesai < 1 or not Sim.pending.is_empty()
 			b.disabled = off
 	for k in OP_ACTIONS:
 		var b := host._buttons.get(k) as Button

@@ -337,6 +337,26 @@ func _run() -> void:
 		await _shot("r5a_commanders")
 		quit(0)
 		return
+	if "--r5b-army" in OS.get_cmdline_user_args():
+		main._instant = true
+		sim0.pending.clear()
+		sim0.request_army_decision()
+		sim0.resolve_decision(0, 0)
+		main._refresh()
+		await _shot("r5b_action_card")
+		sim0.resolve_decision(0, 0)
+		main._refresh()
+		main._journal.clear()
+		main._on_week(sim0.week)
+		main._select_tab(main._journal)
+		await _shot("r5b_daily_report")
+		main._divan.open()
+		await _shot("r5b_divan_report")
+		var army_bar: VScrollBar = main._divan.drawer_scroll.get_v_scroll_bar()
+		main._divan.drawer_scroll.scroll_vertical = int(army_bar.max_value - army_bar.page)
+		await _shot("r5b_commander_cards")
+		quit(0)
+		return
 	if "--regions" in OS.get_cmdline_user_args():
 		main._instant = true
 		sim0.pending.clear()
