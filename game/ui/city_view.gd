@@ -367,7 +367,7 @@ func _region_compact_name(id: String) -> String:
 
 func _build_drawer() -> void:
 	_drawer = PanelContainer.new()
-	_drawer.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PLATE, 0.96), UIKit.GOLD, 10, 20))
+	_drawer.add_theme_stylebox_override("panel", UIKit.box(UIKit.PLATE, UIKit.GOLD, 10, 20))
 	var w := 560.0 if not mobile else 620.0
 	_drawer.anchor_left = 1.0
 	_drawer.anchor_right = 1.0
