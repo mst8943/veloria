@@ -906,7 +906,7 @@ func _initial_art(id: String, size: Vector2, letter_size := 40) -> Control:
 	else:
 		var hue := float(absi(id.hash()) % 360) / 360.0
 		var c := ColorRect.new()
-		c.color = Color.from_hsv(hue, 0.12 if id.begins_with("governor_") else 0.35, 0.22 if id.begins_with("governor_") else 0.34)
+		c.color = Color.from_hsv(hue, 0.12 if (id.begins_with("governor_") or id.begins_with("commander_")) else 0.35, 0.22 if (id.begins_with("governor_") or id.begins_with("commander_")) else 0.34)
 		c.set_anchors_preset(Control.PRESET_FULL_RECT)
 		c.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		box.add_child(c)
@@ -1719,6 +1719,7 @@ func _on_week(_w: int) -> void:
 	_journal.append_text("• %s\n" % Sim.parliament_report_line())
 	_journal.append_text("• %s\n" % Sim.parliament_laws_line())
 	_journal.append_text("• %s\n" % Sim.region_report_line())
+	_journal.append_text("• %s\n" % Sim.army_report_line())
 	_tabs.current_tab = 0
 
 

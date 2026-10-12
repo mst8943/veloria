@@ -14,7 +14,7 @@ func _initialize() -> void:
 	sim.save_path = "user://regions_test.sav"
 	sim.new_game(101)
 	_check(sim.regions.size() == 4, "four regions initialize")
-	_check(sim.actors.size() == 18, "four supporting governors join the existing cast")
+	_check(sim.actors.size() == 21, "the four governors join the existing cast")
 	_check(absf(_weighted(sim, "unrest") - sim.unrest) < 0.001, "national unrest is the weighted regional summary")
 	_check(absf(_weighted(sim, "economy") - sim.economy) < 0.001, "national economy is the weighted regional summary")
 	_check(sim.regions.values().map(func(r: Dictionary) -> float: return float(r["unrest"])).max() > sim.regions.values().map(func(r: Dictionary) -> float: return float(r["unrest"])).min(),
@@ -112,7 +112,7 @@ func _initialize() -> void:
 	_check(report.to_lower().contains("öne çıkıyor") and report.to_lower().contains("diğer bölgeler") and not report.contains("30.0"), "regional report highlights one region and summarizes the rest without numbers")
 	var old_save := {"version": 18, "seed": 101, "unrest": 27.5, "economy": 61.25}
 	var migrated: Dictionary = sim._migrate_save(old_save, 18)
-	_check(int(migrated["version"]) == 20 and absf(_weighted_data(migrated["regions"], "unrest") - 27.5) < 0.001,
+	_check(int(migrated["version"]) == 21 and absf(_weighted_data(migrated["regions"], "unrest") - 27.5) < 0.001,
 		"v18 migration preserves the national unrest level")
 	_check(absf(_weighted_data(migrated["regions"], "economy") - 61.25) < 0.001, "v18 migration preserves the national economy level")
 	var v19_regions: Dictionary = sim._new_regions(27.5, 61.25)

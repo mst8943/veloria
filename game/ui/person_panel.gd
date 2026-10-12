@@ -13,7 +13,7 @@ var _mobile_group_buttons: Dictionary = {}
 var _mobile_person_scroll: ScrollContainer
 const MOBILE_GROUPS := {
 	"dynasty": ["dorn", "prens", "julian"],
-	"state": ["arden", "voss", "kessler", "falk", "governor_capital", "governor_industry", "governor_farmland", "governor_border"],
+	"state": ["arden", "voss", "kessler", "falk", "governor_capital", "governor_industry", "governor_farmland", "governor_border", "commander_capital", "commander_border", "commander_security"],
 	"power": ["halden", "lena", "brandt"],
 	"foreign": ["elena", "claire", "malenkov", "lucien"],
 }
@@ -404,6 +404,8 @@ func _group_for_actor(id: String) -> String:
 
 
 func _role_for_actor(a) -> String:
+	if a.id.begins_with("commander_"):
+		return tr("Komutan")
 	return tr("Vali") if a.id.begins_with("governor_") and Sim._governor_assigned(a.id) else (tr("Atanmamış") if a.id.begins_with("governor_") else tr(str(ROLE.get(a.domain, ""))))
 
 
@@ -627,14 +629,15 @@ func _card_fade() -> Texture2D:
 func _make_card(a) -> PanelContainer:
 	var card := PanelContainer.new()
 	var compact_governor: bool = not host._mobile and str(a.id).begins_with("governor_")
-	card.custom_minimum_size = Vector2(78, 82) if compact_governor else (Vector2(108, 96) if not host._mobile else Vector2(150, 132))
+	var compact_state_card: bool = compact_governor or (not host._mobile and str(a.id).begins_with("commander_"))
+	card.custom_minimum_size = Vector2(78, 82) if compact_state_card else (Vector2(108, 96) if not host._mobile else Vector2(150, 132))
 	card.clip_contents = true
 	card.mouse_filter = Control.MOUSE_FILTER_STOP
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	card.tooltip_text = "%s\n%s" % [a.display_name, a.title]
 	# Portre kartı tam doldurur; ad ve rol, portrenin altındaki karartmanın üstünde.
-	var card_art: Control = host._initial_art(a.id, Vector2(68, 74) if compact_governor else (Vector2(92, 88) if not host._mobile else Vector2(130, 120)), 28 if compact_governor else 36)
-	if compact_governor and card_art.get_child_count() > 0 and card_art.get_child(0) is TextureRect:
+	var card_art: Control = host._initial_art(a.id, Vector2(68, 74) if compact_state_card else (Vector2(92, 88) if not host._mobile else Vector2(130, 120)), 28 if compact_state_card else 36)
+	if compact_state_card and card_art.get_child_count() > 0 and card_art.get_child(0) is TextureRect:
 		(card_art.get_child(0) as TextureRect).stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	card.add_child(card_art)
 	var fade := TextureRect.new()

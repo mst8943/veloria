@@ -16,5 +16,8 @@
   "governor_capital": {"name": "Mira Solen", "title": "Governor of the Capital", "weak_point": "Her old ties to the Palace"},
   "governor_industry": {"name": "Tarin Vey", "title": "Governor of the Industrial Belt", "weak_point": "An old strike file"},
   "governor_farmland": {"name": "Nera Aven", "title": "Governor of the Farming Plains", "weak_point": "A land dispute"},
-  "governor_border": {"name": "Oren Dask", "title": "Governor of the Border Provinces", "weak_point": "An old smuggling inquiry"}
+  "governor_border": {"name": "Oren Dask", "title": "Governor of the Border Provinces", "weak_point": "An old smuggling inquiry"},
+  "commander_capital": {"name":"Ilyan Rell","title":"Capital Garrison Commander","weak_point":"An old duty roster"},
+  "commander_border": {"name":"Sera Kest","title":"Border Corps Commander","weak_point":"An old supply order"},
+  "commander_security": {"name":"Marek Nadir","title":"Gendarmerie and Security Commander","weak_point":"An old surveillance file"}
 }

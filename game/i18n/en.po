@@ -5055,3 +5055,34 @@ msgstr "Find a scapegoat"
 
 msgid "Gündem Değiştir"
 msgstr "Change the subject"
+
+msgid "Komutan"
+msgstr "Commander"
+
+msgid "Başkent garnizonu"
+msgstr "Capital garrison"
+
+msgid "Sınır kolordusu"
+msgstr "Border corps"
+
+msgid "Jandarma ve güvenlik"
+msgstr "Gendarmerie and security"
+
+msgid "Ordu: Birlikler düzenini koruyor; komutanlar nöbette."
+msgstr "Army: The units hold their order; commanders remain on watch."
+
+msgid "Ordu: %s öne çıkıyor; bağlılık %s, moral %s, ikmal %s. Diğer birlikler izleniyor."
+msgstr "Army: %s stands out; loyalty %s, morale %s, supplies %s. The other units remain under watch."
+
+
+msgid "yeterli"
+msgstr "adequate"
+
+msgid "zayıf"
+msgstr "weak"
+
+msgid "tedirgin"
+msgstr "uneasy"
+
+msgid "zorlanıyor"
+msgstr "strained"

@@ -5,7 +5,7 @@ const StripOrder := preload("res://game/ui/strip_order.gd")
 
 const GROUPS := [
 	["Hanedan", ["dorn", "prens", "julian"]],
-	["Devlet", ["arden", "voss", "kessler", "falk", "governor_capital", "governor_industry", "governor_farmland", "governor_border"]],
+	["Devlet", ["arden", "voss", "kessler", "falk", "governor_capital", "governor_industry", "governor_farmland", "governor_border", "commander_capital", "commander_border", "commander_security"]],
 	["Güç ve kamuoyu", ["halden", "lena", "brandt"]],
 	["Dış ilişkiler", ["elena", "claire", "malenkov", "lucien"]],
 ]
@@ -28,6 +28,7 @@ var public_label: Label
 var parliament_label: Label
 var laws_label: Label
 var regions_label: Label
+var army_label: Label
 var opened := false
 var last_id := ""
 var visible_ids: Array = []
@@ -117,6 +118,11 @@ func build(right: VBoxContainer) -> void:
 	laws_label.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 	laws_label.add_theme_font_size_override("font_size", host._fs(12))
 	body.add_child(laws_label)
+	army_label = Label.new()
+	army_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	army_label.add_theme_font_size_override("font_size", host._fs(12))
+	army_label.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+	body.add_child(army_label)
 	regions_label = Label.new()
 	regions_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	regions_label.add_theme_color_override("font_color", UIKit.TEXT_DIM)
@@ -183,6 +189,8 @@ func refresh() -> void:
 		laws_label.text = Sim.parliament_laws_line()
 	if is_instance_valid(regions_label):
 		regions_label.text = Sim.region_report_line()
+	if is_instance_valid(army_label):
+		army_label.text = Sim.army_report_line()
 	if host._mobile:
 		if opened:
 			for i in GROUPS.size():
@@ -252,8 +260,8 @@ func _place(card: Control, target: Node) -> void:
 	if card.get_parent() != null:
 		card.get_parent().remove_child(card)
 	target.add_child(card)
-	var compact_governor: bool = not host._mobile and str(card.get_meta("id", "")).begins_with("governor_")
-	card.custom_minimum_size = Vector2(76, 76) if target == strip else (Vector2(78, 82) if compact_governor else Vector2(108, 96))
+	var compact_card: bool = not host._mobile and (str(card.get_meta("id", "")).begins_with("governor_") or str(card.get_meta("id", "")).begins_with("commander_"))
+	card.custom_minimum_size = Vector2(76, 76) if target == strip else (Vector2(78, 82) if compact_card else Vector2(108, 96))
 
 
 func open() -> void:

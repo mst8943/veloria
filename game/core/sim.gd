@@ -59,6 +59,8 @@ const REGION_WEIGHTS := {"capital": 0.35, "industry": 0.30, "farmland": 0.22, "b
 const REGION_NAMES := {"capital": "Başkent Bölgesi", "industry": "Sanayi Kuşağı", "farmland": "Tarım Ovaları", "border": "Sınır İlleri"}
 var regions: Dictionary = {}
 var region_rng := RandomNumberGenerator.new()
+var army_rng := RandomNumberGenerator.new()
+var army_units: Dictionary = {}
 var region_sync_unrest := 30.0
 var region_sync_economy := 55.0
 var regional_effects: Array[Dictionary] = []
@@ -190,6 +192,7 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 		rng.seed = seed_value
 	economy_rng.seed = rng.seed ^ 0xEC0A07
 	region_rng.seed = rng.seed ^ 0xA4E610
+	army_rng.seed = rng.seed ^ 0xA4B2E
 	parliament_rng.seed = rng.seed ^ 0xA77E31
 	government_rng.seed = rng.seed ^ 0x60A3E71
 	if diff >= 0:
@@ -203,6 +206,7 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 	unrest = 30.0
 	economy = 55.0
 	regions = _new_regions(unrest, economy)
+	army_units.clear()
 	region_sync_unrest = unrest
 	region_sync_economy = economy
 	regional_effects.clear()
@@ -294,7 +298,7 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 		var a := Actor.new()
 		a.setup(d)
 		# Her kampanyada gizli özellikler değişir (tekrar oynanabilirlik).
-		var actor_rng: RandomNumberGenerator = region_rng if a.id.begins_with("governor_") else (newcomer_rng if a.supporting else rng)
+		var actor_rng: RandomNumberGenerator = army_rng if a.id.begins_with("commander_") else (region_rng if a.id.begins_with("governor_") else (newcomer_rng if a.supporting else rng))
 		a.ambition += actor_rng.randf_range(-12.0, 12.0)
 		a.honesty = clampf(a.honesty + actor_rng.randf_range(-0.15, 0.15), 0.05, 1.0)
 		a.perceived_king = king_strength + actor_rng.randf_range(-5.0, 5.0)
@@ -307,6 +311,8 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 		if not _apply_scenario(scenario):
 			push_error("Bilinmeyen senaryo: " + scenario)
 			return
+	army_units = _new_army_units(float(actors.get("arden").power) if actors.has("arden") else 45.0)
+	_sync_arden_power()
 	_generate_reports()
 	_record_timeline()
 	changed.emit()
@@ -572,11 +578,11 @@ func save_summary() -> String:
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
 ## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Sarne ve kadro günlüğü
-const SAVE_VERSION := 20
+const SAVE_VERSION := 21
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
-	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng", "budget_allocation", "delayed_economy", "consent", "public_fear", "public_rng", "public_opinion_active", "last_poll_week", "parliament_base_opposition", "parliament_blocs", "parliament_proposals", "last_parliament_bill_week", "parliament_rng", "parliament_laws", "last_parliament_review_week", "government_rng", "government_pm", "government_coalition", "finance_report_source", "last_confidence_week", "regions", "region_rng", "regional_effects", "last_region_action_week", "last_region_crisis_week", "region_sync_unrest", "region_sync_economy"]
+	"halden_hostile_until", "halden_demands", "lena_boost_until", "kadro_log", "heir_maturity", "foreign", "foreign_hint_until", "lang", "scenario", "endless", "ext_pressure", "ext_rng", "external_history", "king_name", "dynasty_generation", "economy_metrics", "economy_rng", "budget_allocation", "delayed_economy", "consent", "public_fear", "public_rng", "public_opinion_active", "last_poll_week", "parliament_base_opposition", "parliament_blocs", "parliament_proposals", "last_parliament_bill_week", "parliament_rng", "parliament_laws", "last_parliament_review_week", "government_rng", "government_pm", "government_coalition", "finance_report_source", "last_confidence_week", "regions", "region_rng", "regional_effects", "last_region_action_week", "last_region_crisis_week", "region_sync_unrest", "region_sync_economy", "army_units", "army_rng"]
 var load_error := ""   # son başarısız yüklemenin oyuncuya gösterilecek nedeni
 
 
@@ -721,6 +727,12 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 		for id in REGION_WEIGHTS:
 			d["regions"][id]["garrison"] = 0.0
 			d["regions"][id]["media"] = 0.0
+	if from < 21:
+		var old_army_power := float(d.get("actors", {}).get("arden", {}).get("power", 45.0))
+		d["army_units"] = _new_army_save(old_army_power)
+		var old_army_rng := RandomNumberGenerator.new()
+		old_army_rng.seed = int(d.get("seed", 1)) ^ 0xA4B2E
+		d["army_rng"] = old_army_rng.state
 	if not d.has("foreign"):
 		d["foreign"] = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
 	if not d.has("foreign_hint_until"):
@@ -773,6 +785,7 @@ func save_game() -> bool:
 		"regions": regions, "region_rng": region_rng.state, "regional_effects": regional_effects,
 		"last_region_action_week": last_region_action_week, "last_region_crisis_week": last_region_crisis_week,
 		"region_sync_unrest": region_sync_unrest, "region_sync_economy": region_sync_economy,
+		"army_units": army_units, "army_rng": army_rng.state,
 	"version": SAVE_VERSION}
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
@@ -912,6 +925,9 @@ func load_game() -> bool:
 	last_region_action_week = int(d.get("last_region_action_week", 0))
 	last_region_crisis_week = int(d.get("last_region_crisis_week", 0))
 	region_rng.state = int(d.get("region_rng", int(d.get("seed", 1)) ^ 0xA4E610))
+	army_rng.state = int(d.get("army_rng", int(d.get("seed", 1)) ^ 0xA4B2E))
+	army_units = d.get("army_units", _new_army_save(float(actors.get("arden").power) if actors.has("arden") else 45.0))
+	_sync_arden_power()
 	_refresh_parliament_opposition()
 	_generate_reports()
 	report_prev = d.get("report_prev", {})   # _generate_reports'un üzerine yazdığı geçen hafta
@@ -962,6 +978,7 @@ func promote(id: String) -> String:
 	if not spend_mesai():
 		return _no_mesai()
 	a.power += 12.0
+	if id == "arden": _set_arden_power(a.power)
 	a.loyalty["career"] += 8.0
 	a.obligation += 10.0
 	a.ambition += 4.0
@@ -1232,6 +1249,7 @@ func order(id: String, task: String, channel: String) -> String:
 			text = tr("%s soruşturmayı başlattı.") % a.display_name
 		_:
 			text = tr("%s emri aldı.") % a.display_name
+	if a.id == "arden": _set_arden_power(a.power)
 	if crossed:
 		text = tr("%s emri kırmızı çizgisini aştığı için gönülsüzce, yarım yamalak uyguladı. Bunu sana yazdı. (Kırmızı çizgisi: %s)") % [a.display_name, tr(a.red_line)]
 	if delayed:
@@ -1796,6 +1814,7 @@ func _keep_promise(p: Dictionary) -> void:
 			_:
 				a.power += 6.0
 				a.fear = maxf(0.0, a.fear - 15.0)
+		if a.id == "arden": _set_arden_power(a.power)
 	# Aynı ödülü bekleyen diğerleri ihanete uğramış sayılır.
 	for q in promises:
 		if q != p and q["prize"] == p["prize"] and q["state"] == "active":
@@ -1963,6 +1982,8 @@ func _apply_effects(fx: Dictionary) -> void:
 		if actors.has(aid):
 			for prop in af[aid]:
 				_bump(actors[aid], str(prop), float(af[aid][prop]))
+			if aid == "arden" and af[aid].has("power"):
+				_set_arden_power(actors[aid].power)
 	if fx.has("fact"):
 		var fd: Dictionary = fx["fact"]
 		var fact_id := str(fd["id"])
@@ -2005,6 +2026,7 @@ func _bump(a: Actor, prop: String, d: float) -> void:
 		a.secrets_on_king = maxi(0, a.secrets_on_king + int(d))
 	else:
 		a.set(prop, float(a.get(prop)) + d)
+		if a.id == "arden" and prop == "power": _set_arden_power(a.power)
 
 
 # ---------------------------------------------------------------- Meclis görüşleri
@@ -2244,6 +2266,8 @@ func _world_tick() -> void:
 		if a.perceived_king < 50.0:
 			a.loyalty["fear"] = maxf(0.0, a.loyalty["fear"] - 0.15)
 		a.fear = maxf(0.0, a.fear - 0.2)
+	if actors.has("arden"):
+		_set_arden_power(actors["arden"].power)
 	var opp_push := (unrest - 40.0) * 0.05 + (brandt.power * 0.01 if brandt else 0.0) - 0.15
 	_set_parliament_base_opposition(parliament_base_opposition + opp_push)
 	unrest = clampf(unrest + rng.randf_range(-3.0, 3.0) + (50.0 - economy) * 0.05 + (opposition - 40.0) * 0.01 - (unrest - 30.0) * 0.06, 0.0, 100.0)
@@ -2785,7 +2809,7 @@ func _tick_budget_effects() -> void:
 				treasury = clampf(treasury - maxf(0.0, amount) * 0.02, 0.0, 100.0)
 			"army":
 				if actors.has("arden"):
-					actors["arden"].power = clampf(actors["arden"].power + amount * 0.08, 5.0, 100.0)
+					_set_arden_power(clampf(actors["arden"].power + amount * 0.08, 5.0, 100.0))
 				capacity["ordu"] = clampf(float(capacity["ordu"]) + amount * 0.025, 5.0, 100.0)
 			"palace":
 				private_wealth = maxf(0.0, private_wealth + amount * 0.025)
@@ -2905,7 +2929,7 @@ func _enact_parliament_law(law: String) -> void:
 			consent = maxf(0.0, consent - 8.0)
 		"army":
 			if actors.has("arden"):
-				actors["arden"].power = minf(100.0, actors["arden"].power + ARMY_LAW_POWER[difficulty])
+				_set_arden_power(minf(100.0, actors["arden"].power + ARMY_LAW_POWER[difficulty]))
 			_set_budget_allocation(budget_allocation.duplicate())
 		"tax":
 			treasury = minf(100.0, treasury + 3.0)
@@ -2926,7 +2950,7 @@ func _repeal_parliament_law(law: String) -> void:
 			consent = minf(100.0, consent + 4.0)
 		"army":
 			if actors.has("arden"):
-				actors["arden"].power = maxf(5.0, actors["arden"].power - ARMY_LAW_POWER[difficulty])
+				_set_arden_power(maxf(5.0, actors["arden"].power - ARMY_LAW_POWER[difficulty]))
 		"tax":
 			unrest = maxf(0.0, unrest - 2.0)
 
@@ -3269,6 +3293,7 @@ func _run_cascade() -> void:
 			a.plot_stage = st
 		if st == 3 and (a.military or a.royal):
 			a.power += PLOT_PREP_POWER  # kendi adamlarını kritik görevlere getirir
+			if a.id == "arden": _set_arden_power(a.power)
 	var striker := false
 	for a: Actor in actors.values():
 		if a.ready and a.insider and (a.military or a.royal):
@@ -3783,6 +3808,7 @@ func _resolve_other(action: String) -> String:
 		if action == "force":
 			if actors.has("arden"):
 				actors["arden"].power += 8.0
+				_set_arden_power(actors["arden"].power)
 			treasury = maxf(0.0, treasury - 8.0)
 		elif action == "concede":
 			stats["border_concessions"] = int(stats.get("border_concessions", 0)) + 1
@@ -3852,6 +3878,7 @@ func _resolve_other(action: String) -> String:
 			street_anger = minf(100.0, street_anger + 20.0)
 			if actors.has("arden"):
 				actors["arden"].power += 8.0
+				_set_arden_power(actors["arden"].power)
 			_add_fact("kanli_gece_%d" % week, "Ayaklanmanın ordu eliyle kanlı bastırılması", "king", 45, ["arden", "lena", "brandt"], 1)
 			return tr("Meydanlar sabaha temizlendi. Kimse sayıyı söylemiyor; herkes biliyor.")
 		"concede":
@@ -4395,6 +4422,57 @@ func _army_loyalty() -> float:
 	return a.total_loyalty() if a else 50.0
 
 
+func _new_army_save(arden_power: float) -> Dictionary:
+	var units := {}
+	for id in ["capital", "border", "security"]:
+		units[id] = {"commander": "commander_" + id, "loyalty": arden_power, "morale": 50.0, "supply": 50.0}
+	return units
+
+
+func _new_army_units(arden_power: float) -> Dictionary:
+	var units := _new_army_save(arden_power)
+	for id in units:
+		units[id]["morale"] = army_rng.randf_range(45.0, 55.0)
+		units[id]["supply"] = army_rng.randf_range(45.0, 55.0)
+	return units
+
+
+func _sync_arden_power() -> void:
+	if not actors.has("arden") or army_units.is_empty():
+		return
+	var loyalty := 0.0
+	for id in ["capital", "border", "security"]:
+		loyalty += float(army_units.get(id, {}).get("loyalty", actors["arden"].power)) / 3.0
+	actors["arden"].power = loyalty
+
+
+func _set_arden_power(value: float) -> void:
+	for id in ["capital", "border", "security"]:
+		if army_units.has(id):
+			army_units[id]["loyalty"] = value
+	_sync_arden_power()
+
+
+func army_report_line() -> String:
+	var concern := -1.0
+	var featured := ""
+	for id in ["capital", "border", "security"]:
+		var unit: Dictionary = army_units.get(id, {})
+		var score := maxf(0.0, maxf(maxf(60.0 - float(unit.get("loyalty", 50.0)), 55.0 - float(unit.get("morale", 50.0))), 55.0 - float(unit.get("supply", 50.0))))
+		if score > concern:
+			concern = score
+			featured = id
+	if concern < 0.0:
+		return tr("Ordu: Birlikler düzenini koruyor; komutanlar nöbette.")
+	var unit: Dictionary = army_units.get(featured, {})
+	var tone := tr("sağlam") if concern < 15.0 else (tr("tedirgin") if concern < 30.0 else tr("zorlanıyor"))
+	return tr("Ordu: %s öne çıkıyor; bağlılık %s, moral %s, ikmal %s. Diğer birlikler izleniyor.") % [tr(str({"capital": "Başkent garnizonu", "border": "Sınır kolordusu", "security": "Jandarma ve güvenlik"}[featured])), tone, _army_band(float(unit.get("morale", 50.0))), _army_band(float(unit.get("supply", 50.0)))]
+
+
+func _army_band(value: float) -> String:
+	return tr("sağlam") if value >= 62.0 else (tr("yeterli") if value >= 42.0 else tr("zayıf"))
+
+
 func _domain_reported(a: Actor) -> float:
 	var t := _domain_truth(a.domain)
 	var good := 100.0 if a.domain in GOOD_DOMAINS_HIGH else 0.0
@@ -4693,7 +4771,7 @@ func _resolve_regional_crisis(choice: Dictionary) -> String:
 	else:
 		region["unrest"] = clampf(float(region["unrest"]) + (4.0 if ok else 15.0), 0.0, 100.0)
 		if id == "border": ext_pressure["drakon"] = minf(100.0, float(ext_pressure["drakon"]) + 8.0)
-		if kind == "strike" and actors.has("arden"): actors["arden"].power = minf(100.0, actors["arden"].power + 2.0)
+		if kind == "strike" and actors.has("arden"): _set_arden_power(minf(100.0, actors["arden"].power + 2.0))
 	if kind == "disorder": unrest = clampf(unrest + (2.0 if action == "force" and not ok else -2.0), 0.0, 100.0)
 	if not ok: region["economy"] = maxf(0.0, float(region["economy"]) - 5.0)
 	if id == "border" and other_crisis.is_empty() and float(ext_pressure["drakon"]) >= BORDER_CRISIS_AT:

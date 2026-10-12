@@ -321,6 +321,22 @@ func _run() -> void:
 		await _shot("r3c_confidence_vote")
 		quit(0)
 		return
+	if "--army" in OS.get_cmdline_user_args():
+		main._instant = true
+		sim0.pending.clear()
+		main._journal.clear()
+		main._on_week(sim0.week)
+		main._select_tab(main._journal)
+		await _shot("r5a_daily")
+		main._tabs.current_tab = 1
+		Input.warp_mouse(Vector2(8, 8))
+		main._divan.open()
+		await _shot("r5a_divan_report")
+		var bar: VScrollBar = main._divan.drawer_scroll.get_v_scroll_bar()
+		main._divan.drawer_scroll.scroll_vertical = int(bar.max_value - bar.page)
+		await _shot("r5a_commanders")
+		quit(0)
+		return
 	if "--regions" in OS.get_cmdline_user_args():
 		main._instant = true
 		sim0.pending.clear()

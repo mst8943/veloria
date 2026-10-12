@@ -195,7 +195,7 @@ func _run_mobile() -> void:
 		printerr("UI INPUT: mobil ana sekmeler hatalı")
 		quit(1)
 		return
-	var expected := {"dynasty": ["dorn", "prens", "julian"], "state": ["arden", "voss", "kessler", "falk", "governor_capital", "governor_industry", "governor_farmland", "governor_border"], "power": ["halden", "lena", "brandt"], "foreign": ["elena", "claire", "malenkov", "lucien"]}
+	var expected := {"dynasty": ["dorn", "prens", "julian"], "state": ["arden", "voss", "kessler", "falk", "governor_capital", "governor_industry", "governor_farmland", "governor_border", "commander_capital", "commander_border", "commander_security"], "power": ["halden", "lena", "brandt"], "foreign": ["elena", "claire", "malenkov", "lucien"]}
 	main._tabs.current_tab = 1
 	for key in expected:
 		(main._person_panel._mobile_group_buttons[key] as Button).pressed.emit()
@@ -205,7 +205,7 @@ func _run_mobile() -> void:
 				printerr("UI INPUT: mobil grup kişiyi göstermedi: ", key, " / ", id)
 				quit(1)
 				return
-	if main._cards.size() != 18:
+	if main._cards.size() != 21:
 		printerr("UI INPUT: mobil kişi erişimi eksik: ", main._cards.size())
 		quit(1)
 		return
