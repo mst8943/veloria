@@ -61,34 +61,67 @@ func _ready() -> void:
 	band.add_theme_stylebox_override("panel", UIKit.band_style())
 	v.add_child(band)
 	var bar := HBoxContainer.new()
-	bar.add_theme_constant_override("separation", 10)
+	bar.add_theme_constant_override("separation", 12)
 	band.add_child(bar)
 	var title := Label.new()
 	title.text = tr("MEDYA MERKEZİ")
 	title.add_theme_font_override("font", UIKit.caps())
-	title.add_theme_font_size_override("font_size", 30 if mobile else 26)
+	title.add_theme_font_size_override("font_size", 28 if mobile else 26)
 	title.add_theme_color_override("font_color", UIKit.GOLD)
+	title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
+	title.add_theme_constant_override("shadow_outline_size", 8)
 	bar.add_child(title)
 	var sp := Control.new()
-	sp.custom_minimum_size.x = 20
+	sp.custom_minimum_size.x = 24
 	bar.add_child(sp)
+
+	var tab_normal := StyleBoxFlat.new()
+	tab_normal.bg_color = Color(0.06, 0.05, 0.04, 0.85)
+	tab_normal.border_color = Color(UIKit.GOLD_DIM, 0.45)
+	tab_normal.set_border_width_all(1)
+	tab_normal.set_corner_radius_all(3)
+	tab_normal.content_margin_left = 16
+	tab_normal.content_margin_right = 16
+	tab_normal.content_margin_top = 8
+	tab_normal.content_margin_bottom = 8
+
+	var tab_hover := tab_normal.duplicate() as StyleBoxFlat
+	tab_hover.bg_color = Color(0.12, 0.10, 0.08, 0.95)
+	tab_hover.border_color = Color(UIKit.GOLD, 0.85)
+
+	var tab_active := tab_normal.duplicate() as StyleBoxFlat
+	tab_active.bg_color = Color(0.18, 0.14, 0.09, 0.98)
+	tab_active.border_color = UIKit.GOLD
+	tab_active.border_width_bottom = 2
+
 	for key in ["state", "free", "tv"]:
 		var b := Button.new()
 		b.text = tr({"state": "Veloria Haber", "free": "Serbest Kalem", "tv": "Sarne TV"}[key])
 		b.toggle_mode = true
-		b.focus_mode = Control.FOCUS_NONE
-		b.custom_minimum_size = Vector2(150, 40)
+		b.focus_mode = Control.FOCUS_ALL
+		b.custom_minimum_size = Vector2(160 if not mobile else 130, 44)
+		b.add_theme_stylebox_override("normal", tab_normal)
+		b.add_theme_stylebox_override("hover", tab_hover)
+		b.add_theme_stylebox_override("pressed", tab_active)
+		b.add_theme_stylebox_override("focus", tab_hover)
+		b.add_theme_font_override("font", UIKit.caps())
+		b.add_theme_font_size_override("font_size", 15 if not mobile else 14)
+		b.add_theme_color_override("font_color", Color("c0b8a6"))
+		b.add_theme_color_override("font_pressed_color", Color("fff3d0"))
+		b.add_theme_color_override("font_hover_color", Color("fff3d0"))
 		b.pressed.connect(show_tab.bind(key))
 		bar.add_child(b)
 		_tabs[key] = b
+
 	var sp2 := Control.new()
 	sp2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	bar.add_child(sp2)
 	var close := Button.new()
-	close.text = tr("Masaya dön  (Esc)") if not mobile else tr("Kapat")
-	close.focus_mode = Control.FOCUS_NONE
-	close.custom_minimum_size.y = 40
+	close.text = tr("Masaya dön  (Esc)") if not mobile else tr("Masaya dön")
+	close.focus_mode = Control.FOCUS_ALL
+	close.custom_minimum_size = Vector2(160, 44)
 	close.theme_type_variation = "GhostButton"
+	close.add_theme_font_override("font", UIKit.sans(500))
 	close.pressed.connect(close_view)
 	bar.add_child(close)
 	_content = Control.new()
@@ -126,7 +159,9 @@ func close_view() -> void:
 func show_tab(key: String) -> void:
 	_current = key
 	for k in _tabs:
-		(_tabs[k] as Button).button_pressed = k == key
+		var btn: Button = _tabs[k]
+		btn.button_pressed = (k == key)
+		btn.add_theme_color_override("font_color", Color("fff3d0") if k == key else Color("c0b8a6"))
 	for c in _content.get_children():
 		c.queue_free()
 	if _ticker_tween:

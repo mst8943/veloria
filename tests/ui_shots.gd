@@ -141,6 +141,12 @@ func _run() -> void:
 				main._city.open()
 				main._city.show_region("industry")
 			"media": main._open_media()
+			"media_free":
+				main._open_media()
+				main._media.show_tab("free")
+			"media_tv":
+				main._open_media()
+				main._media.show_tab("tv")
 			"menu": main._show_menu()
 			"title": main.add_child(load("res://game/ui/title_screen.gd").new(main))
 		Input.warp_mouse(Vector2(4, 4))
