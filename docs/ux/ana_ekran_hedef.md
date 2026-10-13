@@ -159,3 +159,37 @@ Ana ekranın bölge düzeni mockup'a yakın, ancak tipografi ölçüsü ve bazı
 ### Geçici dosyalar
 
 Görsel kontrol tamamlandı. Geçici ekran görüntülerini silme isteği otomatik inceleme tarafından “blocked by policy” gerekçesiyle reddedildi; bunu aşmak için başka silme yöntemi kullanmadım. Ekran görüntüsü ve yardımcı log/script dosyaları `C:\Users\USER\AppData\Local\Temp\Veloria_AnaEkran_s2_review` altında kaldı. İzole çalıştırıcının artakalan profilleri: `C:\Users\USER\AppData\Local\Temp\Veloria_M1_Test_50cd275483f14112910ee28fdfa56dfa`, `C:\Users\USER\AppData\Local\Temp\Veloria_M1_Test_749fac86511e4c78b303e962151d16ba`, `C:\Users\USER\AppData\Local\Temp\Veloria_M1_Test_7fd52f7acd0140fb926a0ef152a428a3`, `C:\Users\USER\AppData\Local\Temp\Veloria_M1_Test_a78c287ef8594457b812dba6ca73b9a3`.
+
+## Claude doğrulaması (G1 sonrası) — kalan farklar → G1b
+Ekran: `docs/ux/ref/ana_ekran_g1.jpg` (1600×900, aynı durum). Mockup'la bölge bölge karşılaştırıldı. Testler geçiyor; aşağıdakiler görünür farklar. Hepsi G1b'de düzeltilecek.
+
+**Başlık**
+1. Üst resim şeridi neredeyse görünmüyor: bulanık kahverengi bant. Mockup'ta sancaklar, mumlar, sütunlar net ve görünür. `header_bg.png` görselin ÜST bölümü (sancak + mum) gösterilecek şekilde konumlansın; bulanıklık yok; karartma hafif (mockup parlaklığı); şeridin ortası resmin karanlık koridoru olmasın (görsel genişliğe sığdır, gerekirse yanlardaki sancaklı bölümleri göster).
+2. Aslanlar (~70 px) ve kral büstü (~70 px) çok küçük. Mockup'ta ikisi de başlığın TAMAMI boyunca (~135–150 px) durur, üst şeride taşar; taç neredeyse en üste değer. Aslanlar büst kadar yüksek.
+3. Arma mockup'ta daha büyük, iki katmana taşar (~110 px).
+4. Unvan önündeki zambak simgesi şu an küçük, anlaşılmayan bir işaret. Mockup'ta ~30 px net altın zambak (fleur-de-lis); kodla çiz ya da PNG.
+5. Bilgi çubuğu çerçevesi ince tek çizgi; mockup'ta çift altın çizgi ve sol bölümün (unvan→hazine) sağ ucu ok/sivri süsle biter.
+6. Gezinme: simge ile yazı arasında çok boşluk var (simge solda, yazı ~100 px sağda). Mockup'ta simge yazının hemen solunda (8–10 px). Simgeler biraz büyüsün (~24 px).
+
+**Haber şeridi**
+7. Öğeler yayılmış (ikinci öğe ortaya-sağa itilmiş). Mockup'ta öğeler satırda art arda akar, aralarında küçük altın baklava.
+8. Soldaki ve alt bilgideki kıvrım simgesi "↻" gibi okunuyor. Mockup'taki gibi altın kıvrım/akantus süsü olsun.
+
+**Sol panel**
+9. "BU HAFTA NE YAPMALI?" harf aralıklı değil ve altında süslü çizgi yok (mockup'ta var).
+10. Adım çubuğu hâlâ dört ayrı kutu. Mockup: kutu yok; adımlar tek yatay çizgide, aralarında ince altın bağlantı çizgileri; yalnızca etkin adım sivri uçlu plaka içinde; tamamlanan yeşil.
+11. "Bu hafta bekleyen karar yok…" mockup'ta kutusuz düz metin.
+12. Zarf simgesi küçük; mockup'ta ~28 px ince çizgi zarf.
+
+**Sağ sütun**
+13. **Seçili kişi portresi yanlış kırpılmış:** Vale'nin yüzü sol kenarda yarım kalıyor. Yüz merkezli kırp; portre ~120×110'a büyüsün (mockup).
+14. Kişi panelinin alt kenarında ortada zambak süslü ayraç yok (mockup'ta var).
+15. "İZLEME LİSTESİ" çizgisinin ucunda kıvrım süsü yok.
+16. Eylemler sekmelerinin hepsi kutulu; mockup'ta yalnızca etkin sekme plakada, diğerleri düz yazı.
+17. **Raporlar yine yarım satırla kesiliyor** (Arden satırı alt kenarda yarım). Liste tam satırla bitsin ya da alt kenarda solma + kaydırma göstergesi. Mockup'ta üç rapor tam görünüyor: alt çerçeve yüksekliğini ve üstteki bölümlerin boşluklarını buna göre ayarla.
+18. "BU HAFTA" metinleri çerçevenin sol kenarına yapışık (iç boşluk yok); sağ üst köşe süsü başlıktaki baklavanın üstüne biniyor.
+19. "Raporlar" başlığı "R a p o r l a r" gibi aşırı aralıklı; diğer bölüm başlıklarıyla aynı aralık.
+20. "Diğer kişiler Divan'da" mockup'ta daha açık (krem-beyaz).
+
+**Genel**
+21. Mesai 4/4 doğru (4 dolu). Harcandığında içi boş baklava kontrol edilsin (3/4 durumunda ekran görüntüsü).
