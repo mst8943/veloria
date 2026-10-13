@@ -80,9 +80,12 @@ func _run() -> void:
 		quit(0)
 		return
 	var inspect_state := ""
+	var shot_name := "inspect"
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--inspect="):
 			inspect_state = arg.substr(10)
+		if arg.begins_with("--shot-name="):
+			shot_name = arg.substr(12)
 	if inspect_state != "":
 		sim0.week = 1
 		sim0.pending.clear()
@@ -92,15 +95,35 @@ func _run() -> void:
 		main._week_log_week = 1
 		main._sel.clear()
 		main._sel.append("voss")
-		if inspect_state == "decision":
+		if inspect_state == "decision" or inspect_state == "decision_reasons":
 			for event in sim0._events:
 				if event["id"] == "gida_protestosu":
 					sim0.pending.append({"event": event, "age": 0})
+					break
+		elif inspect_state == "decision_noart":
+			for event in sim0._events:
+				if event["id"] == "kamu_maas":
+					var ev_copy: Dictionary = event.duplicate(true)
+					ev_copy["art"] = ""
+					sim0.pending.append({"event": ev_copy, "age": 0})
+					break
+		elif inspect_state == "decision_crisis":
+			sim0.week = 20
+			sim0._open_crisis()
+		elif inspect_state == "decision_multi":
+			for event in sim0._events:
+				if event["id"] in ["gida_protestosu", "kamu_maas"]:
+					sim0.pending.append({"event": event, "age": 0})
+		elif inspect_state == "files":
+			sim0.facts["fact_demo"] = {"id": "fact_demo", "subject": "king", "common": 0.45, "knowers": ["arden", "voss"], "copies": 2, "public": false, "rumor": false, "name": "Gizli Saray Fonu"}
+			sim0.promises = [{"actor": "arden", "prize": "Naiplik", "state": "active", "due": 8, "exposed": false}]
 		main._refresh()
 		main._style_cards()
 		main._update_info()
+		if inspect_state == "decision_reasons" and main._agenda_view.reasons_button != null:
+			main._agenda_view.reasons_button.button_pressed = true
 		match inspect_state:
-			"agenda", "decision":
+			"agenda", "decision", "decision_noart", "decision_crisis", "decision_multi", "decision_reasons":
 				main._tabs.current_tab = 0
 			"files": main._select_tab(main._files_tab)
 			"journal": main._select_tab(main._journal)
@@ -112,7 +135,7 @@ func _run() -> void:
 			"menu": main._show_menu()
 			"title": main.add_child(load("res://game/ui/title_screen.gd").new(main))
 		Input.warp_mouse(Vector2(4, 4))
-		await _shot("inspect")
+		await _shot(shot_name)
 		quit(0)
 		return
 	if "--r5c-coup-signs" in OS.get_cmdline_user_args():

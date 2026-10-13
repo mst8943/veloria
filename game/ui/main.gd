@@ -488,16 +488,28 @@ func _build_ui() -> void:
 	fscroll.add_child(_fact_box)
 	files.add_child(_section(tr("SÖZ DEFTERİ")))
 	var ppanel := PanelContainer.new()
-	ppanel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL_HI, 0.5), Color(UIKit.GOLD_DIM, 0.2), 6, 10))
+	var psb := UIKit.box(Color(UIKit.PANEL, 0.8), Color(0, 0, 0, 0), 6, 12)
+	psb.set_border_width_all(0)
+	ppanel.add_theme_stylebox_override("panel", psb)
 	files.add_child(ppanel)
+	UIKit.ornament(ppanel, Color(UIKit.GOLD, 0.8), 16, 1)
 	_promise_list = RichTextLabel.new()
 	_promise_list.bbcode_enabled = true
 	_promise_list.custom_minimum_size.y = 120
+	_promise_list.add_theme_font_override("normal_font", UIKit.sans())
+	_promise_list.add_theme_font_override("bold_font", UIKit.sans(680))
+	_promise_list.add_theme_color_override("default_color", UIKit.TEXT)
+	_promise_list.add_theme_constant_override("line_separation", 4)
 	ppanel.add_child(_promise_list)
 	_journal = RichTextLabel.new()
 	_journal.name = "Günlük"
 	_journal.bbcode_enabled = true
 	_journal.scroll_following = true
+	_journal.add_theme_font_override("normal_font", UIKit.sans())
+	_journal.add_theme_font_override("bold_font", UIKit.sans(680))
+	_journal.add_theme_font_override("italics_font", UIKit.serif_italic())
+	_journal.add_theme_color_override("default_color", UIKit.TEXT)
+	_journal.add_theme_constant_override("line_separation", 4)
 	_tabs.add_child(_journal)
 	_tabs.set_tab_title(2, tr("Günlük"))
 	_tabs.tab_changed.connect(func(_i: int) -> void:

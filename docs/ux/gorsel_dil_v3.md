@@ -45,3 +45,12 @@ Hedef görünüm `docs/ux/ref/harita_hedef.jpg`:
 - Arka plan: yeni temiz harita görseli `art/city_map_v3.png` (kullanıcı üretecek; mockup'taki şehir, YAZISIZ). Gelene kadar mevcut `art/city_map.png`. Kurum konumları yeni görsele göre `game/data/city_map.json`'da güncellenir (mockup'taki konumlar yüzdeyle).
 - **Parmakla yakınlaştırma/uzaklaştırma ve kaydırma:** iki parmakla sıkıştırma (pinch; `InputEventMagnifyGesture` + iki dokunuşun mesafesi), tek parmakla sürükleme kaydırma (yakınlaştırılmışken), çift dokunma yakınlaştır/sıfırla; masaüstünde fare tekerleği (imleç merkezli) ve sol tıkla sürükleme. Ölçek 1.0–2.5, harita kenarları ekran dışına taşmaz (sınırlı kaydırma), yumuşak geçiş. Plakalar ve bölge işaretçileri haritayla birlikte taşınır ama **yazı boyutu sabit kalır** (ters ölçek), okunur. Kısa dokunma (M1 kuralı) kurumu açar; sürükleme ve sıkıştırma hiçbir kurumu açmaz. "Sıfırla" küçük düğmesi (yakınlaştırılmışken görünür). Mobil ve masaüstü testleri: tests/map_zoom_test.gd (sentetik pinch, sürükleme, sınırlar, kısa dokunma hâlâ açar, sürükleme açmaz).
 - Bölge katmanı: bölge işaretçileri `map_badge` dilinde; bölge paneli `ornate_panel` + `portrait_card`.
+
+## D. Uygulama kontrol listesi
+
+| Sayfa / Bileşen | Durum | Karşılandı / Kısmen + Neden |
+|---|---|---|
+| (1) Gündem: Karar kartı (görselli, görselsiz, kriz/kırmızı, çok kararlı gezinme, Gerekçeler açılırı, damga animasyonu) | Karşılandı | Tek süslü altın/kırmızı çerçeve (border_width 0), 1 px altın görsel kenarı, EB Garamond başlık, Alegreya Sans gövde metni, ChoiceButton stili, _trait kalıbında çipler, danışman portrelerinde 1 px kenarlık ve bölüm başlığı. |
+| (1) Dosyalar sekmesi (Sırlar ve kanıtlar, Söz defteri) | Karşılandı | Rapor satırı kalıbında kanıt satırları (koyu zemin, ton çubuğu, portre, kalın ad, çipler), Söz defteri tek süslü çerçeve ve rahat satır aralıklı tipografi. |
+| (1) Günlük sekmesi | Karşılandı | Alegreya Sans ve EB Garamond başlıklar, rahat satır aralığı, temiz sol panel düzeni. |
+
