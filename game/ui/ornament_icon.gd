@@ -30,20 +30,27 @@ func _draw() -> void:
 				var y := r.position.y + 7 + i * 4
 				draw_line(Vector2(r.position.x + 7, y), Vector2(r.end.x - 5, y), c, 1.0, true)
 		"building":
-			draw_line(Vector2(r.position.x, r.position.y + 5), Vector2(size.x / 2, r.position.y), c, w, true)
-			draw_line(Vector2(size.x / 2, r.position.y), Vector2(r.end.x, r.position.y + 5), c, w, true)
-			draw_line(Vector2(r.position.x, r.position.y + 6), Vector2(r.end.x, r.position.y + 6), c, w, true)
-			for i in 3:
-				var x := r.position.x + 4 + i * (r.size.x - 8) / 2
-				draw_line(Vector2(x, r.position.y + 7), Vector2(x, r.end.y - 4), c, w, true)
-			draw_line(Vector2(r.position.x, r.end.y - 3), Vector2(r.end.x, r.end.y - 3), c, w, true)
+			# Sütunlu bina (mockup): alınlık, dört sütun, iki basamak.
+			var bw := maxf(1.8, size.x / 14.0)
+			var L := size.x * 0.1
+			var R := size.x * 0.9
+			draw_colored_polygon(PackedVector2Array([Vector2(size.x / 2, size.y * 0.1), Vector2(R, size.y * 0.32), Vector2(L, size.y * 0.32)]), c)
+			draw_line(Vector2(L, size.y * 0.37), Vector2(R, size.y * 0.37), c, bw, true)
+			for i in 4:
+				var x := lerpf(size.x * 0.2, size.x * 0.8, float(i) / 3.0)
+				draw_line(Vector2(x, size.y * 0.42), Vector2(x, size.y * 0.76), c, bw, true)
+			draw_line(Vector2(size.x * 0.06, size.y * 0.81), Vector2(size.x * 0.94, size.y * 0.81), c, bw, true)
+			draw_line(Vector2(size.x * 0.02, size.y * 0.9), Vector2(size.x * 0.98, size.y * 0.9), c, bw, true)
 		"newspaper":
-			draw_rect(r, c, false, w)
-			draw_line(r.position + Vector2(3, 5), Vector2(r.end.x - 3, r.position.y + 5), c, 1.0, true)
-			draw_rect(Rect2(r.position + Vector2(3, 8), Vector2(r.size.x * 0.3, r.size.y - 11)), c, false, 1.0)
-			for i in 2:
-				var y := r.position.y + 9 + i * 4
-				draw_line(Vector2(r.position.x + r.size.x * 0.42, y), Vector2(r.end.x - 3, y), c, 1.0, true)
+			# Açık gazete: çerçeve, ortada kat yeri, iki sütun satırı.
+			var bw := maxf(1.6, size.x / 16.0)
+			var rr := Rect2(size * Vector2(0.06, 0.16), size * Vector2(0.88, 0.68))
+			draw_rect(rr, c, false, bw)
+			draw_line(Vector2(size.x / 2, rr.position.y), Vector2(size.x / 2, rr.end.y), c, bw * 0.8, true)
+			for col in [rr.position.x + rr.size.x * 0.1, size.x / 2 + rr.size.x * 0.08]:
+				for i in 3:
+					var y := rr.position.y + rr.size.y * (0.25 + 0.25 * float(i))
+					draw_line(Vector2(col, y), Vector2(col + rr.size.x * 0.32, y), c, bw * 0.8, true)
 		"seal":
 			draw_rect(Rect2(r.position.x + 3, r.position.y, r.size.x - 6, r.size.y * 0.72), c, false, w)
 			draw_line(Vector2(r.position.x + 6, r.position.y + 4), Vector2(r.end.x - 6, r.position.y + 4), c, 1.0, true)
@@ -53,11 +60,24 @@ func _draw() -> void:
 			draw_line(center + Vector2(2, 3), center + Vector2(3, 7), c, w, true)
 		"gear":
 			var center := size / 2
-			draw_circle(center, minf(size.x, size.y) * 0.25, c, false, w, true)
-			draw_circle(center, minf(size.x, size.y) * 0.08, c, false, 1.0, true)
-			for i in 8:
-				var a := TAU * float(i) / 8.0
-				draw_line(center + Vector2(cos(a), sin(a)) * 6.5, center + Vector2(cos(a), sin(a)) * 9.0, c, w, true)
+			var rad := minf(size.x, size.y)
+			var bw := maxf(1.8, rad / 14.0)
+			var pts := PackedVector2Array()
+			for i in 32:
+				var a := TAU * float(i) / 32.0
+				pts.append(center + Vector2(cos(a), sin(a)) * rad * (0.46 if (i % 4) < 2 else 0.36))
+			pts.append(pts[0])
+			draw_polyline(pts, c, bw, true)
+			draw_circle(center, rad * 0.15, c, false, bw, true)
+		"hourglass":
+			var bw := maxf(1.8, size.x / 14.0)
+			var L := size.x * 0.22
+			var R := size.x * 0.78
+			draw_line(Vector2(size.x * 0.14, size.y * 0.08), Vector2(size.x * 0.86, size.y * 0.08), c, bw * 1.3, true)
+			draw_line(Vector2(size.x * 0.14, size.y * 0.92), Vector2(size.x * 0.86, size.y * 0.92), c, bw * 1.3, true)
+			draw_polyline(PackedVector2Array([Vector2(L, size.y * 0.1), Vector2(L, size.y * 0.24), Vector2(size.x / 2, size.y * 0.5), Vector2(L, size.y * 0.76), Vector2(L, size.y * 0.9)]), c, bw, true)
+			draw_polyline(PackedVector2Array([Vector2(R, size.y * 0.1), Vector2(R, size.y * 0.24), Vector2(size.x / 2, size.y * 0.5), Vector2(R, size.y * 0.76), Vector2(R, size.y * 0.9)]), c, bw, true)
+			draw_colored_polygon(PackedVector2Array([Vector2(size.x * 0.32, size.y * 0.86), Vector2(size.x * 0.68, size.y * 0.86), Vector2(size.x / 2, size.y * 0.66)]), c)
 		"star":
 			var points := PackedVector2Array()
 			for i in 10:
@@ -94,9 +114,10 @@ func _draw() -> void:
 				draw_arc(p, size.y * 0.22, -PI * 0.1, PI * 1.65, 18, c, w, true)
 				draw_line(p + Vector2(-2, size.y * 0.18), p + Vector2(2, size.y * 0.3), c, w, true)
 		"endcap":
+			# İnce ok ucu kapanışı (mockup): iki çizgili sivri uç.
 			var mid_y := size.y * 0.5
-			draw_line(Vector2(2, 2), Vector2(2, size.y - 2), c, w, true)
-			draw_colored_polygon(PackedVector2Array([Vector2(4, 2), Vector2(size.x - 2, mid_y), Vector2(4, size.y - 2)]), c)
+			draw_polyline(PackedVector2Array([Vector2(2, 1), Vector2(size.x - 2, mid_y), Vector2(2, size.y - 1)]), c, 1.6, true)
+			draw_polyline(PackedVector2Array([Vector2(1, 6), Vector2(size.x - 7, mid_y), Vector2(1, size.y - 6)]), Color(c, 0.5), 1.0, true)
 
 
 ## Dolu zambak (fleur-de-lis): mızrak uçlu orta yaprak, dışa ve aşağı kıvrılan yan yapraklar, bağ, kısa ayaklar.

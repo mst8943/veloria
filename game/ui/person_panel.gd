@@ -186,14 +186,20 @@ func _build_ui(cols: HBoxContainer) -> void:
 	profile_parent.add_child(person_block)
 
 	var detail := PanelContainer.new()
-	detail.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.85), Color(UIKit.GOLD_DIM, 0.3), 6, 8))
+	var detail_style := UIKit.box(Color(UIKit.PANEL, 0.85), Color(UIKit.GOLD_DIM, 0.3), 6, 8)
+	if not host._mobile:
+		detail_style.set_border_width_all(0)   # kenarı işlemeli çerçeve çizer; ikinci çizgi olmasın
+		detail_style.content_margin_left = 10
+		detail_style.content_margin_top = 7
+		detail_style.content_margin_bottom = 9
+	detail.add_theme_stylebox_override("panel", detail_style)
 	person_block.add_child(detail)
-	UIKit.ornament(detail)
+	UIKit.ornament(detail, Color(UIKit.GOLD, 0.8), 18 if not host._mobile else 14, 1)
 	var irow := HBoxContainer.new()
 	irow.add_theme_constant_override("separation", 10)
 	detail.add_child(irow)
 	host._portrait_box = Control.new()
-	host._portrait_box.custom_minimum_size = Vector2(120, 96) if not host._mobile else Vector2(88, 84)
+	host._portrait_box.custom_minimum_size = Vector2(112, 96) if not host._mobile else Vector2(88, 84)
 	irow.add_child(host._portrait_box)
 	var clear := Button.new()
 	clear_button = clear
@@ -257,11 +263,14 @@ func _build_ui(cols: HBoxContainer) -> void:
 	var act_panel := PanelContainer.new()
 	var act_style := UIKit.box(Color(UIKit.PANEL, 0.8), Color(UIKit.GOLD_DIM, 0.28), 8, 8)
 	if not host._mobile:
-		act_style.content_margin_top = 2
-		act_style.content_margin_bottom = 4
+		act_style.set_border_width_all(0)
+		act_style.content_margin_top = 6
+		act_style.content_margin_bottom = 3
+		act_style.content_margin_left = 16
+		act_style.content_margin_right = 14
 	act_panel.add_theme_stylebox_override("panel", act_style)
 	person_block.add_child(act_panel)
-	UIKit.ornament(act_panel)
+	UIKit.ornament(act_panel, Color(UIKit.GOLD, 0.8), 18 if not host._mobile else 14, 1)
 	var av := VBoxContainer.new()
 	av.add_theme_constant_override("separation", 3)
 	act_panel.add_child(av)
@@ -944,12 +953,21 @@ func _update_info() -> void:
 	if id == "":
 		return
 	var a = Sim.actors[id]
-	var art_size := Vector2(120, 110) if not host._mobile else Vector2(88, 84)
+	var art_size := Vector2(112, 96) if not host._mobile else Vector2(88, 84)
 	var art: Control = host._initial_art(a.id, art_size, 38)
 	art.size = art_size
-	art.position = Vector2(0, -11) if not host._mobile else Vector2.ZERO
+	art.position = Vector2.ZERO
 	host._portrait_box.add_child(art)
-	UIKit.ornament(art, Color(UIKit.GOLD, 0.82), 18, 2)
+	# Portre: tek ince altın kenar (panelin işlemeli çerçevesiyle üst üste binmesin).
+	var edge := Panel.new()
+	var es := StyleBoxFlat.new()
+	es.draw_center = false
+	es.border_color = Color(UIKit.GOLD, 0.85)
+	es.set_border_width_all(2)
+	edge.add_theme_stylebox_override("panel", es)
+	edge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	edge.set_anchors_preset(Control.PRESET_FULL_RECT)
+	art.add_child(edge)
 	var portrait_star := _trait_mark(UIKit.GOLD, true, true)
 	portrait_star.position = Vector2(3, 3)
 	portrait_star.custom_minimum_size = Vector2(15, 15)

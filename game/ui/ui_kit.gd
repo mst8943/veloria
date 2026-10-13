@@ -416,7 +416,9 @@ static func build_theme(mobile := false) -> Theme:
 		t.set_stylebox("panel", "TabContainer", tp)
 	var ta := tex_box("tab_active", [24, 20, 24, 8], [16, 8, 16, 6])
 	if ta != null:
-		t.set_stylebox("tab_selected", "TabContainer", ta)
+		# Seçili sekme de boşta sekmeyle aynı boyda (yalnızca daha parlak); seçilince küçülmez.
+		var ts := tex_box("tab_selected", [20, 12, 20, 8], [16, 8, 16, 6])
+		t.set_stylebox("tab_selected", "TabContainer", ts if ts != null else ta)
 		t.set_stylebox("tab_unselected", "TabContainer", tex_box("tab_idle", [20, 12, 20, 8], [16, 8, 16, 6]))
 		t.set_stylebox("tab_hovered", "TabContainer", tex_box("tab_idle", [20, 12, 20, 8], [16, 8, 16, 6], Color(1.6, 1.5, 1.3)))
 	t.set_color("font_selected_color", "TabContainer", GOLD)

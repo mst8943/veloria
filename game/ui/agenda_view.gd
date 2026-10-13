@@ -359,8 +359,11 @@ func _rebuild_agenda() -> void:
 		card_box.shadow_size = 8 if lead else 3
 		card.add_theme_stylebox_override("panel", card_box)
 		host._agenda.add_child(card)
+		if not host._mobile:
+			# Tek, sade işlemeli çerçeve (kart kenarı ayrıca çizilmez).
+			card_box.set_border_width_all(0)
 		if lead:
-			UIKit.ornament(card, UIKit.DANGER if crisis else UIKit.GOLD, 12 if host._mobile else 28, 8 if host._mobile else 5)
+			UIKit.ornament(card, UIKit.DANGER if crisis else UIKit.GOLD, 12 if host._mobile else 18, 8 if host._mobile else 1)
 		host._decision_cards.append(card)
 		animated.append(card)
 		if (p["age"] > 0 or crisis) and not host._fast():
@@ -679,9 +682,12 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 	var frame_style := UIKit.box(Color(UIKit.PANEL, 0.6), Color(UIKit.GOLD_DIM, 0.25), 8, 10)
 	frame_style.content_margin_top = 8
 	frame_style.content_margin_bottom = 4
+	if not host._mobile:
+		frame_style.set_border_width_all(0)
+		frame_style.content_margin_left = 14
 	frame.add_theme_stylebox_override("panel", frame_style)
 	host._report_box.add_child(frame)
-	UIKit.ornament(frame, Color(UIKit.GOLD, 0.56), 14, 4)
+	UIKit.ornament(frame, Color(UIKit.GOLD, 0.8), 18 if not host._mobile else 14, 1)
 	var contents := VBoxContainer.new()
 	contents.add_theme_constant_override("separation", 2 if host._mobile else 0)
 	frame.add_child(contents)
