@@ -53,4 +53,5 @@ Hedef görünüm `docs/ux/ref/harita_hedef.jpg`:
 | (1) Gündem: Karar kartı (görselli, görselsiz, kriz/kırmızı, çok kararlı gezinme, Gerekçeler açılırı, damga animasyonu) | Karşılandı | Tek süslü altın/kırmızı çerçeve (border_width 0), 1 px altın görsel kenarı, EB Garamond başlık, Alegreya Sans gövde metni, ChoiceButton stili, _trait kalıbında çipler, danışman portrelerinde 1 px kenarlık ve bölüm başlığı. |
 | (1) Dosyalar sekmesi (Sırlar ve kanıtlar, Söz defteri) | Karşılandı | Rapor satırı kalıbında kanıt satırları (koyu zemin, ton çubuğu, portre, kalın ad, çipler), Söz defteri tek süslü çerçeve ve rahat satır aralıklı tipografi. |
 | (1) Günlük sekmesi | Karşılandı | Alegreya Sans ve EB Garamond başlıklar, rahat satır aralığı, temiz sol panel düzeni. |
+| (2) Divan çekmecesi (gruplar, portre kartları, raporlar, vali/komutan kartları) | Karşılandı | Çekmecede tek süslü altın çerçeve (border 0) ve soluk filigran, raporlar satır kalıbında (ton çubukları, rahat boşluk), grup başlıklarında altın baklava ve caps Garamond, portre ve vali/komutan kartlarında 1 px ince altın kenar. |
 

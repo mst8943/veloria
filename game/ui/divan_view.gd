@@ -85,7 +85,18 @@ func build(right: VBoxContainer) -> void:
 	drawer.anchor_left = 0.08 if host._mobile else (0.51 if DisplayServer.window_get_size().x < 1200 else 0.55)
 	drawer.anchor_right = 1.0
 	drawer.anchor_bottom = 1.0
-	drawer.add_theme_stylebox_override("panel", UIKit.box(UIKit.PANEL, UIKit.GOLD_DIM, UIKit.RADIUS, 14))
+	var dbox := UIKit.box(Color(UIKit.PANEL, 0.98), Color(0, 0, 0, 0), UIKit.RADIUS, 14)
+	dbox.set_border_width_all(0)
+	drawer.add_theme_stylebox_override("panel", dbox)
+	UIKit.ornament(drawer, Color(UIKit.GOLD, 0.8), 24, 1)
+	drawer.draw.connect(func() -> void:
+		var watermark_path := "res://art/ui/watermark_crest.png"
+		if ResourceLoader.exists(watermark_path):
+			var wm: Texture2D = load(watermark_path)
+			var scale_factor: float = minf(drawer.size.x / wm.get_width(), drawer.size.y / wm.get_height()) * 0.75
+			var wm_size := Vector2(wm.get_size()) * scale_factor
+			drawer.draw_texture_rect(wm, Rect2((drawer.size - wm_size) / 2.0, wm_size), false, Color(1, 1, 1, 0.045))
+	)
 	overlay.add_child(drawer)
 	drawer_scroll = ScrollContainer.new()
 	drawer_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -99,55 +110,56 @@ func build(right: VBoxContainer) -> void:
 	var title: Control = host._section(tr("DİVAN"))
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	heading.add_child(title)
-	finance_label = Label.new()
-	finance_label.text = Sim.economy_journal_line()
-	finance_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	finance_label.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-	finance_label.add_theme_font_size_override("font_size", host._fs(12))
-	body.add_child(finance_label)
-	public_label = Label.new()
-	public_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	public_label.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-	public_label.add_theme_font_size_override("font_size", host._fs(12))
-	body.add_child(public_label)
-	parliament_label = Label.new()
-	parliament_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	parliament_label.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-	parliament_label.add_theme_font_size_override("font_size", host._fs(12))
-	body.add_child(parliament_label)
-	laws_label = Label.new()
-	laws_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	laws_label.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-	laws_label.add_theme_font_size_override("font_size", host._fs(12))
-	body.add_child(laws_label)
-	army_label = Label.new()
-	army_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	army_label.add_theme_font_size_override("font_size", host._fs(12))
-	army_label.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-	body.add_child(army_label)
-	regions_label = Label.new()
-	regions_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	regions_label.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-	regions_label.add_theme_font_size_override("font_size", host._fs(12))
-	body.add_child(regions_label)
 	var close_button := Button.new()
 	close_button.text = tr("Kapat")
 	close_button.theme_type_variation = "GhostButton"
 	close_button.custom_minimum_size.x = 80
+	close_button.add_theme_font_override("font", UIKit.sans())
 	close_button.pressed.connect(close)
 	host._wire(close_button)
 	close_button.focus_mode = Control.FOCUS_ALL
 	heading.add_child(close_button)
 	focus_button = close_button
+
+	var rep_sec: Control = host._section(tr("RAPORLAR"))
+	body.add_child(rep_sec)
+	finance_label = Label.new()
+	finance_label.text = Sim.economy_journal_line()
+	body.add_child(_make_divan_row(finance_label, UIKit.GOLD_DIM))
+	public_label = Label.new()
+	body.add_child(_make_divan_row(public_label, UIKit.OK))
+	parliament_label = Label.new()
+	body.add_child(_make_divan_row(parliament_label, UIKit.GOLD))
+	laws_label = Label.new()
+	body.add_child(_make_divan_row(laws_label, UIKit.REPORT_BLUE))
+	army_label = Label.new()
+	body.add_child(_make_divan_row(army_label, UIKit.DANGER))
+	regions_label = Label.new()
+	body.add_child(_make_divan_row(regions_label, Color("d9963e")))
+
 	for entry in GROUPS:
 		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 8)
 		body.add_child(row)
+		var gem := Panel.new()
+		var gs := StyleBoxFlat.new()
+		gs.bg_color = UIKit.GOLD
+		gem.add_theme_stylebox_override("panel", gs)
+		gem.custom_minimum_size = Vector2(6, 6)
+		gem.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		gem.pivot_offset = Vector2(3, 3)
+		gem.rotation = deg_to_rad(45.0)
+		gem.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(gem)
 		var button := Button.new()
 		button.text = tr(entry[0])
 		button.theme_type_variation = "GhostButton"
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.custom_minimum_size.y = 44
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.add_theme_font_override("font", UIKit.caps())
+		button.add_theme_font_size_override("font_size", host._fs(14))
+		button.add_theme_color_override("font_color", UIKit.GOLD)
 		host._wire(button)
 		row.add_child(button)
 		group_buttons.append(button)
@@ -174,10 +186,33 @@ func build(right: VBoxContainer) -> void:
 		if entry[0] == "Dış ilişkiler":
 			var note := Label.new()
 			note.text = tr("Dışişleri Bakanı'nın raporu")
+			note.add_theme_font_override("font", UIKit.sans())
 			note.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 			note.add_theme_font_size_override("font_size", host._fs(11))
 			row.add_child(note)
 	layer.visible = false
+
+
+func _make_divan_row(lbl: Label, tone_col: Color) -> PanelContainer:
+	var row_panel := PanelContainer.new()
+	var rsb := UIKit.box(Color(UIKit.PANEL, 0.82), Color(UIKit.GOLD_DIM, 0.18), UIKit.RADIUS, 6)
+	row_panel.add_theme_stylebox_override("panel", rsb)
+	var hb := HBoxContainer.new()
+	hb.add_theme_constant_override("separation", 8)
+	row_panel.add_child(hb)
+	var bar := ColorRect.new()
+	bar.color = tone_col
+	bar.custom_minimum_size = Vector2(4, 0)
+	bar.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hb.add_child(bar)
+	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl.add_theme_font_override("font", UIKit.sans())
+	lbl.add_theme_color_override("font_color", UIKit.TEXT)
+	lbl.add_theme_font_size_override("font_size", host._fs(12))
+	lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hb.add_child(lbl)
+	return row_panel
 
 
 func refresh() -> void:
