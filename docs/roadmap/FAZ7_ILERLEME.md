@@ -1,5 +1,11 @@
 # Faz 7 ilerleme
 
+## Faz 7 kapanış — Denge kalibrasyonu (2026-10-13)
+
+`advice_weighted` 80 kampanyada kapanış ölçümü 62/80 Kolay, 31/80 Normal, 14/80 Zor; üçü de istenen aralıkta. Kolay'da ortak borç→dış baskı artışını zorluk katsayısına bağlayıp hafiflettim. Zor'da yüksek darbe payı/erken hazırlık baskısını ordu yasasının yüksek Arden bonusuyla birlikte değerlendirip katsayıları ayarladım. Askerî darbe kayıpları Zor'da 47'den 38'e, yabancı müdahale kayıpları Kolay'da 10'dan 8'e indi. Uç botların en yüksek Kolay sonucu 40/80; %70 sınırının altında. Darbeye açık krallık, Naiplik ve Boş kasa Normal zorlukta 40'ar kampanya ölçüldü; sırasıyla 18/40, 23/40 ve 14/40 sağ kaldı. Sonsuz modda 40 uzun koşu 145. haftaya ulaşmadı (22'si askerî darbe, 10'u ayaklanmayla bitti); sonuç stres ölçümü olarak kaydedildi.
+
+Bu adımın ölçüm tablosu ve katsayı gerekçesi `docs/design/gerceklik_faz7.md` içindeki **Kalibrasyon (Faz 7 kapanış)** bölümünde. Test/kapıların tam dökümü kapanış denetiminde eklenecek.
+
 ## DALGA R1 — Ekonomi ve bütçe
 
 R1'in a–e parçaları tamamlandı. Başlangıç economy metrikleri, eski kayıt göçü ve Maliye raporu; çeyreklik dört bütçe yaklaşımı ve gecikmeli sektör etkileri; azalan getirili Devlet politikaları; borçtan dış baskıya geçiş; Günlük/Divan satırları ve üç ekonomi başarımı eklendi. Özel bütçe dağılımı dört düzenlenebilir pay ve toplam 100 doğrulaması sunuyor. Bütçe kararları ve yeni metinler TR/EN; kriz haber başlığı için ayrıca EN sızıntı regresyon testi var.

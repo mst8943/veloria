@@ -77,6 +77,18 @@ func _initialize() -> void:
 	sim._tick_external_pressure()
 	low_debt._tick_external_pressure()
 	_check(sim.ext_pressure["asteria"] > low_debt.ext_pressure["asteria"] and sim.rng.state == ext_main_rng, "debt raises foreign pressure on the separate stream")
+	var easy_debt: Node = load("res://game/core/sim.gd").new()
+	easy_debt.new_game(404, 0)
+	easy_debt.budget_allocation["social"] = 70.0
+	easy_debt.economy_metrics["debt"] = 90.0
+	easy_debt.ext_rng.seed = 777
+	sim.new_game(404, 2)
+	sim.budget_allocation["social"] = 70.0
+	sim.economy_metrics["debt"] = 90.0
+	sim.ext_rng.seed = 777
+	easy_debt._tick_external_pressure()
+	sim._tick_external_pressure()
+	_check(easy_debt.ext_pressure["asteria"] < sim.ext_pressure["asteria"], "social debt feeds siege pressure less on Easy than Hard")
 	sim.pending.clear()
 	sim.other_crisis.clear()
 	sim.week = 40

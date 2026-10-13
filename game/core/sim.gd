@@ -38,7 +38,7 @@ const GOOD_DOMAINS_HIGH := ["economy"]  # bu alanlarda yüksek değer iyidir
 const DIFFICULTY := [
 	{"name": "Kolay", "mesai": 5, "grace": 26, "coup_share": 0.74, "income": 1.2, "ready_drive": 44.0, "advice_noise": 0.9, "crisis_odds": 0.95, "leave_gap": 22.0},
 	{"name": "Normal", "mesai": 4, "grace": 12, "coup_share": 0.66, "income": 1.0, "ready_drive": 39.0, "advice_noise": 1.2, "crisis_odds": 0.65, "leave_gap": 14.0},
-	{"name": "Zor", "mesai": 4, "grace": 10, "coup_share": 0.63, "income": 0.8, "ready_drive": 36.0, "advice_noise": 1.25, "crisis_odds": 0.55, "leave_gap": 12.0},
+	{"name": "Zor", "mesai": 4, "grace": 10, "coup_share": 0.66, "income": 0.8, "ready_drive": 38.0, "advice_noise": 1.25, "crisis_odds": 0.55, "leave_gap": 12.0},
 ]
 
 ## Vaat edilebilecek ödüller: her biri yalnızca bir kişiye gerçekten verilebilir.
@@ -115,7 +115,9 @@ const ATTRITION := 0.04
 const STANCE_CAP := 0.23
 const TREASURY_COST := 0.15
 const TREASURY_DIFF := [0.8, 1.0, 1.8]
-const ARMY_LAW_POWER := [1.0, 2.0, 4.0]
+const ARMY_LAW_POWER := [1.0, 2.0, 2.5]
+const DEBT_PRESSURE_RATE := [0.35, 1.2, 1.2]
+const DEBT_PRESSURE_BASE_RATE := [0.02, 0.04, 0.04]
 const TAX_LAW_REVENUE := [0.15, 0.02, 0.02]
 const TAX_LAW_UPFRONT_UNREST := [0.0, 2.0, 4.0]
 const TAX_LAW_UNREST := [0.0, 0.75, 2.4]
@@ -2140,6 +2142,11 @@ func end_week() -> void:
 				proposal["status"] = "lapsed"
 				proposal["result"] = tr("Teklif oylanmadan gündemden düştü.")
 				_fail_parliament_proposal()
+				var lapsed_count := 0
+				for past: Dictionary in parliament_proposals:
+					if str(past.get("status", "")) == "lapsed":
+						lapsed_count += 1
+				_apply_effects({"consent": -minf(12.0, float(lapsed_count) * 3.0), "king": -minf(8.0, float(lapsed_count) * 2.0)})
 			if e.get("kind", "") == "confidence_vote":
 				government_pm = ""
 				government_coalition.clear()
@@ -2421,7 +2428,7 @@ func _tick_external_pressure() -> void:
 	var seravia_feed := maxf(0.0, 40.0 - float(foreign["seravia"])) * 0.12
 	seravia_feed += maxf(0.0, 25.0 - treasury) * 0.12
 	seravia_feed += maxf(0.0, 42.0 - float(capacity["maliye"])) * 0.06
-	var debt_rate := 1.2 if float(budget_allocation.get("social", 25.0)) > 25.0 else 0.04
+	var debt_rate: float = DEBT_PRESSURE_RATE[difficulty] if float(budget_allocation.get("social", 25.0)) > 25.0 else DEBT_PRESSURE_BASE_RATE[difficulty]
 	var debt_stress := maxf(0.0, float(economy_metrics["debt"]) - 85.0) * debt_rate
 	asteria_feed += debt_stress
 	seravia_feed += debt_stress
@@ -2964,7 +2971,7 @@ func _tick_parliament() -> void:
 			{"label": tr("Değiştir"), "text": tr("Uzlaşma için değişiklik yaptın; bazı vekillerin desteği kazanıldı."), "bill_action": "amend", "fx": {"opp": -1.0}},
 			{"label": tr("Geri çek"), "text": tr("Teklif geri çekildi. Muhalefet bunu geri adım olarak anlatacak."), "bill_action": "withdraw", "fx": {"opp": 3.0, "unrest": 10.0}},
 			{"label": tr("Baskıyla geçir"), "text": tr("Teklif baskıyla kabul edildi. Kulislerde kimin bedel ödediği konuşuluyor."), "bill_action": "force",
-				"fx": {"treasury": -float(force_costs["treasury"]), "wealth": -float(force_costs["wealth"]), "unrest": float(force_costs["unrest"]), "king": -14.0},
+			"fx": {"treasury": -float(force_costs["treasury"]), "wealth": -float(force_costs["wealth"]), "unrest": float(force_costs["unrest"]), "king": -14.0, "consent": -15.0, "opp": 6.0},
 				"available": _can_force_parliament()}],
 		"ignore": {"text": tr("Teklif bu hafta gündemden düştü."), "fx": {}}}
 	pending.append({"event": e, "age": 0})
@@ -3126,7 +3133,8 @@ func _queue_confidence_vote() -> void:
 			{"label": tr("Hükümet düşsün"), "text": tr("Başbakan istifa ediyor. Yeni hükümet için son sözü sen söyleyeceksin."), "confidence_action": "fall", "fx": {"king": -35.0, "treasury": -8.0, "consent": -10.0, "unrest": 20.0, "opp": 12.0}},
 			{"label": tr("Baskıyla kurtar"), "text": tr("Hükümet ayakta kalıyor; hazine, meşruiyet ve iz bırakıyor."), "confidence_action": "force",
 				"available": king_strength >= 35.0 and treasury >= 25.0 and private_wealth >= 4.0, "fx": {"king": -30.0, "treasury": -20.0, "wealth": -4.0, "consent": -10.0, "unrest": 14.0, "fear": 8.0}}],
-		"ignore": {"text": tr("Güven oylaması sonuçsuz kaldı; hükümet desteğini yitirdi."), "fx": {}}}
+		"ignore": {"text": tr("Güven oylaması sonuçsuz kaldı; hükümet desteğini yitirdi."),
+			"fx": {"king": -20.0, "treasury": -5.0, "consent": -6.0, "unrest": 10.0, "opp": 6.0}}}
 	pending.append({"event": e, "age": 0})
 	weekly_news.append("OLAY: " + str(e["title"]))
 
@@ -3202,7 +3210,7 @@ func _resolve_parliament_bill(event: Dictionary, choice: int) -> String:
 			proposal["result"] = tr("Teklif geri çekildi.")
 		"force":
 			var costs := _parliament_force_costs()
-			_apply_effects({"treasury": -float(costs["treasury"]), "wealth": -float(costs["wealth"]), "unrest": float(costs["unrest"]), "king": -60.0})
+			_apply_effects({"treasury": -float(costs["treasury"]), "wealth": -float(costs["wealth"]), "unrest": float(costs["unrest"]), "king": -60.0, "consent": -15.0, "opp": 6.0})
 			parliament_blocs["opposition"]["loyalty"] = maxf(0.0, float(parliament_blocs["opposition"]["loyalty"]) - 12.0)
 			parliament_blocs["royal"]["pressure"] = minf(100.0, float(parliament_blocs["royal"]["pressure"]) + 8.0)
 			parliament_blocs["nobles"]["pressure"] = minf(100.0, float(parliament_blocs["nobles"]["pressure"]) + 5.0)

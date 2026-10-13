@@ -104,6 +104,18 @@ func _check_government_paths() -> void:
 	sim.week = 26
 	sim._fire_budget()
 	_check(not sim.pending.is_empty() and sim.pending[0]["event"]["advisors"].has("dorn"), "R1 budget choices use the acting finance reporter")
+	sim.pending.clear()
+	sim.new_game(822, 1)
+	sim.king_strength = 70.0
+	sim.treasury = 65.0
+	sim.consent = 60.0
+	sim.pending.clear()
+	sim._queue_confidence_vote()
+	sim.pending[0]["age"] = 1
+	var ignored_confidence_cost: Dictionary = sim.pending[0]["event"]["ignore"]["fx"]
+	_check(float(ignored_confidence_cost.get("king", 0.0)) < 0.0 and float(ignored_confidence_cost.get("treasury", 0.0)) < 0.0
+		and float(ignored_confidence_cost.get("consent", 0.0)) < 0.0 and float(ignored_confidence_cost.get("unrest", 0.0)) > 0.0,
+		"letting a confidence vote lapse carries a legitimacy cost")
 
 
 func _check_migration_and_save() -> void:

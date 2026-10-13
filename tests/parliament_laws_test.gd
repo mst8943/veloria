@@ -44,7 +44,7 @@ func _run() -> void:
 	sim.parliament_proposals.back()["bill"] = "press"
 	var consent_before_pass: float = sim.consent
 	sim.resolve_decision(0, 3)
-	_check(sim.parliament_laws.has("press") and sim.consent == consent_before_pass - 8.0 and sim.parliament_proposals.back().has("law_week"), "an accepted bill activates and records its permanent law")
+	_check(sim.parliament_laws.has("press") and sim.consent == consent_before_pass - 23.0 and sim.parliament_proposals.back().has("law_week"), "an accepted bill activates, records the law and charges its calibrated legitimacy cost")
 
 	sim.new_game(17032, 1)
 	var baseline_flattery: float = Press._flattery(sim, "free")
@@ -70,7 +70,7 @@ func _run() -> void:
 	sim.new_game(17042, 2)
 	var hard_arden_power: float = sim.actors["arden"].power
 	sim._enact_parliament_law("army")
-	_check(sim.actors["arden"].power == hard_arden_power + 4.0, "hard army law carries its heavier coup risk")
+	_check(sim.actors["arden"].power == hard_arden_power + 2.5, "hard army law carries a calibrated coup risk")
 
 	sim.new_game(17034, 1)
 	sim._enact_parliament_law("tax")

@@ -56,11 +56,12 @@ func _run() -> void:
 	var before_wealth: float = sim.private_wealth
 	var before_unrest: float = sim.unrest
 	var before_king: float = sim.king_strength
+	var before_consent: float = sim.consent
 	var force_index: int = sim.pending[0]["event"]["choices"].find_custom(func(choice: Dictionary) -> bool: return choice["bill_action"] == "force")
 	sim.pending[0]["event"]["proposal"]["bill"] = "press"
 	sim.parliament_proposals.back()["bill"] = "press"
 	var force_result: String = sim.resolve_decision(0, force_index)
-	_check(force_result != "" and sim.treasury == before_treasury - 10.0 and sim.private_wealth == before_wealth - 7.0 and sim.unrest == 100.0 and sim.king_strength == before_king - 60.0, "forcing a bill through costs treasury, private wealth, public order, and royal authority")
+	_check(force_result != "" and sim.treasury == before_treasury - 10.0 and sim.private_wealth == before_wealth - 7.0 and sim.unrest == 100.0 and sim.king_strength == before_king - 60.0 and sim.consent == before_consent - 15.0, "forcing a bill through also costs public legitimacy")
 	_check(sim.flags.has("PARLIAMENT_FORCE_TRACE_%d" % sim.week), "forced vote leaves a trace")
 	_check(sim.save_game(), "parliament state saves")
 	var saved_opposition: float = sim.opposition

@@ -26,6 +26,8 @@ const BOTS := ["idle", "random", "visible", "advice_naive", "advice_weighted", "
 var style := ""   # advice_soft / advice_dirty oyun tarzı
 var dynasty_probe := false
 var dynasty_cap_ok := true
+var scenario_id := ""
+var endless_probe := false
 
 
 func _initialize() -> void:
@@ -44,6 +46,10 @@ func _initialize() -> void:
 			diffs = [int(a.substr(7))]
 		elif a == "--all-diffs":
 			diffs = [0, 1, 2]
+		elif a.begins_with("--scenario="):
+			scenario_id = a.substr(11)
+		elif a == "--endless":
+			endless_probe = true
 		elif a.begins_with("--bots="):
 			bots = Array(a.substr(7).split(","))
 	if "--dynasty-cap" in OS.get_cmdline_user_args():
@@ -122,13 +128,28 @@ func _run(bot: String, diff: int, n: int) -> void:
 	var army_splits := 0
 	var army_redeployments := 0
 	var regimes := {}
+	var army_law_campaigns := 0
+	var army_law_coups := 0
+	var forced_bills := 0
+	var lapsed_bills := 0
 	for s in range(1, n + 1):
-		sim.new_game(s, diff)
+		sim.new_game(s, diff, scenario_id)
+		sim.endless = endless_probe
 		rng.seed = s * 131 + 7
-		while not sim.ended:
+		while not sim.ended and (not endless_probe or sim.week <= sim.MAX_WEEKS + 40):
 			_play(bot)
 			sim.end_week()
 		var r: Dictionary = sim.record
+		var survived: bool = (not sim.ended) if endless_probe else bool(r.get("survived", false))
+		var military_coup := str(r.get("cause", "")).contains("Arden") and str(r.get("cause", "")).contains("Askerî darbe")
+		if sim.parliament_laws.has("army"):
+			army_law_campaigns += 1
+			if military_coup:
+				army_law_coups += 1
+		forced_bills += int(sim.stats.get("parliament_forced", 0))
+		for proposal: Dictionary in sim.parliament_proposals:
+			if str(proposal.get("status", "")) == "lapsed":
+				lapsed_bills += 1
 		confidence_offers += int(sim.stats.get("confidence_offers", 0))
 		confidence_supports += int(sim.stats.get("confidence_supports", 0))
 		confidence_falls += int(sim.stats.get("confidence_falls", 0))
@@ -158,8 +179,8 @@ func _run(bot: String, diff: int, n: int) -> void:
 		arden_attempts += 1 if attempted else 0
 		prince_attempts += 1 if prince_attempted else 0
 		arden_prepared += 1 if prepared else 0
-		weeks += int(r["weeks"])
-		if r["survived"]:
+		weeks += int(r.get("weeks", sim.week - 1))
+		if survived:
 			wins += 1
 			titles[r["title"]] = int(titles.get(r["title"], 0)) + 1
 		else:
@@ -170,8 +191,10 @@ func _run(bot: String, diff: int, n: int) -> void:
 	print("  ort. son kapasite %.1f | Arden girişimi %d/%d | Arden hazırlığı %d/%d | Arden zaferi %d/%d" % [final_cap / n, arden_attempts, n, arden_prepared, n, arden_coups, n])
 	print("  Prens Marcus girişimi %d/%d" % [prince_attempts, n])
 	print("  düşman yayın olayı %.2f/oyun | düşman yayın haftası %.1f/oyun | ort. son servet %.1f" % [float(hostile_broadcasts) / n, float(hostile_weeks) / n, final_wealth / n])
-	print("  gÃ¼ven oyu: kart %d | destek %d | dÃ¼ÅŸÃ¼ÅŸ %d | baskÄ± %d" % [confidence_offers, confidence_supports, confidence_falls, confidence_forced])
+	print("  güven oyu: kart %d | destek %d | düşüş %d | baskı %d" % [confidence_offers, confidence_supports, confidence_falls, confidence_forced])
 	print("  ordu kararları: toplam %d | ek ödenek %d | komuta bölme %d | yer değiştirme %d" % [army_actions, army_allowances, army_splits, army_redeployments])
+	print("  ordu yasası: %d kampanya | %d askeri darbe kaybında yürürlükte" % [army_law_campaigns, army_law_coups])
+	print("  meclis: %d baskılı yasa | %d oylanmadan düşen teklif" % [forced_bills, lapsed_bills])
 	print("  rejimler ", regimes)
 
 
@@ -289,9 +312,12 @@ func _decide(bot: String) -> void:
 		if parliament_bot and str(ev.get("kind", "")) == "parliament_bill":
 			if bot == "parliament_abstain":
 				break
-			ci = 3 if bot == "parliament_force" else 2
-			if not ev["choices"][ci].get("available", true):
-				ci = 0
+			if bot == "parliament_force":
+				if not ev["choices"][3].get("available", true):
+					break
+				ci = 3
+			else:
+				ci = 2
 		if str(ev.get("kind", "")) == "confidence_vote":
 			if bot == "parliament_abstain":
 				break
@@ -317,7 +343,12 @@ func _decide(bot: String) -> void:
 		elif decision_bot.begins_with("advice_") and str(ev.get("kind", "")) != "army_action":
 			ci = _advice_choice("advice_weighted" if decision_bot in ["advice_soft", "advice_dirty", "advice_scheme"] else decision_bot, sim.advice_for(0), ci)
 		if parliament_bot and str(ev.get("kind", "")) == "parliament_bill":
-			ci = 3 if bot == "parliament_force" else 2
+			if bot == "parliament_force":
+				if not ev["choices"][3].get("available", true):
+					break
+				ci = 3
+			else:
+				ci = 2
 		if str(ev.get("kind", "")) == "confidence_vote":
 			if bot == "confidence_force":
 				ci = 2

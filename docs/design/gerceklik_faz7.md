@@ -356,3 +356,19 @@ FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true
 ```
 
 EN sızıntı testi: `EN LEAK SCAN: 5 campaigns, 0 unique leaks`; `python tools/i18n_missing.py`: `0 tr() kaynağı en.po'da yok`. Eski kayıt ve ana RNG testleri geçti. Bütün testler `tools/run_test_isolated.ps1` ile ayrı geçici profilde çalıştırıldı. Özetler: `A11Y: OK` (masaüstü ve mobil), `ARMY ACTIONS: OK`, `ARMY COUP: OK`, `ARMY TEST: OK`, `AUDIO: OK`, `BUDGET UI: OK`, `CONTENT: OK (5 dosya, 8 bozuk örnek)`, `CUTSCENE: OK`, `DAILY CARD: OK`, `DYNASTY: OK`, `ECONOMY: OK`, `ELECTION: OK`, `ENDLESS: OK`, `EN LEAK SCAN: 5 campaigns, 0 unique leaks`, `EVENTS: OK (201 olay, 0 uyarı)`, `EXTERNAL CRISIS: OK`, `I18N: OK`, `LANG: OK`, `LEGACY: OK`, `PARLIAMENT LAWS: OK`, `PARLIAMENT: OK`, `PUBLIC OPINION: OK`, `REGION MAP: OK` (masaüstü ve mobil), `REGIONS: OK`, `SAVE: OK`, `SCENARIO: OK`, `TEST: OK`, `TOUCH: OK`, `TOUCH TAP: OK`, `TOUR: OK`, `UI INPUT: OK` (masaüstü), `UI INPUT: OK (mobile)`, `UI LOGIC: OK`, `[unit] all 399 checks passed`. Mobil özet değişikliğinden sonra `army_coup_test`, a11y (masaüstü/mobil), dokunma (kaydırma/bırakma), `ui_input_test` (masaüstü/mobil) ve `ui_logic_test` yeniden geçti. Bazı Godot headless kapanışları RID/ObjectDB/resource uyarısı verdi; çalıştırılan test süreçlerinin çıkış kodu 0'dı.
+
+## Kalibrasyon (Faz 7 kapanış)
+
+`advice_weighted`, 80 kampanya/zorluk; R5c sonrası kapanış ölçümü:
+
+| Ölçüt botu | Önce (R5c) | Sonra | Hedef |
+|---|---:|---:|---:|
+| Kolay | 59/80 | 62/80 | 61–64 |
+| Normal | 31/80 | 31/80 | 28–31 |
+| Zor | 16/80 | 14/80 | 13–16 |
+
+Kök neden tek bir katsayı değildi. Kolay'da R1 borç baskısı tüm zorluklarda aynı hızlı artıyordu; dış kuşatma/müdahale bunun üzerinden büyüyordu. Borç kaynaklı dış baskı artışı Kolay'da yavaşlatıldı, Normal ve Zor akışı korundu. Zor'da R5c darbe başarı payı ve hazırlık eşiği yüksek, R3b ordu yasasının Arden etkisi de bu seviyede fazlaydı. Zor darbe payı 0,63'ten 0,66'ya, hazır oluş itişi 36'dan 38'e yükseltilirken ordu yasası etkisi 4'ten 2,5'e indirildi. Bu ayar darbe baskısını karşılıklı dengeledi; Zor galibiyeti 2 arttı, askerî darbe kayıpları 47'den 38'e düştü. Kolay yabancı müdahale kayıpları 10'dan 8'e inerken Normal temel oranı değişmedi.
+
+Kolay uç botları (80 kampanya): kemer 22, ödenek 40, baskıyla geçirme 39, oy vermeme 17, sınır garnizonu 21, başkent garnizonu 21, komuta bölme 22, ordu kararı yok 23, tek bölgeye yatırım 22, yatırım yok 19 galibiyet. En yüksek sonuç 40/80; ölçütün %70 sınırı olan 43,4'ün altında. `parliament_force`, zorla geçirme seçeneği yoksa destek vermek yerine teklifi cevapsız bırakacak şekilde düzeltildi; ölçülen strateji artık adındaki politikayı izliyor.
+
+Senaryo dayanıklılığı `advice_weighted`, Normal, her biri 40 kampanya: Darbeye açık krallık 18/40; Naiplik 23/40; Boş kasa 14/40. Sonsuz mod Normal'de 40 kampanyayla 145. haftaya kadar çalıştırıldı; 0/40 bu noktaya sağ ulaştı. Erken bitişler arasında 22 askerî darbe, 10 ayaklanma ve diğer krizler vardı. Bu sonuç ayrı bir sonsuz-mod kazanma kapısı değil, uzun koşu stres ölçümüdür; senaryo başlangıçları değiştirilmedi.
