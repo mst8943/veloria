@@ -6,7 +6,7 @@ You are King Adrian IV, the new ruler of an imaginary kingdom with modern instit
 
 ## Installation
 
-The current release is **1.5.0**. The game is available for Windows, Linux, and the web.
+This guide describes the game build with the Phase 7 economy, public opinion, Assembly, regional and army systems. Check the package information for the distributed release version. The game is available for Windows, Linux, and the web.
 
 | Platform | How to launch |
 |---|---|
@@ -108,6 +108,30 @@ When the quarterly budget arrives, choose austerity, a balanced budget, generosi
 **Prepare Heir** under STATE gradually raises Julian's readiness. His card shows only **Childish**, **Developing** or **Ready**; promoting him too aggressively may unsettle ambitious people at court.
 
 Elena Varos describes the three foreign powers as **Cold / Distant / Close**. The Asteria, Drakon and Seravia missions on the Capital map show the same information. Use **Verify** to check Elena's optimistic account against the records for a short time. **Send Delegation** under STATE improves one relationship slightly at the expense of the other two. At the end of the reign, the Truth File records these ties and the heir's condition.
+
+## Economy, budget and public opinion
+
+The Finance report describes prices, the job market, debt, trade and production. These five indicators are separate from the state treasury, and their exact values are never shown. Each quarter, choose an austerity, balanced or generous allocation, or give the Palace a larger share. Tax, austerity and stimulus actions also place different costs on the budget and the public. Some effects arrive over the following weeks.
+
+The balance between public **consent** and **fear** is qualitative. Polls arrive periodically, but their source may shade the result in its own favour. Speaking to the public, visiting communities, holding a ceremony or keeping out of sight can each change the response. Scandal cards let you deny the story, apologize, find someone to blame or change the subject. Fear can bring short-term obedience while making people hide bad news.
+
+## Assembly, laws and government
+
+The Assembly describes support from four political blocs in qualitative reports; exact vote and seat counts are not shown. You can support a bill, amend it to reach a compromise, withdraw it, or force it through at a cost that leaves a political trace. Passed press, army budget, tax, election, amnesty and judicial laws have lasting effects. The Assembly may later offer to repeal a law for treasury and political costs.
+
+An early-election card leads to an election result and then a government-forming decision. The result describes how the blocs shifted without reporting vote or seat totals. If the Prime Minister loses Assembly support, a confidence vote appears. Choose whether to back the government, let it fall or keep it in place by force. If it falls, you appoint the next Prime Minister; the Finance report and budget process continue under the new reporter.
+
+## Regions and the army
+
+The kingdom has four regions: Capital, Industrial Belt, Farming Plains and Border Provinces. Toggle the map layer to show regional markers. Their shapes distinguish qualitative states such as unrest, markets and loyalty without relying on colour alone. Select a region to see its governor, notable conditions and available actions. Investment and garrison decisions draw on the budget and take time to have an effect. Resolve strikes, shortages, border tension and unrest in the capital through the Agenda or the decision card.
+
+The army has three units: the Capital Garrison, Border Corps and Gendarmerie/Security. Commanders and unit reports are qualitative; strength, loyalty, morale and supplies are not shown as numbers. Army Management lets you appoint an officer, move a garrison, provide extra supply or split the command chain. These choices use time and treasury, and their effects can take several weeks to appear.
+
+A coup leaves signs first: a garrison move, hesitant guards, a silent commander or delayed supplies. Read which unit and region are involved in the crisis card. You can suppress the plot with a loyal unit, negotiate, or call another unit to duty. Moving the Capital Garrison to the border during a border crisis carries a risk; each choice has a cost.
+
+## Touch controls and the opening screen
+
+Tap or click the opening screen to continue. On touch devices, a short tap activates when you lift your finger. If you drag to scroll, passing over an item will not select it. Touch controls do not play mouse-hover sounds or animations. Mobile buttons and actions have touch-friendly targets; mouse and keyboard controls remain available on desktop.
 
 ## Secrets and common knowledge
 

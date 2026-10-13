@@ -6,7 +6,7 @@ Veloria'da modern kurumlara sahip hayali bir krallığın yeni kralısın: **Adr
 
 ## Kurulum
 
-Dağıtımdaki son paket **1.5.0**. Devlet kapasitesi, Sarne'nin patronajı, veliaht, dış ilişkiler ve Türkçe/İngilizce arayüz bu sürümdedir. İngilizce paket ayrıca `OYUNCU_REHBERI.en.md` içerir.
+Bu rehber, Faz 7 ekonomi, kamuoyu, meclis, bölge ve ordu sistemlerinin bulunduğu oyun sürümünü anlatır. Dağıtım paketi sürümünü oyunun paket bilgilerinden kontrol et. İngilizce rehber `OYUNCU_REHBERI.en.md` dosyasındadır.
 
 | Platform | Nasıl açılır |
 |---|---|
@@ -106,6 +106,30 @@ Elena Varos üç dış gücün havasını **Soğuk / Mesafeli / Yakın** diye an
 **İlk haftalarda** gündemin üstünde "Bu hafta ne yapmalı?" yol göstericisi durur: 1 Kararını ver → 2 Raporları oku → 3 Bir kişiye eylem → 4 Haftayı bitir. Sıradaki adım altınla vurgulanır; bir adıma tıklamak seni ilgili yere götürür. İpuçları Ayarlar'dan kapatılabilir.
 
 **Raporlar** masaüstünde güç merkezlerinin altında listelenir; bir rapora tıklamak o kişiyi seçer. Sol kenarın rengi raporun ne *söylediğini* gösterir (yeşil iyi, amber tedirgin, kırmızı kötü); gerçeği değil.
+
+## Ekonomi, bütçe ve kamuoyu
+
+Maliye raporu fiyatları, iş piyasasını, borç yükünü, ticareti ve üretimi anlatır. Bu beş gösterge ve devlet kasası ayrı şeylerdir; göstergelerin kesin değerleri gösterilmez. Her çeyrekte bütçe kararı gelir: sıkı, dengeli ya da cömert dağılımı seçebilir, saraya daha fazla pay ayırabilirsin. Eylemlerden vergi, kemer sıkma ve teşvik seçenekleri de bütçeye ve halka farklı bedeller yükler. Etkiler sonraki haftalara taşınabilir.
+
+Halkın **rıza** ve **korku** dengesi sayıyla verilmez. Anketler belirli aralıklarla gelir; kaynağın kendi çıkarı sonucu olduğundan iyi ya da kötü gösterebilir. Halka konuşmak, sahaya çıkmak, tören düzenlemek veya görünürlüğünü azaltmak farklı tepkiler doğurur. Skandal kartında inkâr, özür, sorumlu bulma ya da gündemi değiştirme seçenekleri vardır. Korku kısa vadede itaat getirebilir, ama insanların kötü haberi saklamasına yol açar.
+
+## Meclis, kanunlar ve hükümet
+
+Meclis dört siyasi bloğun desteğini nitel raporlarla anlatır; oy veya sandalye sayısı gösterilmez. Kanun teklifini destekleyebilir, uzlaşma için değiştirebilir, geri çekebilir ya da bedel ve siyasi iz pahasına baskıyla geçirebilirsin. Kabul edilen basın, ordu bütçesi, vergi, seçim, af ve yargı yasaları kuralları kalıcı etkiler. Meclis daha sonra bir yasayı ücret ve siyasi bedel karşılığında kaldırmayı önerebilir.
+
+Erken seçim kartı seçim sonucuna ve ardından hükümet kurma kararına bağlanır. Sonuç blokların hangi yönde kaydığını söyler; kesin oy ya da sandalye vermez. Başbakan meclis desteğini yitirirse güven oyu gelir. Hükümeti desteklemek, düşmesine izin vermek veya baskıyla ayakta tutmak arasında seçim yaparsın. Hükümet düşerse yeni başbakanı sen atarsın; mali rapor ve bütçe akışı yeni sorumlu üzerinden sürer.
+
+## Bölgeler ve ordu
+
+Ülke Başkent, Sanayi Kuşağı, Tarım Ovaları ve Sınır İlleri olarak dört bölgeden oluşur. Harita düğmesi bölge işaretçilerini açıp kapatır; simge biçimleri huzursuzluk, pazar ve sadakat gibi nitel durumları renk dışında da ayırt eder. Bölgeye tıklayınca vali kartı, öne çıkan durum ve açık eylemler görünür. Yatırım ve garnizon kararları bütçeyle bağlantılıdır; etkileri gecikmeli gelir. Grev, kıtlık, sınır gerilimi ve başkent karışıklığı için bölge krizlerini Günlük'ten veya karar kartından çöz.
+
+Ordu üç birlikten oluşur: başkent garnizonu, sınır kolordusu ve jandarma/güvenlik. Komutanları ve birlik raporları nitel gösterilir; güç, sadakat, moral ve ikmal değerleri sayı olarak açıklanmaz. Ordu Düzeni eyleminde subay atayabilir, garnizonu taşıyabilir, ikmal desteği verebilir veya komuta zincirini bölebilirsin. Bu kararlar mesai ve hazine harcar; sonuçları sonraki haftalarda belirginleşebilir.
+
+Darbe önce alametler bırakır: garnizon hareketi, muhafızların tereddüdü, komutanın sessizliği ya da ikmal gecikmesi. Kriz kartında hangi birliğin ve bölgenin etkilendiğini oku. Sadık bir birlikle bastırabilir, pazarlık edebilir veya başka birliği göreve çağırabilirsin. Başkent garnizonunu sınır gerilimi sırasında çekmek risk yaratabilir; her kararın bedeli vardır.
+
+## Dokunmatik kullanım ve giriş
+
+Giriş ekranında oyuna devam etmek için dokun veya tıkla. Dokunmatik cihazlarda kısa dokunuş, parmağını kaldırınca etkinleşir. Parmağını sürükleyip kaydırırsan geçtiğin öğeler seçilmez; önce kaydırma hareketi tamamlanır. Dokunmatik kullanımda fare hover sesi ve animasyonu yoktur. Mobilde düğme ve eylem hedefleri dokunmaya uygun boyuttadır. Masaüstünde fare ve klavye kullanımı sürer.
 
 ## Sırlar ve ortak bilgi
 
