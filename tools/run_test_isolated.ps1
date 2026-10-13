@@ -5,6 +5,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+$PSNativeCommandUseErrorActionPreference = $false
 $repo = Split-Path -Parent $PSScriptRoot
 $godot = "C:\Users\USER\Downloads\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe"
 $profile = Join-Path $env:TEMP ("Veloria_M1_Test_" + [guid]::NewGuid().ToString("N"))
@@ -14,9 +15,14 @@ try {
 	$env:APPDATA = $profile
 	Push-Location $repo
 	try {
-		$resource = if ($Script.StartsWith("res://", [StringComparison]::OrdinalIgnoreCase)) { $Script } else { "res://tests/" + $Script }
-		if ($Window) { & $godot --path . --script $resource @GameArgs }
-		else { & $godot --headless --path . --script $resource @GameArgs }
+		if ($Script -eq "@project") {
+			if ($Window) { & $godot --path . @GameArgs }
+			else { & $godot --headless --path . @GameArgs }
+		} else {
+			$resource = if ($Script.StartsWith("res://", [StringComparison]::OrdinalIgnoreCase)) { $Script } else { "res://tests/" + $Script }
+			if ($Window) { & $godot --path . --script $resource @GameArgs }
+			else { & $godot --headless --path . --script $resource @GameArgs }
+		}
 		$code = $LASTEXITCODE
 	} finally {
 		Pop-Location
