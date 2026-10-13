@@ -154,3 +154,8 @@ EN/TR masaüstü ve yatay mobilde Gündem/karar, Dosyalar, Günlük, Divan, hari
 ### Gözlemler
 
 Ana ekranın bölge düzeni mockup'a yakın, ancak tipografi ölçüsü ve bazı panellerin oranı piksel düzeyinde tam eşleşmiyor; kabul listesinde bu yüzden “kısmen” olarak işaretlendi. Mobil haber şeridi uzun metni kısaltıyor; dokunarak genişletilebiliyor. Rapor listesinde alt solma/kaydırma göstergesi var; aşağıdaki satırlar kaydırmayla görülüyor. EN/metin taşması görsel kontrolde görülmedi. Test/screenshot Godot süreçleri exit code 0 ile kapansa da kapanışta RID/ObjectDB kaynak uyarıları sürüyor; bunlar bu UI diliminde çözülmedi.
+
+
+### Geçici dosyalar
+
+Görsel kontrol tamamlandı. Geçici ekran görüntülerini silme isteği otomatik inceleme tarafından “blocked by policy” gerekçesiyle reddedildi; bunu aşmak için başka silme yöntemi kullanmadım. Ekran görüntüsü ve yardımcı log/script dosyaları `C:\Users\USER\AppData\Local\Temp\Veloria_AnaEkran_s2_review` altında kaldı. İzole çalıştırıcının artakalan profilleri: `C:\Users\USER\AppData\Local\Temp\Veloria_M1_Test_50cd275483f14112910ee28fdfa56dfa`, `C:\Users\USER\AppData\Local\Temp\Veloria_M1_Test_749fac86511e4c78b303e962151d16ba`, `C:\Users\USER\AppData\Local\Temp\Veloria_M1_Test_7fd52f7acd0140fb926a0ef152a428a3`, `C:\Users\USER\AppData\Local\Temp\Veloria_M1_Test_a78c287ef8594457b812dba6ca73b9a3`.
