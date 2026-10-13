@@ -55,10 +55,8 @@ func _run() -> void:
 		if city.mobile and str(id) == "capital":
 			_expect(marker_name.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART and marker_name.custom_minimum_size.y >= 28.0,
 				"mobile Capital Region marker wraps without clipping")
-		if city.mobile and str(id) == "capital":
-			_expect(marker_name.autowrap_mode == TextServer.AUTOWRAP_WORD_SMART and marker_name.custom_minimum_size.y >= 28.0,
-				"mobile Capital Region marker wraps without clipping")
-		_expect((marker_name.text.begins_with("★") if str(id) == sim.featured_region_id() else not marker_name.text.begins_with("★")),
+		_expect(not marker_name.text.contains("★"), "region names must not use a symbol glyph")
+		_expect(bool(marker.get_meta("featured")) == (str(id) == sim.featured_region_id()),
 			"map does not match the featured region highlight: " + str(id))
 		for site_id in city.plates:
 			var site: Control = city.plates[site_id]

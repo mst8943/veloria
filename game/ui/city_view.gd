@@ -685,6 +685,7 @@ func _make_region_marker(id: String) -> void:
 	var button := Button.new()
 	button.name = "Region_" + id
 	button.set_meta("region_id", id)
+	button.set_meta("featured", id == Sim.featured_region_id())
 	button.custom_minimum_size = Vector2(116, 62) if not mobile else Vector2(80, 58)
 	button.focus_mode = Control.FOCUS_ALL
 	button.tooltip_text = _region_tooltip(id)
@@ -754,7 +755,7 @@ func _make_region_marker(id: String) -> void:
 			Vector2(mid_x, y + 6.0),
 		])
 		button.draw_colored_polygon(tri, UIKit.GOLD)
-		if id == Sim.featured_region_id():
+		if bool(button.get_meta("featured")):
 			var center := Vector2(button.size.x - 9.0, 9.0)
 			var star := PackedVector2Array()
 			for point in 10:
