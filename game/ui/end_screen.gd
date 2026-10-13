@@ -72,8 +72,8 @@ func _build() -> void:
 	head.bbcode_enabled = true
 	head.fit_content = true
 	head.scroll_active = false
-	head.add_theme_font_override("bold_font", UIKit.serif())
-	head.add_theme_font_override("normal_font", UIKit.serif())
+	head.add_theme_font_override("bold_font", UIKit.caps())
+	head.add_theme_font_override("normal_font", UIKit.caps())
 	var head_band := PanelContainer.new()
 	head_band.add_theme_stylebox_override("panel", UIKit.band_style())
 	head_band.add_child(head)
@@ -148,6 +148,7 @@ func _build() -> void:
 	again.theme_type_variation = "PrimaryButton"
 	again.custom_minimum_size.y = 50
 	again.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	again.add_theme_font_override("font", UIKit.caps())
 	host._wire(again)
 	again.pressed.connect(host._start_new)
 	brow.add_child(again)
@@ -155,6 +156,7 @@ func _build() -> void:
 	_continue_btn.text = tr("Saltanata devam et")
 	_continue_btn.theme_type_variation = "GhostButton"
 	_continue_btn.custom_minimum_size = Vector2(220, 50)
+	_continue_btn.add_theme_font_override("font", UIKit.caps())
 	host._wire(_continue_btn)
 	_continue_btn.pressed.connect(host._continue_endless)
 	brow.add_child(_continue_btn)
@@ -162,6 +164,7 @@ func _build() -> void:
 	to_menu.text = tr("Ana Menü")
 	to_menu.theme_type_variation = "GhostButton"
 	to_menu.custom_minimum_size = Vector2(220, 50)
+	to_menu.add_theme_font_override("font", UIKit.caps())
 	host._wire(to_menu)
 	to_menu.pressed.connect(func() -> void:
 		hide()
@@ -175,10 +178,11 @@ func _page(title: String) -> RichTextLabel:
 	var l := RichTextLabel.new()
 	l.name = title
 	l.bbcode_enabled = true
-	l.add_theme_font_size_override("normal_font_size", host._fs(17))
+	l.add_theme_font_override("normal_font", UIKit.sans(470))
 	l.add_theme_font_override("bold_font", UIKit.serif())
-	l.add_theme_font_size_override("bold_font_size", host._fs(20))
-	var pad := UIKit.box(Color(0, 0, 0, 0.25), Color(0, 0, 0, 0), 6, 16)
+	l.add_theme_font_size_override("normal_font_size", host._fs(16))
+	l.add_theme_font_size_override("bold_font_size", host._fs(19))
+	var pad := UIKit.box(Color(0.06, 0.05, 0.04, 0.94), Color.TRANSPARENT, 4, 16)
 	l.add_theme_stylebox_override("normal", pad)
 	tabs.add_child(l)
 	return l

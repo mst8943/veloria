@@ -1873,15 +1873,16 @@ func _open_budget_editor(pending_index: int, choice_index: int) -> void:
 	margin.add_theme_constant_override("margin_bottom", 18)
 	center.add_child(margin)
 	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PLATE, 0.98), UIKit.GOLD, 10, 22))
+	panel.add_theme_stylebox_override("panel", UIKit.box(Color(0.08, 0.07, 0.06, 0.98), Color.TRANSPARENT, 4, 22))
 	margin.add_child(panel)
 	var body := VBoxContainer.new()
 	body.add_theme_constant_override("separation", 8)
 	panel.add_child(body)
+	UIKit.ornament(panel, Color(UIKit.GOLD, 0.85), 18, 1)
 	var title := Label.new()
 	title.text = tr("Özel bütçe dağılımı")
-	title.add_theme_font_override("font", UIKit.serif())
-	title.add_theme_font_size_override("font_size", _fs(22))
+	title.add_theme_font_override("font", UIKit.caps())
+	title.add_theme_font_size_override("font_size", _fs(21))
 	title.add_theme_color_override("font_color", UIKit.GOLD)
 	body.add_child(title)
 	var sectors := ["army", "social", "industry", "palace"]
@@ -1897,6 +1898,7 @@ func _open_budget_editor(pending_index: int, choice_index: int) -> void:
 		var label := Label.new()
 		label.text = labels[i]
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		label.add_theme_font_override("font", UIKit.sans(470))
 		label.add_theme_font_size_override("font_size", _fs(15))
 		row.add_child(label)
 		var share := SpinBox.new()
@@ -1910,6 +1912,7 @@ func _open_budget_editor(pending_index: int, choice_index: int) -> void:
 		row.add_child(share)
 		_budget_editor_spins.append(share)
 	var total := Label.new()
+	total.add_theme_font_override("font", UIKit.sans(470))
 	total.add_theme_font_size_override("font_size", _fs(14))
 	body.add_child(total)
 	var buttons := HBoxContainer.new()
@@ -1920,6 +1923,7 @@ func _open_budget_editor(pending_index: int, choice_index: int) -> void:
 	apply.custom_minimum_size.y = 44
 	apply.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	apply.theme_type_variation = "PrimaryButton"
+	apply.add_theme_font_override("font", UIKit.caps())
 	_wire(apply)
 	buttons.add_child(apply)
 	var cancel := Button.new()
@@ -1927,6 +1931,7 @@ func _open_budget_editor(pending_index: int, choice_index: int) -> void:
 	cancel.custom_minimum_size.y = 44
 	cancel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cancel.theme_type_variation = "GhostButton"
+	cancel.add_theme_font_override("font", UIKit.caps())
 	_wire(cancel)
 	buttons.add_child(cancel)
 	for share in _budget_editor_spins:

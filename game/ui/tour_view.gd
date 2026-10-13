@@ -53,30 +53,32 @@ func _ready() -> void:
 	_frame.draw.connect(_draw_frame)
 	add_child(_frame)
 	_card = PanelContainer.new()
-	_card.add_theme_stylebox_override("panel", UIKit.box(UIKit.PLATE, UIKit.GOLD_DIM, 3, 12, 2))
+	_card.add_theme_stylebox_override("panel", UIKit.box(Color(0.08, 0.07, 0.06, 0.98), Color.TRANSPARENT, 4, 16))
 	add_child(_card)
-	UIKit.ornament(_card, Color(UIKit.GOLD, 0.9), 20, 7)
+	UIKit.ornament(_card, Color(UIKit.GOLD, 0.85), 18, 1)
 	var content := VBoxContainer.new()
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.custom_minimum_size.x = 560
-	content.add_theme_constant_override("separation", 4)
+	content.add_theme_constant_override("separation", 6)
 	_card.add_child(content)
 	_counter = Label.new()
+	_counter.add_theme_font_override("font", UIKit.caps())
 	_counter.add_theme_color_override("font_color", UIKit.GOLD)
-	_counter.add_theme_font_size_override("font_size", host._fs(14))
+	_counter.add_theme_font_size_override("font_size", host._fs(13))
 	_counter.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.add_child(_counter)
 	_title = Label.new()
-	_title.add_theme_font_override("font", UIKit.serif())
-	_title.add_theme_font_size_override("font_size", host._fs(23))
+	_title.add_theme_font_override("font", UIKit.caps())
+	_title.add_theme_font_size_override("font_size", host._fs(21))
 	_title.add_theme_color_override("font_color", UIKit.GOLD)
 	_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_title.custom_minimum_size.x = 540
 	content.add_child(_title)
 	_body = Label.new()
+	_body.add_theme_font_override("font", UIKit.sans(470))
 	_body.add_theme_font_size_override("font_size", host._fs(16))
-	_body.add_theme_color_override("font_color", UIKit.TEXT)
+	_body.add_theme_color_override("font_color", Color("e9e4d6"))
 	_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_body.custom_minimum_size.x = 540
@@ -88,12 +90,14 @@ func _ready() -> void:
 	_back.text = tr("Geri")
 	_back.theme_type_variation = "GhostButton"
 	_back.custom_minimum_size.y = 44
+	_back.add_theme_font_override("font", UIKit.caps())
 	_back.pressed.connect(previous)
 	row.add_child(_back)
 	_skip = Button.new()
 	_skip.text = tr("Atla")
 	_skip.theme_type_variation = "GhostButton"
 	_skip.custom_minimum_size.y = 44
+	_skip.add_theme_font_override("font", UIKit.caps())
 	_skip.pressed.connect(finish)
 	row.add_child(_skip)
 	var spacer := Control.new()
@@ -103,6 +107,7 @@ func _ready() -> void:
 	_next.text = tr("İleri")
 	_next.theme_type_variation = "PrimaryButton"
 	_next.custom_minimum_size = Vector2(132, 44)
+	_next.add_theme_font_override("font", UIKit.caps())
 	_next.pressed.connect(next_step)
 	row.add_child(_next)
 	hide()

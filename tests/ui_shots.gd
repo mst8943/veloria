@@ -149,6 +149,20 @@ func _run() -> void:
 				main._media.show_tab("tv")
 			"desk": main._show_desk()
 			"menu": main._show_menu()
+			"menu_settings":
+				main._show_menu()
+				main._menu_show_page("settings")
+			"menu_dynasty":
+				main._show_menu()
+				main._menu_show_page("dynasty")
+			"modal_archive":
+				main._show_chronicle()
+			"end_screen":
+				sim0.week = 104
+				sim0.king_strength = 90.0
+				sim0.unrest = 20.0
+				sim0._end(true)
+				main._end_overlay.show_record(sim0.record)
 			"title": main.add_child(load("res://game/ui/title_screen.gd").new(main))
 		Input.warp_mouse(Vector2(4, 4))
 		await _shot(shot_name)

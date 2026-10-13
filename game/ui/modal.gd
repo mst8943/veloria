@@ -31,17 +31,20 @@ func _build() -> void:
 		m.add_theme_constant_override("margin_" + side, 24 if host._mobile else 60)
 	add_child(m)
 	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PLATE, 0.97), UIKit.GOLD, 10, 28))
+	panel.add_theme_stylebox_override("panel", UIKit.box(Color(0.08, 0.07, 0.06, 0.98), Color.TRANSPARENT, 4, 28))
 	m.add_child(panel)
-	UIKit.ornament(panel, UIKit.GOLD, 24, 9)
+	UIKit.ornament(panel, Color(UIKit.GOLD, 0.85), 20, 1)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 12)
 	panel.add_child(v)
 	text = RichTextLabel.new()
 	text.bbcode_enabled = true
 	text.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	text.add_theme_font_override("normal_font", UIKit.sans(470))
 	text.add_theme_font_override("bold_font", UIKit.serif())
+	text.add_theme_font_size_override("normal_font_size", host._fs(16))
 	text.add_theme_font_size_override("bold_font_size", host._fs(20))
+	text.add_theme_color_override("default_color", Color("e9e4d6"))
 	v.add_child(text)
 	var brow := HBoxContainer.new()
 	brow.add_theme_constant_override("separation", 10)
@@ -50,6 +53,7 @@ func _build() -> void:
 	yes.theme_type_variation = "PrimaryButton"
 	yes.custom_minimum_size.y = 44
 	yes.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	yes.add_theme_font_override("font", UIKit.caps())
 	host._wire(yes)
 	yes.pressed.connect(func() -> void:
 		hide()
@@ -60,6 +64,7 @@ func _build() -> void:
 	close.text = tr("Kapat")
 	close.custom_minimum_size.y = 44
 	close.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	close.add_theme_font_override("font", UIKit.caps())
 	host._wire(close)
 	close.pressed.connect(func() -> void: hide())
 	brow.add_child(close)

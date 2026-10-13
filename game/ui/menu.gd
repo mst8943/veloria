@@ -106,9 +106,9 @@ func _build() -> void:
 	center.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	menu_scroll.add_child(center)
 	var plate := PanelContainer.new()
-	plate.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PLATE, 0.72), Color(UIKit.GOLD_DIM, 0.35), 10, 34))
+	plate.add_theme_stylebox_override("panel", UIKit.box(Color(0.07, 0.06, 0.05, 0.94), Color.TRANSPARENT, 4, 34))
 	center.add_child(plate)
-	UIKit.ornament(plate, Color(UIKit.GOLD, 0.8), 24, 9)
+	UIKit.ornament(plate, Color(UIKit.GOLD, 0.85), 20, 1)
 	var box := VBoxContainer.new()
 	box.custom_minimum_size.x = 560
 	box.add_theme_constant_override("separation", 12)
@@ -140,9 +140,9 @@ func _build() -> void:
 	box.add_child(title)
 	var sub := Label.new()
 	sub.text = tr("Tahtta kalmak, ülkeyi yönetmekten daha zordur.")
-	sub.add_theme_font_override("font", UIKit.serif())
-	sub.add_theme_font_size_override("font_size", host._fs(20))
-	sub.add_theme_color_override("font_color", Color(UIKit.TEXT, 0.85))
+	sub.add_theme_font_override("font", UIKit.sans(470))
+	sub.add_theme_font_size_override("font_size", host._fs(17))
+	sub.add_theme_color_override("font_color", Color("e8dcc0"))
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	var mdiv := UIKit.divider(380.0)
 	mdiv.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -260,7 +260,10 @@ func _build() -> void:
 	_dynasty_text.scroll_active = false
 	_dynasty_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_dynasty_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_dynasty_text.add_theme_font_size_override("normal_font_size", host._fs(16))
+	_dynasty_text.add_theme_font_override("normal_font", UIKit.sans(470))
+	_dynasty_text.add_theme_font_override("bold_font", UIKit.serif())
+	_dynasty_text.add_theme_font_size_override("normal_font_size", host._fs(15))
+	_dynasty_text.add_theme_font_size_override("bold_font_size", host._fs(18))
 	dynasty_scroll.add_child(_dynasty_text)
 	var dynasty_back := _btn(dynasty_page, tr("Geri"), func() -> void: show_page("main"))
 	dynasty_back.theme_type_variation = "GhostButton"
@@ -376,9 +379,12 @@ func _build() -> void:
 func _btn(parent: Control, text: String, cb: Callable, primary := false) -> Button:
 	var b := Button.new()
 	b.text = text
-	b.custom_minimum_size.y = 46
+	b.custom_minimum_size.y = 52 if host._mobile else 46
 	if primary:
 		b.theme_type_variation = "PrimaryButton"
+		b.add_theme_font_override("font", UIKit.caps())
+	else:
+		b.add_theme_font_override("font", UIKit.serif())
 	host._wire(b)
 	b.pressed.connect(cb)
 	parent.add_child(b)
@@ -398,8 +404,8 @@ func _page(page_name: String, parent: Control) -> VBoxContainer:
 func _heading(t: String) -> Label:
 	var l := Label.new()
 	l.text = t
-	l.add_theme_font_override("font", UIKit.serif())
-	l.add_theme_font_size_override("font_size", host._fs(24))
+	l.add_theme_font_override("font", UIKit.caps())
+	l.add_theme_font_size_override("font_size", host._fs(22))
 	l.add_theme_color_override("font_color", UIKit.GOLD)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	return l
