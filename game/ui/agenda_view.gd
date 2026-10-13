@@ -327,7 +327,7 @@ func _rebuild_agenda() -> void:
 		card.add_child(hb)
 		var tex: Texture2D = host._event_art(str(e.get("art", e["id"])))
 		if tex == null:
-			card_box.content_margin_top = 24
+			card_box.content_margin_top = 32
 		if tex:
 			# Görsel kendi çerçevesinde yavaşça hareket eder (yaşayan kart).
 			var frame := Control.new()
