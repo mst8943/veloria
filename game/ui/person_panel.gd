@@ -192,11 +192,12 @@ func _build_ui(cols: HBoxContainer) -> void:
 	irow.add_theme_constant_override("separation", 10)
 	detail.add_child(irow)
 	host._portrait_box = Control.new()
-	host._portrait_box.custom_minimum_size = Vector2(62, 62)
+	host._portrait_box.custom_minimum_size = Vector2(96, 88) if not host._mobile else Vector2(88, 84)
 	irow.add_child(host._portrait_box)
 	var clear := Button.new()
 	clear_button = clear
 	clear.custom_minimum_size = Vector2(44 if host._mobile else 28, 44 if host._mobile else 28)
+	clear.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	clear.theme_type_variation = "GhostButton"
 	clear.tooltip_text = tr("Seçimi kaldır")
 	clear.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
@@ -206,7 +207,6 @@ func _build_ui(cols: HBoxContainer) -> void:
 		clear.draw_line(mid + Vector2(5, -5), mid + Vector2(-5, 5), UIKit.GOLD, 2.0, true))
 	clear.pressed.connect(func() -> void: host._sel.clear(); _style_cards(); _update_info(); host._divan.refresh())
 	host._wire(clear)
-	irow.add_child(clear)
 	var icol := VBoxContainer.new()
 	icol.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	icol.add_theme_constant_override("separation", 5)
@@ -217,13 +217,16 @@ func _build_ui(cols: HBoxContainer) -> void:
 	host._info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	host._info.fit_content = true
 	host._info.scroll_active = false
-	host._info.add_theme_font_size_override("normal_font_size", host._fs(13))
+	host._info.add_theme_font_override("normal_font", UIKit.serif())
+	host._info.add_theme_font_override("bold_font", UIKit.serif())
+	host._info.add_theme_font_size_override("normal_font_size", host._fs(16 if host._mobile else 17))
 	icol.add_child(host._info)
 	# Kişinin özellikleri: küçük göstergeler (sayı yok; yalnızca oyuncunun bildiği kadar).
 	host._traits = HFlowContainer.new()
 	host._traits.add_theme_constant_override("h_separation", 6)
 	host._traits.add_theme_constant_override("v_separation", 5)
 	icol.add_child(host._traits)
+	irow.add_child(clear)
 
 	# Eylem paneli: tek çerçeve, başlıkta seçili kişi, eylemler amaca göre gruplu.
 	var act_panel := PanelContainer.new()
@@ -294,15 +297,17 @@ func _build_ui(cols: HBoxContainer) -> void:
 	var cat_group := ButtonGroup.new()
 	for g in groups:
 		var cb := Button.new()
-		cb.text = tr("Halk") if g[0] == "KAMUOYU" else tr(str(g[0]))
+		cb.text = UIKit.tr_upper(tr("Halk") if g[0] == "KAMUOYU" else tr(str(g[0])))
 		cb.toggle_mode = true
 		cb.button_group = cat_group
 		cb.theme_type_variation = "GhostButton"
 		cb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if host._mobile:
 			cb.custom_minimum_size.y = 44
-		cb.clip_text = true
-		cb.add_theme_font_size_override("font_size", host._fs(11))
+		cb.clip_text = false
+		cb.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		cb.add_theme_font_override("font", UIKit.serif())
+		cb.add_theme_font_size_override("font_size", host._fs(11 if not host._mobile else 15))
 		if g[0] == "BASKI":
 			for c in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color"]:
 				cb.add_theme_color_override(c, UIKit.DANGER.lightened(0.15))
@@ -347,8 +352,10 @@ func _build_ui(cols: HBoxContainer) -> void:
 	host._hint_label.bbcode_enabled = true
 	host._hint_label.scroll_active = false
 	host._hint_label.add_theme_color_override("default_color", UIKit.TEXT_DIM)
-	host._hint_label.add_theme_font_size_override("normal_font_size", host._fs(13))
-	host._hint_label.add_theme_font_size_override("bold_font_size", host._fs(13))
+	host._hint_label.add_theme_font_override("normal_font", UIKit.serif())
+	host._hint_label.add_theme_font_override("bold_font", UIKit.serif())
+	host._hint_label.add_theme_font_size_override("normal_font_size", host._fs(15 if host._mobile else 14))
+	host._hint_label.add_theme_font_size_override("bold_font_size", host._fs(15 if host._mobile else 14))
 	host._hint_label.clip_contents = true
 	host._hint_label.custom_minimum_size.y = 40 if not host._mobile else 54
 	host._hint_label.text = tr(HINT_DEFAULT)
@@ -420,7 +427,14 @@ func _show_act_cat(cat: String) -> void:
 	for k in host._cat_rows:
 		(host._cat_rows[k] as Control).visible = k == cat
 	for k in host._cat_btns:
-		(host._cat_btns[k] as Button).set_pressed_no_signal(k == cat)   # koddan değişince ButtonGroup diğerini bırakmıyor
+		var button := host._cat_btns[k] as Button
+		var active: bool = k == cat
+		button.set_pressed_no_signal(active)   # koddan değişince ButtonGroup diğerini bırakmıyor
+		var tone: Color = UIKit.DANGER.lightened(0.15) if k == "BASKI" else (UIKit.GOLD if active else UIKit.TEXT_DIM)
+		button.add_theme_color_override("font_color", tone)
+		button.add_theme_color_override("font_hover_color", UIKit.GOLD.lightened(0.2))
+		button.add_theme_stylebox_override("normal", UIKit.box(Color(UIKit.GOLD, 0.09) if active else Color(0, 0, 0, 0), Color(UIKit.GOLD, 0.7) if active else Color(UIKit.GOLD_DIM, 0.2), 5, 4))
+		button.add_theme_stylebox_override("hover", UIKit.box(Color(UIKit.GOLD, 0.14), Color(UIKit.GOLD, 0.55), 5, 4))
 
 
 func _public_action(action: String) -> void:
@@ -639,7 +653,7 @@ func _make_card(a) -> PanelContainer:
 	var card := PanelContainer.new()
 	var compact_governor: bool = str(a.id).begins_with("governor_")
 	var compact_state_card: bool = compact_governor or str(a.id).begins_with("commander_")
-	card.custom_minimum_size = Vector2(82, 98) if compact_state_card else (Vector2(108, 96) if not host._mobile else Vector2(150, 132))
+	card.custom_minimum_size = Vector2(82, 98) if compact_state_card else (Vector2(118, 106) if not host._mobile else Vector2(150, 132))
 	card.clip_contents = true
 	card.mouse_filter = Control.MOUSE_FILTER_STOP
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -649,7 +663,7 @@ func _make_card(a) -> PanelContainer:
 		compact_body = VBoxContainer.new()
 		compact_body.add_theme_constant_override("separation", 0)
 		card.add_child(compact_body)
-	var card_art: Control = host._initial_art(a.id, Vector2(72, 66) if compact_state_card else (Vector2(92, 88) if not host._mobile else Vector2(130, 120)), 28 if compact_state_card else 36)
+	var card_art: Control = host._initial_art(a.id, Vector2(72, 66) if compact_state_card else (Vector2(100, 96) if not host._mobile else Vector2(130, 120)), 28 if compact_state_card else 36)
 	if compact_state_card:
 		compact_body.add_child(card_art)
 	else:
@@ -693,8 +707,8 @@ func _make_card(a) -> PanelContainer:
 	r.text = UIKit.tr_upper(tr("Düşman") if a.moved else _role_for_actor(a))
 	r.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	r.add_theme_font_override("font", UIKit.caps())
-	r.add_theme_font_size_override("font_size", 9 if compact_state_card else (host._fs(12) if host._mobile else host._fs(10)))
-	r.add_theme_color_override("font_color", Color("ff8a7a") if a.moved else Color(UIKit.GOLD, 0.85))
+	r.add_theme_font_size_override("font_size", 11 if compact_state_card else (host._fs(12) if host._mobile else host._fs(11)))
+	r.add_theme_color_override("font_color", Color("ff8a7a") if a.moved else Color(UIKit.GOLD, 1.0))
 	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(r)
 	card.set_meta("id", a.id)
@@ -855,9 +869,14 @@ func _update_info() -> void:
 	if id == "":
 		return
 	var a = Sim.actors[id]
-	var art: Control = host._initial_art(a.id, Vector2(62, 62), 32)
+	var art: Control = host._initial_art(a.id, Vector2(84, 78) if not host._mobile else Vector2(76, 72), 38)
 	host._portrait_box.add_child(art)
-	host._info.append_text("[b][font_size=%d]%s[/font_size][/b]  [color=gray]%s[/color]" % [host._fs(18), a.display_name, a.title])
+	UIKit.ornament(host._portrait_box, Color(UIKit.GOLD, 0.82), 18, 2)
+	var portrait_star := _trait_mark(UIKit.GOLD, true, true)
+	portrait_star.position = Vector2(3, 3)
+	portrait_star.custom_minimum_size = Vector2(15, 15)
+	host._portrait_box.add_child(portrait_star)
+	host._info.append_text("[b][font_size=%d]%s[/font_size][/b]  [color=gray]%s[/color]" % [host._fs(24 if not host._mobile else 20), a.display_name, a.title])
 	# Güç: üç kademe (eskiden metinle verilen bilgi; fazlası değil).
 	var level := Sim.power_tier(a.power)
 	var lvl_name: String = Sim.POWER_TIER_NAMES[level]
@@ -924,25 +943,37 @@ func _trait(text: String, col: Color, filled := -1, total := 0, tip := "") -> Co
 	chip.add_child(row)
 	var n := total if filled >= 0 else 1
 	for i in n:
-		var dot := Panel.new()
-		var ds := StyleBoxFlat.new()
-		ds.set_corner_radius_all(4)
-		ds.anti_aliasing = true
-		ds.bg_color = col if (filled < 0 or i < filled) else Color(col, 0.18)
-		dot.add_theme_stylebox_override("panel", ds)
-		dot.custom_minimum_size = Vector2(7, 7)
-		if Sfx.colorblind_mode and col.is_equal_approx(UIKit.DANGER):
-			dot.rotation = PI / 4.0
-		dot.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		row.add_child(dot)
+		row.add_child(_trait_mark(col, filled >= 0, filled < 0 or i < filled))
 	var l := Label.new()
 	l.text = text
-	l.add_theme_font_size_override("font_size", host._fs(12))
+	l.add_theme_font_override("font", UIKit.serif())
+	l.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 14))
 	l.add_theme_color_override("font_color", col.lightened(0.25) if col.s > 0.1 else col)
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(l)
 	return chip
+
+
+func _trait_mark(col: Color, star: bool, filled: bool) -> Control:
+	var mark := Control.new()
+	mark.custom_minimum_size = Vector2(13, 13)
+	mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	mark.draw.connect(func() -> void:
+		var center := mark.size / 2.0
+		var points := PackedVector2Array()
+		if star:
+			for i in 10:
+				var angle: float = -PI / 2.0 + float(i) * PI / 5.0
+				var radius: float = mark.size.x * (0.48 if i % 2 == 0 else 0.22)
+				points.append(center + Vector2(cos(angle), sin(angle)) * radius)
+		else:
+			points = PackedVector2Array([center + Vector2(0, -5), center + Vector2(5, 0), center + Vector2(0, 5), center + Vector2(-5, 0)])
+		if filled:
+			mark.draw_colored_polygon(points, col)
+		else:
+			points.append(points[0])
+			mark.draw_polyline(points, Color(col, 0.55), 1.2, true))
+	return mark
 
 
 ## Haber şeridi önceliği: kriz ve alametler önce, aktör hamleleri en sonda (özet bölümünde zaten görünür).
