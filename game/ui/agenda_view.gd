@@ -542,8 +542,8 @@ func _draw_trend(c: Control, t: int) -> void:
 
 
 ## Gündem: geçen haftadan bu yana görünür göstergelerde ne değişti (Sim.week_changes). Boşsa bölüm yok.
-func _add_changes(animated: Array[Control]) -> void:
-	var target: VBoxContainer = host._report_box if host._report_box != null else host._agenda
+func _add_changes(animated: Array[Control], target_override: VBoxContainer = null) -> void:
+	var target: VBoxContainer = target_override if target_override != null else (host._report_box if host._report_box != null else host._agenda)
 	target.add_child(host._section(tr("BU HAFTA DEĞİŞENLER"), tr("önce değişenler")))
 	if Sim.week_changes.is_empty():
 		return
@@ -571,14 +571,15 @@ func _add_changes(animated: Array[Control]) -> void:
 		l.text = str(ch["text"])
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		l.add_theme_font_size_override("font_size", host._fs(13))
+		l.add_theme_font_override("font", UIKit.serif())
+		l.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 14))
 		h.add_child(l)
 
 
 ## Masaüstü: karar kartlarının altında haftanın defteri. Eylem sonuçları bildirimde kaybolur, ipucu satırı
 ## yalnızca sonuncuyu tutar; burada hafta boyunca durur. Boşken sıradaki adımı söyler. Yeni bilgi açmaz.
-func _add_week_ledger(animated: Array[Control]) -> void:
-	var target: VBoxContainer = host._report_box if host._report_box != null else host._agenda
+func _add_week_ledger(animated: Array[Control], target_override: VBoxContainer = null) -> void:
+	var target: VBoxContainer = target_override if target_override != null else (host._report_box if host._report_box != null else host._agenda)
 	if host._week_log_week != Sim.week:
 		host._week_log.clear()
 		host._week_log_week = Sim.week
@@ -587,7 +588,8 @@ func _add_week_ledger(animated: Array[Control]) -> void:
 	assembly.text = Sim.parliament_report_line()
 	assembly.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	assembly.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-	assembly.add_theme_font_size_override("font_size", host._fs(12))
+	assembly.add_theme_font_override("font", UIKit.serif())
+	assembly.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 14))
 	target.add_child(assembly)
 	if host._week_log.is_empty():
 		var empty := Label.new()
@@ -595,7 +597,8 @@ func _add_week_ledger(animated: Array[Control]) -> void:
 			else tr("Mesain bitti. Raporlara göz at ve haftayı bitir."))
 		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		empty.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-		empty.add_theme_font_size_override("font_size", host._fs(13))
+		empty.add_theme_font_override("font", UIKit.serif())
+		empty.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 14))
 		target.add_child(empty)
 		return
 	for i in host._week_log.size():
@@ -615,6 +618,8 @@ func _add_week_ledger(animated: Array[Control]) -> void:
 		l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		l.add_theme_font_size_override("normal_font_size", host._fs(12))
 		l.add_theme_font_size_override("bold_font_size", host._fs(12))
+		l.add_theme_font_override("normal_font", UIKit.serif())
+		l.add_theme_font_override("bold_font", UIKit.serif())
 		l.text = "[color=#d6b25e]%d[/color]   %s" % [i + 1, host._week_log[i]]
 		row.add_child(l)
 	# Yalnızca en son satır canlanır (her eylemde bütün liste yeniden belirmesin).
@@ -626,9 +631,17 @@ func _add_week_ledger(animated: Array[Control]) -> void:
 func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]) -> void:
 	for c in host._report_box.get_children():
 		c.queue_free()
-	_add_changes(animated)
-	_add_week_ledger(animated)
-	host._report_box.add_child(host._section(tr("Raporlar")))
+	var frame := PanelContainer.new()
+	frame.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	frame.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.6), Color(UIKit.GOLD_DIM, 0.25), 8, 5))
+	host._report_box.add_child(frame)
+	UIKit.ornament(frame, Color(UIKit.GOLD, 0.56), 22, 4)
+	var contents := VBoxContainer.new()
+	contents.add_theme_constant_override("separation", 4)
+	frame.add_child(contents)
+	_add_changes(animated, contents)
+	_add_week_ledger(animated, contents)
+	contents.add_child(host._section(tr("Raporlar")))
 	var full_reports := PopupPanel.new()
 	host.add_child(full_reports)
 	var popup_scroll := ScrollContainer.new()
@@ -690,13 +703,13 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 				host._update_info()
 				host._divan.refresh()
 				host._all_reports_popup.hide())
-		(host._report_box if report_index < 4 else popup_list).add_child(panel)
+		(contents if report_index < 4 else popup_list).add_child(panel)
 		animated.append(panel)
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)
 		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		panel.add_child(row)
-		var por: Control = host._initial_art(sid, Vector2(28, 28), 14)
+		var por: Control = host._initial_art(sid, Vector2(44, 42), 20)
 		por.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		row.add_child(por)
 		row.add_child(_trend_mark(r))
@@ -707,12 +720,15 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		l.add_theme_font_size_override("normal_font_size", host._fs(13))
-		l.add_theme_font_size_override("bold_font_size", host._fs(13))
+		l.add_theme_font_override("normal_font", UIKit.serif())
+		l.add_theme_font_override("bold_font", UIKit.serif())
+		l.add_theme_font_size_override("normal_font_size", host._fs(15 if host._mobile else 14))
+		l.add_theme_font_size_override("bold_font_size", host._fs(15 if host._mobile else 14))
+		l.add_theme_color_override("default_color", UIKit.TEXT)
 		l.text = "[b]%s[/b]  %s" % [_short_name(str(r["name"])), r["text"]]
 		row.add_child(l)
 		texts.append(l)
-	host._report_box.add_child(all_reports)
+	contents.add_child(all_reports)
 
 
 ## Meclisin görüşü: iki danışmanın kısa önerisi (docs/design/danisman_gorusleri.md).

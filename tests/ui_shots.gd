@@ -62,6 +62,8 @@ func _run() -> void:
 		main._refresh()
 		main._style_cards()
 		main._update_info()
+		Input.warp_mouse(Vector2(4, 4))
+		await process_frame
 		await _shot("main_target")
 		quit(0)
 		return
@@ -674,7 +676,7 @@ func _run() -> void:
 		main._update_info()
 		main._on_flow("gundem")
 		if u3_state == "reports":
-			for child in main._report_box.get_children():
+			for child in main._report_box.find_children("*", "Control", true, false):
 				if child is Button and ((child as Button).text.begins_with("Tüm raporlar") or (child as Button).text.begins_with("All reports")):
 					(child as Button).pressed.emit()
 					break

@@ -302,8 +302,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		cb.button_group = cat_group
 		cb.theme_type_variation = "GhostButton"
 		cb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		if host._mobile:
-			cb.custom_minimum_size.y = 44
+		cb.custom_minimum_size.y = 44 if host._mobile else 32
 		cb.clip_text = false
 		cb.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		cb.add_theme_font_override("font", UIKit.serif())
@@ -362,14 +361,41 @@ func _build_ui(cols: HBoxContainer) -> void:
 	av.add_child(host._hint_label)
 	if not host._mobile:
 		# Masaüstü: raporlar kaynaklarının (güç merkezlerinin) altında, kompakt liste.
+		var report_view := Control.new()
+		report_view.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		right.add_child(report_view)
 		var rscroll := ScrollContainer.new()
-		rscroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		rscroll.set_anchors_preset(Control.PRESET_FULL_RECT)
 		rscroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-		right.add_child(rscroll)
+		report_view.add_child(rscroll)
 		host._report_box = VBoxContainer.new()
 		host._report_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		host._report_box.add_theme_constant_override("separation", 4)
 		rscroll.add_child(host._report_box)
+		var fade_gradient := Gradient.new()
+		fade_gradient.colors = PackedColorArray([Color(UIKit.PANEL, 0.0), Color(UIKit.PANEL, 0.9)])
+		var fade_texture := GradientTexture2D.new()
+		fade_texture.gradient = fade_gradient
+		fade_texture.width = 1
+		fade_texture.height = 36
+		fade_texture.fill_from = Vector2(0, 0)
+		fade_texture.fill_to = Vector2(0, 1)
+		var fade := TextureRect.new()
+		fade.texture = fade_texture
+		fade.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		fade.stretch_mode = TextureRect.STRETCH_SCALE
+		fade.anchor_left = 0.0
+		fade.anchor_top = 0.94
+		fade.anchor_right = 0.97
+		fade.anchor_bottom = 1.0
+		fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		report_view.add_child(fade)
+		var report_scrollbar := rscroll.get_v_scroll_bar()
+		var update_report_fade := func() -> void:
+			fade.visible = report_scrollbar.max_value > report_scrollbar.page + 1.0 and report_scrollbar.value + report_scrollbar.page < report_scrollbar.max_value - 1.0
+		report_scrollbar.changed.connect(update_report_fade)
+		report_scrollbar.value_changed.connect(func(_value: float) -> void: update_report_fade.call())
+		rscroll.resized.connect(update_report_fade)
 	else:
 		var mobile_report_scroll := ScrollContainer.new()
 		mobile_report_scroll.name = "Raporlar listesi"

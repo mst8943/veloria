@@ -572,7 +572,7 @@ func _build_header(parent: Control) -> void:
 	parent.add_child(header)
 	var scenery := TextureRect.new()
 	scenery.name = "HeaderScenery"
-	scenery.custom_minimum_size.y = 28 if _mobile else 55
+	scenery.custom_minimum_size.y = 28 if _mobile else 40
 	scenery.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scenery.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	scenery.stretch_mode = TextureRect.STRETCH_SCALE
@@ -596,7 +596,7 @@ func _build_header(parent: Control) -> void:
 	scenery.add_child(scenery_shade)
 	var band := PanelContainer.new()
 	band.name = "TourTopBar"
-	band.custom_minimum_size.y = 48 if _mobile else 76
+	band.custom_minimum_size.y = 48 if _mobile else 64
 	var band_style := UIKit.band_style()
 	band_style.border_width_top = 1
 	if _mobile:
@@ -1027,7 +1027,8 @@ func _section(title: String, helper := "") -> Control:
 	if helper != "":
 		var h := Label.new()
 		h.text = helper
-		h.add_theme_font_size_override("font_size", _fs(12))
+		h.add_theme_font_override("font", UIKit.serif())
+		h.add_theme_font_size_override("font_size", _fs(13))
 		h.add_theme_color_override("font_color", Color(UIKit.TEXT_DIM, 0.85))
 		h.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		# Dar ekranda açıklama kısalır, başlık kaymaz.
@@ -1795,6 +1796,8 @@ func _rebuild_flow() -> void:
 	for c in _flow.get_children():
 		_flow.remove_child(c)
 		c.queue_free()
+	if not items.is_empty():
+		_flow.add_child(_header_symbol("flourish", Vector2(14, 14), UIKit.GOLD))
 	for i in items.size():
 		var it: Array = items[i]
 		if i > 0:
@@ -1811,7 +1814,8 @@ func _flow_chip(text: String, col: Color, target: String) -> Control:
 	var b := Button.new()
 	b.text = text
 	b.flat = true
-	b.add_theme_font_size_override("font_size", _fs(14))
+	b.add_theme_font_override("font", UIKit.serif())
+	b.add_theme_font_size_override("font_size", _fs(15))
 	for st in ["font_color", "font_disabled_color"]:
 		b.add_theme_color_override(st, col)
 	b.add_theme_color_override("font_hover_color", col.lightened(0.3))

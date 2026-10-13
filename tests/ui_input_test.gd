@@ -30,7 +30,7 @@ func _run() -> void:
 	main._sel.clear()
 	var expected := str(root.get_node("Sim").reports[0]["source"])
 	var report: Control
-	for child in main._report_box.get_children():
+	for child in main._report_box.find_children("*", "Control", true, false):
 		if child is PanelContainer and child.has_meta("report_id"):
 			report = child
 			break
@@ -40,7 +40,7 @@ func _run() -> void:
 		printerr("UI INPUT: rapordan kişi seçilemedi: ", main._sel)
 		quit(1)
 		return
-	for child in main._report_box.get_children():
+	for child in main._report_box.find_children("*", "Control", true, false):
 		if child is Button and ((child as Button).text.begins_with("Tüm raporlar") or (child as Button).text.begins_with("All reports")):
 			(child as Button).pressed.emit()
 			break
@@ -388,7 +388,7 @@ func _run_mobile() -> void:
 		return
 	main._select_tab(main._mobile_reports_page)
 	var all_reports: Button
-	for child in main._report_box.get_children():
+	for child in main._report_box.find_children("*", "Control", true, false):
 		if child is Button and ((child as Button).text.begins_with("Tüm raporlar") or (child as Button).text.begins_with("All reports")):
 			all_reports = child
 			break
