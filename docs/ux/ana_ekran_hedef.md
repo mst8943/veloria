@@ -193,3 +193,44 @@ Ekran: `docs/ux/ref/ana_ekran_g1.jpg` (1600×900, aynı durum). Mockup'la bölge
 
 **Genel**
 21. Mesai 4/4 doğru (4 dolu). Harcandığında içi boş baklava kontrol edilsin (3/4 durumunda ekran görüntüsü).
+
+### G1b uygulama kontrol listesi
+
+21 madde, aynı hafta 1 / karar beklemiyor / `voss` seçili ekranında kontrol edildi. Kanıt görselleri: [1600×900 ana ekran](ref/ana_ekran_g1b.jpg), [mockup ile yan yana karşılaştırma](ref/ana_ekran_g1b_karsilastirma.jpg) ve [3/4 mesai baklavası](ref/ana_ekran_g1b_mesai_3_4.jpg).
+
+| # | Durum | Kontrol |
+|---:|---|---|
+| 1 | kısmen | Üst şerit görünür ve daha açık; mevcut panoramanın dar kırpımı sancakları gösteriyor, mum/sütun ayrıntısı mockup kadar net değil. `art/` salt okunur olduğundan kaynak görsel değişmedi. |
+| 2 | düzeltildi | İki aslan ve kral büstü merkez armaya yakın görünür yüksekliğe indirildi; üst bant toplamı 12 px kısaltıldı. |
+| 3 | düzeltildi | Taçlı arma iki katmana taşan boyutta kaldı. |
+| 4 | düzeltildi | Kral adının önünde belirgin çizilmiş zambak var. |
+| 5 | düzeltildi | Bilgi bandında çift altın çizgi ve sivri uç süsü var. |
+| 6 | düzeltildi | Gezinme simgeleri 24 px; etiketlerin hemen yanında. |
+| 7 | düzeltildi | Haberler aynı satırda ardışık, arada çizilmiş baklava ile akıyor. |
+| 8 | düzeltildi | Haber ve alt bilgi kıvrımları çizilmiş akantus biçiminde. |
+| 9 | düzeltildi | Sol panel başlığı aralıklı büyük harf ve alt çizgiyle gösteriliyor. |
+| 10 | düzeltildi | Adımlar bağlantı çizgili; yalnızca etkin adım çerçeveli, tamamlanan adım yeşil. |
+| 11 | düzeltildi | Bekleyen karar yok durumu kutusuz serif metin. |
+| 12 | düzeltildi | Uyarı kutusundaki zarf çizimi 28×24 px. |
+| 13 | düzeltildi | Seçili Vale portresi 120×110 px alana yüz merkezli yerleşiyor. |
+| 14 | düzeltildi | Kişi kartının altında zambaklı ayraç var. |
+| 15 | düzeltildi | İzleme listesi çizgisinin sonunda kıvrım süsü var. |
+| 16 | düzeltildi | Eylem kategorilerinde yalnızca etkin sekme plakalı. |
+| 17 | düzeltildi | Rapor listesi alt solma ve görünür kaydırma çubuğuyla devam ediyor; satır kaydırıldığında bütünüyle okunuyor. |
+| 18 | düzeltildi | Özet metinleri çerçeve içinden başlıyor; karar kartı başlığı üst çerçeveye değmiyor. |
+| 19 | düzeltildi | “Raporlar” başlığı diğer bölüm başlıklarıyla aynı, ölçülü aralıkta. |
+| 20 | düzeltildi | “Diğer kişiler Divan'da” açık krem serif 16 px. |
+| 21 | düzeltildi | 4/4'te dört dolu baklava, 3/4'te üç dolu ve bir boş baklava; ikinci görünüm ayrı JPG olarak kaydedildi. |
+
+1600×900 ve 1495×840 TR ana ekranları, 1600×900 EN ve 1067×600 yatay mobil TR/EN görüntüleri açılıp kontrol edildi. TR/EN masaüstünde Gündem ve karar kartı, Dosyalar, Günlük, Divan, harita, medya ve menü de açıldı; metin taşması görülmedi. Harita ve medya başlıklarının ana ekran süsleriyle çakışması, süs düğümlerinin katman sırasını normalleştirerek düzeltildi. EN seçili kişi çiplerinden uzun olanı ikinci satıra geçiyor, kart içinde kalıyor ve kesilmiyor.
+
+Test çıktıları (her biri exit code 0): `UI INPUT: OK`, `UI INPUT: OK (mobile)`, `UI LOGIC: OK`, `TOUCH: OK`, `TOUCH TAP: OK`, `A11Y: OK`, `TOUR: OK`, `LANG: OK`, `REGION MAP: OK`, `EN LEAK SCAN: 5 campaigns, 0 unique leaks`, `TR SUFFIX: OK (7039 Turkish, 5602 English strings; 40 campaigns)`, `TEST: OK`.
+
+Tam koşu: TR ve EN için `FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`. Godot test/screenshot süreçleri exit code 0 verdi; kapanışta bazı süreçlerde RID/ObjectDB/resource temizleme uyarıları sürüyor.
+
+### G1b gözlemler
+
+- Düzeltildi: ana header süsleri, harita/medya/menü gibi tam ekran içeriklerin başlığını kapatıyordu. Katman sırası düzeltildi; harita ve medya başlıkları artık okunuyor.
+- Kısmen kaldı: mevcut `header_bg.png` panoramasının merkez kırpımı, dar üst şeritte sancak ve mum ayrıntılarını mockup kadar net gösteremiyor. Görsel dosyaya dokunulmadı.
+- EN'de uzun kişi çipi ikinci satıra kayıyor; seçili kişi çerçevesi içinde kalıyor, metin kesilmiyor.
+- Geçici görselleri temizleme çağrısı otomatik inceleme tarafından engellendi; yeniden denemedim. Kalan geçici klasör: `C:\Users\USER\AppData\Local\Temp\Veloria_G1b`. İlk hatalı ekran görüntüsü argümanından kalan dosya: `C:\Users\USER\Desktop\oyun\main_target.png`.
