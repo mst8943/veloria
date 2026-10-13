@@ -1,6 +1,7 @@
 extends Control
 ## Başkent Haritası: kurumlar birer bina. res://art/city_map_v3.png varsa o kullanılır,
 ## bina konumları res://game/data/city_map.json ile ayarlanabilir; yoksa şehir kodla çizilir.
+## Parmakla / tekerlekle yakınlaştırma-kaydırma, sınırlı alan, sabit yazı boyutu (ters ölçek).
 
 signal request(target: String, arg: String)
 
@@ -34,6 +35,19 @@ const MOBILE_REGION_POS := {"capital": Vector2(0.04, 0.35), "industry": Vector2(
 var mobile := false
 var art_fn: Callable
 var portrait_fn: Callable
+
+# Harita katman ve yakınlaştırma değişkenleri
+var _map_layer: Control
+var zoom_scale := 1.0
+var _reset_zoom_button: Button
+var _is_dragging := false
+var _drag_distance := 0.0
+var _mouse_down_pos := Vector2.ZERO
+var _last_tap_time := 0.0
+var _last_tap_pos := Vector2.ZERO
+var _touch_points: Dictionary = {}
+var _prev_pinch_dist := 0.0
+
 var _drawer: PanelContainer
 var _drawer_body: VBoxContainer
 var _canvas: Control
@@ -57,14 +71,6 @@ func _ready() -> void:
 	_sites = SITES.duplicate(true)
 	_load_overrides()
 	hide()
-
-
-func _on_background_input(event: InputEvent) -> void:
-	if not visible or not _drawer or not _drawer.visible:
-		return
-	if (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT) or (event is InputEventScreenTouch and event.pressed):
-		if not _drawer.get_global_rect().has_point(event.position):
-			_drawer.hide()
 
 
 func _load_overrides() -> void:
@@ -119,8 +125,19 @@ func _build() -> void:
 	_region_buttons.clear()
 	_regions_visible = false
 	_region_panel_id = ""
+	zoom_scale = 1.0
+	_is_dragging = false
+	_drag_distance = 0.0
+	_touch_points.clear()
 
-	# Arka plan görseli: v3 görseli öncelikli
+	# Harita Katmanı (Tüm kaydırılan ve yakınlaştırılan nesneler burada yer alır)
+	_map_layer = Control.new()
+	_map_layer.name = "MapLayer"
+	_map_layer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_map_layer.mouse_filter = Control.MOUSE_FILTER_PASS
+	add_child(_map_layer)
+
+	# Arka plan görseli
 	var tex: Texture2D = null
 	if ResourceLoader.exists("res://art/city_map_v3.png"):
 		tex = load("res://art/city_map_v3.png")
@@ -129,22 +146,20 @@ func _build() -> void:
 
 	if tex:
 		var bg := TextureRect.new()
+		bg.name = "MapBackground"
 		bg.texture = tex
 		bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 		bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(bg)
+		_map_layer.add_child(bg)
 		bg.resized.connect(func() -> void: bg.pivot_offset = bg.size / 2.0)
-		var kb := bg.create_tween().set_loops()
-		kb.tween_property(bg, "scale", Vector2(1.025, 1.025), 24.0).set_trans(Tween.TRANS_SINE)
-		kb.tween_property(bg, "scale", Vector2.ONE, 24.0).set_trans(Tween.TRANS_SINE)
 	else:
 		_canvas = Control.new()
 		_canvas.set_anchors_preset(Control.PRESET_FULL_RECT)
 		_canvas.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		_canvas.draw.connect(_draw_city)
-		add_child(_canvas)
+		_map_layer.add_child(_canvas)
 		_make_lights()
 		var tw := _canvas.create_tween().set_loops()
 		tw.tween_interval(0.45)
@@ -154,9 +169,15 @@ func _build() -> void:
 	vig.color = Color(0, 0, 0, 0.16)
 	vig.set_anchors_preset(Control.PRESET_FULL_RECT)
 	vig.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(vig)
+	_map_layer.add_child(vig)
 
-	# Üst başlık bandı (docs/ux/gorsel_dil_v3.md Bölüm C)
+	# Kurum plakaları ve bölge işaretçileri harita katmanına eklenir
+	for id in _sites:
+		_make_site(id)
+	for id in Sim.REGION_WEIGHTS:
+		_make_region_marker(str(id))
+
+	# Üst başlık bandı (Ekran sabiti)
 	var band := PanelContainer.new()
 	band.add_theme_stylebox_override("panel", UIKit.band_style())
 	band.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE, Control.PRESET_MODE_MINSIZE, 18)
@@ -186,6 +207,25 @@ func _build() -> void:
 	var sp := Control.new()
 	sp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(sp)
+
+	# Sıfırla Düğmesi (Yalnızca yakınlaştırılmışken görünür)
+	_reset_zoom_button = Button.new()
+	_reset_zoom_button.name = "ResetZoomButton"
+	_reset_zoom_button.text = tr("Sıfırla")
+	_reset_zoom_button.tooltip_text = tr("Harita yakınlaştırmasını ve konumunu sıfırla")
+	_reset_zoom_button.custom_minimum_size = Vector2(88, 44)
+	_reset_zoom_button.focus_mode = Control.FOCUS_ALL
+	var rst_box := UIKit.box(Color(UIKit.PLATE, 0.92), Color(UIKit.GOLD, 0.75), 4, 10)
+	var rst_box_h := UIKit.box(Color(0.12, 0.10, 0.08, 0.98), Color("fff3d0"), 4, 10)
+	_reset_zoom_button.add_theme_stylebox_override("normal", rst_box)
+	_reset_zoom_button.add_theme_stylebox_override("hover", rst_box_h)
+	_reset_zoom_button.add_theme_stylebox_override("pressed", rst_box_h)
+	_reset_zoom_button.add_theme_stylebox_override("focus", rst_box_h)
+	_reset_zoom_button.add_theme_color_override("font_color", UIKit.GOLD)
+	_reset_zoom_button.add_theme_font_override("font", UIKit.sans(600))
+	_reset_zoom_button.pressed.connect(reset_zoom)
+	_reset_zoom_button.visible = false
+	top.add_child(_reset_zoom_button)
 
 	# "?" simge açıklaması kare düğme
 	_legend_button = Button.new()
@@ -231,12 +271,205 @@ func _build() -> void:
 	back.pressed.connect(close_view)
 	top.add_child(back)
 
-	for id in _sites:
-		_make_site(id)
-	for id in Sim.REGION_WEIGHTS:
-		_make_region_marker(str(id))
 	_build_drawer()
+	_sync_pins_transform()
 
+
+# ---------------------------------------------------------------- Yakınlaştırma & Kaydırma Motoru
+
+func _on_background_input(event: InputEvent) -> void:
+	if not visible:
+		return
+
+	# Çekmece açıkken dışarı tıklanırsa çekmece kapanır
+	if _drawer and _drawer.visible:
+		if (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT) or (event is InputEventScreenTouch and event.pressed):
+			if not _drawer.get_global_rect().has_point(event.position):
+				_drawer.hide()
+				accept_event()
+				return
+
+	# 1. Pinch Gesture (Dokunmatik sıkıştırma)
+	if event is InputEventMagnifyGesture:
+		apply_zoom(zoom_scale * event.factor, event.position)
+		_is_dragging = true
+		accept_event()
+		return
+
+	# 2. Fare tekerleği (İmleç merkezli yakınlaştırma)
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		if mb.button_index == MOUSE_BUTTON_WHEEL_UP and mb.pressed:
+			apply_zoom(zoom_scale * 1.15, mb.position)
+			accept_event()
+			return
+		elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN and mb.pressed:
+			apply_zoom(zoom_scale / 1.15, mb.position)
+			accept_event()
+			return
+		elif mb.button_index == MOUSE_BUTTON_LEFT:
+			if mb.pressed:
+				_mouse_down_pos = mb.position
+				_drag_distance = 0.0
+				_is_dragging = false
+				# Çift tıklama / çift dokunma kontrolü
+				var now := Time.get_ticks_msec() / 1000.0
+				if now - _last_tap_time < 0.28 and (_mouse_down_pos - _last_tap_pos).length() < 24.0:
+					if zoom_scale > 1.1:
+						reset_zoom()
+					else:
+						apply_zoom(1.8, mb.position)
+					_last_tap_time = 0.0
+					accept_event()
+					return
+				_last_tap_time = now
+				_last_tap_pos = mb.position
+			else:
+				if _is_dragging:
+					_is_dragging = false
+
+	# 3. Fare / Tek Parmak Sürükleme (Pan)
+	if event is InputEventMouseMotion:
+		var mm := event as InputEventMouseMotion
+		if (mm.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
+			_drag_distance += mm.relative.length()
+			if _drag_distance > 8.0:
+				_is_dragging = true
+			if _is_dragging:
+				pan_map(mm.relative)
+				accept_event()
+				return
+
+	# 4. Çoklu Dokunma (Multi-touch Pinch & Drag)
+	if event is InputEventScreenTouch:
+		var st := event as InputEventScreenTouch
+		if st.pressed:
+			_touch_points[st.index] = st.position
+			if _touch_points.size() == 1:
+				_mouse_down_pos = st.position
+				_drag_distance = 0.0
+				_is_dragging = false
+				var now := Time.get_ticks_msec() / 1000.0
+				if now - _last_tap_time < 0.28 and (_mouse_down_pos - _last_tap_pos).length() < 28.0:
+					if zoom_scale > 1.1:
+						reset_zoom()
+					else:
+						apply_zoom(1.8, st.position)
+					_last_tap_time = 0.0
+					accept_event()
+					return
+				_last_tap_time = now
+				_last_tap_pos = st.position
+			elif _touch_points.size() >= 2:
+				var pts := _touch_points.values()
+				_prev_pinch_dist = pts[0].distance_to(pts[1])
+				_is_dragging = true
+		else:
+			_touch_points.erase(st.index)
+			if _touch_points.size() < 2:
+				_prev_pinch_dist = 0.0
+
+	if event is InputEventScreenDrag:
+		var sd := event as InputEventScreenDrag
+		_touch_points[sd.index] = sd.position
+		if _touch_points.size() >= 2:
+			var pts := _touch_points.values()
+			var dist: float = pts[0].distance_to(pts[1])
+			if _prev_pinch_dist > 0.0:
+				var factor := dist / _prev_pinch_dist
+				var center: Vector2 = (pts[0] + pts[1]) * 0.5
+				apply_zoom(zoom_scale * factor, center)
+			_prev_pinch_dist = dist
+			_is_dragging = true
+			accept_event()
+			return
+		elif _touch_points.size() == 1:
+			_drag_distance += sd.relative.length()
+			if _drag_distance > 8.0:
+				_is_dragging = true
+			if _is_dragging:
+				pan_map(sd.relative)
+				accept_event()
+				return
+
+
+func apply_zoom(target_scale: float, focus_point: Vector2) -> void:
+	var new_scale := clampf(target_scale, 1.0, 2.5)
+	if is_equal_approx(new_scale, zoom_scale):
+		return
+
+	if not _map_layer:
+		return
+
+	# Odak noktasının harita üzerindeki yerel koordinatını koru
+	var local_focus := (focus_point - _map_layer.position) / zoom_scale
+	zoom_scale = new_scale
+	_map_layer.scale = Vector2(zoom_scale, zoom_scale)
+	_map_layer.position = focus_point - local_focus * zoom_scale
+
+	_clamp_boundaries()
+	_sync_pins_transform()
+	_update_reset_button()
+
+
+func pan_map(delta: Vector2) -> void:
+	if not _map_layer or zoom_scale <= 1.001:
+		return
+	_map_layer.position += delta
+	_clamp_boundaries()
+
+
+func _clamp_boundaries() -> void:
+	if not _map_layer:
+		return
+	var s := size
+	if zoom_scale <= 1.001:
+		zoom_scale = 1.0
+		_map_layer.scale = Vector2.ONE
+		_map_layer.position = Vector2.ZERO
+		return
+
+	var min_x := s.x * (1.0 - zoom_scale)
+	var min_y := s.y * (1.0 - zoom_scale)
+	_map_layer.position.x = clampf(_map_layer.position.x, min_x, 0.0)
+	_map_layer.position.y = clampf(_map_layer.position.y, min_y, 0.0)
+
+
+func reset_zoom() -> void:
+	if not _map_layer:
+		return
+	var tw := create_tween().set_parallel(true)
+	tw.tween_property(self, "zoom_scale", 1.0, 0.25).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.tween_property(_map_layer, "scale", Vector2.ONE, 0.25).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.tween_property(_map_layer, "position", Vector2.ZERO, 0.25).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.chain().tween_callback(func() -> void:
+		_clamp_boundaries()
+		_sync_pins_transform()
+		_update_reset_button()
+	)
+	var step_tw := create_tween().set_loops(10)
+	step_tw.tween_interval(0.025)
+	step_tw.tween_callback(_sync_pins_transform)
+
+
+## Plaka ve bölge işaretçilerinde ters ölçek: yazı ve buton boyutu sabit (1x) kalır, okunur
+func _sync_pins_transform() -> void:
+	var inv := 1.0 / maxf(zoom_scale, 0.01)
+	var inv_v := Vector2(inv, inv)
+	for plate: Control in plates.values():
+		plate.scale = inv_v
+		plate.pivot_offset = plate.size * 0.5
+	for btn: Control in _region_buttons.values():
+		btn.scale = inv_v
+		btn.pivot_offset = btn.size * 0.5
+
+
+func _update_reset_button() -> void:
+	if _reset_zoom_button:
+		_reset_zoom_button.visible = zoom_scale > 1.05
+
+
+# ---------------------------------------------------------------- Kurum Plakaları
 
 ## Kurum plakası: map_badge kalıbı (yuvarlak altın çerçeveli simge rozeti + koyu plaka üstünde büyük harf ad + altta küçük altın üçgen)
 func _make_site(id: String) -> void:
@@ -246,7 +479,7 @@ func _make_site(id: String) -> void:
 	plate.focus_mode = Control.FOCUS_ALL
 	plate.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	plate.custom_minimum_size = Vector2(0, 38 if not mobile else 44)
-	add_child(plate)
+	_map_layer.add_child(plate)
 	plates[id] = plate
 
 	var sb := StyleBoxFlat.new()
@@ -316,6 +549,7 @@ func _make_site(id: String) -> void:
 	var place := func() -> void:
 		var p: Vector2 = MOBILE_POS.get(id, s["pos"]) if mobile else s["pos"]
 		plate.position = Vector2(p.x * size.x, p.y * size.y) - plate.size / 2.0
+		plate.pivot_offset = plate.size / 2.0
 	plate.resized.connect(place)
 	place.call_deferred()
 
@@ -323,21 +557,28 @@ func _make_site(id: String) -> void:
 		if TOUCH_SCROLL.dispatching_touch: return
 		Sfx.play("hover", -10.0)
 		sb.border_color = Color("fff3d0")
-		sb.bg_color = Color(0.12, 0.10, 0.08, 0.98)
-		plate.pivot_offset = plate.size / 2.0
-		plate.create_tween().tween_property(plate, "scale", Vector2(1.05, 1.05), 0.15))
+		sb.bg_color = Color(0.12, 0.10, 0.08, 0.98))
 	plate.mouse_exited.connect(func() -> void:
 		if TOUCH_SCROLL.dispatching_touch: return
 		sb.border_color = Color(UIKit.GOLD, 0.78)
-		sb.bg_color = Color(0.045, 0.038, 0.03, 0.94)
-		plate.create_tween().tween_property(plate, "scale", Vector2.ONE, 0.15))
+		sb.bg_color = Color(0.045, 0.038, 0.03, 0.94))
+
 	plate.gui_input.connect(func(ev: InputEvent) -> void:
-		if (ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT) or (ev is InputEventKey and ev.pressed and (ev.keycode == KEY_ENTER or ev.keycode == KEY_SPACE)):
+		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+			if _is_dragging:
+				return
 			Sfx.play("click")
 			if id == "saray":
 				close_view()
 			else:
-				show_site(id))
+				show_site(id)
+		elif ev is InputEventKey and ev.pressed and (ev.keycode == KEY_ENTER or ev.keycode == KEY_SPACE):
+			Sfx.play("click")
+			if id == "saray":
+				close_view()
+			else:
+				show_site(id)
+	)
 
 
 func _set_region_layer(enabled: bool) -> void:
@@ -430,28 +671,48 @@ func _make_region_marker(id: String) -> void:
 
 	var p: Vector2 = (_mobile_region_positions if mobile else _region_positions).get(id, REGION_POS[id])
 	button.position = Vector2(p.x * size.x, p.y * size.y) - button.custom_minimum_size / 2.0
+	button.pivot_offset = button.custom_minimum_size * 0.5
 	button.visible = _regions_visible
-	button.pressed.connect(func() -> void: show_region(id))
-	add_child(button)
+
+	var press_pos := Vector2.ZERO
+	button.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton:
+			var mb := ev as InputEventMouseButton
+			if mb.button_index == MOUSE_BUTTON_LEFT:
+				if mb.pressed:
+					press_pos = mb.global_position
+				else:
+					if _is_dragging or (press_pos.distance_to(mb.global_position) > 10.0):
+						return
+					show_region(id)
+	)
+	button.pressed.connect(func() -> void:
+		if not _is_dragging:
+			show_region(id)
+	)
+	_map_layer.add_child(button)
 	_region_buttons[id] = button
-	button.resized.connect(func() -> void: button.position = Vector2(p.x * size.x, p.y * size.y) - button.size / 2.0)
-	resized.connect(func() -> void: button.position = Vector2(p.x * size.x, p.y * size.y) - button.size / 2.0)
+	button.resized.connect(func() -> void:
+		button.position = Vector2(p.x * size.x, p.y * size.y) - button.size / 2.0
+		button.pivot_offset = button.size / 2.0
+	)
+	resized.connect(func() -> void:
+		button.position = Vector2(p.x * size.x, p.y * size.y) - button.size / 2.0
+		button.pivot_offset = button.size / 2.0
+	)
 
 
 func _draw_region_symbols(control: Control, levels: Dictionary, has_crisis: bool, has_governor: bool) -> void:
 	var w := control.size.x
 	var y := 10.0
 	var ink := Color("ead7a6")
-	# Üçgen + tarama: huzursuzluk
 	var triangle := PackedVector2Array([Vector2(5, y + 6), Vector2(12, y - 6), Vector2(19, y + 6), Vector2(5, y + 6)])
 	control.draw_polyline(triangle, ink, 1.5, true)
 	for i in int(levels["unrest"]):
 		control.draw_line(Vector2(8 + i * 4, y + 3), Vector2(10 + i * 4, y - 1), ink, 1.5, true)
-	# Pazar sütunları
 	for i in 3:
 		var height := 2.0 + i * 2.0 + float(levels["economy"]) * 2.0
 		control.draw_rect(Rect2(Vector2(28 + i * 4, y + 6 - height), Vector2(2, height)), ink)
-	# Kalkan: bağlılık
 	var shield := PackedVector2Array([Vector2(43, y - 6), Vector2(54, y - 3), Vector2(53, y + 4), Vector2(48, y + 8), Vector2(43, y + 4), Vector2(43, y - 6)])
 	control.draw_polyline(shield, ink, 1.5, true)
 	for i in int(levels["loyalty"]):
@@ -480,7 +741,6 @@ func _region_compact_name(id: String) -> String:
 
 func _build_drawer() -> void:
 	_drawer = PanelContainer.new()
-	# Tek süslü çerçeve: panelin kendi kenarı 0 + UIKit.ornament (çerçeve üstüne çerçeve yok)
 	var psb := StyleBoxFlat.new()
 	psb.bg_color = Color(0.07, 0.06, 0.05, 0.96)
 	psb.set_border_width_all(0)
@@ -492,7 +752,6 @@ func _build_drawer() -> void:
 	_drawer.add_theme_stylebox_override("panel", psb)
 	UIKit.ornament(_drawer, Color(UIKit.GOLD, 0.8), 22, 1)
 
-	# Soluk arma filigranı
 	if ResourceLoader.exists("res://art/ui/watermark_crest.png"):
 		var wm := TextureRect.new()
 		wm.texture = load("res://art/ui/watermark_crest.png")
@@ -538,7 +797,6 @@ func show_site(id: String) -> void:
 	for c in _drawer_body.get_children():
 		c.queue_free()
 
-	# Kurum görseli: 1 px ince altın kenarlık
 	var tex: Texture2D = art_fn.call(str(s["art"])) if art_fn.is_valid() else null
 	if tex:
 		var frame := PanelContainer.new()
@@ -558,7 +816,6 @@ func show_site(id: String) -> void:
 		img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		frame.add_child(img)
 
-	# Bölüm başlığı: altın baklava + caps Garamond başlık
 	var title_box := HBoxContainer.new()
 	title_box.add_theme_constant_override("separation", 10)
 	_drawer_body.add_child(title_box)
@@ -588,28 +845,23 @@ func show_site(id: String) -> void:
 		var institution: String = institutions[id]
 		var chief: String = str(_sites[id]["actor"])
 		var chief_name: String = Sim.actors[chief].display_name if Sim.actors.has(chief) else tr("makam boş")
-		_drawer_body.add_child(_text(tr("İşleyiş: [b]%s[/b]
-Başkan: %s") % [tr(Sim.capacity_band(institution)), chief_name]))
+		_drawer_body.add_child(_text(tr("İşleyiş: [b]%s[/b]\nBaşkan: %s") % [tr(Sim.capacity_band(institution)), chief_name]))
 		if id == "maliye":
 			_drawer_body.add_child(_text(tr("Kasa: [b]%s[/b]") % tr(Sim.treasury_band())))
 	if id == "holding":
-		_drawer_body.add_child(_text(tr("Nüfuz: [b]%s[/b]
-Medya: [b]%s[/b]") % [tr(Sim.halden_influence_band()), tr(Sim.halden_mood())]))
+		_drawer_body.add_child(_text(tr("Nüfuz: [b]%s[/b]\nMedya: [b]%s[/b]") % [tr(Sim.halden_influence_band()), tr(Sim.halden_mood())]))
 	if id in ["asteria", "drakon", "seravia"]:
-		_drawer_body.add_child(_text(tr("İlişki: [b]%s[/b]
-[color=gray]Elena'nın anlatımı iyimser olabilir; Doğrula kayıtları altı hafta açar.[/color]") % tr(Sim.foreign_band(id))))
+		_drawer_body.add_child(_text(tr("İlişki: [b]%s[/b]\n[color=gray]Elena'nın anlatımı iyimser olabilir; Doğrula kayıtları altı hafta açar.[/color]") % tr(Sim.foreign_band(id))))
 
 	var aid: String = s["actor"]
 	if Sim.actors.has(aid):
 		var a = Sim.actors[aid]
-		# Rapor satırı kalıbı: koyu zemin, solda ton çubuğu, 1 px portre, kalın ad sütunu
 		var row := PanelContainer.new()
 		var rsb := StyleBoxFlat.new()
 		rsb.bg_color = Color(0.08, 0.07, 0.06, 0.88)
-		rsb.border_color = Color(UIKit.GOLD, 0.3)
+		rsb.border_color = Color(UIKit.GOLD, 0.8)
 		rsb.set_border_width_all(1)
 		rsb.border_width_left = 3
-		rsb.border_color = Color(UIKit.GOLD, 0.8)
 		rsb.set_corner_radius_all(3)
 		rsb.content_margin_left = 12
 		rsb.content_margin_right = 12
@@ -675,7 +927,6 @@ func show_region(id: String) -> void:
 	for c in _drawer_body.get_children():
 		c.queue_free()
 
-	# Başlık satırı
 	var title_box := HBoxContainer.new()
 	title_box.add_theme_constant_override("separation", 10)
 	_drawer_body.add_child(title_box)
@@ -881,7 +1132,6 @@ func _make_lights() -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 7
 	for i in 1400:
-		# Işıklar kurum çevrelerinde ve nehir boyunda yoğunlaşır
 		var p := Vector2(rng.randf(), rng.randf())
 		if rng.randf() < 0.55:
 			var keys := SITES.keys()
@@ -893,14 +1143,12 @@ func _make_lights() -> void:
 func _draw_city() -> void:
 	var s := _canvas.size
 	_canvas.draw_rect(Rect2(Vector2.ZERO, s), Color("07080d"))
-	# Nehir
 	var river := PackedVector2Array()
 	for i in 30:
 		var x := s.x * i / 29.0
 		river.append(Vector2(x, s.y * 0.53 + sin(i * 0.45) * s.y * 0.05))
 	_canvas.draw_polyline(river, Color("0d1a2a"), s.y * 0.05, true)
 	_canvas.draw_polyline(river, Color(0.25, 0.35, 0.5, 0.25), 2.0, true)
-	# Bulvarlar: saraydan kurumlara
 	var palace: Vector2 = SITES["saray"]["pos"] * s
 	for id in SITES:
 		var p: Vector2 = SITES[id]["pos"] * s
@@ -911,12 +1159,10 @@ func _draw_city() -> void:
 		var a := Vector2(rng.randf() * s.x, rng.randf() * s.y)
 		var b := a + Vector2(rng.randf_range(-260, 260), rng.randf_range(-140, 140))
 		_canvas.draw_line(a, b, Color(0.8, 0.6, 0.35, 0.08), 1.5, true)
-	# Kurum ışık halkaları
 	for id in SITES:
 		var p: Vector2 = SITES[id]["pos"] * s
 		for k in 6:
 			_canvas.draw_circle(p, 90.0 - k * 14.0, Color(0.95, 0.7, 0.35, 0.025 + k * 0.012))
-	# Pencere ışıkları (hafif titreşim)
 	var t := Time.get_ticks_msec() / 1000.0
 	for l in _lights:
 		var p: Vector2 = l[0] * s
