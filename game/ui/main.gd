@@ -118,6 +118,10 @@ func _ready() -> void:
 		add_child(TOUCH_SCROLL.new())
 	UIKit.configure_accessibility(Sfx.text_size, Sfx.high_contrast, Sfx.reduce_motion)
 	theme = UIKit.build_theme(_mobile)
+	theme.default_font = UIKit.serif()
+	theme.set_font("bold_font", "RichTextLabel", UIKit.serif())
+	theme.set_font("italics_font", "RichTextLabel", UIKit.serif_italic())
+	theme.set_font("bold_italics_font", "RichTextLabel", UIKit.serif_italic())
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	Sim.week_advanced.connect(_on_week)
 	Sim.news.connect(_on_news)
@@ -327,7 +331,8 @@ func _fast() -> bool:
 
 ## Mobilde yazılar büyür (yatay telefon: ~1067x600 taban).
 func _fs(n: int) -> int:
-	return roundi(n * [1.0, 1.14, 1.28][Sfx.text_size] * (1.22 if _mobile else 1.0))
+	var scaled := roundi(n * [1.0, 1.14, 1.28][Sfx.text_size] * (1.22 if _mobile else 1.0))
+	return maxi(15, scaled) if _mobile else scaled
 
 
 # ---------------------------------------------------------------- Kurulum

@@ -326,7 +326,7 @@ func _plate(id: String, title: String, area: Vector2) -> Control:
 		b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var bl := Label.new()
 		bl.text = mark
-		bl.add_theme_font_size_override("font_size", UIKit.scaled_font_size(14))
+		bl.add_theme_font_size_override("font_size", maxi(15, UIKit.scaled_font_size(14)) if mobile else UIKit.scaled_font_size(14))
 		bl.custom_minimum_size.x = maxf(16.0, bl.text.length() * 22.0)
 		bl.add_theme_color_override("font_color", Color("fff1dc"))
 		b.add_child(bl)
@@ -338,7 +338,7 @@ func _plate(id: String, title: String, area: Vector2) -> Control:
 	sum.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	sum.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	sum.custom_minimum_size.x = w - 20
-	sum.add_theme_font_size_override("font_size", UIKit.scaled_font_size(14 if mobile else 15))
+	sum.add_theme_font_size_override("font_size", maxi(15, UIKit.scaled_font_size(14)) if mobile else UIKit.scaled_font_size(15))
 	sum.add_theme_color_override("font_color", Color(0.86, 0.8, 0.68, 0.92))
 	sum.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.95))
 	sum.add_theme_constant_override("shadow_outline_size", 5)

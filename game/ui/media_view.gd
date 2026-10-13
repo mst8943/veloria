@@ -145,7 +145,8 @@ func show_tab(key: String) -> void:
 func _ink_label(text: String, size: int, color: Color = INK, serif := false, wrap := true) -> Label:
 	var l := Label.new()
 	l.text = text
-	l.add_theme_font_size_override("font_size", UIKit.scaled_font_size(size))
+	var font_size := UIKit.scaled_font_size(size)
+	l.add_theme_font_size_override("font_size", maxi(15, font_size) if mobile else font_size)
 	l.add_theme_color_override("font_color", color)
 	if serif:
 		l.add_theme_font_override("font", UIKit.serif())
@@ -165,8 +166,11 @@ func _ink_body(bbcode: String, size: int, color: Color = INK_SOFT, justify := tr
 	r.add_theme_font_override("normal_font", UIKit.serif())
 	r.add_theme_font_override("bold_font", UIKit.caps())
 	r.add_theme_font_override("italics_font", UIKit.serif_italic())
+	var font_size := UIKit.scaled_font_size(size)
+	if mobile:
+		font_size = maxi(15, font_size)
 	for k in ["normal_font_size", "bold_font_size", "italics_font_size"]:
-		r.add_theme_font_size_override(k, UIKit.scaled_font_size(size))
+		r.add_theme_font_size_override(k, font_size)
 	r.add_theme_color_override("default_color", color)
 	# Dar sütunda iki yana yaslama kelime arasında delik açar; orada sola yaslı.
 	r.text = ("[fill]%s[/fill]" if justify else "%s") % bbcode

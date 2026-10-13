@@ -159,7 +159,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		var card_scroll := ScrollContainer.new()
 		card_scroll.name = "Kişi şeridi"
 		card_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		card_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+		card_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 		card_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 		strip.add_child(card_scroll)
 		_mobile_card_row = HBoxContainer.new()
@@ -723,7 +723,7 @@ func _make_card(a) -> PanelContainer:
 	n.text = host._short_name(a.display_name)
 	n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	n.add_theme_font_override("font", UIKit.serif())
-	n.add_theme_font_size_override("font_size", 13 if compact_state_card else (host._fs(18) if host._mobile else 17))
+	n.add_theme_font_size_override("font_size", host._fs(15 if compact_state_card else 18) if host._mobile else (13 if compact_state_card else 17))
 	n.add_theme_color_override("font_color", Color("f3ead2"))
 	n.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.8))
 	n.add_theme_constant_override("shadow_outline_size", 4)
@@ -733,7 +733,7 @@ func _make_card(a) -> PanelContainer:
 	r.text = UIKit.tr_upper(tr("Düşman") if a.moved else _role_for_actor(a))
 	r.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	r.add_theme_font_override("font", UIKit.caps())
-	r.add_theme_font_size_override("font_size", 11 if compact_state_card else (host._fs(12) if host._mobile else host._fs(11)))
+	r.add_theme_font_size_override("font_size", host._fs(15 if compact_state_card else 12) if host._mobile else (11 if compact_state_card else host._fs(11)))
 	r.add_theme_color_override("font_color", Color("ff8a7a") if a.moved else Color(UIKit.GOLD, 1.0))
 	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(r)
@@ -798,11 +798,11 @@ func _style_cards(hover_id := "") -> void:
 				var portrait := body.get_child(0) as Control
 				portrait.custom_minimum_size = Vector2(120, 88)
 			else:
-				card.custom_minimum_size = Vector2(120, 104) if compact else Vector2(150, 132)
+				card.custom_minimum_size = Vector2(140, 112) if compact else Vector2(150, 132)
 				var portrait := card.get_child(0) as Control
-				portrait.custom_minimum_size = Vector2(100, 92) if compact else Vector2(130, 120)
+				portrait.custom_minimum_size = Vector2(120, 100) if compact else Vector2(130, 120)
 				var labels := card.get_meta("card_labels") as VBoxContainer
-				labels.offset_top = -42 if compact else -52
+				labels.offset_top = -48 if compact else -52
 		var a = Sim.actors.get(id)
 		var selected: bool = host._sel.has(id)
 		var primary: bool = not host._sel.is_empty() and host._sel[0] == id
@@ -983,6 +983,7 @@ func _trait(text: String, col: Color, filled := -1, total := 0, tip := "") -> Co
 func _trait_mark(col: Color, star: bool, filled: bool) -> Control:
 	var mark := Control.new()
 	mark.custom_minimum_size = Vector2(13, 13)
+	mark.rotation = PI / 4.0 if Sfx.colorblind_mode and not star else 0.0
 	mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	mark.draw.connect(func() -> void:
 		var center := mark.size / 2.0

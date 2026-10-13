@@ -47,7 +47,7 @@ func _shot(file_name: String) -> void:
 func _run() -> void:
 	# Kişi paneli dolu görünsün: en güçlü kişiyi seç.
 	var sim0: Node = root.get_node("Sim")
-	if "--main-target" in OS.get_cmdline_user_args():
+	if "--main-target" in OS.get_cmdline_user_args() or "--main-people" in OS.get_cmdline_user_args():
 		sim0.week = 1
 		sim0.pending.clear()
 		sim0.mesai = sim0.mesai_max
@@ -62,9 +62,47 @@ func _run() -> void:
 		main._refresh()
 		main._style_cards()
 		main._update_info()
+		if "--main-people" in OS.get_cmdline_user_args():
+			main._tabs.current_tab = 1
 		Input.warp_mouse(Vector2(4, 4))
 		await process_frame
-		await _shot("main_target")
+		await _shot("main_people" if "--main-people" in OS.get_cmdline_user_args() else "main_target")
+		quit(0)
+		return
+	var inspect_state := ""
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--inspect="):
+			inspect_state = arg.substr(10)
+	if inspect_state != "":
+		sim0.week = 1
+		sim0.pending.clear()
+		sim0.mesai = sim0.mesai_max
+		main._media_seen_week = 0
+		main._week_log.clear()
+		main._week_log_week = 1
+		main._sel.clear()
+		main._sel.append("voss")
+		if inspect_state == "decision":
+			for event in sim0._events:
+				if event["id"] == "gida_protestosu":
+					sim0.pending.append({"event": event, "age": 0})
+		main._refresh()
+		main._style_cards()
+		main._update_info()
+		match inspect_state:
+			"agenda", "decision":
+				main._tabs.current_tab = 0
+			"files": main._select_tab(main._files_tab)
+			"journal": main._select_tab(main._journal)
+			"divan":
+				if main._mobile: main._tabs.current_tab = 1
+				main._divan.open()
+			"map": main._city.open()
+			"media": main._open_media()
+			"menu": main._show_menu()
+			"title": main.add_child(load("res://game/ui/title_screen.gd").new(main))
+		Input.warp_mouse(Vector2(4, 4))
+		await _shot("inspect")
 		quit(0)
 		return
 	if "--r5c-coup-signs" in OS.get_cmdline_user_args():

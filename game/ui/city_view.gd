@@ -310,7 +310,7 @@ func _make_region_marker(id: String) -> void:
 	name.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if mobile else TextServer.AUTOWRAP_OFF
 	if mobile and id == "capital": name.custom_minimum_size.y = 28
-	name.add_theme_font_size_override("font_size", 12 if mobile else 14)
+	name.add_theme_font_size_override("font_size", 15 if mobile else 14)
 	name.add_theme_color_override("font_color", Color("f1e6c8"))
 	name.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	column.add_child(name)
