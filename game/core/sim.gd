@@ -3548,7 +3548,7 @@ func _crisis_event(lead: Actor) -> Dictionary:
 	var street_t: String = tr(["Sokak öfkeli; meydanlar senin için dolmayabilir.", "Sokak tedirgin; kimse kimin kazanacağını bilmiyor.", "Sokaklar sakin; halk sana hâlâ kulak verir."][street_b])
 	var choices: Array = [
 		{"label": tr("Sadık %s ile bastır") % tr(_army_unit_name(_army_defense_unit(unit_id))), "crisis": "army_suppress", "unit": _army_defense_unit(unit_id), "fx": {}},
-		{"label": tr("%s ile pazarlık et") % ek(nm, "le"), "crisis": "army_negotiate", "fx": {}},
+		{"label": tr("%s ile pazarlık et") % nm, "crisis": "army_negotiate", "fx": {}},
 		{"label": tr("Yedek %s birliğini başkente çağır") % tr(_army_unit_name(_army_alternate_unit(unit_id, _army_defense_unit(unit_id)))), "crisis": "army_switch", "unit": _army_alternate_unit(unit_id, _army_defense_unit(unit_id)), "fx": {}}]
 	if not lead.military:
 		choices = [
