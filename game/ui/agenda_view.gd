@@ -46,28 +46,50 @@ func _add_guide(animated: Array[Control]) -> void:
 	var step := _guide_step()
 	var panel := PanelContainer.new()
 	panel.name = "WeeklyGuide"
-	panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.92), Color(UIKit.GOLD, 0.45), 8, 10))
+	panel.add_theme_stylebox_override("panel", UIKit.box(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0, 0))
 	host._agenda.add_child(panel)
 	animated.append(panel)
 	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 6)
+	v.add_theme_constant_override("separation", 4)
 	panel.add_child(v)
 	var head := Label.new()
 	head.text = tr("BU HAFTA NE YAPMALI?")
-	head.add_theme_font_override("font", UIKit.serif())
-	head.add_theme_font_size_override("font_size", host._fs(15))
+	head.add_theme_font_override("font", UIKit.caps())
+	head.add_theme_font_size_override("font_size", host._fs(16))
 	head.add_theme_color_override("font_color", UIKit.GOLD)
+	head.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	v.add_child(head)
+	var guide_divider := UIKit.divider(200, UIKit.GOLD)
+	guide_divider.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	v.add_child(guide_divider)
+	var step_bar := Control.new()
+	step_bar.name = "WeeklySteps"
+	step_bar.custom_minimum_size.y = 42 if host._mobile else 36
+	step_bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	step_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	step_bar.draw.connect(func() -> void:
+		var width := step_bar.size.x / float(GUIDE_STEPS.size())
+		var y := step_bar.size.y * 0.84
+		for i in range(GUIDE_STEPS.size() - 1):
+			var from := Vector2((float(i) + 0.66) * width, y)
+			var to := Vector2((float(i) + 1.34) * width, y)
+			step_bar.draw_line(from, to, UIKit.OK if i + 1 < step else Color(UIKit.GOLD_DIM, 0.42), 1.2, true)
+		var plate := Rect2(Vector2((step - 1) * width + 4, 3), Vector2(width - 8, step_bar.size.y - 6))
+		var cut := 6.0
+		var points := PackedVector2Array([plate.position + Vector2(cut, 0), plate.position + Vector2(plate.size.x - cut, 0), plate.position + Vector2(plate.size.x, cut), plate.position + Vector2(plate.size.x, plate.size.y - cut), plate.position + Vector2(plate.size.x - cut, plate.size.y), plate.position + Vector2(cut, plate.size.y), plate.position + Vector2(0, plate.size.y - cut), plate.position + Vector2(0, cut)])
+		step_bar.draw_colored_polygon(points, Color(UIKit.GOLD, 0.08))
+		step_bar.draw_polyline(PackedVector2Array(points + PackedVector2Array([points[0]])), Color(UIKit.GOLD, 0.74), 1.2, true))
+	v.add_child(step_bar)
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 6)
-	v.add_child(row)
+	row.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	step_bar.add_child(row)
 	for i in GUIDE_STEPS.size():
 		var b := Button.new()
 		b.text = tr("%d   %s") % [i + 1, tr(GUIDE_STEPS[i][0])]
 		b.theme_type_variation = "GhostButton"
 		b.toggle_mode = true
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.custom_minimum_size.y = 44 if host._mobile else 40
+		b.custom_minimum_size.y = 44 if host._mobile else 36
 		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		b.add_theme_font_override("font", UIKit.serif())
 		b.add_theme_font_size_override("font_size", host._fs(14))
@@ -75,9 +97,9 @@ func _add_guide(animated: Array[Control]) -> void:
 		var col := UIKit.GOLD if i + 1 == step else (UIKit.OK if i + 1 < step else UIKit.TEXT_DIM)
 		for c in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color"]:
 			b.add_theme_color_override(c, col)
-		b.add_theme_stylebox_override("normal", UIKit.box(Color(UIKit.GOLD, 0.07) if i + 1 == step else Color(0, 0, 0, 0), Color(UIKit.GOLD, 0.62) if i + 1 == step else Color(UIKit.GOLD_DIM, 0.22), 6, 5))
-		b.add_theme_stylebox_override("hover", UIKit.box(Color(UIKit.GOLD, 0.12), Color(UIKit.GOLD, 0.55), 6, 5))
-		b.add_theme_stylebox_override("pressed", UIKit.box(Color(UIKit.GOLD, 0.16), Color(UIKit.GOLD, 0.75), 6, 5))
+		b.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+		b.add_theme_stylebox_override("hover", UIKit.box(Color(UIKit.GOLD, 0.08), Color(0, 0, 0, 0), 0, 2))
+		b.add_theme_stylebox_override("pressed", UIKit.box(Color(UIKit.GOLD, 0.12), Color(0, 0, 0, 0), 0, 2))
 		b.set_pressed_no_signal(i + 1 == step)
 		b.pressed.connect(_guide_go.bind(i + 1))
 		host._wire(b)
@@ -248,16 +270,8 @@ func _rebuild_agenda() -> void:
 		nh.add_theme_constant_override("separation", 8)
 		nh.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		note.add_child(nh)
-		var ic_tex: Texture2D = host._art("res://art/icons/rapor.png")
-		if ic_tex:
-			var ic := TextureRect.new()
-			ic.texture = ic_tex
-			ic.custom_minimum_size = Vector2(20, 20)
-			ic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			ic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-			ic.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-			ic.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			nh.add_child(ic)
+		var ic: Control = host._header_symbol("envelope", Vector2(28, 24), UIKit.GOLD)
+		nh.add_child(ic)
 		var nl := Label.new()
 		nl.text = tr(ADVICE[Sim.week])
 		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -295,14 +309,13 @@ func _rebuild_agenda() -> void:
 			nav.add_child(following)
 			nav_buttons.append(following)
 	else:
-		var empty_panel := PanelContainer.new()
-		empty_panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.72), Color(UIKit.GOLD_DIM, 0.3), 6, 8))
-		host._agenda.add_child(empty_panel)
 		var empty := Label.new()
 		empty.text = tr("Bu hafta bekleyen karar yok. Kişilerle ilgilen ya da haftayı bitir.")
 		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		empty.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-		empty_panel.add_child(empty)
+		empty.add_theme_color_override("font_color", UIKit.TEXT)
+		empty.add_theme_font_override("font", UIKit.serif())
+		empty.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 16))
+		host._agenda.add_child(empty)
 	for pi in Sim.pending.size():
 		if pi != decision_index:
 			continue
@@ -633,15 +646,22 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		c.queue_free()
 	var frame := PanelContainer.new()
 	frame.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	frame.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.6), Color(UIKit.GOLD_DIM, 0.25), 8, 5))
+	var frame_style := UIKit.box(Color(UIKit.PANEL, 0.6), Color(UIKit.GOLD_DIM, 0.25), 8, 10)
+	frame_style.content_margin_top = 8
+	frame_style.content_margin_bottom = 4
+	frame.add_theme_stylebox_override("panel", frame_style)
 	host._report_box.add_child(frame)
-	UIKit.ornament(frame, Color(UIKit.GOLD, 0.56), 22, 4)
+	UIKit.ornament(frame, Color(UIKit.GOLD, 0.56), 14, 4)
 	var contents := VBoxContainer.new()
-	contents.add_theme_constant_override("separation", 4)
+	contents.add_theme_constant_override("separation", 2)
 	frame.add_child(contents)
 	_add_changes(animated, contents)
 	_add_week_ledger(animated, contents)
-	contents.add_child(host._section(tr("Raporlar")))
+	var reports_heading: Control = host._section(tr("Raporlar"))
+	var reports_label := reports_heading.get_child(1) as Label
+	reports_label.add_theme_font_override("font", UIKit.serif())
+	reports_label.add_theme_font_size_override("font_size", host._fs(16))
+	contents.add_child(reports_heading)
 	var full_reports := PopupPanel.new()
 	host.add_child(full_reports)
 	var popup_scroll := ScrollContainer.new()
@@ -684,8 +704,8 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		var band := clampi(int(r.get("band", 1)), 0, 2)
 		# Renk yalnızca sol çizgide: raporun söylediği durum. Kutu kenarı yok, liste sakin kalır.
 		var sb := UIKit.box(Color(UIKit.PANEL_HI, 0.42), Color(0, 0, 0, 0), 2, 6)
-		sb.content_margin_top = 3
-		sb.content_margin_bottom = 3
+		sb.content_margin_top = 1
+		sb.content_margin_bottom = 1
 		sb.border_width_left = 3
 		sb.border_color = [Color(UIKit.OK, 0.8), Color(UIKit.AMBER, 0.8), Color(UIKit.DANGER, 0.9)][band]
 		panel.add_theme_stylebox_override("panel", sb)
@@ -709,7 +729,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		row.add_theme_constant_override("separation", 8)
 		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		panel.add_child(row)
-		var por: Control = host._initial_art(sid, Vector2(44, 42), 20)
+		var por: Control = host._initial_art(sid, Vector2(34, 32), 20)
 		por.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		row.add_child(por)
 		row.add_child(_trend_mark(r))
@@ -722,8 +742,8 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		l.add_theme_font_override("normal_font", UIKit.serif())
 		l.add_theme_font_override("bold_font", UIKit.serif())
-		l.add_theme_font_size_override("normal_font_size", host._fs(15 if host._mobile else 14))
-		l.add_theme_font_size_override("bold_font_size", host._fs(15 if host._mobile else 14))
+		l.add_theme_font_size_override("normal_font_size", host._fs(15 if host._mobile else 13))
+		l.add_theme_font_size_override("bold_font_size", host._fs(15 if host._mobile else 13))
 		l.add_theme_color_override("default_color", UIKit.TEXT)
 		l.text = "[b]%s[/b]  %s" % [_short_name(str(r["name"])), r["text"]]
 		row.add_child(l)
