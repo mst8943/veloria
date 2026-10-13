@@ -114,7 +114,43 @@ Haber şeridi koyu çerçeveli serif satıra dönüştürüldü; iki haber ayrı
 Sol gündem alanının arkasına mevcut `watermark_crest.png` düşük alfa ile çiziliyor; kaynak yoksa hiçbir öğe ayrılmaz ve mevcut gündem içeriği aynen çalışır. Haftalık rehberin başlığı/step metinleri serif oldu, seçili adım çerçevelendi; mobil hedefler en az 44 px. Bekleyen karar olmadığında bilgilendirme metni koyu-altın kutu içinde gösteriliyor. 1600×900 TR ve 1067×600 EN hedef ekranları açıldı; filigran metni bastırmıyor, rehber ve boş durum kutusu yatay alana sığıyor. Masaüstü ve mobil `ui_input_test.gd`: `UI INPUT: OK`, `UI INPUT: OK (mobile)`; exit code 0. Godot kapanışında mevcut kaynak/RID uyarıları sürüyor.
 ### 4 — Sağ sütun
 
-İzleme kartları bir miktar büyütüldü ve rol metinleri daha parlak serif-altın oldu. Seçili kişi kartında portre büyütülüp ince süslü çerçeve ve çizilmiş yıldız eklendi; ad/unvan serif, kapatma düğmesi sağ üstte. Nitel çiplerde seviye yıldızları ve diğer işaretler yazı glifi yerine çizilir. Eylem sekmeleri serif ve büyük harf; “HALK” düzeltildi, “OPERASYON” kesilmiyor. Eylem önizlemesi/sonuç alanı serif biçime geçti. 1600×900 TR ve 1495×840 EN hedef görüntüleri açıldı; EN’de çipler gerektiğinde ikinci satıra akıyor, içerik taşmıyor. 1067×600 EN gündem görünümü de açıldı; mobilde Kişiler ayrı sekmede kaldığı için panelin mobil görünümü ayrıca kontrol edilecek. `ui_input_test.gd`: masaüstü `UI INPUT: OK`, mobil `UI INPUT: OK (mobile)`; exit code 0. Godot kapanış uyarıları sürüyor.
+İzleme kartları bir miktar büyütüldü ve rol metinleri daha parlak serif-altın oldu. Seçili kişi kartında portre büyütülüp ince süslü çerçeve ve çizilmiş yıldız eklendi; ad/unvan serif, kapatma düğmesi sağ üstte. Nitel çiplerde seviye yıldızları ve diğer işaretler yazı glifi yerine çizilir. Eylem sekmeleri serif ve büyük harf; “HALK” düzeltildi, “OPERASYON” kesilmiyor. Eylem önizlemesi/sonuç alanı serif biçime geçti. 1600×900 TR ve 1495×840 EN hedef görüntüleri açıldı; EN’de çipler gerektiğinde ikinci satıra akıyor, içerik taşmıyor. 1067×600 EN gündem görünümü de açıldı; mobilde Kişiler ayrı sekmede kaldığı için panelin mobil görünümü de açılıp kontrol edildi. `ui_input_test.gd`: masaüstü `UI INPUT: OK`, mobil `UI INPUT: OK (mobile)`; exit code 0. Godot kapanış uyarıları sürüyor.
 ### 5 — Değişenler, bu hafta, raporlar ve alt bilgi
 
-Sağ sütundaki üç özet bölümü tek süslü çerçeveye alındı. Başlıklar/yardımcı metinler serif; rapor satırlarında kaynak portresi, mevcut yeşil/amber/kırmızı ton çubuğu ve serif kaynak/metin var. Taşan liste alt kenarda yumuşak solma ve dikey kaydırma çubuğuyla devam ediyor; kaydırmanın sonunda son satır tam görünür. Alt bilgi şeridindeki durum metni serif oldu ve başına glif olmayan çizilmiş kıvrım eklendi. Başlık katmanlarının yüksekliği hedef oranlara yaklaştırıldı; alanı raporlara açtı. `ui_input_test.gd` iç içe çerçevedeki rapor ve “Tüm raporlar” düğmesini bulacak şekilde uyarlandı. 1600×900 TR hedef görüntüsü açıldı; EN/1495 ve yatay mobil kontrolleri final dilimde tekrar edilecek. Masaüstü ve mobil `ui_input_test.gd` önceki çalıştırmada sırasıyla `UI INPUT: OK`, `UI INPUT: OK (mobile)` verdi. Godot kapanışında kaynak/RID uyarıları sürüyor.
+Sağ sütundaki üç özet bölümü tek süslü çerçeveye alındı. Başlıklar/yardımcı metinler serif; rapor satırlarında kaynak portresi, mevcut yeşil/amber/kırmızı ton çubuğu ve serif kaynak/metin var. Taşan liste alt kenarda yumuşak solma ve dikey kaydırma çubuğuyla devam ediyor; kaydırmanın sonunda son satır tam görünür. Alt bilgi şeridindeki durum metni serif oldu ve başına glif olmayan çizilmiş kıvrım eklendi. Başlık katmanlarının yüksekliği hedef oranlara yaklaştırıldı; alanı raporlara açtı. `ui_input_test.gd` iç içe çerçevedeki rapor ve “Tüm raporlar” düğmesini bulacak şekilde uyarlandı. 1600×900 TR hedef görüntüsüne ek olarak EN/1495 ve yatay mobil kontrolleri final dilimde tekrar edildi. Masaüstü ve mobil `ui_input_test.gd` önceki çalıştırmada sırasıyla `UI INPUT: OK`, `UI INPUT: OK (mobile)` verdi. Godot kapanışında kaynak/RID uyarıları sürüyor.
+
+
+### 6 — Genel serif geçişi ve mobil uyarlama
+
+Ana arayüz temasında varsayılan yazı tipi `UIKit.serif()` oldu; kalın/italik temalar da aynı aileyi kullanıyor. Mobil metin yardımcıları 15 px tabanını koruyor; haber ve kişi paneli, medya, masa ve harita etiketleri bu tabana uyarlandı. Kişi kartı şeridinde yatay kaydırma çubuğu metnin üstüne binmiyor. TR/EN yatay mobil (1067×600), masaüstü ve kişi paneli açıldı; `ui_input_test` mobil ve masaüstü ile kaydırma/dokunma kapıları çalıştırıldı.
+
+### Uygulama kontrol listesi
+
+| Bölüm | Durum | Kontrol |
+|---|---|---|
+| 0. Genel | karşılandı | Serif tema, en küçük mobil metin 15 px, simgeler çizim/PNG; glif yedeği yok. |
+| 1. Başlık bandı | karşılandı | İki katman, aslanlar, kral büstü, arma, hafta plakası/ilerleme, mesai baklavaları, simgeli gezinme ve ayraçlar. |
+| 2. Haber/alamet şeridi | karşılandı | Kıvrım ve baklava çizili; dinamik metin, mobilde kısaltma/etkileşim. |
+| 3. Sol sekmeler | karşılandı | Serif simgeli Gündem/Dosyalar/Günlük sekmeleri ve bekleyen sayaç davranışı korundu. |
+| 4. Sol panel | karşılandı | Filigran, adım çubuğu, uyarı ve boş durum kutuları. |
+| 5.1 İzleme listesi | karşılandı | Büyütülmüş kişi kartları, seçili kenar ve okunur rol satırları. |
+| 5.2 Seçili kişi paneli | karşılandı | Yüzü görünen portre çerçevesi, nitel çipler ve köşedeki kapatma. |
+| 5.3 Eylemler paneli | karşılandı | HALK/OPERASYON etiketleri, açıklama/son eylem alanı ve serif eylem düğmeleri. |
+| 5.4 Değişenler / Bu hafta / Raporlar | karşılandı | Serif satırlar, kaynak portreleri/ton çubukları; alt kenarda solma ve kaydırma ile devam. |
+| 6. Alt bilgi | karşılandı | Çizilmiş kıvrım, serif durum satırı ve haftayı bitir düğmesi. |
+| 7. Kararlar | karşılandı | Büst/kaydet simgesi/çarpı/mesai baklavaları için belgelenen kararlar uygulandı. |
+| 8. Gereken görseller | karşılandı | Beş istenen `art/ui` kaynağı mevcut ve `ResourceLoader.exists` ile kullanılıyor; `art/` değiştirilmedi. |
+| 9. Mobil | karşılandı | 1067×600 yatay yerleşim, 44 px hedefler, gizlenen aslan/arma, kısa gezinme ve 15 px metin tabanı. |
+| 10. Kabul | kısmen | 1600×900 ve 1495×840 aynı TR durumuyla karşılaştırıldı; bölüm düzeni yakın, fakat mockup ile piksel düzeyinde tam eşleşmiyor. Karşılaştırma: `docs/ux/ref/ana_ekran_karsilastirma.jpg`. |
+
+EN/TR masaüstü ve yatay mobilde Gündem/karar, Dosyalar, Günlük, Divan, harita, medya, menü ve giriş ekranları açıldı. EN metinlerde belirgin taşma görülmedi. Kişiler görünümündeki yatay kart şeridi kaydırılabilir; daha fazla kart kenar oklarıyla erişilebilir.
+
+### Kapı kapanışı
+
+- `tools/run_test_isolated.ps1` ile bütün `*_test.gd`, `*_check.gd` ve `unit_tests.gd` çalıştırıldı. `a11y_test` ilk denemede renk körü işaretini yakaladı; düzeltmeden sonra `A11Y: OK`. Masaüstü/mobil giriş sonuçları `UI INPUT: OK`, `UI INPUT: OK (mobile)`. Dokunma `TOUCH: OK`, `TOUCH TAP: OK`; `UI LOGIC: OK`; senaryo ve simülasyon `SCENARIO: OK`, `TEST: OK`; `TR SUFFIX: OK (7034 Turkish, 5602 English strings; 40 campaigns)`. İçerik `CONTENT: OK (5 dosya, 8 bozuk örnek)`, olaylar `EVENTS: OK (201 olay, 0 uyarı)`, birim paketi `[unit] all 399 checks passed`. Ayrıntılı, değiştirilmemiş araç çıktıları `docs/ux/ana_ekran_test_raporu.txt` içinde.
+- Doğru `--autoplay --full --seed=101` koşusu TR ve EN için aynı sonucu verdi: `FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`.
+- `docs/ux/ref/ana_ekran_karsilastirma.jpg` hedef mockup, 1600×900 ve 1495×840 aynı TR durumunu yan yana gösterir. EN/TR, masaüstü/yatay mobil için Gündem/karar, Dosyalar, Günlük, Divan, harita, medya, menü ve giriş ekranları açılıp kontrol edildi.
+
+### Gözlemler
+
+Ana ekranın bölge düzeni mockup'a yakın, ancak tipografi ölçüsü ve bazı panellerin oranı piksel düzeyinde tam eşleşmiyor; kabul listesinde bu yüzden “kısmen” olarak işaretlendi. Mobil haber şeridi uzun metni kısaltıyor; dokunarak genişletilebiliyor. Rapor listesinde alt solma/kaydırma göstergesi var; aşağıdaki satırlar kaydırmayla görülüyor. EN/metin taşması görsel kontrolde görülmedi. Test/screenshot Godot süreçleri exit code 0 ile kapansa da kapanışta RID/ObjectDB kaynak uyarıları sürüyor; bunlar bu UI diliminde çözülmedi.
