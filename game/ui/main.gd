@@ -31,6 +31,9 @@ var _header_progress: ProgressBar
 var _header_mesai: Label
 var _header_wealth: Label
 var _headline: Label
+var _headline_secondary: Label
+var _headline_diamond: Control
+var _headline_band: PanelContainer
 var _headline_notice := ""
 var _tabs: TabContainer
 var _scroll: ScrollContainer
@@ -374,32 +377,50 @@ func _build_ui() -> void:
 
 	_build_header(root)
 
-	# Alamet/haber şeridi: koyu zemin, solda amber çizgi; boşken gizli (bkz. _refresh).
+	# Haber satırı: çizilmiş kıvrım ve iki başlık arasında çizilmiş baklava.
+	_headline_band = PanelContainer.new()
+	_headline_band.name = "NewsTicker"
+	_headline_band.visible = false
+	_headline_band.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_headline_band.custom_minimum_size.y = 32 if _mobile else 30
+	var ticker_style := UIKit.box(Color(UIKit.PLATE, 0.82), Color(UIKit.GOLD_DIM, 0.2), 2, 8)
+	ticker_style.content_margin_top = 2 if _mobile else 4
+	ticker_style.content_margin_bottom = 2 if _mobile else 4
+	_headline_band.add_theme_stylebox_override("panel", ticker_style)
+	root.add_child(_headline_band)
+	var hl_row := HBoxContainer.new()
+	hl_row.add_theme_constant_override("separation", 8)
+	_headline_band.add_child(hl_row)
+	hl_row.add_child(_header_symbol("flourish", Vector2(18, 18), UIKit.GOLD))
 	_headline = Label.new()
-	_headline.add_theme_color_override("font_color", UIKit.AMBER.lightened(0.35))
-	_headline.add_theme_font_size_override("font_size", _fs(14))
+	_headline.add_theme_font_override("font", UIKit.serif())
+	_headline.add_theme_color_override("font_color", UIKit.TEXT)
+	_headline.add_theme_font_size_override("font_size", _fs(16))
 	_headline.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	var hl_sb := UIKit.box(Color(UIKit.PLATE, 0.78), Color(0, 0, 0, 0), 2, 12)
-	hl_sb.border_color = UIKit.AMBER
-	hl_sb.border_width_left = 3
-	hl_sb.content_margin_top = 5
-	hl_sb.content_margin_bottom = 5
-	_headline.add_theme_stylebox_override("normal", hl_sb)
 	_headline.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	if _mobile:
-		# Dokununca açılır: uzun haber metni tek satıra sığmıyor.
-		_headline.mouse_filter = Control.MOUSE_FILTER_STOP
-		_headline.custom_minimum_size.y = 40
-		_headline.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		_headline.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+	_headline.size_flags_stretch_ratio = 1.0
+	_headline.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_headline.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hl_row.add_child(_headline)
+	_headline_diamond = _header_symbol("diamond", Vector2(8, 8), UIKit.GOLD, true)
+	_headline_diamond.visible = false
+	hl_row.add_child(_headline_diamond)
+	_headline_secondary = Label.new()
+	_headline_secondary.add_theme_font_override("font", UIKit.serif())
+	_headline_secondary.add_theme_color_override("font_color", UIKit.TEXT)
+	_headline_secondary.add_theme_font_size_override("font_size", _fs(16))
+	_headline_secondary.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_headline_secondary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_headline_secondary.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_headline_secondary.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hl_row.add_child(_headline_secondary)
+	_headline_band.mouse_filter = Control.MOUSE_FILTER_STOP if _mobile else Control.MOUSE_FILTER_IGNORE
+	_headline_band.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton and ev.button_index == MOUSE_BUTTON_LEFT:
+			var mb := ev as InputEventMouseButton
+			if (TOUCH_SCROLL.dispatching_touch and not mb.pressed) or (not TOUCH_SCROLL.dispatching_touch and mb.pressed):
 				_headline_expanded = not _headline_expanded
 				_apply_headline_mode())
-	# Şerit sağ üstteki bildirimlerin altına girmesin.
-	var hl_row := HBoxContainer.new()
-	hl_row.visible = false
-	hl_row.add_child(_headline)
-	root.add_child(hl_row)
 
 	var cols := HBoxContainer.new()
 	cols.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -479,7 +500,11 @@ func _build_ui() -> void:
 			_tabs.set_tab_icon(i, ti)
 	if _mobile:
 		_tabs.set_tab_title(0, tr("Gündem"))
-	_tabs.add_theme_constant_override("icon_max_width", 20)
+	_tabs.add_theme_constant_override("icon_max_width", 22)
+	var tab_bar: TabBar = _tabs.get_tab_bar()
+	tab_bar.custom_minimum_size.y = 44 if _mobile else 46
+	tab_bar.add_theme_font_override("font", UIKit.serif())
+	tab_bar.add_theme_font_size_override("font_size", _fs(17 if _mobile else 18))
 
 	_build_person_panel(cols)
 
@@ -1215,7 +1240,9 @@ func _after_load(message: String) -> void:
 	_hide_menu()
 	_journal.clear()
 	_headline.text = ""
-	_headline.get_parent().visible = false
+	_headline_secondary.text = ""
+	_headline_diamond.visible = false
+	_headline_band.visible = false
 	_sel.clear()
 	_divan.last_id = ""
 	_agenda_view.decision_index = 0
@@ -1878,9 +1905,15 @@ func _apply_headline_mode() -> void:
 	if _headline_expanded:
 		_headline.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_headline.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
+		_headline_secondary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_headline_secondary.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
+		_headline_band.custom_minimum_size.y = 48 if _mobile else 30
 	else:
 		_headline.autowrap_mode = TextServer.AUTOWRAP_OFF
 		_headline.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		_headline_secondary.autowrap_mode = TextServer.AUTOWRAP_OFF
+		_headline_secondary.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		_headline_band.custom_minimum_size.y = 32 if _mobile else 30
 
 
 func _update_headline() -> void:
@@ -1891,10 +1924,14 @@ func _update_headline() -> void:
 		items.append(Sim.news_for_display(str(item)))
 	if items.size() < 2 and Sfx.tips and AGENDA_VIEW.ADVICE.has(Sim.week):
 		items.append(tr(str(AGENDA_VIEW.ADVICE[Sim.week])))
-	_headline.text = "  ·  ".join(items.slice(0, 2))
+	_headline.text = items[0] if not items.is_empty() else ""
+	_headline_secondary.text = items[1] if items.size() > 1 else ""
+	_headline.tooltip_text = _headline.text
+	_headline_secondary.tooltip_text = _headline_secondary.text
+	_headline_diamond.visible = _headline_secondary.text != ""
 	_apply_headline_mode()
 	# Mobilde dikey alan kıt: haber şeridi yalnızca Gündem sekmesinde görünür.
-	_headline.get_parent().visible = _headline.text != "" and (not _mobile or _tabs.current_tab == 0)
+	_headline_band.visible = _headline.text != "" and (not _mobile or _tabs.current_tab == 0)
 
 
 func _on_news(_text: String) -> void:

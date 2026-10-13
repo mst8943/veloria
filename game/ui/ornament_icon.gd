@@ -77,4 +77,8 @@ func _draw() -> void:
 			draw_arc(Vector2(size.x / 2, size.y * 0.34), size.x * 0.24, PI, TAU, 16, c, w, true)
 			draw_line(Vector2(size.x * 0.18, size.y * 0.28), Vector2(size.x * 0.28, size.y * 0.54), c, w, true)
 			draw_line(Vector2(size.x * 0.82, size.y * 0.28), Vector2(size.x * 0.72, size.y * 0.54), c, w, true)
-
+		"flourish":
+			var cy := size.y / 2.0
+			draw_line(Vector2(1, cy), Vector2(size.x * 0.38, cy), c, w, true)
+			draw_arc(Vector2(size.x * 0.48, cy - 2), size.y * 0.22, PI * 0.15, PI * 1.7, 18, c, w, true)
+			draw_arc(Vector2(size.x * 0.73, cy + 2), size.y * 0.22, -PI * 0.8, PI * 0.75, 18, c, w, true)
