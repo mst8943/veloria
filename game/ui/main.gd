@@ -374,6 +374,8 @@ func _build_ui() -> void:
 	var safe := _safe_insets()
 	for side in ["left", "right", "top", "bottom"]:
 		var base_margin: int = ((4 if side in ["bottom", "top"] else 10) if _mobile else 18)
+		if side == "top" and not _mobile:
+			base_margin = 0
 		margin.add_theme_constant_override("margin_" + side, base_margin + int(safe.get(side, 0)))
 	_stage.add_child(margin)
 	var root := VBoxContainer.new()
@@ -394,7 +396,7 @@ func _build_ui() -> void:
 	_headline_band.add_theme_stylebox_override("panel", ticker_style)
 	root.add_child(_headline_band)
 	var hl_row := HBoxContainer.new()
-	hl_row.add_theme_constant_override("separation", 8)
+	hl_row.add_theme_constant_override("separation", 5)
 	_headline_band.add_child(hl_row)
 	hl_row.add_child(_header_symbol("flourish", Vector2(18, 18), UIKit.GOLD))
 	_headline = Label.new()
@@ -403,7 +405,7 @@ func _build_ui() -> void:
 	_headline.add_theme_font_size_override("font_size", _fs(16))
 	_headline.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_headline.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_headline.size_flags_stretch_ratio = 1.0
+	_headline.size_flags_stretch_ratio = 0.68
 	_headline.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_headline.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hl_row.add_child(_headline)
@@ -416,6 +418,7 @@ func _build_ui() -> void:
 	_headline_secondary.add_theme_font_size_override("font_size", _fs(16))
 	_headline_secondary.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_headline_secondary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_headline_secondary.size_flags_stretch_ratio = 1.32
 	_headline_secondary.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_headline_secondary.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hl_row.add_child(_headline_secondary)
@@ -577,10 +580,11 @@ func _build_header(parent: Control) -> void:
 	parent.add_child(header)
 	var scenery := TextureRect.new()
 	scenery.name = "HeaderScenery"
-	scenery.custom_minimum_size.y = 28 if _mobile else 40
+	scenery.custom_minimum_size.y = 28 if _mobile else 42
 	scenery.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scenery.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	scenery.stretch_mode = TextureRect.STRETCH_SCALE
+	scenery.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	scenery.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	var scenery_tex := _art("res://art/ui/header_bg.png")
 	if scenery_tex:
 		scenery.texture = scenery_tex
@@ -595,37 +599,49 @@ func _build_header(parent: Control) -> void:
 		scenery.texture = fallback
 	header.add_child(scenery)
 	var scenery_shade := ColorRect.new()
-	scenery_shade.color = Color(UIKit.SHADE, 0.55)
+	scenery_shade.color = Color(UIKit.SHADE, 0.24)
 	scenery_shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	scenery_shade.set_anchors_preset(Control.PRESET_FULL_RECT)
 	scenery.add_child(scenery_shade)
 	var band := PanelContainer.new()
 	band.name = "TourTopBar"
-	band.custom_minimum_size.y = 48 if _mobile else 64
+	band.custom_minimum_size.y = 48 if _mobile else 60
 	var band_style := UIKit.band_style()
 	band_style.border_width_top = 1
-	if _mobile:
-		band_style.content_margin_top = 0
-		band_style.content_margin_bottom = 0
+	band_style.content_margin_top = 0
+	band_style.content_margin_bottom = 0
 	band.add_theme_stylebox_override("panel", band_style)
 	header.add_child(band)
+	var double_frame := Control.new()
+	double_frame.name = "DoubleGoldFrame"
+	double_frame.set_anchors_preset(Control.PRESET_FULL_RECT)
+	double_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	double_frame.draw.connect(func() -> void:
+		for y in [1.0, 3.0, double_frame.size.y - 2.0, double_frame.size.y - 4.0]:
+			double_frame.draw_line(Vector2(2, y), Vector2(double_frame.size.x - 2, y), Color(UIKit.GOLD, 0.42 if int(y) % 2 == 1 else 0.2), 1.0, true))
+	band.add_child(double_frame)
 	var inset := MarginContainer.new()
 	inset.set_anchors_preset(Control.PRESET_FULL_RECT)
 	for side in ["left", "right"]:
 		inset.add_theme_constant_override("margin_" + side, 4 if _mobile else 8)
 	for side in ["top", "bottom"]:
-		inset.add_theme_constant_override("margin_" + side, 0 if _mobile else 2)
+		inset.add_theme_constant_override("margin_" + side, 0)
 	band.add_child(inset)
 	var top := HBoxContainer.new()
 	top.add_theme_constant_override("separation", 7 if _mobile else 10)
 	top.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	inset.add_child(top)
 	if not _mobile:
-		top.add_child(_royal_asset_slot("lion", Vector2(34, 58), true))
-	var bust_slot := _royal_asset_slot("king_bust", Vector2(42, 44) if _mobile else Vector2(58, 66), false)
+		top.add_child(_royal_asset_slot("lion", Vector2(64, 52), true))
+	var bust_slot := _royal_asset_slot("king_bust", Vector2(42, 44) if _mobile else Vector2(56, 52), false)
 	top.add_child(bust_slot)
 	if not _mobile:
-		top.add_child(_header_symbol("lily", Vector2(18, 22), UIKit.GOLD))
+		var royal_title_gap := Control.new()
+		royal_title_gap.custom_minimum_size.x = 56
+		royal_title_gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		top.add_child(royal_title_gap)
+		top.add_child(_header_symbol("lily", Vector2(30, 30), UIKit.GOLD))
+		top.add_child(_header_separator(42))
 	var king := Label.new()
 	king.text = tr("KRAL ADRİAN IV")
 	king.add_theme_font_override("font", UIKit.serif())
@@ -640,7 +656,7 @@ func _build_header(parent: Control) -> void:
 		top.add_child(_header_separator(42))
 	var week_plate := PanelContainer.new()
 	week_plate.name = "WeekPlate"
-	week_plate.custom_minimum_size = Vector2(150 if not _mobile else 138, 44 if _mobile else 48)
+	week_plate.custom_minimum_size = Vector2(150 if not _mobile else 138, 44 if _mobile else 52)
 	week_plate.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	week_plate.add_theme_stylebox_override("panel", UIKit.box(Color("100d09"), Color(UIKit.GOLD_DIM, 0.75), 2, 5))
 	top.add_child(week_plate)
@@ -662,11 +678,12 @@ func _build_header(parent: Control) -> void:
 	_header_progress.show_percentage = false
 	_header_progress.custom_minimum_size = Vector2(136 if not _mobile else 124, 5)
 	wk.add_child(_header_progress)
-	var crest_slot := _royal_asset_slot("crest", Vector2(46, 68), false)
-	crest_slot.z_index = 2
+	var crest_slot := _royal_asset_slot("crest", Vector2(46, 58), false)
 	top.add_child(crest_slot)
 	if not _mobile:
-		top.add_child(_header_separator(42))
+		var crest_separator := _header_separator(42)
+		crest_separator.custom_minimum_size.x = 14
+		top.add_child(crest_separator)
 	_header_mesai = Label.new()
 	_header_mesai.add_theme_font_override("font", UIKit.serif())
 	_header_mesai.add_theme_font_size_override("font_size", _fs(20))
@@ -692,38 +709,47 @@ func _build_header(parent: Control) -> void:
 	_header_wealth.tooltip_text = tr("Kişisel servet: devlet bütçesinden ayrı, gizli işlerin için.")
 	_header_wealth.mouse_filter = Control.MOUSE_FILTER_STOP
 	top.add_child(_stat("res://art/icons/servet.png", _header_wealth))
+	if not _mobile:
+		top.add_child(_header_symbol("endcap", Vector2(16, 28), UIKit.GOLD_DIM))
 	var sp := Control.new()
 	sp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(sp)
-	_header_nav(top, "desk", tr("Masa"), "building", _show_desk, 72 if _mobile else 90)
+	_header_nav(top, "desk", tr("Masa"), "building", _show_desk)
 	(_buttons["desk"] as Button).tooltip_text = tr("Çalışma masası: gündem, gazete, kişiler, günlük, dosyalar, hanedan ve başkent haritası.")
 	top.add_child(_header_separator(32))
-	_header_nav(top, "media", tr("Medya"), "newspaper", _open_media, 76 if _mobile else 92)
+	_header_nav(top, "media", tr("Medya"), "newspaper", _open_media)
 	(_buttons["media"] as Button).tooltip_text = tr("Medya Merkezi: Sarne'nin gazetesi, Leyla'nın bağımsız gazetesi ve Sarne TV. İkisini karşılaştır; biri yalan söylüyor olabilir.")
 	top.add_child(_header_separator(32))
-	var save_nav := _header_nav(top, "save", tr("Kaydet"), "seal", _on_save, 72)
+	var save_nav := _header_nav(top, "save", tr("Kaydet"), "seal", _on_save)
 	var save_separator := _header_separator(32)
 	top.add_child(save_separator)
-	_header_nav(top, "menu", tr("Menü"), "gear", _show_menu, 70 if _mobile else 82)
+	_header_nav(top, "menu", tr("Menü"), "gear", _show_menu)
 	if _mobile:
 		# Dar ekranda otomatik kayıt var; kısa gezinme etiketleri ve kral büstü kalır.
 		save_nav.visible = false
 		save_separator.visible = false
 	else:
-		top.add_child(_royal_asset_slot("lion", Vector2(34, 58), true))
+		var right_lion_slot := _royal_asset_slot("lion", Vector2(64, 52), false)
+		right_lion_slot.name = "RightLionSlot"
+		top.add_child(right_lion_slot)
 	# Reserve heraldic slots even when a platform build omits the optional art.
 	var bust := bust_slot.get_child(0) as TextureRect
 	if bust.texture != null:
 		bust.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		bust.position = Vector2(-5, -10) if _mobile else Vector2(-8, -32)
-		bust.size = Vector2(52, 60) if _mobile else Vector2(74, 104)
-		bust.z_index = 4
+		bust.position = Vector2(-3, -10) if _mobile else Vector2(-7, -30)
+		bust.size = Vector2(52, 60) if _mobile else Vector2(88, 110)
 	var crest := crest_slot.get_child(0) as TextureRect
 	if crest.texture != null:
 		crest.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		crest.position = Vector2(-7, -12)
-		crest.size = Vector2(60, 82)
-		crest.z_index = 4
+		crest.position = Vector2(-7, -32)
+		crest.size = Vector2(90, 145)
+	for lion_slot in header.find_children("LionSlot", "Control", true, false) + header.find_children("RightLionSlot", "Control", true, false):
+		var lion := lion_slot.get_child(0) as TextureRect
+		if lion.texture != null:
+			lion.set_anchors_preset(Control.PRESET_TOP_LEFT)
+			lion.position = Vector2(-6, -26)
+			lion.size = Vector2(62, 86)
+			lion.pivot_offset = lion.size / 2.0
 	if _mobile:
 		# The mobile crest slot stays narrow but the art remains hidden on this size.
 		crest_slot.visible = false
@@ -770,18 +796,26 @@ func _header_symbol(kind: String, icon_size: Vector2, color: Color, filled := fa
 	return icon
 
 
-func _header_nav(parent: Control, key: String, text: String, icon_kind: String, callback: Callable, width: int) -> HBoxContainer:
+func _header_nav(parent: Control, key: String, text: String, icon_kind: String, callback: Callable) -> HBoxContainer:
 	var group := HBoxContainer.new()
-	group.add_theme_constant_override("separation", 3)
+	group.add_theme_constant_override("separation", 5)
 	group.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	group.add_child(_header_symbol(icon_kind, Vector2(20, 20), UIKit.GOLD_DIM))
+	group.add_child(_header_symbol(icon_kind, Vector2(24, 24), UIKit.GOLD_DIM))
 	var button := Button.new()
 	button.text = text
 	button.theme_type_variation = "GhostButton"
-	button.custom_minimum_size = Vector2(width, 44 if _mobile else 36)
+	button.custom_minimum_size = Vector2(0, 44 if _mobile else 36)
 	button.size_flags_horizontal = Control.SIZE_SHRINK_END
+	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	button.add_theme_font_override("font", UIKit.serif())
 	button.add_theme_font_size_override("font_size", _fs(15 if not _mobile else 13))
+	button.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+	var nav_hover := StyleBoxFlat.new()
+	nav_hover.bg_color = Color(UIKit.GOLD, 0.08)
+	nav_hover.content_margin_left = 2
+	nav_hover.content_margin_right = 2
+	button.add_theme_stylebox_override("hover", nav_hover)
+	button.add_theme_stylebox_override("pressed", nav_hover)
 	_wire(button)
 	button.pressed.connect(callback)
 	group.add_child(button)

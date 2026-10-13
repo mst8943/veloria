@@ -70,15 +70,27 @@ func _draw() -> void:
 			else:
 				draw_polyline(points, c, w, true)
 		"lily":
-			var mid := Vector2(size.x / 2, size.y * 0.78)
-			draw_line(mid, Vector2(size.x / 2, size.y * 0.25), c, w, true)
-			draw_line(Vector2(size.x / 2, size.y * 0.58), Vector2(size.x * 0.18, size.y * 0.28), c, w, true)
-			draw_line(Vector2(size.x / 2, size.y * 0.58), Vector2(size.x * 0.82, size.y * 0.28), c, w, true)
-			draw_arc(Vector2(size.x / 2, size.y * 0.34), size.x * 0.24, PI, TAU, 16, c, w, true)
-			draw_line(Vector2(size.x * 0.18, size.y * 0.28), Vector2(size.x * 0.28, size.y * 0.54), c, w, true)
-			draw_line(Vector2(size.x * 0.82, size.y * 0.28), Vector2(size.x * 0.72, size.y * 0.54), c, w, true)
+			var cx := size.x * 0.5
+			var base_y := size.y * 0.82
+			var center := PackedVector2Array([Vector2(cx, base_y), Vector2(cx - size.x * 0.09, size.y * 0.43), Vector2(cx, size.y * 0.08), Vector2(cx + size.x * 0.09, size.y * 0.43), Vector2(cx, base_y)])
+			draw_polyline(center, c, 2.0, true)
+			var left := PackedVector2Array([Vector2(cx, size.y * 0.62), Vector2(size.x * 0.08, size.y * 0.25), Vector2(size.x * 0.14, size.y * 0.67), Vector2(cx, size.y * 0.78)])
+			var right := PackedVector2Array([Vector2(cx, size.y * 0.62), Vector2(size.x * 0.92, size.y * 0.25), Vector2(size.x * 0.86, size.y * 0.67), Vector2(cx, size.y * 0.78)])
+			draw_polyline(left, c, 2.0, true)
+			draw_polyline(right, c, 2.0, true)
+			draw_line(Vector2(size.x * 0.12, base_y), Vector2(size.x * 0.88, base_y), c, 2.0, true)
 		"flourish":
 			var cy := size.y / 2.0
-			draw_line(Vector2(1, cy), Vector2(size.x * 0.38, cy), c, w, true)
-			draw_arc(Vector2(size.x * 0.48, cy - 2), size.y * 0.22, PI * 0.15, PI * 1.7, 18, c, w, true)
-			draw_arc(Vector2(size.x * 0.73, cy + 2), size.y * 0.22, -PI * 0.8, PI * 0.75, 18, c, w, true)
+			var pts := PackedVector2Array()
+			for i in 17:
+				var t := float(i) / 16.0
+				pts.append(Vector2(1.0 + t * (size.x - 2.0), cy + sin(t * TAU) * size.y * 0.22))
+			draw_polyline(pts, c, w, true)
+			for side in [-1.0, 1.0]:
+				var p := Vector2(size.x * (0.5 + side * 0.2), cy - side * size.y * 0.15)
+				draw_arc(p, size.y * 0.22, -PI * 0.1, PI * 1.65, 18, c, w, true)
+				draw_line(p + Vector2(-2, size.y * 0.18), p + Vector2(2, size.y * 0.3), c, w, true)
+		"endcap":
+			var mid_y := size.y * 0.5
+			draw_line(Vector2(2, 2), Vector2(2, size.y - 2), c, w, true)
+			draw_colored_polygon(PackedVector2Array([Vector2(4, 2), Vector2(size.x - 2, mid_y), Vector2(4, size.y - 2)]), c)
