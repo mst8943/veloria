@@ -2,6 +2,7 @@ extends Control
 ## Saray Masası: kararlar, raporlar, kişiler, eylemler. Ham sayılar bilerek gösterilmez.
 
 const UIKit := preload("res://game/ui/ui_kit.gd")
+const ORNAMENT_ICON := preload("res://game/ui/ornament_icon.gd")
 const Loc := preload("res://game/core/loc.gd")
 const ATMOS_SHADER := preload("res://game/ui/atmosphere.gdshader")
 const VIBRANCY_SHADER := preload("res://game/ui/vibrancy.gdshader")
@@ -533,53 +534,123 @@ func _build_ui() -> void:
 
 
 func _build_header(parent: Control) -> void:
-	# Başlık bandı: koyu, alt kenarında ince altın çizgi.
+	var header := VBoxContainer.new()
+	header.name = "RoyalHeader"
+	header.add_theme_constant_override("separation", 0)
+	parent.add_child(header)
+	var scenery := TextureRect.new()
+	scenery.name = "HeaderScenery"
+	scenery.custom_minimum_size.y = 28 if _mobile else 55
+	scenery.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scenery.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	scenery.stretch_mode = TextureRect.STRETCH_SCALE
+	var scenery_tex := _art("res://art/ui/header_bg.png")
+	if scenery_tex:
+		scenery.texture = scenery_tex
+	else:
+		var gradient := Gradient.new()
+		gradient.colors = PackedColorArray([Color("21170f"), Color("100c09"), Color("2b1711")])
+		gradient.offsets = PackedFloat32Array([0.0, 0.52, 1.0])
+		var fallback := GradientTexture2D.new()
+		fallback.gradient = gradient
+		fallback.fill_from = Vector2(0.0, 0.5)
+		fallback.fill_to = Vector2(1.0, 0.5)
+		scenery.texture = fallback
+	header.add_child(scenery)
+	var scenery_shade := ColorRect.new()
+	scenery_shade.color = Color(UIKit.SHADE, 0.55)
+	scenery_shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	scenery_shade.set_anchors_preset(Control.PRESET_FULL_RECT)
+	scenery.add_child(scenery_shade)
 	var band := PanelContainer.new()
 	band.name = "TourTopBar"
-	band.add_theme_stylebox_override("panel", UIKit.band_style())
-	parent.add_child(band)
+	band.custom_minimum_size.y = 48 if _mobile else 76
+	var band_style := UIKit.band_style()
+	band_style.border_width_top = 1
+	if _mobile:
+		band_style.content_margin_top = 0
+		band_style.content_margin_bottom = 0
+	band.add_theme_stylebox_override("panel", band_style)
+	header.add_child(band)
+	var inset := MarginContainer.new()
+	inset.set_anchors_preset(Control.PRESET_FULL_RECT)
+	for side in ["left", "right"]:
+		inset.add_theme_constant_override("margin_" + side, 4 if _mobile else 8)
+	for side in ["top", "bottom"]:
+		inset.add_theme_constant_override("margin_" + side, 0 if _mobile else 2)
+	band.add_child(inset)
 	var top := HBoxContainer.new()
-	top.add_theme_constant_override("separation", 26)
-	band.add_child(top)
-	var frame := PanelContainer.new()
-	frame.add_theme_stylebox_override("panel", UIKit.box(Color(0, 0, 0, 0.4), UIKit.GOLD, 4, 2, 2))
-	frame.add_child(_initial_art("king", Vector2(46, 46), 24))
-	top.add_child(frame)
+	top.add_theme_constant_override("separation", 7 if _mobile else 10)
+	top.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	inset.add_child(top)
+	if not _mobile:
+		top.add_child(_royal_asset_slot("lion", Vector2(34, 58), true))
+	var bust_slot := _royal_asset_slot("king_bust", Vector2(42, 44) if _mobile else Vector2(58, 66), false)
+	top.add_child(bust_slot)
+	if not _mobile:
+		top.add_child(_header_symbol("lily", Vector2(18, 22), UIKit.GOLD))
 	var king := Label.new()
 	king.text = tr("KRAL ADRİAN IV")
 	king.add_theme_font_override("font", UIKit.serif())
-	king.add_theme_font_size_override("font_size", _fs(26))
+	king.add_theme_font_size_override("font_size", _fs(34))
 	king.add_theme_color_override("font_color", UIKit.GOLD)
+	king.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
+	king.add_theme_constant_override("shadow_offset_x", 2)
+	king.add_theme_constant_override("shadow_offset_y", 2)
 	king.visible = not _mobile
 	top.add_child(king)
+	if not _mobile:
+		top.add_child(_header_separator(42))
+	var week_plate := PanelContainer.new()
+	week_plate.name = "WeekPlate"
+	week_plate.custom_minimum_size = Vector2(150 if not _mobile else 138, 44 if _mobile else 48)
+	week_plate.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	week_plate.add_theme_stylebox_override("panel", UIKit.box(Color("100d09"), Color(UIKit.GOLD_DIM, 0.75), 2, 5))
+	top.add_child(week_plate)
 	var wk := VBoxContainer.new()
-	wk.add_theme_constant_override("separation", 2)
-	top.add_child(wk)
+	wk.add_theme_constant_override("separation", 1)
+	week_plate.add_child(wk)
+	var week_label_row := HBoxContainer.new()
+	week_label_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	week_label_row.add_theme_constant_override("separation", 5)
+	wk.add_child(week_label_row)
+	week_label_row.add_child(_header_symbol("diamond", Vector2(10, 10), UIKit.GOLD, true))
 	_header_week = Label.new()
 	_header_week.add_theme_font_override("font", UIKit.serif())
-	_header_week.add_theme_font_size_override("font_size", _fs(18))
-	wk.add_child(_header_week)
+	_header_week.add_theme_font_size_override("font_size", _fs(16))
+	_header_week.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	week_label_row.add_child(_header_week)
 	_header_progress = ProgressBar.new()
 	_header_progress.max_value = Sim.MAX_WEEKS
 	_header_progress.show_percentage = false
-	_header_progress.custom_minimum_size = Vector2(220, 6)
+	_header_progress.custom_minimum_size = Vector2(136 if not _mobile else 124, 5)
 	wk.add_child(_header_progress)
+	var crest_slot := _royal_asset_slot("crest", Vector2(46, 68), false)
+	crest_slot.z_index = 2
+	top.add_child(crest_slot)
+	if not _mobile:
+		top.add_child(_header_separator(42))
 	_header_mesai = Label.new()
+	_header_mesai.add_theme_font_override("font", UIKit.serif())
 	_header_mesai.add_theme_font_size_override("font_size", _fs(20))
 	_header_mesai.add_theme_color_override("font_color", UIKit.GOLD)
 	_header_mesai.tooltip_text = tr("Mesai: bu hafta kalan eylem hakkın.")
 	_header_mesai.mouse_filter = Control.MOUSE_FILTER_STOP
-	var mesai_row := _stat("res://art/icons/mesai.png", _header_mesai)
 	_header_mesai.visible = false
-	# Mesai elmasları çizilir: her fontta ve platformda aynı görünür.
+	var mesai_row := HBoxContainer.new()
+	mesai_row.add_theme_constant_override("separation", 7)
+	mesai_row.mouse_filter = Control.MOUSE_FILTER_STOP
+	mesai_row.tooltip_text = _header_mesai.tooltip_text
 	_mesai_box = HBoxContainer.new()
-	_mesai_box.add_theme_constant_override("separation", 9)
+	_mesai_box.add_theme_constant_override("separation", 7)
 	_mesai_box.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_mesai_box.tooltip_text = _header_mesai.tooltip_text
 	_mesai_box.mouse_filter = Control.MOUSE_FILTER_STOP
 	mesai_row.add_child(_mesai_box)
 	top.add_child(mesai_row)
+	top.add_child(_header_separator(42))
 	_header_wealth = Label.new()
+	_header_wealth.add_theme_font_override("font", UIKit.serif())
 	_header_wealth.add_theme_font_size_override("font_size", _fs(19))
 	_header_wealth.tooltip_text = tr("Kişisel servet: devlet bütçesinden ayrı, gizli işlerin için.")
 	_header_wealth.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -587,34 +658,99 @@ func _build_header(parent: Control) -> void:
 	var sp := Control.new()
 	sp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(sp)
-	_add_btn(top, "desk", tr("Masa"), _show_desk)
+	_header_nav(top, "desk", tr("Masa"), "building", _show_desk, 72 if _mobile else 90)
 	(_buttons["desk"] as Button).tooltip_text = tr("Çalışma masası: gündem, gazete, kişiler, günlük, dosyalar, hanedan ve başkent haritası.")
-	(_buttons["desk"] as Button).size_flags_horizontal = Control.SIZE_SHRINK_END
-	(_buttons["desk"] as Button).custom_minimum_size.x = 96
-	_add_btn(top, "media", tr("Medya"), _open_media)
+	top.add_child(_header_separator(32))
+	_header_nav(top, "media", tr("Medya"), "newspaper", _open_media, 76 if _mobile else 92)
 	(_buttons["media"] as Button).tooltip_text = tr("Medya Merkezi: Sarne'nin gazetesi, Leyla'nın bağımsız gazetesi ve Sarne TV. İkisini karşılaştır; biri yalan söylüyor olabilir.")
-	_add_btn(top, "save", tr("Kaydet"), _on_save)
-	_add_btn(top, "menu", tr("Menü"), _show_menu)
-	(_buttons["media"] as Button).size_flags_horizontal = Control.SIZE_SHRINK_END
-	(_buttons["media"] as Button).custom_minimum_size.x = 150
-	for k in ["save", "menu"]:
-		(_buttons[k] as Button).size_flags_horizontal = Control.SIZE_SHRINK_END
-		(_buttons[k] as Button).custom_minimum_size.x = 96
-	# Gezinme düğmeleri eylem değil: hayalet stil, ince ayraçla gruplu
-	for k in ["desk", "media", "save", "menu"]:
-		(_buttons[k] as Button).theme_type_variation = "GhostButton"
-	var sep := ColorRect.new()
-	sep.color = Color(UIKit.GOLD_DIM, 0.35)
-	sep.custom_minimum_size = Vector2(1, 30)
-	sep.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	top.add_child(sep)
-	top.move_child(sep, (_buttons["save"] as Button).get_index())
+	top.add_child(_header_separator(32))
+	var save_nav := _header_nav(top, "save", tr("Kaydet"), "seal", _on_save, 72)
+	var save_separator := _header_separator(32)
+	top.add_child(save_separator)
+	_header_nav(top, "menu", tr("Menü"), "gear", _show_menu, 70 if _mobile else 82)
 	if _mobile:
-		# Dar ekran: otomatik kayıt var, Kaydet ve ayraç yer kaplamasın
-		(_buttons["save"] as Button).visible = false
-		sep.visible = false
-		for k in ["desk", "media", "menu"]:
-			(_buttons[k] as Button).custom_minimum_size.x = 0
+		# Dar ekranda otomatik kayıt var; kısa gezinme etiketleri ve kral büstü kalır.
+		save_nav.visible = false
+		save_separator.visible = false
+	else:
+		top.add_child(_royal_asset_slot("lion", Vector2(34, 58), true))
+	# Reserve heraldic slots even when a platform build omits the optional art.
+	var bust := bust_slot.get_child(0) as TextureRect
+	if bust.texture != null:
+		bust.set_anchors_preset(Control.PRESET_TOP_LEFT)
+		bust.position = Vector2(-5, -10) if _mobile else Vector2(-8, -32)
+		bust.size = Vector2(52, 60) if _mobile else Vector2(74, 104)
+		bust.z_index = 4
+	var crest := crest_slot.get_child(0) as TextureRect
+	if crest.texture != null:
+		crest.set_anchors_preset(Control.PRESET_TOP_LEFT)
+		crest.position = Vector2(-7, -12)
+		crest.size = Vector2(60, 82)
+		crest.z_index = 4
+	if _mobile:
+		# The mobile crest slot stays narrow but the art remains hidden on this size.
+		crest_slot.visible = false
+
+
+func _royal_asset_slot(name: String, slot_size: Vector2, mirrored: bool) -> Control:
+	var slot := Control.new()
+	slot.name = name.capitalize() + "Slot"
+	slot.custom_minimum_size = slot_size
+	slot.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var tex := TextureRect.new()
+	tex.name = "Art"
+	tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tex.texture = _art("res://art/ui/%s.png" % name)
+	tex.visible = tex.texture != null
+	if mirrored:
+		tex.scale.x = -1.0
+		tex.pivot_offset = slot_size / 2.0
+	tex.set_anchors_preset(Control.PRESET_FULL_RECT)
+	slot.add_child(tex)
+	return slot
+
+
+func _header_separator(height: int) -> ColorRect:
+	var separator := ColorRect.new()
+	separator.color = Color(UIKit.GOLD_DIM, 0.42)
+	separator.custom_minimum_size = Vector2(1, height)
+	separator.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	separator.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return separator
+
+
+func _header_symbol(kind: String, icon_size: Vector2, color: Color, filled := false) -> Control:
+	var icon: Control = ORNAMENT_ICON.new()
+	icon.set("kind", kind)
+	icon.set("line_color", color)
+	icon.set("filled", filled)
+	icon.custom_minimum_size = icon_size
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return icon
+
+
+func _header_nav(parent: Control, key: String, text: String, icon_kind: String, callback: Callable, width: int) -> HBoxContainer:
+	var group := HBoxContainer.new()
+	group.add_theme_constant_override("separation", 3)
+	group.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	group.add_child(_header_symbol(icon_kind, Vector2(20, 20), UIKit.GOLD_DIM))
+	var button := Button.new()
+	button.text = text
+	button.theme_type_variation = "GhostButton"
+	button.custom_minimum_size = Vector2(width, 44 if _mobile else 36)
+	button.size_flags_horizontal = Control.SIZE_SHRINK_END
+	button.add_theme_font_override("font", UIKit.serif())
+	button.add_theme_font_size_override("font_size", _fs(15 if not _mobile else 13))
+	_wire(button)
+	button.pressed.connect(callback)
+	group.add_child(button)
+	parent.add_child(group)
+	_buttons[key] = button
+	return group
 
 
 func _stat(icon_path: String, label: Label) -> Control:

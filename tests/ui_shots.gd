@@ -47,6 +47,24 @@ func _shot(file_name: String) -> void:
 func _run() -> void:
 	# Kişi paneli dolu görünsün: en güçlü kişiyi seç.
 	var sim0: Node = root.get_node("Sim")
+	if "--main-target" in OS.get_cmdline_user_args():
+		sim0.week = 1
+		sim0.pending.clear()
+		sim0.mesai = sim0.mesai_max
+		sim0.private_wealth = 10.0
+		sim0.week_changes.clear()
+		main._media_seen_week = 0
+		main._week_log.clear()
+		main._week_log_week = 1
+		main._sel.clear()
+		main._sel.append("voss")
+		root.get_node("Sfx").tips = true
+		main._refresh()
+		main._style_cards()
+		main._update_info()
+		await _shot("main_target")
+		quit(0)
+		return
 	if "--r5c-coup-signs" in OS.get_cmdline_user_args():
 		sim0.pending.clear()
 		for actor in sim0.actors.values(): actor.signs.clear()

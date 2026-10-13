@@ -97,3 +97,11 @@ Mockup masaüstü. Mobil (yatay 1067×600) aynı dili kullanır ama: üst resim 
 - 1600×900 ve 1495×840'ta aynı durumdaki ekran görüntüsü mockup'la yan yana konunca bölge bölge eşleşir (bu belgedeki her madde işaretlenir).
 - Diğer ekranlar (gündem karar kartı, Dosyalar, Günlük, Divan, harita, medya, menü) yeni başlık/şerit/yazı diliyle bozulmaz.
 - Tüm testler (ui_input masaüstü+mobil, ui_logic, touch_*, a11y, tour, lang_switch, region_map, en_leak) geçer; EN metinler sığar.
+
+## Uygulama ilerlemesi
+
+### 1 — Başlık bandı
+
+İki katmanlı saray şeridi ve altın bilgi bandı eklendi. `header_bg.png`, `lion.png`, `king_bust.png` ve `crest.png` mevcut kaynakları `ResourceLoader.exists` ile kullanılıyor; eksikse koyu gradyan/boş yer ayrılır. Hafta plakası artık ilerleme çizgisini taşır, mesai yalnızca mevcut toplam kadar dolu/boş çizilmiş baklava gösterir. Gezinme simgeleri glif yerine çizimdir; mobilde aslanlar, arma ve Kaydet öğesi gizlenir, büst ve 44 px gezinme hedefleri kalır.
+
+`tests/ui_shots.gd --main-target` aynı görsel durumunu (1. hafta, bekleyen karar yok, `voss`/Nadir Vale seçili, “Raporları oku” adımı) üretir; sadece ekran görüntüsü için durum kurar. 1600×900, 1495×840 ve yatay mobil; TR/EN başlık görüntüleri açılıp kontrol edildi. `ui_input_test.gd`: masaüstü `UI INPUT: OK`, mobil `UI INPUT: OK (mobile)`. Test ve screenshot süreçleri exit code 0 verdi; Godot kapanışında mevcut RID/ObjectDB kaynak uyarıları da çıktı.
