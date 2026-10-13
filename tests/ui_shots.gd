@@ -147,6 +147,7 @@ func _run() -> void:
 			"media_tv":
 				main._open_media()
 				main._media.show_tab("tv")
+			"desk": main._show_desk()
 			"menu": main._show_menu()
 			"title": main.add_child(load("res://game/ui/title_screen.gd").new(main))
 		Input.warp_mouse(Vector2(4, 4))

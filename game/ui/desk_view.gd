@@ -126,20 +126,20 @@ func _build() -> void:
 		_make_object(id)
 	# Başlık
 	var top := VBoxContainer.new()
-	top.position = Vector2(0, 26)
+	top.position = Vector2(0, 24)
 	top.size = Vector2(1600, 100)
 	top.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_stage.add_child(top)
 	_title = Label.new()
-	_title.text = tr("HAFTA %d   ·   KRAL ADRİAN IV") % Sim.week
+	_title.text = (tr("HAFTA %d") % Sim.week) + "   ·   " + tr("KRAL ADRİAN IV")
 	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_title.add_theme_font_override("font", UIKit.serif())
-	_title.add_theme_font_size_override("font_size", UIKit.scaled_font_size(34))
+	_title.add_theme_font_override("font", UIKit.caps())
+	_title.add_theme_font_size_override("font_size", UIKit.scaled_font_size(32))
 	_title.add_theme_color_override("font_color", UIKit.GOLD)
-	_title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
+	_title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.95))
 	_title.add_theme_constant_override("shadow_outline_size", 8)
 	top.add_child(_title)
-	var div := UIKit.divider(420.0)
+	var div := UIKit.divider(460.0)
 	div.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	top.add_child(div)
 	_sub = Label.new()
@@ -148,7 +148,8 @@ func _build() -> void:
 		news = Sim.news_for_display(str(Sim.weekly_news[0]))
 	_sub.text = news if news != "" else tr("Masada yeni dosyalar var.")
 	_sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_sub.add_theme_font_size_override("font_size", UIKit.scaled_font_size(17))
+	_sub.add_theme_font_override("font", UIKit.sans(470))
+	_sub.add_theme_font_size_override("font_size", UIKit.scaled_font_size(16))
 	_sub.add_theme_color_override("font_color", Color("e8dcc0"))
 	_sub.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
 	_sub.add_theme_constant_override("shadow_outline_size", 6)
@@ -158,8 +159,10 @@ func _build() -> void:
 	_open_btn.theme_type_variation = "PrimaryButton"
 	var n := Sim.pending.size()
 	_open_btn.text = (Loc.ntr("%d KARAR BEKLİYOR   ·   GÜNDEMİ AÇ   »", n) % n) if n > 0 else tr("GÜNDEMİ AÇ   »")
-	_open_btn.position = Vector2(500, 806)
-	_open_btn.size = Vector2(600, 72)
+	_open_btn.position = Vector2(490, 804)
+	_open_btn.size = Vector2(620, 68)
+	_open_btn.add_theme_font_override("font", UIKit.caps())
+	_open_btn.add_theme_font_size_override("font_size", UIKit.scaled_font_size(20))
 	_open_btn.focus_mode = Control.FOCUS_NONE
 	_open_btn.pressed.connect(func() -> void: _go("gundem"))
 	_stage.add_child(_open_btn)
@@ -268,82 +271,122 @@ func _shadow_layer(body: Control, tex: Texture2D, dsz: Vector2, offset: Vector2,
 	return m
 
 
+func _icon_for_id(id: String) -> String:
+	match id:
+		"harita":
+			return "pusula"
+		"hanedan":
+			return "tac"
+		"kisiler":
+			return "defne"
+		"gunluk":
+			return "yildiz"
+		"gundem":
+			return "terazi"
+		"dosyalar":
+			return "goz"
+		"medya":
+			return "anten"
+	return "yildiz"
+
+
 ## Nesnenin altındaki etiket: ad, varsa küçük işaret, ve tek satırlık özet.
 func _plate(id: String, title: String, area: Vector2) -> Control:
-	var w := maxf(area.x + 60.0, 300.0)
-	var plate := Control.new()
+	var w := maxf(area.x + 20.0, 260.0)
+	var plate := PanelContainer.new()
 	plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	plate.position = Vector2((area.x - w) / 2.0, area.y + 2.0)
-	plate.size = Vector2(w, 130 if mobile else (116 if Sfx.text_size == 2 else 52))
-	# Arkada yumuşak, kenarsız bir karanlık: kutu değil, okunurluk için gölge.
-	var shade := TextureRect.new()
-	shade.texture = _plate_shade()
-	shade.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	shade.stretch_mode = TextureRect.STRETCH_SCALE
-	shade.position = Vector2(-20, -16)
-	shade.size = Vector2(w + 40, 86)
-	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	plate.add_child(shade)
+	plate.position = Vector2((area.x - w) / 2.0, area.y - 4.0)
+	plate.custom_minimum_size = Vector2(w, 0)
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.045, 0.038, 0.03, 0.94)
+	sb.border_color = Color(UIKit.GOLD, 0.75)
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(3)
+	sb.content_margin_left = 10
+	sb.content_margin_right = 10
+	sb.content_margin_top = 5
+	sb.content_margin_bottom = 6
+	sb.shadow_color = Color(0, 0, 0, 0.75)
+	sb.shadow_size = 8
+	sb.shadow_offset = Vector2(0, 3)
+	sb.anti_aliasing = true
+	plate.add_theme_stylebox_override("panel", sb)
+
 	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 0)
+	box.add_theme_constant_override("separation", 3)
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.set_anchors_preset(Control.PRESET_FULL_RECT)
 	plate.add_child(box)
+
 	var row := HBoxContainer.new()
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 8)
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(row)
+
+	var icon_box := Control.new()
+	icon_box.custom_minimum_size = Vector2(24, 24)
+	icon_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var iname := _icon_for_id(id)
+	icon_box.draw.connect(func() -> void:
+		var c := icon_box.size / 2.0
+		icon_box.draw_circle(c, 11.0, Color(0.12, 0.09, 0.06, 0.95))
+		icon_box.draw_arc(c, 11.0, 0.0, TAU, 28, Color(UIKit.GOLD, 0.85), 1.1, true)
+		UIKit.draw_icon(icon_box, iname, c, 14.0, UIKit.GOLD)
+	)
+	row.add_child(icon_box)
+
 	var name_l := Label.new()
 	name_l.text = tr(title)
-	name_l.add_theme_font_override("font", UIKit.serif())
-	name_l.add_theme_font_size_override("font_size", UIKit.scaled_font_size(31 if mobile else 23))
-	name_l.add_theme_color_override("font_color", Color("f1e6c8"))
+	name_l.add_theme_font_override("font", UIKit.caps())
+	name_l.add_theme_font_size_override("font_size", UIKit.scaled_font_size(17 if mobile else 15))
+	name_l.add_theme_color_override("font_color", Color("fff3d0"))
 	name_l.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
-	name_l.add_theme_constant_override("shadow_outline_size", 6)
-	name_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	name_l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	name_l.add_theme_constant_override("shadow_outline_size", 4)
 	name_l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	name_l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(name_l)
+
 	var mark := _mark_text(id)
 	if mark != "":
 		var b := PanelContainer.new()
-		var sb := StyleBoxFlat.new()
-		sb.bg_color = Color("8e231a")
-		sb.border_color = Color(0.95, 0.8, 0.55, 0.85)
-		sb.set_border_width_all(1)
-		sb.set_corner_radius_all(11)
-		sb.content_margin_left = 8
-		sb.content_margin_right = 8
-		sb.content_margin_top = 0
-		sb.content_margin_bottom = 1
-		sb.shadow_color = Color(0, 0, 0, 0.5)
-		sb.shadow_size = 4
-		sb.anti_aliasing = true
-		b.add_theme_stylebox_override("panel", sb)
+		var sb_m := StyleBoxFlat.new()
+		sb_m.bg_color = Color(0.55, 0.12, 0.10, 0.95)
+		sb_m.border_color = Color(UIKit.GOLD, 0.85)
+		sb_m.set_border_width_all(1)
+		sb_m.set_corner_radius_all(10)
+		sb_m.content_margin_left = 7
+		sb_m.content_margin_right = 7
+		sb_m.content_margin_top = 1
+		sb_m.content_margin_bottom = 1
+		sb_m.shadow_color = Color(0, 0, 0, 0.5)
+		sb_m.shadow_size = 4
+		sb_m.anti_aliasing = true
+		b.add_theme_stylebox_override("panel", sb_m)
 		b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var bl := Label.new()
 		bl.text = mark
-		bl.add_theme_font_size_override("font_size", maxi(15, UIKit.scaled_font_size(14)) if mobile else UIKit.scaled_font_size(14))
-		bl.custom_minimum_size.x = maxf(16.0, bl.text.length() * 22.0)
+		bl.add_theme_font_override("font", UIKit.sans(680))
+		bl.add_theme_font_size_override("font_size", UIKit.scaled_font_size(12))
 		bl.add_theme_color_override("font_color", Color("fff1dc"))
 		b.add_child(bl)
 		row.add_child(b)
 		_badges[id] = b
+
 	var sum := Label.new()
 	sum.text = _summary(id)
 	sum.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	sum.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	sum.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	sum.custom_minimum_size.x = w - 20
-	sum.add_theme_font_size_override("font_size", maxi(15, UIKit.scaled_font_size(14)) if mobile else UIKit.scaled_font_size(15))
-	sum.add_theme_color_override("font_color", Color(0.86, 0.8, 0.68, 0.92))
+	sum.add_theme_font_override("font", UIKit.sans(470))
+	sum.add_theme_font_size_override("font_size", maxi(14, UIKit.scaled_font_size(13)) if mobile else UIKit.scaled_font_size(13))
+	sum.add_theme_color_override("font_color", Color(0.86, 0.82, 0.72, 0.92))
 	sum.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.95))
-	sum.add_theme_constant_override("shadow_outline_size", 5)
+	sum.add_theme_constant_override("shadow_outline_size", 4)
 	sum.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(sum)
+
 	return plate
 
 
