@@ -394,9 +394,10 @@ func _build_ui() -> void:
 	ticker_style.content_margin_top = 2 if _mobile else 4
 	ticker_style.content_margin_bottom = 2 if _mobile else 4
 	_headline_band.add_theme_stylebox_override("panel", ticker_style)
+	_headline_band.resized.connect(func() -> void: _fit_headline())
 	root.add_child(_headline_band)
 	var hl_row := HBoxContainer.new()
-	hl_row.add_theme_constant_override("separation", 5)
+	hl_row.add_theme_constant_override("separation", 12)
 	_headline_band.add_child(hl_row)
 	hl_row.add_child(_header_symbol("flourish", Vector2(18, 18), UIKit.GOLD))
 	_headline = Label.new()
@@ -438,7 +439,15 @@ func _build_ui() -> void:
 	# Sol: sekmeler
 	_tabs = TabContainer.new()
 	_tabs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_tabs.size_flags_stretch_ratio = 1.45
+	_tabs.size_flags_stretch_ratio = 1.42
+	if not _mobile:
+		# Mockup: sol panelin içeriği süslü çerçeveden belirgin içeride başlar.
+		var tab_panel := theme.get_stylebox("panel", "TabContainer").duplicate() as StyleBox
+		tab_panel.content_margin_left = 48
+		tab_panel.content_margin_right = 44
+		tab_panel.content_margin_top = 30
+		tab_panel.content_margin_bottom = 24
+		_tabs.add_theme_stylebox_override("panel", tab_panel)
 	cols.add_child(_tabs)
 	_scroll = ScrollContainer.new()
 	_scroll.name = "Gündem"
@@ -580,7 +589,7 @@ func _build_header(parent: Control) -> void:
 	parent.add_child(header)
 	var scenery := TextureRect.new()
 	scenery.name = "HeaderScenery"
-	scenery.custom_minimum_size.y = 28 if _mobile else 42
+	scenery.custom_minimum_size.y = 28 if _mobile else 56
 	scenery.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scenery.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	scenery.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
@@ -599,13 +608,13 @@ func _build_header(parent: Control) -> void:
 		scenery.texture = fallback
 	header.add_child(scenery)
 	var scenery_shade := ColorRect.new()
-	scenery_shade.color = Color(UIKit.SHADE, 0.24)
+	scenery_shade.color = Color(UIKit.SHADE, 0.08)
 	scenery_shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	scenery_shade.set_anchors_preset(Control.PRESET_FULL_RECT)
 	scenery.add_child(scenery_shade)
 	var band := PanelContainer.new()
 	band.name = "TourTopBar"
-	band.custom_minimum_size.y = 48 if _mobile else 60
+	band.custom_minimum_size.y = 48 if _mobile else 70
 	var band_style := UIKit.band_style()
 	band_style.border_width_top = 1
 	band_style.content_margin_top = 0
@@ -628,19 +637,19 @@ func _build_header(parent: Control) -> void:
 		inset.add_theme_constant_override("margin_" + side, 0)
 	band.add_child(inset)
 	var top := HBoxContainer.new()
-	top.add_theme_constant_override("separation", 7 if _mobile else 10)
+	top.add_theme_constant_override("separation", 7 if _mobile else 6)
 	top.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	inset.add_child(top)
 	if not _mobile:
-		top.add_child(_royal_asset_slot("lion", Vector2(64, 52), true))
-	var bust_slot := _royal_asset_slot("king_bust", Vector2(42, 44) if _mobile else Vector2(56, 52), false)
+		top.add_child(_royal_asset_slot("lion", Vector2(66, 52), true))
+	var bust_slot := _royal_asset_slot("king_bust", Vector2(42, 44) if _mobile else Vector2(112, 52), false)
 	top.add_child(bust_slot)
 	if not _mobile:
 		var royal_title_gap := Control.new()
-		royal_title_gap.custom_minimum_size.x = 56
+		royal_title_gap.custom_minimum_size.x = 4
 		royal_title_gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		top.add_child(royal_title_gap)
-		top.add_child(_header_symbol("lily", Vector2(30, 30), UIKit.GOLD))
+		top.add_child(_header_symbol("lily", Vector2(30, 36), UIKit.GOLD, true))
 		top.add_child(_header_separator(42))
 	var king := Label.new()
 	king.text = tr("KRAL ADRİAN IV")
@@ -656,10 +665,12 @@ func _build_header(parent: Control) -> void:
 		top.add_child(_header_separator(42))
 	var week_plate := PanelContainer.new()
 	week_plate.name = "WeekPlate"
-	week_plate.custom_minimum_size = Vector2(150 if not _mobile else 138, 44 if _mobile else 52)
+	week_plate.custom_minimum_size = Vector2(186 if not _mobile else 138, 44 if _mobile else 46)
 	week_plate.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	week_plate.add_theme_stylebox_override("panel", UIKit.box(Color("100d09"), Color(UIKit.GOLD_DIM, 0.75), 2, 5))
+	week_plate.add_theme_stylebox_override("panel", _week_plate_style() if not _mobile else UIKit.box(Color("100d09"), Color(UIKit.GOLD_DIM, 0.75), 2, 5))
 	top.add_child(week_plate)
+	if not _mobile:
+		week_plate.draw.connect(_draw_week_plate.bind(week_plate))
 	var wk := VBoxContainer.new()
 	wk.add_theme_constant_override("separation", 1)
 	week_plate.add_child(wk)
@@ -670,20 +681,21 @@ func _build_header(parent: Control) -> void:
 	week_label_row.add_child(_header_symbol("diamond", Vector2(10, 10), UIKit.GOLD, true))
 	_header_week = Label.new()
 	_header_week.add_theme_font_override("font", UIKit.serif())
-	_header_week.add_theme_font_size_override("font_size", _fs(16))
+	_header_week.add_theme_font_size_override("font_size", _fs(17))
 	_header_week.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	week_label_row.add_child(_header_week)
 	_header_progress = ProgressBar.new()
 	_header_progress.max_value = Sim.MAX_WEEKS
 	_header_progress.show_percentage = false
-	_header_progress.custom_minimum_size = Vector2(136 if not _mobile else 124, 5)
+	_header_progress.custom_minimum_size = Vector2(150 if not _mobile else 124, 4)
 	wk.add_child(_header_progress)
-	var crest_slot := _royal_asset_slot("crest", Vector2(46, 58), false)
+	var crest_slot := _royal_asset_slot("crest", Vector2(60, 58), false)
 	top.add_child(crest_slot)
 	if not _mobile:
-		var crest_separator := _header_separator(42)
-		crest_separator.custom_minimum_size.x = 14
-		top.add_child(crest_separator)
+		var crest_gap := Control.new()
+		crest_gap.custom_minimum_size.x = 2
+		crest_gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		top.add_child(crest_gap)
 	_header_mesai = Label.new()
 	_header_mesai.add_theme_font_override("font", UIKit.serif())
 	_header_mesai.add_theme_font_size_override("font_size", _fs(20))
@@ -729,30 +741,51 @@ func _build_header(parent: Control) -> void:
 		save_nav.visible = false
 		save_separator.visible = false
 	else:
-		var right_lion_slot := _royal_asset_slot("lion", Vector2(64, 52), false)
+		var right_lion_slot := _royal_asset_slot("lion", Vector2(66, 52), false)
 		right_lion_slot.name = "RightLionSlot"
 		top.add_child(right_lion_slot)
 	# Reserve heraldic slots even when a platform build omits the optional art.
 	var bust := bust_slot.get_child(0) as TextureRect
 	if bust.texture != null:
 		bust.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		bust.position = Vector2(-3, -10) if _mobile else Vector2(-7, -30)
-		bust.size = Vector2(52, 60) if _mobile else Vector2(88, 110)
+		bust.position = Vector2(-3, -10) if _mobile else Vector2(-14, -60)
+		bust.size = Vector2(52, 60) if _mobile else Vector2(134, 128)
 	var crest := crest_slot.get_child(0) as TextureRect
 	if crest.texture != null:
 		crest.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		crest.position = Vector2(-7, -32)
-		crest.size = Vector2(90, 145)
+		crest.position = Vector2(-16, -60)
+		crest.size = Vector2(92, 100)
 	for lion_slot in header.find_children("LionSlot", "Control", true, false) + header.find_children("RightLionSlot", "Control", true, false):
 		var lion := lion_slot.get_child(0) as TextureRect
 		if lion.texture != null:
 			lion.set_anchors_preset(Control.PRESET_TOP_LEFT)
-			lion.position = Vector2(-6, -26)
-			lion.size = Vector2(62, 86)
+			lion.position = Vector2(-16, -58)
+			lion.size = Vector2(96, 126)
 			lion.pivot_offset = lion.size / 2.0
 	if _mobile:
 		# The mobile crest slot stays narrow but the art remains hidden on this size.
 		crest_slot.visible = false
+
+
+## Hafta plakası: uçları sivri, ince çift altın çizgili koyu plaka (mockup).
+func _week_plate_style() -> StyleBox:
+	var sb := StyleBoxEmpty.new()
+	sb.content_margin_left = 22
+	sb.content_margin_right = 22
+	sb.content_margin_top = 4
+	sb.content_margin_bottom = 5
+	return sb
+
+
+func _draw_week_plate(c: Control) -> void:
+	var w := c.size.x
+	var h := c.size.y
+	var tip := 16.0
+	var outer := PackedVector2Array([Vector2(tip, 0), Vector2(w - tip, 0), Vector2(w, h * 0.5), Vector2(w - tip, h), Vector2(tip, h), Vector2(0, h * 0.5), Vector2(tip, 0)])
+	c.draw_colored_polygon(outer, Color("0d0a07"))
+	c.draw_polyline(outer, Color(UIKit.GOLD, 0.85), 1.4, true)
+	var inner := PackedVector2Array([Vector2(tip + 3, 4), Vector2(w - tip - 3, 4), Vector2(w - 6, h * 0.5), Vector2(w - tip - 3, h - 4), Vector2(tip + 3, h - 4), Vector2(6, h * 0.5), Vector2(tip + 3, 4)])
+	c.draw_polyline(inner, Color(UIKit.GOLD_DIM, 0.45), 1.0, true)
 
 
 func _royal_asset_slot(name: String, slot_size: Vector2, mirrored: bool) -> Control:
@@ -786,6 +819,16 @@ func _header_separator(height: int) -> ColorRect:
 
 
 func _header_symbol(kind: String, icon_size: Vector2, color: Color, filled := false) -> Control:
+	if kind == "lily" and filled and ResourceLoader.exists("res://art/ui/fleur.png"):
+		var fleur := TextureRect.new()
+		fleur.texture = load("res://art/ui/fleur.png")
+		fleur.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		fleur.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		fleur.custom_minimum_size = icon_size
+		fleur.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		fleur.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		fleur.modulate = Color.WHITE if color == UIKit.GOLD else Color(color, 1.0)
+		return fleur
 	var icon: Control = ORNAMENT_ICON.new()
 	icon.set("kind", kind)
 	icon.set("line_color", color)
@@ -800,7 +843,7 @@ func _header_nav(parent: Control, key: String, text: String, icon_kind: String, 
 	var group := HBoxContainer.new()
 	group.add_theme_constant_override("separation", 5)
 	group.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	group.add_child(_header_symbol(icon_kind, Vector2(24, 24), UIKit.GOLD_DIM))
+	group.add_child(_header_symbol(icon_kind, Vector2(26, 26) if not _mobile else Vector2(24, 24), UIKit.GOLD))
 	var button := Button.new()
 	button.text = text
 	button.theme_type_variation = "GhostButton"
@@ -808,7 +851,8 @@ func _header_nav(parent: Control, key: String, text: String, icon_kind: String, 
 	button.size_flags_horizontal = Control.SIZE_SHRINK_END
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	button.add_theme_font_override("font", UIKit.serif())
-	button.add_theme_font_size_override("font_size", _fs(15 if not _mobile else 13))
+	button.add_theme_font_size_override("font_size", _fs(16 if not _mobile else 13))
+	button.add_theme_color_override("font_color", UIKit.TEXT)
 	button.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
 	var nav_hover := StyleBoxFlat.new()
 	nav_hover.bg_color = Color(UIKit.GOLD, 0.08)
@@ -1966,6 +2010,22 @@ func _apply_headline_mode() -> void:
 		_headline_band.custom_minimum_size.y = 32 if _mobile else 30
 
 
+## Haber öğeleri satırda art arda akar: ilk öğe metni kadar yer alır (en çok satırın %62'si), ikincisi kalanı doldurur.
+func _fit_headline() -> void:
+	if _headline == null or _headline_secondary == null:
+		return
+	if _headline_expanded:
+		_headline.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		return
+	var font := _headline.get_theme_font("font")
+	var fs := _headline.get_theme_font_size("font_size")
+	var want := font.get_string_size(_headline.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 6.0
+	var room := maxf(_headline_band.size.x - 60.0, 200.0)
+	_headline.size_flags_horizontal = Control.SIZE_FILL
+	_headline.custom_minimum_size.x = minf(want, room * (0.62 if _headline_secondary.text != "" else 1.0))
+	_headline_secondary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+
 func _update_headline() -> void:
 	var items: Array[String] = []
 	if _headline_notice != "":
@@ -1980,6 +2040,7 @@ func _update_headline() -> void:
 	_headline_secondary.tooltip_text = _headline_secondary.text
 	_headline_diamond.visible = _headline_secondary.text != ""
 	_apply_headline_mode()
+	_fit_headline()
 	# Mobilde dikey alan kıt: haber şeridi yalnızca Gündem sekmesinde görünür.
 	_headline_band.visible = _headline.text != "" and (not _mobile or _tabs.current_tab == 0)
 

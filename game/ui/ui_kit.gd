@@ -71,6 +71,24 @@ static func serif() -> Font:
 	return _serif
 
 
+static var _serif_bold: Font
+
+
+## Kalın serif (aynı EB Garamond, ağırlık 720): adlar ve vurgular.
+static func serif_bold() -> Font:
+	if _serif_bold == null:
+		var base := serif()
+		if base is FontVariation:
+			var fv := FontVariation.new()
+			fv.base_font = (base as FontVariation).base_font
+			var ts := TextServerManager.get_primary_interface()
+			fv.variation_opentype = {ts.name_to_tag("wght"): 720}
+			_serif_bold = fv
+		else:
+			_serif_bold = base
+	return _serif_bold
+
+
 static var _italic: Font
 
 

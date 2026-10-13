@@ -70,6 +70,9 @@ func _draw() -> void:
 			else:
 				draw_polyline(points, c, w, true)
 		"lily":
+			if filled:
+				_draw_fleur(c)
+				return
 			var cx := size.x * 0.5
 			var base_y := size.y * 0.82
 			var center := PackedVector2Array([Vector2(cx, base_y), Vector2(cx - size.x * 0.09, size.y * 0.43), Vector2(cx, size.y * 0.08), Vector2(cx + size.x * 0.09, size.y * 0.43), Vector2(cx, base_y)])
@@ -94,3 +97,25 @@ func _draw() -> void:
 			var mid_y := size.y * 0.5
 			draw_line(Vector2(2, 2), Vector2(2, size.y - 2), c, w, true)
 			draw_colored_polygon(PackedVector2Array([Vector2(4, 2), Vector2(size.x - 2, mid_y), Vector2(4, size.y - 2)]), c)
+
+
+## Dolu zambak (fleur-de-lis): mızrak uçlu orta yaprak, dışa ve aşağı kıvrılan yan yapraklar, bağ, kısa ayaklar.
+func _draw_fleur(c: Color) -> void:
+	var W := size.x
+	var H := size.y
+	var mid := [[0.5, 0.0], [0.585, 0.15], [0.615, 0.3], [0.585, 0.46], [0.545, 0.6], [0.455, 0.6], [0.415, 0.46], [0.385, 0.3], [0.415, 0.15]]
+	draw_colored_polygon(_smooth(mid, W, H, 0.5, 1.0), c)
+	var petal := [[0.53, 0.62], [0.57, 0.44], [0.65, 0.29], [0.77, 0.21], [0.9, 0.24], [0.97, 0.36], [0.94, 0.5], [0.86, 0.57], [0.88, 0.47], [0.85, 0.38], [0.77, 0.34], [0.69, 0.41], [0.635, 0.53], [0.6, 0.63]]
+	var foot := [[0.55, 0.68], [0.64, 0.73], [0.71, 0.81], [0.73, 0.93], [0.66, 0.88], [0.6, 0.8], [0.54, 0.77]]
+	for side in [1.0, -1.0]:
+		draw_colored_polygon(_smooth(petal, W, H, side, 1.0), c)
+		draw_colored_polygon(_smooth(foot, W, H, side, 1.0), c)
+	draw_rect(Rect2(Vector2(0.28 * W, 0.6 * H), Vector2(0.44 * W, 0.085 * H)), c)
+	draw_colored_polygon(_smooth([[0.455, 0.68], [0.545, 0.68], [0.525, 0.86], [0.5, 0.98], [0.475, 0.86]], W, H, 1.0, 1.0), c)
+
+
+func _smooth(pts: Array, W: float, H: float, side: float, _k: float) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	for p in pts:
+		out.append(Vector2((0.5 + side * (float(p[0]) - 0.5)) * W, float(p[1]) * H))
+	return out

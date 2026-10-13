@@ -182,7 +182,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 	selection_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	person_block = VBoxContainer.new()
 	person_block.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	person_block.add_theme_constant_override("separation", 6)
+	person_block.add_theme_constant_override("separation", 6 if host._mobile else 8)
 	profile_parent.add_child(person_block)
 
 	var detail := PanelContainer.new()
@@ -193,7 +193,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 	irow.add_theme_constant_override("separation", 10)
 	detail.add_child(irow)
 	host._portrait_box = Control.new()
-	host._portrait_box.custom_minimum_size = Vector2(124, 88) if not host._mobile else Vector2(88, 84)
+	host._portrait_box.custom_minimum_size = Vector2(120, 96) if not host._mobile else Vector2(88, 84)
 	irow.add_child(host._portrait_box)
 	var clear := Button.new()
 	clear_button = clear
@@ -233,7 +233,10 @@ func _build_ui(cols: HBoxContainer) -> void:
 	ornament_row.add_theme_constant_override("separation", 8)
 	ornament_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	ornament_row.custom_minimum_size.y = 12
-	person_block.add_child(ornament_row)
+	if host._mobile:
+		person_block.add_child(ornament_row)
+	else:
+		_attach_bottom_ornament(detail, ornament_row)
 	var left_rule := ColorRect.new()
 	left_rule.color = Color(UIKit.GOLD, 0.72)
 	left_rule.custom_minimum_size = Vector2(48, 2)
@@ -241,7 +244,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 	left_rule.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	left_rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ornament_row.add_child(left_rule)
-	ornament_row.add_child(host._header_symbol("lily", Vector2(18, 18), UIKit.GOLD))
+	ornament_row.add_child(host._header_symbol("lily", Vector2(20, 24), UIKit.GOLD, true))
 	var right_rule := ColorRect.new()
 	right_rule.color = left_rule.color
 	right_rule.custom_minimum_size = Vector2(48, 2)
@@ -252,7 +255,11 @@ func _build_ui(cols: HBoxContainer) -> void:
 
 	# Eylem paneli: tek çerçeve, başlıkta seçili kişi, eylemler amaca göre gruplu.
 	var act_panel := PanelContainer.new()
-	act_panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.8), Color(UIKit.GOLD_DIM, 0.28), 8, 8))
+	var act_style := UIKit.box(Color(UIKit.PANEL, 0.8), Color(UIKit.GOLD_DIM, 0.28), 8, 8)
+	if not host._mobile:
+		act_style.content_margin_top = 2
+		act_style.content_margin_bottom = 4
+	act_panel.add_theme_stylebox_override("panel", act_style)
 	person_block.add_child(act_panel)
 	UIKit.ornament(act_panel)
 	var av := VBoxContainer.new()
@@ -260,7 +267,9 @@ func _build_ui(cols: HBoxContainer) -> void:
 	act_panel.add_child(av)
 	host._act_title = Label.new()
 	host._act_title.add_theme_font_override("font", UIKit.serif())
-	host._act_title.add_theme_font_size_override("font_size", host._fs(17))
+	host._act_title.add_theme_font_size_override("font_size", host._fs(17 if host._mobile else 16))
+	if not host._mobile:
+		host._act_title.add_theme_constant_override("line_spacing", -6)
 	host._act_title.add_theme_color_override("font_color", UIKit.GOLD)
 	host._act_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	host._act_title.custom_minimum_size.y = 44 if host._mobile else 0
@@ -324,7 +333,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		cb.button_group = cat_group
 		cb.theme_type_variation = "GhostButton"
 		cb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		cb.custom_minimum_size.y = 44 if host._mobile else 28
+		cb.custom_minimum_size.y = 44 if host._mobile else 24
 		cb.clip_text = false
 		cb.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		cb.add_theme_font_override("font", UIKit.serif())
@@ -369,6 +378,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 	hsep.custom_minimum_size.y = 1
 	hsep.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	av.add_child(hsep)
+	hsep.visible = host._mobile
 	host._hint_label = RichTextLabel.new()
 	host._hint_label.bbcode_enabled = true
 	host._hint_label.scroll_active = false
@@ -378,7 +388,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 	host._hint_label.add_theme_font_size_override("normal_font_size", host._fs(15 if host._mobile else 14))
 	host._hint_label.add_theme_font_size_override("bold_font_size", host._fs(15 if host._mobile else 14))
 	host._hint_label.clip_contents = true
-	host._hint_label.custom_minimum_size.y = 40 if not host._mobile else 54
+	host._hint_label.custom_minimum_size.y = 36 if not host._mobile else 54
 	host._hint_label.text = tr(HINT_DEFAULT)
 	av.add_child(host._hint_label)
 	if not host._mobile:
@@ -430,6 +440,21 @@ func _build_ui(cols: HBoxContainer) -> void:
 		host._report_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		host._report_box.add_theme_constant_override("separation", 4)
 		mobile_report_scroll.add_child(host._report_box)
+
+
+## Zambaklı ayraç panelin alt kenarına oturur (mockup): ayrı satır kaplamaz.
+func _attach_bottom_ornament(panel: Control, ornament: Control) -> void:
+	var holder := Control.new()
+	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	holder.top_level = false
+	panel.add_child(holder)
+	holder.add_child(ornament)
+	var place := func() -> void:
+		ornament.position = Vector2(panel.size.x * 0.12, panel.size.y - 12.0 - (holder.global_position.y - panel.global_position.y))
+		ornament.size = Vector2(panel.size.x * 0.76, 24)
+	panel.resized.connect(place)
+	holder.resized.connect(place)
+	place.call_deferred()
 
 
 func _mobile_arrow(to_right: bool) -> Button:
@@ -497,7 +522,7 @@ func _add_btn(parent: Node, key: String, text: String, cb: Callable) -> void:
 	var b := Button.new()
 	b.text = tr(text)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b.custom_minimum_size.y = 44 if host._mobile else 32
+	b.custom_minimum_size.y = 44 if host._mobile else 28
 	b.pressed.connect(cb)
 	if TIPS.has(key):
 		var tip: String = tr(TIPS[key])
@@ -703,7 +728,7 @@ func _make_card(a) -> PanelContainer:
 	var card := PanelContainer.new()
 	var compact_governor: bool = str(a.id).begins_with("governor_")
 	var compact_state_card: bool = compact_governor or str(a.id).begins_with("commander_")
-	card.custom_minimum_size = Vector2(82, 98) if compact_state_card else (Vector2(118, 96) if not host._mobile else Vector2(150, 132))
+	card.custom_minimum_size = Vector2(82, 98) if compact_state_card else (Vector2(104, 96) if not host._mobile else Vector2(150, 132))
 	card.clip_contents = true
 	card.mouse_filter = Control.MOUSE_FILTER_STOP
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -984,9 +1009,9 @@ func _signs_tip(a) -> String:
 ## Kişi göstergesi: renkli nokta ya da kademe noktaları + kısa metin.
 func _trait(text: String, col: Color, filled := -1, total := 0, tip := "") -> Control:
 	var chip := PanelContainer.new()
-	var sb := UIKit.box(Color(col, 0.1), Color(col, 0.38), 10, 4)
-	sb.content_margin_top = 2
-	sb.content_margin_bottom = 2
+	var sb := UIKit.box(Color(col, 0.12), Color(col, 0.5), 6, 8)
+	sb.content_margin_top = 3
+	sb.content_margin_bottom = 3
 	chip.add_theme_stylebox_override("panel", sb)
 	chip.tooltip_text = tip
 	chip.mouse_filter = Control.MOUSE_FILTER_PASS if tip != "" else Control.MOUSE_FILTER_IGNORE
@@ -994,9 +1019,13 @@ func _trait(text: String, col: Color, filled := -1, total := 0, tip := "") -> Co
 	row.add_theme_constant_override("separation", 4)
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	chip.add_child(row)
-	var n := total if filled >= 0 else 1
-	for i in n:
-		row.add_child(_trait_mark(col, filled >= 0, filled < 0 or i < filled))
+	if filled >= 0 and not host._mobile:
+		for i in maxi(filled, 1):
+			row.add_child(_trait_mark(col, true, filled > 0))
+	else:
+		var n := total if filled >= 0 else 1
+		for i in n:
+			row.add_child(_trait_mark(col, filled >= 0, filled < 0 or i < filled))
 	var l := Label.new()
 	l.text = text
 	l.add_theme_font_override("font", UIKit.serif())
