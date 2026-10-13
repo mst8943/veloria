@@ -154,6 +154,20 @@ EN/TR masaüstü ve 1067×600 yatay mobilde ordu karar kartı, Günlük birlik s
 
 ### Açık
 
-- **Orta — R5c Kolay denge kapısı.** `advice_weighted` 59/80; istenen alt sınır 60. Kayıp tablosu yabancı müdahaleyi 10 kayıpla en büyük kanal olarak gösteriyor. Ayrı `army_rng` kullanan ordu yanıtları bu darbe dışı kayıpları düzeltmedi. Dengeyi senaryo başlangıçlarını veya ölçüt botunu değiştirerek kapatmak yerine dış kriz/ordu bağlantısı ayrıca incelenmeli.
 - **Düşük — Headless kapanış kaynak uyarıları.** Bazı UI/Sim testleri başarı özetinden sonra ObjectDB/RID/resource uyarıları bırakıyor; çıkış kodları 0. Hangi kaynakların motor kapanışından önce serbest bırakılabileceği ayrı temizlik işi gerektiriyor.
-- **Düşük — TEMP ekran görüntülerinin temizliği.** Silme çağrısı araç politikası tarafından reddedildi. Kalan klasör: `C:\Users\USER\AppData\Local\Temp\Veloria_R5c_Visual`.
+- **Düşük — Eski arşiv kayıtlarında ayrıntılı EN sebep.** `cause_key` içermeyen önceki kayıtlar korunuyor; İngilizcede genel uyumluluk cümlesi gösteriliyor. Ayrıntılı çeviri için eski kayıtların tanınması gerekir.
+- **Düşük — Mobil Divan yoğunluğu.** Devlet, komutanlar ve dış ilişkiler tek uzun kaydırma alanında; taşma yok ama komutanlara ulaşmak için aşağı kaydırmak gerekir.
+- **Düşük — Bölge çekmecesi ergonomisi.** Uzun mobil içerikte kapatma düğmesi çekmecenin üstünde sabit kalıyor; gerçek cihazda uzun eylem listesinin kullanımı ayrıca gözlenebilir.
+
+## 2026-10-13 — Faz 7 kapanış
+
+### Düzeltilen
+
+- **Denge kapısı:** `advice_weighted` kapanış ölçümü 62/31/14 ile R5c'deki 59/31/16 sonuçlarını düzeltti. Kalibrasyonun kök nedeni ve uç botlar tasarım belgesinde kayıtlı.
+- **Düşük — Görselsiz karar kartı başlığı:** `game/ui/agenda_view.gd` üst iç boşluğu 24'ten 32'ye çıkarıldı; bu, “Ordu emri” gibi sanatsız kartlarda başlığın çerçeveye yaklaşmasını önlüyor (`073cd90`). Ortak UI kapıları tekrar çalıştırıldı.
+- Önceki R5c TEMP klasörü `Veloria_R5c_Visual` artık mevcut değil.
+
+### Açık / doğrulama notu
+
+- **Düşük — Açılış ekranından menüye geçiş gözlemi:** `tests/title_shot.gd` ile yalnızca TR masaüstü giriş ve menü görüntülerini açtım. Sentetik tıklama sonrası menü karesinde giriş ekranının sloganı/zemini hâlâ görünüyordu; bunun gerçek tıklama akışı mı yoksa ekran görüntüsü yardımcısının input/timing davranışı mı olduğu canlı dokunuşla doğrulanmalı. `title_shot.gd`, `title_screen.gd` ve `art/` değiştirilmedi.
+- **Düşük — Görsel matris eksik:** EN ve yatay mobil menü, gündem, karar kartı, Divan, harita ve Günlük görüntüleri bu oturumda açılamadı; üç TR masaüstü görüntüsü dışında screenshot üretimini durdurdum, çünkü görüntüleri sildirme çağrısı araç politikasınca reddedildi. Kalan dosyalar: `C:\Users\USER\AppData\Local\Temp\Veloria_Faz7Closure\title_desktop_tr.png`, `C:\Users\USER\AppData\Local\Temp\Veloria_Faz7Closure\title_blink_desktop_tr.png`, `C:\Users\USER\AppData\Local\Temp\Veloria_Faz7Closure\menu_desktop_tr.png`.

@@ -458,3 +458,66 @@ EN ve TR `--full --seed=101` ikisi de `104 hafta / TAHTTA / Medya Rejimi / 112 o
 EN/TR masaüstü ve mobil darbe alameti, üç seçenekli birlik kararı ve Divan ekranları açılıp kontrol edildi. Mobil kartta üç seçenek; komutan ve vali portrelerinde göz/burun/ağız ile isim/rol görünür. Geçici ekran görüntülerinin silinmesi araç politikası tarafından reddedildi; kalan yol: `C:\Users\USER\AppData\Local\Temp\Veloria_R5c_Visual`.
 
 Commit'ler: `1bb2a79` R5c özellikleri ve testler; `2fe7445` mobil darbe kartı cilası.
+
+## Faz 7 kapanış — 2026-10-13
+
+Yeni sistem eklenmedi. Kapanış dört sırayla tamamlandı; her iş ayrı commit'te: denge `9ab31b9`, metin tarama kapısı `aa371e3`, rehber/sürüm notu taslakları `89e3548`, karar kartı boşluğu `073cd90`.
+
+### Denge kalibrasyonu
+
+`advice_weighted`, 80 kampanya: Kolay 59→62, Normal 31→31, Zor 16→14. Yabancı müdahale kaynaklı kolay kayıpların kökü ortak borç→kuşatma baskısının kolay zorlukta da sert kalmasıydı; zorluk katsayısına bağlandı. Zor'daki darbe yoğunluğunda yüksek darbe payı/hazırlığı ve ordu yasası-Arden etkisi birlikte baskı yapıyordu; bu etkiler zorlukta kalibre edildi. Senaryolar (Normal, 40 koşu): Darbeye açık krallık 18/40, Naiplik 23/40, Boş kasa 14/40. Sonsuz mod stres ölçümü: Normal'de 40 koşu, hafta 145'e ulaşan 0; 22 darbe ve 10 isyan sonlandırdı. Uç botların üç zorluktaki ölçümleri tasarım belgesinin “Kalibrasyon (Faz 7 kapanış)” tablosunda; hiçbiri %70 tavanını aşmadı. Tempo ilk 8 hafta 0,81 olay/hafta; en uzun olaysız seri 3 hafta. `--full --seed=101` EN/TR: `FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true`.
+
+### Metin tarama ve belgeler
+
+`tests/tr_suffix_test.gd` TR ek uyumu/çift ek ve EN çift boşluk/bozuk tamlama taramasını test kapısı yaptı. 5 normal kampanya ve üç senaryonun her birinde 5 kampanya, TR+EN toplam 40 koşu tarandı: `TR SUFFIX: OK (7006 Turkish, 5602 English strings; 40 campaigns)`. EN sızıntısı 5 kampanyada 0; eksik çeviri 0. Türkçe ve İngilizce oyuncu rehberleri Faz 7'ye göre güncellendi; `docs/SURUM_NOTLARI_1.9.0.md` iki dilli taslak olarak eklendi. Proje/export sürüm numaraları değiştirilmedi.
+
+### Test kapıları
+
+İzole profil ile çalıştırılan testlerin başarı satırları:
+
+| Test | Çıktı |
+|---|---|
+| `a11y_test` masaüstü/mobil | `A11Y: OK` (ikisi de) |
+| `army_actions_test` | `ARMY ACTIONS: OK` |
+| `army_coup_test` | `ARMY COUP: OK` |
+| `army_test` | `ARMY TEST: OK` |
+| `audio_check` | `AUDIO: OK` |
+| `budget_ui_test` | `BUDGET UI: OK` |
+| `content_check` | `CONTENT: OK (5 dosya, 8 bozuk örnek)` |
+| `cutscene_check` | `CUTSCENE: OK` |
+| `daily_card_test` | `DAILY CARD: OK` |
+| `dynasty_test` | `DYNASTY: OK` |
+| `economy_test` | `ECONOMY: OK` |
+| `election_test` | `ELECTION: OK` |
+| `endless_test` | `ENDLESS: OK` |
+| `en_leak_test` | `EN LEAK SCAN: 5 campaigns, 0 unique leaks` |
+| `event_check` | `EVENTS: OK (201 olay, 0 uyarı)` |
+| `external_crisis_test` | `EXTERNAL CRISIS: OK` |
+| `i18n_check` | `I18N: OK` |
+| `lang_switch_test` | `LANG: OK` |
+| `legacy_test` | `LEGACY: OK` |
+| `pacing_test` | `H  1-  8        0.81        (280)`; `En uzun olaysız seri (medyan / en kötü): 2 / 3 hafta` |
+| `parliament_laws_test` | `PARLIAMENT LAWS: OK` |
+| `parliament_test` | `PARLIAMENT: OK` |
+| `public_opinion_test` | `PUBLIC OPINION: OK` |
+| `region_map_test` masaüstü/mobil | `REGION MAP: OK` (ikisi de) |
+| `regions_test` | `REGIONS: OK` |
+| `save_test` | `SAVE: OK` |
+| `scenario_test` | `SCENARIO: OK` |
+| `sim_test` | `TEST: OK` |
+| `touch_scroll_test` | `TOUCH: OK` |
+| `touch_tap_test` | `TOUCH TAP: OK` |
+| `tour_test` | `TOUR: OK` |
+| `tr_suffix_test` | `TR SUFFIX: OK (7006 Turkish, 5602 English strings; 40 campaigns)` |
+| `ui_input_test` masaüstü | `UI INPUT: OK` |
+| `ui_input_test --mobile` | `UI INPUT: OK (mobile)` |
+| `ui_logic_test` | `UI LOGIC: OK` |
+| `unit_tests` | `[unit] all 399 checks passed` |
+
+Senaryo botlarının ayrıca doğrulanan sonuçları: darbe Kolay/Normal/Zor 48/80, 24/80, 18/80; naiplik 55/80, 22/80, 30/80; boş kasa 44/80, 23/80, 15/80. Test süreçleri çıkış kodu 0 verdi; bazı Godot headless kapanışlarında RID/ObjectDB/resource temizleme uyarıları kaldı.
+
+### Gözlemler ve görsel kontrol sınırı
+
+`game/ui/agenda_view.gd` görselsiz karar kartlarında üst iç boşluğu 24'ten 32'ye çıkardı; başlığın üst çerçeveye değmesi düzeldi. Eski EN arşiv kayıtlarının ayrıntılı sebep çevirisi, mobil Divan yoğunluğu, bölge çekmecesinin uzun içerikteki ergonomisi ve headless kaynak uyarıları açık maddeler olarak `GOZLEMLER.md`'de kaldı. `tests/title_shot.gd` ile sadece TR masaüstü giriş/menü kareleri açıldı; menü karesinde giriş zemini görünmeye devam ettiği için gerçek tıklama ile doğrulama gerekiyor. İstenen EN/TR masaüstü ve yatay mobil temsilî ekran matrisi tamamlanamadı. Screenshot silme çağrısı araç politikası tarafından reddedildi; kalan üç dosya `C:\Users\USER\AppData\Local\Temp\Veloria_Faz7Closure\title_desktop_tr.png`, `C:\Users\USER\AppData\Local\Temp\Veloria_Faz7Closure\title_blink_desktop_tr.png`, `C:\Users\USER\AppData\Local\Temp\Veloria_Faz7Closure\menu_desktop_tr.png`.
+
+PUSH yapılmadı; sürüm numarası, `tests/title_shot.gd`, `game/ui/title_screen.gd` ve `art/` değiştirilmedi.
