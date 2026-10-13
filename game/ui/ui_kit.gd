@@ -42,12 +42,18 @@ static func configure_accessibility(size: int, contrast: bool, motion: bool) -> 
 static func sans(weight := 500, slant := false) -> Font:
 	var key := "%d%s" % [weight, "i" if slant else ""]
 	if not _sans.has(key):
-		if not ResourceLoader.exists(SANS_PATH):
-			return ThemeDB.fallback_font
 		var fv := FontVariation.new()
-		fv.base_font = load(SANS_PATH)
-		var ts := TextServerManager.get_primary_interface()
-		fv.variation_opentype = {ts.name_to_tag("wght"): weight}
+		# Gövde yazısı: Alegreya Sans (mockup'taki hümanist sans; statik kesimler). Yoksa IBM Plex (değişken).
+		var cut := "Bold" if weight >= 620 else ("Medium" if weight >= 470 else "Regular")
+		var alegreya := "res://game/fonts/AlegreyaSans-%s.ttf" % cut
+		if ResourceLoader.exists(alegreya):
+			fv.base_font = load(alegreya)
+		elif ResourceLoader.exists(SANS_PATH):
+			fv.base_font = load(SANS_PATH)
+			var ts := TextServerManager.get_primary_interface()
+			fv.variation_opentype = {ts.name_to_tag("wght"): weight}
+		else:
+			return ThemeDB.fallback_font
 		if slant:
 			fv.variation_transform = Transform2D(Vector2(1, 0), Vector2(0.2, 1), Vector2.ZERO)
 		_sans[key] = fv

@@ -189,9 +189,9 @@ func _build_ui(cols: HBoxContainer) -> void:
 	var detail_style := UIKit.box(Color(UIKit.PANEL, 0.85), Color(UIKit.GOLD_DIM, 0.3), 6, 8)
 	if not host._mobile:
 		detail_style.set_border_width_all(0)   # kenarı işlemeli çerçeve çizer; ikinci çizgi olmasın
-		detail_style.content_margin_left = 10
-		detail_style.content_margin_top = 7
-		detail_style.content_margin_bottom = 9
+		detail_style.content_margin_left = 16
+		detail_style.content_margin_top = 14
+		detail_style.content_margin_bottom = 14
 	detail.add_theme_stylebox_override("panel", detail_style)
 	person_block.add_child(detail)
 	UIKit.ornament(detail, Color(UIKit.GOLD, 0.8), 18 if not host._mobile else 14, 1)
@@ -968,16 +968,12 @@ func _update_info() -> void:
 	var edge := Panel.new()
 	var es := StyleBoxFlat.new()
 	es.draw_center = false
-	es.border_color = Color(UIKit.GOLD, 0.85)
-	es.set_border_width_all(2)
+	es.border_color = Color(UIKit.GOLD, 0.7)
+	es.set_border_width_all(1)
 	edge.add_theme_stylebox_override("panel", es)
 	edge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	edge.set_anchors_preset(Control.PRESET_FULL_RECT)
 	art.add_child(edge)
-	var portrait_star := _trait_mark(UIKit.GOLD, true, true)
-	portrait_star.position = Vector2(3, 3)
-	portrait_star.custom_minimum_size = Vector2(15, 15)
-	host._portrait_box.add_child(portrait_star)
 	host._info.append_text("[b][font_size=%d]%s[/font_size][/b]  [color=#cfc6b0][font_size=%d]%s[/font_size][/color]" % [host._fs(20 if not host._mobile else 20), a.display_name, host._fs(14 if not host._mobile else 16), a.title])
 	# Güç: üç kademe (eskiden metinle verilen bilgi; fazlası değil).
 	var level := Sim.power_tier(a.power)

@@ -584,6 +584,8 @@ func _draw_trend(c: Control, t: int) -> void:
 ## Gündem: geçen haftadan bu yana görünür göstergelerde ne değişti (Sim.week_changes). Boşsa bölüm yok.
 func _add_changes(animated: Array[Control], target_override: VBoxContainer = null) -> void:
 	var target: VBoxContainer = target_override if target_override != null else (host._report_box if host._report_box != null else host._agenda)
+	if Sim.week_changes.is_empty() and not host._mobile:
+		return   # boş başlık yer kaplamasın
 	target.add_child(host._section(tr("BU HAFTA DEĞİŞENLER"), tr("önce değişenler")))
 	if Sim.week_changes.is_empty():
 		return
@@ -632,7 +634,7 @@ func _add_week_ledger(animated: Array[Control], target_override: VBoxContainer =
 	assembly.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 13))
 	assembly.add_theme_color_override("font_color", UIKit.TEXT if not host._mobile else UIKit.TEXT_DIM)
 	if not host._mobile:
-		assembly.add_theme_constant_override("line_spacing", -4)
+		assembly.add_theme_constant_override("line_spacing", 1)
 	target.add_child(assembly)
 	if host._week_log.is_empty():
 		var empty := Label.new()
@@ -644,7 +646,7 @@ func _add_week_ledger(animated: Array[Control], target_override: VBoxContainer =
 		empty.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 13))
 		if not host._mobile:
 			empty.add_theme_color_override("font_color", UIKit.TEXT)
-			empty.add_theme_constant_override("line_spacing", -4)
+			empty.add_theme_constant_override("line_spacing", 1)
 		target.add_child(empty)
 		return
 	for i in host._week_log.size():
@@ -684,12 +686,14 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 	frame_style.content_margin_bottom = 4
 	if not host._mobile:
 		frame_style.set_border_width_all(0)
-		frame_style.content_margin_left = 14
+		frame_style.content_margin_left = 18
+		frame_style.content_margin_right = 16
+		frame_style.content_margin_top = 12
 	frame.add_theme_stylebox_override("panel", frame_style)
 	host._report_box.add_child(frame)
 	UIKit.ornament(frame, Color(UIKit.GOLD, 0.8), 18 if not host._mobile else 14, 1)
 	var contents := VBoxContainer.new()
-	contents.add_theme_constant_override("separation", 2 if host._mobile else 0)
+	contents.add_theme_constant_override("separation", 2 if host._mobile else 6)
 	frame.add_child(contents)
 	_add_changes(animated, contents)
 	_add_week_ledger(animated, contents)
@@ -740,8 +744,8 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		var band := clampi(int(r.get("band", 1)), 0, 2)
 		# Renk yalnızca sol çizgide: raporun söylediği durum. Kutu kenarı yok, liste sakin kalır.
 		var sb := UIKit.box(Color(UIKit.PANEL_HI, 0.42), Color(0, 0, 0, 0), 2, 6)
-		sb.content_margin_top = 1
-		sb.content_margin_bottom = 1
+		sb.content_margin_top = 4 if not host._mobile else 1
+		sb.content_margin_bottom = 4 if not host._mobile else 1
 		if not host._mobile:
 			sb.bg_color = Color(0, 0, 0, 0.32)
 		sb.border_width_left = 3
@@ -796,7 +800,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		l.add_theme_color_override("default_color", UIKit.TEXT)
 		l.text = ("[b]%s[/b]  %s" % [_short_name(str(r["name"])), r["text"]]) if host._mobile else str(r["text"])
 		if not host._mobile:
-			l.add_theme_constant_override("line_separation", -3)
+			l.add_theme_constant_override("line_separation", 1)
 		row.add_child(l)
 		texts.append(l)
 	contents.add_child(all_reports)
