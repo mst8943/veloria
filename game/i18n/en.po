@@ -4318,6 +4318,12 @@ msgstr "Open the map symbol legend"
 msgid "Harita simgeleri"
 msgstr "Map symbols"
 
+msgid "Sıfırla"
+msgstr "Reset"
+
+msgid "Harita yakınlaştırmasını ve konumunu sıfırla"
+msgstr "Reset map zoom and position"
+
 msgid "Üçgen: huzursuzluk"
 msgstr "Triangle: unrest"
 
