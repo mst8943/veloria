@@ -51,15 +51,25 @@ func _run() -> void:
 		sim0.week = 1
 		sim0.pending.clear()
 		sim0.mesai = sim0.mesai_max
+		for arg in OS.get_cmdline_user_args():
+			if arg.begins_with("--main-target-mesai="):
+				sim0.mesai = clampi(int(arg.substr(20)), 0, sim0.mesai_max)
 		sim0.private_wealth = 10.0
 		sim0.week_changes.clear()
+		var news_tr := "OLAY: Taç giyme töreninin ertesi sabahı"
+		var news_en := "EVENT: The morning after the coronation"
+		sim0.weekly_news = [news_tr]
+		sim0.weekly_news_localized = {news_tr: news_en}
 		main._media_seen_week = 0
 		main._week_log.clear()
 		main._week_log_week = 1
 		main._sel.clear()
 		main._sel.append("voss")
+		var is_english := "--lang=en" in OS.get_cmdline_user_args()
+		main._headline_notice = "Vale sana bir dosya bıraktı: ‘Kim kimdir, Majesteleri.’ Arden not etti." if not is_english else "Vale left you a file: ‘Who is who, Your Majesty.’ Arden noted it."
 		root.get_node("Sfx").tips = true
 		main._refresh()
+		main._update_headline()
 		main._style_cards()
 		main._update_info()
 		if "--main-people" in OS.get_cmdline_user_args():
