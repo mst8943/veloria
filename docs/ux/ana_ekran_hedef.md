@@ -109,3 +109,6 @@ Mockup masaüstü. Mobil (yatay 1067×600) aynı dili kullanır ama: üst resim 
 ### 2 — Haber şeridi ve sol sekmeler
 
 Haber şeridi koyu çerçeveli serif satıra dönüştürüldü; iki haber ayrı metin alanlarında, aralarında çizilmiş baklava ve solunda çizilmiş kıvrım bulunur. Sol sekmelerde simge ve metin serif tipografiye geçti, masaüstünde ve mobilde sekme yüksekliği dokunma erişimini korur. 1600×900 EN ve 1067×600 EN hedef görüntüleri açılıp kontrol edildi; dar mobil şeritte haber metinleri üç noktayla kısalıyor ve dokununca genişleyebiliyor. Masaüstü/mobil `ui_input_test.gd` sonuçları `UI INPUT: OK` ve `UI INPUT: OK (mobile)`; çıkış kodları 0. Godot kapanışında mevcut kaynak/RID uyarıları sürüyor.
+### 3 — Sol panel
+
+Sol gündem alanının arkasına mevcut `watermark_crest.png` düşük alfa ile çiziliyor; kaynak yoksa hiçbir öğe ayrılmaz ve mevcut gündem içeriği aynen çalışır. Haftalık rehberin başlığı/step metinleri serif oldu, seçili adım çerçevelendi; mobil hedefler en az 44 px. Bekleyen karar olmadığında bilgilendirme metni koyu-altın kutu içinde gösteriliyor. 1600×900 TR ve 1067×600 EN hedef ekranları açıldı; filigran metni bastırmıyor, rehber ve boş durum kutusu yatay alana sığıyor. Masaüstü ve mobil `ui_input_test.gd`: `UI INPUT: OK`, `UI INPUT: OK (mobile)`; exit code 0. Godot kapanışında mevcut kaynak/RID uyarıları sürüyor.

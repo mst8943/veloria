@@ -441,6 +441,13 @@ func _build_ui() -> void:
 	_agenda.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_agenda.add_theme_constant_override("separation", 6 if _mobile else 10)
 	_scroll.add_child(_agenda)
+	var watermark: Texture2D = _art("res://art/ui/watermark_crest.png")
+	if watermark:
+		_scroll.draw.connect(func() -> void:
+			var scale_factor: float = minf(_scroll.size.x / watermark.get_width(), _scroll.size.y / watermark.get_height()) * 0.82
+			var watermark_size := Vector2(watermark.get_size()) * scale_factor
+			_scroll.draw_texture_rect(watermark, Rect2((_scroll.size - watermark_size) / 2.0, watermark_size), false, Color(1, 1, 1, 0.055)))
+		_scroll.resized.connect(_scroll.queue_redraw)
 	var files := VBoxContainer.new()
 	files.name = "Dosyalar"
 	_tabs.add_child(files)

@@ -45,6 +45,7 @@ func _guide_step() -> int:
 func _add_guide(animated: Array[Control]) -> void:
 	var step := _guide_step()
 	var panel := PanelContainer.new()
+	panel.name = "WeeklyGuide"
 	panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.92), Color(UIKit.GOLD, 0.45), 8, 10))
 	host._agenda.add_child(panel)
 	animated.append(panel)
@@ -53,8 +54,8 @@ func _add_guide(animated: Array[Control]) -> void:
 	panel.add_child(v)
 	var head := Label.new()
 	head.text = tr("BU HAFTA NE YAPMALI?")
-	head.add_theme_font_override("font", UIKit.caps())
-	head.add_theme_font_size_override("font_size", host._fs(12))
+	head.add_theme_font_override("font", UIKit.serif())
+	head.add_theme_font_size_override("font_size", host._fs(15))
 	head.add_theme_color_override("font_color", UIKit.GOLD)
 	v.add_child(head)
 	var row := HBoxContainer.new()
@@ -66,12 +67,17 @@ func _add_guide(animated: Array[Control]) -> void:
 		b.theme_type_variation = "GhostButton"
 		b.toggle_mode = true
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.custom_minimum_size.y = 44 if host._mobile else 40
 		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		b.add_theme_font_size_override("font_size", host._fs(13))
+		b.add_theme_font_override("font", UIKit.serif())
+		b.add_theme_font_size_override("font_size", host._fs(14))
 		b.tooltip_text = tr(GUIDE_STEPS[i][1])
 		var col := UIKit.GOLD if i + 1 == step else (UIKit.OK if i + 1 < step else UIKit.TEXT_DIM)
 		for c in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color"]:
 			b.add_theme_color_override(c, col)
+		b.add_theme_stylebox_override("normal", UIKit.box(Color(UIKit.GOLD, 0.07) if i + 1 == step else Color(0, 0, 0, 0), Color(UIKit.GOLD, 0.62) if i + 1 == step else Color(UIKit.GOLD_DIM, 0.22), 6, 5))
+		b.add_theme_stylebox_override("hover", UIKit.box(Color(UIKit.GOLD, 0.12), Color(UIKit.GOLD, 0.55), 6, 5))
+		b.add_theme_stylebox_override("pressed", UIKit.box(Color(UIKit.GOLD, 0.16), Color(UIKit.GOLD, 0.75), 6, 5))
 		b.set_pressed_no_signal(i + 1 == step)
 		b.pressed.connect(_guide_go.bind(i + 1))
 		host._wire(b)
@@ -289,11 +295,14 @@ func _rebuild_agenda() -> void:
 			nav.add_child(following)
 			nav_buttons.append(following)
 	else:
+		var empty_panel := PanelContainer.new()
+		empty_panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.72), Color(UIKit.GOLD_DIM, 0.3), 6, 8))
+		host._agenda.add_child(empty_panel)
 		var empty := Label.new()
 		empty.text = tr("Bu hafta bekleyen karar yok. Kişilerle ilgilen ya da haftayı bitir.")
 		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		empty.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-		host._agenda.add_child(empty)
+		empty_panel.add_child(empty)
 	for pi in Sim.pending.size():
 		if pi != decision_index:
 			continue
