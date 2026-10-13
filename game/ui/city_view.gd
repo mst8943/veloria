@@ -46,6 +46,8 @@ var _mouse_down_pos := Vector2.ZERO
 var _last_tap_time := 0.0
 var _last_tap_pos := Vector2.ZERO
 var _touch_points: Dictionary = {}
+var _touch_gesture_starts: Dictionary = {}
+var _touch_gesture_moved := false
 var _prev_pinch_dist := 0.0
 
 var _drawer: PanelContainer
@@ -59,6 +61,7 @@ var _region_buttons: Dictionary = {}
 var _regions_visible := false
 var _region_toggle: Button
 var _legend_button: Button
+var _top_band: Control
 var _region_action_button: Button
 var _region_panel_id := ""
 var plates: Dictionary = {}   # kurum id -> etiket (test ve konumlandırma için)
@@ -67,6 +70,7 @@ var plates: Dictionary = {}   # kurum id -> etiket (test ve konumlandırma için
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	add_to_group("touch_map_gesture")
 	gui_input.connect(_on_background_input)
 	_sites = SITES.duplicate(true)
 	_load_overrides()
@@ -179,6 +183,7 @@ func _build() -> void:
 
 	# Üst başlık bandı (Ekran sabiti)
 	var band := PanelContainer.new()
+	_top_band = band
 	band.add_theme_stylebox_override("panel", UIKit.band_style())
 	band.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE, Control.PRESET_MODE_MINSIZE, 18)
 	add_child(band)
@@ -292,7 +297,6 @@ func _on_background_input(event: InputEvent) -> void:
 	# 1. Pinch Gesture (Dokunmatik sıkıştırma)
 	if event is InputEventMagnifyGesture:
 		apply_zoom(zoom_scale * event.factor, event.position)
-		_is_dragging = true
 		accept_event()
 		return
 
@@ -314,7 +318,7 @@ func _on_background_input(event: InputEvent) -> void:
 				_is_dragging = false
 				# Çift tıklama / çift dokunma kontrolü
 				var now := Time.get_ticks_msec() / 1000.0
-				if now - _last_tap_time < 0.28 and (_mouse_down_pos - _last_tap_pos).length() < 24.0:
+				if not TOUCH_SCROLL.dispatching_touch and now - _last_tap_time < 0.28 and (_mouse_down_pos - _last_tap_pos).length() < 24.0:
 					if zoom_scale > 1.1:
 						reset_zoom()
 					else:
@@ -322,8 +326,9 @@ func _on_background_input(event: InputEvent) -> void:
 					_last_tap_time = 0.0
 					accept_event()
 					return
-				_last_tap_time = now
-				_last_tap_pos = mb.position
+				if not TOUCH_SCROLL.dispatching_touch:
+					_last_tap_time = now
+					_last_tap_pos = mb.position
 			else:
 				if _is_dragging:
 					_is_dragging = false
@@ -345,6 +350,7 @@ func _on_background_input(event: InputEvent) -> void:
 		var st := event as InputEventScreenTouch
 		if st.pressed:
 			_touch_points[st.index] = st.position
+			_touch_gesture_starts[st.index] = st.position
 			if _touch_points.size() == 1:
 				_mouse_down_pos = st.position
 				_drag_distance = 0.0
@@ -366,6 +372,7 @@ func _on_background_input(event: InputEvent) -> void:
 				_is_dragging = true
 		else:
 			_touch_points.erase(st.index)
+			_touch_gesture_starts.erase(st.index)
 			if _touch_points.size() < 2:
 				_prev_pinch_dist = 0.0
 
@@ -391,6 +398,76 @@ func _on_background_input(event: InputEvent) -> void:
 				pan_map(sd.relative)
 				accept_event()
 				return
+
+
+func _accepts_touch_position(pos: Vector2) -> bool:
+	if not visible or not get_global_rect().has_point(pos):
+		return false
+	if _top_band and _top_band.get_global_rect().has_point(pos):
+		return false
+	if _drawer and _drawer.visible and _drawer.get_global_rect().has_point(pos):
+		return false
+	return true
+
+
+## TouchScroll keeps tap activation centralized and forwards only map drag/pinch movement here.
+func _handle_touch_gesture(event: InputEvent) -> bool:
+	if event is InputEventScreenTouch:
+		var touch := event as InputEventScreenTouch
+		if touch.pressed:
+			_touch_points[touch.index] = touch.position
+			_touch_gesture_starts[touch.index] = touch.position
+			if _touch_points.size() >= 2:
+				var pts := _touch_points.values()
+				_prev_pinch_dist = pts[0].distance_to(pts[1])
+				_touch_gesture_moved = true
+				_is_dragging = true
+				return true
+			_touch_gesture_moved = false
+			_is_dragging = false
+			return false
+		var moved := _touch_gesture_moved
+		_touch_points.erase(touch.index)
+		_touch_gesture_starts.erase(touch.index)
+		if _touch_points.size() < 2:
+			_prev_pinch_dist = 0.0
+		if _touch_points.is_empty():
+			_is_dragging = false
+			_touch_gesture_moved = false
+			if not moved:
+				var now := Time.get_ticks_msec() / 1000.0
+				if now - _last_tap_time < 0.28 and (touch.position - _last_tap_pos).length() < 28.0:
+					if zoom_scale > 1.1:
+						reset_zoom()
+					else:
+						apply_zoom(1.8, touch.position)
+					_last_tap_time = 0.0
+					return true
+				_last_tap_time = now
+				_last_tap_pos = touch.position
+		return moved
+	if event is InputEventScreenDrag:
+		var drag := event as InputEventScreenDrag
+		if not _touch_points.has(drag.index):
+			return false
+		var previous: Vector2 = _touch_points[drag.index]
+		_touch_points[drag.index] = drag.position
+		if _touch_points.size() >= 2:
+			var pts := _touch_points.values()
+			var dist: float = pts[0].distance_to(pts[1])
+			if _prev_pinch_dist > 0.0:
+				apply_zoom(zoom_scale * dist / _prev_pinch_dist, (pts[0] + pts[1]) * 0.5)
+			_prev_pinch_dist = dist
+			_touch_gesture_moved = true
+			_is_dragging = true
+			return true
+		var start: Vector2 = _touch_gesture_starts[drag.index]
+		if start.distance_to(drag.position) >= 8.0:
+			_touch_gesture_moved = true
+			_is_dragging = true
+			pan_map(drag.position - previous)
+			return true
+	return false
 
 
 func apply_zoom(target_scale: float, focus_point: Vector2) -> void:
@@ -563,9 +640,19 @@ func _make_site(id: String) -> void:
 		sb.border_color = Color(UIKit.GOLD, 0.78)
 		sb.bg_color = Color(0.045, 0.038, 0.03, 0.94))
 
+	var press_pos := [Vector2.ZERO]
 	plate.gui_input.connect(func(ev: InputEvent) -> void:
-		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
-			if _is_dragging:
+		if ev is InputEventMouseButton and ev.button_index == MOUSE_BUTTON_LEFT:
+			var mb := ev as InputEventMouseButton
+			var activate := false
+			if mb.pressed:
+				if TOUCH_SCROLL.dispatching_touch:
+					press_pos[0] = mb.global_position
+				else:
+					activate = true
+			else:
+				activate = TOUCH_SCROLL.dispatching_touch and not _is_dragging and press_pos[0].distance_to(mb.global_position) <= 10.0
+			if not activate:
 				return
 			Sfx.play("click")
 			if id == "saray":
@@ -631,7 +718,7 @@ func _make_region_marker(id: String) -> void:
 
 	var name := Label.new()
 	name.name = "RegionName"
-	name.text = ("★ " if id == Sim.featured_region_id() else "") + _region_compact_name(id)
+	name.text = _region_compact_name(id)
 	name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	name.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if mobile else TextServer.AUTOWRAP_OFF
@@ -667,6 +754,14 @@ func _make_region_marker(id: String) -> void:
 			Vector2(mid_x, y + 6.0),
 		])
 		button.draw_colored_polygon(tri, UIKit.GOLD)
+		if id == Sim.featured_region_id():
+			var center := Vector2(button.size.x - 9.0, 9.0)
+			var star := PackedVector2Array()
+			for point in 10:
+				var angle := -PI * 0.5 + point * PI / 5.0
+				var radius := 4.5 if point % 2 == 0 else 2.0
+				star.append(center + Vector2(cos(angle), sin(angle)) * radius)
+			button.draw_colored_polygon(star, UIKit.GOLD)
 	)
 
 	var p: Vector2 = (_mobile_region_positions if mobile else _region_positions).get(id, REGION_POS[id])
@@ -674,18 +769,6 @@ func _make_region_marker(id: String) -> void:
 	button.pivot_offset = button.custom_minimum_size * 0.5
 	button.visible = _regions_visible
 
-	var press_pos := Vector2.ZERO
-	button.gui_input.connect(func(ev: InputEvent) -> void:
-		if ev is InputEventMouseButton:
-			var mb := ev as InputEventMouseButton
-			if mb.button_index == MOUSE_BUTTON_LEFT:
-				if mb.pressed:
-					press_pos = mb.global_position
-				else:
-					if _is_dragging or (press_pos.distance_to(mb.global_position) > 10.0):
-						return
-					show_region(id)
-	)
 	button.pressed.connect(func() -> void:
 		if not _is_dragging:
 			show_region(id)
@@ -742,7 +825,7 @@ func _region_compact_name(id: String) -> String:
 func _build_drawer() -> void:
 	_drawer = PanelContainer.new()
 	var psb := StyleBoxFlat.new()
-	psb.bg_color = Color(0.07, 0.06, 0.05, 0.96)
+	psb.bg_color = Color(0.07, 0.06, 0.05, 1.0)
 	psb.set_border_width_all(0)
 	psb.set_corner_radius_all(3)
 	psb.content_margin_left = 22

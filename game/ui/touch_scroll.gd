@@ -46,6 +46,7 @@ var _touch_feedback_target: Control
 var _touch_feedback_layer: CanvasLayer
 var _touch_feedback: Panel
 var _touch_range_target: Range
+var _map_touch_targets: Dictionary = {}
 
 
 func _ready() -> void:
@@ -151,6 +152,20 @@ func _input(event: InputEvent) -> void:
 
 func _handle_screen_touch(event: InputEventScreenTouch) -> void:
 	if event.pressed:
+		var map_target := _active_map_touch_target()
+		if map_target == null:
+			map_target = _map_touch_target_at(event.position)
+		if map_target != null:
+			_map_touch_targets[event.index] = map_target
+			if bool(map_target.call("_handle_touch_gesture", event)):
+				_touch_cancelled = true
+				_touch_moved = true
+				_hide_touch_feedback()
+			if _touch_active:
+				_touch_cancelled = true
+				_touch_moved = true
+				_hide_touch_feedback()
+				return
 		_touch_active = true
 		_touch_cancelled = false
 		_touch_moved = false
@@ -170,6 +185,15 @@ func _handle_screen_touch(event: InputEventScreenTouch) -> void:
 		_touch_feedback_target = _tappable_or_null(_control_at(event.position))
 		_hide_touch_feedback()
 		return
+	var map_target: Control = _map_touch_targets.get(event.index)
+	var map_consumed := false
+	if is_instance_valid(map_target):
+		map_consumed = bool(map_target.call("_handle_touch_gesture", event))
+	_map_touch_targets.erase(event.index)
+	if map_consumed:
+		_touch_cancelled = true
+		_touch_moved = true
+		_hide_touch_feedback()
 	if not _touch_active:
 		return
 	if _touch_range_target != null:
@@ -177,7 +201,7 @@ func _handle_screen_touch(event: InputEventScreenTouch) -> void:
 		_touch_range_target = null
 		_touch_active = false
 		return
-	var valid_tap := not _touch_cancelled and not _touch_moved and Time.get_ticks_msec() - _touch_started_ms < TAP_TIME_LIMIT_MS
+	var valid_tap := not map_consumed and not _touch_cancelled and not _touch_moved and Time.get_ticks_msec() - _touch_started_ms < TAP_TIME_LIMIT_MS
 	var was_dragging := _touch_cancelled and _touch_moved
 	_touch_active = false
 	_hide_touch_feedback()
@@ -190,6 +214,13 @@ func _handle_screen_touch(event: InputEventScreenTouch) -> void:
 
 
 func _handle_screen_drag(event: InputEventScreenDrag) -> void:
+	var map_target: Control = _map_touch_targets.get(event.index)
+	if is_instance_valid(map_target):
+		if bool(map_target.call("_handle_touch_gesture", event)):
+			_touch_moved = true
+			_touch_cancelled = true
+			_hide_touch_feedback()
+			return
 	if not _touch_active:
 		return
 	if _touch_range_target != null:
@@ -259,6 +290,21 @@ func _control_at(pos: Vector2) -> Control:
 	var seq := [0]
 	_collect_hit(get_tree().root, pos, 0, seq, found)
 	return found[2] as Control
+
+
+func _active_map_touch_target() -> Control:
+	for target: Control in _map_touch_targets.values():
+		if is_instance_valid(target):
+			return target
+	return null
+
+
+func _map_touch_target_at(pos: Vector2) -> Control:
+	for node in get_tree().get_nodes_in_group("touch_map_gesture"):
+		if node is Control and node.is_visible_in_tree() and node.has_method("_accepts_touch_position"):
+			if bool(node.call("_accepts_touch_position", pos)):
+				return node as Control
+	return null
 
 
 func _collect_hit(n: Node, pos: Vector2, layer: int, seq: Array, found: Array) -> void:
