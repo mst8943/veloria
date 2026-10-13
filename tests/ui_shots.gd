@@ -101,19 +101,31 @@ func _run() -> void:
 					sim0.pending.append({"event": event, "age": 0})
 					break
 		elif inspect_state == "decision_noart":
+			var found := false
 			for event in sim0._events:
-				if event["id"] == "kamu_maas":
+				if event["id"] == "gida_protestosu":
 					var ev_copy: Dictionary = event.duplicate(true)
 					ev_copy["art"] = ""
 					sim0.pending.append({"event": ev_copy, "age": 0})
+					found = true
 					break
+			if not found:
+				push_error("UI_SHOTS: decision_noart fixture event not found")
+				quit(1)
+				return
 		elif inspect_state == "decision_crisis":
 			sim0.week = 20
 			sim0._open_crisis()
 		elif inspect_state == "decision_multi":
+			var found: Array[String] = []
 			for event in sim0._events:
-				if event["id"] in ["gida_protestosu", "kamu_maas"]:
+				if event["id"] in ["gida_protestosu", "general_atamalari"]:
 					sim0.pending.append({"event": event, "age": 0})
+					found.append(event["id"])
+			if found.size() != 2:
+				push_error("UI_SHOTS: decision_multi fixture events missing: " + str(found))
+				quit(1)
+				return
 		elif inspect_state == "files":
 			sim0.facts["fact_demo"] = {"id": "fact_demo", "subject": "king", "common": 0.45, "knowers": ["arden", "voss"], "copies": 2, "public": false, "rumor": false, "name": "Gizli Saray Fonu"}
 			sim0.promises = [{"actor": "arden", "prize": "Naiplik", "state": "active", "due": 8, "exposed": false}]
