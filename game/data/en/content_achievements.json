@@ -42,5 +42,7 @@
   "yarali_egemen": ["Wounded Sovereign", "Survive an assassination attempt and complete your reign."],
   "kusaklar": ["Across Generations", "Complete a second generation through Continue dynasty."],
   "uc_nesil": ["Three Generations", "Complete a third generation through Continue dynasty."],
+  "muhafizlar_sadakati": ["The Guard Stands", "Suppress a coup with the capital unit."],
+  "komuta_zinciri": ["The Chain Holds", "Stop a coup by switching the unit on duty."],
   "bes_nesil": ["The Fifth Crown", "Complete a fifth generation through Continue dynasty."]
 }

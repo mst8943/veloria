@@ -5246,11 +5246,68 @@ msgstr "Swap the %s and %s commanders"
 msgid "İki görevden birini seç; gelen subayın bağlılığı belirsiz, eski komutanın tepkisi izlenir."
 msgstr "Choose which post to fill; the incoming officer's loyalty is uncertain, and the former commander's reaction will be watched."
 
-msgid "Komutan %s olsun; %s görevini devralsın"
-msgstr "Put %s in command; have them take over the %s post"
+msgid "Komutanlık %s'ye geçsin — %s"
+msgstr "Transfer command to %s — %s"
 
 msgid "Komutanlıklar yer değiştirir; yeni bağlılık belirsiz, eski komutanın tepkisi izlenir."
 msgstr "The commands will be swapped; the new loyalty is uncertain, and the former commander's reaction will be watched."
 
 msgid "Komutan değişimi için yön seç."
 msgstr "Choose which way to make the command change."
+
+msgid "%s, %s hattında kıpırdıyor. Komutanı susuyor; ikmal kâğıtları da gecikiyor."
+msgstr "%s is stirring along the %s line. The commander is silent, and supply reports are late."
+
+msgid "%s hattında komutan sessiz, ikmal gecikiyor."
+msgstr "The commander on the %s line is silent; supplies are delayed."
+
+msgid "Başkent garnizonu sarayda."
+msgstr "The capital garrison remains at the palace."
+
+msgid "Başkent garnizonu sınır hattında; saraydaki nöbet inceldi."
+msgstr "The capital garrison is on the border; the palace watch is thin."
+
+msgid "Sadık %s ile bastır"
+msgstr "Suppress the coup with the loyal %s"
+
+msgid "%s ile pazarlık et"
+msgstr "Negotiate with %s"
+
+msgid "Yedek %s birliğini başkente çağır"
+msgstr "Call the reserve %s to the capital"
+
+msgid "%s çağrısına cevap vermedi. Saray kapıları yalnız kaldı."
+msgstr "The %s did not answer the call. The palace gates were left alone."
+
+msgid "%s saraya çağrıldı ve giriş kapılarını tuttu. %s tutuklandı; emir zinciri yeniden kuruldu."
+msgstr "The %s was called to the palace and secured the gates. %s was arrested, and the chain of command was restored."
+
+msgid "Darbe kararı: %s birlikleri komployu bastırdı; kışlada sert hesaplaşma sürüyor."
+msgstr "Coup decision: the %s suppressed the plot; a hard reckoning continues in the barracks."
+
+msgid "Darbe kararı: %s saraya çağrıldı; komuta zinciri yeniden kuruldu."
+msgstr "Coup decision: the %s was called to the palace; the chain of command was restored."
+
+msgid "Muhafızların Sadakati"
+msgstr "The Guard Stands"
+
+msgid "Darbe girişimini başkent birliğiyle bastır."
+msgstr "Suppress a coup with the capital unit."
+
+msgid "Komuta Zinciri"
+msgstr "The Chain Holds"
+
+msgid "Birliği değiştirerek darbeyi durdur."
+msgstr "Stop a coup by switching the unit on duty."
+
+msgid "%s garnizonunda sevkiyat emri konuşuluyor."
+msgstr "Supply orders around the %s are drawing notice."
+
+msgid "%s komutanı sorulara cevap vermiyor."
+msgstr "The %s commander has stopped answering questions."
+
+msgid "%s ikmali kesildi; muhafızlar kime bağlı olduğunu tartışıyor."
+msgstr "The %s supply line is cut; guards argue over whom they serve."
+
+msgid "%s\n%s\n%s %s%s"
+msgstr "%s\n%s\n%s %s%s"

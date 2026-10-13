@@ -299,7 +299,7 @@ func new_game(seed_value: int = 0, diff: int = -1, scenario := "", legacy: Dicti
 		"regional_garrisons": {"capital": 0, "industry": 0, "farmland": 0, "border": 0},
 		"regional_media": {"capital": 0, "industry": 0, "farmland": 0, "border": 0}, "regional_governors": 0, "regional_actions": 0, "regional_events": 0}
 	stats.merge({"army_actions": 0, "army_officer_changes": 0, "army_redeployments": 0, "army_allowances": 0, "army_splits": 0,
-		"army_allowance_uses": 0}, true)
+		"army_allowance_uses": 0, "army_coup_suppressions": 0, "army_coup_switches": 0}, true)
 	regime = ""
 	ended = false
 	record = {}
@@ -591,7 +591,7 @@ func save_summary() -> String:
 
 ## Kayıt şeması sürümü. Kaydın biçimi her değiştiğinde artır ve _migrate_save'e bir adım ekle.
 ## 1: sürüm yok · 2: rapor farkları · 3: sokak/mahkeme krizi · 4: rejim · 5: devlet · 6: Sarne ve kadro günlüğü
-const SAVE_VERSION := 22
+const SAVE_VERSION := 23
 const SAVE_REQUIRED := ["week", "mesai", "king", "unrest", "economy", "opp", "wealth", "actors", "facts", "flags",
 	"fired", "history", "pending", "truth", "karne", "stats", "rng", "seed", "diff", "regime",
 	"capacity", "treasury", "budget_stance", "court_share", "capacity_timeline", "holding",
@@ -760,6 +760,15 @@ func _migrate_save(d: Dictionary, from: int) -> Dictionary:
 		for key in ["army_actions", "army_officer_changes", "army_redeployments", "army_allowances", "army_splits", "army_allowance_uses"]:
 			army_stats[key] = 0
 		d["stats"] = army_stats
+	if from < 23:
+		var migrated_coup: Dictionary = d.get("coup_crisis", {})
+		if not migrated_coup.is_empty() and not migrated_coup.has("unit"):
+			migrated_coup["unit"] = "capital"
+		d["coup_crisis"] = migrated_coup
+		var coup_stats: Dictionary = d.get("stats", {})
+		coup_stats["army_coup_suppressions"] = 0
+		coup_stats["army_coup_switches"] = 0
+		d["stats"] = coup_stats
 	if not d.has("foreign"):
 		d["foreign"] = {"asteria": 50.0, "drakon": 50.0, "seravia": 50.0}
 	if not d.has("foreign_hint_until"):
@@ -1945,7 +1954,7 @@ func resolve_decision(pending_index: int, choice_index: int) -> String:
 		pending.remove_at(pending_index)
 		history.append(tr("Hafta %d — %s » %s") % [week, e["title"], ch["label"]])
 		var kind := str(e.get("crisis_kind", "coup"))
-		var crisis_text := _resolve_crisis(str(ch.get("crisis", ""))) if kind == "coup" else (_resolve_regional_crisis(ch) if kind == "regional" else _resolve_other(str(ch.get("crisis", ""))))
+		var crisis_text := _resolve_crisis(str(ch.get("crisis", "")), str(ch.get("unit", ""))) if kind == "coup" else (_resolve_regional_crisis(ch) if kind == "regional" else _resolve_other(str(ch.get("crisis", ""))))
 		if coup_crisis.get("failed", false) or other_crisis.get("failed", false):
 			end_week()  # kapılar açıldı: kriz bu gece sonuçlanır
 		changed.emit()
@@ -3360,6 +3369,8 @@ func _run_cascade() -> void:
 		if st == 3 and (a.military or a.royal):
 			a.power += PLOT_PREP_POWER  # kendi adamlarını kritik görevlere getirir
 			if a.id == "arden": _set_arden_power(a.power)
+		if a.military and st > 0 and army_rng.randf() < float(PLOT_SIGN_P[st]) * 0.7:
+			_add_army_plot_sign(a, st)
 	var striker := false
 	for a: Actor in actors.values():
 		if a.ready and a.insider and (a.military or a.royal):
@@ -3403,7 +3414,8 @@ func _log_plot(a: Actor, from: int, to: int) -> void:
 	elif to == 1 and from == 0 and not _plot_seen(a, "huzursuzlanmaya başladı"):
 		text = "huzursuzlanmaya başladı"
 	if text != "":
-		plot_log.append({"w": week, "name": a.display_name, "text": text})
+		var unit_id := _army_unit_for_leader(a.id)
+		plot_log.append({"w": week, "name": a.display_name, "text": text, "unit": unit_id})
 
 
 func _plot_seen(a: Actor, text: String) -> bool:
@@ -3476,8 +3488,28 @@ func _crisis_guard() -> float:
 	return g / 100.0
 
 
-func crisis_chance(action: String) -> float:
+func crisis_chance(action: String, unit_id := "") -> float:
 	var share := _ready_power_share()
+	if action == "army_suppress" or action == "army_switch":
+		var unit: Dictionary = army_units.get(unit_id, {})
+		if unit.is_empty():
+			return crisis_chance("rally")
+		var region_id := str(unit.get("region", unit_id))
+		var region: Dictionary = regions.get(region_id, {})
+		var chance := crisis_chance("rally")
+		chance += (float(unit.get("loyalty", 50.0)) - 50.0) * 0.002
+		chance += (float(unit.get("morale", 50.0)) - 50.0) * 0.0015
+		chance += (float(unit.get("supply", 50.0)) - 50.0) * 0.0015
+		chance += (float(region.get("loyalty", 50.0)) - 50.0) * 0.0015
+		chance += (float(region.get("garrison", 0.0)) - 35.0) * 0.001
+		if str(coup_crisis.get("unit", "")) == unit_id:
+			chance -= 0.14
+		if str(other_crisis.get("kind", "")) == "border" and str(army_units.get("capital", {}).get("region", "capital")) != "capital":
+			chance -= 0.18
+		if army_command_split:
+			chance -= 0.04
+		chance += 0.35 if difficulty == 0 else (-0.40 if difficulty == 2 else 0.0)
+		return clampf(chance, 0.05, 0.85)
 	if action == "rally":
 		return clampf((CRISIS_RALLY_BASE + (king_strength - 50.0) / 100.0 + _crisis_guard() * 0.3 + (1.0 - share) * 0.5) * _diff("crisis_odds") + (float(capacity["ordu"]) - 55.0) / STATE_RALLY_DENOM[difficulty] + foreign_defense_bonus(), 0.05, 0.85)
 	if action == "appeal":
@@ -3492,8 +3524,9 @@ func _open_crisis() -> void:
 			lead = a
 	if lead == null:
 		return
-	coup_crisis = {"leader": lead.id, "week": week}
-	plot_log.append({"w": week, "name": lead.display_name, "text": "darbe girişimini başlattı"})
+	var unit_id := _army_unit_for_leader(lead.id)
+	coup_crisis = {"leader": lead.id, "week": week, "unit": unit_id}
+	plot_log.append({"w": week, "name": lead.display_name, "text": "darbe girişimini başlattı", "unit": unit_id})
 	pending.insert(0, {"event": _crisis_event(lead), "age": 0})
 	_add_news("KRİZ: %s harekete geçti. Saray kuşatılmak üzere." % lead.display_name,
 		tr("KRİZ: %s harekete geçti. Saray kuşatılmak üzere.") % lead.display_name)
@@ -3502,25 +3535,71 @@ func _open_crisis() -> void:
 func _crisis_event(lead: Actor) -> Dictionary:
 	var nm := short_name(lead)
 	var opening := tr("Prens'in muhafızları sarayın doğu kanadını tuttu. Soylular taht salonunda toplanıyor; kimse seni çağırmadı.")
+	var unit_id := str(coup_crisis.get("unit", "capital"))
 	if lead.military:
-		opening = tr("%s birlikleri başkentin girişlerini tuttu. Saraya mühürlü bir mektup geldi: 'Majestelerinin istirahati için.'") % ek(nm, "in")
+		opening = tr("%s, %s hattında kıpırdıyor. Komutanı susuyor; ikmal kâğıtları da gecikiyor.") % [tr(_army_unit_name(unit_id)), ek(nm, "in")]
 	var rally := crisis_chance("rally")
 	var appeal := crisis_chance("appeal")
+	if lead.military:
+		rally = crisis_chance("army_suppress", _army_defense_unit(unit_id))
 	var guard_b := 2 if rally >= 0.5 else (1 if rally >= 0.3 else 0)
 	var street_b := 2 if appeal >= 0.45 else (1 if appeal >= 0.25 else 0)
 	var guard_t: String = tr(["Muhafız komutanı çağrılarına cevap vermiyor.", "Muhafızların bir kısmı tereddütte.", "Saray muhafızları sana bağlı görünüyor."][guard_b])
 	var street_t: String = tr(["Sokak öfkeli; meydanlar senin için dolmayabilir.", "Sokak tedirgin; kimse kimin kazanacağını bilmiyor.", "Sokaklar sakin; halk sana hâlâ kulak verir."][street_b])
+	var choices: Array = [
+		{"label": tr("Sadık %s ile bastır") % tr(_army_unit_name(_army_defense_unit(unit_id))), "crisis": "army_suppress", "unit": _army_defense_unit(unit_id), "fx": {}},
+		{"label": tr("%s ile pazarlık et") % ek(nm, "le"), "crisis": "army_negotiate", "fx": {}},
+		{"label": tr("Yedek %s birliğini başkente çağır") % tr(_army_unit_name(_army_alternate_unit(unit_id, _army_defense_unit(unit_id)))), "crisis": "army_switch", "unit": _army_alternate_unit(unit_id, _army_defense_unit(unit_id)), "fx": {}}]
+	if not lead.military:
+		choices = [
+			{"label": tr("Sadık birlikleri topla, liderleri tutuklat"), "crisis": "rally", "fx": {}},
+			{"label": tr("%s istediğini ver") % ek(nm, "e"), "crisis": "concede", "fx": {}},
+			{"label": tr("Balkona çık, halka seslen"), "crisis": "appeal", "fx": {}}]
+	var deployment := ""
+	var mobile_opening := ""
+	if lead.military:
+		deployment = tr("Başkent garnizonu sarayda.") if str(army_units.get("capital", {}).get("region", "capital")) == "capital" else tr("Başkent garnizonu sınır hattında; saraydaki nöbet inceldi.")
+		mobile_opening = tr("%s hattında komutan sessiz, ikmal gecikiyor.") % tr(_army_unit_name(unit_id))
 	return {"id": "darbe_krizi", "art": "general_atamalari" if lead.military else "gizli_toplanti", "crisis": true, "advisors": [],
 		"crisis_kind": "coup", "banner": tr("DARBE GİRİŞİMİ — bu hafta karar vermezsen saray düşer."),
 		"title": tr("Darbe kapıda"),
-		"text": tr("%s\n%s %s%s") % [opening, guard_t, street_t,
+		"text": tr("%s\n%s\n%s %s%s") % [opening, deployment, guard_t, street_t,
 			"" if int(stats.get("concessions", 0)) == 0 else tr(" Bir kez boyun eğdin; bu kez sözüne inanmayabilirler.")],
 		"cues": {"guard": guard_b, "street": street_b},
-		"choices": [
-			{"label": tr("Sadık birlikleri topla, liderleri tutuklat"), "crisis": "rally", "fx": {}},
-			{"label": tr("%s istediğini ver") % ek(nm, "e"), "crisis": "concede", "fx": {}},
-			{"label": tr("Balkona çık, halka seslen"), "crisis": "appeal", "fx": {}}],
+		"choices": choices,
+		"mobile_text": " ".join([mobile_opening, deployment, guard_t]) if lead.military else "",
 		"ignore": {"text": tr("Karar verilmedi. Kapılar açıldı."), "fx": {}}}
+
+
+func _resolve_army_coup_switch(lead: Actor, coup_unit: String, defender: String) -> String:
+	var chance := crisis_chance("army_switch", defender)
+	if army_rng.randf() >= chance:
+		coup_crisis["failed"] = true
+		_set_crisis_note("Darbe gecesi başka birliği çağırdın; emir kışlaya ulaşmadı.")
+		return tr("%s çağrısına cevap vermedi. Saray kapıları yalnız kaldı.") % tr(_army_unit_name(defender))
+	var unit: Dictionary = army_units[defender]
+	var old_region := str(unit.get("region", defender))
+	if regions.has(old_region):
+		regions[old_region]["garrison"] = maxf(0.0, float(regions[old_region].get("garrison", 0.0)) - 18.0)
+	unit["region"] = "capital"
+	unit["loyalty"] = minf(100.0, float(unit.get("loyalty", 50.0)) + 4.0)
+	unit["morale"] = minf(100.0, float(unit.get("morale", 50.0)) + 5.0)
+	regions["capital"]["garrison"] = minf(100.0, float(regions["capital"].get("garrison", 0.0)) + 18.0)
+	_close_crisis()
+	flags["DARBE_BASTIRILDI"] = week
+	flags[lead.id.to_upper() + "_GITTI"] = week
+	stats["army_coup_switches"] = int(stats.get("army_coup_switches", 0)) + 1
+	army_action_note = {"kind": "coup_switched", "unit": defender, "week": week}
+	plot_log.append({"w": week, "name": lead.display_name, "text": "birlik değiştirerek bastırıldı", "unit": coup_unit})
+	for actor: Actor in actors.values():
+		if actor.ready and actor.insider:
+			actor.ready = false
+			actor.plot_calm = 0
+	actors.erase(lead.id)
+	king_strength = clampf(king_strength + 3.0, 0.0, 100.0)
+	unrest = clampf(unrest + 5.0, 0.0, 100.0)
+	_add_fact("darbe_birlik_degisti_%d" % week, "Birlik değiştirerek darbe girişiminin bastırılması", "king", 20.0, [lead.id, str(unit.get("commander", ""))], 1)
+	return tr("%s saraya çağrıldı ve giriş kapılarını tuttu. %s tutuklandı; emir zinciri yeniden kuruldu.") % [tr(_army_unit_name(defender)), lead.display_name]
 
 
 func _close_crisis() -> void:
@@ -3530,8 +3609,9 @@ func _close_crisis() -> void:
 			pending.remove_at(i)
 
 
-func _resolve_crisis(action: String) -> String:
+func _resolve_crisis(action: String, unit_id := "") -> String:
 	var lead: Actor = actors.get(coup_crisis.get("leader", ""))
+	var lead_unit := str(coup_crisis.get("unit", ""))
 	var conspirators: Array = []
 	for a: Actor in actors.values():
 		if a.ready and a.insider and a != lead:
@@ -3541,12 +3621,19 @@ func _resolve_crisis(action: String) -> String:
 		_close_crisis()
 		return tr("Darbenin lideri ortada yok; komplo dağıldı.")
 	var nm := short_name(lead)
+	if action == "army_switch":
+		return _resolve_army_coup_switch(lead, lead_unit, unit_id)
 	match action:
-		"rally":
-			if rng.randf() < crisis_chance("rally"):
+		"rally", "army_suppress":
+			var success_chance := crisis_chance("army_suppress", unit_id) if action == "army_suppress" else crisis_chance("rally")
+			var success := army_rng.randf() < success_chance if action == "army_suppress" else rng.randf() < success_chance
+			if success:
 				_close_crisis()
 				flags["DARBE_BASTIRILDI"] = week
 				flags[lead.id.to_upper() + "_GITTI"] = week
+				if action == "army_suppress":
+					stats["army_coup_suppressions"] = int(stats.get("army_coup_suppressions", 0)) + 1
+					army_action_note = {"kind": "coup_suppressed", "unit": unit_id, "week": week}
 				var knowers: Array = [lead.id]
 				for a: Actor in conspirators:
 					a.fear += 20.0
@@ -3554,7 +3641,7 @@ func _resolve_crisis(action: String) -> String:
 					a.ready = false
 					a.plot_calm = 0
 					knowers.append(a.id)
-				plot_log.append({"w": week, "name": lead.display_name, "text": "tutuklandı (darbe bastırıldı)"})
+				plot_log.append({"w": week, "name": lead.display_name, "text": "tutuklandı (darbe bastırıldı)", "unit": unit_id if action == "army_suppress" else lead_unit})
 				actors.erase(lead.id)
 				king_strength = clampf(king_strength + 5.0, 0.0, 100.0)
 				unrest = clampf(unrest + 8.0, 0.0, 100.0)
@@ -3563,8 +3650,14 @@ func _resolve_crisis(action: String) -> String:
 			coup_crisis["failed"] = true
 			_set_crisis_note("Darbe gecesi sadık birlikleri toplamaya çalıştın; muhafızlar silahlarını indirdi.")
 			return tr("Muhafızlar silahlarını indirdi. %s kapıdan girdiğinde salonda senden başka kimse yoktu.") % nm
-		"concede":
-			if rng.randf() >= crisis_chance("concede"):
+		"concede", "army_negotiate":
+			var bargain_chance := crisis_chance("concede")
+			if action == "army_negotiate":
+				var turning_unit: Dictionary = army_units.get(lead_unit, {})
+				bargain_chance *= 0.75 + float(turning_unit.get("loyalty", 50.0)) * 0.0025
+				bargain_chance *= [1.0, 0.95, 0.70][difficulty]
+			var failed_bargain := army_rng.randf() >= bargain_chance if action == "army_negotiate" else rng.randf() >= bargain_chance
+			if failed_bargain:
 				coup_crisis["failed"] = true
 				_set_crisis_note("Darbe gecesi bir kez daha taviz vermeyi denedin; bu kez kimse sözüne inanmadı.")
 				return tr("%s teklifini dinledi, sonra güldü: 'Bunu geçen sefer de söylemiştiniz, Majesteleri.'") % nm
@@ -3582,7 +3675,7 @@ func _resolve_crisis(action: String) -> String:
 			for a: Actor in actors.values():
 				a.perceived_king -= 5.0
 			king_strength = clampf(king_strength - 15.0, 0.0, 100.0)
-			plot_log.append({"w": week, "name": lead.display_name, "text": "taviz koparıp geri çekildi"})
+			plot_log.append({"w": week, "name": lead.display_name, "text": "taviz koparıp geri çekildi", "unit": lead_unit})
 			return tr("%s istediğini aldı. Tanklar kışlaya döndü; ama artık herkes bu ülkeyi gerçekte kimin yönettiğini biliyor.") % nm
 		_:
 			if rng.randf() < crisis_chance("appeal"):
@@ -3594,7 +3687,7 @@ func _resolve_crisis(action: String) -> String:
 					a.fear += 10.0
 				king_strength = clampf(king_strength + 3.0, 0.0, 100.0)
 				unrest = clampf(unrest - 5.0, 0.0, 100.0)
-				plot_log.append({"w": week, "name": lead.display_name, "text": "halk sarayın önüne dolunca yalnız kaldı"})
+				plot_log.append({"w": week, "name": lead.display_name, "text": "halk sarayın önüne dolunca yalnız kaldı", "unit": lead_unit})
 				return tr("Meydan doldu. Kalabalık adını haykırırken %s yanındakilerin birer birer telefonu kapattığını gördü.") % nm
 			unrest = clampf(unrest + 15.0, 0.0, 100.0)
 			coup_crisis["failed"] = true
@@ -3691,7 +3784,16 @@ func _assassination_conditions() -> bool:
 func other_chance(action: String) -> float:
 	if str(other_crisis.get("kind", "")) == "border":
 		match action:
-			"force": return clampf((float(capacity["ordu"]) + _army_loyalty() + treasury - 120.0) / 200.0, 0.08, 0.78)
+			"force":
+				var border_unit: Dictionary = army_units.get("border", {})
+				var deployment := str(border_unit.get("region", "border"))
+				var local: Dictionary = regions.get(deployment, {})
+				var readiness := (float(border_unit.get("loyalty", 50.0)) - 50.0) * 0.002
+				readiness += (float(border_unit.get("morale", 50.0)) + float(border_unit.get("supply", 50.0)) - 100.0) * 0.001
+				readiness += (float(local.get("loyalty", 50.0)) - 50.0) * 0.001
+				readiness += (float(local.get("garrison", 0.0)) - 25.0) * 0.001
+				readiness += 0.15 if deployment == "border" else -0.10
+				return clampf((float(capacity["ordu"]) + _army_loyalty() + treasury - 120.0) / 200.0 + readiness, 0.08, 0.78)
 			"concede": return clampf(0.85 - float(stats.get("border_concessions", 0)) * 0.35, 0.18, 0.85)
 			_: return clampf((float(foreign.get("asteria", 50.0)) + float(capacity["hukuk"]) - ext_pressure["asteria"]) / 200.0, 0.1, 0.8)
 	if str(other_crisis.get("kind", "")) == "siege":
@@ -4366,6 +4468,10 @@ func _army_achievement_ids() -> Array[String]:
 		earned.append("garnizon_hatti")
 	if int(stats.get("army_allowances", 0)) >= 3:
 		earned.append("ordu_ikmalcisi")
+	if int(stats.get("army_coup_suppressions", 0)) >= 1:
+		earned.append("muhafizlar_sadakati")
+	if int(stats.get("army_coup_switches", 0)) >= 1:
+		earned.append("komuta_zinciri")
 	return earned
 
 
@@ -4543,6 +4649,58 @@ func economy_journal_line() -> String:
 	return tr("Maliye raporu bu hafta masaya ulaşmadı.")
 
 
+func _army_unit_for_leader(leader_id: String) -> String:
+	for unit_id in ["capital", "border", "security"]:
+		if str(army_units.get(unit_id, {}).get("commander", "")) == leader_id or leader_id == "commander_" + unit_id:
+			return unit_id
+	var chosen := "capital"
+	var lowest := INF
+	for unit_id in ["capital", "border", "security"]:
+		var unit: Dictionary = army_units.get(unit_id, {})
+		var region: Dictionary = regions.get(str(unit.get("region", unit_id)), {})
+		var cohesion := float(unit.get("loyalty", 50.0)) + float(unit.get("morale", 50.0)) * 0.35
+		cohesion += float(unit.get("supply", 50.0)) * 0.2 + float(region.get("loyalty", 50.0)) * 0.2
+		if cohesion < lowest:
+			lowest = cohesion
+			chosen = unit_id
+	return chosen
+
+
+func _army_defense_unit(coup_unit: String) -> String:
+	var chosen := "security" if coup_unit != "security" else "capital"
+	var highest := -INF
+	for unit_id in ["capital", "border", "security"]:
+		if unit_id == coup_unit:
+			continue
+		var unit: Dictionary = army_units.get(unit_id, {})
+		var region: Dictionary = regions.get(str(unit.get("region", unit_id)), {})
+		var cohesion := float(unit.get("loyalty", 50.0)) + float(unit.get("morale", 50.0)) * 0.35
+		cohesion += float(unit.get("supply", 50.0)) * 0.2 + float(region.get("loyalty", 50.0)) * 0.2
+		if cohesion > highest:
+			highest = cohesion
+			chosen = unit_id
+	return chosen
+
+
+func _army_alternate_unit(coup_unit: String, defense_unit: String) -> String:
+	for unit_id in ["capital", "border", "security"]:
+		if unit_id != coup_unit and unit_id != defense_unit:
+			return unit_id
+	return defense_unit
+
+
+func _add_army_plot_sign(actor: Actor, stage: int) -> void:
+	var unit_id := _army_unit_for_leader(actor.id)
+	var unit_name := tr(_army_unit_name(unit_id))
+	var unit_name_en := Loc.en(_army_unit_name(unit_id))
+	var pair: Array = [
+		["%s garnizonunda sevkiyat emri konuşuluyor.", "Supply orders around the %s are drawing notice."],
+		["%s komutanı sorulara cevap vermiyor.", "The %s commander has stopped answering questions."],
+		["%s ikmali kesildi; muhafızlar kime bağlı olduğunu tartışıyor.", "The %s supply line is cut; guards argue over whom they serve."]
+	][clampi(stage - 1, 0, 2)]
+	_add_sign(actor, str(pair[0]) % unit_name, mini(stage, 3), true, str(pair[1]) % unit_name_en)
+
+
 func _army_loyalty() -> float:
 	var a: Actor = actors.get("arden")
 	return a.total_loyalty() if a else 50.0
@@ -4579,7 +4737,7 @@ func _queue_army_action_options(action: String, pair_unit := "capital", pair_oth
 				var replacement: String = str(army_units[direction[1]].get("commander", ""))
 				if not actors.has(current) or not actors.has(replacement):
 					continue
-				choices.append({"label": tr("Komutan %s olsun; %s görevini devralsın") % [ek(actors[replacement].display_name, "in"), tr(_army_unit_name(direction[0]))],
+				choices.append({"label": tr("Komutanlık %s'ye geçsin — %s") % [ek(actors[replacement].display_name, "e"), tr(_army_unit_name(direction[0]))],
 					"action": "officer", "unit": direction[0], "other": direction[1], "available": week - int(army_units[direction[0]].get("appointed_week", -20)) >= 8,
 					"preview": tr("Komutanlıklar yer değiştirir; yeni bağlılık belirsiz, eski komutanın tepkisi izlenir."), "fx": {}})
 		"redeploy":
@@ -4690,6 +4848,8 @@ func army_action_line() -> String:
 		"redeploy": return tr("Ordu kararı: %s %s hattına kaydırıldı; merkez ve sınırdaki denge değişti.") % [tr(_army_unit_name(str(army_action_note.get("unit", "capital")))), tr(str(REGION_NAMES.get(str(army_action_note.get("destination", "")), "Sınır İlleri")))]
 		"allowance": return tr("Ordu kararı: Ek maaş ve ikmal ayrıldı; moral etkisi gecikmeli, tekrarlar daha az karşılık verir.")
 		"split": return tr("Ordu kararı: Komuta zinciri bölündü; Arden'in öfkesi ve emir birliği riski sürüyor.")
+		"coup_suppressed": return tr("Darbe kararı: %s birlikleri komployu bastırdı; kışlada sert hesaplaşma sürüyor.") % tr(_army_unit_name(str(army_action_note.get("unit", "capital"))))
+		"coup_switched": return tr("Darbe kararı: %s saraya çağrıldı; komuta zinciri yeniden kuruldu.") % tr(_army_unit_name(str(army_action_note.get("unit", "security"))))
 	return ""
 
 

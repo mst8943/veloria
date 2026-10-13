@@ -39,19 +39,19 @@ func _initialize() -> void:
 	var saved_power := float(sim.actors["arden"].power)
 	var saved_units: Dictionary = sim.army_units.duplicate(true)
 	var saved_rng: int = sim.army_rng.state
-	_check(sim.save_game(), "v22 army save writes")
+	_check(sim.save_game(), "v23 army save writes")
 	var file := FileAccess.open(sim.save_path, FileAccess.READ)
 	var data: Dictionary = str_to_var(file.get_as_text())
-	_check(int(data["version"]) == 22 and data.has("army_units") and data.has("army_rng"), "v22 save contains army data")
+	_check(int(data["version"]) == 23 and data.has("army_units") and data.has("army_rng"), "v23 save contains army data")
 	var old_save: Dictionary = data.duplicate(true)
 	old_save["version"] = 20
 	old_save.erase("army_units")
 	old_save.erase("army_rng")
 	var migrated: Dictionary = sim._migrate_save(old_save, 20)
-	_check(int(migrated["version"]) == 22 and migrated["army_units"].size() == 3, "v21 save migrates to three units")
+	_check(int(migrated["version"]) == 23 and migrated["army_units"].size() == 3, "v21 save migrates to three units")
 	_check(is_equal_approx(float(migrated["army_units"]["capital"]["loyalty"]), saved_power), "migration preserves old Arden power")
 	_check(migrated["army_units"]["capital"]["region"] == "capital", "migration assigns existing garrison positions")
-	_check(sim.load_game(), "v22 army save loads")
+	_check(sim.load_game(), "v23 army save loads")
 	_check(is_equal_approx(float(sim.actors["arden"].power), saved_power), "loaded army data preserves derived power")
 	var traits_restored := true
 	for id in ids:

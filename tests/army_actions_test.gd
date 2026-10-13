@@ -70,10 +70,15 @@ func _initialize() -> void:
 	_check(float(sim.capacity["ordu"]) < army_capacity_before and sim.army_tension > 0.0, "command split costs efficiency and adds coup tension")
 	_check(sim._army_achievement_ids().has("ordu_ikmalcisi") and sim._army_achievement_ids().has("garnizon_hatti"), "army action achievements register completed paths")
 
-	_check(sim.save_game(), "v22 army action state saves")
+	_check(sim.save_game(), "v23 army action state saves")
 	var file := FileAccess.open(sim.save_path, FileAccess.READ)
 	var saved: Dictionary = str_to_var(file.get_as_text())
-	_check(int(saved["version"]) == 22 and saved.has_all(["army_effects", "army_tension", "army_command_split", "army_action_note"]), "v22 save contains army action state")
+	_check(int(saved["version"]) == 23 and saved.has_all(["army_effects", "army_tension", "army_command_split", "army_action_note"]), "v23 save contains army action state")
+	var v22: Dictionary = saved.duplicate(true)
+	v22["version"] = 22
+	v22.erase("army_coup_note")
+	var migrated: Dictionary = sim._migrate_save(v22, 22)
+	_check(int(migrated["version"]) == 23 and migrated.has("coup_crisis"), "v22 saves migrate to v23")
 	var v21: Dictionary = saved.duplicate(true)
 	v21["version"] = 21
 	for key in ["army_effects", "army_tension", "army_command_split", "army_action_note"]:
@@ -81,8 +86,8 @@ func _initialize() -> void:
 	for unit: Dictionary in v21["army_units"].values():
 		unit.erase("region")
 		unit.erase("appointed_week")
-	var migrated: Dictionary = sim._migrate_save(v21, 21)
-	_check(int(migrated["version"]) == 22 and migrated["army_units"]["capital"]["region"] == "capital", "v21 saves migrate safely to v22")
+	migrated = sim._migrate_save(v21, 21)
+	_check(int(migrated["version"]) == 23 and migrated["army_units"]["capital"]["region"] == "capital", "v21 saves migrate safely to v23")
 	_check(sim.load_game() and sim.army_command_split and sim.army_action_note == saved["army_action_note"], "army action state survives a save reload")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(sim.save_path))
 	if failures.is_empty():

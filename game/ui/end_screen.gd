@@ -198,7 +198,11 @@ func _append_plot(plot: Array, signs: Dictionary) -> void:
 		var source: String = l["text"]
 		var t := tr(source)
 		var col := "#c0504a" if source.contains("komploya") or source.contains("hazırlığına") or source.contains("darbe girişimini") else ("#7fae7a" if source.contains("çekildi") or source.contains("tutuklandı") or source.contains("halk") else "#d08a3d")
-		lies_page.append_text(tr("• Hafta %d — [b]%s[/b] [color=%s]%s[/color]\n") % [int(l["w"]), tr(str(l["name"])), col, t])
+		var entry_name := tr(str(l["name"]))
+		var unit_id := str(l.get("unit", ""))
+		if unit_id != "":
+			entry_name += " · " + tr(Sim._army_unit_name(unit_id))
+		lies_page.append_text(tr("• Hafta %d — [b]%s[/b] [color=%s]%s[/color]\n") % [int(l["w"]), entry_name, col, t])
 
 
 ## Hakikat Dosyası'nın ikinci yarısı: danışmanların önerileri gerçekte ne kadar iyiydi?
