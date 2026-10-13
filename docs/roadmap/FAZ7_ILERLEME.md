@@ -429,3 +429,20 @@ Ayrı commit'ler: cila `8b3ee11`, özellikler/ölçüm botu/testi `ea49676`. Cil
 ### Gözlemler
 
 Kompakt komutan kartları portre yüzü ile ad/rolü ayırıyor; uzun karar listeleri artık madde işaretli. Mobil Divan'da komutan kartları aşağı kaydırma gerektiriyor; taşma yok, yoğunluğu ileride azaltmak değerlendirilebilir. Ayrıntı `docs/roadmap/GOZLEMLER.md` içindeki 2026-10-13 R5b kaydında.
+
+
+## R5c — Darbe gerçekçiliği (2026-10-13)
+
+Git geçmişinde R5a `58fece9`, R5b `ea49676` ve R5b cila `8b3ee11` doğrulandı. R5c alametleri darbenin yöneldiği birliğe bağlar; darbe kartı birlik adını, komutan sessizliğini, ikmal gecikmesini ve başkent garnizonunun yerini anlatır. Oyuncu sadık birlikle bastırma, liderle pazarlık veya yedek birlik çağırma kararı verir. Yerel birlik/bölge sadakati ve hazırlık başarı ihtimalini, başkent garnizonunun sınırda olması da darbe/sınır krizi ödünleşmesini etkiler. Yeni kararların RNG'si `army_rng`; SAVE_VERSION 23, v22 göçü, iki başarım ve Günlük/Divan kayıtları eklendi.
+
+R5c mobil cila commit'inde darbe kartı özeti kısaltıldı; 1067×600 ekranda üç birlik seçeneği ilk görünümde kalıyor. Divan portreleri masaüstü ve mobilde gözle denetlendi.
+
+### Kapılar
+
+`advice_weighted` 80 kampanya: Kolay 59/80, Normal 31/80, Zor 16/80. Normal ve Zor hedef aralığında; Kolay alt sınırın 1 galibiyet altında. Kolay kayıp tablosunda 10 yabancı müdahale kaybı var; R5c birlik etkisi darbe dışı kayıp kanalını yeterince değiştirmedi. Bu kapı açık sorun olarak GOZLEMLER.md'ye kaydedildi. Uç bot galibiyetleri: sınır garnizonu 19/3/0, başkent garnizonu 19/3/0, ordu kararı yok 17/4/0, komuta zincirini böl 17/4/0 (Kolay/Normal/Zor); %70 sınırını aşan yok. Tempo 0,81 olay/hafta; en uzun olaysız seri 3 hafta.
+
+EN ve TR `--full --seed=101` ikisi de `104 hafta / TAHTTA / Medya Rejimi / 112 olay` verdi. Sızıntı taraması 5 kampanyada 0, eksik çeviri 0. Çalıştırılabilir `tests/*.gd` testleri (görsel/dump yardımcıları hariç) izole profilde çalıştırıldı; mobil cila sonrasında ilgili darbe, erişilebilirlik, dokunma ve UI testleri tekrarlandı. Çıkış kodları 0; bazı Godot kapanışlarında RID/ObjectDB/resource uyarıları var. Ayrıntılı çıktılar **R5c Ayar** bölümünde.
+
+EN/TR masaüstü ve mobil darbe alameti, üç seçenekli birlik kararı ve Divan ekranları açılıp kontrol edildi. Mobil kartta üç seçenek; komutan ve vali portrelerinde göz/burun/ağız ile isim/rol görünür. Geçici ekran görüntülerinin silinmesi araç politikası tarafından reddedildi; kalan yol: `C:\Users\USER\AppData\Local\Temp\Veloria_R5c_Visual`.
+
+Commit'ler: `1bb2a79` R5c özellikleri ve testler; `2fe7445` mobil darbe kartı cilası.

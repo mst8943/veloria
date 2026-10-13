@@ -143,3 +143,17 @@ EN/TR masaüstü ve 1067×600 yatay mobilde ordu karar kartı, Günlük birlik s
 - **Orta — Ordu emri kartında yalnızca komutan değişimi seçenekleri var (6 permütasyon).** Ödenek, garnizon yer değiştirme, komuta zinciri bölme seçenekleri bu kartta yok ve eşit görünen altı komutan-değişimi seçeneği karar yükünü artırıyor. Kart ya tek tür eylemi tek seçenekle sunmalı ya da seçenekleri gruplayıp en fazla 3-4 göstermeli.
 - **Düşük — "Ordu emri" başlığı kartın üst çerçevesine değiyor** (aynı görselsiz karar kartı boşluk sorunu geri gelmiş).
 - **Denge notu.** R5b sonrası ölçüt 58/27/15 (Claude doğruladı): Zor tabana yaklaştı (+2) ama Kolay −4, Normal −3 hedefin altında; Kolay'da yabancı müdahale kaybı 10. R5c'de Kolay ≈ 60–62, Normal ≈ 29–30'a geri çek.
+
+
+## 2026-10-13 — R5c
+
+### Düzeltilen
+
+- **Düşük — Mobil darbe kartında üçüncü karar ilk ekranda görünmüyordu.** Uzun olay anlatısı sabit alt çubuğa doğru üç seçenekli listeyi itiyordu. Mobilde birlik, sessiz komutan, geciken ikmal, garnizon konumu ve muhafız tereddüdünü koruyan kısa özet kullanıldı; masaüstü metni aynı kaldı. EN/TR yatay mobil görüntülerde üç seçenek de görünür.
+- **Düşük — Divan görüntü kontrolünde dikey konum portreleri kesiyordu.** Mobil Divan ekranı valiler ve komutanlar aynı anda görülecek kaydırma konumunda tekrar açıldı. Solen/Vey/Aven/Dask ile Rell/Kest/Nadir kartlarında göz, burun ve ağız görünüyor; ad/rol yüzün altında kalıyor. Kart kodunda yeni kırpma değişikliği gerekmedi.
+
+### Açık
+
+- **Orta — R5c Kolay denge kapısı.** `advice_weighted` 59/80; istenen alt sınır 60. Kayıp tablosu yabancı müdahaleyi 10 kayıpla en büyük kanal olarak gösteriyor. Ayrı `army_rng` kullanan ordu yanıtları bu darbe dışı kayıpları düzeltmedi. Dengeyi senaryo başlangıçlarını veya ölçüt botunu değiştirerek kapatmak yerine dış kriz/ordu bağlantısı ayrıca incelenmeli.
+- **Düşük — Headless kapanış kaynak uyarıları.** Bazı UI/Sim testleri başarı özetinden sonra ObjectDB/RID/resource uyarıları bırakıyor; çıkış kodları 0. Hangi kaynakların motor kapanışından önce serbest bırakılabileceği ayrı temizlik işi gerektiriyor.
+- **Düşük — TEMP ekran görüntülerinin temizliği.** Silme çağrısı araç politikası tarafından reddedildi. Kalan klasör: `C:\Users\USER\AppData\Local\Temp\Veloria_R5c_Visual`.

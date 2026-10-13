@@ -321,3 +321,38 @@ Her test `tools/run_test_isolated.ps1` ile ayrı geçici kullanıcı profili alt
 | `unit_tests` | `[unit] all 399 checks passed` |
 
 Birçok Godot süreci başarılı test özetinden sonra kapanışta RID/ObjectDB/resource temizleme uyarıları verdi; tüm test çıkış kodları yine de 0 oldu.
+
+
+## R5c Ayar
+
+R5c darbe akışı artık komplonun yöneldiği birliği, o birliğin bölgesini ve sarayın nöbet durumunu kullanıyor. Birlik alametleri `army_rng` ile üretiliyor; bastırma, pazarlık ve yedek birlik çağırma da aynı ayrı üreteci kullanıyor. Başkent garnizonunun sınırda olması yerel bastırma şansını azaltıyor; sınır kolordusunun sınırda, hazır ve sadık olması Drakon krizinde güç gösterisinin güvenilirliğini artırıyor. Yeni gizli durum için SAVE_VERSION 23 oldu; v22 darbe kayıtlarına güvenli `capital` birliği ekleniyor. İki yeni başarım birlikle bastırma ve komuta zincirini değiştirme kararlarını kaydediyor.
+
+### Denge
+
+`advice_weighted`, 80 kampanya. R5b tabanı ile son R5c ölçümü:
+
+| Zorluk | R5b tabanı | R5c sonucu | Fark | R5c kapısı |
+|---|---:|---:|---:|---:|
+| Kolay | 58/80 | 59/80 | +1 | 60–64 — **1 galibiyet eksik** |
+| Normal | 27/80 | 31/80 | +4 | 28–31 — geçti |
+| Zor | 15/80 | 16/80 | +1 | 13–16 — geçti |
+
+Kolay ölçümündeki kayıplar: mali çöküş 5, yabancı müdahale 10, saray darbesi 2, ayaklanma 3, askerî darbe 1. R5c birlik savunması ve sınır kolordusu etkisi eklendi; Easy askerî bastırma katsayısını artırmak Kolay galibiyetini değiştirmedi. Eksik galibiyet darbe dışı yabancı müdahale kayıplarından geliyor; R5c mekanikleri bu krizin tamamını karşılamıyor. Ölçüm hedefini karşılamadığı için bu kapı **başarısız** kaydedildi; sonucu gizlemek için başlangıç verisi ya da ölçüt botu değiştirilmedi.
+
+| Uç bot (80 kampanya) | Kolay | Normal | Zor |
+|---|---:|---:|---:|
+| Garnizonu hep sınıra çek (`army_garrison_border`) | 19/80 | 3/80 | 0/80 |
+| Garnizonu hep başkente topla (`army_garrison_capital`) | 19/80 | 3/80 | 0/80 |
+| Hiç ordu kararı verme (`army_none`) | 17/80 | 4/80 | 0/80 |
+| Komuta zincirini hep böl (`army_split`) | 17/80 | 4/80 | 0/80 |
+
+Dört uç bot da ölçütün %70 sınırının altında kaldı. `pacing_test`: ilk 8 hafta 0,81 olay/hafta; en uzun olaysız seri 3 hafta.
+
+EN ve TR `--full --seed=101` çıktıları:
+
+```text
+FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true
+FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true
+```
+
+EN sızıntı testi: `EN LEAK SCAN: 5 campaigns, 0 unique leaks`; `python tools/i18n_missing.py`: `0 tr() kaynağı en.po'da yok`. Eski kayıt ve ana RNG testleri geçti. Bütün testler `tools/run_test_isolated.ps1` ile ayrı geçici profilde çalıştırıldı. Özetler: `A11Y: OK` (masaüstü ve mobil), `ARMY ACTIONS: OK`, `ARMY COUP: OK`, `ARMY TEST: OK`, `AUDIO: OK`, `BUDGET UI: OK`, `CONTENT: OK (5 dosya, 8 bozuk örnek)`, `CUTSCENE: OK`, `DAILY CARD: OK`, `DYNASTY: OK`, `ECONOMY: OK`, `ELECTION: OK`, `ENDLESS: OK`, `EN LEAK SCAN: 5 campaigns, 0 unique leaks`, `EVENTS: OK (201 olay, 0 uyarı)`, `EXTERNAL CRISIS: OK`, `I18N: OK`, `LANG: OK`, `LEGACY: OK`, `PARLIAMENT LAWS: OK`, `PARLIAMENT: OK`, `PUBLIC OPINION: OK`, `REGION MAP: OK` (masaüstü ve mobil), `REGIONS: OK`, `SAVE: OK`, `SCENARIO: OK`, `TEST: OK`, `TOUCH: OK`, `TOUCH TAP: OK`, `TOUR: OK`, `UI INPUT: OK` (masaüstü), `UI INPUT: OK (mobile)`, `UI LOGIC: OK`, `[unit] all 399 checks passed`. Mobil özet değişikliğinden sonra `army_coup_test`, a11y (masaüstü/mobil), dokunma (kaydırma/bırakma), `ui_input_test` (masaüstü/mobil) ve `ui_logic_test` yeniden geçti. Bazı Godot headless kapanışları RID/ObjectDB/resource uyarısı verdi; çalıştırılan test süreçlerinin çıkış kodu 0'dı.
