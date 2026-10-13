@@ -105,6 +105,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		cap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		cap.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		cap_row.add_child(cap)
+		cap_row.add_child(host._header_symbol("flourish", Vector2(22, 18), UIKit.GOLD))
 	host._multi_btn = Button.new()
 	host._multi_btn.text = tr("Çoklu seçim")
 	host._multi_btn.toggle_mode = true
@@ -192,7 +193,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 	irow.add_theme_constant_override("separation", 10)
 	detail.add_child(irow)
 	host._portrait_box = Control.new()
-	host._portrait_box.custom_minimum_size = Vector2(96, 88) if not host._mobile else Vector2(88, 84)
+	host._portrait_box.custom_minimum_size = Vector2(124, 88) if not host._mobile else Vector2(88, 84)
 	irow.add_child(host._portrait_box)
 	var clear := Button.new()
 	clear_button = clear
@@ -227,14 +228,35 @@ func _build_ui(cols: HBoxContainer) -> void:
 	host._traits.add_theme_constant_override("v_separation", 5)
 	icol.add_child(host._traits)
 	irow.add_child(clear)
+	var ornament_row := HBoxContainer.new()
+	ornament_row.name = "PersonDivider"
+	ornament_row.add_theme_constant_override("separation", 8)
+	ornament_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	ornament_row.custom_minimum_size.y = 12
+	person_block.add_child(ornament_row)
+	var left_rule := ColorRect.new()
+	left_rule.color = Color(UIKit.GOLD, 0.72)
+	left_rule.custom_minimum_size = Vector2(48, 2)
+	left_rule.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	left_rule.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	left_rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ornament_row.add_child(left_rule)
+	ornament_row.add_child(host._header_symbol("lily", Vector2(18, 18), UIKit.GOLD))
+	var right_rule := ColorRect.new()
+	right_rule.color = left_rule.color
+	right_rule.custom_minimum_size = Vector2(48, 2)
+	right_rule.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right_rule.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	right_rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ornament_row.add_child(right_rule)
 
 	# Eylem paneli: tek çerçeve, başlıkta seçili kişi, eylemler amaca göre gruplu.
 	var act_panel := PanelContainer.new()
-	act_panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.8), Color(UIKit.GOLD_DIM, 0.28), 8, 10))
+	act_panel.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PANEL, 0.8), Color(UIKit.GOLD_DIM, 0.28), 8, 8))
 	person_block.add_child(act_panel)
 	UIKit.ornament(act_panel)
 	var av := VBoxContainer.new()
-	av.add_theme_constant_override("separation", 5)
+	av.add_theme_constant_override("separation", 3)
 	act_panel.add_child(av)
 	host._act_title = Label.new()
 	host._act_title.add_theme_font_override("font", UIKit.serif())
@@ -302,7 +324,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		cb.button_group = cat_group
 		cb.theme_type_variation = "GhostButton"
 		cb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		cb.custom_minimum_size.y = 44 if host._mobile else 32
+		cb.custom_minimum_size.y = 44 if host._mobile else 28
 		cb.clip_text = false
 		cb.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		cb.add_theme_font_override("font", UIKit.serif())
@@ -373,11 +395,11 @@ func _build_ui(cols: HBoxContainer) -> void:
 		host._report_box.add_theme_constant_override("separation", 4)
 		rscroll.add_child(host._report_box)
 		var fade_gradient := Gradient.new()
-		fade_gradient.colors = PackedColorArray([Color(UIKit.PANEL, 0.0), Color(UIKit.PANEL, 0.9)])
+		fade_gradient.colors = PackedColorArray([Color(UIKit.PANEL, 0.0), Color(UIKit.PANEL, 0.98)])
 		var fade_texture := GradientTexture2D.new()
 		fade_texture.gradient = fade_gradient
 		fade_texture.width = 1
-		fade_texture.height = 36
+		fade_texture.height = 48
 		fade_texture.fill_from = Vector2(0, 0)
 		fade_texture.fill_to = Vector2(0, 1)
 		var fade := TextureRect.new()
@@ -385,12 +407,14 @@ func _build_ui(cols: HBoxContainer) -> void:
 		fade.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		fade.stretch_mode = TextureRect.STRETCH_SCALE
 		fade.anchor_left = 0.0
-		fade.anchor_top = 0.94
-		fade.anchor_right = 0.97
+		fade.anchor_top = 0.90
+		fade.anchor_right = 0.98
 		fade.anchor_bottom = 1.0
 		fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		report_view.add_child(fade)
 		var report_scrollbar := rscroll.get_v_scroll_bar()
+		report_scrollbar.custom_minimum_size.x = 8
+		report_scrollbar.modulate = Color(UIKit.GOLD, 0.82)
 		var update_report_fade := func() -> void:
 			fade.visible = report_scrollbar.max_value > report_scrollbar.page + 1.0 and report_scrollbar.value + report_scrollbar.page < report_scrollbar.max_value - 1.0
 		report_scrollbar.changed.connect(update_report_fade)
@@ -459,8 +483,9 @@ func _show_act_cat(cat: String) -> void:
 		var tone: Color = UIKit.DANGER.lightened(0.15) if k == "BASKI" else (UIKit.GOLD if active else UIKit.TEXT_DIM)
 		button.add_theme_color_override("font_color", tone)
 		button.add_theme_color_override("font_hover_color", UIKit.GOLD.lightened(0.2))
-		button.add_theme_stylebox_override("normal", UIKit.box(Color(UIKit.GOLD, 0.09) if active else Color(0, 0, 0, 0), Color(UIKit.GOLD, 0.7) if active else Color(UIKit.GOLD_DIM, 0.2), 5, 4))
-		button.add_theme_stylebox_override("hover", UIKit.box(Color(UIKit.GOLD, 0.14), Color(UIKit.GOLD, 0.55), 5, 4))
+		button.add_theme_stylebox_override("normal", UIKit.box(Color(UIKit.GOLD, 0.09), Color(UIKit.GOLD, 0.7), 5, 4) if active else StyleBoxEmpty.new())
+		button.add_theme_stylebox_override("hover", UIKit.box(Color(UIKit.GOLD, 0.14), Color(UIKit.GOLD, 0.55), 5, 4) if active else StyleBoxEmpty.new())
+		button.add_theme_stylebox_override("pressed", UIKit.box(Color(UIKit.GOLD, 0.16), Color(UIKit.GOLD, 0.75), 5, 4) if active else StyleBoxEmpty.new())
 
 
 func _public_action(action: String) -> void:
@@ -472,8 +497,7 @@ func _add_btn(parent: Node, key: String, text: String, cb: Callable) -> void:
 	var b := Button.new()
 	b.text = tr(text)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	if host._mobile:
-		b.custom_minimum_size.y = 44
+	b.custom_minimum_size.y = 44 if host._mobile else 32
 	b.pressed.connect(cb)
 	if TIPS.has(key):
 		var tip: String = tr(TIPS[key])
@@ -679,7 +703,7 @@ func _make_card(a) -> PanelContainer:
 	var card := PanelContainer.new()
 	var compact_governor: bool = str(a.id).begins_with("governor_")
 	var compact_state_card: bool = compact_governor or str(a.id).begins_with("commander_")
-	card.custom_minimum_size = Vector2(82, 98) if compact_state_card else (Vector2(118, 106) if not host._mobile else Vector2(150, 132))
+	card.custom_minimum_size = Vector2(82, 98) if compact_state_card else (Vector2(118, 96) if not host._mobile else Vector2(150, 132))
 	card.clip_contents = true
 	card.mouse_filter = Control.MOUSE_FILTER_STOP
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -689,7 +713,7 @@ func _make_card(a) -> PanelContainer:
 		compact_body = VBoxContainer.new()
 		compact_body.add_theme_constant_override("separation", 0)
 		card.add_child(compact_body)
-	var card_art: Control = host._initial_art(a.id, Vector2(72, 66) if compact_state_card else (Vector2(100, 96) if not host._mobile else Vector2(130, 120)), 28 if compact_state_card else 36)
+	var card_art: Control = host._initial_art(a.id, Vector2(72, 66) if compact_state_card else (Vector2(100, 86) if not host._mobile else Vector2(130, 120)), 28 if compact_state_card else 36)
 	if compact_state_card:
 		compact_body.add_child(card_art)
 	else:
@@ -895,9 +919,12 @@ func _update_info() -> void:
 	if id == "":
 		return
 	var a = Sim.actors[id]
-	var art: Control = host._initial_art(a.id, Vector2(84, 78) if not host._mobile else Vector2(76, 72), 38)
+	var art_size := Vector2(120, 110) if not host._mobile else Vector2(88, 84)
+	var art: Control = host._initial_art(a.id, art_size, 38)
+	art.size = art_size
+	art.position = Vector2(0, -11) if not host._mobile else Vector2.ZERO
 	host._portrait_box.add_child(art)
-	UIKit.ornament(host._portrait_box, Color(UIKit.GOLD, 0.82), 18, 2)
+	UIKit.ornament(art, Color(UIKit.GOLD, 0.82), 18, 2)
 	var portrait_star := _trait_mark(UIKit.GOLD, true, true)
 	portrait_star.position = Vector2(3, 3)
 	portrait_star.custom_minimum_size = Vector2(15, 15)
@@ -957,7 +984,7 @@ func _signs_tip(a) -> String:
 ## Kişi göstergesi: renkli nokta ya da kademe noktaları + kısa metin.
 func _trait(text: String, col: Color, filled := -1, total := 0, tip := "") -> Control:
 	var chip := PanelContainer.new()
-	var sb := UIKit.box(Color(col, 0.1), Color(col, 0.38), 10, 8)
+	var sb := UIKit.box(Color(col, 0.1), Color(col, 0.38), 10, 4)
 	sb.content_margin_top = 2
 	sb.content_margin_bottom = 2
 	chip.add_theme_stylebox_override("panel", sb)
@@ -973,7 +1000,7 @@ func _trait(text: String, col: Color, filled := -1, total := 0, tip := "") -> Co
 	var l := Label.new()
 	l.text = text
 	l.add_theme_font_override("font", UIKit.serif())
-	l.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 14))
+	l.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 13))
 	l.add_theme_color_override("font_color", col.lightened(0.25) if col.s > 0.1 else col)
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(l)

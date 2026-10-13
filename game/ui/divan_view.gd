@@ -57,7 +57,9 @@ func build(right: VBoxContainer) -> void:
 		strip.add_child(tile)
 	guide_hint = Label.new()
 	guide_hint.text = tr("Diğer kişiler Divan'da")
-	guide_hint.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+	guide_hint.add_theme_color_override("font_color", UIKit.TEXT)
+	guide_hint.add_theme_font_override("font", UIKit.serif())
+	guide_hint.add_theme_font_size_override("font_size", host._fs(16))
 	if not host._mobile:
 		right.add_child(guide_hint)
 	parked = Control.new()
