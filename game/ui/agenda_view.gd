@@ -372,7 +372,7 @@ func _rebuild_agenda() -> void:
 			late.add_theme_font_size_override("font_size", host._fs(11 if host._mobile else 13))
 			vb.add_child(late)
 		var d := Label.new()
-		d.text = str(e["text"])
+		d.text = str(e.get("mobile_text", e["text"])) if host._mobile and str(e.get("mobile_text", "")) != "" else str(e["text"])
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		if host._mobile:
 			d.add_theme_font_size_override("font_size", host._fs(13))
@@ -380,7 +380,7 @@ func _rebuild_agenda() -> void:
 		var council: Dictionary = {}
 		if e.get("kind", "") != "parliament_bill":
 			council = _add_council(vb, pi)
-		if crisis:
+		if crisis and not (host._mobile and str(e.get("mobile_text", "")) != ""):
 			var hush := Label.new()
 			hush.text = tr("Meclis susuyor. Bu kararı yalnız vereceksin.")
 			hush.add_theme_font_override("font", UIKit.serif_italic())

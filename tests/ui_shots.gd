@@ -47,6 +47,50 @@ func _shot(file_name: String) -> void:
 func _run() -> void:
 	# Kişi paneli dolu görünsün: en güçlü kişiyi seç.
 	var sim0: Node = root.get_node("Sim")
+	if "--r5c-coup-signs" in OS.get_cmdline_user_args():
+		sim0.pending.clear()
+		for actor in sim0.actors.values(): actor.signs.clear()
+		sim0.weekly_news.clear()
+		sim0.weekly_news_localized.clear()
+		for stage in [1, 2, 3]:
+			sim0._add_army_plot_sign(sim0.actors["arden"], stage)
+		main._tabs.current_tab = 1
+		main._person_panel._set_mobile_group("state")
+		var tap := InputEventMouseButton.new()
+		tap.button_index = MOUSE_BUTTON_LEFT
+		tap.pressed = true
+		main._person_panel._on_card_input(tap, "arden")
+		await process_frame
+		for chip in main._traits.get_children():
+			if chip.tooltip_text.begins_with(tr("Son alametler")) or chip.tooltip_text.begins_with(tr("Recent signs")):
+				Input.warp_mouse(chip.get_global_rect().get_center())
+				break
+		for i in 45: await process_frame
+		await _shot("r5c_coup_signs")
+		quit(0)
+		return
+	if "--r5c-coup-card" in OS.get_cmdline_user_args():
+		sim0.pending.clear()
+		for actor in sim0.actors.values(): actor.ready = false
+		sim0.actors["arden"].ready = true
+		sim0.week = 20
+		sim0._open_crisis()
+		main._tabs.current_tab = 0
+		main._refresh()
+		await _shot("r5c_coup_card")
+		quit(0)
+		return
+	if "--r5c-divan" in OS.get_cmdline_user_args():
+		sim0.pending.clear()
+		main._tabs.current_tab = 0
+		main._divan.open()
+		if "--scroll-divan" in OS.get_cmdline_user_args():
+			for i in 35: await process_frame
+			var bar: VScrollBar = main._divan.drawer_scroll.get_v_scroll_bar()
+			main._divan.drawer_scroll.scroll_vertical = maxi(0, int(bar.max_value - bar.page) - 280)
+		await _shot("r5c_divan")
+		quit(0)
+		return
 	if "--border-crisis" in OS.get_cmdline_user_args() or "--siege-crisis" in OS.get_cmdline_user_args() or "--assassination-crisis" in OS.get_cmdline_user_args():
 		var crisis_kind := "border" if "--border-crisis" in OS.get_cmdline_user_args() else ("siege" if "--siege-crisis" in OS.get_cmdline_user_args() else "assassination")
 		var prefix := "border" if crisis_kind == "border" else ("siege" if crisis_kind == "siege" else "assassination")
