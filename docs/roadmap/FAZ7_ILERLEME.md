@@ -6,6 +6,12 @@
 
 Bu adımın ölçüm tablosu ve katsayı gerekçesi `docs/design/gerceklik_faz7.md` içindeki **Kalibrasyon (Faz 7 kapanış)** bölümünde. Test/kapıların tam dökümü kapanış denetiminde eklenecek.
 
+## Faz 7 kapanış — Türkçe ek ve EN metin taraması (2026-10-13)
+
+`tests/tr_suffix_test.gd` artık metin kataloğunu ve oyun kaynaklarındaki çeviri kalıplarını tarıyor; ayrıca her dilde 5 normal kampanya ve Darbeye açık krallık, Naiplik, Boş kasa senaryolarının beşer koşusunu (toplam 40 kampanya) gerçek üretilen rapor, karar, Günlük ve olay metinlerinde inceliyor. Türkçe tarama yanlış birim iyelik eklerini, kesme işaretinden sonra uyumsuz ünlüyü ve `…'in ile` türü çift yapıları; İngilizce tarama yinelenen tamlamaları ve doğal cümle içindeki çift boşluğu arıyor. Bilinen örneklerle tarama desenlerinin kendisi de denetleniyor.
+
+Sonuç: `TR SUFFIX: OK (7006 Turkish, 5602 English strings; 40 campaigns)`. Kaynak ağacında bu kontrolde yeni hata çıkmadı; `Arden'in ile` ordu pazarlık etiketi önceki `fd5a883` commit'inde düzeltilmişti.
+
 ## DALGA R1 — Ekonomi ve bütçe
 
 R1'in a–e parçaları tamamlandı. Başlangıç economy metrikleri, eski kayıt göçü ve Maliye raporu; çeyreklik dört bütçe yaklaşımı ve gecikmeli sektör etkileri; azalan getirili Devlet politikaları; borçtan dış baskıya geçiş; Günlük/Divan satırları ve üç ekonomi başarımı eklendi. Özel bütçe dağılımı dört düzenlenebilir pay ve toplam 100 doğrulaması sunuyor. Bütçe kararları ve yeni metinler TR/EN; kriz haber başlığı için ayrıca EN sızıntı regresyon testi var.
