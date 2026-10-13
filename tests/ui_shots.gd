@@ -131,6 +131,15 @@ func _run() -> void:
 				if main._mobile: main._tabs.current_tab = 1
 				main._divan.open()
 			"map": main._city.open()
+			"map_regions":
+				main._city.open()
+				main._city._set_region_layer(true)
+			"map_site":
+				main._city.open()
+				main._city.show_site("medya")
+			"map_region":
+				main._city.open()
+				main._city.show_region("industry")
 			"media": main._open_media()
 			"menu": main._show_menu()
 			"title": main.add_child(load("res://game/ui/title_screen.gd").new(main))

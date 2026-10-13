@@ -1,25 +1,25 @@
 {
-  "saray": [0.50, 0.14],
-  "adliye": [0.15, 0.30],
-  "maliye": [0.32, 0.58],
-  "parlamento": [0.84, 0.31],
-  "medya": [0.50, 0.66],
-  "genelkurmay": [0.17, 0.72],
-  "istihbarat": [0.83, 0.74],
-  "holding": [0.545, 0.90],
-  "asteria": [0.68, 0.17],
-  "drakon": [0.32, 0.82],
-  "seravia": [0.74, 0.85],
+  "saray": [0.50, 0.15],
+  "adliye": [0.15, 0.15],
+  "parlamento": [0.85, 0.15],
+  "maliye": [0.19, 0.39],
+  "medya": [0.50, 0.41],
+  "asteria": [0.85, 0.39],
+  "genelkurmay": [0.18, 0.59],
+  "holding": [0.51, 0.64],
+  "istihbarat": [0.85, 0.59],
+  "drakon": [0.30, 0.79],
+  "seravia": [0.75, 0.79],
   "regions": {
-    "capital": [0.06, 0.52],
-    "industry": [0.94, 0.52],
-    "farmland": [0.06, 0.88],
-    "border": [0.94, 0.88]
+    "capital": [0.05, 0.38],
+    "industry": [0.95, 0.48],
+    "farmland": [0.08, 0.88],
+    "border": [0.92, 0.88]
   },
   "mobile_regions": {
-    "capital": [0.04, 0.31],
-    "industry": [0.96, 0.31],
-    "farmland": [0.038, 0.70],
-    "border": [0.96, 0.70]
+    "capital": [0.04, 0.35],
+    "industry": [0.96, 0.35],
+    "farmland": [0.04, 0.75],
+    "border": [0.96, 0.75]
   }
 }

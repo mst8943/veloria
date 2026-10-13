@@ -121,7 +121,7 @@ func build(right: VBoxContainer) -> void:
 	heading.add_child(close_button)
 	focus_button = close_button
 
-	var rep_sec: Control = host._section(tr("RAPORLAR"))
+	var rep_sec: Control = host._section(tr("Raporlar"))
 	body.add_child(rep_sec)
 	finance_label = Label.new()
 	finance_label.text = Sim.economy_journal_line()

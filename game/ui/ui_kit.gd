@@ -578,3 +578,187 @@ static func dust(area: Vector2, amount := 36, alpha := 0.35) -> CPUParticles2D:
 	fade.set_color(fade.get_point_count() - 1, Color(1, 1, 1, 0))
 	p.color_ramp = fade
 	return p
+
+
+## Kodla çizilen ince altın çizgi simgeleri (glif/harf yok, her ekranda keskin).
+## name: tac, terazi, sutun, para, anten, pusula, kilic, goz, grafik, ejder, defne, kalkan, zarf, klasor, yildiz
+static func draw_icon(c: CanvasItem, icon_name: String, center: Vector2, size: float, col: Color = GOLD) -> void:
+	var r := size * 0.5
+	var w := 1.4
+	match icon_name:
+		"tac":
+			# Taç: taban çizgisi, üç tepe (orta yüksek), tepe uçlarında küçük inciler
+			var pts := PackedVector2Array([
+				center + Vector2(-r * 0.75, r * 0.45),
+				center + Vector2(r * 0.75, r * 0.45),
+				center + Vector2(r * 0.65, -r * 0.25),
+				center + Vector2(r * 0.28, r * 0.1),
+				center + Vector2(0, -r * 0.55),
+				center + Vector2(-r * 0.28, r * 0.1),
+				center + Vector2(-r * 0.65, -r * 0.25),
+				center + Vector2(-r * 0.75, r * 0.45),
+			])
+			c.draw_polyline(pts, col, w, true)
+			c.draw_line(center + Vector2(-r * 0.7, r * 0.3), center + Vector2(r * 0.7, r * 0.3), col, 1.0, true)
+			c.draw_circle(center + Vector2(-r * 0.65, -r * 0.28), 1.6, col)
+			c.draw_circle(center + Vector2(0, -r * 0.58), 1.8, col)
+			c.draw_circle(center + Vector2(r * 0.65, -r * 0.28), 1.6, col)
+		"terazi":
+			# Adliye terazisi: dikey direk, üst yatay kol, sol ve sağ sarkan kefeler
+			c.draw_line(center + Vector2(0, -r * 0.7), center + Vector2(0, r * 0.65), col, w + 0.3, true)
+			c.draw_line(center + Vector2(-r * 0.4, r * 0.65), center + Vector2(r * 0.4, r * 0.65), col, w, true)
+			c.draw_line(center + Vector2(-r * 0.72, -r * 0.45), center + Vector2(r * 0.72, -r * 0.45), col, w, true)
+			# Sol kefe
+			c.draw_line(center + Vector2(-r * 0.72, -r * 0.45), center + Vector2(-r * 0.9, -r * 0.05), col, 1.0, true)
+			c.draw_line(center + Vector2(-r * 0.72, -r * 0.45), center + Vector2(-r * 0.54, -r * 0.05), col, 1.0, true)
+			var pan_l := PackedVector2Array([
+				center + Vector2(-r * 0.92, -r * 0.05),
+				center + Vector2(-r * 0.72, r * 0.12),
+				center + Vector2(-r * 0.52, -r * 0.05),
+			])
+			c.draw_polyline(pan_l, col, w, true)
+			# Sağ kefe
+			c.draw_line(center + Vector2(r * 0.72, -r * 0.45), center + Vector2(r * 0.54, -r * 0.05), col, 1.0, true)
+			c.draw_line(center + Vector2(r * 0.72, -r * 0.45), center + Vector2(r * 0.9, -r * 0.05), col, 1.0, true)
+			var pan_r := PackedVector2Array([
+				center + Vector2(r * 0.52, -r * 0.05),
+				center + Vector2(r * 0.72, r * 0.12),
+				center + Vector2(r * 0.92, -r * 0.05),
+			])
+			c.draw_polyline(pan_r, col, w, true)
+		"sutun":
+			# Parlamento sütunları: üçgen çatı, arşitrav, 4 sütun, taban
+			var roof := PackedVector2Array([
+				center + Vector2(0, -r * 0.75),
+				center + Vector2(r * 0.78, -r * 0.35),
+				center + Vector2(-r * 0.78, -r * 0.35),
+				center + Vector2(0, -r * 0.75),
+			])
+			c.draw_polyline(roof, col, w, true)
+			c.draw_line(center + Vector2(-r * 0.75, -r * 0.28), center + Vector2(r * 0.75, -r * 0.28), col, w, true)
+			for i in 4:
+				var x := -r * 0.55 + i * (r * 1.1 / 3.0)
+				c.draw_line(center + Vector2(x, -r * 0.25), center + Vector2(x, r * 0.5), col, w, true)
+			c.draw_line(center + Vector2(-r * 0.8, r * 0.55), center + Vector2(r * 0.8, r * 0.55), col, w + 0.4, true)
+		"para":
+			# Maliye / madeni para yığını: üst üste elipsler
+			for i in 3:
+				var y := center.y + r * 0.35 - i * (r * 0.38)
+				var rect := Rect2(center.x - r * 0.65, y - r * 0.14, r * 1.3, r * 0.28)
+				c.draw_rect(rect, Color(col.r, col.g, col.b, 0.22), true)
+				c.draw_rect(rect, col, false, 1.2)
+		"anten":
+			# Medya kulesi ve yayın dalgaları
+			var tower := PackedVector2Array([
+				center + Vector2(-r * 0.4, r * 0.65),
+				center + Vector2(0, -r * 0.4),
+				center + Vector2(r * 0.4, r * 0.65),
+			])
+			c.draw_polyline(tower, col, w, true)
+			c.draw_line(center + Vector2(-r * 0.25, r * 0.2), center + Vector2(r * 0.25, r * 0.2), col, 1.1, true)
+			c.draw_line(center + Vector2(0, -r * 0.4), center + Vector2(0, -r * 0.6), col, w, true)
+			c.draw_circle(center + Vector2(0, -r * 0.6), 1.8, col)
+			# Dalga yayları
+			c.draw_arc(center + Vector2(0, -r * 0.5), r * 0.45, -PI * 0.65, -PI * 0.35, 8, col, 1.2, true)
+			c.draw_arc(center + Vector2(0, -r * 0.5), r * 0.45, -PI * 0.15, PI * 0.15, 8, col, 1.2, true)
+			c.draw_arc(center + Vector2(0, -r * 0.5), r * 0.72, -PI * 0.65, -PI * 0.35, 10, col, 1.1, true)
+			c.draw_arc(center + Vector2(0, -r * 0.5), r * 0.72, -PI * 0.15, PI * 0.15, 10, col, 1.1, true)
+		"pusula":
+			# Asteria pusula yıldızı: 8 köşeli yıldız (4 uzun, 4 kısa sivri uç)
+			var outer := r * 0.78
+			var mid := r * 0.46
+			var inner := r * 0.16
+			for i in 4:
+				var ang := i * PI * 0.5
+				var d := Vector2(cos(ang), sin(ang))
+				var p := Vector2(-sin(ang), cos(ang))
+				var tip := center + d * outer
+				var w1 := center + p * inner
+				var w2 := center - p * inner
+				c.draw_polyline(PackedVector2Array([tip, w1, center, w2, tip]), col, 1.1, true)
+			for i in 4:
+				var ang := (i + 0.5) * PI * 0.5
+				var d := Vector2(cos(ang), sin(ang))
+				c.draw_line(center, center + d * mid, col, 1.0, true)
+			c.draw_circle(center, 2.0, col)
+		"kilic":
+			# Genelkurmay çapraz kılıçları: iki çapraz çizgi, kabzalar
+			var d1 := Vector2(r * 0.65, -r * 0.65)
+			var d2 := Vector2(-r * 0.65, -r * 0.65)
+			c.draw_line(center - d1, center + d1, col, w, true)
+			c.draw_line(center - d2, center + d2, col, w, true)
+			# Kabza korumaları
+			var h1 := center - d1 * 0.7
+			var p1 := Vector2(-d1.y, d1.x).normalized() * (r * 0.22)
+			c.draw_line(h1 - p1, h1 + p1, col, 1.3, true)
+			var h2 := center - d2 * 0.7
+			var p2 := Vector2(-d2.y, d2.x).normalized() * (r * 0.22)
+			c.draw_line(h2 - p2, h2 + p2, col, 1.3, true)
+		"goz":
+			# İstihbarat gözü: üst ve alt yaylar, ortada gözbebeği
+			var eye_l := center + Vector2(-r * 0.75, 0)
+			var eye_r := center + Vector2(r * 0.75, 0)
+			var eye_t := center + Vector2(0, -r * 0.48)
+			var eye_b := center + Vector2(0, r * 0.48)
+			c.draw_polyline(PackedVector2Array([eye_l, eye_t, eye_r, eye_b, eye_l]), col, w, true)
+			c.draw_circle(center, r * 0.26, col)
+			c.draw_circle(center, r * 0.1, Color(BG, 0.95))
+		"grafik":
+			# Sarne Holding yükselen çubuk grafiği: 3 yükselen çubuk
+			c.draw_line(center + Vector2(-r * 0.75, r * 0.6), center + Vector2(r * 0.75, r * 0.6), col, w + 0.3, true)
+			var h_bars := [0.4, 0.7, 1.05]
+			for i in 3:
+				var x := center.x - r * 0.55 + i * (r * 0.45)
+				var bar_h: float = r * float(h_bars[i])
+				var rect := Rect2(x, center.y + r * 0.55 - bar_h, r * 0.3, bar_h)
+				c.draw_rect(rect, col, true)
+		"ejder":
+			# Drakon ejderhası: stilize S kıvrımlı gövde, sivri burun ve kanat çıkıntısı
+			var dragon := PackedVector2Array([
+				center + Vector2(-r * 0.4, r * 0.6),
+				center + Vector2(r * 0.3, r * 0.45),
+				center + Vector2(r * 0.1, 0),
+				center + Vector2(-r * 0.3, -r * 0.2),
+				center + Vector2(-r * 0.1, -r * 0.6),
+				center + Vector2(r * 0.4, -r * 0.45),
+				center + Vector2(r * 0.2, -r * 0.25),
+			])
+			c.draw_polyline(dragon, col, w + 0.2, true)
+			c.draw_circle(center + Vector2(-r * 0.05, -r * 0.45), 1.6, col)
+		"defne":
+			# Seravia defnesi: iki yana açılan çelenk yayları ve yapraklar
+			c.draw_arc(center + Vector2(-r * 0.1, 0), r * 0.55, PI * 0.3, PI * 1.2, 10, col, w, true)
+			c.draw_arc(center + Vector2(r * 0.1, 0), r * 0.55, -PI * 0.2, PI * 0.7, 10, col, w, true)
+			for i in 3:
+				var ang_l := PI * 0.5 + i * 0.35
+				var pl := center + Vector2(-r * 0.1, 0) + Vector2(cos(ang_l), sin(ang_l)) * (r * 0.55)
+				c.draw_circle(pl, 1.6, col)
+				var ang_r := PI * 0.5 - i * 0.35
+				var pr := center + Vector2(r * 0.1, 0) + Vector2(cos(ang_r), sin(ang_r)) * (r * 0.55)
+				c.draw_circle(pr, 1.6, col)
+		"kalkan":
+			# Bölge kalkanı
+			var shield := PackedVector2Array([
+				center + Vector2(-r * 0.6, -r * 0.6),
+				center + Vector2(r * 0.6, -r * 0.6),
+				center + Vector2(r * 0.55, r * 0.1),
+				center + Vector2(0, r * 0.72),
+				center + Vector2(-r * 0.55, r * 0.1),
+				center + Vector2(-r * 0.6, -r * 0.6),
+			])
+			c.draw_polyline(shield, col, w, true)
+		"yildiz":
+			c.draw_colored_polygon(PackedVector2Array([
+				center + Vector2(0, -r * 0.75),
+				center + Vector2(r * 0.25, -r * 0.2),
+				center + Vector2(r * 0.75, 0),
+				center + Vector2(r * 0.25, r * 0.2),
+				center + Vector2(0, r * 0.75),
+				center + Vector2(-r * 0.25, r * 0.2),
+				center + Vector2(-r * 0.75, 0),
+				center + Vector2(-r * 0.25, -r * 0.2),
+			]), col)
+		_:
+			# Varsayılan: dolu altın baklava
+			_diamond(c, center, r * 0.5, col)
+

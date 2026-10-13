@@ -1,5 +1,5 @@
 extends Control
-## Başkent Haritası: kurumlar birer bina. res://art/city_map.png varsa o kullanılır,
+## Başkent Haritası: kurumlar birer bina. res://art/city_map_v3.png varsa o kullanılır,
 ## bina konumları res://game/data/city_map.json ile ayarlanabilir; yoksa şehir kodla çizilir.
 
 signal request(target: String, arg: String)
@@ -8,17 +8,17 @@ const UIKit := preload("res://game/ui/ui_kit.gd")
 const TOUCH_SCROLL := preload("res://game/ui/touch_scroll.gd")
 
 const SITES := {
-	"saray": {"pos": Vector2(0.5, 0.16), "title": "SARAY", "sub": "Çalışma odası ve taht", "actor": "dorn", "art": "toren"},
-	"adliye": {"pos": Vector2(0.22, 0.38), "title": "ADLİYE", "sub": "Soruşturmalar ve hukuk", "actor": "falk", "art": "yargic_dosya"},
-	"maliye": {"pos": Vector2(0.32, 0.58), "title": "MALİYE BAKANLIĞI", "sub": "Kasa ve vergi defterleri", "actor": "kessler", "art": "butce_acigi"},
-	"parlamento": {"pos": Vector2(0.78, 0.38), "title": "PARLAMENTO", "sub": "Yasalar ve siyasi bloklar", "actor": "brandt", "art": "erken_secim"},
-	"genelkurmay": {"pos": Vector2(0.15, 0.7), "title": "GENELKURMAY", "sub": "Ordu ve komuta", "actor": "arden", "art": "general_atamalari"},
-	"medya": {"pos": Vector2(0.5, 0.62), "title": "MEDYA MERKEZİ", "sub": "Basın ve kamuoyu", "actor": "lena", "art": "halden_kanal"},
-	"istihbarat": {"pos": Vector2(0.85, 0.7), "title": "İSTİHBARAT", "sub": "Arşivler ve dosyalar", "actor": "voss", "art": "voss_dosyalar"},
-	"holding": {"pos": Vector2(0.5, 0.88), "title": "SARNE HOLDİNG", "sub": "Sermaye, ihaleler, borçlar", "actor": "halden", "art": "halden_ihale"},
-	"asteria": {"pos": Vector2(0.68, 0.17), "title": "ASTERIA ELÇİLİĞİ", "sub": "Kredi ve hukuk diplomasisi", "actor": "claire", "art": "yabanci_elci"},
-	"drakon": {"pos": Vector2(0.32, 0.82), "title": "DRAKON ELÇİLİĞİ", "sub": "Sınır ve güvenlik", "actor": "malenkov", "art": "sinir_krizi"},
-	"seravia": {"pos": Vector2(0.74, 0.85), "title": "SERAVIA TEMSİLCİLİĞİ", "sub": "Ticaret ve limanlar", "actor": "lucien", "art": "yabanci_elci"},
+	"saray": {"pos": Vector2(0.50, 0.15), "title": "SARAY", "sub": "Çalışma odası ve taht", "actor": "dorn", "art": "toren", "icon": "tac"},
+	"adliye": {"pos": Vector2(0.15, 0.15), "title": "ADLİYE", "sub": "Soruşturmalar ve hukuk", "actor": "falk", "art": "yargic_dosya", "icon": "terazi"},
+	"maliye": {"pos": Vector2(0.19, 0.39), "title": "MALİYE BAKANLIĞI", "sub": "Kasa ve vergi defterleri", "actor": "kessler", "art": "butce_acigi", "icon": "para"},
+	"parlamento": {"pos": Vector2(0.85, 0.15), "title": "PARLAMENTO", "sub": "Yasalar ve siyasi bloklar", "actor": "brandt", "art": "erken_secim", "icon": "sutun"},
+	"genelkurmay": {"pos": Vector2(0.18, 0.59), "title": "GENELKURMAY", "sub": "Ordu ve komuta", "actor": "arden", "art": "general_atamalari", "icon": "kilic"},
+	"medya": {"pos": Vector2(0.50, 0.41), "title": "MEDYA MERKEZİ", "sub": "Basın ve kamuoyu", "actor": "lena", "art": "halden_kanal", "icon": "anten"},
+	"istihbarat": {"pos": Vector2(0.85, 0.59), "title": "İSTİHBARAT", "sub": "Arşivler ve dosyalar", "actor": "voss", "art": "voss_dosyalar", "icon": "goz"},
+	"holding": {"pos": Vector2(0.51, 0.64), "title": "SARNE HOLDİNG", "sub": "Sermaye, ihaleler, borçlar", "actor": "halden", "art": "halden_ihale", "icon": "grafik"},
+	"asteria": {"pos": Vector2(0.85, 0.39), "title": "ASTERIA ELÇİLİĞİ", "sub": "Kredi ve hukuk diplomasisi", "actor": "claire", "art": "yabanci_elci", "icon": "pusula"},
+	"drakon": {"pos": Vector2(0.30, 0.79), "title": "DRAKON ELÇİLİĞİ", "sub": "Sınır ve güvenlik", "actor": "malenkov", "art": "sinir_krizi", "icon": "ejder"},
+	"seravia": {"pos": Vector2(0.75, 0.79), "title": "SERAVIA TEMSİLCİLİĞİ", "sub": "Ticaret ve limanlar", "actor": "lucien", "art": "yabanci_elci", "icon": "defne"},
 }
 
 ## Telefonda etiketler çakışmasın: 3 sütun x 4 satır düzeni (kentin gerçek dağılımından bağımsız, okunur).
@@ -28,8 +28,8 @@ const MOBILE_POS := {
 	"genelkurmay": Vector2(0.17, 0.65), "holding": Vector2(0.50, 0.65), "istihbarat": Vector2(0.83, 0.65),
 	"drakon": Vector2(0.30, 0.85), "seravia": Vector2(0.70, 0.85),
 }
-const REGION_POS := {"capital": Vector2(0.06, 0.52), "industry": Vector2(0.94, 0.52), "farmland": Vector2(0.06, 0.88), "border": Vector2(0.94, 0.88)}
-const MOBILE_REGION_POS := {"capital": Vector2(0.04, 0.31), "industry": Vector2(0.96, 0.31), "farmland": Vector2(0.038, 0.70), "border": Vector2(0.96, 0.70)}
+const REGION_POS := {"capital": Vector2(0.05, 0.38), "industry": Vector2(0.95, 0.48), "farmland": Vector2(0.08, 0.88), "border": Vector2(0.92, 0.88)}
+const MOBILE_REGION_POS := {"capital": Vector2(0.04, 0.35), "industry": Vector2(0.96, 0.35), "farmland": Vector2(0.04, 0.75), "border": Vector2(0.96, 0.75)}
 
 var mobile := false
 var art_fn: Callable
@@ -119,7 +119,14 @@ func _build() -> void:
 	_region_buttons.clear()
 	_regions_visible = false
 	_region_panel_id = ""
-	var tex: Texture2D = load("res://art/city_map.png") if ResourceLoader.exists("res://art/city_map.png") else null
+
+	# Arka plan görseli: v3 görseli öncelikli
+	var tex: Texture2D = null
+	if ResourceLoader.exists("res://art/city_map_v3.png"):
+		tex = load("res://art/city_map_v3.png")
+	elif ResourceLoader.exists("res://art/city_map.png"):
+		tex = load("res://art/city_map.png")
+
 	if tex:
 		var bg := TextureRect.new()
 		bg.texture = tex
@@ -130,7 +137,7 @@ func _build() -> void:
 		add_child(bg)
 		bg.resized.connect(func() -> void: bg.pivot_offset = bg.size / 2.0)
 		var kb := bg.create_tween().set_loops()
-		kb.tween_property(bg, "scale", Vector2(1.04, 1.04), 24.0).set_trans(Tween.TRANS_SINE)
+		kb.tween_property(bg, "scale", Vector2(1.025, 1.025), 24.0).set_trans(Tween.TRANS_SINE)
 		kb.tween_property(bg, "scale", Vector2.ONE, 24.0).set_trans(Tween.TRANS_SINE)
 	else:
 		_canvas = Control.new()
@@ -142,56 +149,88 @@ func _build() -> void:
 		var tw := _canvas.create_tween().set_loops()
 		tw.tween_interval(0.45)
 		tw.tween_callback(_canvas.queue_redraw)
+
 	var vig := ColorRect.new()
-	vig.color = Color(0, 0, 0, 0.18)
+	vig.color = Color(0, 0, 0, 0.16)
 	vig.set_anchors_preset(Control.PRESET_FULL_RECT)
 	vig.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(vig)
-	# Üst başlık ve geri
+
+	# Üst başlık bandı (docs/ux/gorsel_dil_v3.md Bölüm C)
 	var band := PanelContainer.new()
 	band.add_theme_stylebox_override("panel", UIKit.band_style())
 	band.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE, Control.PRESET_MODE_MINSIZE, 18)
 	add_child(band)
+
 	var top := HBoxContainer.new()
 	top.add_theme_constant_override("separation", 16)
 	band.add_child(top)
+
 	var title := Label.new()
 	title.text = tr("BAŞKENT")
 	title.add_theme_font_override("font", UIKit.caps())
-	title.add_theme_font_size_override("font_size", 30)
+	title.add_theme_font_size_override("font_size", 28)
 	title.add_theme_color_override("font_color", UIKit.GOLD)
 	title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
 	title.add_theme_constant_override("shadow_outline_size", 8)
 	top.add_child(title)
+
 	var hint := Label.new()
 	hint.text = tr("Bir kuruma tıkla")
 	hint.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	hint.add_theme_font_override("font", UIKit.sans(470))
+	hint.add_theme_font_size_override("font_size", 15)
 	hint.add_theme_color_override("font_color", Color("cfc6b0"))
 	top.add_child(hint)
+
 	var sp := Control.new()
 	sp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(sp)
+
+	# "?" simge açıklaması kare düğme
 	_legend_button = Button.new()
 	_legend_button.text = "?"
 	_legend_button.tooltip_text = tr("Harita simgelerinin açıklamasını aç")
 	_legend_button.custom_minimum_size = Vector2(44, 44)
 	_legend_button.focus_mode = Control.FOCUS_ALL
+	var btn_box := UIKit.box(Color(UIKit.PLATE, 0.92), Color(UIKit.GOLD_DIM, 0.75), 4, 8)
+	var btn_box_h := UIKit.box(Color(0.12, 0.10, 0.08, 0.98), UIKit.GOLD, 4, 8)
+	_legend_button.add_theme_stylebox_override("normal", btn_box)
+	_legend_button.add_theme_stylebox_override("hover", btn_box_h)
+	_legend_button.add_theme_stylebox_override("pressed", btn_box_h)
+	_legend_button.add_theme_stylebox_override("focus", btn_box_h)
+	_legend_button.add_theme_color_override("font_color", UIKit.GOLD)
+	_legend_button.add_theme_font_override("font", UIKit.serif_bold())
+	_legend_button.add_theme_font_size_override("font_size", 20)
 	_legend_button.pressed.connect(_show_map_legend)
 	top.add_child(_legend_button)
+
+	# "Bölgeler: Kapalı / Açık" süslü düğme
 	_region_toggle = Button.new()
 	_region_toggle.toggle_mode = true
 	_region_toggle.text = tr("Bölgeler: Kapalı")
 	_region_toggle.tooltip_text = tr("Bölge katmanını aç/kapat")
-	_region_toggle.custom_minimum_size = Vector2(132, 44)
+	_region_toggle.custom_minimum_size = Vector2(136, 44)
+	var reg_box := UIKit.box(Color(UIKit.PLATE, 0.92), Color(UIKit.GOLD_DIM, 0.75), 4, 12)
+	var reg_box_h := UIKit.box(Color(0.12, 0.10, 0.08, 0.98), UIKit.GOLD, 4, 12)
+	_region_toggle.add_theme_stylebox_override("normal", reg_box)
+	_region_toggle.add_theme_stylebox_override("hover", reg_box_h)
+	_region_toggle.add_theme_stylebox_override("pressed", reg_box_h)
+	_region_toggle.add_theme_stylebox_override("focus", reg_box_h)
+	_region_toggle.add_theme_color_override("font_color", UIKit.TEXT)
+	_region_toggle.add_theme_font_override("font", UIKit.sans(500))
 	_region_toggle.toggled.connect(_set_region_layer)
 	top.add_child(_region_toggle)
+
+	# Masaya dön düğmesi
 	var back := Button.new()
 	back.text = tr("Masaya dön  (Esc)") if not mobile else tr("Masaya dön")
 	back.focus_mode = Control.FOCUS_NONE
-	back.custom_minimum_size = Vector2(170, 42)
+	back.custom_minimum_size = Vector2(170, 44)
 	back.theme_type_variation = "GhostButton"
 	back.pressed.connect(close_view)
 	top.add_child(back)
+
 	for id in _sites:
 		_make_site(id)
 	for id in Sim.REGION_WEIGHTS:
@@ -199,69 +238,101 @@ func _build() -> void:
 	_build_drawer()
 
 
+## Kurum plakası: map_badge kalıbı (yuvarlak altın çerçeveli simge rozeti + koyu plaka üstünde büyük harf ad + altta küçük altın üçgen)
 func _make_site(id: String) -> void:
 	var s: Dictionary = _sites[id]
 	var plate := PanelContainer.new()
-	var sb := UIKit.box(Color(UIKit.PLATE, 0.86), Color(UIKit.GOLD, 0.55), 6, 14)
-	plate.add_theme_stylebox_override("panel", sb)
+	plate.name = "SitePlate_" + id
+	plate.focus_mode = Control.FOCUS_ALL
 	plate.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	plate.custom_minimum_size = Vector2(0, 38 if not mobile else 44)
 	add_child(plate)
 	plates[id] = plate
-	var v := VBoxContainer.new()
-	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	v.add_theme_constant_override("separation", 0)
-	plate.add_child(v)
+
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.045, 0.038, 0.03, 0.94)
+	sb.border_color = Color(UIKit.GOLD, 0.78)
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(2)
+	sb.content_margin_left = 6
+	sb.content_margin_right = 14
+	sb.content_margin_top = 3
+	sb.content_margin_bottom = 3
+	plate.add_theme_stylebox_override("panel", sb)
+
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 8)
+	row.add_theme_constant_override("separation", 10)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	v.add_child(row)
-	var dot := Panel.new()
-	var ds := StyleBoxFlat.new()
-	ds.bg_color = UIKit.GOLD
-	ds.set_corner_radius_all(6)
-	dot.add_theme_stylebox_override("panel", ds)
-	dot.custom_minimum_size = Vector2(11, 11)
-	dot.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	row.add_child(dot)
+	plate.add_child(row)
+
+	# Sol yuvarlak altın çerçeveli simge rozeti
+	var badge_size := 32.0 if not mobile else 38.0
+	var badge := Control.new()
+	badge.custom_minimum_size = Vector2(badge_size, badge_size)
+	badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var icon_id: String = str(s.get("icon", "tac"))
+	badge.draw.connect(func() -> void:
+		var c := badge.size * 0.5
+		var r := minf(c.x, c.y) - 1.0
+		badge.draw_circle(c, r, Color(0.035, 0.03, 0.025, 0.98))
+		badge.draw_arc(c, r, 0, TAU, 32, UIKit.GOLD, 1.5, true)
+		badge.draw_arc(c, r - 2.5, 0, TAU, 32, Color(UIKit.GOLD_DIM, 0.5), 1.0, true)
+		UIKit.draw_icon(badge, icon_id, c, r * 1.5, UIKit.GOLD)
+	)
+	row.add_child(badge)
+
+	# Sağ altın büyük harf ad (alt satır açıklama yok)
 	var t := Label.new()
 	t.text = tr(str(s["title"]))
-	t.add_theme_font_override("font", UIKit.serif())
-	t.add_theme_font_size_override("font_size", 22 if not mobile else 21)
-	t.add_theme_color_override("font_color", Color("f1e6c8"))
+	t.add_theme_font_override("font", UIKit.caps())
+	t.add_theme_font_size_override("font_size", 16 if not mobile else 15)
+	t.add_theme_color_override("font_color", Color("fff3d0"))
+	t.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.95))
+	t.add_theme_constant_override("shadow_outline_size", 4)
+	t.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	t.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(t)
-	var sub := Label.new()
-	sub.text = tr(str(s["sub"]))
-	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	sub.add_theme_font_size_override("font_size", 13 if not mobile else 15)
-	sub.add_theme_color_override("font_color", Color("b9b1a0"))
-	v.add_child(sub)
+
+	# Altta binayı gösteren küçük altın üçgen
+	plate.draw.connect(func() -> void:
+		var mid_x := plate.size.x * 0.5
+		var y := plate.size.y
+		var tri := PackedVector2Array([
+			Vector2(mid_x - 5.5, y),
+			Vector2(mid_x + 5.5, y),
+			Vector2(mid_x, y + 7.0),
+		])
+		plate.draw_colored_polygon(tri, UIKit.GOLD)
+		plate.draw_line(Vector2(mid_x - 5.5, y), Vector2(mid_x, y + 7.0), Color("fff3d0"), 1.0, true)
+		plate.draw_line(Vector2(mid_x + 5.5, y), Vector2(mid_x, y + 7.0), Color("fff3d0"), 1.0, true)
+	)
+
 	for c in plate.find_children("*", "Control", true, false):
 		(c as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
+
 	# Konum: yüzdelik nokta etiketin merkezi olur
 	var place := func() -> void:
 		var p: Vector2 = MOBILE_POS.get(id, s["pos"]) if mobile else s["pos"]
 		plate.position = Vector2(p.x * size.x, p.y * size.y) - plate.size / 2.0
 	plate.resized.connect(place)
 	place.call_deferred()
-	var blink := dot.create_tween().set_loops()
-	blink.tween_property(dot, "modulate:a", 0.4, 0.9 + randf() * 0.5)
-	blink.tween_property(dot, "modulate:a", 1.0, 0.9)
+
 	plate.mouse_entered.connect(func() -> void:
 		if TOUCH_SCROLL.dispatching_touch: return
 		Sfx.play("hover", -10.0)
-		sb.border_color = UIKit.GOLD
-		sb.bg_color = Color(0.1, 0.08, 0.05, 0.92)
+		sb.border_color = Color("fff3d0")
+		sb.bg_color = Color(0.12, 0.10, 0.08, 0.98)
 		plate.pivot_offset = plate.size / 2.0
-		plate.create_tween().tween_property(plate, "scale", Vector2(1.06, 1.06), 0.15))
+		plate.create_tween().tween_property(plate, "scale", Vector2(1.05, 1.05), 0.15))
 	plate.mouse_exited.connect(func() -> void:
 		if TOUCH_SCROLL.dispatching_touch: return
-		sb.border_color = Color(UIKit.GOLD, 0.55)
-		sb.bg_color = Color(UIKit.PLATE, 0.86)
+		sb.border_color = Color(UIKit.GOLD, 0.78)
+		sb.bg_color = Color(0.045, 0.038, 0.03, 0.94)
 		plate.create_tween().tween_property(plate, "scale", Vector2.ONE, 0.15))
 	plate.gui_input.connect(func(ev: InputEvent) -> void:
-		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+		if (ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT) or (ev is InputEventKey and ev.pressed and (ev.keycode == KEY_ENTER or ev.keycode == KEY_SPACE)):
 			Sfx.play("click")
 			if id == "saray":
 				close_view()
@@ -281,28 +352,42 @@ func _sync_region_markers() -> void:
 		marker.visible = _regions_visible and not (_drawer and _drawer.visible)
 
 
+## Bölge işaretçisi: map_badge dilinde buton
 func _make_region_marker(id: String) -> void:
 	var button := Button.new()
 	button.name = "Region_" + id
 	button.set_meta("region_id", id)
-	button.custom_minimum_size = Vector2(112, 64) if not mobile else Vector2(74, 60)
+	button.custom_minimum_size = Vector2(116, 62) if not mobile else Vector2(80, 58)
 	button.focus_mode = Control.FOCUS_ALL
 	button.tooltip_text = _region_tooltip(id)
-	var normal := UIKit.box(Color(UIKit.PLATE, 0.95), Color(UIKit.GOLD, 0.85), 7, 5)
+
+	var normal := StyleBoxFlat.new()
+	normal.bg_color = Color(0.045, 0.038, 0.03, 0.95)
+	normal.border_color = Color(UIKit.GOLD, 0.8)
+	normal.set_border_width_all(1)
+	normal.set_corner_radius_all(3)
+	normal.content_margin_left = 6
+	normal.content_margin_right = 6
+	normal.content_margin_top = 4
+	normal.content_margin_bottom = 4
+
 	var hover := normal.duplicate() as StyleBoxFlat
-	hover.border_color = Color(UIKit.GOLD, 1.0)
-	hover.bg_color = Color(0.1, 0.08, 0.05, 0.98)
+	hover.border_color = Color("fff3d0")
+	hover.bg_color = Color(0.12, 0.10, 0.08, 0.98)
+
 	button.add_theme_stylebox_override("normal", normal)
 	button.add_theme_stylebox_override("hover", hover)
 	button.add_theme_stylebox_override("pressed", hover)
 	button.add_theme_stylebox_override("focus", hover)
 	button.text = ""
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+
 	var column := VBoxContainer.new()
 	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	column.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	column.add_theme_constant_override("separation", 0)
+	column.add_theme_constant_override("separation", 2)
 	button.add_child(column)
+
 	var name := Label.new()
 	name.name = "RegionName"
 	name.text = ("★ " if id == Sim.featured_region_id() else "") + _region_compact_name(id)
@@ -310,10 +395,12 @@ func _make_region_marker(id: String) -> void:
 	name.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if mobile else TextServer.AUTOWRAP_OFF
 	if mobile and id == "capital": name.custom_minimum_size.y = 28
-	name.add_theme_font_size_override("font_size", 15 if mobile else 14)
-	name.add_theme_color_override("font_color", Color("f1e6c8"))
+	name.add_theme_font_override("font", UIKit.caps())
+	name.add_theme_font_size_override("font_size", 14 if not mobile else 13)
+	name.add_theme_color_override("font_color", Color("fff3d0"))
 	name.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	column.add_child(name)
+
 	var symbols := Control.new()
 	symbols.name = "StatusSymbols"
 	symbols.custom_minimum_size.y = 19
@@ -328,6 +415,19 @@ func _make_region_marker(id: String) -> void:
 	symbols.tooltip_text = tr("Huzursuzluk %s; pazar %s; bağlılık %s") % [words["unrest"], words["economy"], words["loyalty"]]
 	symbols.draw.connect(func() -> void: _draw_region_symbols(symbols, levels, has_crisis, has_governor))
 	column.add_child(symbols)
+
+	# Altta küçük altın işaret üçgeni
+	button.draw.connect(func() -> void:
+		var mid_x := button.size.x * 0.5
+		var y := button.size.y
+		var tri := PackedVector2Array([
+			Vector2(mid_x - 5.0, y),
+			Vector2(mid_x + 5.0, y),
+			Vector2(mid_x, y + 6.0),
+		])
+		button.draw_colored_polygon(tri, UIKit.GOLD)
+	)
+
 	var p: Vector2 = (_mobile_region_positions if mobile else _region_positions).get(id, REGION_POS[id])
 	button.position = Vector2(p.x * size.x, p.y * size.y) - button.custom_minimum_size / 2.0
 	button.visible = _regions_visible
@@ -342,16 +442,16 @@ func _draw_region_symbols(control: Control, levels: Dictionary, has_crisis: bool
 	var w := control.size.x
 	var y := 10.0
 	var ink := Color("ead7a6")
-	# Triangle + hatch count encodes unrest without relying on hue.
+	# Üçgen + tarama: huzursuzluk
 	var triangle := PackedVector2Array([Vector2(5, y + 6), Vector2(12, y - 6), Vector2(19, y + 6), Vector2(5, y + 6)])
 	control.draw_polyline(triangle, ink, 1.5, true)
 	for i in int(levels["unrest"]):
 		control.draw_line(Vector2(8 + i * 4, y + 3), Vector2(10 + i * 4, y - 1), ink, 1.5, true)
-	# Market columns.
+	# Pazar sütunları
 	for i in 3:
 		var height := 2.0 + i * 2.0 + float(levels["economy"]) * 2.0
 		control.draw_rect(Rect2(Vector2(28 + i * 4, y + 6 - height), Vector2(2, height)), ink)
-	# Shield outline + internal hatch count for loyalty.
+	# Kalkan: bağlılık
 	var shield := PackedVector2Array([Vector2(43, y - 6), Vector2(54, y - 3), Vector2(53, y + 4), Vector2(48, y + 8), Vector2(43, y + 4), Vector2(43, y - 6)])
 	control.draw_polyline(shield, ink, 1.5, true)
 	for i in int(levels["loyalty"]):
@@ -376,11 +476,33 @@ func _region_compact_name(id: String) -> String:
 		_: return tr("Sınır")
 
 
-# ---------------------------------------------------------------- Kurum paneli
+# ---------------------------------------------------------------- Kurum & Bölge çekmecesi
 
 func _build_drawer() -> void:
 	_drawer = PanelContainer.new()
-	_drawer.add_theme_stylebox_override("panel", UIKit.box(UIKit.PLATE, UIKit.GOLD, 10, 20))
+	# Tek süslü çerçeve: panelin kendi kenarı 0 + UIKit.ornament (çerçeve üstüne çerçeve yok)
+	var psb := StyleBoxFlat.new()
+	psb.bg_color = Color(0.07, 0.06, 0.05, 0.96)
+	psb.set_border_width_all(0)
+	psb.set_corner_radius_all(3)
+	psb.content_margin_left = 22
+	psb.content_margin_right = 22
+	psb.content_margin_top = 22
+	psb.content_margin_bottom = 22
+	_drawer.add_theme_stylebox_override("panel", psb)
+	UIKit.ornament(_drawer, Color(UIKit.GOLD, 0.8), 22, 1)
+
+	# Soluk arma filigranı
+	if ResourceLoader.exists("res://art/ui/watermark_crest.png"):
+		var wm := TextureRect.new()
+		wm.texture = load("res://art/ui/watermark_crest.png")
+		wm.set_anchors_preset(Control.PRESET_FULL_RECT)
+		wm.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		wm.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		wm.modulate = Color(1, 1, 1, 0.06)
+		wm.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_drawer.add_child(wm)
+
 	var w := 560.0 if not mobile else 620.0
 	_drawer.anchor_left = 1.0
 	_drawer.anchor_right = 1.0
@@ -392,12 +514,13 @@ func _build_drawer() -> void:
 	_drawer.offset_bottom = -20
 	add_child(_drawer)
 	_drawer.visibility_changed.connect(_sync_region_markers)
+
 	var scroll := ScrollContainer.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_drawer.add_child(scroll)
 	_drawer_body = VBoxContainer.new()
 	_drawer_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_drawer_body.add_theme_constant_override("separation", 12)
+	_drawer_body.add_theme_constant_override("separation", 14)
 	scroll.add_child(_drawer_body)
 	_drawer.hide()
 
@@ -414,55 +537,115 @@ func show_site(id: String) -> void:
 	var s: Dictionary = _sites[id]
 	for c in _drawer_body.get_children():
 		c.queue_free()
+
+	# Kurum görseli: 1 px ince altın kenarlık
 	var tex: Texture2D = art_fn.call(str(s["art"])) if art_fn.is_valid() else null
 	if tex:
-		var frame := Control.new()
-		frame.custom_minimum_size = Vector2(0, 220)
-		frame.clip_contents = true
+		var frame := PanelContainer.new()
+		frame.custom_minimum_size = Vector2(0, 210)
+		var fsb := StyleBoxFlat.new()
+		fsb.bg_color = Color(0, 0, 0, 0.4)
+		fsb.border_color = Color(UIKit.GOLD, 0.7)
+		fsb.set_border_width_all(1)
+		fsb.set_corner_radius_all(2)
+		frame.add_theme_stylebox_override("panel", fsb)
 		_drawer_body.add_child(frame)
+
 		var img := TextureRect.new()
 		img.texture = tex
 		img.set_anchors_preset(Control.PRESET_FULL_RECT)
 		img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		frame.add_child(img)
+
+	# Bölüm başlığı: altın baklava + caps Garamond başlık
+	var title_box := HBoxContainer.new()
+	title_box.add_theme_constant_override("separation", 10)
+	_drawer_body.add_child(title_box)
+
+	var dia := Control.new()
+	dia.custom_minimum_size = Vector2(14, 14)
+	dia.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	dia.draw.connect(func() -> void:
+		var c := dia.size * 0.5
+		dia.draw_colored_polygon(PackedVector2Array([
+			c + Vector2(0, -6), c + Vector2(6, 0), c + Vector2(0, 6), c + Vector2(-6, 0)
+		]), UIKit.GOLD)
+	)
+	title_box.add_child(dia)
+
 	var t := Label.new()
 	t.text = tr(str(s["title"]))
-	t.add_theme_font_override("font", UIKit.serif())
-	t.add_theme_font_size_override("font_size", 30)
+	t.add_theme_font_override("font", UIKit.caps())
+	t.add_theme_font_size_override("font_size", 26)
 	t.add_theme_color_override("font_color", UIKit.GOLD)
-	_drawer_body.add_child(t)
+	title_box.add_child(t)
+
 	_drawer_body.add_child(_text("[color=gray]%s[/color]" % tr(str(s["sub"]))))
+
 	var institutions := {"maliye": "maliye", "adliye": "hukuk", "genelkurmay": "ordu", "saray": "idare"}
 	if institutions.has(id):
 		var institution: String = institutions[id]
 		var chief: String = str(_sites[id]["actor"])
 		var chief_name: String = Sim.actors[chief].display_name if Sim.actors.has(chief) else tr("makam boş")
-		_drawer_body.add_child(_text(tr("İşleyiş: [b]%s[/b]\nBaşkan: %s") % [tr(Sim.capacity_band(institution)), chief_name]))
+		_drawer_body.add_child(_text(tr("İşleyiş: [b]%s[/b]
+Başkan: %s") % [tr(Sim.capacity_band(institution)), chief_name]))
 		if id == "maliye":
 			_drawer_body.add_child(_text(tr("Kasa: [b]%s[/b]") % tr(Sim.treasury_band())))
 	if id == "holding":
-		_drawer_body.add_child(_text(tr("Nüfuz: [b]%s[/b]\nMedya: [b]%s[/b]") % [tr(Sim.halden_influence_band()), tr(Sim.halden_mood())]))
+		_drawer_body.add_child(_text(tr("Nüfuz: [b]%s[/b]
+Medya: [b]%s[/b]") % [tr(Sim.halden_influence_band()), tr(Sim.halden_mood())]))
 	if id in ["asteria", "drakon", "seravia"]:
-		_drawer_body.add_child(_text(tr("İlişki: [b]%s[/b]\n[color=gray]Elena'nın anlatımı iyimser olabilir; Doğrula kayıtları altı hafta açar.[/color]") % tr(Sim.foreign_band(id))))
+		_drawer_body.add_child(_text(tr("İlişki: [b]%s[/b]
+[color=gray]Elena'nın anlatımı iyimser olabilir; Doğrula kayıtları altı hafta açar.[/color]") % tr(Sim.foreign_band(id))))
+
 	var aid: String = s["actor"]
 	if Sim.actors.has(aid):
 		var a = Sim.actors[aid]
-		var row := HBoxContainer.new()
-		row.add_theme_constant_override("separation", 12)
+		# Rapor satırı kalıbı: koyu zemin, solda ton çubuğu, 1 px portre, kalın ad sütunu
+		var row := PanelContainer.new()
+		var rsb := StyleBoxFlat.new()
+		rsb.bg_color = Color(0.08, 0.07, 0.06, 0.88)
+		rsb.border_color = Color(UIKit.GOLD, 0.3)
+		rsb.set_border_width_all(1)
+		rsb.border_width_left = 3
+		rsb.border_color = Color(UIKit.GOLD, 0.8)
+		rsb.set_corner_radius_all(3)
+		rsb.content_margin_left = 12
+		rsb.content_margin_right = 12
+		rsb.content_margin_top = 10
+		rsb.content_margin_bottom = 10
+		row.add_theme_stylebox_override("panel", rsb)
 		_drawer_body.add_child(row)
+
+		var hbox := HBoxContainer.new()
+		hbox.add_theme_constant_override("separation", 14)
+		row.add_child(hbox)
+
+		var pt_frame := PanelContainer.new()
+		var ptsb := StyleBoxFlat.new()
+		ptsb.bg_color = Color.TRANSPARENT
+		ptsb.border_color = Color(UIKit.GOLD, 0.7)
+		ptsb.set_border_width_all(1)
+		ptsb.set_corner_radius_all(2)
+		pt_frame.add_theme_stylebox_override("panel", ptsb)
+		hbox.add_child(pt_frame)
+
 		var pt := TextureRect.new()
 		pt.texture = portrait_fn.call(aid) if portrait_fn.is_valid() else null
-		pt.custom_minimum_size = Vector2(96, 96)
+		pt.custom_minimum_size = Vector2(84, 84)
 		pt.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		pt.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-		row.add_child(pt)
+		pt_frame.add_child(pt)
+
 		var info := _text("[b]%s[/b]\n[color=gray]%s[/color]\n\"%s\"" % [a.display_name, a.title, _report_of(aid)])
 		info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.add_child(info)
+		hbox.add_child(info)
 	else:
 		_drawer_body.add_child(_text(tr("[color=#c0504a]Bu makam boş. Sahibi artık sarayda değil.[/color]")))
+
 	_drawer_body.add_child(_text(_site_details(id)))
+
 	var actions := HBoxContainer.new()
 	actions.add_theme_constant_override("separation", 10)
 	_drawer_body.add_child(actions)
@@ -476,7 +659,8 @@ func show_site(id: String) -> void:
 		actions.add_child(_btn(tr("Doğrula"), func() -> void:
 			Sim.cross_check("elena")
 			show_site(id)))
-	actions.add_child(_btn("Kapat", func() -> void: _drawer.hide()))
+	actions.add_child(_btn(tr("Kapat"), func() -> void: _drawer.hide()))
+
 	_drawer.show()
 	_drawer.modulate.a = 0.0
 	var tw := _drawer.create_tween().set_parallel(true)
@@ -490,13 +674,31 @@ func show_region(id: String) -> void:
 	_region_panel_id = id
 	for c in _drawer_body.get_children():
 		c.queue_free()
+
+	# Başlık satırı
+	var title_box := HBoxContainer.new()
+	title_box.add_theme_constant_override("separation", 10)
+	_drawer_body.add_child(title_box)
+
+	var dia := Control.new()
+	dia.custom_minimum_size = Vector2(14, 14)
+	dia.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	dia.draw.connect(func() -> void:
+		var c := dia.size * 0.5
+		dia.draw_colored_polygon(PackedVector2Array([
+			c + Vector2(0, -6), c + Vector2(6, 0), c + Vector2(0, 6), c + Vector2(-6, 0)
+		]), UIKit.GOLD)
+	)
+	title_box.add_child(dia)
+
 	var name := tr(str(Sim.REGION_NAMES[id]))
 	var title := Label.new()
 	title.text = name
-	title.add_theme_font_override("font", UIKit.serif())
-	title.add_theme_font_size_override("font_size", 28)
+	title.add_theme_font_override("font", UIKit.caps())
+	title.add_theme_font_size_override("font_size", 26)
 	title.add_theme_color_override("font_color", UIKit.GOLD)
-	_drawer_body.add_child(title)
+	title_box.add_child(title)
+
 	var state := _text(Sim.region_status_line(id))
 	_drawer_body.add_child(state)
 	_drawer_body.add_child(_text(tr("Simgeler: üçgen huzursuzluğu, sütunlar pazarı, kalkan bağlılığı gösterir; ünlem kriz, kişi vali demektir.")))
@@ -506,11 +708,36 @@ func show_region(id: String) -> void:
 		_drawer_body.add_child(_text("[color=#f0c36a][b]%s[/b][/color]" % tr("Bölgede karar bekleyen kriz var.")))
 	else:
 		_drawer_body.add_child(_text(tr("Bölgede bekleyen kriz yok.")))
+
 	var governor_id := str(Sim.regions[id].get("governor", ""))
-	var governor_row := HBoxContainer.new()
-	governor_row.add_theme_constant_override("separation", 12)
+	var governor_row := PanelContainer.new()
+	var gr_sb := StyleBoxFlat.new()
+	gr_sb.bg_color = Color(0.08, 0.07, 0.06, 0.88)
+	gr_sb.border_color = Color(UIKit.GOLD, 0.8)
+	gr_sb.set_border_width_all(1)
+	gr_sb.border_width_left = 3
+	gr_sb.set_corner_radius_all(3)
+	gr_sb.content_margin_left = 12
+	gr_sb.content_margin_right = 12
+	gr_sb.content_margin_top = 10
+	gr_sb.content_margin_bottom = 10
+	governor_row.add_theme_stylebox_override("panel", gr_sb)
 	_drawer_body.add_child(governor_row)
+
+	var ghbox := HBoxContainer.new()
+	ghbox.add_theme_constant_override("separation", 12)
+	governor_row.add_child(ghbox)
+
 	if governor_id != "" and Sim.actors.has(governor_id):
+		var pt_frame := PanelContainer.new()
+		var ptsb := StyleBoxFlat.new()
+		ptsb.bg_color = Color.TRANSPARENT
+		ptsb.border_color = Color(UIKit.GOLD, 0.7)
+		ptsb.set_border_width_all(1)
+		ptsb.set_corner_radius_all(2)
+		pt_frame.add_theme_stylebox_override("panel", ptsb)
+		ghbox.add_child(pt_frame)
+
 		var portrait := TextureRect.new()
 		portrait.name = "GovernorPortrait"
 		portrait.texture = portrait_fn.call(governor_id) if portrait_fn.is_valid() else null
@@ -518,31 +745,37 @@ func show_region(id: String) -> void:
 		portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		governor_row.add_child(portrait)
+		pt_frame.add_child(portrait)
+
 		var actor = Sim.actors[governor_id]
 		var governor_name := Label.new()
 		governor_name.text = "%s\n%s" % [actor.display_name, tr("Vali")]
+		governor_name.add_theme_font_override("font", UIKit.sans(680))
 		governor_name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		governor_name.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		governor_row.add_child(governor_name)
+		ghbox.add_child(governor_name)
 	else:
-		governor_row.add_child(_text("[b]%s[/b]" % tr("Vali atanmamış")))
+		ghbox.add_child(_text("[b]%s[/b]" % tr("Vali atanmamış")))
+
 	_drawer_body.add_child(_text("[b]%s[/b]" % tr("Açık bölge eylemleri")))
 	_region_action_button = _btn(tr("Bölge kararlarını aç"), func() -> void: request.emit("region", id))
 	_region_action_button.custom_minimum_size.y = 48
 	_region_action_button.focus_mode = Control.FOCUS_ALL
 	_region_action_button.tooltip_text = tr("Bu bölge için R1 bütçesi ve mesai kullanan kararları aç")
 	_drawer_body.add_child(_region_action_button)
+
 	_drawer_body.add_child(_text(tr("Aşağıdaki liste bilgi amaçlıdır; seçimler karar kartında yapılır.")))
 	for option: Dictionary in Sim.region_action_choices(id):
 		var label := str(option["label"])
 		if not bool(option.get("available", true)):
 			label += " — " + tr("bütçe payı veya hazine yetersiz")
 		_drawer_body.add_child(_text(label))
+
 	var close := _btn(tr("Kapat"), func() -> void: _drawer.hide())
 	close.custom_minimum_size.y = 48
 	close.focus_mode = Control.FOCUS_ALL
 	_drawer_body.add_child(close)
+
 	_drawer.show()
 	_drawer.modulate.a = 0.0
 	_drawer.create_tween().tween_property(_drawer, "modulate:a", 1.0, 0.25)
@@ -553,18 +786,22 @@ func _show_map_legend() -> void:
 	_region_panel_id = ""
 	for c in _drawer_body.get_children():
 		c.queue_free()
+
 	var title := Label.new()
 	title.text = tr("Harita simgeleri")
-	title.add_theme_font_override("font", UIKit.serif())
-	title.add_theme_font_size_override("font_size", 28)
+	title.add_theme_font_override("font", UIKit.caps())
+	title.add_theme_font_size_override("font_size", 26)
 	title.add_theme_color_override("font_color", UIKit.GOLD)
 	_drawer_body.add_child(title)
+
 	for line in [tr("Üçgen: huzursuzluk"), tr("Sütunlar: pazar"), tr("Kalkan: bağlılık"), tr("Ünlem: bekleyen kriz"), tr("Kişi simgesi: vali")]:
 		_drawer_body.add_child(_text(line))
+
 	var close := _btn(tr("Kapat"), func() -> void: _drawer.hide())
 	close.custom_minimum_size.y = 48
 	close.focus_mode = Control.FOCUS_ALL
 	_drawer_body.add_child(close)
+
 	_drawer.show()
 	_drawer.modulate.a = 1.0
 	close.grab_focus.call_deferred()
@@ -617,6 +854,10 @@ func _text(bb: String) -> RichTextLabel:
 	r.fit_content = true
 	r.scroll_active = false
 	r.text = bb
+	r.add_theme_font_override("normal_font", UIKit.sans(500))
+	r.add_theme_font_override("bold_font", UIKit.sans(680))
+	r.add_theme_font_size_override("normal_font_size", 16 if not mobile else 15)
+	r.add_theme_font_size_override("bold_font_size", 16 if not mobile else 15)
 	return r
 
 
@@ -624,8 +865,9 @@ func _btn(text: String, cb: Callable) -> Button:
 	var b := Button.new()
 	b.text = tr(text)
 	b.focus_mode = Control.FOCUS_NONE
-	b.custom_minimum_size.y = 42
+	b.custom_minimum_size.y = 44
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.add_theme_font_override("font", UIKit.sans(500))
 	b.pressed.connect(func() -> void:
 		Sfx.play("click")
 		cb.call())

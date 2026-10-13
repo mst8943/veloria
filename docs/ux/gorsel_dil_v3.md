@@ -54,4 +54,6 @@ Hedef görünüm `docs/ux/ref/harita_hedef.jpg`:
 | (1) Dosyalar sekmesi (Sırlar ve kanıtlar, Söz defteri) | Karşılandı | Rapor satırı kalıbında kanıt satırları (koyu zemin, ton çubuğu, portre, kalın ad, çipler), Söz defteri tek süslü çerçeve ve rahat satır aralıklı tipografi. |
 | (1) Günlük sekmesi | Karşılandı | Alegreya Sans ve EB Garamond başlıklar, rahat satır aralığı, temiz sol panel düzeni. |
 | (2) Divan çekmecesi (gruplar, portre kartları, raporlar, vali/komutan kartları) | Karşılandı | Çekmecede tek süslü altın çerçeve (border 0) ve soluk filigran, raporlar satır kalıbında (ton çubukları, rahat boşluk), grup başlıklarında altın baklava ve caps Garamond, portre ve vali/komutan kartlarında 1 px ince altın kenar. |
+| (3a) Başkent haritası (görsel dil: arka plan, kurum plakaları, bölge katmanı, kurum ve bölge panelleri) | Karşılandı | art/city_map_v3.png arka plan, simgeli dairesel rozet + altın caps ad + altın üçgen iğne (map_badge), bölge işaretçileri map_badge dilinde, kurumlarda ve bölgelerde tek süslü altın çerçeve (border 0) + soluk arma filigranı, 1 px altın portre/görsel kenarı, rapor satırı görevli/vali kalıbı, üst bant band_style ve kare legend butonu. |
+
 
