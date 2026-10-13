@@ -118,8 +118,8 @@ func _ready() -> void:
 		add_child(TOUCH_SCROLL.new())
 	UIKit.configure_accessibility(Sfx.text_size, Sfx.high_contrast, Sfx.reduce_motion)
 	theme = UIKit.build_theme(_mobile)
-	theme.default_font = UIKit.serif()
-	theme.set_font("bold_font", "RichTextLabel", UIKit.serif())
+	theme.default_font = UIKit.sans()
+	theme.set_font("bold_font", "RichTextLabel", UIKit.sans(680))
 	theme.set_font("italics_font", "RichTextLabel", UIKit.serif_italic())
 	theme.set_font("bold_italics_font", "RichTextLabel", UIKit.serif_italic())
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
@@ -391,6 +391,10 @@ func _build_ui() -> void:
 	_headline_band.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_headline_band.custom_minimum_size.y = 32 if _mobile else 30
 	var ticker_style := UIKit.box(Color(UIKit.PLATE, 0.82), Color(UIKit.GOLD_DIM, 0.2), 2, 8)
+	if not _mobile:
+		ticker_style.bg_color = Color(0.03, 0.025, 0.018, 0.9)
+		ticker_style.border_color = Color(UIKit.GOLD, 0.42)
+		ticker_style.content_margin_left = 14
 	ticker_style.content_margin_top = 2 if _mobile else 4
 	ticker_style.content_margin_bottom = 2 if _mobile else 4
 	_headline_band.add_theme_stylebox_override("panel", ticker_style)
@@ -401,22 +405,22 @@ func _build_ui() -> void:
 	_headline_band.add_child(hl_row)
 	hl_row.add_child(_header_symbol("flourish", Vector2(18, 18), UIKit.GOLD))
 	_headline = Label.new()
-	_headline.add_theme_font_override("font", UIKit.serif())
+	_headline.add_theme_font_override("font", UIKit.serif() if not _mobile else UIKit.sans())
 	_headline.add_theme_color_override("font_color", UIKit.TEXT)
-	_headline.add_theme_font_size_override("font_size", _fs(16))
+	_headline.add_theme_font_size_override("font_size", _fs(16 if _mobile else 15))
 	_headline.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_headline.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_headline.size_flags_stretch_ratio = 0.68
 	_headline.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_headline.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hl_row.add_child(_headline)
-	_headline_diamond = _header_symbol("diamond", Vector2(8, 8), UIKit.GOLD, true)
+	_headline_diamond = _header_symbol("diamond", Vector2(8, 8) if _mobile else Vector2(12, 12), UIKit.GOLD, true)
 	_headline_diamond.visible = false
 	hl_row.add_child(_headline_diamond)
 	_headline_secondary = Label.new()
-	_headline_secondary.add_theme_font_override("font", UIKit.serif())
+	_headline_secondary.add_theme_font_override("font", UIKit.serif() if not _mobile else UIKit.sans())
 	_headline_secondary.add_theme_color_override("font_color", UIKit.TEXT)
-	_headline_secondary.add_theme_font_size_override("font_size", _fs(16))
+	_headline_secondary.add_theme_font_size_override("font_size", _fs(16 if _mobile else 15))
 	_headline_secondary.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_headline_secondary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_headline_secondary.size_flags_stretch_ratio = 1.32
@@ -461,6 +465,8 @@ func _build_ui() -> void:
 	var watermark: Texture2D = _art("res://art/ui/watermark_crest.png")
 	if watermark:
 		_scroll.draw.connect(func() -> void:
+			if not _mobile:
+				_scroll.draw_rect(Rect2(Vector2.ZERO, _scroll.size), Color(0.045, 0.038, 0.03, 0.75))
 			var scale_factor: float = minf(_scroll.size.x / watermark.get_width(), _scroll.size.y / watermark.get_height()) * 0.82
 			var watermark_size := Vector2(watermark.get_size()) * scale_factor
 			_scroll.draw_texture_rect(watermark, Rect2((_scroll.size - watermark_size) / 2.0, watermark_size), false, Color(1, 1, 1, 0.055)))
@@ -524,11 +530,13 @@ func _build_ui() -> void:
 			_tabs.set_tab_icon(i, ti)
 	if _mobile:
 		_tabs.set_tab_title(0, tr("Gündem"))
-	_tabs.add_theme_constant_override("icon_max_width", 22)
+	_tabs.add_theme_constant_override("icon_max_width", 22 if _mobile else 24)
 	var tab_bar: TabBar = _tabs.get_tab_bar()
-	tab_bar.custom_minimum_size.y = 44 if _mobile else 46
-	tab_bar.add_theme_font_override("font", UIKit.serif())
-	tab_bar.add_theme_font_size_override("font_size", _fs(17 if _mobile else 18))
+	tab_bar.custom_minimum_size.y = 44 if _mobile else 48
+	tab_bar.add_theme_font_override("font", UIKit.sans())
+	tab_bar.add_theme_font_size_override("font_size", _fs(17 if _mobile else 16))
+	if not _mobile:
+		tab_bar.add_theme_constant_override("h_separation", 10)
 
 	_build_person_panel(cols)
 
@@ -548,7 +556,7 @@ func _build_ui() -> void:
 	_end_btn = Button.new()
 	_end_btn.text = tr("HAFTAYI BİTİR   »")
 	_end_btn.theme_type_variation = "PrimaryButton"
-	_end_btn.custom_minimum_size = Vector2(300 if _mobile else 360, 52)
+	_end_btn.custom_minimum_size = Vector2(300 if _mobile else 360, 52 if _mobile else 44)
 	_wire(_end_btn)
 	_end_btn.pressed.connect(_end_week_pressed)
 	bottom.add_child(_end_btn)
@@ -583,6 +591,9 @@ func _build_ui() -> void:
 
 
 func _build_header(parent: Control) -> void:
+	if not _mobile and ResourceLoader.exists(HEADER_ART_TR):
+		_build_header_art(parent)
+		return
 	var header := VBoxContainer.new()
 	header.name = "RoyalHeader"
 	header.add_theme_constant_override("separation", 0)
@@ -692,9 +703,12 @@ func _build_header(parent: Control) -> void:
 		top.add_child(_header_separator(42))
 	var king := Label.new()
 	king.text = tr("KRAL ADRİAN IV")
-	king.add_theme_font_override("font", UIKit.serif())
-	king.add_theme_font_size_override("font_size", _fs(34))
-	king.add_theme_color_override("font_color", Color("e4c47e"))
+	var title_font := FontVariation.new()
+	title_font.base_font = UIKit.serif()
+	title_font.spacing_glyph = 1
+	king.add_theme_font_override("font", title_font)
+	king.add_theme_font_size_override("font_size", _fs(36))
+	king.add_theme_color_override("font_color", Color("e8cb86"))
 	king.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
 	king.add_theme_constant_override("shadow_offset_x", 2)
 	king.add_theme_constant_override("shadow_offset_y", 2)
@@ -736,8 +750,8 @@ func _build_header(parent: Control) -> void:
 		crest_gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		top.add_child(crest_gap)
 	_header_mesai = Label.new()
-	_header_mesai.add_theme_font_override("font", UIKit.serif())
-	_header_mesai.add_theme_font_size_override("font_size", _fs(20))
+	_header_mesai.add_theme_font_override("font", UIKit.sans())
+	_header_mesai.add_theme_font_size_override("font_size", _fs(20 if _mobile else 17))
 	_header_mesai.add_theme_color_override("font_color", UIKit.GOLD)
 	_header_mesai.tooltip_text = tr("Mesai: bu hafta kalan eylem hakkın.")
 	_header_mesai.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -760,8 +774,8 @@ func _build_header(parent: Control) -> void:
 	top.add_child(mesai_row)
 	top.add_child(_header_separator(42))
 	_header_wealth = Label.new()
-	_header_wealth.add_theme_font_override("font", UIKit.serif())
-	_header_wealth.add_theme_font_size_override("font_size", _fs(19))
+	_header_wealth.add_theme_font_override("font", UIKit.sans())
+	_header_wealth.add_theme_font_size_override("font_size", _fs(19 if _mobile else 17))
 	_header_wealth.tooltip_text = tr("Kişisel servet: devlet bütçesinden ayrı, gizli işlerin için.")
 	_header_wealth.mouse_filter = Control.MOUSE_FILTER_STOP
 	top.add_child(_stat("res://art/icons/servet.png", _header_wealth))
@@ -792,8 +806,8 @@ func _build_header(parent: Control) -> void:
 	var bust := bust_slot.get_child(0) as TextureRect
 	if bust.texture != null:
 		bust.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		bust.position = Vector2(-3, -10) if _mobile else Vector2(-14, -60)
-		bust.size = Vector2(52, 60) if _mobile else Vector2(134, 128)
+		bust.position = Vector2(-3, -10) if _mobile else Vector2(-22, -66)
+		bust.size = Vector2(52, 60) if _mobile else Vector2(150, 140)
 	var crest := crest_slot.get_child(0) as TextureRect
 	if crest.texture != null:
 		crest.set_anchors_preset(Control.PRESET_TOP_LEFT)
@@ -831,6 +845,146 @@ func _draw_week_plate(c: Control) -> void:
 	c.draw_polyline(outer, Color(UIKit.GOLD, 0.85), 1.4, true)
 	var inner := PackedVector2Array([Vector2(tip + 3, 4), Vector2(w - tip - 3, 4), Vector2(w - 6, h * 0.5), Vector2(w - tip - 3, h - 4), Vector2(tip + 3, h - 4), Vector2(6, h * 0.5), Vector2(tip + 3, 4)])
 	c.draw_polyline(inner, Color(UIKit.GOLD_DIM, 0.45), 1.0, true)
+
+
+const HEADER_ART_TR := "res://art/ui/header_tr.png"     # onaylı mockup başlığı (yazısı gömülü)
+const HEADER_ART_BASE := "res://art/ui/header_base.png" # aynı resim, unvan yazısı silinmiş (diğer diller)
+const HEADER_ART_W := 1492.0
+const HEADER_ART_H := 118.0
+var _header_art: TextureRect
+var _header_title: Label
+
+
+## Masaüstü başlığı: mockup'ın kendisi (aslanlar, büst, arma, çerçeveler) resim olarak; değişen bilgiler
+## (hafta, mesai, servet, gezinme) resimdeki yerlerine, mockup ölçüleriyle yerleştirilir.
+func _build_header_art(parent: Control) -> void:
+	var header := Control.new()
+	header.name = "RoyalHeader"
+	header.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(header)
+	_header_art = TextureRect.new()
+	_header_art.name = "TourTopBar"
+	_header_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_header_art.stretch_mode = TextureRect.STRETCH_SCALE
+	_header_art.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	_header_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	header.add_child(_header_art)
+	var cream := Color("ece3cc")
+	_header_title = Label.new()
+	_header_title.text = tr("KRAL ADRİAN IV")
+	_header_title.add_theme_font_override("font", UIKit.serif())
+	_header_title.add_theme_color_override("font_color", Color("e8cb86"))
+	_header_title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.85))
+	_header_title.add_theme_constant_override("shadow_offset_y", 2)
+	_header_title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_header_title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_header_art.add_child(_header_title)
+	_header_week = Label.new()
+	_header_week.add_theme_font_override("font", UIKit.serif())
+	_header_week.add_theme_color_override("font_color", Color("efe9dc"))
+	_header_week.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_header_week.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_header_week.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_header_art.add_child(_header_week)
+	_header_progress = ProgressBar.new()
+	_header_progress.max_value = Sim.MAX_WEEKS
+	_header_progress.show_percentage = false
+	_header_progress.add_theme_stylebox_override("background", StyleBoxEmpty.new())
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = Color("f2d48a")
+	_header_progress.add_theme_stylebox_override("fill", fill)
+	_header_progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_header_art.add_child(_header_progress)
+	_header_mesai = Label.new()
+	_header_mesai.visible = false
+	_header_art.add_child(_header_mesai)
+	_mesai_box = HBoxContainer.new()
+	_mesai_box.add_theme_constant_override("separation", 4)
+	_mesai_box.tooltip_text = tr("Mesai: bu hafta kalan eylem hakkın.")
+	_mesai_box.mouse_filter = Control.MOUSE_FILTER_STOP
+	_header_art.add_child(_mesai_box)
+	_header_wealth = Label.new()
+	_header_wealth.add_theme_font_override("font", UIKit.sans())
+	_header_wealth.add_theme_color_override("font_color", cream)
+	_header_wealth.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_header_wealth.tooltip_text = tr("Kişisel servet: devlet bütçesinden ayrı, gizli işlerin için.")
+	_header_wealth.mouse_filter = Control.MOUSE_FILTER_STOP
+	_header_art.add_child(_header_wealth)
+	# Gezinme: resimdeki simge + yazı alanını kaplayan saydam düğmeler; yazı simgenin sağından başlar.
+	var nav := [
+		["desk", tr("Masa"), _show_desk, 982.0, 1062.0, 1021.0],
+		["media", tr("Medya"), _open_media, 1074.0, 1220.0, 1112.0],
+		["save", tr("Kaydet"), _on_save, 1230.0, 1320.0, 1268.0],
+		["menu", tr("Menü"), _show_menu, 1332.0, 1412.0, 1371.0],
+	]
+	var hover := StyleBoxFlat.new()
+	hover.bg_color = Color(UIKit.GOLD, 0.08)
+	for item in nav:
+		var b := Button.new()
+		b.text = item[1]
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.flat = true
+		b.focus_mode = Control.FOCUS_ALL
+		b.add_theme_font_override("font", UIKit.serif())
+		for c in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+			b.add_theme_color_override(c, cream if c != "font_hover_color" else Color("fff3d0"))
+		b.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+		b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+		b.add_theme_stylebox_override("hover", hover)
+		b.add_theme_stylebox_override("pressed", hover)
+		b.set_meta("art_span", Vector3(item[3], item[4], item[5]))
+		_wire(b)
+		b.pressed.connect(item[2])
+		_header_art.add_child(b)
+		_buttons[item[0]] = b
+	(_buttons["desk"] as Button).tooltip_text = tr("Çalışma masası: gündem, gazete, kişiler, günlük, dosyalar, hanedan ve başkent haritası.")
+	(_buttons["media"] as Button).tooltip_text = tr("Medya Merkezi: Sarne'nin gazetesi, Leyla'nın bağımsız gazetesi ve Sarne TV. İkisini karşılaştır; biri yalan söylüyor olabilir.")
+	var place := func() -> void:
+		# Başlık sayfa kenar boşluklarını aşar: resim pencere genişliğinde, oranı korunur.
+		var side := 18.0
+		var art_w := header.size.x + side * 2.0
+		var k := art_w / HEADER_ART_W
+		header.custom_minimum_size.y = HEADER_ART_H * k - 8.0   # haber şeridi başlığın hemen altına oturur
+		_header_art.position = Vector2(-side, 0)
+		_header_art.size = Vector2(art_w, HEADER_ART_H * k)
+		var tr_title := Sfx.language != "en"
+		_header_art.texture = load(HEADER_ART_TR if tr_title else HEADER_ART_BASE)
+		_header_title.visible = not tr_title
+		_header_title.text = tr("KRAL ADRİAN IV")
+		_header_title.add_theme_font_size_override("font_size", roundi(32 * k))
+		_header_title.position = Vector2(272, 62) * k
+		_header_title.size = Vector2(300, 38) * k
+		_header_week.add_theme_font_size_override("font_size", roundi(16 * k))
+		_header_week.position = Vector2(582, 72) * k
+		_header_week.size = Vector2(112, 22) * k
+		_header_progress.position = Vector2(579, 95.2) * k
+		_header_progress.size = Vector2(128, 1.6) * k
+		_mesai_box.position = Vector2(766, 75) * k
+		_header_wealth.add_theme_font_size_override("font_size", roundi(19 * k))
+		_header_wealth.position = Vector2(922, 72) * k
+		_header_wealth.size = Vector2(40, 26) * k
+		for key in ["desk", "media", "save", "menu"]:
+			var b := _buttons[key] as Button
+			var span: Vector3 = b.get_meta("art_span")
+			b.position = Vector2(span.x, 66) * k
+			b.size = Vector2(span.y - span.x, 42) * k
+			# Yazı simgeden sonraki alana sığmazsa küçülür (ör. "Medya · yeni sayı", İngilizce metinler).
+			var room := (span.y - span.z) * k - 4.0
+			var fsize := roundi(15.5 * k)
+			while fsize > 9 and UIKit.serif().get_string_size(b.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x > room:
+				fsize -= 1
+			b.add_theme_font_size_override("font_size", fsize)
+			var pad := StyleBoxEmpty.new()
+			pad.content_margin_left = (span.z - span.x) * k
+			b.add_theme_stylebox_override("normal", pad)
+			var hv := hover.duplicate() as StyleBoxFlat
+			hv.content_margin_left = pad.content_margin_left
+			b.add_theme_stylebox_override("hover", hv)
+			b.add_theme_stylebox_override("pressed", hv)
+			b.add_theme_stylebox_override("focus", pad)
+	header.resized.connect(place)
+	header.set_meta("place", place)
+	place.call_deferred()
 
 
 func _royal_asset_slot(name: String, slot_size: Vector2, mirrored: bool) -> Control:
@@ -886,17 +1040,17 @@ func _header_symbol(kind: String, icon_size: Vector2, color: Color, filled := fa
 
 func _header_nav(parent: Control, key: String, text: String, icon_kind: String, callback: Callable) -> HBoxContainer:
 	var group := HBoxContainer.new()
-	group.add_theme_constant_override("separation", 5 if _mobile else 10)
+	group.add_theme_constant_override("separation", 5 if _mobile else 8)
 	group.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	group.add_child(_header_symbol(icon_kind, Vector2(30, 30) if not _mobile else Vector2(24, 24), UIKit.GOLD))
+	group.add_child(_header_symbol(icon_kind, Vector2(26, 26) if not _mobile else Vector2(24, 24), UIKit.GOLD))
 	var button := Button.new()
 	button.text = text
 	button.theme_type_variation = "GhostButton"
 	button.custom_minimum_size = Vector2(0, 44 if _mobile else 36)
 	button.size_flags_horizontal = Control.SIZE_SHRINK_END
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	button.add_theme_font_override("font", UIKit.serif())
-	button.add_theme_font_size_override("font_size", _fs(16 if not _mobile else 13))
+	button.add_theme_font_override("font", UIKit.sans())
+	button.add_theme_font_size_override("font_size", _fs(14 if not _mobile else 13))
 	button.add_theme_color_override("font_color", UIKit.TEXT)
 	button.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
 	var nav_hover := StyleBoxFlat.new()
@@ -971,6 +1125,8 @@ func _build_fx() -> void:
 	atmos.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var mat := ShaderMaterial.new()
 	mat.shader = ATMOS_SHADER
+	if not _mobile:
+		mat.set_shader_parameter("grain", 0.018)   # mockup: temiz yüzey, belirgin gren yok
 	atmos.material = mat
 	_fx.add_child(atmos)
 	_curtain = ColorRect.new()
@@ -1140,7 +1296,7 @@ func _section(title: String, helper := "") -> Control:
 	var l := Label.new()
 	l.text = title
 	l.add_theme_font_override("font", UIKit.caps())
-	l.add_theme_font_size_override("font_size", _fs(15))
+	l.add_theme_font_size_override("font_size", _fs(15 if _mobile else 16))
 	l.add_theme_color_override("font_color", UIKit.GOLD)
 	l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(l)
@@ -1155,7 +1311,7 @@ func _section(title: String, helper := "") -> Control:
 	if helper != "":
 		var h := Label.new()
 		h.text = helper
-		h.add_theme_font_override("font", UIKit.serif())
+		h.add_theme_font_override("font", UIKit.sans())
 		h.add_theme_font_size_override("font_size", _fs(13))
 		h.add_theme_color_override("font_color", Color(UIKit.TEXT_DIM, 0.85))
 		h.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -1178,7 +1334,8 @@ func _toast_msg(text: String) -> void:
 func _log(text: String) -> void:
 	_journal.append_text("• %s\n" % text)
 	_toast_msg(text)
-	_hint(tr("Son eylem") + "\n" + text)  # sonuç bildirim kaybolsa da burada kalır
+	if _mobile:
+		_hint(tr("Son eylem") + "\n" + text)  # sonuç bildirim kaybolsa da burada kalır (masaüstünde Bu Hafta defterinde)
 	if _week_log_week != Sim.week:
 		_week_log.clear()
 		_week_log_week = Sim.week
@@ -1835,6 +1992,8 @@ func _refresh() -> void:
 	if _header_week == null or Sim.actors.is_empty():
 		return
 	_header_week.text = tr("HAFTA %d / %d") % [Sim.week, Sim.MAX_WEEKS]
+	if _header_art != null and _header_art.texture != load(HEADER_ART_TR if Sfx.language != "en" else HEADER_ART_BASE):
+		(_header_art.get_parent().get_meta("place") as Callable).call()   # dil değişti: unvan resmi/yazısı
 	if _fast() or _header_progress.value > Sim.week:
 		_header_progress.value = Sim.week
 	elif _header_progress.value < Sim.week:
@@ -1848,6 +2007,8 @@ func _refresh() -> void:
 	if mb:
 		var fresh_issue: bool = _media_seen_week != Sim.week
 		mb.text = (tr("Medya •") if _mobile else tr("Medya  ·  yeni sayı")) if fresh_issue else tr("Medya")
+		if _header_art != null and mb.has_meta("art_span"):
+			(_header_art.get_parent().get_meta("place") as Callable).call()
 	_header_wealth.text = str(int(Sim.private_wealth))
 	if _last_mesai != Sim.mesai and _last_mesai != -1 and not _fast():
 		UIKit.pulse(_mesai_box, 1.2)
@@ -1942,7 +2103,7 @@ func _flow_chip(text: String, col: Color, target: String) -> Control:
 	var b := Button.new()
 	b.text = text
 	b.flat = true
-	b.add_theme_font_override("font", UIKit.serif())
+	b.add_theme_font_override("font", UIKit.sans())
 	b.add_theme_font_size_override("font_size", _fs(15))
 	for st in ["font_color", "font_disabled_color"]:
 		b.add_theme_color_override(st, col)

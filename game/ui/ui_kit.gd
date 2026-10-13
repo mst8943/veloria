@@ -381,7 +381,7 @@ static func build_theme(mobile := false) -> Theme:
 	t.set_stylebox("pressed", "GhostButton", box(Color(GOLD, 0.15), GOLD, 5, bm))
 	t.set_color("font_color", "GhostButton", Color("d9c79a"))
 	t.set_color("font_hover_color", "GhostButton", Color("fff3d0"))
-	t.set_font("font", "GhostButton", serif())
+	t.set_font("font", "GhostButton", sans())
 	t.set_font_size("font_size", "GhostButton", scaled_font_size(19 if mobile else 17))
 	# Birincil düğme
 	t.add_type("PrimaryButton")
@@ -417,14 +417,14 @@ static func build_theme(mobile := false) -> Theme:
 	var ta := tex_box("tab_active", [24, 20, 24, 8], [16, 8, 16, 6])
 	if ta != null:
 		# Seçili sekme de boşta sekmeyle aynı boyda (yalnızca daha parlak); seçilince küçülmez.
-		var ts := tex_box("tab_selected", [20, 12, 20, 8], [16, 8, 16, 6])
+		var ts := tex_box("tab_selected_gap", [27, 12, 27, 8], [24, 8, 24, 6])
 		t.set_stylebox("tab_selected", "TabContainer", ts if ts != null else ta)
-		t.set_stylebox("tab_unselected", "TabContainer", tex_box("tab_idle", [20, 12, 20, 8], [16, 8, 16, 6]))
-		t.set_stylebox("tab_hovered", "TabContainer", tex_box("tab_idle", [20, 12, 20, 8], [16, 8, 16, 6], Color(1.6, 1.5, 1.3)))
+		t.set_stylebox("tab_unselected", "TabContainer", tex_box("tab_idle_gap", [27, 12, 27, 8], [24, 8, 24, 6]))
+		t.set_stylebox("tab_hovered", "TabContainer", tex_box("tab_selected_gap", [27, 12, 27, 8], [24, 8, 24, 6], Color(1, 1, 1, 0.7)))
 	t.set_color("font_selected_color", "TabContainer", GOLD)
-	t.set_color("font_unselected_color", "TabContainer", TEXT_DIM)
+	t.set_color("font_unselected_color", "TabContainer", TEXT if not mobile else TEXT_DIM)
 	t.set_color("font_hovered_color", "TabContainer", TEXT)
-	t.set_font("font", "TabContainer", serif())
+	t.set_font("font", "TabContainer", sans())
 	t.set_font_size("font_size", "TabContainer", scaled_font_size(21 if mobile else 17))
 	# Listeler
 	t.set_stylebox("panel", "ItemList", box(Color(PANEL, 0.6), Color(GOLD_DIM, 0.25), 4, 6))

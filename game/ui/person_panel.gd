@@ -224,8 +224,8 @@ func _build_ui(cols: HBoxContainer) -> void:
 	host._info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	host._info.fit_content = true
 	host._info.scroll_active = false
-	host._info.add_theme_font_override("normal_font", UIKit.serif())
-	host._info.add_theme_font_override("bold_font", UIKit.serif())
+	host._info.add_theme_font_override("normal_font", UIKit.sans())
+	host._info.add_theme_font_override("bold_font", UIKit.sans(680))
 	host._info.add_theme_font_size_override("normal_font_size", host._fs(16 if host._mobile else 17))
 	icol.add_child(host._info)
 	# Kişinin özellikleri: küçük göstergeler (sayı yok; yalnızca oyuncunun bildiği kadar).
@@ -264,10 +264,10 @@ func _build_ui(cols: HBoxContainer) -> void:
 	var act_style := UIKit.box(Color(UIKit.PANEL, 0.8), Color(UIKit.GOLD_DIM, 0.28), 8, 8)
 	if not host._mobile:
 		act_style.set_border_width_all(0)
-		act_style.content_margin_top = 6
-		act_style.content_margin_bottom = 3
-		act_style.content_margin_left = 16
-		act_style.content_margin_right = 14
+		act_style.content_margin_top = 10
+		act_style.content_margin_bottom = 8
+		act_style.content_margin_left = 22
+		act_style.content_margin_right = 20
 	act_panel.add_theme_stylebox_override("panel", act_style)
 	person_block.add_child(act_panel)
 	UIKit.ornament(act_panel, Color(UIKit.GOLD, 0.8), 18 if not host._mobile else 14, 1)
@@ -279,7 +279,9 @@ func _build_ui(cols: HBoxContainer) -> void:
 	host._act_title.add_theme_font_size_override("font_size", host._fs(17 if host._mobile else 16))
 	if not host._mobile:
 		host._act_title.add_theme_constant_override("line_spacing", -6)
-	host._act_title.add_theme_color_override("font_color", UIKit.GOLD)
+	host._act_title.add_theme_color_override("font_color", UIKit.GOLD if host._mobile else Color("e8dcc0"))
+	if not host._mobile:
+		host._act_title.add_theme_font_override("font", UIKit.caps())
 	host._act_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	host._act_title.custom_minimum_size.y = 44 if host._mobile else 0
 	av.add_child(host._act_title)
@@ -345,7 +347,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		cb.custom_minimum_size.y = 44 if host._mobile else 24
 		cb.clip_text = false
 		cb.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		cb.add_theme_font_override("font", UIKit.serif())
+		cb.add_theme_font_override("font", UIKit.sans())
 		cb.add_theme_font_size_override("font_size", host._fs(11 if not host._mobile else 15))
 		if g[0] == "BASKI":
 			for c in ["font_color", "font_hover_color", "font_pressed_color", "font_hover_pressed_color"]:
@@ -374,7 +376,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 					button_row = row.get_child(row.get_child_count() - 1)
 			_add_btn(button_row, item[0], item[1], actions[item[0]])
 			var btn := host._buttons[item[0]] as Button
-			btn.add_theme_font_size_override("font_size", host._fs(13))
+			btn.add_theme_font_size_override("font_size", host._fs(13 if host._mobile else 12))
 			btn.clip_text = true
 			if item[0] in ["blackmail", "dismiss", "op_zayif"]:
 				btn.theme_type_variation = "DangerButton"
@@ -391,14 +393,16 @@ func _build_ui(cols: HBoxContainer) -> void:
 	host._hint_label = RichTextLabel.new()
 	host._hint_label.bbcode_enabled = true
 	host._hint_label.scroll_active = false
-	host._hint_label.add_theme_color_override("default_color", UIKit.TEXT_DIM)
-	host._hint_label.add_theme_font_override("normal_font", UIKit.serif())
-	host._hint_label.add_theme_font_override("bold_font", UIKit.serif())
-	host._hint_label.add_theme_font_size_override("normal_font_size", host._fs(15 if host._mobile else 14))
-	host._hint_label.add_theme_font_size_override("bold_font_size", host._fs(15 if host._mobile else 14))
+	host._hint_label.add_theme_color_override("default_color", UIKit.TEXT_DIM if host._mobile else UIKit.TEXT)
+	host._hint_label.add_theme_font_override("normal_font", UIKit.sans())
+	host._hint_label.add_theme_font_override("bold_font", UIKit.sans(680))
+	host._hint_label.add_theme_font_size_override("normal_font_size", host._fs(15 if host._mobile else 13))
+	host._hint_label.add_theme_font_size_override("bold_font_size", host._fs(15 if host._mobile else 13))
 	host._hint_label.clip_contents = true
-	host._hint_label.custom_minimum_size.y = 36 if not host._mobile else 54
+	host._hint_label.custom_minimum_size.y = 42 if not host._mobile else 54
 	host._hint_label.text = tr(HINT_DEFAULT)
+	if not host._mobile:
+		_hint(tr(CAT_TIPS.get(host._act_cat, CAT_TIPS["KAZAN"])))
 	av.add_child(host._hint_label)
 	if not host._mobile:
 		# Masaüstü: raporlar kaynaklarının (güç merkezlerinin) altında, kompakt liste.
@@ -508,6 +512,8 @@ func _role_for_actor(a) -> String:
 
 func _show_act_cat(cat: String) -> void:
 	host._act_cat = cat
+	if not host._mobile and CAT_TIPS.has(cat):
+		_hint(tr(CAT_TIPS[cat]))   # mockup: alan seçili sekmenin ne işe yaradığını söyler
 	for k in host._cat_rows:
 		(host._cat_rows[k] as Control).visible = k == cat
 	for k in host._cat_btns:
@@ -686,7 +692,7 @@ func _hint(text: String) -> void:
 		return
 	var lines := text.split("\n", false, 1)
 	if lines.size() == 2:
-		host._hint_label.text = "[color=#d6b25e][b]%s[/b][/color]\n%s" % [lines[0], lines[1]]
+		host._hint_label.text = ("[color=#d6b25e][b]%s[/b][/color]\n%s" if host._mobile else "[color=#f3ead2][b]%s[/b][/color]\n%s") % [lines[0], lines[1]]
 	else:
 		host._hint_label.text = text
 
@@ -864,7 +870,7 @@ func _style_cards(hover_id := "") -> void:
 		var a = Sim.actors.get(id)
 		var selected: bool = host._sel.has(id)
 		var primary: bool = not host._sel.is_empty() and host._sel[0] == id
-		var border := Color(UIKit.GOLD_DIM, 0.35)
+		var border := Color(UIKit.GOLD_DIM, 0.35) if host._mobile else Color(UIKit.GOLD, 0.62)
 		var bg := Color(UIKit.PANEL, 0.9)
 		if a != null and a.moved:
 			border = UIKit.DANGER
@@ -877,7 +883,7 @@ func _style_cards(hover_id := "") -> void:
 				var external_lvl := Sim.external_suspicion_level(id) if Sim.FOREIGN_ENVOYS.has(id) else 0
 				var external_hint := external_lvl >= 2
 				rl.text = UIKit.tr_upper(tr("Dış temas şüphesi") if external_hint else (role if lvl < 2 else "%s · %s" % [role, Sim.SUSPICION_NAMES[lvl]]))
-				rl.add_theme_color_override("font_color", UIKit.AMBER.lightened(0.15) if external_hint else [Color(UIKit.GOLD, 0.85), Color(UIKit.GOLD, 0.85), UIKit.AMBER.lightened(0.15), Color("ff8a7a")][lvl])
+				rl.add_theme_color_override("font_color", UIKit.AMBER.lightened(0.15) if external_hint else [UIKit.GOLD, UIKit.GOLD, UIKit.AMBER.lightened(0.15), Color("ff8a7a")][lvl])
 			if lvl >= 2:
 				border = Color(UIKit.AMBER if lvl == 2 else UIKit.DANGER, 0.7)
 		if hover_id == id:
@@ -972,7 +978,7 @@ func _update_info() -> void:
 	portrait_star.position = Vector2(3, 3)
 	portrait_star.custom_minimum_size = Vector2(15, 15)
 	host._portrait_box.add_child(portrait_star)
-	host._info.append_text("[b][font_size=%d]%s[/font_size][/b]  [color=gray]%s[/color]" % [host._fs(24 if not host._mobile else 20), a.display_name, a.title])
+	host._info.append_text("[b][font_size=%d]%s[/font_size][/b]  [color=#cfc6b0][font_size=%d]%s[/font_size][/color]" % [host._fs(20 if not host._mobile else 20), a.display_name, host._fs(14 if not host._mobile else 16), a.title])
 	# Güç: üç kademe (eskiden metinle verilen bilgi; fazlası değil).
 	var level := Sim.power_tier(a.power)
 	var lvl_name: String = Sim.POWER_TIER_NAMES[level]
@@ -1027,7 +1033,7 @@ func _signs_tip(a) -> String:
 ## Kişi göstergesi: renkli nokta ya da kademe noktaları + kısa metin.
 func _trait(text: String, col: Color, filled := -1, total := 0, tip := "") -> Control:
 	var chip := PanelContainer.new()
-	var sb := UIKit.box(Color(col, 0.12), Color(col, 0.5), 6, 8)
+	var sb := UIKit.box(Color(col, 0.12), Color(col, 0.5), 6, 8 if host._mobile else 7)
 	sb.content_margin_top = 3
 	sb.content_margin_bottom = 3
 	chip.add_theme_stylebox_override("panel", sb)
@@ -1039,16 +1045,16 @@ func _trait(text: String, col: Color, filled := -1, total := 0, tip := "") -> Co
 	chip.add_child(row)
 	if filled >= 0 and not host._mobile:
 		for i in maxi(filled, 1):
-			row.add_child(_trait_mark(col, true, filled > 0))
+			row.add_child(_trait_mark(col, true, true))
 	else:
 		var n := total if filled >= 0 else 1
 		for i in n:
 			row.add_child(_trait_mark(col, filled >= 0, filled < 0 or i < filled))
 	var l := Label.new()
 	l.text = text
-	l.add_theme_font_override("font", UIKit.serif())
-	l.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 13))
-	l.add_theme_color_override("font_color", col.lightened(0.25) if col.s > 0.1 else col)
+	l.add_theme_font_override("font", UIKit.sans())
+	l.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 12))
+	l.add_theme_color_override("font_color", (col.lightened(0.25) if col.s > 0.1 else col) if host._mobile else Color("ece3cc"))
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(l)
 	return chip
@@ -1063,9 +1069,9 @@ func _trait_mark(col: Color, star: bool, filled: bool) -> Control:
 		var center := mark.size / 2.0
 		var points := PackedVector2Array()
 		if star:
-			for i in 10:
-				var angle: float = -PI / 2.0 + float(i) * PI / 5.0
-				var radius: float = mark.size.x * (0.48 if i % 2 == 0 else 0.22)
+			for i in 8:
+				var angle: float = -PI / 2.0 + float(i) * PI / 4.0
+				var radius: float = mark.size.x * (0.5 if i % 2 == 0 else 0.14)
 				points.append(center + Vector2(cos(angle), sin(angle)) * radius)
 		else:
 			points = PackedVector2Array([center + Vector2(0, -5), center + Vector2(5, 0), center + Vector2(0, 5), center + Vector2(-5, 0)])

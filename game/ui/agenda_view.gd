@@ -79,7 +79,7 @@ func _add_guide(animated: Array[Control]) -> void:
 		bar.set_border_width_all(1)
 		bar.set_corner_radius_all(4)
 		step_bar.draw_style_box(bar, Rect2(Vector2.ZERO, step_bar.size))
-		var font := UIKit.serif()
+		var font := UIKit.sans()
 		var fs: int = host._fs(14)
 		var half: Array[float] = []
 		for i in GUIDE_STEPS.size():
@@ -110,7 +110,7 @@ func _add_guide(animated: Array[Control]) -> void:
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.custom_minimum_size.y = 44 if host._mobile else 36
 		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		b.add_theme_font_override("font", UIKit.serif())
+		b.add_theme_font_override("font", UIKit.sans())
 		b.add_theme_font_size_override("font_size", host._fs(14))
 		b.tooltip_text = tr(GUIDE_STEPS[i][1])
 		var col := UIKit.GOLD if i + 1 == step else (UIKit.OK if i + 1 < step else UIKit.TEXT_DIM)
@@ -126,7 +126,7 @@ func _add_guide(animated: Array[Control]) -> void:
 	var tip := Label.new()
 	tip.text = tr(GUIDE_STEPS[step - 1][1])
 	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	tip.add_theme_font_override("font", UIKit.serif())
+	tip.add_theme_font_override("font", UIKit.sans())
 	tip.add_theme_font_size_override("font_size", host._fs(13 if host._mobile else 14))
 	tip.add_theme_color_override("font_color", Color("d8cba8") if host._mobile else UIKit.TEXT)
 	v.add_child(tip)
@@ -299,7 +299,7 @@ func _rebuild_agenda() -> void:
 		nl.text = tr(ADVICE[Sim.week])
 		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		nl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		nl.add_theme_font_override("font", UIKit.serif())
+		nl.add_theme_font_override("font", UIKit.sans())
 		nl.add_theme_font_size_override("font_size", host._fs(14))
 		nl.add_theme_color_override("font_color", UIKit.TEXT)
 		nl.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -337,7 +337,7 @@ func _rebuild_agenda() -> void:
 		empty.text = tr("Bu hafta bekleyen karar yok. Kişilerle ilgilen ya da haftayı bitir.")
 		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		empty.add_theme_color_override("font_color", UIKit.TEXT if host._mobile else Color(UIKit.TEXT, 0.82))
-		empty.add_theme_font_override("font", UIKit.serif())
+		empty.add_theme_font_override("font", UIKit.sans())
 		empty.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 14))
 		host._agenda.add_child(empty)
 	for pi in Sim.pending.size():
@@ -611,7 +611,7 @@ func _add_changes(animated: Array[Control], target_override: VBoxContainer = nul
 		l.text = str(ch["text"])
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		l.add_theme_font_override("font", UIKit.serif())
+		l.add_theme_font_override("font", UIKit.sans())
 		l.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 14))
 		h.add_child(l)
 
@@ -628,8 +628,8 @@ func _add_week_ledger(animated: Array[Control], target_override: VBoxContainer =
 	assembly.text = Sim.parliament_report_line()
 	assembly.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	assembly.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-	assembly.add_theme_font_override("font", UIKit.serif())
-	assembly.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 14))
+	assembly.add_theme_font_override("font", UIKit.sans())
+	assembly.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 13))
 	assembly.add_theme_color_override("font_color", UIKit.TEXT if not host._mobile else UIKit.TEXT_DIM)
 	if not host._mobile:
 		assembly.add_theme_constant_override("line_spacing", -4)
@@ -640,8 +640,8 @@ func _add_week_ledger(animated: Array[Control], target_override: VBoxContainer =
 			else tr("Mesain bitti. Raporlara göz at ve haftayı bitir."))
 		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		empty.add_theme_color_override("font_color", UIKit.TEXT_DIM)
-		empty.add_theme_font_override("font", UIKit.serif())
-		empty.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 14))
+		empty.add_theme_font_override("font", UIKit.sans())
+		empty.add_theme_font_size_override("font_size", host._fs(15 if host._mobile else 13))
 		if not host._mobile:
 			empty.add_theme_color_override("font_color", UIKit.TEXT)
 			empty.add_theme_constant_override("line_spacing", -4)
@@ -664,8 +664,8 @@ func _add_week_ledger(animated: Array[Control], target_override: VBoxContainer =
 		l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		l.add_theme_font_size_override("normal_font_size", host._fs(12))
 		l.add_theme_font_size_override("bold_font_size", host._fs(12))
-		l.add_theme_font_override("normal_font", UIKit.serif())
-		l.add_theme_font_override("bold_font", UIKit.serif())
+		l.add_theme_font_override("normal_font", UIKit.sans())
+		l.add_theme_font_override("bold_font", UIKit.sans(680))
 		l.text = "[color=#d6b25e]%d[/color]   %s" % [i + 1, host._week_log[i]]
 		row.add_child(l)
 	# Yalnızca en son satır canlanır (her eylemde bütün liste yeniden belirmesin).
@@ -774,10 +774,10 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 			# Mockup: ad ayrı, kalın bir sütunda; metin hizalı akar.
 			var name_col := Label.new()
 			name_col.text = _short_name(str(r["name"]))
-			name_col.custom_minimum_size.x = 54
+			name_col.custom_minimum_size.x = 48
 			name_col.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-			name_col.add_theme_font_override("font", UIKit.serif_bold())
-			name_col.add_theme_font_size_override("font_size", host._fs(14))
+			name_col.add_theme_font_override("font", UIKit.sans(680))
+			name_col.add_theme_font_size_override("font_size", host._fs(13))
 			name_col.add_theme_color_override("font_color", UIKit.TEXT)
 			name_col.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			row.add_child(name_col)
@@ -789,10 +789,10 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		l.add_theme_font_override("normal_font", UIKit.serif())
-		l.add_theme_font_override("bold_font", UIKit.serif())
-		l.add_theme_font_size_override("normal_font_size", host._fs(15 if host._mobile else 13))
-		l.add_theme_font_size_override("bold_font_size", host._fs(15 if host._mobile else 13))
+		l.add_theme_font_override("normal_font", UIKit.sans())
+		l.add_theme_font_override("bold_font", UIKit.sans(680))
+		l.add_theme_font_size_override("normal_font_size", host._fs(15 if host._mobile else 12))
+		l.add_theme_font_size_override("bold_font_size", host._fs(15 if host._mobile else 12))
 		l.add_theme_color_override("default_color", UIKit.TEXT)
 		l.text = ("[b]%s[/b]  %s" % [_short_name(str(r["name"])), r["text"]]) if host._mobile else str(r["text"])
 		if not host._mobile:
