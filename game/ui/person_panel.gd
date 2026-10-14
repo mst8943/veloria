@@ -101,8 +101,9 @@ func _build_ui(cols: HBoxContainer) -> void:
 		people.add_child(right)
 	else:
 		cols.add_child(right)
+	var cap_row: HBoxContainer
 	if not host._mobile:
-		var cap_row := HBoxContainer.new()
+		cap_row = HBoxContainer.new()
 		right.add_child(cap_row)
 		var cap: Control = host._section(tr("İZLEME LİSTESİ"))
 		cap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -117,6 +118,9 @@ func _build_ui(cols: HBoxContainer) -> void:
 	host._multi_btn.add_theme_font_size_override("font_size", host._fs(13))
 	host._multi_btn.tooltip_text = tr("Açıkken kartlara dokunmak seçime ekler/çıkarır (Ctrl ile aynı). Operasyon çemberi için.")
 	host._wire(host._multi_btn)
+	if not host._mobile:
+		host._multi_btn.custom_minimum_size.y = 32
+		cap_row.add_child(host._multi_btn)
 	host._multi_btn.toggled.connect(func(on: bool) -> void:
 		_hint(tr("Çoklu seçim %s. Operasyon için 1–3 kişi seç.") % tr("açık" if on else "kapalı")))
 	host._grid = GridContainer.new()
@@ -174,6 +178,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		left.pressed.connect(func() -> void: card_scroll.scroll_horizontal = maxi(0, card_scroll.scroll_horizontal - 220))
 		right_arrow.pressed.connect(func() -> void: card_scroll.scroll_horizontal += 220)
 		_set_mobile_group("dynasty")
+		page_parent.add_child(host._multi_btn)
 	operation_bar = VBoxContainer.new()
 	operation_bar.name = "OperationCircle"
 	operation_bar.visible = false
@@ -378,7 +383,6 @@ func _build_ui(cols: HBoxContainer) -> void:
 		if g[0] == "OPERASYON":
 			operation_tools.add_child(cb)
 			cb.custom_minimum_size.y = 44
-			operation_tools.add_child(host._multi_btn)
 		else:
 			cat_row.add_child(cb)
 		host._cat_btns[g[0]] = cb
@@ -529,8 +533,19 @@ func _show_act_cat(cat: String) -> void:
 
 
 func _sync_operation_bar() -> void:
-	if operation_bar != null:
-		operation_bar.visible = host._multi_btn.button_pressed or host._sel.size() > 1
+	if operation_bar == null:
+		return
+	operation_bar.visible = host._multi_btn.button_pressed or host._sel.size() > 1
+	if host._report_box == null:
+		return
+	var banner := host._report_box.find_child("WeekBanner", true, false) as Control
+	if banner != null:
+		banner.visible = not operation_bar.visible
+	var rows := host._report_box.find_child("ReportRows", true, false) as VBoxContainer
+	if rows != null:
+		var max_rows: int = 3 if host.get_viewport_rect().size.y >= 780 else 2
+		for i in rows.get_child_count():
+			rows.get_child(i).visible = not operation_bar.visible or i < max_rows
 
 
 func _set_dossier_action_layout() -> void:
@@ -871,6 +886,7 @@ func _on_card_input(ev: InputEvent, id: String) -> void:
 		host._sel.append(id)
 	_style_cards()
 	_update_info()
+	_sync_operation_bar()
 	if not mb.ctrl_pressed and not mb.shift_pressed and not host._multi_btn.button_pressed:
 		host._open_person_file(id)
 	if not host._mobile:

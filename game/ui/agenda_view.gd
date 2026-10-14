@@ -801,6 +801,10 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 	reports_label.add_theme_font_override("font", UIKit.serif())
 	reports_label.add_theme_font_size_override("font_size", host._fs(16))
 	contents.add_child(reports_heading)
+	var report_rows := VBoxContainer.new()
+	report_rows.name = "ReportRows"
+	report_rows.add_theme_constant_override("separation", 2)
+	contents.add_child(report_rows)
 	var full_reports := PopupPanel.new()
 	host.add_child(full_reports)
 	var popup_scroll := ScrollContainer.new()
@@ -810,6 +814,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 	popup_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	popup_scroll.add_child(popup_list)
 	var all_reports := Button.new()
+	all_reports.name = "AllReportsButton"
 	all_reports.text = tr("Tüm raporlar (%d)") % Sim.reports.size()
 	all_reports.theme_type_variation = "GhostButton"
 	all_reports.custom_minimum_size.y = 44 if host._mobile else 0
@@ -857,7 +862,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 				Sfx.play("click", -4.0)
 				host._open_person_file(sid)
 				host._all_reports_popup.hide())
-		contents.add_child(panel)
+		report_rows.add_child(panel)
 		animated.append(panel)
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)

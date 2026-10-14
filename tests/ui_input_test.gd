@@ -16,6 +16,10 @@ func _run() -> void:
 		return
 	for i in 20:
 		await process_frame
+	if not await _operation_toggle_ok():
+		printerr("UI INPUT: operation toggle is not reachable")
+		quit(1)
+		return
 	main._on_flow("gundem")
 	for i in 5:
 		await process_frame
@@ -200,6 +204,11 @@ func _run() -> void:
 func _run_mobile() -> void:
 	for i in 20:
 		await process_frame
+	main._tabs.current_tab = 1
+	if not await _operation_toggle_ok():
+		printerr("UI INPUT: mobile operation toggle is hidden or smaller than 44 px")
+		quit(1)
+		return
 	if main._tabs.get_tab_count() != 3 or not main._tabs.get_tab_title(0).begins_with(tr("Gündem")) or main._tabs.get_tab_title(1) != tr("Kişiler") or main._tabs.get_tab_title(2) != tr("Raporlar"):
 		printerr("UI INPUT: mobil ana sekmeler hatalı")
 		quit(1)
@@ -422,6 +431,28 @@ func _run_mobile() -> void:
 		return
 	print("UI INPUT: OK (mobile)")
 	quit(0)
+
+
+func _operation_toggle_ok() -> bool:
+	var button := main._multi_btn as Button
+	if not button.is_visible_in_tree() or (main._mobile and button.custom_minimum_size.y < 44):
+		return false
+	button.button_pressed = true
+	for _i in 2: await process_frame
+	var opened: bool = main._person_panel.operation_bar.visible
+	var reports_fit := true
+	if not main._mobile and main._report_box != null:
+		var banner := main._report_box.find_child("WeekBanner", true, false) as Control
+		var rows := main._report_box.find_child("ReportRows", true, false) as VBoxContainer
+		var all_reports := main._report_box.find_child("AllReportsButton", true, false) as Button
+		var visible_rows := 0
+		if rows != null:
+			for row in rows.get_children():
+				if row.visible: visible_rows += 1
+		reports_fit = banner != null and not banner.visible and visible_rows <= (3 if main.get_viewport_rect().size.y >= 780 else 2) and all_reports != null and all_reports.get_global_rect().end.y <= root.get_visible_rect().end.y
+	button.button_pressed = false
+	await process_frame
+	return opened and reports_fit and not main._person_panel.operation_bar.visible
 
 
 func _check_city_dismiss() -> bool:
