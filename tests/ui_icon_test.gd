@@ -2,7 +2,7 @@ extends SceneTree
 
 const UIKit := preload("res://game/ui/ui_kit.gd")
 const IconFallback := preload("res://game/ui/ornament_icon.gd")
-const ICONS := ["bina", "gazete", "kumsaati", "disli", "zarf", "klasor", "parsomen", "sandik", "terazi", "tac", "meclis", "altin", "kilic", "goz", "pusula", "defne"]
+const ICONS := ["bina", "gazete", "kumsaati", "disli", "zarf", "klasor", "parsomen", "sandik", "terazi", "tac", "meclis", "altin", "kilic", "goz", "pusula", "defne", "kalem"]
 
 
 func _initialize() -> void:

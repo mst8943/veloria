@@ -77,6 +77,8 @@ var _media_seen_week := 0
 var _acted_week := 0              # bu hafta bir kişiye eylem yapıldı mı (yol gösterici için)
 var _queued_end := false
 var _mesai_box: HBoxContainer
+var _mesai_tip_popup: Panel
+var _mesai_touch_start := Vector2(-1, -1)
 var _curtain_img: TextureRect
 var _curtain_skip := false
 var _cinema: Control
@@ -776,18 +778,13 @@ func _build_header(parent: Control) -> void:
 	_header_mesai.add_theme_font_override("font", UIKit.sans())
 	_header_mesai.add_theme_font_size_override("font_size", _fs(20 if _mobile else 17))
 	_header_mesai.add_theme_color_override("font_color", UIKit.GOLD)
-	_header_mesai.tooltip_text = tr("Mesai: bu hafta kalan eylem hakkın.")
+	_header_mesai.tooltip_text = _mesai_tooltip()
 	_header_mesai.mouse_filter = Control.MOUSE_FILTER_STOP
 	_header_mesai.visible = false
 	var mesai_row := HBoxContainer.new()
-	mesai_row.add_theme_constant_override("separation", 7)
+	mesai_row.add_theme_constant_override("separation", 0)
 	mesai_row.mouse_filter = Control.MOUSE_FILTER_STOP
-	mesai_row.tooltip_text = _header_mesai.tooltip_text
-	_mesai_box = HBoxContainer.new()
-	_mesai_box.add_theme_constant_override("separation", 7)
-	_mesai_box.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	_mesai_box.tooltip_text = _header_mesai.tooltip_text
-	_mesai_box.mouse_filter = Control.MOUSE_FILTER_STOP
+	_mesai_box = _new_mesai_group()
 	if not _mobile:
 		var mesai_gap := Control.new()
 		mesai_gap.custom_minimum_size.x = 10
@@ -870,7 +867,7 @@ func _draw_week_plate(c: Control) -> void:
 	c.draw_polyline(inner, Color(UIKit.GOLD_DIM, 0.45), 1.0, true)
 
 
-const HEADER_ART := "res://art/ui/header_hi.png"
+const HEADER_ART := "res://art/ui/header_hi_clean.png"
 const HEADER_ART_W := 1964.0
 # Crop below the main rail; the remaining side scroll tails cost vertical room in the game layout.
 const HEADER_ART_H := 210.0
@@ -888,9 +885,6 @@ static func _header_texture(english: bool) -> Texture2D:
 		return _header_art_tr
 	var source: Texture2D = load(HEADER_ART)
 	var image: Image = source.get_image().duplicate()
-	# Only the inner content rows are inpainted; the engraved separators and frames remain untouched.
-	for rect in [Rect2i(868, 123, 132, 46), Rect2i(1027, 121, 140, 50), Rect2i(1184, 121, 94, 50), Rect2i(1298, 121, 98, 50), Rect2i(1404, 121, 184, 50), Rect2i(1598, 121, 137, 50), Rect2i(1741, 121, 103, 50)]:
-		_fill_header_rect(image, rect)
 	if english:
 		image.fill_rect(Rect2i(390, 118, 430, 57), Color("080705"))
 	var texture := ImageTexture.create_from_image(image)
@@ -899,20 +893,6 @@ static func _header_texture(english: bool) -> Texture2D:
 	else:
 		_header_art_tr = texture
 	return texture
-
-
-static func _fill_header_rect(image: Image, rect: Rect2i) -> void:
-	var x0 := maxi(1, rect.position.x)
-	var x1 := mini(image.get_width() - 1, rect.end.x)
-	var y0 := maxi(0, rect.position.y)
-	var y1 := mini(image.get_height(), rect.end.y)
-	for y in range(y0, y1):
-		var left := image.get_pixel(x0 - 1, y)
-		var right := image.get_pixel(x1, y)
-		for x in range(x0, x1):
-			image.set_pixel(x, y, left.lerp(right, float(x - x0 + 1) / float(x1 - x0 + 1)))
-
-
 ## Masaüstü başlığı: mockup'ın kendisi (aslanlar, büst, arma, çerçeveler) resim olarak; değişen bilgiler
 ## (hafta, mesai, servet, gezinme) resimdeki yerlerine, mockup ölçüleriyle yerleştirilir.
 func _build_header_art(parent: Control) -> void:
@@ -954,12 +934,10 @@ func _build_header_art(parent: Control) -> void:
 	_header_progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_header_art.add_child(_header_progress)
 	_header_mesai = Label.new()
+	_header_mesai.tooltip_text = _mesai_tooltip()
 	_header_mesai.visible = false
 	_header_art.add_child(_header_mesai)
-	_mesai_box = HBoxContainer.new()
-	_mesai_box.add_theme_constant_override("separation", 4)
-	_mesai_box.tooltip_text = tr("Mesai: bu hafta kalan eylem hakkın.")
-	_mesai_box.mouse_filter = Control.MOUSE_FILTER_STOP
+	_mesai_box = _new_mesai_group()
 	_header_art.add_child(_mesai_box)
 	_header_wealth = Label.new()
 	_header_wealth.add_theme_font_override("font", UIKit.sans())
@@ -975,7 +953,7 @@ func _build_header_art(parent: Control) -> void:
 		["desk", tr("Masa"), _show_desk, 1298.0, 1395.0, "bina"],
 		["media", tr("Medya"), _open_media, 1405.0, 1588.0, "gazete"],
 		["save", tr("Kaydet"), _on_save, 1599.0, 1734.0, "kumsaati"],
-		["menu", tr("Menü"), _show_menu, 1741.0, 1844.0, "disli"],
+		["menu", tr("Menü"), _show_menu, 1741.0, 1835.0, "disli"],
 	]
 	var hover := StyleBoxFlat.new()
 	hover.bg_color = Color(UIKit.GOLD, 0.08)
@@ -1038,7 +1016,9 @@ func _build_header_art(parent: Control) -> void:
 		_header_week.size = Vector2(132, 29) * k
 		_header_progress.position = Vector2(883, 162) * k
 		_header_progress.size = Vector2(106, 2) * k
-		_mesai_box.position = Vector2(1034, 130) * k
+		_mesai_box.position = Vector2(1027, 130) * k
+		_mesai_box.size = Vector2(140, 26)
+		_mesai_box.scale = Vector2(k, k)
 		_header_wealth_icon.position = Vector2(1185, 126) * k
 		_header_wealth_icon.size = Vector2(31, 31) * k
 		_header_wealth.add_theme_font_size_override("font_size", roundi(25 * k))
@@ -1189,31 +1169,106 @@ func _update_mesai_pips() -> void:
 	if _mesai_box == null:
 		return
 	var want: int = Sim.mesai_max
-	while _mesai_box.get_child_count() < want:
-		# Kapsayıcılar çocuklarının dönüşünü sıfırlar; elması kapsayıcı olmayan bir tutucuya koy.
-		var s := (22 if _header_art != null else 13) if not _mobile else 16
-		var holder := Control.new()
-		holder.custom_minimum_size = Vector2(s + 4, s + 4)
-		holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		var pip := Panel.new()
-		pip.size = Vector2(s, s)
-		pip.position = Vector2(2, 2)
-		pip.pivot_offset = Vector2(s, s) / 2.0
-		pip.rotation = deg_to_rad(45.0)
+	var pip_size := 22 if _mobile or _header_art == null else 18
+	while _mesai_box.get_child_count() < want + 1:
+		var pip := UIKit.icon("kalem", Vector2(pip_size, pip_size), Color.WHITE)
+		pip.custom_minimum_size = Vector2(pip_size, pip_size)
+		pip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		holder.add_child(pip)
-		_mesai_box.add_child(holder)
-	while _mesai_box.get_child_count() > want:
+		_mesai_box.add_child(pip)
+	while _mesai_box.get_child_count() > want + 1:
 		var last := _mesai_box.get_child(_mesai_box.get_child_count() - 1)
 		_mesai_box.remove_child(last)
 		last.queue_free()
 	for i in want:
-		var sb := StyleBoxFlat.new()
-		sb.bg_color = UIKit.GOLD if i < Sim.mesai else Color(0, 0, 0, 0.35)
-		sb.border_color = UIKit.GOLD
-		sb.set_border_width_all(2)
-		sb.anti_aliasing = true
-		(_mesai_box.get_child(i).get_child(0) as Panel).add_theme_stylebox_override("panel", sb)
+		_mesai_box.get_child(i + 1).modulate = Color(1.0, 0.94, 0.72) if i < Sim.mesai else Color(0.35, 0.3, 0.25, 0.7)
+	_mesai_box.tooltip_text = _mesai_tooltip()
+	_header_mesai.tooltip_text = _mesai_box.tooltip_text
+
+
+func _new_mesai_group() -> HBoxContainer:
+	var group := HBoxContainer.new()
+	group.add_theme_constant_override("separation", 1 if _header_art != null else 3)
+	group.custom_minimum_size = Vector2(140, 26) if not _mobile else Vector2(152, 44)
+	group.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	group.mouse_filter = Control.MOUSE_FILTER_STOP
+	group.tooltip_text = _mesai_tooltip()
+	var title := Label.new()
+	title.text = tr("MESAİ")
+	title.add_theme_font_override("font", UIKit.serif())
+	title.add_theme_color_override("font_color", Color("e8cb86"))
+	var title_size := _fs(16 if not _mobile else 13)
+	var title_width := 40.0 if not _mobile else 52.0
+	while title_size > 10 and UIKit.serif().get_string_size(title.text, HORIZONTAL_ALIGNMENT_LEFT, -1, title_size).x > title_width - 2.0:
+		title_size -= 1
+	title.add_theme_font_size_override("font_size", title_size)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	title.custom_minimum_size = Vector2(title_width, 44 if _mobile else 24)
+	title.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	group.add_child(title)
+	if _mobile:
+		group.gui_input.connect(_on_mesai_gui_input)
+	return group
+
+
+func _mesai_tooltip() -> String:
+	return tr("Bu hafta %d eylem hakkın kaldı. Her eylem ve karar bir hak harcar.") % Sim.mesai
+
+
+func _on_mesai_gui_input(event: InputEvent) -> void:
+	if not _mobile or not event is InputEventScreenTouch:
+		return
+	var touch := event as InputEventScreenTouch
+	accept_event()
+	if touch.pressed:
+		_mesai_touch_start = touch.position
+	elif _mesai_touch_start.x >= 0.0:
+		var is_tap := not touch.canceled and touch.position.distance_to(_mesai_touch_start) < 14.0
+		_mesai_touch_start = Vector2(-1, -1)
+		if is_tap:
+			_show_mesai_touch_tip()
+
+
+func _show_mesai_touch_tip() -> void:
+	if is_instance_valid(_mesai_tip_popup):
+		_mesai_tip_popup.queue_free()
+	_mesai_tip_popup = Panel.new()
+	_mesai_tip_popup.name = "MesaiTouchTooltip"
+	_mesai_tip_popup.add_theme_stylebox_override("panel", UIKit.box(Color(UIKit.PLATE, 0.98), UIKit.GOLD_DIM, 1, 6))
+	var viewport_size := get_viewport_rect().size
+	var popup_width := minf(440.0, viewport_size.x - 32.0)
+	_mesai_tip_popup.custom_minimum_size = Vector2(popup_width, 72.0)
+	_mesai_tip_popup.z_index = 100
+	_mesai_tip_popup.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var label := Label.new()
+	label.text = _mesai_tooltip()
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.set_anchors_preset(Control.PRESET_FULL_RECT)
+	label.offset_left = 12.0
+	label.offset_top = 8.0
+	label.offset_right = -12.0
+	label.offset_bottom = -8.0
+	label.add_theme_font_override("font", UIKit.sans())
+	label.add_theme_font_size_override("font_size", _fs(16))
+	label.add_theme_color_override("font_color", UIKit.TEXT)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_mesai_tip_popup.add_child(label)
+	add_child(_mesai_tip_popup)
+	var anchor := _mesai_box.get_global_rect()
+	var x := clampf(anchor.position.x, 16.0, viewport_size.x - popup_width - 16.0)
+	var y := anchor.end.y + 6.0
+	if y + 72.0 > viewport_size.y:
+		y = maxf(8.0, anchor.position.y - 78.0)
+	_mesai_tip_popup.position = Vector2(x, y)
+	_mesai_tip_popup.size = Vector2(popup_width, 72.0)
+	var tip := _mesai_tip_popup
+	get_tree().create_timer(3.0).timeout.connect(func() -> void:
+		if is_instance_valid(tip):
+			tip.queue_free()
+		if _mesai_tip_popup == tip:
+			_mesai_tip_popup = null)
 
 
 func _build_fx() -> void:

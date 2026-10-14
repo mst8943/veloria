@@ -5518,3 +5518,9 @@ msgstr "ACHIEVEMENTS"
 
 msgid "Henüz tamamlanmış bir saltanat yok."
 msgstr "No completed reigns yet."
+
+msgid "MESAİ"
+msgstr "ACTIONS"
+
+msgid "Bu hafta %d eylem hakkın kaldı. Her eylem ve karar bir hak harcar."
+msgstr "Actions remaining this week: %d. Each action and decision uses one."
