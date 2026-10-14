@@ -237,7 +237,7 @@ func _build_mobile_content(parent: VBoxContainer) -> void:
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.add_theme_constant_override("separation", 12)
 	scroll.add_child(content)
-	_profile_slot = Control.new()
+	_profile_slot = VBoxContainer.new()
 	_profile_slot.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.add_child(_profile_slot)
 	_reparent(_person_panel.profile_panel, _profile_slot)

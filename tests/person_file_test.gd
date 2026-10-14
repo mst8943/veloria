@@ -5,6 +5,9 @@ var main: Control
 
 func _initialize() -> void:
 	ProjectSettings.set_setting("veloria/dev_autostart", true)
+	ProjectSettings.set_setting("veloria/dev_mobile", "--mobile" in OS.get_cmdline_user_args())
+	if "--mobile" in OS.get_cmdline_user_args():
+		DisplayServer.window_set_size(Vector2i(1067, 600))
 	_boot.call_deferred()
 
 
@@ -44,6 +47,15 @@ func _run() -> void:
 	if not main._person_file.sheet.is_ancestor_of(main._person_panel.profile_panel) or not main._person_file.sheet.is_ancestor_of(main._person_panel.actions_panel):
 		_fail("profile or action table was not moved into the shared dossier")
 		return
+	if main._mobile:
+		var scroll := main._person_file.sheet.find_child("PersonFileScroll", true, false) as ScrollContainer
+		if scroll == null or main._person_file.sheet.anchor_left != 0.0 or main._person_file.sheet.anchor_top != 0.0 or main._person_file.sheet.anchor_right != 1.0 or main._person_file.sheet.anchor_bottom != 1.0 or scroll.get_global_rect().end.y > root.get_visible_rect().end.y:
+			_fail("mobile dossier is not a full-screen single-column page")
+			return
+		for node in main._person_panel.actions_panel.find_children("*", "Button", true, false):
+			if (node as Button).custom_minimum_size.y < 44:
+				_fail("mobile dossier action target is smaller than 44 px")
+				return
 	var actor = sim.actors["voss"]
 	actor.known_weak = false
 	actor.known_red = false
@@ -92,5 +104,5 @@ func _run() -> void:
 	if main._person_file.is_open():
 		_fail("close button did not close the dossier")
 		return
-	print("PERSON FILE: OK")
+	print("PERSON FILE: OK (mobile)" if main._mobile else "PERSON FILE: OK")
 	quit(0)

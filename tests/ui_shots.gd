@@ -105,6 +105,13 @@ func _run() -> void:
 		main._open_person_file("voss")
 		main._show_act_cat("BASKI")
 		main._person_panel._update_action_states()
+		var action_scroll_name := "PersonFileScroll" if main._mobile else "ActionsScroll"
+		var action_scroll := main._person_file.sheet.find_child(action_scroll_name, true, false) as ScrollContainer
+		if action_scroll != null:
+			for _i in 3: await process_frame
+			var target_action := main._buttons.get("blackmail") as Button
+			if target_action != null:
+				action_scroll.scroll_vertical = clampi(action_scroll.scroll_vertical + roundi(target_action.get_global_rect().position.y - action_scroll.get_global_rect().position.y - 64), 0, int(action_scroll.get_v_scroll_bar().max_value))
 		await _shot(prefix + "locked")
 		main._person_file.close_file()
 		main._multi_btn.button_pressed = true
