@@ -737,24 +737,60 @@ func _add_week_ledger(animated: Array[Control], target_override: VBoxContainer =
 func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]) -> void:
 	for c in host._report_box.get_children():
 		c.queue_free()
-	var frame := PanelContainer.new()
-	frame.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var frame_style := UIKit.box(Color(UIKit.PANEL, 0.6), Color(UIKit.GOLD_DIM, 0.25), 8, 10)
-	frame_style.content_margin_top = 8
-	frame_style.content_margin_bottom = 4
+	var week_frame := PanelContainer.new()
+	week_frame.name = "BuHaftaPaneli"
+	week_frame.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	week_frame.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	var week_style := UIKit.box(Color(UIKit.PANEL, 0.7), Color(UIKit.GOLD_DIM, 0.25), 8, 12)
+	week_style.set_border_width_all(0)
+	week_style.content_margin_top = 10
+	week_style.content_margin_bottom = 8
+	week_style.content_margin_left = 16
+	week_style.content_margin_right = 16
+	week_frame.add_theme_stylebox_override("panel", week_style)
+	UIKit.ornament(week_frame, Color(UIKit.GOLD, 0.8), 18, 1)
+	host._report_box.add_child(week_frame)
+	var week_contents := VBoxContainer.new()
+	week_contents.add_theme_constant_override("separation", 6)
+	week_frame.add_child(week_contents)
+	_add_changes(animated, week_contents)
+	_add_week_ledger(animated, week_contents)
 	if not host._mobile:
-		frame_style.set_border_width_all(0)
-		frame_style.content_margin_left = 18
-		frame_style.content_margin_right = 16
-		frame_style.content_margin_top = 12
-	frame.add_theme_stylebox_override("panel", frame_style)
-	host._report_box.add_child(frame)
-	UIKit.ornament(frame, Color(UIKit.GOLD, 0.8), 18 if not host._mobile else 14, 1)
+		var banner_path := "res://art/ui/bu_hafta_banner.png"
+		var banner := TextureRect.new()
+		banner.name = "WeekBanner"
+		banner.custom_minimum_size.y = 72 if host.get_viewport_rect().size.y < 780 else 92
+		banner.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		banner.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		banner.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if ResourceLoader.exists(banner_path):
+			banner.texture = load(banner_path)
+		else:
+			var gradient := Gradient.new()
+			gradient.colors = PackedColorArray([Color("332514"), Color("100d0a")])
+			var texture := GradientTexture2D.new()
+			texture.gradient = gradient
+			banner.texture = texture
+		week_contents.add_child(banner)
+
+	var report_frame := PanelContainer.new()
+	report_frame.name = "RaporlarPaneli"
+	report_frame.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	report_frame.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var report_style := UIKit.box(Color(UIKit.PANEL, 0.7), Color(UIKit.GOLD_DIM, 0.25), 8, 12)
+	report_style.set_border_width_all(0)
+	report_style.content_margin_top = 8
+	report_style.content_margin_bottom = 6
+	report_style.content_margin_left = 16
+	report_style.content_margin_right = 16
+	report_frame.add_theme_stylebox_override("panel", report_style)
+	UIKit.ornament(report_frame, Color(UIKit.GOLD, 0.8), 18, 1)
+	host._report_box.add_child(report_frame)
 	var contents := VBoxContainer.new()
-	contents.add_theme_constant_override("separation", 2 if host._mobile else 6)
-	frame.add_child(contents)
-	_add_changes(animated, contents)
-	_add_week_ledger(animated, contents)
+	contents.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	contents.add_theme_constant_override("separation", 3)
+	report_frame.add_child(contents)
 	var reports_heading: Control = host._section(tr("Raporlar"))
 	var reports_label := reports_heading.get_child(1) as Label
 	reports_label.add_theme_font_override("font", UIKit.serif())
@@ -777,7 +813,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 	if is_instance_valid(host._all_reports_popup):
 		host._all_reports_popup.free()
 	host._all_reports_popup = full_reports
-	for i in mini(4, Sim.reports.size()):
+	for i in Sim.reports.size():
 		var r: Dictionary = Sim.reports[i]
 		var entry := Button.new()
 		entry.text = "%s · %s\n%s" % [r["name"], r["title"], r["text"]]
@@ -787,18 +823,15 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		popup_list.add_child(entry)
 		var source := str(r["source"])
 		entry.pressed.connect(func() -> void:
-			if Sim.actors.has(source):
-				host._sel.clear()
-				host._sel.append(source)
-				host._style_cards()
-				host._update_info()
-				host._divan.refresh()
+			if Sim.actors.has(source): host._open_person_file(source)
 			host._all_reports_popup.hide())
 		host._wire(entry)
-	for report_index in Sim.reports.size():
+	var visible_count := 4 if host.get_viewport_rect().size.y >= 780 else 3
+	for report_index in mini(visible_count, Sim.reports.size()):
 		var r: Dictionary = Sim.reports[report_index]
 		var panel := PanelContainer.new()
 		panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		panel.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		var band := clampi(int(r.get("band", 1)), 0, 2)
 		# Renk yalnızca sol çizgide: raporun söylediği durum. Kutu kenarı yok, liste sakin kalır.
 		var sb := UIKit.box(Color(UIKit.PANEL_HI, 0.42), Color(0, 0, 0, 0), 2, 6)
@@ -817,26 +850,22 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 			var mb := ev as InputEventMouseButton
 			if mb != null and mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT and Sim.actors.has(sid):
 				Sfx.play("click", -4.0)
-				host._sel.clear()
-				host._sel.append(sid)
-				host._style_cards()
-				host._update_info()
-				host._divan.refresh()
+				host._open_person_file(sid)
 				host._all_reports_popup.hide())
-		(contents if report_index < 4 else popup_list).add_child(panel)
+		contents.add_child(panel)
 		animated.append(panel)
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)
 		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		panel.add_child(row)
-		var por: Control = host._initial_art(sid, Vector2(34, 32) if host._mobile else Vector2(30, 28), 20)
+		var por: Control = host._initial_art(sid, Vector2(40, 40) if host._mobile else Vector2(44, 44), 24)
 		por.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		row.add_child(por)
 		if not host._mobile:
 			# Mockup: ad ayrı, kalın bir sütunda; metin hizalı akar.
 			var name_col := Label.new()
 			name_col.text = _short_name(str(r["name"]))
-			name_col.custom_minimum_size.x = 48
+			name_col.custom_minimum_size.x = 52
 			name_col.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 			name_col.add_theme_font_override("font", UIKit.sans(680))
 			name_col.add_theme_font_size_override("font_size", host._fs(13))
@@ -853,14 +882,15 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		l.add_theme_font_override("normal_font", UIKit.sans())
 		l.add_theme_font_override("bold_font", UIKit.sans(680))
-		l.add_theme_font_size_override("normal_font_size", host._fs(15 if host._mobile else 12))
-		l.add_theme_font_size_override("bold_font_size", host._fs(15 if host._mobile else 12))
+		l.add_theme_font_size_override("normal_font_size", host._fs(15 if host._mobile else 13))
+		l.add_theme_font_size_override("bold_font_size", host._fs(15 if host._mobile else 13))
 		l.add_theme_color_override("default_color", UIKit.TEXT)
 		l.text = ("[b]%s[/b]  %s" % [_short_name(str(r["name"])), r["text"]]) if host._mobile else str(r["text"])
 		if not host._mobile:
-			l.add_theme_constant_override("line_separation", 1)
+			l.add_theme_constant_override("line_separation", 2)
 		row.add_child(l)
 		texts.append(l)
+	all_reports.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	contents.add_child(all_reports)
 
 

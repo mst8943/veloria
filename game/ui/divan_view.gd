@@ -60,8 +60,7 @@ func build(right: VBoxContainer) -> void:
 	guide_hint.add_theme_color_override("font_color", Color(UIKit.TEXT, 0.88))
 	guide_hint.add_theme_font_override("font", UIKit.sans())
 	guide_hint.add_theme_font_size_override("font_size", host._fs(15))
-	if not host._mobile:
-		right.add_child(guide_hint)
+	guide_hint.visible = false
 	parked = Control.new()
 	parked.visible = false
 	parked.mouse_filter = Control.MOUSE_FILTER_IGNORE

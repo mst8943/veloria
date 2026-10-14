@@ -24,6 +24,7 @@ const TOUR_VIEW := preload("res://game/ui/tour_view.gd")
 
 var _agenda_view: RefCounted
 var _person_panel: RefCounted
+var _person_file: RefCounted
 var _divan: RefCounted
 var _stage: Control
 var _header_week: Label
@@ -1781,6 +1782,22 @@ func _selected_primary() -> String:
 	if _sel.is_empty() or not Sim.actors.has(_sel[0]):
 		return ""
 	return _sel[0]
+
+
+func _open_person_file(id: String) -> void:
+	if not Sim.actors.has(id):
+		return
+	if _person_file != null:
+		_person_file.open(id)
+		return
+	_sel = [id]
+	_style_cards()
+	_update_info()
+	_divan.refresh()
+	if _mobile:
+		_tabs.current_tab = 1
+	elif _person_panel._legacy_popup != null:
+		_person_panel._legacy_popup.popup_centered(Vector2i(960, 700))
 
 
 func _act(fn: Callable) -> void:
