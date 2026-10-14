@@ -65,3 +65,43 @@ Ekran: `docs/ux/ref/kisi_dosyasi_ilk_uygulama.jpg`, hedef: `docs/ux/ref/kisi_dos
 6. **Boyut:** belge ekranı yeterince kaplamıyor (mockup ~%80×%88); 1600×900'de kâğıt görselinin en-boy oranı korunarak mümkün olduğunca büyük.
 7. **Mobil:** künye kutusu ile kâğıt çubukları üst üste, metin çubukların dışına taşıyor; mobilde kâğıt görselini arka plan olarak kullanıp içeriği tek sütun, kâğıt yüzeyine koyu mürekkep yazıyla dök (ya da düz parşömen dokusu), çubuk görsellerini mobilde gizle.
 8. **Sağ sütun "Bu hafta":** banner çok küçük/yan bant gibi; mockup'ta panelin alt yarısını kaplayan geniş salon görseli. "Raporlar" 4 satır ve "Tüm raporlar (11)" iyi.
+
+### Uygulama denetimi — 2026-10-14
+
+Hedef ve ilk uygulama görselleri ile 1519×1036 kâğıt görselindeki boşluklar ızgara üzerinde karşılaştırıldı. Karşılaştırma: [hedef / uygulama](ref/kisi_dosyasi_revizyon_karsilastirma.jpg).
+İki tam test turunun ham çıktıları: [test çıktıları](kisi_dosyasi_test_ciktilari.md).
+
+| # | Sonuç | Denetim notu |
+|---|---|---|
+| 1 | Düzeldi | Künye ve eylemler kâğıt bölgelerine yerleştirildi; ayrıca koyu metin kutusu yok. |
+| 2 | Düzeldi | Başlık arma yanında okunur, çerçevenin üstüne binmiyor. |
+| 3 | Düzeldi | Sol sütun kalemin sağında; mühür fotoğrafın sağ alt köşesinde. |
+| 4 | Düzeldi | Portre saydam pencerenin arkasında ve ikinci portre çerçevesi yok. |
+| 5 | Kısmen | A–F eylemleri tek satırlı gruplar ve kaydırılabilir; sağlanan kâğıt görselinde dört basılı başlık şeridi bulunduğundan E/F için ayrı basılı şerit yok. Tüm eylemler kaydırmayla erişilebilir. |
+| 6 | Düzeldi | Masaüstünde oran korunarak ekranın büyük bölümünü kaplıyor. |
+| 7 | Düzeldi | Mobil tek sütun; yazı kâğıt dokusu üzerinde ve eylem hedefleri en az 44 px. |
+| 8 | Düzeldi | Bu hafta banner'ı panelin alt yarısına yayıldı; dört rapor ve tüm raporlar düğmesi görünüyor. |
+
+### İlk denetim gözlemleri — tarihsel notlar
+
+- İlk denetimde kâğıt dışındaki koyu çevre opak resmin parçasıydı; güncel düzeltmede bu alan saydamlaştırıldı ve kenar yumuşatıldı.
+- İlk denetimde kâğıtta dört basılı eylem şeridi vardı; E ve F şeritleri kodla eklendi ve kaydırma görünümünde doğrulandı.
+- 1280×720 ve 1067×600'de EN/TR künye ve kişi içeriği kâğıt alanında kaldı; mobilde eylemler sayfa kaydırmasıyla erişiliyor.
+
+### Kalan beş kusur — düzeltme denetimi (2026-10-14)
+
+Bu ek, ilk uygulama denetiminin devamındaki beş kusuru kapatır. Önceki tablodaki #5 “Kısmen” notu bu ekle güncellenmiştir.
+
+| # | Kusur | Durum | Kontrol |
+|---|---|---|---|
+| 1 | Eylem etkisinin kesilmesi | Düzeldi | Ad/mesai ve etki iki satırda; dinamik satır yüksekliği, tam etki metni, testte kaynak metin eşitliği ve `…` yok. |
+| 2 | D son satırı ve E/F grupları | Düzeldi | D'nin son eylemi tam görünüyor; E `DEVLET / GENEL`, F `HALK` başlıkları kâğıt üzerinde çiziliyor. İnce kaydırma çubuğu ve aşağı ok ipucu var; bütün satırlar testte kaydırılarak görülüyor. |
+| 3 | Sol sütun arması/ayraç çakışması | Düzeldi | Ayraçlar akış içinde kendi yerini kaplıyor; sol yazı kalem/arma alanının dışında. Mobil ayraçlar metni kesmiyor. |
+| 4 | Kâğıt dışındaki koyu kutu | Düzeldi | Sayfa arka planı yarı saydam karartılıyor; kâğıdın koyu dış çevresi saydamlaştırılıp kenar yumuşatılıyor. |
+| 5 | Mobil künye boşluğu | Düzeldi | Künye portre satırında, portrenin sağında; test fotoğraf ve metin arasında boşluk olduğunu doğruluyor. |
+
+Son görsel seti: [TR 1600×900](ref/kisi_dosyasi_final_tr_1600x900.jpg), [TR 1280×720](ref/kisi_dosyasi_final_tr_1280x720.jpg), [TR yatay mobil 1067×600](ref/kisi_dosyasi_final_tr_mobile_1067x600.jpg), [EN 1600×900](ref/kisi_dosyasi_final_en_1600x900.jpg), [EN 1280×720](ref/kisi_dosyasi_final_en_1280x720.jpg), [EN yatay mobil 1067×600](ref/kisi_dosyasi_final_en_mobile_1067x600.jpg). Mockup ve son 1600×900 uygulama yan yana: [karşılaştırma](ref/kisi_dosyasi_kalan_kusurlar_karsilastirma.jpg). Eylem gruplarının D sonu, E ve F kaydırma konumları: [TR](ref/kisi_dosyasi_eylem_gruplari_tr.jpg), [EN](ref/kisi_dosyasi_eylem_gruplari_en.jpg).
+
+Masaüstü çıktısında satırlar ve çubuklar kâğıt içinde kalıyor; 1280×720'de sığıyor; mobilde künye fotoğrafın yanına geliyor ve eylemler dikey kaydırılıyor. Kapalı eylem nedenlerinin EN öneki de çevrildi. Görsel denetimde bu beş madde dışında yeni taşma ya da metin sızıntısı bulmadım.
+
+Test çıktılarının bu oturuma ait ham bölümü: [kisi_dosyasi_test_ciktilari.md](kisi_dosyasi_test_ciktilari.md).

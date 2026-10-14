@@ -1,0 +1,3575 @@
+# Kişi dosyası — iki tam test turu
+
+Her test `tools/run_test_isolated.ps1` ile ayrı izole profilde çalıştırıldı. `PASS` testin çıkış kodunun 0 olduğunu belirtir. Godot bazı UI testlerinin kapanışında RID/ObjectDB kaynak temizleme uyarıları yazdı; bu satırlar aşağıda aynen bırakıldı.
+
+## Tur 1
+
+## a11y_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+A11Y: OK
+ERROR: 1 RID allocations of type 'N13RendererDummy11MeshStorage14DummyMultiMeshE' were leaked at exit.
+ERROR: 1 RID allocations of type 'N13RendererDummy9DummyMeshE' were leaked at exit.
+ERROR: 11 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 15 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 98 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## army_actions_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ARMY ACTIONS: OK
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## army_coup_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ARMY COUP: OK
+WARNING: 39 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## army_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ARMY TEST: OK
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## audio_check.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+AUDIO click AudioStreamWAV 0.21s dosya
+AUDIO hover AudioStreamWAV 0.09s dosya
+AUDIO paper AudioStreamWAV 0.87s dosya
+AUDIO seal AudioStreamWAV 1.2s dosya
+AUDIO bell AudioStreamWAV 5.6s dosya
+AUDIO stinger_loss AudioStreamWAV 10.7s dosya
+AUDIO stinger_win AudioStreamWAV 9.5s dosya
+AUDIO cutscene AudioStreamWAV 4.2s dosya
+AUDIO alert AudioStreamWAV 1.55s dosya
+AUDIO menu AudioStreamOggVorbis 186.04s dosya
+AUDIO ambient AudioStreamOggVorbis 186.04s dosya
+AUDIO tension AudioStreamOggVorbis 186.04s dosya
+AUDIO crisis AudioStreamOggVorbis 186.04s dosya
+AUDIO: OK
+WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 2 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## budget_ui_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+BUDGET UI: OK
+ERROR: 7 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 71 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## content_check.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CONTENT: OK (5 dosya, 8 bozuk örnek)
+```
+
+## cutscene_check.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CUTSCENE: OK
+ERROR: 4 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 2 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 35 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## daily_card_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+DAILY CARD: OK
+WARNING: 2 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 42 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+ERROR: 7 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+```
+
+## dynasty_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ok  ilk nesil yalnız halef kararıyla sürer
+ok  ikinci nesil sayılır ve miras azalır
+ok  kayıp hanedan devamını ve sayacı sıfırlar
+DYNASTY: OK
+```
+
+## economy_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ECONOMY: OK
+WARNING: 106 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## election_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ELECTION: OK
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## endless_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ENDLESS: OK
+```
+
+## en_leak_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+EN LEAK SCAN: 5 campaigns, 0 unique leaks
+ERROR: 10 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 3 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 30 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 125 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 6 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## event_check.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+EVENTS: OK (201 olay, 0 uyarı)
+```
+
+## external_crisis_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ok    external pressure leaves the main RNG untouched
+ok    envoy signal is bounded and does not consume the stream
+ok    border warning opens the note card
+ok    note resolution schedules the ultimatum stage
+ok    ultimatum waits for the next week
+ok    version 10 saves receive safe defaults
+ok    old scandal fact displays in English
+ok    border note is localized in English
+ok    ultimatum is localized in English
+ok    financial pressure opens the embargo note
+ok    the credit-cut stage waits a week on its separate RNG
+ok    credit-cut card has all three response paths
+ok    assassination cannot open without a warning and leaves main RNG untouched
+ok    assassination warning opens its preparation card one week later with three choices
+ok    assassination resolution consumes only its separate RNG
+ok    successful route change leaves the ruler wounded and survives the night
+ok    survival unlocks the two-choice Palace aftermath event
+ok    surviving the assassination grants its wounded sovereign ending and achievement
+ok    assassination preparation card is fully localized in English
+ok    assassination defeat records its own ending
+ok    credit-cut card is localized in English
+ok    financial crisis news is localized in English
+ok    financial defeat records its own cause and title
+EXTERNAL CRISIS: OK
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## i18n_check.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+I18N: OK
+```
+
+## lang_switch_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+LANG: OK
+ERROR: 9 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 34 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 119 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## legacy_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ok  mirassız başlangıç değişmedi
+ok  miras ayrı RNG tüketmiyor
+ok  miras etkileri ve nesil aşınması
+ok  açık dosya iki dilde ve geçerli şemayla taşınır
+ok  legacy etkilerinin EN adları tamam
+ok  miras üç etkiyi aşmıyor ve artı/eksi taşıyor
+ok  halef sonucu Julian'ı seçiyor
+LEGACY: OK
+```
+
+## map_zoom_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+MAP ZOOM: OK
+ERROR: 8 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 83 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 4 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## pacing_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Dilim (hafta)   olay/hafta   (yaşayan oyun-haftası)
+H  1-  8        0.81        (280)
+H  9- 16        0.93        (320)
+H 17- 24        1.49        (320)
+H 25- 32        1.77        (320)
+H 33- 40        1.68        (320)
+H 41- 48        1.67        (320)
+H 49- 56        1.47        (314)
+H 57- 64        1.60        (299)
+H 65- 72        1.35        (284)
+H 73- 80        1.12        (236)
+H 81- 88        1.57        (91)
+H 89- 96        1.06        (18)
+H 97-104        1.00        (4)
+En uzun olaysız seri (medyan / en kötü): 2 / 3 hafta
+WARNING: 35 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## parliament_laws_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PARLIAMENT LAWS: OK
+```
+
+## parliament_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PARLIAMENT: OK
+```
+
+## person_file_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PERSON FILE: OK
+ERROR: 7 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 86 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## public_opinion_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PUBLIC OPINION: OK
+```
+
+## region_map_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+REGION MAP: OK
+ERROR: 8 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 91 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 6 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## regions_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+REGIONS: OK
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## save_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ok    başlangıç kurum aralığı
+ok    başlangıç holdingi
+ok    kaydet
+ok    gidiş-dönüş
+ok    dış ilişkiler gidiş-dönüş
+ok    dış baskı ve ayrı üreteç gidiş-dönüş
+ok    sürüm yazıldı
+ok    v11 hanedan alanları göçü
+ok    v8 dil göçü
+ok    v8 dış güç göçü
+ok    v7 yeni kadro göçü
+ok    v6 holding çizelgesi göçü
+ok    v5 Sarne göçü
+ok    v4 devlet göçü
+ok    v3 rejim göçü
+ok    göçte haber tekrarı yok
+ok    v1 göçü
+ok    v1 sonrası hafta akışı
+ok    yeni sürüm reddi
+ok    eksik alan reddi
+ok    bozuk dosya reddi
+SAVE: OK
+```
+
+## scenario_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+SCENARIO BOT darbe Kolay: 48/80
+SCENARIO BOT darbe Normal: 24/80
+SCENARIO BOT darbe Zor: 18/80
+SCENARIO BOT naiplik Kolay: 55/80
+SCENARIO BOT naiplik Normal: 22/80
+SCENARIO BOT naiplik Zor: 30/80
+SCENARIO BOT bos_kasa Kolay: 44/80
+SCENARIO BOT bos_kasa Normal: 23/80
+SCENARIO BOT bos_kasa Zor: 15/80
+SCENARIO: OK
+```
+
+## sim_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[idle] kazanma 0/40, ort. hafta 18.2
+   { "Saltanatının 20. haftasında halk ayaklan": 11, "Saltanatının 16. haftasında halk ayaklan": 8, "Saltanatının 18. haftasında halk ayaklan": 9, "Saltanatının 19. haftasında halk ayaklan": 4, "Saltanatının 12. haftasında halk ayaklan": 1, "Saltanatının 17. haftasında halk ayaklan": 3, "Saltanatının 21. haftasında halk ayaklan": 1, "Saltanatının 13. haftasında halk ayaklan": 1, "Saltanatının 22. haftasında halk ayaklan": 1, "Saltanatının 22. haftasında Askerî darbe": 1 }
+   olay sayısı/kampanya: 29.1
+[random] kazanma 0/40, ort. hafta 33.4
+   { "Saltanatının 25. haftasında Saray darbes": 1, "Saltanatının 44. haftasında Saray darbes": 3, "Saltanatının 41. haftasında Askerî darbe": 1, "Saltanatının 40. haftasında Askerî darbe": 1, "Saltanatının 19. haftasında Saray darbes": 1, "Saltanatının 27. haftasında Askerî darbe": 2, "Saltanatının 32. haftasında Drakon sınır": 1, "Saltanatının 18. haftasında Askerî darbe": 1, "Saltanatının 19. haftasında Askerî darbe": 2, "Saltanatının 23. haftasında Askerî darbe": 1, "Saltanatının 35. haftasında Askerî darbe": 2, "Saltanatının 29. haftasında Askerî darbe": 1, "Saltanatının 39. haftasında Askerî darbe": 1, "Saltanatının 38. haftasında Askerî darbe": 1, "Saltanatının 31. haftasında Askerî darbe": 2, "Saltanatının 33. haftasında Askerî darbe": 1, "Saltanatının 26. haftasında Saray darbes": 1, "Saltanatının 24. haftasında Askerî darbe": 1, "Saltanatının 26. haftasında kredi kesild": 2, "Saltanatının 32. haftasında Askerî darbe": 1, "Saltanatının 37. haftasında kredi kesild": 1, "Saltanatının 42. haftasında Drakon sınır": 1, "Saltanatının 22. haftasında Askerî darbe": 2, "Saltanatının 40. haftasında kredi kesild": 1, "Saltanatının 57. haftasında Saray darbes": 1, "Saltanatının 28. haftasında Saray darbes": 1, "Saltanatının 50. haftasında Askerî darbe": 1, "Saltanatının 28. haftasında halk ayaklan": 1, "Saltanatının 49. haftasında Drakon sınır": 1, "Saltanatının 50. haftasında Saray darbes": 1, "Saltanatının 32. haftasında Saray darbes": 1, "Saltanatının 53. haftasında Drakon sınır": 1 }
+   olay sayısı/kampanya: 50.1
+[careful] kazanma 24/40, ort. hafta 99.0
+   { "Saltanatının 104. haftasında Saray darbe": 2, "Saltanatının 87. haftasında Askerî darbe": 1, "Medya Rejimi": 18, "Saltanatının 100. haftasında Saray darbe": 2, "Saltanatının 74. haftasında saldırganlar": 1, "İstihbarat Rejimi": 5, "Saltanatının 81. haftasında Askerî darbe": 1, "Saltanatının 73. haftasında Askerî darbe": 1, "Saltanatının 89. haftasında Saray darbes": 1, "Saltanatının 103. haftasında Drakon sını": 1, "Saltanatının 102. haftasında Drakon sını": 1, "Saltanatının 92. haftasında Askerî darbe": 1, "Saltanatının 97. haftasında Drakon sınır": 1, "Saltanatının 101. haftasında Askerî darb": 1, "Saltanatının 70. haftasında Askerî darbe": 1, "Yaralı Egemen": 1, "Saltanatının 85. haftasında Drakon sınır": 1 }
+   olay sayısı/kampanya: 118.4
+[Kolay / random] kazanma 0/40, ort. hafta 39.3
+[Kolay / careful] kazanma 31/40, ort. hafta 101.7
+[Zor / random] kazanma 0/40, ort. hafta 29.0
+[Zor / careful] kazanma 13/40, ort. hafta 89.8
+Araştırma: 1 denemede zayıf nokta bulundu = true
+  Victor Sarne boyun eğmedi; şantajı ifşa etmekle tehdit ediyor. Konuşulmaya başlandı bile.
+  Sarne korku: 10 -> 5
+  Marcus Arden emri kırmızı çizgisini aştığı için gönülsüzce, yarım yamalak uyguladı. Bunu sana yazdı. (Kırmızı çizgisi: Siviller üzerine ateş açma emri)
+Söz: Marcus Arden'e Naiplik sözü verdin. Gözleri parladı; vadesi geldiğinde hatırlatacak.
+Söz: Victor Sarne'ye Naiplik sözü verdin. Gözleri parladı; vadesi geldiğinde hatırlatacak.
+Söz (tekrar): Marcus Arden'e bunu zaten vaat ettin.
+  Kart: Marcus Arden sözünü hatırlatıyor -> Marcus Arden sözünü aldı. Bunu unutmayacak. Victor Sarne, kendisine vaat edilen Naiplik başkasına verildiği için öfkeli.
+  Durumlar: ["arden:kept", "halden:broken"]
+  Kayıttan sonra söz sayısı: 2
+Hiç tetiklenmeyen olaylar (120 kampanyada): ["brandt_hapis", "muhalefet_para", "defter_kopya", "yazili_emirler", "santaj_kurbani", "terfi_rekabet", "bozulan_sozler", "operasyon_sizdi", "muhtira_sonrasi", "derin_devlet", "yay_falk_kopus", "rejim_guvenlikci_hesap", "rejim_populist_hesap", "rejim_patronajci_hesap", "maliye_cokus", "adliye_cokus", "uzman_bakan", "sadik_komutan_sinav", "liyakatli_savci", "kadro_ihaneti", "saray_payi_sizdi", "holding_devrildi", "julian_halka_konusma", "julian_isyani_reddi", "julian_marcus_oyunu", "julian_evlilik_teklifi", "elena_istifa", "asteria_kredi_teklifi", "asteria_ozgurluk_notasi", "drakon_silah_anlasmasi", "drakon_sinir_notasi", "seravia_yatirim_teklifi", "seravia_ambargo", "seravia_sarne_destegi", "drakon_darbe_destegi"]
+   ulaşılabilir mi brandt_hapis: true
+   ulaşılabilir mi muhalefet_para: true
+   ulaşılabilir mi defter_kopya: true
+   ulaşılabilir mi yazili_emirler: true
+   ulaşılabilir mi santaj_kurbani: true
+   ulaşılabilir mi terfi_rekabet: true
+   ulaşılabilir mi bozulan_sozler: true
+   ulaşılabilir mi operasyon_sizdi: true
+   ulaşılabilir mi muhtira_sonrasi: true
+   ulaşılabilir mi derin_devlet: true
+   ulaşılabilir mi yay_falk_kopus: true
+   ulaşılabilir mi rejim_guvenlikci_hesap: true
+   ulaşılabilir mi rejim_populist_hesap: true
+   ulaşılabilir mi rejim_patronajci_hesap: true
+   ulaşılabilir mi maliye_cokus: true
+   ulaşılabilir mi adliye_cokus: true
+   ulaşılabilir mi uzman_bakan: true
+   ulaşılabilir mi sadik_komutan_sinav: true
+   ulaşılabilir mi liyakatli_savci: true
+   ulaşılabilir mi kadro_ihaneti: true
+   ulaşılabilir mi saray_payi_sizdi: true
+   ulaşılabilir mi holding_devrildi: true
+   ulaşılabilir mi julian_halka_konusma: true
+   ulaşılabilir mi julian_isyani_reddi: true
+   ulaşılabilir mi julian_marcus_oyunu: true
+   ulaşılabilir mi julian_evlilik_teklifi: true
+   ulaşılabilir mi elena_istifa: true
+   ulaşılabilir mi asteria_kredi_teklifi: true
+   ulaşılabilir mi asteria_ozgurluk_notasi: true
+   ulaşılabilir mi drakon_silah_anlasmasi: true
+   ulaşılabilir mi drakon_sinir_notasi: true
+   ulaşılabilir mi seravia_yatirim_teklifi: true
+   ulaşılabilir mi seravia_ambargo: true
+   ulaşılabilir mi seravia_sarne_destegi: true
+   ulaşılabilir mi drakon_darbe_destegi: true
+Tarihçiler: 2 | zaman çizelgesi: 20 hafta
+Ek uyumu: OK
+Kayıt/yükleme: OK (hafta 11)
+Birbirine düşür: OK
+Dokuz hikâye yayı: OK
+Rejim tipleri: OK
+Devlet finali: OK
+Yeni kadro RNG: OK
+Veliaht eğitimi: OK
+Yeni kadro raporları: OK
+Dış ilişkiler: OK
+Meclis: görüş türleri { "rec": 3114, "flat": 91, "evasive": 9 } | ort. kayıp (V) sadık 1.88 (n=2622), hazır 8.16 (n=492)
+Meclis görüşleri: OK
+Komplo: alamet gerçek 574 / dedikodu 92, 20 oyunda 32 kriz
+Darbe aşamaları: OK
+Örnek final: Devrilen Kral | Saltanatının 18. haftasında halk ayaklanması sarayı kuşattı. Kriz kapına dayandığında karar veremedin.
+  H1 Victor Sarne: 'Kanallarım sizi seviyor; halk da kanallarımı.' -> gerçekte 'Halk kimin hikâyesine inanacağına henüz karar vermedi.'
+  H1 Leyla Sarn: 'Sokakta sakin bir hava var.' -> gerçekte 'İnsanlar daha çok soru soruyor.'
+  H2 Kraliçe Helena: '(kötü haberi sana iletmedi)' -> gerçekte 'Selin Veyra: Kasadaki rakamlar tutuyor, ama pazardaki fiyatlar tutmuyor. Fiyatlar oynak. İş piyasası yavaşlıyor. Borç yükü hissediliyor. Ticaret temkinli, üretim ılımlı. Memurlar hesabı çıkarıyor, gecikmeler yönetilebilir.'
+TEST: OK
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## touch_scroll_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+TOUCH: OK
+```
+
+## touch_tap_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+TOUCH TAP: OK
+```
+
+## tour_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+TOUR: OK
+ERROR: 8 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 30 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 109 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 4 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## tr_suffix_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+TR SUFFIX: OK (7267 Turkish, 5726 English strings; 40 campaigns)
+```
+
+## ui_input_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+UI INPUT: OK
+ERROR: 8 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 3 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 90 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 6 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## ui_logic_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+UI LOGIC: OK
+```
+
+## unit_tests.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[unit] json_rpc framing
+  ok  result() frames id + payload
+  ok  error() carries code + message
+  ok  error() omits data when null
+  ok  make_notification() has no id and omits null params
+[unit] effort tier map
+  ok  doctor is L1 (survives any cap)
+  ok  playtest is L5 premium
+  ok  export_project is L6
+  ok  unmapped tool falls back to L1 (never hidden by accident)
+  ok  allows() honors the boundary
+  ok  clamp_level() bounds 1..MAX
+  ok  L4 See unlocks get_performance_monitors
+  ok  render_probe is L4 (ships in Lite)
+  ok  set_debug_draw is L4 (ships in Lite)
+  ok  reload_shader is L5 premium (mutates the live game)
+[unit] tool registry
+  ok  has() reflects registration
+  ok  list_specs(4) filters by tier
+  ok  list_specs(6) advertises everything
+  ok  annotations carry readOnlyHint
+[unit] jobs.poll_until (B2)
+  ok  tick result ends the wait
+  ok  deadline returns {timeout:true}
+  ok  pump runs each pass (ran 7 times)
+[unit] http_server statics
+  ok  _find_header_end locates CRLFCRLF
+  ok  _find_header_end returns -1 when absent
+  ok  _reason maps auth/method codes
+[unit] client_config
+  ok  mcp_url tokenless
+  ok  mcp_url carries the token as a path segment
+  ok  entry() uses the tokened url
+  ok  desktop_entry bridges the tokened url
+  ok  cline entry keeps its type
+  ok  codex upsert: fresh file gets our table
+  ok  codex upsert: identical table is a no-op (no churn)
+  ok  codex upsert: our table is rewritten
+  ok  codex upsert: other tables survive verbatim
+  ok  configured_port falls back to the default when unset
+  ok  configured_port honors the beckett/port project setting
+  ok  BECKETT_PORT env overrides the project setting
+  ok  a junk BECKETT_PORT falls through to the project setting
+[unit] mcp_server._tool_result serializer
+  ok  json dict rides as structuredContent
+  ok  json dict also renders as text for every client
+  ok  error carries message + suggestion, isError=true
+  ok  image + text both present
+  ok  image_base64 carries its explicit mime
+  ok  json legend rides beside the image
+  ok  empty result says so instead of vanishing
+  ok  text block survives beside a json payload
+  ok  json still rides as structuredContent when text is present
+  ok  error suppresses the handler's own text
+  ok  json mirror is compact (no pretty-print newlines)
+  ok  resource_link block emitted on 2025-06-18
+  ok  resource_link suppressed on 2025-03-26 (predates the content type)
+  ok  the rest of the result survives the suppression
+  ok  supports_resource_link() reports the gate honestly
+  ok  link entries without a uri are dropped, not fatal
+[unit] mcp_server idempotency cache is bounded by bytes, not just entries
+  ok  _result_bytes counts image payloads
+  ok  entry bound still holds
+  ok  byte ceiling holds after 200 image results
+  ok  size bookkeeping stays in step with the cache
+  ok  an oversized result is not cached
+  ok  a small result still caches
+[unit] initialize instructions derive the skill-pack count from disk
+  ok  _skill_pack_count matches the .md files on disk (0)
+[unit] instructions pack-count assert skipped (Lite build: skills trimmed)
+[unit] http_server content-type
+  ok  default Content-Type is still JSON
+  ok  default Content-Type declares charset=utf-8
+[unit] a stale Mcp-Session-Id is served, never 404ed
+  ok  fresh server serves a client holding a pre-restart id
+  ok  initialize still mints an Mcp-Session-Id for clients that expect one
+  ok  ...and it differs from the stale id, so the requests below really mismatch
+  ok  POST with a mismatched id gets its JSON-RPC result
+  ok  initialize carrying a stale id is served (a client re-initializing the lazy way)
+  ok  a notification with a stale id still gets its 202
+  ok  DELETE with a stale id stays the stateless no-op
+  ok  GET with a stale id still opens the event stream
+  ok  the current id keeps working
+  ok  no id at all keeps working
+  ok  a stale id does not soften the Host gate
+  ok  server/discover answers HTTP 200 with a JSON-RPC body
+  ok  ...carrying -32601, the signal a 2026-07-28 client falls back on
+  ok  ...with the string request id echoed unchanged
+[unit] mcp_server._secure_equals (B1)
+  ok  equal strings match
+  ok  one differing byte rejects
+  ok  length mismatch rejects
+  ok  empty == empty
+[unit] gate refusals are labeled as what their body is
+  ok  a spoofed Host answers 403
+  ok  ...and still says why
+  ok  ...under a Content-Type that fits the body ('text/plain; charset=utf-8' over 'forbidden host (this server only answers to a loopback Host)')
+  ok  a cross-origin request answers 403, labeled to fit ('forbidden origin')
+  ok  a mismatched session id is answered under a fitting label too (status 200)
+  ok  a request without the token answers 401, labeled to fit ('unauthorized')
+  ok  a served JSON-RPC answer leaves the Content-Type to the JSON default
+  ok  ...and that default fits its body
+[unit] mcp_server._validate_args
+  ok  missing required arg rejected
+  ok  array where string expected rejected
+  ok  numeric string passes the lenient gate
+[unit] callargs arg coercion (v1.10.2 silent-argument fix)
+  ok  [x,y,z] coerces to Vector3i
+  ok  JSON 60.0 coerces to int for an int param
+  ok  prepared args execute through callv
+  ok  {x,y,z} coerces to Vector3
+  ok  "x y z" string coerces to Vector3
+  ok  Godot literal string coerces to Vector3
+  ok  wrong-size vector array errors (no silent zero)
+  ok  garbage for a vector param errors (no silent zero)
+  ok  too few args errors instead of a silent no-op
+  ok  too many args errors
+  ok  hex string coerces to Color
+  ok  [r,g,b] coerces to Color
+  ok  String coerces to StringName
+  ok  untyped params pass through; defaults still fill
+  ok  [[x,y],..] coerces to PackedVector2Array
+  ok  null passes for an object param
+  ok  object param from a string errors without a resolver (no silent null)
+  ok  metadata-less call falls back to raw passthrough
+  ok  String coerces to NodePath
+  ok  fractional float for an int param errors
+  ok  Transform3D literal string parses
+  ok  int array coerces to PackedInt32Array
+[unit] error echo (v1.11 - engine errors attached to the causing call)
+  ok  an error in the window is echoed
+  ok  echo carries file:line
+  ok  a fresh mark sees nothing
+  ok  prints are not echoed
+  ok  severity maps warning
+  ok  echo caps at 8 + a count note
+  ok  severity maps script errors
+ERROR: [beckett unit probe - intentional error, ignore]
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _t_error_echo (res://tests/unit_tests.gd:1085)
+       [1] _init (res://tests/unit_tests.gd:62)
+  ok  a real push_error lands in the window
+ERROR: [beckett unit probe 2 - after uninstall, ignore]
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _t_error_echo (res://tests/unit_tests.gd:1090)
+       [1] _init (res://tests/unit_tests.gd:62)
+  ok  uninstall stops the capture
+  ok  engine_errors stay advisory (isError false)
+  ok  engine errors render as a text block
+  ok  engine_errors ride structuredContent
+  ok  engine_errors merge beside a json payload
+[unit] script_tools class_name mask (B4)
+  ok  registered name + own path: renamed in place
+  ok  mask preserves line count
+  ok  registered name + different path: real conflict reported
+  ok  unregistered name: untouched (self-refs need it)
+  ok  one-line form keeps its extends half
+  ok  4.5+ same-line @abstract form keeps its annotation (empirically compile-verified shape)
+  ok  THE regression: re-validating a real registered script compiles clean
+[unit] playtest groups skipped (Lite build: module trimmed)
+[unit] runner perf group skipped (Lite build: runner trimmed)
+[unit] runtime/replay_perf.gd (game-side engine, B7 module)
+  ok  no samples -> empty summary (not fabricated zeros)
+  ok  game-side p95 matches the runner's math
+  ok  summary carries the flat baseline-diff keys
+  ok  begin() resets the capture
+[unit] runtime/input_codec.gd round-trip (B7 module)
+  ok  key builds
+  ok  key round-trips through serialize
+  ok  joy_axis clamps value to -1..1
+  ok  joy_axis round-trips axis + device
+  ok  touch_drag round-trips index + position
+  ok  unknown type builds null (skipped, not crashed)
+  ok  echo keys serialize to {} (dropped)
+  ok  key builds with unicode (int)
+  ok  key builds with unicode (1-char string)
+  ok  unicode round-trips through serialize
+  ok  unicode key omitted when zero
+  ok  device-id availability matches ClassDB (no phantom device 0)
+  ok  mouse device id likewise
+  ok  keyboard id is the engine's own value
+  ok  a synthesized key carries the keyboard device id
+[unit] runtime/ui_inspect.gd (ui_snapshot walker + occlusion hit test)
+  ok  pick_at finds the button at its center
+  ok  covering sibling (STOP) receives the point
+  ok  click_reaches refuses the covered button
+  ok  overlay with IGNORE is click-through
+  ok  PASS child is the raw receiver
+  ok  PASS child bubbles the click up to the button
+  ok  higher CanvasLayer overlay wins the pick
+  ok  is_disabled sees BaseButton.disabled
+  ok  is_disabled false on a control without the property
+  ok  snapshot ok
+  ok  snapshot carries the button + text
+  ok  snapshot rect mirrors the live global rect (ints)
+  ok  snapshot carries slider value + range
+  ok  hash is stable for an unchanged UI
+  ok  since_hash short-circuits to unchanged
+  ok  a text change changes the hash
+  ok  snapshot flags the covered button with occluded_by
+  ok  audit ok
+  ok  audit finds the overlapping pair
+  ok  audit finds the offscreen control
+  ok  audit finds the trimmed label (font-measured, not min-size)
+  ok  audit flags sub-touch_min targets
+  ok  audit flags focus_mode NONE buttons
+  ok  annotate draws the box outline
+  ok  annotate leaves pixels outside the mark alone
+  ok  annotate stamps the digit tag
+[unit] ui_audit focus graph (v1.11)
+  ok  nothing focused -> no_initial_focus flagged
+  ok  the island is unreachable from the entry
+  ok  the island is a dead end (all moves stay on it)
+  ok  focus summary counts focusable=3 reachable=2
+  ok  entry defaults to the first focusable in tree order
+  ok  with focus granted, no_initial_focus clears
+  ok  A/B stay reachable (only the island flags)
+[unit] per-frame typing window (v1.11)
+  ok  tick 1 injects exactly one char
+  ok  chars pace one per tick
+  ok  the submit Enter takes its own frame
+  ok  the stream closes after the queue drains
+  ok  type_status reports done + typed count
+  ok  a vanished target ends the stream with a warning
+[unit] runtime_bridge handshake compare (v1.9.1)
+  ok  matching hello accepted
+  ok  wrong hello rejected
+  ok  empty hello vs required token rejected
+[unit] game_view probe + Suspend diagnosis (v1.13 S11/S12)
+  ok  mode is one of embedded|windowed|unknown
+  ok  outside the editor the probe answers unknown, never a guess
+  ok  unknown still names the read that was unavailable
+  ok  payload always carries placement + note
+  ok  -1 Disabled -> windowed
+  ok  1 Embed Game -> embedded / main
+  ok  2 Make Game Workspace Floating -> embedded / floating
+  ok  0 Use Per-Project Configuration on an untouched project -> embedded
+  ok  ...and the source says the value was defaulted, not stored
+  ok  a stored embed_on_play=false is honoured and named
+  ok  stored make_floating_on_play=false -> main placement
+  ok  a value outside the documented set reads as unknown (the Android editor ships its own hints)
+  ok  a windowed game keeps the bare timeout
+  ok  the embedded message still leads with the timeout
+  ok  an embedded timeout names the Suspend button + the placement
+  ok  ...and distinguishes it from freeze, which leaves the channel alive
+[unit] set_project_setting type mirror (v1.12)
+  ok  string '2' onto an int setting stores int 2
+  ok  string '0.35' onto a float setting stores a float
+  ok  string 'true' onto a bool setting stores a bool
+  ok  a numeric-looking string onto a STRING setting stays a String
+  ok  no existing type -> no guess (stays a String)
+  ok  JSON number 0.0 onto an int setting stores int 0 (not 0.0)
+  ok  number onto a float setting stays a float
+  ok  a lossy float onto an int setting is NOT silently truncated
+  ok  stringified array still recovers as PackedStringArray
+[unit] doctor context block (v1.13 S10)
+  ok  doctor carries a context block
+  ok  per_tier covers every tier this build can reach (6)
+  ok  tiers are numbered and named from the effort map
+  ok  tool counts are cumulative per tier
+  ok  per_tier bytes equal JSON.stringify(specs) in UTF-8 bytes
+  ok  bytes exceed code points on a non-ASCII surface (String.length would under-report)
+  ok  approx_tokens is bytes/4, the stated ratio
+  ok  context.bytes is the tier the dial actually sits on
+  ok  context names the advertised count and labels the ratio as approximate
+  ok  a Lite ceiling reports 4 tiers, not 6
+  ok  context.bytes tracks the dial on a capped build
+  ok  ok stays exactly warnings.is_empty()
+  ok  neither the context block nor game_view appends a warning
+  ok  doctor mounts game_view beside game_bridge
+[unit] runtime property resolution + write verify (v1.12)
+  ok  a ':' path resolves to the sub-resource that OWNS the leaf
+  ok  an object hop uses a plain set, not set_indexed
+  ok  a typo in the leaf is an error, not a silent null
+  ok  the error suggests the right name
+  ok  the error names the class that actually owns the leaf
+  ok  a typo in an intermediate hop names THAT hop, not the whole path
+  ok  a built-in struct hop falls back to the whole path via set_indexed
+  ok  a null intermediate says so instead of writing nowhere
+  ok  float compare is approximate
+  ok  genuinely different floats differ
+  ok  vector compare works
+  ok  int and float are not conflated (type change means the write was reshaped)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _root (res://addons/beckett/runtime/mcp_runtime.gd:479)
+       [1] _path_of (res://addons/beckett/runtime/mcp_runtime.gd:496)
+       [2] _set_cmd (res://addons/beckett/runtime/mcp_runtime.gd:621)
+       [3] _t_property_owner (res://tests/unit_tests.gd:1266)
+       [4] _init (res://tests/unit_tests.gd:82)
+       [5] _t_focus_graph (res://tests/unit_tests.gd:1159)
+  ok  a nested write reports ok
+  ok  THE regression: the value actually reaches the Environment
+  ok  the response always carries before/after
+  ok  a real change is reported as changed
+  ok  writing an unknown property is an error, never a silent ok
+  ok  an uncoercible value for a typed property is refused
+  ok  a matching type passes
+  ok  a null current value cannot pin a type, so nothing is refused
+  ok  same-type struct passes
+  ok  THE data-loss regression: garbage for a Transform3D is refused
+  ok  ...and the original transform is left intact
+[unit] render_probe winding math (v1.12)
+  ok  a PrimitiveMesh reports triangles without ArrayMesh's method
+  ok  both triangles sampled
+  ok  a stock PlaneMesh agrees with its own normals
+  ok  no degenerate triangles in a stock mesh
+  ok  a reversed index buffer is detected against unchanged normals
+  ok  the reversed mesh still reports its real triangle count
+  ok  0-facing + back-face culling names the reversed index buffer
+  ok  healthy winding produces no warning (signal stays high)
+  ok  0-facing with culling DISABLED is not a bug (both sides draw)
+  ok  debug draw modes expose the two workhorse views
+  ok  debug draw names round-trip for the previous-mode report
+[unit] screenshot assert metric (v1.12 W2)
+  ok  identical frames pass the default threshold (snr 10000000000)
+  ok  a single changed pixel still passes (AA-tolerant, snr 41.5)
+  ok  a genuinely different frame FAILS (snr 6.8 < 30)
+  ok  half the frame changed FAILS (snr 9.8)
+[unit] screenshot resolution cap (v1.13 S5)
+  ok  2560x1440 capped at 1280 -> 0.5
+  ok  portrait frames cap on the long edge too
+  ok  a frame already under the cap is untouched
+  ok  max_dim=0 is the explicit opt-out
+  ok  an explicit smaller scale still wins
+  ok  the cap wins when it is the smaller factor
+  ok  scale is still clamped to 1.0
+  ok  scale is still clamped up to 0.05
+  ok  post-crop 2000x1200 capped at 1280 -> 0.64
+  ok  the returned frame is 1280x768
+  ok  the legend rect fits inside the capped picture
+  ok  the legend corner lands ON the drawn box
+  ok  the legend right edge lands ON the drawn box
+  ok  3 px above the legend rect is still background
+[unit] compare_screenshots downscale chain (v1.13 S7)
+  ok  baseline down the same chain compares clean (diff 0.0000%)
+  ok  a mismatched chain does NOT (diff 7.1604% on an unchanged frame)
+[unit] dock tier stats (v1.13 S13)
+  ok  the sample really carries multi-byte characters
+  ok  _spec_tokens counts UTF-8 bytes (doctor's convention)
+  ok  line 1 stays the live tool/token cost
+  ok  the saving names the edition ceiling, never the literal Max
+  ok  the saving rides a second line (a wider label would widen the dock)
+  ok  no saving clause at the ceiling
+  ok  Full names Max, the ceiling it really has
+[unit] resolver did-you-mean (S17)
+  ok  _lev: kitten/sitting costs 3
+  ok  _lev: an empty side costs the other's length
+  ok  _lev: identical costs nothing
+  ok  nearest: one typo hits, the unrelated names do not
+  ok  nearest: a case-only slip scores 0
+  ok  nearest: nothing close suggests nothing
+  ok  nearest: empty query / candidates are safe
+  ok  nearest: an over-long query is refused before the DP
+  ok  nearest: the closest candidate ranks first
+  ok  nearest: limit is honoured
+  ok  nearest: Sprit2D -> Sprite2D across the whole ClassDB
+  ok  describe_class: a typo now names the class (was the generic fallback)
+  ok  describe_class: substring still wins for a prefix query
+  ok  describe_class: a hopeless query still gets the generic advice
+  ok  describe_object miss: candidates come from the running game when the bridge is up
+  ok  describe_object miss: an absolute live path matches on its last segment
+  ok  a res:// miss is a load failure, not a typo: no suggestion
+  ok  no live node is close: no suggestion
+[unit] v1.14 description budget (the context diet)
+  ok  tool modules registered (55 tools)
+  ok  no tool description over 600 chars except doctor
+  ok  no argument description over 130 chars
+  ok  every help(tool=...) pointer resolves to a longer long form
+[unit] v1.14 the long form never ships on tools/list
+  ok  list_specs omits the help key (that IS the diet)
+  ok  the short description is what ships
+  ok  help_for returns the long form
+  ok  help_for on an unknown tool is empty, not an error
+  ok  documented_names lists only tools with a long form
+  ok  a tool with no long form falls back to its description
+[unit] v1.14 outputSchema is a promise we can keep
+  ok  output_schema is advertised as outputSchema
+  ok  get_performance_monitors outputSchema is type object (only Dictionaries are promoted)
+  ok  get_performance_monitors outputSchema does not close the object
+  ok  get_performance_monitors required keys are all declared as properties
+  ok  doctor outputSchema is type object (only Dictionaries are promoted)
+  ok  doctor outputSchema does not close the object
+  ok  doctor required keys are all declared as properties
+  ok  at least one tool declares an outputSchema (get_performance_monitors, doctor)
+  ok  get_performance_monitors: a schema-shaped result survives _tool_result as structuredContent
+  ok  doctor: a schema-shaped result survives _tool_result as structuredContent
+[unit] v1.14 capture store
+  ok  a well-formed id validates
+  ok  traversal is rejected
+  ok  uppercase hex is rejected (one canonical form)
+  ok  an unknown extension is rejected
+  ok  a 15-digit id is rejected
+  ok  path_for refuses to build a path for a bad id
+  ok  mime maps to an extension
+  ok  an unknown mime falls back to png
+  ok  id maps back to a mime
+  ok  store() wrote a capture
+  ok  store() returns a capture:// uri
+  ok  store() returns an ABSOLUTE path for the text channel
+  ok  read_id round-trips the exact bytes as a blob
+  ok  a binary resource carries blob, never text
+  ok  reading a capture that is gone fails honestly
+  ok  read_id validates before touching the filesystem
+  ok  empty data is rejected rather than written
+  ok  wrote 25 captures to exercise the cap
+  ok  the store pruned itself to at most 20 (held 20)
+  ok  ids mint strictly increasing, however fast the machine is
+  ok  the NEWEST captures are the ones that survived
+  ok  the oldest capture was evicted
+  ok  probe captures cleaned up
+[unit] v1.14 screenshot deliver= modes
+  ok  no deliver argument leaves the line alone
+  ok  ...and leaves the inline image alone
+  ok  deliver=inline is a no-op
+  ok  an unknown deliver mode is named in the result
+  ok  ...and the picture still rides inline
+  ok  deliver=both keeps the image AND adds the link
+  ok  deliver=both names the uri in the line
+  ok  the EDITOR key shape (image_png_base64) is delivered too
+  ok  ...and names its uri
+[unit] screenshot save_to survives deliver=link
+  ok  the handler returns a result instead of abandoning the call
+  ok  save_to wrote the file even though deliver=link dropped the inline copy
+  ok  ...and it holds the real frame, not a 0-byte stub
+  ok  the line says it saved, and the file backs that up
+  ok  the capture:// link still ships alongside the save
+  ok  deliver=link still keeps the base64 out of the transcript
+  ok  saving an empty capture fails out loud
+  ok  ...and leaves no 0-byte file behind
+[unit] ci.yml engine matrix
+  ok  matrix declares 8 lanes (got 8)
+  ok  every godot pin is quoted
+  ok  the 4.4.1 parse-time floor is still a lane
+  ok  at least 3 distinct engine pins (got 4)
+  ok  exactly one experimental lane (got 1)
+  ok  warn-only is gated on matrix.experimental, not hardcoded true
+  ok  the job name flags the experimental lane
+  ok  fetch step knows the pre-release channel
+  ok  fetch step detects a pre-release version
+  ok  asset names interpolate the derived tag, not a hardcoded -stable
+  ok  count-site anchor 'the full N-tool Lite' intact
+  ok  count-site anchor '-Edition Lite -ExpectedTools N' intact
+  ok  count-site anchor '-Edition Full -ExpectedTools N' intact
+  ok  exactly two probe counts, one per edition (got 2)
+  ok  the probe edition is keyed on repository visibility, not on files on disk
+  ok  export safety: the autoload stub is readable
+  ok  export safety: the autoload stub names only strip-proof globals (offending: [])
+  ok  export safety: the autoload stub uses no preload()
+  ok  export safety: the autoload stub gates on OS.has_feature("editor")
+  ok  export safety: plugin.gd points the autoload at the stub, not at the implementation
+  ok  export safety: the export filter keeps exactly the file plugin.gd registers
+  ok  export safety: _autoload_target strips the singleton marker
+  ok  export safety: _autoload_target passes an unresolvable uid through instead of erroring
+  ok  templates: the bundled templates folder carries a .gdignore
+  ok  templates: apply_template never copies a .gdignore into res://
+  ok  templates: apply_template still copies scripts and scenes
+  ok  templates: apply_template leaves editor sidecars and the manifest behind
+
+[unit] all 399 checks passed
+```
+
+## a11y_test.gd --mobile — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+A11Y: OK
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 96 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+ERROR: 1 RID allocations of type 'N13RendererDummy11MeshStorage14DummyMultiMeshE' were leaked at exit.
+ERROR: 1 RID allocations of type 'N13RendererDummy9DummyMeshE' were leaked at exit.
+ERROR: 10 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 5 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+```
+
+## person_file_test.gd --mobile — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PERSON FILE: OK (mobile)
+WARNING: 17 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 81 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+ERROR: 9 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 6 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+```
+
+## ui_input_test.gd --mobile — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+UI INPUT: OK (mobile)
+ERROR: 9 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 5 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 3 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 17 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 94 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+
+## Tur 2
+
+## a11y_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+A11Y: OK
+ERROR: 1 RID allocations of type 'N13RendererDummy11MeshStorage14DummyMultiMeshE' were leaked at exit.
+ERROR: 1 RID allocations of type 'N13RendererDummy9DummyMeshE' were leaked at exit.
+ERROR: 11 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 15 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 98 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## army_actions_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ARMY ACTIONS: OK
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## army_coup_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ARMY COUP: OK
+WARNING: 39 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## army_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ARMY TEST: OK
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## audio_check.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+AUDIO click AudioStreamWAV 0.21s dosya
+AUDIO hover AudioStreamWAV 0.09s dosya
+AUDIO paper AudioStreamWAV 0.87s dosya
+AUDIO seal AudioStreamWAV 1.2s dosya
+AUDIO bell AudioStreamWAV 5.6s dosya
+AUDIO stinger_loss AudioStreamWAV 10.7s dosya
+AUDIO stinger_win AudioStreamWAV 9.5s dosya
+AUDIO cutscene AudioStreamWAV 4.2s dosya
+AUDIO alert AudioStreamWAV 1.55s dosya
+AUDIO menu AudioStreamOggVorbis 186.04s dosya
+AUDIO ambient AudioStreamOggVorbis 186.04s dosya
+AUDIO tension AudioStreamOggVorbis 186.04s dosya
+AUDIO crisis AudioStreamOggVorbis 186.04s dosya
+AUDIO: OK
+WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 2 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## budget_ui_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+BUDGET UI: OK
+ERROR: 7 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 79 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 4 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## content_check.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CONTENT: OK (5 dosya, 8 bozuk örnek)
+```
+
+## cutscene_check.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CUTSCENE: OK
+ERROR: 4 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 2 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 35 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## daily_card_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+DAILY CARD: OK
+ERROR: 7 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 2 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 42 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## dynasty_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ok  ilk nesil yalnız halef kararıyla sürer
+ok  ikinci nesil sayılır ve miras azalır
+ok  kayıp hanedan devamını ve sayacı sıfırlar
+DYNASTY: OK
+```
+
+## economy_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ECONOMY: OK
+WARNING: 106 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## election_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ELECTION: OK
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## endless_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ENDLESS: OK
+```
+
+## en_leak_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+EN LEAK SCAN: 5 campaigns, 0 unique leaks
+ERROR: 10 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 3 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 30 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 110 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## event_check.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+EVENTS: OK (201 olay, 0 uyarı)
+```
+
+## external_crisis_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ok    external pressure leaves the main RNG untouched
+ok    envoy signal is bounded and does not consume the stream
+ok    border warning opens the note card
+ok    note resolution schedules the ultimatum stage
+ok    ultimatum waits for the next week
+ok    version 10 saves receive safe defaults
+ok    old scandal fact displays in English
+ok    border note is localized in English
+ok    ultimatum is localized in English
+ok    financial pressure opens the embargo note
+ok    the credit-cut stage waits a week on its separate RNG
+ok    credit-cut card has all three response paths
+ok    assassination cannot open without a warning and leaves main RNG untouched
+ok    assassination warning opens its preparation card one week later with three choices
+ok    assassination resolution consumes only its separate RNG
+ok    successful route change leaves the ruler wounded and survives the night
+ok    survival unlocks the two-choice Palace aftermath event
+ok    surviving the assassination grants its wounded sovereign ending and achievement
+ok    assassination preparation card is fully localized in English
+ok    assassination defeat records its own ending
+ok    credit-cut card is localized in English
+ok    financial crisis news is localized in English
+ok    financial defeat records its own cause and title
+EXTERNAL CRISIS: OK
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## i18n_check.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+I18N: OK
+```
+
+## lang_switch_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+LANG: OK
+ERROR: 9 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 34 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 119 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## legacy_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ok  mirassız başlangıç değişmedi
+ok  miras ayrı RNG tüketmiyor
+ok  miras etkileri ve nesil aşınması
+ok  açık dosya iki dilde ve geçerli şemayla taşınır
+ok  legacy etkilerinin EN adları tamam
+ok  miras üç etkiyi aşmıyor ve artı/eksi taşıyor
+ok  halef sonucu Julian'ı seçiyor
+LEGACY: OK
+```
+
+## map_zoom_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+MAP ZOOM: OK
+ERROR: 8 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 83 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 4 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## pacing_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Dilim (hafta)   olay/hafta   (yaşayan oyun-haftası)
+H  1-  8        0.81        (280)
+H  9- 16        0.93        (320)
+H 17- 24        1.49        (320)
+H 25- 32        1.77        (320)
+H 33- 40        1.68        (320)
+H 41- 48        1.67        (320)
+H 49- 56        1.47        (314)
+H 57- 64        1.60        (299)
+H 65- 72        1.35        (284)
+H 73- 80        1.12        (236)
+H 81- 88        1.57        (91)
+H 89- 96        1.06        (18)
+H 97-104        1.00        (4)
+En uzun olaysız seri (medyan / en kötü): 2 / 3 hafta
+WARNING: 35 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## parliament_laws_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PARLIAMENT LAWS: OK
+```
+
+## parliament_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PARLIAMENT: OK
+```
+
+## person_file_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PERSON FILE: OK
+ERROR: 7 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 86 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## public_opinion_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PUBLIC OPINION: OK
+```
+
+## region_map_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+REGION MAP: OK
+ERROR: 8 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 88 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## regions_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+REGIONS: OK
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## save_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ok    başlangıç kurum aralığı
+ok    başlangıç holdingi
+ok    kaydet
+ok    gidiş-dönüş
+ok    dış ilişkiler gidiş-dönüş
+ok    dış baskı ve ayrı üreteç gidiş-dönüş
+ok    sürüm yazıldı
+ok    v11 hanedan alanları göçü
+ok    v8 dil göçü
+ok    v8 dış güç göçü
+ok    v7 yeni kadro göçü
+ok    v6 holding çizelgesi göçü
+ok    v5 Sarne göçü
+ok    v4 devlet göçü
+ok    v3 rejim göçü
+ok    göçte haber tekrarı yok
+ok    v1 göçü
+ok    v1 sonrası hafta akışı
+ok    yeni sürüm reddi
+ok    eksik alan reddi
+ok    bozuk dosya reddi
+SAVE: OK
+```
+
+## scenario_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+SCENARIO BOT darbe Kolay: 48/80
+SCENARIO BOT darbe Normal: 24/80
+SCENARIO BOT darbe Zor: 18/80
+SCENARIO BOT naiplik Kolay: 55/80
+SCENARIO BOT naiplik Normal: 22/80
+SCENARIO BOT naiplik Zor: 30/80
+SCENARIO BOT bos_kasa Kolay: 44/80
+SCENARIO BOT bos_kasa Normal: 23/80
+SCENARIO BOT bos_kasa Zor: 15/80
+SCENARIO: OK
+```
+
+## sim_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[idle] kazanma 0/40, ort. hafta 18.2
+   { "Saltanatının 20. haftasında halk ayaklan": 11, "Saltanatının 16. haftasında halk ayaklan": 8, "Saltanatının 18. haftasında halk ayaklan": 9, "Saltanatının 19. haftasında halk ayaklan": 4, "Saltanatının 12. haftasında halk ayaklan": 1, "Saltanatının 17. haftasında halk ayaklan": 3, "Saltanatının 21. haftasında halk ayaklan": 1, "Saltanatının 13. haftasında halk ayaklan": 1, "Saltanatının 22. haftasında halk ayaklan": 1, "Saltanatının 22. haftasında Askerî darbe": 1 }
+   olay sayısı/kampanya: 29.1
+[random] kazanma 0/40, ort. hafta 33.4
+   { "Saltanatının 25. haftasında Saray darbes": 1, "Saltanatının 44. haftasında Saray darbes": 3, "Saltanatının 41. haftasında Askerî darbe": 1, "Saltanatının 40. haftasında Askerî darbe": 1, "Saltanatının 19. haftasında Saray darbes": 1, "Saltanatının 27. haftasında Askerî darbe": 2, "Saltanatının 32. haftasında Drakon sınır": 1, "Saltanatının 18. haftasında Askerî darbe": 1, "Saltanatının 19. haftasında Askerî darbe": 2, "Saltanatının 23. haftasında Askerî darbe": 1, "Saltanatının 35. haftasında Askerî darbe": 2, "Saltanatının 29. haftasında Askerî darbe": 1, "Saltanatının 39. haftasında Askerî darbe": 1, "Saltanatının 38. haftasında Askerî darbe": 1, "Saltanatının 31. haftasında Askerî darbe": 2, "Saltanatının 33. haftasında Askerî darbe": 1, "Saltanatının 26. haftasında Saray darbes": 1, "Saltanatının 24. haftasında Askerî darbe": 1, "Saltanatının 26. haftasında kredi kesild": 2, "Saltanatının 32. haftasında Askerî darbe": 1, "Saltanatının 37. haftasında kredi kesild": 1, "Saltanatının 42. haftasında Drakon sınır": 1, "Saltanatının 22. haftasında Askerî darbe": 2, "Saltanatının 40. haftasında kredi kesild": 1, "Saltanatının 57. haftasında Saray darbes": 1, "Saltanatının 28. haftasında Saray darbes": 1, "Saltanatının 50. haftasında Askerî darbe": 1, "Saltanatının 28. haftasında halk ayaklan": 1, "Saltanatının 49. haftasında Drakon sınır": 1, "Saltanatının 50. haftasında Saray darbes": 1, "Saltanatının 32. haftasında Saray darbes": 1, "Saltanatının 53. haftasında Drakon sınır": 1 }
+   olay sayısı/kampanya: 50.1
+[careful] kazanma 24/40, ort. hafta 99.0
+   { "Saltanatının 104. haftasında Saray darbe": 2, "Saltanatının 87. haftasında Askerî darbe": 1, "Medya Rejimi": 18, "Saltanatının 100. haftasında Saray darbe": 2, "Saltanatının 74. haftasında saldırganlar": 1, "İstihbarat Rejimi": 5, "Saltanatının 81. haftasında Askerî darbe": 1, "Saltanatının 73. haftasında Askerî darbe": 1, "Saltanatının 89. haftasında Saray darbes": 1, "Saltanatının 103. haftasında Drakon sını": 1, "Saltanatının 102. haftasında Drakon sını": 1, "Saltanatının 92. haftasında Askerî darbe": 1, "Saltanatının 97. haftasında Drakon sınır": 1, "Saltanatının 101. haftasında Askerî darb": 1, "Saltanatının 70. haftasında Askerî darbe": 1, "Yaralı Egemen": 1, "Saltanatının 85. haftasında Drakon sınır": 1 }
+   olay sayısı/kampanya: 118.4
+[Kolay / random] kazanma 0/40, ort. hafta 39.3
+[Kolay / careful] kazanma 31/40, ort. hafta 101.7
+[Zor / random] kazanma 0/40, ort. hafta 29.0
+[Zor / careful] kazanma 13/40, ort. hafta 89.8
+Araştırma: 1 denemede zayıf nokta bulundu = true
+  Victor Sarne boyun eğmedi; şantajı ifşa etmekle tehdit ediyor. Konuşulmaya başlandı bile.
+  Sarne korku: 10 -> 5
+  Marcus Arden emri kırmızı çizgisini aştığı için gönülsüzce, yarım yamalak uyguladı. Bunu sana yazdı. (Kırmızı çizgisi: Siviller üzerine ateş açma emri)
+Söz: Marcus Arden'e Naiplik sözü verdin. Gözleri parladı; vadesi geldiğinde hatırlatacak.
+Söz: Victor Sarne'ye Naiplik sözü verdin. Gözleri parladı; vadesi geldiğinde hatırlatacak.
+Söz (tekrar): Marcus Arden'e bunu zaten vaat ettin.
+  Kart: Marcus Arden sözünü hatırlatıyor -> Marcus Arden sözünü aldı. Bunu unutmayacak. Victor Sarne, kendisine vaat edilen Naiplik başkasına verildiği için öfkeli.
+  Durumlar: ["arden:kept", "halden:broken"]
+  Kayıttan sonra söz sayısı: 2
+Hiç tetiklenmeyen olaylar (120 kampanyada): ["brandt_hapis", "muhalefet_para", "defter_kopya", "yazili_emirler", "santaj_kurbani", "terfi_rekabet", "bozulan_sozler", "operasyon_sizdi", "muhtira_sonrasi", "derin_devlet", "yay_falk_kopus", "rejim_guvenlikci_hesap", "rejim_populist_hesap", "rejim_patronajci_hesap", "maliye_cokus", "adliye_cokus", "uzman_bakan", "sadik_komutan_sinav", "liyakatli_savci", "kadro_ihaneti", "saray_payi_sizdi", "holding_devrildi", "julian_halka_konusma", "julian_isyani_reddi", "julian_marcus_oyunu", "julian_evlilik_teklifi", "elena_istifa", "asteria_kredi_teklifi", "asteria_ozgurluk_notasi", "drakon_silah_anlasmasi", "drakon_sinir_notasi", "seravia_yatirim_teklifi", "seravia_ambargo", "seravia_sarne_destegi", "drakon_darbe_destegi"]
+   ulaşılabilir mi brandt_hapis: true
+   ulaşılabilir mi muhalefet_para: true
+   ulaşılabilir mi defter_kopya: true
+   ulaşılabilir mi yazili_emirler: true
+   ulaşılabilir mi santaj_kurbani: true
+   ulaşılabilir mi terfi_rekabet: true
+   ulaşılabilir mi bozulan_sozler: true
+   ulaşılabilir mi operasyon_sizdi: true
+   ulaşılabilir mi muhtira_sonrasi: true
+   ulaşılabilir mi derin_devlet: true
+   ulaşılabilir mi yay_falk_kopus: true
+   ulaşılabilir mi rejim_guvenlikci_hesap: true
+   ulaşılabilir mi rejim_populist_hesap: true
+   ulaşılabilir mi rejim_patronajci_hesap: true
+   ulaşılabilir mi maliye_cokus: true
+   ulaşılabilir mi adliye_cokus: true
+   ulaşılabilir mi uzman_bakan: true
+   ulaşılabilir mi sadik_komutan_sinav: true
+   ulaşılabilir mi liyakatli_savci: true
+   ulaşılabilir mi kadro_ihaneti: true
+   ulaşılabilir mi saray_payi_sizdi: true
+   ulaşılabilir mi holding_devrildi: true
+   ulaşılabilir mi julian_halka_konusma: true
+   ulaşılabilir mi julian_isyani_reddi: true
+   ulaşılabilir mi julian_marcus_oyunu: true
+   ulaşılabilir mi julian_evlilik_teklifi: true
+   ulaşılabilir mi elena_istifa: true
+   ulaşılabilir mi asteria_kredi_teklifi: true
+   ulaşılabilir mi asteria_ozgurluk_notasi: true
+   ulaşılabilir mi drakon_silah_anlasmasi: true
+   ulaşılabilir mi drakon_sinir_notasi: true
+   ulaşılabilir mi seravia_yatirim_teklifi: true
+   ulaşılabilir mi seravia_ambargo: true
+   ulaşılabilir mi seravia_sarne_destegi: true
+   ulaşılabilir mi drakon_darbe_destegi: true
+Tarihçiler: 2 | zaman çizelgesi: 20 hafta
+Ek uyumu: OK
+Kayıt/yükleme: OK (hafta 11)
+Birbirine düşür: OK
+Dokuz hikâye yayı: OK
+Rejim tipleri: OK
+Devlet finali: OK
+Yeni kadro RNG: OK
+Veliaht eğitimi: OK
+Yeni kadro raporları: OK
+Dış ilişkiler: OK
+Meclis: görüş türleri { "rec": 3114, "flat": 91, "evasive": 9 } | ort. kayıp (V) sadık 1.88 (n=2622), hazır 8.16 (n=492)
+Meclis görüşleri: OK
+Komplo: alamet gerçek 574 / dedikodu 92, 20 oyunda 32 kriz
+Darbe aşamaları: OK
+Örnek final: Devrilen Kral | Saltanatının 18. haftasında halk ayaklanması sarayı kuşattı. Kriz kapına dayandığında karar veremedin.
+  H1 Victor Sarne: 'Kanallarım sizi seviyor; halk da kanallarımı.' -> gerçekte 'Halk kimin hikâyesine inanacağına henüz karar vermedi.'
+  H1 Leyla Sarn: 'Sokakta sakin bir hava var.' -> gerçekte 'İnsanlar daha çok soru soruyor.'
+  H2 Kraliçe Helena: '(kötü haberi sana iletmedi)' -> gerçekte 'Selin Veyra: Kasadaki rakamlar tutuyor, ama pazardaki fiyatlar tutmuyor. Fiyatlar oynak. İş piyasası yavaşlıyor. Borç yükü hissediliyor. Ticaret temkinli, üretim ılımlı. Memurlar hesabı çıkarıyor, gecikmeler yönetilebilir.'
+TEST: OK
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## touch_scroll_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+TOUCH: OK
+```
+
+## touch_tap_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+TOUCH TAP: OK
+```
+
+## tour_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+TOUR: OK
+WARNING: 30 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 109 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 4 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+ERROR: 8 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+```
+
+## tr_suffix_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+TR SUFFIX: OK (7267 Turkish, 5726 English strings; 40 campaigns)
+```
+
+## ui_input_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+UI INPUT: OK
+ERROR: 8 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 4 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 3 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 91 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 6 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## ui_logic_test.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+UI LOGIC: OK
+```
+
+## unit_tests.gd — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[unit] json_rpc framing
+  ok  result() frames id + payload
+  ok  error() carries code + message
+  ok  error() omits data when null
+  ok  make_notification() has no id and omits null params
+[unit] effort tier map
+  ok  doctor is L1 (survives any cap)
+  ok  playtest is L5 premium
+  ok  export_project is L6
+  ok  unmapped tool falls back to L1 (never hidden by accident)
+  ok  allows() honors the boundary
+  ok  clamp_level() bounds 1..MAX
+  ok  L4 See unlocks get_performance_monitors
+  ok  render_probe is L4 (ships in Lite)
+  ok  set_debug_draw is L4 (ships in Lite)
+  ok  reload_shader is L5 premium (mutates the live game)
+[unit] tool registry
+  ok  has() reflects registration
+  ok  list_specs(4) filters by tier
+  ok  list_specs(6) advertises everything
+  ok  annotations carry readOnlyHint
+[unit] jobs.poll_until (B2)
+  ok  tick result ends the wait
+  ok  deadline returns {timeout:true}
+  ok  pump runs each pass (ran 7 times)
+[unit] http_server statics
+  ok  _find_header_end locates CRLFCRLF
+  ok  _find_header_end returns -1 when absent
+  ok  _reason maps auth/method codes
+[unit] client_config
+  ok  mcp_url tokenless
+  ok  mcp_url carries the token as a path segment
+  ok  entry() uses the tokened url
+  ok  desktop_entry bridges the tokened url
+  ok  cline entry keeps its type
+  ok  codex upsert: fresh file gets our table
+  ok  codex upsert: identical table is a no-op (no churn)
+  ok  codex upsert: our table is rewritten
+  ok  codex upsert: other tables survive verbatim
+  ok  configured_port falls back to the default when unset
+  ok  configured_port honors the beckett/port project setting
+  ok  BECKETT_PORT env overrides the project setting
+  ok  a junk BECKETT_PORT falls through to the project setting
+[unit] mcp_server._tool_result serializer
+  ok  json dict rides as structuredContent
+  ok  json dict also renders as text for every client
+  ok  error carries message + suggestion, isError=true
+  ok  image + text both present
+  ok  image_base64 carries its explicit mime
+  ok  json legend rides beside the image
+  ok  empty result says so instead of vanishing
+  ok  text block survives beside a json payload
+  ok  json still rides as structuredContent when text is present
+  ok  error suppresses the handler's own text
+  ok  json mirror is compact (no pretty-print newlines)
+  ok  resource_link block emitted on 2025-06-18
+  ok  resource_link suppressed on 2025-03-26 (predates the content type)
+  ok  the rest of the result survives the suppression
+  ok  supports_resource_link() reports the gate honestly
+  ok  link entries without a uri are dropped, not fatal
+[unit] mcp_server idempotency cache is bounded by bytes, not just entries
+  ok  _result_bytes counts image payloads
+  ok  entry bound still holds
+  ok  byte ceiling holds after 200 image results
+  ok  size bookkeeping stays in step with the cache
+  ok  an oversized result is not cached
+  ok  a small result still caches
+[unit] initialize instructions derive the skill-pack count from disk
+  ok  _skill_pack_count matches the .md files on disk (0)
+[unit] instructions pack-count assert skipped (Lite build: skills trimmed)
+[unit] http_server content-type
+  ok  default Content-Type is still JSON
+  ok  default Content-Type declares charset=utf-8
+[unit] a stale Mcp-Session-Id is served, never 404ed
+  ok  fresh server serves a client holding a pre-restart id
+  ok  initialize still mints an Mcp-Session-Id for clients that expect one
+  ok  ...and it differs from the stale id, so the requests below really mismatch
+  ok  POST with a mismatched id gets its JSON-RPC result
+  ok  initialize carrying a stale id is served (a client re-initializing the lazy way)
+  ok  a notification with a stale id still gets its 202
+  ok  DELETE with a stale id stays the stateless no-op
+  ok  GET with a stale id still opens the event stream
+  ok  the current id keeps working
+  ok  no id at all keeps working
+  ok  a stale id does not soften the Host gate
+  ok  server/discover answers HTTP 200 with a JSON-RPC body
+  ok  ...carrying -32601, the signal a 2026-07-28 client falls back on
+  ok  ...with the string request id echoed unchanged
+[unit] mcp_server._secure_equals (B1)
+  ok  equal strings match
+  ok  one differing byte rejects
+  ok  length mismatch rejects
+  ok  empty == empty
+[unit] gate refusals are labeled as what their body is
+  ok  a spoofed Host answers 403
+  ok  ...and still says why
+  ok  ...under a Content-Type that fits the body ('text/plain; charset=utf-8' over 'forbidden host (this server only answers to a loopback Host)')
+  ok  a cross-origin request answers 403, labeled to fit ('forbidden origin')
+  ok  a mismatched session id is answered under a fitting label too (status 200)
+  ok  a request without the token answers 401, labeled to fit ('unauthorized')
+  ok  a served JSON-RPC answer leaves the Content-Type to the JSON default
+  ok  ...and that default fits its body
+[unit] mcp_server._validate_args
+  ok  missing required arg rejected
+  ok  array where string expected rejected
+  ok  numeric string passes the lenient gate
+[unit] callargs arg coercion (v1.10.2 silent-argument fix)
+  ok  [x,y,z] coerces to Vector3i
+  ok  JSON 60.0 coerces to int for an int param
+  ok  prepared args execute through callv
+  ok  {x,y,z} coerces to Vector3
+  ok  "x y z" string coerces to Vector3
+  ok  Godot literal string coerces to Vector3
+  ok  wrong-size vector array errors (no silent zero)
+  ok  garbage for a vector param errors (no silent zero)
+  ok  too few args errors instead of a silent no-op
+  ok  too many args errors
+  ok  hex string coerces to Color
+  ok  [r,g,b] coerces to Color
+  ok  String coerces to StringName
+  ok  untyped params pass through; defaults still fill
+  ok  [[x,y],..] coerces to PackedVector2Array
+  ok  null passes for an object param
+  ok  object param from a string errors without a resolver (no silent null)
+  ok  metadata-less call falls back to raw passthrough
+  ok  String coerces to NodePath
+  ok  fractional float for an int param errors
+  ok  Transform3D literal string parses
+  ok  int array coerces to PackedInt32Array
+[unit] error echo (v1.11 - engine errors attached to the causing call)
+  ok  an error in the window is echoed
+  ok  echo carries file:line
+  ok  a fresh mark sees nothing
+  ok  prints are not echoed
+  ok  severity maps warning
+  ok  echo caps at 8 + a count note
+  ok  severity maps script errors
+ERROR: [beckett unit probe - intentional error, ignore]
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _t_error_echo (res://tests/unit_tests.gd:1085)
+       [1] _init (res://tests/unit_tests.gd:62)
+  ok  a real push_error lands in the window
+ERROR: [beckett unit probe 2 - after uninstall, ignore]
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _t_error_echo (res://tests/unit_tests.gd:1090)
+       [1] _init (res://tests/unit_tests.gd:62)
+  ok  uninstall stops the capture
+  ok  engine_errors stay advisory (isError false)
+  ok  engine errors render as a text block
+  ok  engine_errors ride structuredContent
+  ok  engine_errors merge beside a json payload
+[unit] script_tools class_name mask (B4)
+  ok  registered name + own path: renamed in place
+  ok  mask preserves line count
+  ok  registered name + different path: real conflict reported
+  ok  unregistered name: untouched (self-refs need it)
+  ok  one-line form keeps its extends half
+  ok  4.5+ same-line @abstract form keeps its annotation (empirically compile-verified shape)
+  ok  THE regression: re-validating a real registered script compiles clean
+[unit] playtest groups skipped (Lite build: module trimmed)
+[unit] runner perf group skipped (Lite build: runner trimmed)
+[unit] runtime/replay_perf.gd (game-side engine, B7 module)
+  ok  no samples -> empty summary (not fabricated zeros)
+  ok  game-side p95 matches the runner's math
+  ok  summary carries the flat baseline-diff keys
+  ok  begin() resets the capture
+[unit] runtime/input_codec.gd round-trip (B7 module)
+  ok  key builds
+  ok  key round-trips through serialize
+  ok  joy_axis clamps value to -1..1
+  ok  joy_axis round-trips axis + device
+  ok  touch_drag round-trips index + position
+  ok  unknown type builds null (skipped, not crashed)
+  ok  echo keys serialize to {} (dropped)
+  ok  key builds with unicode (int)
+  ok  key builds with unicode (1-char string)
+  ok  unicode round-trips through serialize
+  ok  unicode key omitted when zero
+  ok  device-id availability matches ClassDB (no phantom device 0)
+  ok  mouse device id likewise
+  ok  keyboard id is the engine's own value
+  ok  a synthesized key carries the keyboard device id
+[unit] runtime/ui_inspect.gd (ui_snapshot walker + occlusion hit test)
+  ok  pick_at finds the button at its center
+  ok  covering sibling (STOP) receives the point
+  ok  click_reaches refuses the covered button
+  ok  overlay with IGNORE is click-through
+  ok  PASS child is the raw receiver
+  ok  PASS child bubbles the click up to the button
+  ok  higher CanvasLayer overlay wins the pick
+  ok  is_disabled sees BaseButton.disabled
+  ok  is_disabled false on a control without the property
+  ok  snapshot ok
+  ok  snapshot carries the button + text
+  ok  snapshot rect mirrors the live global rect (ints)
+  ok  snapshot carries slider value + range
+  ok  hash is stable for an unchanged UI
+  ok  since_hash short-circuits to unchanged
+  ok  a text change changes the hash
+  ok  snapshot flags the covered button with occluded_by
+  ok  audit ok
+  ok  audit finds the overlapping pair
+  ok  audit finds the offscreen control
+  ok  audit finds the trimmed label (font-measured, not min-size)
+  ok  audit flags sub-touch_min targets
+  ok  audit flags focus_mode NONE buttons
+  ok  annotate draws the box outline
+  ok  annotate leaves pixels outside the mark alone
+  ok  annotate stamps the digit tag
+[unit] ui_audit focus graph (v1.11)
+  ok  nothing focused -> no_initial_focus flagged
+  ok  the island is unreachable from the entry
+  ok  the island is a dead end (all moves stay on it)
+  ok  focus summary counts focusable=3 reachable=2
+  ok  entry defaults to the first focusable in tree order
+  ok  with focus granted, no_initial_focus clears
+  ok  A/B stay reachable (only the island flags)
+[unit] per-frame typing window (v1.11)
+  ok  tick 1 injects exactly one char
+  ok  chars pace one per tick
+  ok  the submit Enter takes its own frame
+  ok  the stream closes after the queue drains
+  ok  type_status reports done + typed count
+  ok  a vanished target ends the stream with a warning
+[unit] runtime_bridge handshake compare (v1.9.1)
+  ok  matching hello accepted
+  ok  wrong hello rejected
+  ok  empty hello vs required token rejected
+[unit] game_view probe + Suspend diagnosis (v1.13 S11/S12)
+  ok  mode is one of embedded|windowed|unknown
+  ok  outside the editor the probe answers unknown, never a guess
+  ok  unknown still names the read that was unavailable
+  ok  payload always carries placement + note
+  ok  -1 Disabled -> windowed
+  ok  1 Embed Game -> embedded / main
+  ok  2 Make Game Workspace Floating -> embedded / floating
+  ok  0 Use Per-Project Configuration on an untouched project -> embedded
+  ok  ...and the source says the value was defaulted, not stored
+  ok  a stored embed_on_play=false is honoured and named
+  ok  stored make_floating_on_play=false -> main placement
+  ok  a value outside the documented set reads as unknown (the Android editor ships its own hints)
+  ok  a windowed game keeps the bare timeout
+  ok  the embedded message still leads with the timeout
+  ok  an embedded timeout names the Suspend button + the placement
+  ok  ...and distinguishes it from freeze, which leaves the channel alive
+[unit] set_project_setting type mirror (v1.12)
+  ok  string '2' onto an int setting stores int 2
+  ok  string '0.35' onto a float setting stores a float
+  ok  string 'true' onto a bool setting stores a bool
+  ok  a numeric-looking string onto a STRING setting stays a String
+  ok  no existing type -> no guess (stays a String)
+  ok  JSON number 0.0 onto an int setting stores int 0 (not 0.0)
+  ok  number onto a float setting stays a float
+  ok  a lossy float onto an int setting is NOT silently truncated
+  ok  stringified array still recovers as PackedStringArray
+[unit] doctor context block (v1.13 S10)
+  ok  doctor carries a context block
+  ok  per_tier covers every tier this build can reach (6)
+  ok  tiers are numbered and named from the effort map
+  ok  tool counts are cumulative per tier
+  ok  per_tier bytes equal JSON.stringify(specs) in UTF-8 bytes
+  ok  bytes exceed code points on a non-ASCII surface (String.length would under-report)
+  ok  approx_tokens is bytes/4, the stated ratio
+  ok  context.bytes is the tier the dial actually sits on
+  ok  context names the advertised count and labels the ratio as approximate
+  ok  a Lite ceiling reports 4 tiers, not 6
+  ok  context.bytes tracks the dial on a capped build
+  ok  ok stays exactly warnings.is_empty()
+  ok  neither the context block nor game_view appends a warning
+  ok  doctor mounts game_view beside game_bridge
+[unit] runtime property resolution + write verify (v1.12)
+  ok  a ':' path resolves to the sub-resource that OWNS the leaf
+  ok  an object hop uses a plain set, not set_indexed
+  ok  a typo in the leaf is an error, not a silent null
+  ok  the error suggests the right name
+  ok  the error names the class that actually owns the leaf
+  ok  a typo in an intermediate hop names THAT hop, not the whole path
+  ok  a built-in struct hop falls back to the whole path via set_indexed
+  ok  a null intermediate says so instead of writing nowhere
+  ok  float compare is approximate
+  ok  genuinely different floats differ
+  ok  vector compare works
+  ok  int and float are not conflated (type change means the write was reshaped)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _root (res://addons/beckett/runtime/mcp_runtime.gd:479)
+       [1] _path_of (res://addons/beckett/runtime/mcp_runtime.gd:496)
+       [2] _set_cmd (res://addons/beckett/runtime/mcp_runtime.gd:621)
+       [3] _t_property_owner (res://tests/unit_tests.gd:1266)
+       [4] _init (res://tests/unit_tests.gd:82)
+       [5] _t_focus_graph (res://tests/unit_tests.gd:1159)
+  ok  a nested write reports ok
+  ok  THE regression: the value actually reaches the Environment
+  ok  the response always carries before/after
+  ok  a real change is reported as changed
+  ok  writing an unknown property is an error, never a silent ok
+  ok  an uncoercible value for a typed property is refused
+  ok  a matching type passes
+  ok  a null current value cannot pin a type, so nothing is refused
+  ok  same-type struct passes
+  ok  THE data-loss regression: garbage for a Transform3D is refused
+  ok  ...and the original transform is left intact
+[unit] render_probe winding math (v1.12)
+  ok  a PrimitiveMesh reports triangles without ArrayMesh's method
+  ok  both triangles sampled
+  ok  a stock PlaneMesh agrees with its own normals
+  ok  no degenerate triangles in a stock mesh
+  ok  a reversed index buffer is detected against unchanged normals
+  ok  the reversed mesh still reports its real triangle count
+  ok  0-facing + back-face culling names the reversed index buffer
+  ok  healthy winding produces no warning (signal stays high)
+  ok  0-facing with culling DISABLED is not a bug (both sides draw)
+  ok  debug draw modes expose the two workhorse views
+  ok  debug draw names round-trip for the previous-mode report
+[unit] screenshot assert metric (v1.12 W2)
+  ok  identical frames pass the default threshold (snr 10000000000)
+  ok  a single changed pixel still passes (AA-tolerant, snr 41.5)
+  ok  a genuinely different frame FAILS (snr 6.8 < 30)
+  ok  half the frame changed FAILS (snr 9.8)
+[unit] screenshot resolution cap (v1.13 S5)
+  ok  2560x1440 capped at 1280 -> 0.5
+  ok  portrait frames cap on the long edge too
+  ok  a frame already under the cap is untouched
+  ok  max_dim=0 is the explicit opt-out
+  ok  an explicit smaller scale still wins
+  ok  the cap wins when it is the smaller factor
+  ok  scale is still clamped to 1.0
+  ok  scale is still clamped up to 0.05
+  ok  post-crop 2000x1200 capped at 1280 -> 0.64
+  ok  the returned frame is 1280x768
+  ok  the legend rect fits inside the capped picture
+  ok  the legend corner lands ON the drawn box
+  ok  the legend right edge lands ON the drawn box
+  ok  3 px above the legend rect is still background
+[unit] compare_screenshots downscale chain (v1.13 S7)
+  ok  baseline down the same chain compares clean (diff 0.0000%)
+  ok  a mismatched chain does NOT (diff 7.1604% on an unchanged frame)
+[unit] dock tier stats (v1.13 S13)
+  ok  the sample really carries multi-byte characters
+  ok  _spec_tokens counts UTF-8 bytes (doctor's convention)
+  ok  line 1 stays the live tool/token cost
+  ok  the saving names the edition ceiling, never the literal Max
+  ok  the saving rides a second line (a wider label would widen the dock)
+  ok  no saving clause at the ceiling
+  ok  Full names Max, the ceiling it really has
+[unit] resolver did-you-mean (S17)
+  ok  _lev: kitten/sitting costs 3
+  ok  _lev: an empty side costs the other's length
+  ok  _lev: identical costs nothing
+  ok  nearest: one typo hits, the unrelated names do not
+  ok  nearest: a case-only slip scores 0
+  ok  nearest: nothing close suggests nothing
+  ok  nearest: empty query / candidates are safe
+  ok  nearest: an over-long query is refused before the DP
+  ok  nearest: the closest candidate ranks first
+  ok  nearest: limit is honoured
+  ok  nearest: Sprit2D -> Sprite2D across the whole ClassDB
+  ok  describe_class: a typo now names the class (was the generic fallback)
+  ok  describe_class: substring still wins for a prefix query
+  ok  describe_class: a hopeless query still gets the generic advice
+  ok  describe_object miss: candidates come from the running game when the bridge is up
+  ok  describe_object miss: an absolute live path matches on its last segment
+  ok  a res:// miss is a load failure, not a typo: no suggestion
+  ok  no live node is close: no suggestion
+[unit] v1.14 description budget (the context diet)
+  ok  tool modules registered (55 tools)
+  ok  no tool description over 600 chars except doctor
+  ok  no argument description over 130 chars
+  ok  every help(tool=...) pointer resolves to a longer long form
+[unit] v1.14 the long form never ships on tools/list
+  ok  list_specs omits the help key (that IS the diet)
+  ok  the short description is what ships
+  ok  help_for returns the long form
+  ok  help_for on an unknown tool is empty, not an error
+  ok  documented_names lists only tools with a long form
+  ok  a tool with no long form falls back to its description
+[unit] v1.14 outputSchema is a promise we can keep
+  ok  output_schema is advertised as outputSchema
+  ok  get_performance_monitors outputSchema is type object (only Dictionaries are promoted)
+  ok  get_performance_monitors outputSchema does not close the object
+  ok  get_performance_monitors required keys are all declared as properties
+  ok  doctor outputSchema is type object (only Dictionaries are promoted)
+  ok  doctor outputSchema does not close the object
+  ok  doctor required keys are all declared as properties
+  ok  at least one tool declares an outputSchema (get_performance_monitors, doctor)
+  ok  get_performance_monitors: a schema-shaped result survives _tool_result as structuredContent
+  ok  doctor: a schema-shaped result survives _tool_result as structuredContent
+[unit] v1.14 capture store
+  ok  a well-formed id validates
+  ok  traversal is rejected
+  ok  uppercase hex is rejected (one canonical form)
+  ok  an unknown extension is rejected
+  ok  a 15-digit id is rejected
+  ok  path_for refuses to build a path for a bad id
+  ok  mime maps to an extension
+  ok  an unknown mime falls back to png
+  ok  id maps back to a mime
+  ok  store() wrote a capture
+  ok  store() returns a capture:// uri
+  ok  store() returns an ABSOLUTE path for the text channel
+  ok  read_id round-trips the exact bytes as a blob
+  ok  a binary resource carries blob, never text
+  ok  reading a capture that is gone fails honestly
+  ok  read_id validates before touching the filesystem
+  ok  empty data is rejected rather than written
+  ok  wrote 25 captures to exercise the cap
+  ok  the store pruned itself to at most 20 (held 20)
+  ok  ids mint strictly increasing, however fast the machine is
+  ok  the NEWEST captures are the ones that survived
+  ok  the oldest capture was evicted
+  ok  probe captures cleaned up
+[unit] v1.14 screenshot deliver= modes
+  ok  no deliver argument leaves the line alone
+  ok  ...and leaves the inline image alone
+  ok  deliver=inline is a no-op
+  ok  an unknown deliver mode is named in the result
+  ok  ...and the picture still rides inline
+  ok  deliver=both keeps the image AND adds the link
+  ok  deliver=both names the uri in the line
+  ok  the EDITOR key shape (image_png_base64) is delivered too
+  ok  ...and names its uri
+[unit] screenshot save_to survives deliver=link
+  ok  the handler returns a result instead of abandoning the call
+  ok  save_to wrote the file even though deliver=link dropped the inline copy
+  ok  ...and it holds the real frame, not a 0-byte stub
+  ok  the line says it saved, and the file backs that up
+  ok  the capture:// link still ships alongside the save
+  ok  deliver=link still keeps the base64 out of the transcript
+  ok  saving an empty capture fails out loud
+  ok  ...and leaves no 0-byte file behind
+[unit] ci.yml engine matrix
+  ok  matrix declares 8 lanes (got 8)
+  ok  every godot pin is quoted
+  ok  the 4.4.1 parse-time floor is still a lane
+  ok  at least 3 distinct engine pins (got 4)
+  ok  exactly one experimental lane (got 1)
+  ok  warn-only is gated on matrix.experimental, not hardcoded true
+  ok  the job name flags the experimental lane
+  ok  fetch step knows the pre-release channel
+  ok  fetch step detects a pre-release version
+  ok  asset names interpolate the derived tag, not a hardcoded -stable
+  ok  count-site anchor 'the full N-tool Lite' intact
+  ok  count-site anchor '-Edition Lite -ExpectedTools N' intact
+  ok  count-site anchor '-Edition Full -ExpectedTools N' intact
+  ok  exactly two probe counts, one per edition (got 2)
+  ok  the probe edition is keyed on repository visibility, not on files on disk
+  ok  export safety: the autoload stub is readable
+  ok  export safety: the autoload stub names only strip-proof globals (offending: [])
+  ok  export safety: the autoload stub uses no preload()
+  ok  export safety: the autoload stub gates on OS.has_feature("editor")
+  ok  export safety: plugin.gd points the autoload at the stub, not at the implementation
+  ok  export safety: the export filter keeps exactly the file plugin.gd registers
+  ok  export safety: _autoload_target strips the singleton marker
+  ok  export safety: _autoload_target passes an unresolvable uid through instead of erroring
+  ok  templates: the bundled templates folder carries a .gdignore
+  ok  templates: apply_template never copies a .gdignore into res://
+  ok  templates: apply_template still copies scripts and scenes
+  ok  templates: apply_template leaves editor sidecars and the manifest behind
+
+[unit] all 399 checks passed
+```
+
+## a11y_test.gd --mobile — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+A11Y: OK
+ERROR: 1 RID allocations of type 'N13RendererDummy11MeshStorage14DummyMultiMeshE' were leaked at exit.
+ERROR: 1 RID allocations of type 'N13RendererDummy9DummyMeshE' were leaked at exit.
+ERROR: 10 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 5 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 96 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## person_file_test.gd --mobile — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PERSON FILE: OK (mobile)
+ERROR: 9 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 6 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 17 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 95 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## ui_input_test.gd --mobile — PASS
+
+```text
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+UI INPUT: OK (mobile)
+ERROR: 9 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 5 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 3 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 17 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 94 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+```
+
+## Kalan beş kusur — doğrulama koşusu (2026-10-14)
+
+Aşağıdaki ilk blok, `tools/run_test_isolated.ps1` ile çalıştırılan tests/*.gd tam paketinin gerçek stdout/stderr satırlarıdır. Taşıma katmanının PowerShell CLIXML sarmalayıcıları çıkarıldı; Godot'un kapanış uyarıları aynen bırakıldı. 46 çalıştırmanın tamamı `EXIT CODE: 0` verdi. Son kod/çeviri düzeltmesinden sonra kişi dosyası masaüstü ve mobil TR/EN, `i18n_check`, `lang_switch_test` ve `en_leak_test` hedefli olarak tekrar çalıştırıldı.
+
+### Tam paket — stdout / stderr
+
+```text
+﻿=== a11y_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+A11Y: OK
+ERROR: 1 RID allocations of type 'N13RendererDummy11MeshStorage14DummyMultiMeshE' were leaked at exit.
+ERROR: 1 RID allocations of type 'N13RendererDummy9DummyMeshE' were leaked at exit.
+ERROR: 11 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 15 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 158 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== a11y_test.gd -- --mobile ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+A11Y: OK
+ERROR: 1 RID allocations of type 'N13RendererDummy11MeshStorage14DummyMultiMeshE' were leaked at exit.
+ERROR: 1 RID allocations of type 'N13RendererDummy9DummyMeshE' were leaked at exit.
+ERROR: 10 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 155 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== army_actions_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ARMY ACTIONS: OK
+--- STDERR ---
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== army_coup_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ARMY COUP: OK
+--- STDERR ---
+WARNING: 39 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== army_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ARMY TEST: OK
+--- STDERR ---
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== audio_check.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+AUDIO click AudioStreamWAV 0.21s dosya
+AUDIO hover AudioStreamWAV 0.09s dosya
+AUDIO paper AudioStreamWAV 0.87s dosya
+AUDIO seal AudioStreamWAV 1.2s dosya
+AUDIO bell AudioStreamWAV 5.6s dosya
+AUDIO stinger_loss AudioStreamWAV 10.7s dosya
+AUDIO stinger_win AudioStreamWAV 9.5s dosya
+AUDIO cutscene AudioStreamWAV 4.2s dosya
+AUDIO alert AudioStreamWAV 1.55s dosya
+AUDIO menu AudioStreamOggVorbis 186.04s dosya
+AUDIO ambient AudioStreamOggVorbis 186.04s dosya
+AUDIO tension AudioStreamOggVorbis 186.04s dosya
+AUDIO crisis AudioStreamOggVorbis 186.04s dosya
+AUDIO: OK
+--- STDERR ---
+WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 2 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== budget_ui_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+BUDGET UI: OK
+ERROR: 7 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 139 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 4 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== cause_probe.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[Kolay, kanıt yok etmeden] kazanma 6/20  { "yetkisiz (skandal)": 7, "diğer": 4, "darbe": 3, "tahtta": 6 }
+[Normal, kanıt yok etmeden] kazanma 0/20  { "yetkisiz (skandal)": 12, "diğer": 1, "darbe": 6, "ayaklanma": 1 }
+--- STDERR ---
+WARNING: 37 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== content_check.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CONTENT: OK (5 dosya, 8 bozuk örnek)
+--- STDERR ---
+EXIT CODE: 0
+=== cutscene_check.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+CUTSCENE: OK
+ERROR: 4 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 2 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 93 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== daily_card_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+DAILY CARD: OK
+ERROR: 7 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 2 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 102 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== dynasty_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ok  ilk nesil yalnız halef kararıyla sürer
+ok  ikinci nesil sayılır ve miras azalır
+ok  kayıp hanedan devamını ve sayacı sıfırlar
+DYNASTY: OK
+--- STDERR ---
+EXIT CODE: 0
+=== economy_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ECONOMY: OK
+--- STDERR ---
+WARNING: 106 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== election_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ELECTION: OK
+--- STDERR ---
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== endless_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ENDLESS: OK
+--- STDERR ---
+EXIT CODE: 0
+=== en_dump.gd -- --out=C:\Users\USER\AppData\Local\Temp\Veloria_PersonFileCurrent\en_dump.tsv ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+DUMP 949
+ERROR: 8 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 30 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 168 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== en_dump2.gd -- --out=C:\Users\USER\AppData\Local\Temp\Veloria_PersonFileCurrent\en_dump2.tsv ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+DUMP2 3152
+ERROR: 7 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 542 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 1183 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== en_leak_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+EN LEAK SCAN: 5 campaigns, 0 unique leaks
+ERROR: 10 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 3 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 30 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 170 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== event_check.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+EVENTS: OK (201 olay, 0 uyarı)
+--- STDERR ---
+EXIT CODE: 0
+=== external_crisis_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ok    external pressure leaves the main RNG untouched
+ok    envoy signal is bounded and does not consume the stream
+ok    border warning opens the note card
+ok    note resolution schedules the ultimatum stage
+ok    ultimatum waits for the next week
+ok    version 10 saves receive safe defaults
+ok    old scandal fact displays in English
+ok    border note is localized in English
+ok    ultimatum is localized in English
+ok    financial pressure opens the embargo note
+ok    the credit-cut stage waits a week on its separate RNG
+ok    credit-cut card has all three response paths
+ok    assassination cannot open without a warning and leaves main RNG untouched
+ok    assassination warning opens its preparation card one week later with three choices
+ok    assassination resolution consumes only its separate RNG
+ok    successful route change leaves the ruler wounded and survives the night
+ok    survival unlocks the two-choice Palace aftermath event
+ok    surviving the assassination grants its wounded sovereign ending and achievement
+ok    assassination preparation card is fully localized in English
+ok    assassination defeat records its own ending
+ok    credit-cut card is localized in English
+ok    financial crisis news is localized in English
+ok    financial defeat records its own cause and title
+EXTERNAL CRISIS: OK
+--- STDERR ---
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== i18n_check.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+I18N: OK
+--- STDERR ---
+EXIT CODE: 0
+=== lang_switch_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+LANG: OK
+ERROR: 9 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 34 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 179 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== legacy_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ok  mirassız başlangıç değişmedi
+ok  miras ayrı RNG tüketmiyor
+ok  miras etkileri ve nesil aşınması
+ok  açık dosya iki dilde ve geçerli şemayla taşınır
+ok  legacy etkilerinin EN adları tamam
+ok  miras üç etkiyi aşmıyor ve artı/eksi taşıyor
+ok  halef sonucu Julian'ı seçiyor
+LEGACY: OK
+--- STDERR ---
+EXIT CODE: 0
+=== map_zoom_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+MAP ZOOM: OK
+ERROR: 8 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 143 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 4 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== parliament_laws_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PARLIAMENT LAWS: OK
+--- STDERR ---
+EXIT CODE: 0
+=== parliament_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PARLIAMENT: OK
+--- STDERR ---
+EXIT CODE: 0
+=== pacing_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+Dilim (hafta)   olay/hafta   (yaşayan oyun-haftası)
+H  1-  8        0.81        (280)
+H  9- 16        0.93        (320)
+H 17- 24        1.49        (320)
+H 25- 32        1.77        (320)
+H 33- 40        1.68        (320)
+H 41- 48        1.67        (320)
+H 49- 56        1.47        (314)
+H 57- 64        1.60        (299)
+H 65- 72        1.35        (284)
+H 73- 80        1.12        (236)
+H 81- 88        1.57        (91)
+H 89- 96        1.06        (18)
+H 97-104        1.00        (4)
+En uzun olaysız seri (medyan / en kötü): 2 / 3 hafta
+--- STDERR ---
+WARNING: 35 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== person_file_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PERSON FILE: OK
+ERROR: 7 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 146 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== person_file_test.gd -- --mobile ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PERSON FILE: OK (mobile)
+ERROR: 9 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 17 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 155 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== public_opinion_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PUBLIC OPINION: OK
+--- STDERR ---
+EXIT CODE: 0
+=== region_map_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+REGION MAP: OK
+ERROR: 8 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 147 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== regions_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+REGIONS: OK
+--- STDERR ---
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== save_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ok    başlangıç kurum aralığı
+ok    başlangıç holdingi
+ok    kaydet
+ok    gidiş-dönüş
+ok    dış ilişkiler gidiş-dönüş
+ok    dış baskı ve ayrı üreteç gidiş-dönüş
+ok    sürüm yazıldı
+ok    v11 hanedan alanları göçü
+ok    v8 dil göçü
+ok    v8 dış güç göçü
+ok    v7 yeni kadro göçü
+ok    v6 holding çizelgesi göçü
+ok    v5 Sarne göçü
+ok    v4 devlet göçü
+ok    v3 rejim göçü
+ok    göçte haber tekrarı yok
+ok    v1 göçü
+ok    v1 sonrası hafta akışı
+ok    yeni sürüm reddi
+ok    eksik alan reddi
+ok    bozuk dosya reddi
+SAVE: OK
+--- STDERR ---
+EXIT CODE: 0
+=== scenario_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+SCENARIO BOT darbe Kolay: 48/80
+SCENARIO BOT darbe Normal: 24/80
+SCENARIO BOT darbe Zor: 18/80
+SCENARIO BOT naiplik Kolay: 55/80
+SCENARIO BOT naiplik Normal: 22/80
+SCENARIO BOT naiplik Zor: 30/80
+SCENARIO BOT bos_kasa Kolay: 44/80
+SCENARIO BOT bos_kasa Normal: 23/80
+SCENARIO BOT bos_kasa Zor: 15/80
+SCENARIO: OK
+--- STDERR ---
+EXIT CODE: 0
+=== sim_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[idle] kazanma 0/40, ort. hafta 18.2
+   { "Saltanatının 20. haftasında halk ayaklan": 11, "Saltanatının 16. haftasında halk ayaklan": 8, "Saltanatının 18. haftasında halk ayaklan": 9, "Saltanatının 19. haftasında halk ayaklan": 4, "Saltanatının 12. haftasında halk ayaklan": 1, "Saltanatının 17. haftasında halk ayaklan": 3, "Saltanatının 21. haftasında halk ayaklan": 1, "Saltanatının 13. haftasında halk ayaklan": 1, "Saltanatının 22. haftasında halk ayaklan": 1, "Saltanatının 22. haftasında Askerî darbe": 1 }
+   olay sayısı/kampanya: 29.1
+[random] kazanma 0/40, ort. hafta 33.4
+   { "Saltanatının 25. haftasında Saray darbes": 1, "Saltanatının 44. haftasında Saray darbes": 3, "Saltanatının 41. haftasında Askerî darbe": 1, "Saltanatının 40. haftasında Askerî darbe": 1, "Saltanatının 19. haftasında Saray darbes": 1, "Saltanatının 27. haftasında Askerî darbe": 2, "Saltanatının 32. haftasında Drakon sınır": 1, "Saltanatının 18. haftasında Askerî darbe": 1, "Saltanatının 19. haftasında Askerî darbe": 2, "Saltanatının 23. haftasında Askerî darbe": 1, "Saltanatının 35. haftasında Askerî darbe": 2, "Saltanatının 29. haftasında Askerî darbe": 1, "Saltanatının 39. haftasında Askerî darbe": 1, "Saltanatının 38. haftasında Askerî darbe": 1, "Saltanatının 31. haftasında Askerî darbe": 2, "Saltanatının 33. haftasında Askerî darbe": 1, "Saltanatının 26. haftasında Saray darbes": 1, "Saltanatının 24. haftasında Askerî darbe": 1, "Saltanatının 26. haftasında kredi kesild": 2, "Saltanatının 32. haftasında Askerî darbe": 1, "Saltanatının 37. haftasında kredi kesild": 1, "Saltanatının 42. haftasında Drakon sınır": 1, "Saltanatının 22. haftasında Askerî darbe": 2, "Saltanatının 40. haftasında kredi kesild": 1, "Saltanatının 57. haftasında Saray darbes": 1, "Saltanatının 28. haftasında Saray darbes": 1, "Saltanatının 50. haftasında Askerî darbe": 1, "Saltanatının 28. haftasında halk ayaklan": 1, "Saltanatının 49. haftasında Drakon sınır": 1, "Saltanatının 50. haftasında Saray darbes": 1, "Saltanatının 32. haftasında Saray darbes": 1, "Saltanatının 53. haftasında Drakon sınır": 1 }
+   olay sayısı/kampanya: 50.1
+[careful] kazanma 24/40, ort. hafta 99.0
+   { "Saltanatının 104. haftasında Saray darbe": 2, "Saltanatının 87. haftasında Askerî darbe": 1, "Medya Rejimi": 18, "Saltanatının 100. haftasında Saray darbe": 2, "Saltanatının 74. haftasında saldırganlar": 1, "İstihbarat Rejimi": 5, "Saltanatının 81. haftasında Askerî darbe": 1, "Saltanatının 73. haftasında Askerî darbe": 1, "Saltanatının 89. haftasında Saray darbes": 1, "Saltanatının 103. haftasında Drakon sını": 1, "Saltanatının 102. haftasında Drakon sını": 1, "Saltanatının 92. haftasında Askerî darbe": 1, "Saltanatının 97. haftasında Drakon sınır": 1, "Saltanatının 101. haftasında Askerî darb": 1, "Saltanatının 70. haftasında Askerî darbe": 1, "Yaralı Egemen": 1, "Saltanatının 85. haftasında Drakon sınır": 1 }
+   olay sayısı/kampanya: 118.4
+[Kolay / random] kazanma 0/40, ort. hafta 39.3
+[Kolay / careful] kazanma 31/40, ort. hafta 101.7
+[Zor / random] kazanma 0/40, ort. hafta 29.0
+[Zor / careful] kazanma 13/40, ort. hafta 89.8
+Araştırma: 1 denemede zayıf nokta bulundu = true
+  Victor Sarne boyun eğmedi; şantajı ifşa etmekle tehdit ediyor. Konuşulmaya başlandı bile.
+  Sarne korku: 10 -> 5
+  Marcus Arden emri kırmızı çizgisini aştığı için gönülsüzce, yarım yamalak uyguladı. Bunu sana yazdı. (Kırmızı çizgisi: Siviller üzerine ateş açma emri)
+Söz: Marcus Arden'e Naiplik sözü verdin. Gözleri parladı; vadesi geldiğinde hatırlatacak.
+Söz: Victor Sarne'ye Naiplik sözü verdin. Gözleri parladı; vadesi geldiğinde hatırlatacak.
+Söz (tekrar): Marcus Arden'e bunu zaten vaat ettin.
+  Kart: Marcus Arden sözünü hatırlatıyor -> Marcus Arden sözünü aldı. Bunu unutmayacak. Victor Sarne, kendisine vaat edilen Naiplik başkasına verildiği için öfkeli.
+  Durumlar: ["arden:kept", "halden:broken"]
+  Kayıttan sonra söz sayısı: 2
+Hiç tetiklenmeyen olaylar (120 kampanyada): ["brandt_hapis", "muhalefet_para", "defter_kopya", "yazili_emirler", "santaj_kurbani", "terfi_rekabet", "bozulan_sozler", "operasyon_sizdi", "muhtira_sonrasi", "derin_devlet", "yay_falk_kopus", "rejim_guvenlikci_hesap", "rejim_populist_hesap", "rejim_patronajci_hesap", "maliye_cokus", "adliye_cokus", "uzman_bakan", "sadik_komutan_sinav", "liyakatli_savci", "kadro_ihaneti", "saray_payi_sizdi", "holding_devrildi", "julian_halka_konusma", "julian_isyani_reddi", "julian_marcus_oyunu", "julian_evlilik_teklifi", "elena_istifa", "asteria_kredi_teklifi", "asteria_ozgurluk_notasi", "drakon_silah_anlasmasi", "drakon_sinir_notasi", "seravia_yatirim_teklifi", "seravia_ambargo", "seravia_sarne_destegi", "drakon_darbe_destegi"]
+   ulaşılabilir mi brandt_hapis: true
+   ulaşılabilir mi muhalefet_para: true
+   ulaşılabilir mi defter_kopya: true
+   ulaşılabilir mi yazili_emirler: true
+   ulaşılabilir mi santaj_kurbani: true
+   ulaşılabilir mi terfi_rekabet: true
+   ulaşılabilir mi bozulan_sozler: true
+   ulaşılabilir mi operasyon_sizdi: true
+   ulaşılabilir mi muhtira_sonrasi: true
+   ulaşılabilir mi derin_devlet: true
+   ulaşılabilir mi yay_falk_kopus: true
+   ulaşılabilir mi rejim_guvenlikci_hesap: true
+   ulaşılabilir mi rejim_populist_hesap: true
+   ulaşılabilir mi rejim_patronajci_hesap: true
+   ulaşılabilir mi maliye_cokus: true
+   ulaşılabilir mi adliye_cokus: true
+   ulaşılabilir mi uzman_bakan: true
+   ulaşılabilir mi sadik_komutan_sinav: true
+   ulaşılabilir mi liyakatli_savci: true
+   ulaşılabilir mi kadro_ihaneti: true
+   ulaşılabilir mi saray_payi_sizdi: true
+   ulaşılabilir mi holding_devrildi: true
+   ulaşılabilir mi julian_halka_konusma: true
+   ulaşılabilir mi julian_isyani_reddi: true
+   ulaşılabilir mi julian_marcus_oyunu: true
+   ulaşılabilir mi julian_evlilik_teklifi: true
+   ulaşılabilir mi elena_istifa: true
+   ulaşılabilir mi asteria_kredi_teklifi: true
+   ulaşılabilir mi asteria_ozgurluk_notasi: true
+   ulaşılabilir mi drakon_silah_anlasmasi: true
+   ulaşılabilir mi drakon_sinir_notasi: true
+   ulaşılabilir mi seravia_yatirim_teklifi: true
+   ulaşılabilir mi seravia_ambargo: true
+   ulaşılabilir mi seravia_sarne_destegi: true
+   ulaşılabilir mi drakon_darbe_destegi: true
+Tarihçiler: 2 | zaman çizelgesi: 20 hafta
+Ek uyumu: OK
+Kayıt/yükleme: OK (hafta 11)
+Birbirine düşür: OK
+Dokuz hikâye yayı: OK
+Rejim tipleri: OK
+Devlet finali: OK
+Yeni kadro RNG: OK
+Veliaht eğitimi: OK
+Yeni kadro raporları: OK
+Dış ilişkiler: OK
+Meclis: görüş türleri { "rec": 3114, "flat": 91, "evasive": 9 } | ort. kayıp (V) sadık 1.88 (n=2622), hazır 8.16 (n=492)
+Meclis görüşleri: OK
+Komplo: alamet gerçek 574 / dedikodu 92, 20 oyunda 32 kriz
+Darbe aşamaları: OK
+Örnek final: Devrilen Kral | Saltanatının 18. haftasında halk ayaklanması sarayı kuşattı. Kriz kapına dayandığında karar veremedin.
+  H1 Victor Sarne: 'Kanallarım sizi seviyor; halk da kanallarımı.' -> gerçekte 'Halk kimin hikâyesine inanacağına henüz karar vermedi.'
+  H1 Leyla Sarn: 'Sokakta sakin bir hava var.' -> gerçekte 'İnsanlar daha çok soru soruyor.'
+  H2 Kraliçe Helena: '(kötü haberi sana iletmedi)' -> gerçekte 'Selin Veyra: Kasadaki rakamlar tutuyor, ama pazardaki fiyatlar tutmuyor. Fiyatlar oynak. İş piyasası yavaşlıyor. Borç yükü hissediliyor. Ticaret temkinli, üretim ılımlı. Memurlar hesabı çıkarıyor, gecikmeler yönetilebilir.'
+TEST: OK
+--- STDERR ---
+WARNING: 40 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== title_shot.gd -- --out=C:\Users\USER\AppData\Local\Temp\Veloria_PersonFileCurrent\title ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.325 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4060
+
+ERROR: 6 RID allocations of type 'N10RendererRD14TextureStorage7TextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 2 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 6 RIDs of type "Texture" were leaked.
+   at: finalize (servers/rendering/rendering_device.cpp:8900)
+WARNING: 89 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== touch_scroll_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+TOUCH: OK
+--- STDERR ---
+EXIT CODE: 0
+=== touch_tap_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+TOUCH TAP: OK
+--- STDERR ---
+EXIT CODE: 0
+=== tour_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+TOUR: OK
+ERROR: 8 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 30 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 169 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 4 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== tr_suffix_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+TR SUFFIX: OK (7281 Turkish, 5727 English strings; 40 campaigns)
+--- STDERR ---
+EXIT CODE: 0
+=== ui_input_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+UI INPUT: OK
+ERROR: 8 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 3 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 147 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== ui_input_test.gd -- --mobile ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+UI INPUT: OK (mobile)
+ERROR: 9 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 3 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 17 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 155 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 6 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== ui_logic_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+UI LOGIC: OK
+--- STDERR ---
+EXIT CODE: 0
+=== unit_tests.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[unit] json_rpc framing
+  ok  result() frames id + payload
+  ok  error() carries code + message
+  ok  error() omits data when null
+  ok  make_notification() has no id and omits null params
+[unit] effort tier map
+  ok  doctor is L1 (survives any cap)
+  ok  playtest is L5 premium
+  ok  export_project is L6
+  ok  unmapped tool falls back to L1 (never hidden by accident)
+  ok  allows() honors the boundary
+  ok  clamp_level() bounds 1..MAX
+  ok  L4 See unlocks get_performance_monitors
+  ok  render_probe is L4 (ships in Lite)
+  ok  set_debug_draw is L4 (ships in Lite)
+  ok  reload_shader is L5 premium (mutates the live game)
+[unit] tool registry
+  ok  has() reflects registration
+  ok  list_specs(4) filters by tier
+  ok  list_specs(6) advertises everything
+  ok  annotations carry readOnlyHint
+[unit] jobs.poll_until (B2)
+  ok  tick result ends the wait
+  ok  deadline returns {timeout:true}
+  ok  pump runs each pass (ran 7 times)
+[unit] http_server statics
+  ok  _find_header_end locates CRLFCRLF
+  ok  _find_header_end returns -1 when absent
+  ok  _reason maps auth/method codes
+[unit] client_config
+  ok  mcp_url tokenless
+  ok  mcp_url carries the token as a path segment
+  ok  entry() uses the tokened url
+  ok  desktop_entry bridges the tokened url
+  ok  cline entry keeps its type
+  ok  codex upsert: fresh file gets our table
+  ok  codex upsert: identical table is a no-op (no churn)
+  ok  codex upsert: our table is rewritten
+  ok  codex upsert: other tables survive verbatim
+  ok  configured_port falls back to the default when unset
+  ok  configured_port honors the beckett/port project setting
+  ok  BECKETT_PORT env overrides the project setting
+  ok  a junk BECKETT_PORT falls through to the project setting
+[unit] mcp_server._tool_result serializer
+  ok  json dict rides as structuredContent
+  ok  json dict also renders as text for every client
+  ok  error carries message + suggestion, isError=true
+  ok  image + text both present
+  ok  image_base64 carries its explicit mime
+  ok  json legend rides beside the image
+  ok  empty result says so instead of vanishing
+  ok  text block survives beside a json payload
+  ok  json still rides as structuredContent when text is present
+  ok  error suppresses the handler's own text
+  ok  json mirror is compact (no pretty-print newlines)
+  ok  resource_link block emitted on 2025-06-18
+  ok  resource_link suppressed on 2025-03-26 (predates the content type)
+  ok  the rest of the result survives the suppression
+  ok  supports_resource_link() reports the gate honestly
+  ok  link entries without a uri are dropped, not fatal
+[unit] mcp_server idempotency cache is bounded by bytes, not just entries
+  ok  _result_bytes counts image payloads
+  ok  entry bound still holds
+  ok  byte ceiling holds after 200 image results
+  ok  size bookkeeping stays in step with the cache
+  ok  an oversized result is not cached
+  ok  a small result still caches
+[unit] initialize instructions derive the skill-pack count from disk
+  ok  _skill_pack_count matches the .md files on disk (0)
+[unit] instructions pack-count assert skipped (Lite build: skills trimmed)
+[unit] http_server content-type
+  ok  default Content-Type is still JSON
+  ok  default Content-Type declares charset=utf-8
+[unit] a stale Mcp-Session-Id is served, never 404ed
+  ok  fresh server serves a client holding a pre-restart id
+  ok  initialize still mints an Mcp-Session-Id for clients that expect one
+  ok  ...and it differs from the stale id, so the requests below really mismatch
+  ok  POST with a mismatched id gets its JSON-RPC result
+  ok  initialize carrying a stale id is served (a client re-initializing the lazy way)
+  ok  a notification with a stale id still gets its 202
+  ok  DELETE with a stale id stays the stateless no-op
+  ok  GET with a stale id still opens the event stream
+  ok  the current id keeps working
+  ok  no id at all keeps working
+  ok  a stale id does not soften the Host gate
+  ok  server/discover answers HTTP 200 with a JSON-RPC body
+  ok  ...carrying -32601, the signal a 2026-07-28 client falls back on
+  ok  ...with the string request id echoed unchanged
+[unit] mcp_server._secure_equals (B1)
+  ok  equal strings match
+  ok  one differing byte rejects
+  ok  length mismatch rejects
+  ok  empty == empty
+[unit] gate refusals are labeled as what their body is
+  ok  a spoofed Host answers 403
+  ok  ...and still says why
+  ok  ...under a Content-Type that fits the body ('text/plain; charset=utf-8' over 'forbidden host (this server only answers to a loopback Host)')
+  ok  a cross-origin request answers 403, labeled to fit ('forbidden origin')
+  ok  a mismatched session id is answered under a fitting label too (status 200)
+  ok  a request without the token answers 401, labeled to fit ('unauthorized')
+  ok  a served JSON-RPC answer leaves the Content-Type to the JSON default
+  ok  ...and that default fits its body
+[unit] mcp_server._validate_args
+  ok  missing required arg rejected
+  ok  array where string expected rejected
+  ok  numeric string passes the lenient gate
+[unit] callargs arg coercion (v1.10.2 silent-argument fix)
+  ok  [x,y,z] coerces to Vector3i
+  ok  JSON 60.0 coerces to int for an int param
+  ok  prepared args execute through callv
+  ok  {x,y,z} coerces to Vector3
+  ok  "x y z" string coerces to Vector3
+  ok  Godot literal string coerces to Vector3
+  ok  wrong-size vector array errors (no silent zero)
+  ok  garbage for a vector param errors (no silent zero)
+  ok  too few args errors instead of a silent no-op
+  ok  too many args errors
+  ok  hex string coerces to Color
+  ok  [r,g,b] coerces to Color
+  ok  String coerces to StringName
+  ok  untyped params pass through; defaults still fill
+  ok  [[x,y],..] coerces to PackedVector2Array
+  ok  null passes for an object param
+  ok  object param from a string errors without a resolver (no silent null)
+  ok  metadata-less call falls back to raw passthrough
+  ok  String coerces to NodePath
+  ok  fractional float for an int param errors
+  ok  Transform3D literal string parses
+  ok  int array coerces to PackedInt32Array
+[unit] error echo (v1.11 - engine errors attached to the causing call)
+  ok  an error in the window is echoed
+  ok  echo carries file:line
+  ok  a fresh mark sees nothing
+  ok  prints are not echoed
+  ok  severity maps warning
+  ok  echo caps at 8 + a count note
+  ok  severity maps script errors
+  ok  a real push_error lands in the window
+  ok  uninstall stops the capture
+  ok  engine_errors stay advisory (isError false)
+  ok  engine errors render as a text block
+  ok  engine_errors ride structuredContent
+  ok  engine_errors merge beside a json payload
+[unit] script_tools class_name mask (B4)
+  ok  registered name + own path: renamed in place
+  ok  mask preserves line count
+  ok  registered name + different path: real conflict reported
+  ok  unregistered name: untouched (self-refs need it)
+  ok  one-line form keeps its extends half
+  ok  4.5+ same-line @abstract form keeps its annotation (empirically compile-verified shape)
+  ok  THE regression: re-validating a real registered script compiles clean
+[unit] playtest groups skipped (Lite build: module trimmed)
+[unit] runner perf group skipped (Lite build: runner trimmed)
+[unit] runtime/replay_perf.gd (game-side engine, B7 module)
+  ok  no samples -> empty summary (not fabricated zeros)
+  ok  game-side p95 matches the runner's math
+  ok  summary carries the flat baseline-diff keys
+  ok  begin() resets the capture
+[unit] runtime/input_codec.gd round-trip (B7 module)
+  ok  key builds
+  ok  key round-trips through serialize
+  ok  joy_axis clamps value to -1..1
+  ok  joy_axis round-trips axis + device
+  ok  touch_drag round-trips index + position
+  ok  unknown type builds null (skipped, not crashed)
+  ok  echo keys serialize to {} (dropped)
+  ok  key builds with unicode (int)
+  ok  key builds with unicode (1-char string)
+  ok  unicode round-trips through serialize
+  ok  unicode key omitted when zero
+  ok  device-id availability matches ClassDB (no phantom device 0)
+  ok  mouse device id likewise
+  ok  keyboard id is the engine's own value
+  ok  a synthesized key carries the keyboard device id
+[unit] runtime/ui_inspect.gd (ui_snapshot walker + occlusion hit test)
+  ok  pick_at finds the button at its center
+  ok  covering sibling (STOP) receives the point
+  ok  click_reaches refuses the covered button
+  ok  overlay with IGNORE is click-through
+  ok  PASS child is the raw receiver
+  ok  PASS child bubbles the click up to the button
+  ok  higher CanvasLayer overlay wins the pick
+  ok  is_disabled sees BaseButton.disabled
+  ok  is_disabled false on a control without the property
+  ok  snapshot ok
+  ok  snapshot carries the button + text
+  ok  snapshot rect mirrors the live global rect (ints)
+  ok  snapshot carries slider value + range
+  ok  hash is stable for an unchanged UI
+  ok  since_hash short-circuits to unchanged
+  ok  a text change changes the hash
+  ok  snapshot flags the covered button with occluded_by
+  ok  audit ok
+  ok  audit finds the overlapping pair
+  ok  audit finds the offscreen control
+  ok  audit finds the trimmed label (font-measured, not min-size)
+  ok  audit flags sub-touch_min targets
+  ok  audit flags focus_mode NONE buttons
+  ok  annotate draws the box outline
+  ok  annotate leaves pixels outside the mark alone
+  ok  annotate stamps the digit tag
+[unit] ui_audit focus graph (v1.11)
+  ok  nothing focused -> no_initial_focus flagged
+  ok  the island is unreachable from the entry
+  ok  the island is a dead end (all moves stay on it)
+  ok  focus summary counts focusable=3 reachable=2
+  ok  entry defaults to the first focusable in tree order
+  ok  with focus granted, no_initial_focus clears
+  ok  A/B stay reachable (only the island flags)
+[unit] per-frame typing window (v1.11)
+  ok  tick 1 injects exactly one char
+  ok  chars pace one per tick
+  ok  the submit Enter takes its own frame
+  ok  the stream closes after the queue drains
+  ok  type_status reports done + typed count
+  ok  a vanished target ends the stream with a warning
+[unit] runtime_bridge handshake compare (v1.9.1)
+  ok  matching hello accepted
+  ok  wrong hello rejected
+  ok  empty hello vs required token rejected
+[unit] game_view probe + Suspend diagnosis (v1.13 S11/S12)
+  ok  mode is one of embedded|windowed|unknown
+  ok  outside the editor the probe answers unknown, never a guess
+  ok  unknown still names the read that was unavailable
+  ok  payload always carries placement + note
+  ok  -1 Disabled -> windowed
+  ok  1 Embed Game -> embedded / main
+  ok  2 Make Game Workspace Floating -> embedded / floating
+  ok  0 Use Per-Project Configuration on an untouched project -> embedded
+  ok  ...and the source says the value was defaulted, not stored
+  ok  a stored embed_on_play=false is honoured and named
+  ok  stored make_floating_on_play=false -> main placement
+  ok  a value outside the documented set reads as unknown (the Android editor ships its own hints)
+  ok  a windowed game keeps the bare timeout
+  ok  the embedded message still leads with the timeout
+  ok  an embedded timeout names the Suspend button + the placement
+  ok  ...and distinguishes it from freeze, which leaves the channel alive
+[unit] set_project_setting type mirror (v1.12)
+  ok  string '2' onto an int setting stores int 2
+  ok  string '0.35' onto a float setting stores a float
+  ok  string 'true' onto a bool setting stores a bool
+  ok  a numeric-looking string onto a STRING setting stays a String
+  ok  no existing type -> no guess (stays a String)
+  ok  JSON number 0.0 onto an int setting stores int 0 (not 0.0)
+  ok  number onto a float setting stays a float
+  ok  a lossy float onto an int setting is NOT silently truncated
+  ok  stringified array still recovers as PackedStringArray
+[unit] doctor context block (v1.13 S10)
+  ok  doctor carries a context block
+  ok  per_tier covers every tier this build can reach (6)
+  ok  tiers are numbered and named from the effort map
+  ok  tool counts are cumulative per tier
+  ok  per_tier bytes equal JSON.stringify(specs) in UTF-8 bytes
+  ok  bytes exceed code points on a non-ASCII surface (String.length would under-report)
+  ok  approx_tokens is bytes/4, the stated ratio
+  ok  context.bytes is the tier the dial actually sits on
+  ok  context names the advertised count and labels the ratio as approximate
+  ok  a Lite ceiling reports 4 tiers, not 6
+  ok  context.bytes tracks the dial on a capped build
+  ok  ok stays exactly warnings.is_empty()
+  ok  neither the context block nor game_view appends a warning
+  ok  doctor mounts game_view beside game_bridge
+[unit] runtime property resolution + write verify (v1.12)
+  ok  a ':' path resolves to the sub-resource that OWNS the leaf
+  ok  an object hop uses a plain set, not set_indexed
+  ok  a typo in the leaf is an error, not a silent null
+  ok  the error suggests the right name
+  ok  the error names the class that actually owns the leaf
+  ok  a typo in an intermediate hop names THAT hop, not the whole path
+  ok  a built-in struct hop falls back to the whole path via set_indexed
+  ok  a null intermediate says so instead of writing nowhere
+  ok  float compare is approximate
+  ok  genuinely different floats differ
+  ok  vector compare works
+  ok  int and float are not conflated (type change means the write was reshaped)
+  ok  a nested write reports ok
+  ok  THE regression: the value actually reaches the Environment
+  ok  the response always carries before/after
+  ok  a real change is reported as changed
+  ok  writing an unknown property is an error, never a silent ok
+  ok  an uncoercible value for a typed property is refused
+  ok  a matching type passes
+  ok  a null current value cannot pin a type, so nothing is refused
+  ok  same-type struct passes
+  ok  THE data-loss regression: garbage for a Transform3D is refused
+  ok  ...and the original transform is left intact
+[unit] render_probe winding math (v1.12)
+  ok  a PrimitiveMesh reports triangles without ArrayMesh's method
+  ok  both triangles sampled
+  ok  a stock PlaneMesh agrees with its own normals
+  ok  no degenerate triangles in a stock mesh
+  ok  a reversed index buffer is detected against unchanged normals
+  ok  the reversed mesh still reports its real triangle count
+  ok  0-facing + back-face culling names the reversed index buffer
+  ok  healthy winding produces no warning (signal stays high)
+  ok  0-facing with culling DISABLED is not a bug (both sides draw)
+  ok  debug draw modes expose the two workhorse views
+  ok  debug draw names round-trip for the previous-mode report
+[unit] screenshot assert metric (v1.12 W2)
+  ok  identical frames pass the default threshold (snr 10000000000)
+  ok  a single changed pixel still passes (AA-tolerant, snr 41.5)
+  ok  a genuinely different frame FAILS (snr 6.8 < 30)
+  ok  half the frame changed FAILS (snr 9.8)
+[unit] screenshot resolution cap (v1.13 S5)
+  ok  2560x1440 capped at 1280 -> 0.5
+  ok  portrait frames cap on the long edge too
+  ok  a frame already under the cap is untouched
+  ok  max_dim=0 is the explicit opt-out
+  ok  an explicit smaller scale still wins
+  ok  the cap wins when it is the smaller factor
+  ok  scale is still clamped to 1.0
+  ok  scale is still clamped up to 0.05
+  ok  post-crop 2000x1200 capped at 1280 -> 0.64
+  ok  the returned frame is 1280x768
+  ok  the legend rect fits inside the capped picture
+  ok  the legend corner lands ON the drawn box
+  ok  the legend right edge lands ON the drawn box
+  ok  3 px above the legend rect is still background
+[unit] compare_screenshots downscale chain (v1.13 S7)
+  ok  baseline down the same chain compares clean (diff 0.0000%)
+  ok  a mismatched chain does NOT (diff 7.1604% on an unchanged frame)
+[unit] dock tier stats (v1.13 S13)
+  ok  the sample really carries multi-byte characters
+  ok  _spec_tokens counts UTF-8 bytes (doctor's convention)
+  ok  line 1 stays the live tool/token cost
+  ok  the saving names the edition ceiling, never the literal Max
+  ok  the saving rides a second line (a wider label would widen the dock)
+  ok  no saving clause at the ceiling
+  ok  Full names Max, the ceiling it really has
+[unit] resolver did-you-mean (S17)
+  ok  _lev: kitten/sitting costs 3
+  ok  _lev: an empty side costs the other's length
+  ok  _lev: identical costs nothing
+  ok  nearest: one typo hits, the unrelated names do not
+  ok  nearest: a case-only slip scores 0
+  ok  nearest: nothing close suggests nothing
+  ok  nearest: empty query / candidates are safe
+  ok  nearest: an over-long query is refused before the DP
+  ok  nearest: the closest candidate ranks first
+  ok  nearest: limit is honoured
+  ok  nearest: Sprit2D -> Sprite2D across the whole ClassDB
+  ok  describe_class: a typo now names the class (was the generic fallback)
+  ok  describe_class: substring still wins for a prefix query
+  ok  describe_class: a hopeless query still gets the generic advice
+  ok  describe_object miss: candidates come from the running game when the bridge is up
+  ok  describe_object miss: an absolute live path matches on its last segment
+  ok  a res:// miss is a load failure, not a typo: no suggestion
+  ok  no live node is close: no suggestion
+[unit] v1.14 description budget (the context diet)
+  ok  tool modules registered (55 tools)
+  ok  no tool description over 600 chars except doctor
+  ok  no argument description over 130 chars
+  ok  every help(tool=...) pointer resolves to a longer long form
+[unit] v1.14 the long form never ships on tools/list
+  ok  list_specs omits the help key (that IS the diet)
+  ok  the short description is what ships
+  ok  help_for returns the long form
+  ok  help_for on an unknown tool is empty, not an error
+  ok  documented_names lists only tools with a long form
+  ok  a tool with no long form falls back to its description
+[unit] v1.14 outputSchema is a promise we can keep
+  ok  output_schema is advertised as outputSchema
+  ok  get_performance_monitors outputSchema is type object (only Dictionaries are promoted)
+  ok  get_performance_monitors outputSchema does not close the object
+  ok  get_performance_monitors required keys are all declared as properties
+  ok  doctor outputSchema is type object (only Dictionaries are promoted)
+  ok  doctor outputSchema does not close the object
+  ok  doctor required keys are all declared as properties
+  ok  at least one tool declares an outputSchema (get_performance_monitors, doctor)
+  ok  get_performance_monitors: a schema-shaped result survives _tool_result as structuredContent
+  ok  doctor: a schema-shaped result survives _tool_result as structuredContent
+[unit] v1.14 capture store
+  ok  a well-formed id validates
+  ok  traversal is rejected
+  ok  uppercase hex is rejected (one canonical form)
+  ok  an unknown extension is rejected
+  ok  a 15-digit id is rejected
+  ok  path_for refuses to build a path for a bad id
+  ok  mime maps to an extension
+  ok  an unknown mime falls back to png
+  ok  id maps back to a mime
+  ok  store() wrote a capture
+  ok  store() returns a capture:// uri
+  ok  store() returns an ABSOLUTE path for the text channel
+  ok  read_id round-trips the exact bytes as a blob
+  ok  a binary resource carries blob, never text
+  ok  reading a capture that is gone fails honestly
+  ok  read_id validates before touching the filesystem
+  ok  empty data is rejected rather than written
+  ok  wrote 25 captures to exercise the cap
+  ok  the store pruned itself to at most 20 (held 20)
+  ok  ids mint strictly increasing, however fast the machine is
+  ok  the NEWEST captures are the ones that survived
+  ok  the oldest capture was evicted
+  ok  probe captures cleaned up
+[unit] v1.14 screenshot deliver= modes
+  ok  no deliver argument leaves the line alone
+  ok  ...and leaves the inline image alone
+  ok  deliver=inline is a no-op
+  ok  an unknown deliver mode is named in the result
+  ok  ...and the picture still rides inline
+  ok  deliver=both keeps the image AND adds the link
+  ok  deliver=both names the uri in the line
+  ok  the EDITOR key shape (image_png_base64) is delivered too
+  ok  ...and names its uri
+[unit] screenshot save_to survives deliver=link
+  ok  the handler returns a result instead of abandoning the call
+  ok  save_to wrote the file even though deliver=link dropped the inline copy
+  ok  ...and it holds the real frame, not a 0-byte stub
+  ok  the line says it saved, and the file backs that up
+  ok  the capture:// link still ships alongside the save
+  ok  deliver=link still keeps the base64 out of the transcript
+  ok  saving an empty capture fails out loud
+  ok  ...and leaves no 0-byte file behind
+[unit] ci.yml engine matrix
+  ok  matrix declares 8 lanes (got 8)
+  ok  every godot pin is quoted
+  ok  the 4.4.1 parse-time floor is still a lane
+  ok  at least 3 distinct engine pins (got 4)
+  ok  exactly one experimental lane (got 1)
+  ok  warn-only is gated on matrix.experimental, not hardcoded true
+  ok  the job name flags the experimental lane
+  ok  fetch step knows the pre-release channel
+  ok  fetch step detects a pre-release version
+  ok  asset names interpolate the derived tag, not a hardcoded -stable
+  ok  count-site anchor 'the full N-tool Lite' intact
+  ok  count-site anchor '-Edition Lite -ExpectedTools N' intact
+  ok  count-site anchor '-Edition Full -ExpectedTools N' intact
+  ok  exactly two probe counts, one per edition (got 2)
+  ok  the probe edition is keyed on repository visibility, not on files on disk
+  ok  export safety: the autoload stub is readable
+  ok  export safety: the autoload stub names only strip-proof globals (offending: [])
+  ok  export safety: the autoload stub uses no preload()
+  ok  export safety: the autoload stub gates on OS.has_feature("editor")
+  ok  export safety: plugin.gd points the autoload at the stub, not at the implementation
+  ok  export safety: the export filter keeps exactly the file plugin.gd registers
+  ok  export safety: _autoload_target strips the singleton marker
+  ok  export safety: _autoload_target passes an unresolvable uid through instead of erroring
+  ok  templates: the bundled templates folder carries a .gdignore
+  ok  templates: apply_template never copies a .gdignore into res://
+  ok  templates: apply_template still copies scripts and scenes
+  ok  templates: apply_template leaves editor sidecars and the manifest behind
+
+[unit] all 399 checks passed
+--- STDERR ---
+ERROR: [beckett unit probe - intentional error, ignore]
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _t_error_echo (res://tests/unit_tests.gd:1085)
+       [1] _init (res://tests/unit_tests.gd:62)
+ERROR: [beckett unit probe 2 - after uninstall, ignore]
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _t_error_echo (res://tests/unit_tests.gd:1090)
+       [1] _init (res://tests/unit_tests.gd:62)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _root (res://addons/beckett/runtime/mcp_runtime.gd:479)
+       [1] _path_of (res://addons/beckett/runtime/mcp_runtime.gd:496)
+       [2] _set_cmd (res://addons/beckett/runtime/mcp_runtime.gd:621)
+       [3] _t_property_owner (res://tests/unit_tests.gd:1266)
+       [4] _init (res://tests/unit_tests.gd:82)
+       [5] _t_focus_graph (res://tests/unit_tests.gd:1159)
+EXIT CODE: 0
+=== ux_audit.gd -- --out=C:\Users\USER\AppData\Local\Temp\Veloria_PersonFileCurrent\ux_audit ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.325 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4060
+
+AUDIT d01_gundem
+AUDIT d02_kisi_secili
+AUDIT d03_dosyalar
+AUDIT d04_gunluk
+AUDIT x01_masa
+AUDIT x02_harita
+AUDIT x03_medya
+AUDIT x03_medya_free
+AUDIT x03_medya_tv
+AUDIT x02_harita_adliye
+AUDIT x02_harita_holding
+AUDIT x04_menu
+AUDIT x05_menu_new
+AUDIT x05_menu_new_scenarios
+AUDIT x05_menu_settings
+AUDIT x06_modal
+AUDIT x07_son_0
+AUDIT x07_son_1
+AUDIT x07_son_2
+AUDIT x07_son_3
+AUDIT x07_son_4
+AUDIT BULGU: 0
+ERROR: 13 RID allocations of type 'N10RendererRD14TextureStorage7TextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 3 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 14 RIDs of type "Texture" were leaked.
+   at: finalize (servers/rendering/rendering_device.cpp:8900)
+WARNING: 129 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== ui_shots.gd -- --person-file-suite --size=1600x900 --out=C:\Users\USER\AppData\Local\Temp\Veloria_PersonFileCurrent\test_shots --person-file-prefix=test_ ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.325 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 4060
+
+SHOT test_right
+SHOT test_file_voss
+SHOT test_file_governor_industry
+SHOT test_file_claire
+SHOT test_locked
+SHOT test_multi
+ERROR: 8 RID allocations of type 'N10RendererRD14TextureStorage7TextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 9 RIDs of type "Texture" were leaked.
+   at: finalize (servers/rendering/rendering_device.cpp:8900)
+WARNING: 119 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+```
+
+### Son değişiklikten sonraki hedefli tekrarlar
+
+```text
+﻿=== person_file_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PERSON FILE: OK
+ERROR: 7 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 146 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== person_file_test.gd -- --lang=en ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PERSON FILE: OK
+ERROR: 7 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 16 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 131 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== person_file_test.gd -- --mobile ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PERSON FILE: OK (mobile)
+ERROR: 9 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 17 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 153 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== person_file_test.gd -- --mobile --lang=en ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PERSON FILE: OK (mobile)
+ERROR: 9 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 17 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 155 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== i18n_check.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+I18N: OK
+--- STDERR ---
+EXIT CODE: 0
+=== lang_switch_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+LANG: OK
+ERROR: 9 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 34 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 179 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+=== en_leak_test.gd  ===
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+EN LEAK SCAN: 5 campaigns, 0 unique leaks
+ERROR: 10 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 64 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 3 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+--- STDERR ---
+WARNING: 30 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 183 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 6 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+EXIT CODE: 0
+```
+
+### Sızıntı ve seed kapısı
+
+```text
+tools/i18n_missing.py: 0 tr() kaynağı en.po'da yok
+TR: FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true
+EN: FULLRUN tohum=101 hafta=104 sonuç=TAHTTA ünvan=Medya Rejimi miras_kararı=true olay=112 son_ekran=true
+```
