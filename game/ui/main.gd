@@ -1169,7 +1169,7 @@ func _update_mesai_pips() -> void:
 	if _mesai_box == null:
 		return
 	var want: int = Sim.mesai_max
-	var pip_size := 22 if _mobile or _header_art == null else 18
+	var pip_size := 22 if _mobile or _header_art == null else 24
 	while _mesai_box.get_child_count() < want + 1:
 		var pip := UIKit.icon("kalem", Vector2(pip_size, pip_size), Color.WHITE)
 		pip.custom_minimum_size = Vector2(pip_size, pip_size)
