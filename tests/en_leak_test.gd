@@ -52,13 +52,18 @@ func _seed_archive() -> void:
 func _check_archive_tr() -> void:
 	root.get_node("Sfx").set_language("tr")
 	main._show_chronicle()
-	var text := str(main._modal.text.get_parsed_text())
-	if not text.contains("104 haftalık saltanatın sonunda tahtını korudun.") or not text.contains("Saltanatının 9. haftasında halk ayaklanması sarayı kuşattı."):
+	var archive: Control = main.get_node("ArchiveView")
+	var localized_cause: String = archive.find_child("ArchiveCause_1", true, false).text
+	var legacy_cause: String = archive.find_child("ArchiveCause_0", true, false).text
+	if not localized_cause.contains("104 haftalık saltanatın sonunda tahtını korudun.") or not legacy_cause.contains("Saltanatının 9. haftasında halk ayaklanması sarayı kuşattı."):
 		failures.append("archive | TR archive entries were not preserved")
 	root.get_node("Sfx").set_language("en")
 	main._show_chronicle()
 	await process_frame
-	_collect(main._modal, "Chronicle with saved TR/EN and legacy entries")
+	archive = main.get_node("ArchiveView")
+	if archive.find_child("ArchiveCause_0", true, false).text != "The cause remains in the original archive entry.":
+		failures.append("archive | legacy cause did not use current English")
+	_collect(archive, "Chronicle with saved TR/EN and legacy entries")
 
 func _scan_game_ui() -> void:
 	for i in main._tabs.get_tab_count():
