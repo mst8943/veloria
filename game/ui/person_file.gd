@@ -86,7 +86,8 @@ func build() -> void:
 	var margin := MarginContainer.new()
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
 	for side in ["left", "right", "top", "bottom"]:
-		margin.add_theme_constant_override("margin_" + side, (12 if host._mobile else 34))
+		var margin_size := 34 if not host._mobile else (22 if side == "top" else 12)
+		margin.add_theme_constant_override("margin_" + side, margin_size)
 	sheet.add_child(margin)
 	var layout := VBoxContainer.new()
 	layout.add_theme_constant_override("separation", 8 if host._mobile else 10)

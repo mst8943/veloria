@@ -452,8 +452,13 @@ func _operation_toggle_ok() -> bool:
 				if row.visible: visible_rows += 1
 		reports_fit = banner != null and not banner.visible and visible_rows <= (3 if main.get_viewport_rect().size.y >= 780 else 2) and all_reports != null and all_reports.get_global_rect().end.y <= root.get_visible_rect().end.y
 	button.button_pressed = false
-	await process_frame
-	return opened and reports_fit and not main._person_panel.operation_bar.visible
+	main._update_info()
+	for _i in 2: await process_frame
+	var normal_fits := true
+	if not main._mobile and main._report_box != null:
+		var all_reports := main._report_box.find_child("AllReportsButton", true, false) as Button
+		normal_fits = all_reports != null and all_reports.get_global_rect().end.y <= root.get_visible_rect().end.y
+	return opened and reports_fit and normal_fits and not main._person_panel.operation_bar.visible
 
 
 func _check_city_dismiss() -> bool:

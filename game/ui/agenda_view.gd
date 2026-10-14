@@ -836,7 +836,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 			if Sim.actors.has(source): host._open_person_file(source)
 			host._all_reports_popup.hide())
 		host._wire(entry)
-	var visible_count := 4 if host.get_viewport_rect().size.y >= 780 else 3
+	var visible_count := 4 if host.get_viewport_rect().size.y >= 780 else 2
 	for report_index in mini(visible_count, Sim.reports.size()):
 		var r: Dictionary = Sim.reports[report_index]
 		var panel := PanelContainer.new()
