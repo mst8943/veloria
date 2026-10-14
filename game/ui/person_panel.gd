@@ -344,7 +344,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 		cb.button_group = cat_group
 		cb.theme_type_variation = "GhostButton"
 		cb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		cb.custom_minimum_size.y = 44 if host._mobile else 24
+		cb.custom_minimum_size.y = 44 if host._mobile else 28
 		cb.clip_text = false
 		cb.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		cb.add_theme_font_override("font", UIKit.sans())

@@ -1058,7 +1058,7 @@ func _header_nav(parent: Control, key: String, text: String, icon_kind: String, 
 	var button := Button.new()
 	button.text = text
 	button.theme_type_variation = "GhostButton"
-	button.custom_minimum_size = Vector2(0, 44 if _mobile else 36)
+	button.custom_minimum_size = Vector2(44 if _mobile else 0, 44 if _mobile else 36)
 	button.size_flags_horizontal = Control.SIZE_SHRINK_END
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	button.add_theme_font_override("font", UIKit.sans())
