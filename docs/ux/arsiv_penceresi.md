@@ -19,3 +19,28 @@ Not: "Hanedan Defteri" ayrı bir sayfa (menu.gd `show_page("dynasty")`); bu gör
 
 ## Yeni görseller (kullanıcı üretir; yoksa yedek çizim)
 `art/ui/arsiv_arka_plan.png` (2000×1125, opak), `art/ui/arsiv_kitaplar.png` (saydam), `art/ui/arsiv_kalkan_dustu.png` (saydam, kırmızı kalkan), `art/ui/arsiv_kalkan_tahtta.png` (saydam, altın-yeşil kalkan). Kalkan varyantları kodla da boyanabilir (yedek).
+
+## Uygulama kontrol listesi
+
+| Mockup bölgesi | Durum | Kontrol |
+|---|---|---|
+| Dış çerçeve, koyu zemin ve yan aslanlar | Kısmen | Tek ince çift altın çerçeve ve kodla çizilmiş köşe süsleri var. `arsiv_arka_plan.png` depoda olmadığından aslan kabartmaları ve mumlar görünmüyor; dosya gelince otomatik kullanılır. |
+| Başlık ve kitap yığını | Karşılandı | Başlık ve alt başlık ortalı; kitap görseli yokken yazıyla çizilmiş kitap yedeği gösteriliyor. |
+| Üç istatistik kutusu | Karşılandı | Saltanat sayısı, tahtta bitenler ve en uzun saltanat yalnızca arşiv kayıtlarından hesaplanıyor. Kayıt yokken en uzun süre `—`; örnek değer uydurulmuyor. |
+| Son olaylar bandı ve kayıt satırları | Karşılandı | En yeni sekiz kayıt kaydırılabilir; tarih/hafta, sonuç kalkanı, renkli sonuç, unvan ve `Sim.chronicle_cause()` metni bulunuyor. Eski anahtarsız kayıt İngilizcede mevcut genel cümleyi, Türkçede kayıtlı sebebi kullanıyor. Kalkan görselleri yokken çizilmiş yedek gösteriliyor. |
+| Başarımlar bandı ve liste | Karşılandı | 46 başarımın tamamı kaydırılabilir, kazanılanlar üstte, sayaç doğru; simgeler glif yerine ince altın çizgilerle çiziliyor. EN görünümünde İngilizce başarı içeriği yükleniyor. |
+| Kapat düğmesi ve Esc | Karşılandı | Ortalı süslü düğme ve Escape kapatması çalışıyor. |
+| Mobil düzen | Karşılandı | 1067×600 yatayda üç küçük istatistik kutusu, dikey olay/başarım akışı ve en az 44 px düğme/satırlar kontrol edildi. |
+
+TR ve EN için 1600×900, 1280×720 ve 1067×600; boş ve 10 kayıtlı arşiv görüntüleri açılıp incelendi. 1600×900 TR uygulaması ile hedef mockup yan yana [karşılaştırma görselinde](ref/arsiv_karsilastirma.jpg); her iki panel 1600×900 (toplam 3200×900). Geçici görüntüler `C:\Users\USER\Desktop\oyun\Temp` altında kaldı; temizleme komutu güvenlik politikası tarafından reddedildi.
+
+## Gözlemler
+
+Kullanıcı tarafından sağlanacağı belirtilen dört `art/ui/arsiv_*.png` görseli mevcut değil. Beklenen dosyalar ve ekranda değiştirecekleri:
+
+- `art/ui/arsiv_arka_plan.png` — 2000×1125 opak arka plan; koyu düz yedek zeminin yerini alıp mockup'taki mum/aslan kabartmalarını getirir.
+- `art/ui/arsiv_kitaplar.png` — saydam kitap illüstrasyonu; başlıkta 62×52 px (mobilde 44×42 px) çizim yedeğinin yerini alır.
+- `art/ui/arsiv_kalkan_dustu.png` — saydam düşüş kalkanı; olay satırında 42×50 px (mobilde 36×44 px) vektör kalkanın yerini alır.
+- `art/ui/arsiv_kalkan_tahtta.png` — saydam tahtta kalma kalkanı; aynı ölçüdeki yeşil-altın vektör kalkanın yerini alır.
+
+Dosyalar yokken çizim yedekleri içerik, erişilebilirlik ve yerleşimi korur. Her varlık `ResourceLoader.exists()` ile seçilir; sonradan eklendiklerinde kod değişmeden görünür. `art/` klasörüne bu çalışma sırasında dosya yazılmadı.
