@@ -202,7 +202,7 @@ EN/TR masaüstü ve 1067×600 yatay mobilde ordu karar kartı, Günlük birlik s
 
 ### Açık / ertelenen
 
-- **Düşük — İngilizce menü logosunda Türkçe slogan.** TR ve EN menüleri aynı `art/logo_seffaf.png` raster logosunu kullanıyor; içindeki “Tahtın Gölgesinde” yazısı çevrilmiyor. Görsel varlık yazma kısıtı nedeniyle bu oturumda değiştirilmedi. TR/EN yan yana kanıt: `docs/ux/ref/denetim_menu.jpg`.
+- **Düşük — İngilizce giriş/menü logosunda Türkçe slogan.** `art/giris.png` ve `art/logo_seffaf.png` içindeki “Tahtın Gölgesinde” yazısı EN arayüzde de Türkçe kalıyor. Görsel varlık yazma kısıtı nedeniyle bu oturumda değiştirilmedi. TR/EN menü kanıtı: `docs/ux/ref/denetim_menu.jpg`.
 - **Düşük — Kısa onay penceresi tüm ekranı dolduruyor.** Denetim fikstüründeki tek satırlı “Test” mesajı geniş ve yüksek tam ekran panelin üstünde kalıyor, ortada fazla boş alan bırakıyor. Uzun arşiv metninin kaydırılabilir kalması gerektiğinden içerik boyuna göre panel ölçüsü ayrı UI işi olarak ertelendi.
 - **Doğrulanmadı — Arşiv, Hanedan Defteri, Başarımlar, bütçe düzenleyicisi ve tur balonu.** Bu özel alt ekranlar bu oturumda ayrı ayrı açılıp görsel kontrol edilmedi; bunlar için genel menü/modal ve oyun sonu görüntülerinden çıkarım yapılmamalı.
 - **Düşük — Mobil UX ölçüm aracının etiket genişliği.** 1067×600 denetimde sekiz masa etiketi “METİN TAŞIYOR” uyarısı verdi. Ekran görüntülerinde bütün etiketler okunur ve çakışmasız; ölçer ters ölçekli harita etiketlerinin gerçek metin alanını hesaba katmıyor. Otomatik uyarı görsel kusur olarak doğrulanmadı.
