@@ -79,6 +79,43 @@ func _run() -> void:
 		await _shot("main_people" if "--main-people" in OS.get_cmdline_user_args() else "main_target")
 		quit(0)
 		return
+	if "--person-file-suite" in OS.get_cmdline_user_args():
+		var prefix := ""
+		for arg in OS.get_cmdline_user_args():
+			if arg.begins_with("--person-file-prefix="):
+				prefix = arg.substr(21)
+		sim0.week = 1
+		sim0.pending.clear()
+		sim0.mesai = sim0.mesai_max
+		main._week_log.clear()
+		main._week_log_week = 1
+		main._sel.clear()
+		main._sel.append("voss")
+		main._refresh()
+		main._update_info()
+		main._tabs.current_tab = 1 if main._mobile else 0
+		Input.warp_mouse(Vector2(4, 4))
+		await _shot(prefix + "right")
+		for id in ["voss", "governor_industry", "claire"]:
+			main._open_person_file(id)
+			await _shot(prefix + "file_" + id)
+			main._person_file.close_file()
+		var person = sim0.actors["voss"]
+		person.known_weak = false
+		main._open_person_file("voss")
+		main._show_act_cat("BASKI")
+		main._person_panel._update_action_states()
+		await _shot(prefix + "locked")
+		main._person_file.close_file()
+		main._multi_btn.button_pressed = true
+		main._sel.clear()
+		main._sel.append("voss")
+		main._sel.append("arden")
+		main._style_cards()
+		main._update_info()
+		await _shot(prefix + "multi")
+		quit(0)
+		return
 	var inspect_state := ""
 	var shot_name := "inspect"
 	for arg in OS.get_cmdline_user_args():

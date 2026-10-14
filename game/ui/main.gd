@@ -19,6 +19,7 @@ const MENU := preload("res://game/ui/menu.gd")
 const MODAL := preload("res://game/ui/modal.gd")
 const AGENDA_VIEW := preload("res://game/ui/agenda_view.gd")
 const PERSON_PANEL := preload("res://game/ui/person_panel.gd")
+const PERSON_FILE := preload("res://game/ui/person_file.gd")
 const DIVAN_VIEW := preload("res://game/ui/divan_view.gd")
 const TOUR_VIEW := preload("res://game/ui/tour_view.gd")
 
@@ -219,6 +220,7 @@ func rebuild_ui() -> void:
 	var menu_page: String = _menu.page_now if _menu != null else "main"
 	var tab: int = _tabs.current_tab
 	var sel := _sel.duplicate()
+	var file_id: String = _person_file.actor_id if _person_file != null and _person_file.is_open() else ""
 	var dec_index: int = _agenda_view.decision_index
 	for n in _ui_nodes:
 		if is_instance_valid(n):
@@ -249,6 +251,8 @@ func rebuild_ui() -> void:
 		_style_cards()
 		_update_info()
 		_tabs.current_tab = clampi(tab, 0, _tabs.get_tab_count() - 1)
+		if file_id != "":
+			_open_person_file(file_id)
 	if menu_open:
 		_show_menu()
 		_menu.show_page(menu_page)
@@ -260,7 +264,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if k == null or not k.pressed or k.echo:
 		return
 	var in_game: bool = not Sim.actors.is_empty() and not Sim.ended
-	if in_game and not _mobile and not _divan.opened and not _menu.visible and not _desk.visible and not _city.visible and not _media.visible and not _modal.visible \
+	if in_game and not _mobile and not _divan.opened and not _menu.visible and not _desk.visible and not _city.visible and not _media.visible and not _modal.visible and (_person_file == null or not _person_file.is_open()) \
 			and k.keycode >= KEY_1 and k.keycode <= KEY_5 and not k.ctrl_pressed and not k.alt_pressed:
 		var index := k.keycode - KEY_1
 		if index < _divan.visible_ids.size():
@@ -280,6 +284,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				_tour.finish()
 			elif _modal.visible:
 				_modal.hide()
+			elif _person_file != null and _person_file.is_open():
+				_person_file.close_file()
 			elif _divan.opened:
 				_divan.close()
 			elif in_game and not _sel.is_empty() and not _menu.visible and not _desk.visible and not _city.visible and not _media.visible and not _modal.visible:
@@ -296,10 +302,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			elif not _menu.visible and not _end_overlay.visible:
 				_show_menu()
 		KEY_SPACE:
-			if in_game and not _menu.visible and not _end_overlay.visible and not _media.visible and not _desk.visible and not _city.visible:
+			if in_game and not _menu.visible and not _end_overlay.visible and not _media.visible and not _desk.visible and not _city.visible and (_person_file == null or not _person_file.is_open()):
 				_end_week_pressed()
 		KEY_LEFT, KEY_RIGHT:
-			if in_game and _tabs.current_tab == 0 and not _menu.visible and not _end_overlay.visible and not _media.visible and not _desk.visible and not _city.visible and not _modal.visible:
+			if in_game and _tabs.current_tab == 0 and not _menu.visible and not _end_overlay.visible and not _media.visible and not _desk.visible and not _city.visible and not _modal.visible and (_person_file == null or not _person_file.is_open()):
 				_agenda_view.show_decision(_agenda_view.decision_index + (-1 if k.keycode == KEY_LEFT else 1))
 		KEY_S:
 			if k.ctrl_pressed and in_game:
@@ -552,6 +558,8 @@ func _build_ui() -> void:
 		tab_bar.add_theme_constant_override("h_separation", 10)
 
 	_build_person_panel(cols)
+	_person_file = PERSON_FILE.new(self)
+	_person_file.build()
 
 	# Alt satır: haftanın akış şeridi (ne kaldı, ne bekliyor) ve Haftayı Bitir.
 	var bottom := HBoxContainer.new()
@@ -1625,13 +1633,7 @@ func _on_city_request(target: String, arg: String) -> void:
 		"actor":
 			_city.close_view()
 			_desk.close_view()
-			if Sim.actors.has(arg):
-				_sel = [arg]
-				_style_cards()
-				_update_info()
-				_divan.refresh()
-			if _mobile:
-				_tabs.current_tab = 1
+			_open_person_file(arg)
 
 
 func _open_media() -> void:
@@ -1796,8 +1798,6 @@ func _open_person_file(id: String) -> void:
 	_divan.refresh()
 	if _mobile:
 		_tabs.current_tab = 1
-	elif _person_panel._legacy_popup != null:
-		_person_panel._legacy_popup.popup_centered(Vector2i(960, 700))
 
 
 func _act(fn: Callable) -> void:
@@ -2388,6 +2388,8 @@ func _update_action_states() -> void:
 
 func _update_info() -> void:
 	_person_panel._update_info()
+	if _person_file != null:
+		_person_file.refresh()
 
 func _signs_tip(a) -> String:
 	return _person_panel._signs_tip(a)

@@ -134,7 +134,7 @@ func _target() -> Control:
 		2: return host._decision_cards[0] if not host._decision_cards.is_empty() else host._scroll
 		3: return host._decision_cards[0] if not host._decision_cards.is_empty() else host._scroll
 		4: return host._person_panel._mobile_card_row if host._mobile else host._grid
-		5: return host._person_panel.person_block
+		5: return host._person_file.sheet
 		6: return host._mobile_reports_page if host._mobile else (host._report_box if host._report_box != null else host._scroll)
 		7: return host._files_tab
 		8: return host._end_btn
@@ -142,6 +142,8 @@ func _target() -> Control:
 
 func _render() -> void:
 	if not is_node_ready(): return
+	if index != 5 and host._person_file.is_open():
+		host._person_file.close_file()
 	var screen := get_viewport_rect().size
 	if screen.x < 100.0: screen = Vector2(1600, 900)
 	if index == 4 or index == 5:
@@ -153,6 +155,8 @@ func _render() -> void:
 			host._style_cards()
 			host._update_info()
 			host._divan.refresh()
+		if index == 5 and not host._sel.is_empty():
+			host._open_person_file(host._selected_primary())
 	elif index == 6 and host._mobile:
 		host._tabs.current_tab = 2
 		host._mobile_report_tabs.current_tab = 0
@@ -225,6 +229,8 @@ func decision_made() -> void:
 func finish() -> void:
 	active = false
 	hide()
+	if host._person_file.is_open():
+		host._person_file.close_file()
 	Sfx.tour_done = true
 	Sfx.save_settings()
 	if _auto_selected_id != "" and host._sel == [_auto_selected_id]:

@@ -5317,3 +5317,168 @@ msgstr "The %s supply line is cut; guards argue over whom they serve."
 
 msgid "%s\n%s\n%s %s%s"
 msgstr "%s\n%s\n%s %s%s"
+
+msgid "VELORIA KRALİYET İSTİHBARAT DİVANI"
+msgstr "VELORIA ROYAL INTELLIGENCE COUNCIL"
+
+msgid "Kişi dosyasını kapat"
+msgstr "Close person file"
+
+msgid "GİZLİ SİCİL DOSYASI · NO: %s"
+msgstr "CONFIDENTIAL RECORD · NO: %s"
+
+msgid "Sarayda ağırlığı olan, göz ardı edilemeyecek bir isim."
+msgstr "A figure of weight at court who cannot be ignored."
+
+msgid "Henüz öğrenilmedi. Araştır eylemiyle ortaya çıkarılabilir."
+msgstr "Not yet known. The Investigate action may reveal it."
+
+msgid "Zayıf nokta"
+msgstr "Weak point"
+
+msgid "Kırmızı çizgi"
+msgstr "Red line"
+
+msgid "Henüz çapraz sorgulanmış bir rapor yok."
+msgstr "No report has been cross-checked yet."
+
+msgid "Doğrulanmış raporlar çoğunlukla tutarlı."
+msgstr "Verified reports are mostly consistent."
+
+msgid "Çapraz sorgular çelişkiler ortaya çıkardı."
+msgstr "Cross-checks revealed contradictions."
+
+msgid "Çapraz sorgular karışık bir sicil gösteriyor."
+msgstr "Cross-checks show a mixed record."
+
+msgid "Kayıttaki bekleyen sözler: %s"
+msgstr "Outstanding promises on record: %s"
+
+msgid "Kayıtta bekleyen bir söz yok."
+msgstr "No outstanding promises on record."
+
+msgid "Bu kişi açıkça Taç'a karşı döndü."
+msgstr "This person has openly turned against the Crown."
+
+msgid "Bu kişi karşılık bekliyor."
+msgstr "This person expects something in return."
+
+msgid "Sadakati belirsiz."
+msgstr "Loyalty remains uncertain."
+
+msgid "Son eylem: %s"
+msgstr "Last action: %s"
+
+msgid "Aktif saltanat yok."
+msgstr "No active reign."
+
+msgid "Mesain kalmadı."
+msgstr "No court time remains."
+
+msgid "Bu eylem için kişisel servetin yetmiyor."
+msgstr "You lack the personal wealth for this action."
+
+msgid "Bu kişi henüz yeniden huzura çağrılamaz."
+msgstr "This person cannot yet be summoned again."
+
+msgid "Bu kişi sana karşı döndü."
+msgstr "This person has turned against you."
+
+msgid "Bu söz zaten verilmiş."
+msgstr "This promise has already been made."
+
+msgid "Zayıf nokta bilinmiyor; önce Araştır."
+msgstr "Weak point unknown; Investigate first."
+
+msgid "Bu kişiye şimdilik atama yapılamaz."
+msgstr "This person cannot be appointed right now."
+
+msgid "Seçilen kişiye bu sözleşme verilemez."
+msgstr "This contract cannot be awarded to the selected person."
+
+msgid "Veliaht için yeni ders açılamaz."
+msgstr "No new training can be arranged for the heir."
+
+msgid "Elçiler yeni bir heyete hazır değil."
+msgstr "The envoys are not ready for a new delegation."
+
+msgid "Önce bekleyen kararı çöz."
+msgstr "Resolve the pending decision first."
+
+msgid "Kullanılamaz: %s"
+msgstr "Unavailable: %s"
+
+msgid "Operasyon için bir ila üç kişi seç."
+msgstr "Select one to three people for an operation."
+
+msgid "Bu işlem daha fazla mesai gerektiriyor."
+msgstr "This operation requires more court time."
+
+msgid "Bu eylem için tam iki kişi seç."
+msgstr "Select exactly two people for this action."
+
+msgid "Bu ikili yeni bir operasyon için henüz hazır değil."
+msgstr "This pair is not ready for another operation yet."
+
+msgid "Raporlar çoğunlukla tutarlı"
+msgstr "Reports are mostly consistent"
+
+msgid "Raporlarda çelişki var"
+msgstr "Reports contain contradictions"
+
+msgid "Raporlar eşit ölçüde tutarlı ve çelişkili"
+msgstr "Reports are equally consistent and contradictory"
+
+msgid "Doğrulama: "
+msgstr "Cross-check: "
+
+msgid "Bekleyen söz: %s"
+msgstr "Outstanding promise: %s"
+
+msgid "Gözlem notu: %s"
+msgstr "Observation note: %s"
+
+msgid "Birlik durumu: %s; bağlılık %s, moral %s, ikmal %s."
+msgstr "Unit status: %s; loyalty %s, morale %s, supplies %s."
+
+msgid "Dış temaslarda dikkat çeken bir gerilim işareti yok."
+msgstr "No notable sign of tension in foreign contacts this week."
+
+msgid "Bu hafta için yeni bir gözlem kaydı yok."
+msgstr "No new observation has been recorded this week."
+
+msgid "Makamın ve görünür nüfuzun saraydaki ağırlığını özetler."
+msgstr "Summarizes the standing of the office and its visible influence at court."
+
+msgid "Yakın dönemde belirgin bir alamet kayda geçmedi."
+msgstr "No clear sign has been recorded recently."
+
+msgid "Bazı davranışlar dikkat çekiyor; tek başına kanıt sayılmaz."
+msgstr "Some behavior draws attention, though it is not proof on its own."
+
+msgid "İşaretler güveni zedeliyor; ihtiyatlı hareket et."
+msgstr "The signs are undermining trust; proceed with care."
+
+msgid "Belirgin alametler var; güven sarsılmış durumda."
+msgstr "Clear signs are present; trust has been shaken."
+
+msgid "Kişi"
+msgstr "Person"
+
+msgid "Makam"
+msgstr "Office"
+
+msgid "Güç derecesi"
+msgstr "Influence"
+
+msgid "Güncel tavır"
+msgstr "Current disposition"
+
+msgid "Saray gözlemi ve ruh hâli"
+msgstr "Court observations and mood"
+
+msgid "Hassas ve gizli bilgiler"
+msgstr "Sensitive and confidential details"
+
+msgid "Hükümdarla ilişki ve sicil"
+msgstr "Relationship with the Crown and record"

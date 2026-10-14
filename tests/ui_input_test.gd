@@ -23,10 +23,12 @@ func _run() -> void:
 	var pos := card.get_global_rect().get_center()
 	_click_at(pos)
 	await process_frame
-	if main._sel != ["arden"]:
+	if main._sel != ["arden"] or not main._person_file.is_open():
 		printerr("UI INPUT: kişi kartı seçilemedi: ", main._sel)
 		quit(1)
 		return
+	main._person_file._close_button.pressed.emit()
+	await process_frame
 	main._sel.clear()
 	var expected := str(root.get_node("Sim").reports[0]["source"])
 	var report: Control
@@ -35,6 +37,11 @@ func _run() -> void:
 			report = child
 			break
 	_click_at(report.get_global_rect().get_center())
+	await process_frame
+	if main._sel != [expected] or not main._person_file.is_open():
+		quit(1)
+		return
+	main._person_file._close_button.pressed.emit()
 	await process_frame
 	if main._sel != [expected]:
 		printerr("UI INPUT: rapordan kişi seçilemedi: ", main._sel)
@@ -56,14 +63,13 @@ func _run() -> void:
 		return
 	(full_list.get_child(0) as Button).pressed.emit()
 	await process_frame
-	if main._all_reports_popup.visible or main._sel != [expected]:
+	if main._all_reports_popup.visible or main._sel != [expected] or not main._person_file.is_open():
 		printerr("UI INPUT: kaplamadan rapor seçilemedi")
 		quit(1)
 		return
-	_click_at(main._person_panel.clear_button.get_global_rect().get_center())
+	_click_at(Vector2(8, 300))
 	await process_frame
-	if not main._sel.is_empty() or main._person_panel.person_block.visible or not main._person_panel.selection_hint.visible:
-		printerr("UI INPUT: X seçimi kaldıramadı")
+	if main._person_file.is_open():
 		quit(1)
 		return
 	_click_at(main._cards["arden"].get_global_rect().get_center())
@@ -72,10 +78,12 @@ func _run() -> void:
 	selection_escape.pressed = true
 	root.push_input(selection_escape, true)
 	await process_frame
-	if not main._sel.is_empty() or main._person_panel.person_block.visible:
+	if main._sel != ["arden"] or main._person_file.is_open():
 		printerr("UI INPUT: Esc seçimi kaldıramadı")
 		quit(1)
 		return
+	main._sel.clear()
+	main._update_info()
 	main._instant = true
 	main._divan.open()
 	await process_frame
@@ -84,10 +92,11 @@ func _run() -> void:
 	await process_frame
 	_click_at(main._cards["elena"].get_global_rect().get_center())
 	await process_frame
-	if main._divan.opened or main._sel != ["elena"]:
+	if main._divan.opened or main._sel != ["elena"] or not main._person_file.is_open():
 		printerr("UI INPUT: Divan'dan kişi seçilemedi")
 		quit(1)
 		return
+	main._person_file.close_file()
 	main._divan.open()
 	_click_at(Vector2(20, 300))
 	await process_frame
@@ -260,33 +269,37 @@ func _run_mobile() -> void:
 	tap.button_index = MOUSE_BUTTON_LEFT
 	tap.pressed = true
 	main._person_panel._on_card_input(tap, "elena")
-	if main._sel != ["elena"] or not main._person_panel.person_block.visible or main._person_panel._mobile_group != "foreign":
-		printerr("UI INPUT: mobil kişi seçimi bloğu açmadı")
+	if main._sel != ["elena"] or not main._person_file.is_open() or main._person_panel._mobile_group != "foreign":
+		printerr("UI INPUT: mobile person file did not open")
 		quit(1)
 		return
-	var profile_scroll: ScrollContainer = main._person_panel._mobile_person_scroll
+	var profile_scroll := main._person_file.sheet.find_child("PersonFileScroll", true, false) as ScrollContainer
+	if profile_scroll == null:
+		printerr("UI INPUT: mobile dossier scroll is missing")
+		quit(1)
+		return
 	var profile_view := profile_scroll.get_global_rect()
-	if profile_view.end.y > main._end_btn.get_global_rect().position.y or main._person_panel.host._act_title.custom_minimum_size.y < 44:
-		printerr("UI INPUT: kişi ayrıntısı alt çubukla çakışıyor ya da eylem başlığı küçük")
+	if profile_view.position.y < 0 or profile_view.end.y > 600 or main._person_panel.host._act_title.custom_minimum_size.y < 44:
+		printerr("UI INPUT: mobile dossier overflows or action header is too small")
 		quit(1)
 		return
 	for button in main._buttons.values():
 		if (button as Button).custom_minimum_size.y < 44:
-			printerr("UI INPUT: seçili kişi eylemi 44 px altında")
+			printerr("UI INPUT: mobile action target is smaller than 44 px")
 			quit(1)
 			return
 	for i in 3:
 		await process_frame
-	var fits_without_scroll: bool = main._person_panel.person_block.get_global_rect().end.y <= profile_view.end.y
-	if profile_scroll.get_v_scroll_bar().max_value <= profile_scroll.get_v_scroll_bar().page and not fits_without_scroll:
-		printerr("UI INPUT: kişi eylem bloğu dikey erişilebilir değil")
+	if profile_scroll.get_v_scroll_bar().max_value <= profile_scroll.get_v_scroll_bar().page:
+		printerr("UI INPUT: dossier content is not vertically scrollable")
 		quit(1)
 		return
-	main._person_panel.clear_button.pressed.emit()
+	main._person_file._close_button.pressed.emit()
 	await process_frame
-	if not main._sel.is_empty() or main._person_panel.person_block.visible:
-		printerr("UI INPUT: mobil seçim temizlenmedi")
+	if main._person_file.is_open():
+		printerr("UI INPUT: mobile close button did not close dossier")
 		quit(1)
+		return
 	var sim: Node = root.get_node("Sim")
 	sim.week = 4
 	sim.pending.clear()

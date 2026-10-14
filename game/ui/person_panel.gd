@@ -6,13 +6,15 @@ const TOUCH_SCROLL := preload("res://game/ui/touch_scroll.gd")
 
 var host: Control
 var person_block: VBoxContainer
+var profile_panel: PanelContainer
+var actions_panel: PanelContainer
 var selection_hint: Label
 var clear_button: Button
 var _mobile_card_row: HBoxContainer
 var _mobile_group := "dynasty"
 var _mobile_group_buttons: Dictionary = {}
 var _mobile_person_scroll: ScrollContainer
-var _legacy_popup: PopupPanel
+var operation_bar: VBoxContainer
 const MOBILE_GROUPS := {
 	"dynasty": ["dorn", "prens", "julian"],
 	"state": ["arden", "voss", "kessler", "falk", "governor_capital", "governor_industry", "governor_farmland", "governor_border", "commander_capital", "commander_border", "commander_security"],
@@ -172,29 +174,34 @@ func _build_ui(cols: HBoxContainer) -> void:
 		left.pressed.connect(func() -> void: card_scroll.scroll_horizontal = maxi(0, card_scroll.scroll_horizontal - 220))
 		right_arrow.pressed.connect(func() -> void: card_scroll.scroll_horizontal += 220)
 		_set_mobile_group("dynasty")
+	operation_bar = VBoxContainer.new()
+	operation_bar.name = "OperationCircle"
+	operation_bar.visible = false
+	operation_bar.add_theme_constant_override("separation", 4)
+	var operation_tools := HBoxContainer.new()
+	operation_tools.add_theme_constant_override("separation", 6)
+	operation_bar.add_child(operation_tools)
+	page_parent.add_child(operation_bar)
 	host._divan.build(right)
 	selection_hint = Label.new()
 	selection_hint.text = tr("Bir kişi seç. Sayıları göremezsin; yalnızca davranışlarından tahmin edebilirsin.")
 	selection_hint.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 	selection_hint.add_theme_font_size_override("font_size", host._fs(13))
 	selection_hint.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	var profile_parent: Control = page_parent
-	profile_parent.add_child(selection_hint)
+	selection_hint.visible = false
 	selection_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	person_block = VBoxContainer.new()
 	person_block.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	person_block.add_theme_constant_override("separation", 6 if host._mobile else 8)
-	if host._mobile:
-		profile_parent.add_child(person_block)
-	else:
-		# Transitional access while the person-file view is being built in the next slice.
-		_legacy_popup = PopupPanel.new()
-		_legacy_popup.name = "LegacyPersonActions"
-		_legacy_popup.size = Vector2i(960, 700)
-		_legacy_popup.add_child(person_block)
-		host.add_child(_legacy_popup)
+	var staging := Control.new()
+	staging.name = "PersonFileStaging"
+	staging.visible = false
+	staging.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.add_child(staging)
+	staging.add_child(person_block)
 
 	var detail := PanelContainer.new()
+	profile_panel = detail
 	var detail_style := UIKit.box(Color(UIKit.PANEL, 0.85), Color(UIKit.GOLD_DIM, 0.3), 6, 8)
 	if not host._mobile:
 		detail_style.set_border_width_all(0)   # kenarı işlemeli çerçeve çizer; ikinci çizgi olmasın
@@ -208,7 +215,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 	irow.add_theme_constant_override("separation", 10)
 	detail.add_child(irow)
 	host._portrait_box = Control.new()
-	host._portrait_box.custom_minimum_size = Vector2(112, 96) if not host._mobile else Vector2(88, 84)
+	host._portrait_box.custom_minimum_size = Vector2(190, 214) if not host._mobile else Vector2(150, 166)
 	irow.add_child(host._portrait_box)
 	var clear := Button.new()
 	clear_button = clear
@@ -270,6 +277,7 @@ func _build_ui(cols: HBoxContainer) -> void:
 
 	# Eylem paneli: tek çerçeve, başlıkta seçili kişi, eylemler amaca göre gruplu.
 	var act_panel := PanelContainer.new()
+	actions_panel = act_panel
 	var act_style := UIKit.box(Color(UIKit.PANEL, 0.8), Color(UIKit.GOLD_DIM, 0.28), 8, 8)
 	if not host._mobile:
 		act_style.set_border_width_all(0)
@@ -367,11 +375,20 @@ func _build_ui(cols: HBoxContainer) -> void:
 			if not TOUCH_SCROLL.dispatching_touch: _hint(ctip))
 		cb.pressed.connect(_show_act_cat.bind(str(g[0])))
 		host._wire(cb)
-		cat_row.add_child(cb)
+		if g[0] == "OPERASYON":
+			operation_tools.add_child(cb)
+			cb.custom_minimum_size.y = 44
+			operation_tools.add_child(host._multi_btn)
+		else:
+			cat_row.add_child(cb)
 		host._cat_btns[g[0]] = cb
-		var row: Control = VBoxContainer.new() if g[0] == "DEVLET" else HBoxContainer.new()
+		var row: Control = VBoxContainer.new() if g[0] == "DEVLET" else (GridContainer.new() if g[0] == "OPERASYON" else HBoxContainer.new())
 		row.add_theme_constant_override("separation", 4 if g[0] == "DEVLET" else 6)
-		av.add_child(row)
+		if g[0] == "OPERASYON":
+			(row as GridContainer).columns = 2
+			operation_bar.add_child(row)
+		else:
+			av.add_child(row)
 		host._cat_rows[g[0]] = row
 		for item_index in g[1].size():
 			var item: Array = g[1][item_index]
@@ -389,9 +406,8 @@ func _build_ui(cols: HBoxContainer) -> void:
 			btn.clip_text = true
 			if item[0] in ["blackmail", "dismiss", "op_zayif"]:
 				btn.theme_type_variation = "DangerButton"
-		if g[0] == "OPERASYON":
-			row.add_child(host._multi_btn)
 	_show_act_cat(host._act_cat)
+	host._multi_btn.toggled.connect(func(_on: bool) -> void: _sync_operation_bar())
 	# Eylem açıklaması / son eylemin sonucu: panelin içinde iki satırlık alan (ayrı boş kutu yok).
 	var hsep := ColorRect.new()
 	hsep.color = Color(UIKit.GOLD_DIM, 0.25)
@@ -493,10 +509,12 @@ func _role_for_actor(a) -> String:
 
 func _show_act_cat(cat: String) -> void:
 	host._act_cat = cat
+	var file_open: bool = host._person_file != null and host._person_file.is_open()
 	if not host._mobile and CAT_TIPS.has(cat):
 		_hint(tr(CAT_TIPS[cat]))   # mockup: alan seçili sekmenin ne işe yaradığını söyler
 	for k in host._cat_rows:
-		(host._cat_rows[k] as Control).visible = k == cat
+		if k != "OPERASYON":
+			(host._cat_rows[k] as Control).visible = file_open or k == cat
 	for k in host._cat_btns:
 		var button := host._cat_btns[k] as Button
 		var active: bool = k == cat
@@ -507,6 +525,34 @@ func _show_act_cat(cat: String) -> void:
 		button.add_theme_stylebox_override("normal", UIKit.box(Color(UIKit.GOLD, 0.09), Color(UIKit.GOLD, 0.7), 5, 4) if active else StyleBoxEmpty.new())
 		button.add_theme_stylebox_override("hover", UIKit.box(Color(UIKit.GOLD, 0.14), Color(UIKit.GOLD, 0.55), 5, 4) if active else StyleBoxEmpty.new())
 		button.add_theme_stylebox_override("pressed", UIKit.box(Color(UIKit.GOLD, 0.16), Color(UIKit.GOLD, 0.75), 5, 4) if active else StyleBoxEmpty.new())
+	_sync_operation_bar()
+
+
+func _sync_operation_bar() -> void:
+	if operation_bar != null:
+		operation_bar.visible = host._multi_btn.button_pressed or host._sel.size() > 1
+
+
+func _set_dossier_action_layout() -> void:
+	var av := host._act_title.get_parent() as VBoxContainer
+	var sections := VBoxContainer.new()
+	sections.name = "DossierActionGroups"
+	sections.add_theme_constant_override("separation", 8)
+	for key in host._cat_btns:
+		if key == "OPERASYON":
+			continue
+		var heading := host._cat_btns[key] as Button
+		var row := host._cat_rows[key] as Control
+		heading.get_parent().remove_child(heading)
+		row.get_parent().remove_child(row)
+		heading.custom_minimum_size.y = 44 if host._mobile else 36
+		heading.add_theme_font_size_override("font_size", host._fs(14 if not host._mobile else 15))
+		heading.add_theme_stylebox_override("normal", UIKit.box(Color(UIKit.GOLD, 0.08), Color(UIKit.GOLD_DIM, 0.38), 4, 6))
+		sections.add_child(heading)
+		sections.add_child(row)
+		row.show()
+	av.add_child(sections)
+	av.move_child(sections, 1)
 
 
 func _public_action(action: String) -> void:
@@ -580,6 +626,7 @@ func _preview(key: String) -> void:
 	var risk := int(m[4])
 	var note := ""
 	var id: String = host._selected_primary()
+	_sync_operation_bar()
 	if key == "op_dus":
 		var n: int = host._sel.size()
 		if n != 2:
@@ -888,6 +935,7 @@ func _update_action_states() -> void:
 		return
 	var id: String = host._selected_primary()
 	var busy := Sim.ended or Sim.actors.is_empty()
+	var locked_reason := ""
 	if id == "":
 		host._act_title.text = tr("EYLEMLER   ·   önce bir kişi seç")
 	else:
@@ -897,32 +945,43 @@ func _update_action_states() -> void:
 	for k in PERSON_ACTIONS:
 		var b := host._buttons.get(k) as Button
 		if b:
-			var off: bool = busy or id == "" or Sim.mesai < 1
-			if k == "bribe" and Sim.private_wealth < 5.0:
-				off = true
-			if k == "summon" and id != "" and (Sim.summon_wait(id) > 0 or Sim.actors[id].moved):
-				off = true
-			if k.begins_with("p_") and Sim.prize_taken(Sim.PRIZES[int(k.substr(2))]):
-				off = true
-			if k == "blackmail" and id != "" and not Sim.actors[id].known_weak:
-				off = true
-			if k.begins_with("appoint_") and id != "" and (not Sim.INSTITUTION_HEADS.has(id) or Sim.actors[id].moved or Sim.appoint_wait(id) > 0):
-				off = true
-			if k == "tender" and id != "" and (id != "halden" or Sim.actors[id].moved or Sim.tender_wait() > 0):
-				off = true
-			if k == "train_heir" and id != "" and (id != "julian" or Sim.actors[id].moved or Sim.heir_train_wait() > 0):
-				off = true
-			if k == "delegation" and id != "" and (not Sim.FOREIGN_ENVOYS.has(id) or Sim.actors[id].moved or Sim.delegation_wait() > 0):
-				off = true
-			if k == "army_management":
-				off = busy or Sim.mesai < 1 or not Sim.pending.is_empty()
-			b.disabled = off
+			var reason := tr("Aktif saltanat yok.") if busy else (tr("Önce bir kişi seç.") if id == "" else (tr("Mesain kalmadı.") if Sim.mesai < 1 else ""))
+			if reason == "" and k == "bribe" and Sim.private_wealth < 5.0:
+				reason = tr("Bu eylem için kişisel servetin yetmiyor.")
+			if reason == "" and k == "summon" and id != "" and (Sim.summon_wait(id) > 0 or Sim.actors[id].moved):
+				reason = tr("Bu kişi henüz yeniden huzura çağrılamaz.") if not Sim.actors[id].moved else tr("Bu kişi sana karşı döndü.")
+			if reason == "" and k.begins_with("p_") and Sim.prize_taken(Sim.PRIZES[int(k.substr(2))]):
+				reason = tr("Bu söz zaten verilmiş.")
+			if reason == "" and k == "blackmail" and id != "" and not Sim.actors[id].known_weak:
+				reason = tr("Zayıf nokta bilinmiyor; önce Araştır.")
+			if reason == "" and k.begins_with("appoint_") and id != "" and (not Sim.INSTITUTION_HEADS.has(id) or Sim.actors[id].moved or Sim.appoint_wait(id) > 0):
+				reason = tr("Bu kişiye şimdilik atama yapılamaz.")
+			if reason == "" and k == "tender" and id != "" and (id != "halden" or Sim.actors[id].moved or Sim.tender_wait() > 0):
+				reason = tr("Seçilen kişiye bu sözleşme verilemez.")
+			if reason == "" and k == "train_heir" and id != "" and (id != "julian" or Sim.actors[id].moved or Sim.heir_train_wait() > 0):
+				reason = tr("Veliaht için yeni ders açılamaz.")
+			if reason == "" and k == "delegation" and id != "" and (not Sim.FOREIGN_ENVOYS.has(id) or Sim.actors[id].moved or Sim.delegation_wait() > 0):
+				reason = tr("Elçiler yeni bir heyete hazır değil.")
+			if reason == "" and k == "army_management" and not Sim.pending.is_empty():
+				reason = tr("Önce bekleyen kararı çöz.")
+			b.disabled = reason != ""
+			b.modulate = Color(1, 1, 1, 0.48) if b.disabled else Color.WHITE
+			b.tooltip_text = tr(TIPS.get(k, "")) + ("\n" + tr("Kullanılamaz: %s") % reason if reason != "" else "")
+			if locked_reason == "" and reason != "" and b.get_parent().is_visible_in_tree():
+				locked_reason = reason
 	for k in OP_ACTIONS:
 		var b := host._buttons.get(k) as Button
 		if b:
-			b.disabled = busy or host._sel.is_empty() or host._sel.size() > 3 or Sim.mesai < 2
-			if k == "op_dus":
-				b.disabled = busy or host._sel.size() != 2 or Sim.mesai < 2 or Sim.rival_wait(host._sel) > 0
+			var reason := tr("Aktif saltanat yok.") if busy else (tr("Operasyon için bir ila üç kişi seç.") if host._sel.is_empty() or host._sel.size() > 3 else (tr("Bu işlem daha fazla mesai gerektiriyor.") if Sim.mesai < 2 else ""))
+			if reason == "" and k == "op_dus" and host._sel.size() != 2:
+				reason = tr("Bu eylem için tam iki kişi seç.")
+			if reason == "" and k == "op_dus" and Sim.rival_wait(host._sel) > 0:
+				reason = tr("Bu ikili yeni bir operasyon için henüz hazır değil.")
+			b.disabled = reason != ""
+			b.modulate = Color(1, 1, 1, 0.48) if b.disabled else Color.WHITE
+			b.tooltip_text = tr(TIPS.get(k, "")) + ("\n" + tr("Kullanılamaz: %s") % reason if reason != "" else "")
+	if host._hint_label != null:
+		_hint(tr("Kullanılamaz: %s") % locked_reason if locked_reason != "" else tr(CAT_TIPS.get(host._act_cat, CAT_TIPS["KAZAN"])))
 
 
 func _update_info() -> void:
@@ -942,7 +1001,7 @@ func _update_info() -> void:
 	if id == "":
 		return
 	var a = Sim.actors[id]
-	var art_size := Vector2(112, 96) if not host._mobile else Vector2(88, 84)
+	var art_size := Vector2(190, 214) if not host._mobile else Vector2(150, 166)
 	var art: Control = host._initial_art(a.id, art_size, 38)
 	art.size = art_size
 	art.position = Vector2.ZERO
@@ -957,6 +1016,15 @@ func _update_info() -> void:
 	edge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	edge.set_anchors_preset(Control.PRESET_FULL_RECT)
 	art.add_child(edge)
+	var photo_frame_path := "res://art/ui/dosya_foto_cercevesi.png"
+	if ResourceLoader.exists(photo_frame_path):
+		var photo_frame := TextureRect.new()
+		photo_frame.texture = load(photo_frame_path)
+		photo_frame.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		photo_frame.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		photo_frame.set_anchors_preset(Control.PRESET_FULL_RECT)
+		photo_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		art.add_child(photo_frame)
 	host._info.append_text("[b][font_size=%d]%s[/font_size][/b]  [color=#cfc6b0][font_size=%d]%s[/font_size][/color]" % [host._fs(20 if not host._mobile else 20), a.display_name, host._fs(14 if not host._mobile else 16), a.title])
 	# Güç: üç kademe (eskiden metinle verilen bilgi; fazlası değil).
 	var level := Sim.power_tier(a.power)
@@ -988,10 +1056,11 @@ func _update_info() -> void:
 	var k: Dictionary = Sim.karne.get(a.id, {"ok": 0, "bad": 0})
 	if int(k["ok"]) + int(k["bad"]) > 0:
 		var trust_col := UIKit.OK if int(k["ok"]) >= int(k["bad"]) else UIKit.DANGER
-		host._traits.add_child(_trait(tr("Doğrulama: %d örtüştü · %d çelişti") % [k["ok"], k["bad"]], trust_col, -1, 0,
+		var trust_text := tr("Raporlar çoğunlukla tutarlı") if int(k["ok"]) > int(k["bad"]) else (tr("Raporlarda çelişki var") if int(k["bad"]) > int(k["ok"]) else tr("Raporlar eşit ölçüde tutarlı ve çelişkili"))
+		host._traits.add_child(_trait(tr("Doğrulama: ") + trust_text, trust_col, -1, 0,
 			tr("Raporlarının başka kaynaklarla karşılaştırılması.")))
 	for p in Sim.active_promises_of(a.id):
-		host._traits.add_child(_trait(tr("Söz: %s · hafta %d") % [tr(str(p["prize"])), p["due"]], Color("d9b359"), -1, 0, tr("Ona verdiğin söz ve vadesi.")))
+		host._traits.add_child(_trait(tr("Bekleyen söz: %s") % tr(str(p["prize"])), Color("d9b359"), -1, 0, tr("Ona verdiğin söz ve vadesi.")))
 	if host._sel.size() > 1:
 		host._traits.add_child(_trait(tr("%d kişi seçili · operasyon çemberi") % host._sel.size(), UIKit.GOLD, -1, 0, ""))
 

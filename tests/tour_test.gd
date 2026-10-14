@@ -56,6 +56,16 @@ func _run() -> void:
 	if main._tour.index != 4:
 		printerr("TOUR: actual choice did not continue the tour: index=", main._tour.index, " pending=", sim.pending.size(), " buttons=", main._decision_buttons.size(), " busy=", main._busy)
 		quit(1); return
+	main._tour.next_step()
+	await create_timer(0.3).timeout
+	if main._tour.index != 5 or not main._person_file.is_open() or main._tour._target() != main._person_file.sheet:
+		printerr("TOUR: dossier step did not open and target the person file")
+		quit(1); return
+	main._tour.next_step()
+	await create_timer(0.3).timeout
+	if main._tour.index != 6 or main._person_file.is_open():
+		printerr("TOUR: leaving dossier step did not close the person file")
+		quit(1); return
 	main._tour._skip.pressed.emit()
 	if main._tour.active or not sfx.tour_done:
 		printerr("TOUR: skip did not persist completion")
