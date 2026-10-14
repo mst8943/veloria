@@ -188,3 +188,30 @@ EN/TR masaüstü ve 1067×600 yatay mobilde ordu karar kartı, Günlük birlik s
 
 - **Düşük — Sanat varlığı ihtiyacı:** `art/city_map_v3.png` arka planı başarıyla kullanılıyor; ileride valiler ve komutanlar için bireysel sanat varlıkları eklenirse `map_badge` ve Divan kartlarında doğrudan kullanıma hazır altyapı mevcuttur (`art/` klasörüne dokunulmadı).
 - **Düşük — Headless Godot kapanış kaynak uyarıları:** Bazı headless testlerde Godot motorunun çıkışta verdiği zararsız RID/ObjectDB uyarıları (exit code 0).
+
+## 2026-10-14 — Görsel Dil v3 bağımsız denetimi
+
+### Düzeltilen
+
+- **Orta — Harita dokunma hareketleri oyuna ulaşmıyordu.** Ortak `TouchScroll` girdi olayını tükettiği için `CityView` sürükleme/sıkıştırma olaylarını alamıyordu. Harita hareketleri ayrı gruptan yönlendirildi; kısa dokunma bırakmada açıyor, sürükleme/pinch açmıyor. Sentetik test gerçek `ScreenTouch` / `ScreenDrag` olaylarını kapsıyor (`b00b0e3`).
+- **Düşük — Bölge çekmecesi arkasındaki harita etiketleri görünüyordu.** Çekmece zemini opaklaştırıldı; işaretçinin ikinci açma yolu kaldırıldı (`b00b0e3`).
+- **Düşük — Öne çıkan bölge yıldız glifi kullanıyordu.** Harita yıldızı çizimle gösteriliyor; test artık glif yerine öne çıkan bölge metaverisini doğruluyor (`af5059d`).
+- **Düşük — UI görüntü fikstürleri geçersiz olay kimlikleri kullanıyordu.** Görselsiz ve çok karar durumları mevcut olaylara bağlandı; fikstür bulunamazsa hata veriyor (`1573102`).
+- **Düşük — Harita sıfırlama kontrollerinin İngilizcesi eksikti.** Düğme ve tooltip çevirileri eklendi (`aa3b9f2`).
+- **Düşük — Küçük etkileşim hedefleri.** Eylem kategorisi sekmeleri masaüstünde 28 px'e, mobil üst gezinme düğmeleri en az 44 px genişliğe çıkarıldı (`d70de6e`).
+
+### Açık / ertelenen
+
+- **Düşük — İngilizce menü logosunda Türkçe slogan.** TR ve EN menüleri aynı `art/logo_seffaf.png` raster logosunu kullanıyor; içindeki “Tahtın Gölgesinde” yazısı çevrilmiyor. Görsel varlık yazma kısıtı nedeniyle bu oturumda değiştirilmedi. TR/EN yan yana kanıt: `docs/ux/ref/denetim_menu.jpg`.
+- **Düşük — Mobil UX ölçüm aracının etiket genişliği.** 1067×600 denetimde sekiz masa etiketi “METİN TAŞIYOR” uyarısı verdi. Ekran görüntülerinde bütün etiketler okunur ve çakışmasız; ölçer ters ölçekli harita etiketlerinin gerçek metin alanını hesaba katmıyor. Otomatik uyarı görsel kusur olarak doğrulanmadı.
+- **Düşük — Girişten menüye test karesi animasyon sırasında alınıyor.** `title_shot.gd` tıklama sonrası menü katmanlarının kademeli görünmesi tamamlanmadan görüntü alabiliyor; bağımsız `ux_audit` menü karesinde kalıcı üst üste binme yok. Gerçek cihaz dokunuşuyla geçiş ayrıca doğrulanmalı.
+- **Düşük — Tekrarlanan portre kenarı çizimi.** Birkaç görünüm aynı 1 px kenar panelini yerel olarak kuruyor. Görsel sonuçlar tutarlı; ortak portre kenarı yardımcısına toplama düşük öncelikli bakım işi olarak bırakıldı.
+- **Düşük — Headless Godot kapanış kaynak uyarıları.** Bazı testlerin başarılı özetinden sonra RID/ObjectDB/resource uyarıları sürüyor; çıkış kodları 0.
+
+### Ekran denetimi
+
+TR masaüstü (1600×900 ve 1280×720) denetim görüntülerinde; EN masaüstü 1280×720'de; TR/EN yatay mobilde (1067×600) Gündem/karar, Dosyalar, Günlük, Divan, harita/kurum ve bölge panelleri, medya, masa, menü/ayarlar, modallar ve oyun sonu görünümleri kontrol edildi. EN masaüstü 1600×900'de seçili kişi, medya ve harita panelleri ayrıca açıldı. Ana ekran, onaylı `ana_ekran_g1e_karsilastirma.jpg` ile karşılaştırıldı; başlık/person paneli/gündem ana ekranına değişiklik kaynaklı sapma görülmedi. Bütün sayfa durumlarının her dil ve çözünürlük birleşimi ayrı ayrı incelenmedi. Harita dokunma düzeltmesi davranışsal; varsayılan simülasyon dosyalarına değişiklik yok.
+
+### Test kayıt notu
+
+Son tekrarın ham çıktısı `docs/ux/denetim_test_ciktilari.txt` içindedir. Kullanıcının “Testler tamam ben baktım” yönlendirmesi üzerine bu tekrar `ux_audit.gd` aşamasında durduruldu (36/44 vaka ilerlemesi). Önceki tam matriste `region_map_test` eski `★` beklentisiyle başarısız olmuştu; fikstür düzeltmesinden sonra desktop/mobile hedefli tekrarlar `REGION MAP: OK` verdi. Durdurulan tekrarın kalan vaka sonuçları bu dosyada doğrulanmış sayılmaz; önceki tam koşudaki tüm ham satırlar bu kısmi tekrar dosyasında saklı değildir.
