@@ -1,19 +1,25 @@
-# Ki?i dosyas? ? do?rulama raporu
+# Kişi dosyası — doğrulama raporu
 
-## Sonu?
+## Sonuç
 
-- A, B ve C a?amalar? ayr? commit'lerde tamamland?; ?al??ma a?ac?ndaki i18n d?zeltmesi ve kar??la?t?rma/rapor belgeleri de ayr? commit'lere al?nd?.
-- Masa?st? 1600?900 ve 1280?720, yatay mobil 1067?600; TR ve EN ekranlar? incelendi. Her ?l?ekte sa? s?tun, Nadir Vale dosyas?, vali dosyas?, d?? el?i dosyas?, kilitli eylem ve ?oklu se?im i?in ekran g?r?nt?s? al?nd? (36 g?r?nt?). ?kisi de kar??la?t?rma olarak sakland?: [ferah Bu hafta kar??la?t?rmas?](ref/bu_hafta_ferah_karsilastirma.jpg), [ki?i dosyas? kar??la?t?rmas?](ref/kisi_dosyasi_karsilastirma.jpg).
-- Ana oyun ak??? ve `game/core/` de?i?tirilmedi. `tests/title_shot.gd`, `game/ui/title_screen.gd` ve `art/` de?i?medi.
-- T?m test paketi iki tur ?al??t?; her kay?tl? test komutunun ??k?? kodu 0. A?a??da her sat?r ve motor kapan?? uyar?s? ham ??kt?s?yla yer al?yor.
-- `--full --seed=101` kap?s?nda ana sahne otomatik oynatmay? `--autoplay` ile ba?lat?yor; bu tetikleyiciyle izole TR ve EN ko?ular? ayr? ayr? 104 hafta / TAHTTA / Medya Rejimi / 112 olay verdi. ??k?? kodlar? 0.
+- A, B ve C aşamaları ayrı commit'lerde tamamlandı; i18n düzeltmesi ve karşılaştırma/rapor belgeleri de ayrı commit'lere alındı.
+- Masaüstü 1600×900 ve 1280×720, yatay mobil 1067×600; TR ve EN ekranları incelendi. Her ölçekte sağ sütun, Nadir Vale dosyası, vali dosyası, dış elçi dosyası, kilitli eylem ve çoklu seçim için ekran görüntüsü alındı (36 görüntü). Karşılaştırmalar: [ferah Bu hafta](ref/bu_hafta_ferah_karsilastirma.jpg), [kişi dosyası](ref/kisi_dosyasi_karsilastirma.jpg).
+- Ana oyun akışı ve `game/core/` değiştirilmedi. `tests/title_shot.gd`, `game/ui/title_screen.gd` ve `art/` değişmedi.
+- Tüm test paketi iki tur çalıştı; her kayıtlı test komutunun çıkış kodu 0. Aşağıda her satır ve motor kapanış uyarısı ham çıktısıyla yer alıyor.
+- `--full --seed=101` kapısında ana sahne otomatik oynatmayı `--autoplay` ile başlatıyor; bu tetikleyiciyle izole TR ve EN koşuları ayrı ayrı 104 hafta / TAHTTA / Medya Rejimi / 112 olay verdi. Çıkış kodları 0.
 
-## G?rsel inceleme notlar?
+## Gözlemler
 
-- 1600?900 ve 1280?720'de sa? s?tun rapor d??mesiyle birlikte s???yor; dosya panelindeki portre ve b?l?mler, kilitli eylem sebebi ve ?oklu se?im kontrol? g?r?n?r.
-- 1067?600'de dosya tam ekran, tek s?tun ve dokunmatik hedefler en az 44 px. ?oklu se?imde operasyon eylemleri dikey ak??ta a?a??da; kayd?r?nca ula??labiliyor ve test bunu do?ruluyor.
-- TR/EN etiketleri ve a??klamalar yerle?ime s???yor. ?ngilizce dosya numaralar? art?k ?ngilizce veri dosyas?ndan geliyor; i18n kap?s? temiz.
-- Her iki `--full` ko?usunda Godot ??k???nda RID/ObjectDB/resource temizleme uyar?lar? var; uygulama sonucu ve s?re? ??k?? kodu ba?ar?l?.
+- Görsel incelemede büyük taşma, üst üste binme veya çalışmayan kontrol bulmadım. Banner ve dosya çizim varlıkları mevcut; yedek çizimler kullanılmadı.
+- Mobil çoklu seçimde operasyon eylemleri ilk görünümün altında kalıyor; kaydırmayla erişiliyor ve test bunu doğruluyor.
+- Headless Godot kapanışında RID/ObjectDB/resource temizleme uyarıları çıktı; tüm test süreçleri ve iki tam koşu çıkış kodu 0 verdi.
+
+## Görsel inceleme notları
+
+- 1600×900 ve 1280×720'de sağ sütun rapor düğmesiyle birlikte sığıyor; dosya panelindeki portre ve bölümler, kilitli eylem sebebi ve çoklu seçim kontrolü görünür.
+- 1067×600'de dosya tam ekran, tek sütun ve dokunmatik hedefler en az 44 px. Çoklu seçimde operasyon eylemleri dikey akışta aşağıda; kaydırınca ulaşılabiliyor ve test bunu doğruluyor.
+- TR/EN etiketleri ve açıklamalar yerleşime sığıyor. İngilizce dosya numaraları artık İngilizce veri dosyasından geliyor; i18n kapısı temiz.
+- Her iki `--full` koşusunda Godot çıkışında RID/ObjectDB/resource temizleme uyarıları var; uygulama sonucu ve süreç çıkış kodu başarılı.
 
 ## Test ??kt?lar? ? tur 1 (ham)
 
