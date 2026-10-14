@@ -550,24 +550,207 @@ func _sync_operation_bar() -> void:
 
 func _set_dossier_action_layout() -> void:
 	var av := host._act_title.get_parent() as VBoxContainer
-	var sections := VBoxContainer.new()
-	sections.name = "DossierActionGroups"
-	sections.add_theme_constant_override("separation", 8)
+	if av.find_child("DossierActionGroups", false, false) != null:
+		return
+	var groups := VBoxContainer.new()
+	groups.name = "DossierActionGroups"
+	groups.add_theme_constant_override("separation", 5)
+	if host._mobile:
+		groups.add_child(host._person_file._make_action_scroll_hint())
+	var layout := [
+		["A", "KAZAN", ["KAZAN"]],
+		["B", "SÖZ VER", ["SÖZ VER"]],
+		["C", "ÖĞREN", ["ÖĞREN"]],
+		["D", "EMRET", ["EMRET", "BASKI"]],
+		["E", "DEVLET / GENEL", ["DEVLET"]],
+		["F", "KAMUOYU", ["KAMUOYU"]],
+	]
+	for item: Array in layout:
+		var letter: String = item[0]
+		var categories: Array = item[2]
+		var band := PanelContainer.new()
+		band.name = "DossierActionBand" + letter
+		band.custom_minimum_size.y = roundi(30 * host._person_file._paper_scale) if not host._mobile else 22
+		band.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var band_style := StyleBoxFlat.new()
+		band_style.bg_color = Color("392615")
+		band_style.border_color = Color("80643b", 0.9)
+		band_style.set_border_width_all(1)
+		band_style.content_margin_left = 8
+		band_style.content_margin_right = 8
+		band_style.content_margin_top = 1
+		band_style.content_margin_bottom = 1
+		if not host._mobile:
+			band.add_theme_stylebox_override("panel", band_style)
+		else:
+			band.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+		band.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		groups.add_child(band)
+		var heading := Label.new()
+		heading.name = "DossierGroup" + letter
+		var group_name := tr("Halk") if letter == "F" else tr(str(item[1]))
+		if letter == "D": group_name = "%s & %s" % [tr("EMRET"), tr("BASKI")]
+		heading.text = UIKit.tr_upper("%s) %s" % [letter, group_name])
+		heading.add_theme_font_override("font", UIKit.caps())
+		heading.add_theme_font_size_override("font_size", host._fs(14 if not host._mobile else 16))
+		heading.add_theme_color_override("font_color", Color("2a1c0e") if host._mobile else Color("f1dfb6"))
+		heading.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		band.add_child(heading)
+		var rows := VBoxContainer.new()
+		rows.name = "DossierRows" + letter
+		rows.add_theme_constant_override("separation", 2)
+		groups.add_child(rows)
+		for category in categories:
+			var old_row := host._cat_rows[category] as Control
+			for button_node in old_row.find_children("*", "Button", true, false):
+				var button := button_node as Button
+				var action_key := _action_key_for_button(button)
+				button.get_parent().remove_child(button)
+				button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				button.custom_minimum_size.y = _dossier_action_height(button)
+				button.clip_text = false
+				button.add_theme_color_override("font_color", Color(0, 0, 0, 0))
+				button.add_theme_color_override("font_hover_color", Color(0, 0, 0, 0))
+				button.add_theme_color_override("font_pressed_color", Color(0, 0, 0, 0))
+				button.add_theme_color_override("font_disabled_color", Color(0, 0, 0, 0))
+				button.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+				button.add_theme_stylebox_override("disabled", StyleBoxEmpty.new())
+				button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+				var hover := StyleBoxFlat.new()
+				hover.draw_center = false
+				hover.border_color = Color("765523", 0.6)
+				hover.set_border_width_all(1)
+				button.add_theme_stylebox_override("hover", hover)
+				button.add_theme_stylebox_override("pressed", hover)
+				button.resized.connect(_fit_dossier_action.bind(button))
+				var labels := VBoxContainer.new()
+				labels.name = "DossierActionLayout"
+				labels.set_anchors_preset(Control.PRESET_FULL_RECT)
+				labels.offset_left = 8
+				labels.offset_right = -8
+				labels.offset_top = 2
+				labels.offset_bottom = -2
+				labels.add_theme_constant_override("separation", 0)
+				labels.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				var title := Label.new()
+				title.name = "DossierActionText"
+				title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				title.add_theme_font_override("font", UIKit.sans())
+				title.add_theme_font_size_override("font_size", host._fs(14 if not host._mobile else 15))
+				labels.add_child(title)
+				var effect := Label.new()
+				effect.name = "DossierActionEffect"
+				effect.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				effect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				effect.add_theme_font_override("font", UIKit.sans())
+				effect.add_theme_font_size_override("font_size", host._fs(12 if not host._mobile else 12))
+				labels.add_child(effect)
+				button.add_child(labels)
+				_action_label_ref(action_key, title, effect)
+				rows.add_child(button)
 	for key in host._cat_btns:
 		if key == "OPERASYON":
 			continue
 		var heading := host._cat_btns[key] as Button
 		var row := host._cat_rows[key] as Control
-		heading.get_parent().remove_child(heading)
-		row.get_parent().remove_child(row)
-		heading.custom_minimum_size.y = 44 if host._mobile else 36
-		heading.add_theme_font_size_override("font_size", host._fs(14 if not host._mobile else 15))
-		heading.add_theme_stylebox_override("normal", UIKit.box(Color(UIKit.GOLD, 0.08), Color(UIKit.GOLD_DIM, 0.38), 4, 6))
-		sections.add_child(heading)
-		sections.add_child(row)
+		var old_parent := heading.get_parent()
+		if old_parent != null: old_parent.remove_child(heading)
+		if row.get_parent() != null: row.get_parent().remove_child(row)
+		var legacy := av.get_node_or_null("DossierLegacyControls") as Control
+		if legacy == null:
+			legacy = Control.new()
+			legacy.name = "DossierLegacyControls"
+			legacy.visible = false
+			legacy.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			av.add_child(legacy)
+		legacy.add_child(heading)
+		legacy.add_child(row)
 		row.show()
-	av.add_child(sections)
-	av.move_child(sections, 1)
+	av.add_child(groups)
+	av.move_child(groups, 1)
+	host._act_title.hide()
+	host._hint_label.hide()
+	var empty_style := StyleBoxEmpty.new()
+	var panel := host._person_file._person_panel.actions_panel as PanelContainer
+	panel.add_theme_stylebox_override("panel", empty_style)
+	var old_ornament := panel.get_node_or_null("Ornament")
+	if old_ornament != null:
+		old_ornament.queue_free()
+
+
+func _action_key_for_button(button: Button) -> String:
+	for key in host._buttons:
+		if host._buttons[key] == button:
+			return str(key)
+	return ""
+
+
+func _action_label_ref(key: String, title: Label, effect: Label) -> void:
+	if key != "" and host._person_file != null:
+		host._person_file._action_lines[key] = {"title": title, "effect": effect}
+	var button := host._buttons.get(key) as Button
+	if button != null:
+		button.text = _dossier_action_title(button)
+		title.text = button.text
+		effect.text = _dossier_action_effect(button)
+		title.add_theme_color_override("font_color", Color("2a1c0e"))
+		effect.add_theme_color_override("font_color", Color("806b4e") if button.disabled else Color("4e3a24"))
+		_fit_dossier_action(button)
+
+
+func _fit_dossier_action(button: Button) -> void:
+	var height := _dossier_action_height(button)
+	if absf(button.custom_minimum_size.y - height) > 0.5:
+		button.custom_minimum_size.y = height
+
+
+func _dossier_action_height(button: Button) -> float:
+	var width: float = button.size.x - 18 if button.size.x > 0 else (host.get_viewport_rect().size.x - 48 if host._mobile else 500.0 * host._person_file._paper_scale - 18.0)
+	var title_size: int = host._fs(15 if host._mobile else 14)
+	var effect_size: int = host._fs(12)
+	var title_lines := _dossier_wrapped_lines(_dossier_action_title(button), UIKit.sans(), title_size, width)
+	var effect_lines := _dossier_wrapped_lines(_dossier_action_effect(button), UIKit.sans(), effect_size, width)
+	var height := float(title_lines * UIKit.sans().get_height(title_size) + effect_lines * UIKit.sans().get_height(effect_size) + 10)
+	return maxf(48.0, height) if host._mobile else maxf(38.0, height)
+
+
+func _dossier_action_title(button: Button) -> String:
+	var tip := button.tooltip_text.split("\n", false)
+	var title := str(tip[0]) if not tip.is_empty() else button.text
+	if Loc.lang == "tr": title = title.replace("mesai", "Mesai")
+	return title
+
+
+func _dossier_action_effect(button: Button) -> String:
+	var tip := button.tooltip_text.split("\n", false)
+	var effect := ""
+	if tip.size() > 1 and not str(tip[1]).begins_with(tr("Kullanılamaz:")):
+		effect = str(tip[1]).split(".", false)[0].strip_edges()
+		if effect != "" and not effect.ends_with("."):
+			effect += "."
+	if button.disabled and tip.size() > 1 and str(tip[-1]).begins_with(tr("Kullanılamaz:")):
+		var reason := str(tip[-1])
+		effect += ("\n" if effect != "" else "") + reason
+	return "→ " + effect if effect != "" else ""
+
+
+func _dossier_wrapped_lines(text: String, font: Font, font_size: int, width: float) -> int:
+	if text.is_empty() or width <= 1.0:
+		return 1 if not text.is_empty() else 0
+	var lines := 0
+	for paragraph in text.split("\n", true):
+		var line_width := 0.0
+		lines += 1
+		for word in str(paragraph).split(" ", false):
+			var word_width := font.get_string_size(word, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+			var space := font.get_string_size(" ", HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x if line_width > 0.0 else 0.0
+			if line_width > 0.0 and line_width + space + word_width > width:
+				lines += 1
+				line_width = word_width
+			else:
+				line_width += space + word_width
+	return lines
 
 
 func _public_action(action: String) -> void:
@@ -998,6 +1181,8 @@ func _update_action_states() -> void:
 			b.tooltip_text = tr(TIPS.get(k, "")) + ("\n" + tr("Kullanılamaz: %s") % reason if reason != "" else "")
 	if host._hint_label != null:
 		_hint(tr("Kullanılamaz: %s") % locked_reason if locked_reason != "" else tr(CAT_TIPS.get(host._act_cat, CAT_TIPS["KAZAN"])))
+	if host._person_file != null and host._person_file.is_open():
+		host._person_file._refresh_action_lines()
 
 
 func _update_info() -> void:
@@ -1017,30 +1202,23 @@ func _update_info() -> void:
 	if id == "":
 		return
 	var a = Sim.actors[id]
-	var art_size := Vector2(190, 214) if not host._mobile else Vector2(150, 166)
+	var file_open: bool = host._person_file != null and host._person_file.is_open()
+	var art_size: Vector2 = host._portrait_box.size if file_open and host._portrait_box.size.x > 0 else (Vector2(190, 214) if not host._mobile else Vector2(150, 166))
 	var art: Control = host._initial_art(a.id, art_size, 38)
 	art.size = art_size
 	art.position = Vector2.ZERO
 	host._portrait_box.add_child(art)
-	# Portre: tek ince altın kenar (panelin işlemeli çerçevesiyle üst üste binmesin).
-	var edge := Panel.new()
-	var es := StyleBoxFlat.new()
-	es.draw_center = false
-	es.border_color = Color(UIKit.GOLD, 0.7)
-	es.set_border_width_all(1)
-	edge.add_theme_stylebox_override("panel", es)
-	edge.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	edge.set_anchors_preset(Control.PRESET_FULL_RECT)
-	art.add_child(edge)
-	var photo_frame_path := "res://art/ui/dosya_foto_cercevesi.png"
-	if ResourceLoader.exists(photo_frame_path):
-		var photo_frame := TextureRect.new()
-		photo_frame.texture = load(photo_frame_path)
-		photo_frame.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		photo_frame.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-		photo_frame.set_anchors_preset(Control.PRESET_FULL_RECT)
-		photo_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		art.add_child(photo_frame)
+	if not file_open:
+		# The dossier's paper frame sits above the portrait and supplies its only border.
+		var edge := Panel.new()
+		var es := StyleBoxFlat.new()
+		es.draw_center = false
+		es.border_color = Color(UIKit.GOLD, 0.7)
+		es.set_border_width_all(1)
+		edge.add_theme_stylebox_override("panel", es)
+		edge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		edge.set_anchors_preset(Control.PRESET_FULL_RECT)
+		art.add_child(edge)
 	host._info.append_text("[b][font_size=%d]%s[/font_size][/b]  [color=#cfc6b0][font_size=%d]%s[/font_size][/color]" % [host._fs(20 if not host._mobile else 20), a.display_name, host._fs(14 if not host._mobile else 16), a.title])
 	# Güç: üç kademe (eskiden metinle verilen bilgi; fazlası değil).
 	var level := Sim.power_tier(a.power)

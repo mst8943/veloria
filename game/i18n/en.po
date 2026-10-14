@@ -5408,6 +5408,9 @@ msgstr "Resolve the pending decision first."
 msgid "Kullanılamaz: %s"
 msgstr "Unavailable: %s"
 
+msgid "Kullanılamaz:"
+msgstr "Unavailable:"
+
 msgid "Operasyon için bir ila üç kişi seç."
 msgstr "Select one to three people for an operation."
 
@@ -5450,6 +5453,9 @@ msgstr "No new observation has been recorded this week."
 msgid "Makamın ve görünür nüfuzun saraydaki ağırlığını özetler."
 msgstr "Summarizes the standing of the office and its visible influence at court."
 
+msgid "Saraydaki ağırlığı belirgin."
+msgstr "Clear standing at court."
+
 msgid "Yakın dönemde belirgin bir alamet kayda geçmedi."
 msgstr "No clear sign has been recorded recently."
 
@@ -5471,8 +5477,11 @@ msgstr "Office"
 msgid "Güç derecesi"
 msgstr "Influence"
 
-msgid "Güncel tavır"
-msgstr "Current disposition"
+msgid "Güç"
+msgstr "Influence"
+
+msgid "Tavır"
+msgstr "Disposition"
 
 msgid "Saray gözlemi ve ruh hâli"
 msgstr "Court observations and mood"
@@ -5482,3 +5491,8 @@ msgstr "Sensitive and confidential details"
 
 msgid "Hükümdarla ilişki ve sicil"
 msgstr "Relationship with the Crown and record"
+msgid "Daha fazla eylem"
+msgstr "More actions below"
+
+msgid "DEVLET / GENEL"
+msgstr "STATE / GENERAL"
