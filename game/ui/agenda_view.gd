@@ -902,6 +902,8 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		texts.append(l)
 	all_reports.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	contents.add_child(all_reports)
+	if host._person_panel != null:
+		host._person_panel.call_deferred("_sync_operation_bar")
 
 
 ## Meclisin görüşü: iki danışmanın kısa önerisi (docs/design/danisman_gorusleri.md).

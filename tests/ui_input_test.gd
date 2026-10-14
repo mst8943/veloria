@@ -438,6 +438,7 @@ func _operation_toggle_ok() -> bool:
 	if not button.is_visible_in_tree() or (main._mobile and button.custom_minimum_size.y < 44):
 		return false
 	button.button_pressed = true
+	main._update_info()
 	for _i in 2: await process_frame
 	var opened: bool = main._person_panel.operation_bar.visible
 	var reports_fit := true
