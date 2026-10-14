@@ -1231,36 +1231,13 @@ func _menu_show_page(page_name: String) -> void:
 
 
 func _show_chronicle() -> void:
-	var list: Array = Sim.load_chronicle()
-	var t := tr("[b][font_size=%d][color=#d6b25e]HÜKÜMDARLIK ARŞİVİ[/color][/font_size][/b]\n[color=gray]Tarih, krallarını unutmaz.[/color]\n\n") % _fs(30)
-	if list.is_empty():
-		t += tr("Henüz tamamlanmış bir saltanat yok. İlk hükümdarlığın burada anılacak.")
-	else:
-		var wins := 0
-		var best := 0
-		for r in list:
-			wins += 1 if r["survived"] else 0
-			best = maxi(best, int(r["weeks"]))
-		t += tr("Saltanat sayısı: %d   ·   Tahtta kalan: %d   ·   En uzun saltanat: %s\n\n") % [list.size(), wins, tr("%d hafta") % best]
-		for i in range(list.size() - 1, -1, -1):
-			var r: Dictionary = list[i]
-			var mark := "[color=#7fae7a]%s[/color]" % tr("TAHTTA") if r["survived"] else "[color=#c0504a]%s[/color]" % tr("DÜŞTÜ")
-			t += "%s  [b]%s[/b]   [color=gray]%s · %s · %s[/color]\n     %s\n" % [mark, tr(str(r["title"])), r["date"], tr(str(r["difficulty"])), tr("%d hafta") % int(r["weeks"]), Sim.chronicle_cause(r)]
-	var have: Dictionary = Sim.load_achievements()
-	t += tr("\n[b][font_size=%d][color=#d6b25e]BAŞARIMLAR  ·  %d / %d[/color][/font_size][/b]\n") % [_fs(24), have.size(), Sim.ACHIEVEMENTS.size()]
-	for id in Sim.ACHIEVEMENTS:
-		var info: Array = Sim.ACHIEVEMENTS[id]
-		if have.has(id):
-			t += "[color=#d6b25e]»[/color]  [b]%s[/b]  [color=gray]%s · %s[/color]\n" % [tr(str(info[0])), tr(str(info[1])), have[id]]
-		else:
-			t += "[color=#55524c]·  %s  ·  %s[/color]\n" % [tr(str(info[0])), tr(str(info[1]))]
-	var extension_have: Dictionary = Sim.load_achievements(true)
-	if not extension_have.is_empty():
-		t += tr("\n[b][font_size=%d][color=#d6b25e]UZATMA BAŞARIMLARI[/color][/font_size][/b]\n") % _fs(24)
-		for id in extension_have:
-			var info: Array = Sim.ACHIEVEMENTS.get(id, [id, ""])
-			t += "[color=#d6b25e]»[/color]  [b]%s[/b]  [color=gray]%s · %s[/color]\n" % [tr(str(info[0])), tr(str(info[1])), extension_have[id]]
-	_show_modal(t)
+	var archive := get_node_or_null("ArchiveView")
+	if archive == null:
+		archive = load("res://game/ui/archive_view.gd").new()
+		archive.name = "ArchiveView"
+		add_child(archive)
+	archive.visible = true
+	archive.call("refresh")
 
 
 # ---------------------------------------------------------------- Yardımcılar

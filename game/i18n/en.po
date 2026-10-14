@@ -5497,3 +5497,24 @@ msgstr "More actions below"
 
 msgid "DEVLET / GENEL"
 msgstr "STATE / GENERAL"
+
+msgid "Tarih, kararlar ve sonuçlar."
+msgstr "History, decisions and consequences."
+
+msgid "Saltanat sayısı"
+msgstr "Reigns recorded"
+
+msgid "Tahtta kalan"
+msgstr "Reigns survived"
+
+msgid "En uzun saltanat"
+msgstr "Longest reign"
+
+msgid "SON OLAYLAR"
+msgstr "RECENT EVENTS"
+
+msgid "BAŞARIMLAR"
+msgstr "ACHIEVEMENTS"
+
+msgid "Henüz tamamlanmış bir saltanat yok."
+msgstr "No completed reigns yet."
