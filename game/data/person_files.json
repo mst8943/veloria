@@ -1,7 +1,6 @@
 {
   "arden": {
     "file_no": "ORDU-01",
-    "file_no_en": "ARMY-01",
     "observations": [
       "Emirlerin uygulanışını ölçülü tutar.",
       "Muhafızların düzenini yakından izler."
@@ -9,7 +8,6 @@
   },
   "voss": {
     "file_no": "İSTİHBARAT-01",
-    "file_no_en": "INTELLIGENCE-01",
     "observations": [
       "Sorularını doğrudan sormaz; önce sessizliği dinler.",
       "Raporlarının kaynağını korumaya özen gösterir."
@@ -17,7 +15,6 @@
   },
   "kessler": {
     "file_no": "MALİYE-01",
-    "file_no_en": "FINANCE-01",
     "observations": [
       "Kararlarını hesap ve kamu yüküyle birlikte tartar.",
       "Mali raporları gecikmeden Divan’a taşır."
@@ -25,7 +22,6 @@
   },
   "halden": {
     "file_no": "MEDYA-01",
-    "file_no_en": "MEDIA-01",
     "observations": [
       "Haber akışının yönünü dikkatle kollar.",
       "Sarayla yakınlığını pazarlık konusu yapar."
@@ -33,7 +29,6 @@
   },
   "lena": {
     "file_no": "BASIN-01",
-    "file_no_en": "PRESS-01",
     "observations": [
       "Kaynağını korumadan yayıma geçmez.",
       "Kamu yararını kişisel yakınlığın önünde tutar."
@@ -41,7 +36,6 @@
   },
   "dorn": {
     "file_no": "SARAY-01",
-    "file_no_en": "PALACE-01",
     "observations": [
       "Saray içindeki havayı yatıştırmaya çalışır.",
       "Törenlerin ve vakfın itibarını gözetir."
@@ -49,7 +43,6 @@
   },
   "prens": {
     "file_no": "HANEDAN-01",
-    "file_no_en": "ROYAL-01",
     "observations": [
       "Aile içindeki desteğin işaretlerini arar.",
       "Saraydaki konumunu korumaya çalışır."
@@ -57,7 +50,6 @@
   },
   "brandt": {
     "file_no": "MUHALEFET-01",
-    "file_no_en": "OPPOSITION-01",
     "observations": [
       "Mecliste müttefik arar.",
       "Kamuya açık sözlerinin arkasında durur."
@@ -65,7 +57,6 @@
   },
   "falk": {
     "file_no": "YARGI-01",
-    "file_no_en": "JUSTICE-01",
     "observations": [
       "Usul ve delil arasındaki çizgiyi önemser.",
       "Yargı kurumlarının bağımsız görünmesine dikkat eder."
@@ -73,7 +64,6 @@
   },
   "julian": {
     "file_no": "HANEDAN-02",
-    "file_no_en": "ROYAL-02",
     "observations": [
       "Her görünüşü bir öğrenme fırsatı sayar.",
       "Sarayın beklentilerini anlamaya çalışır."
@@ -81,7 +71,6 @@
   },
   "elena": {
     "file_no": "DIŞİŞLERİ-01",
-    "file_no_en": "FOREIGN-01",
     "observations": [
       "Müttefiklerin ve rakiplerin tepkilerini birlikte tartar.",
       "Görüşmelerin dilini dikkatle seçer."
@@ -89,7 +78,6 @@
   },
   "claire": {
     "file_no": "ASTERIA-01",
-    "file_no_en": "ASTERIA-01",
     "observations": [
       "Ev sahibi sarayın işaretlerini izler.",
       "Açık temaslarda ölçülü davranır."
@@ -97,7 +85,6 @@
   },
   "malenkov": {
     "file_no": "DRAKON-01",
-    "file_no_en": "DRAKON-01",
     "observations": [
       "Sınırdaki gelişmeleri yakından takip eder.",
       "Her önerinin ülkesine etkisini tartar."
@@ -105,7 +92,6 @@
   },
   "lucien": {
     "file_no": "SERAVIA-01",
-    "file_no_en": "SERAVIA-01",
     "observations": [
       "Ticaret ve liman bağlarını gözetir.",
       "Ekonomik temaslarda uzun vadeli çıkar arar."
@@ -113,7 +99,6 @@
   },
   "governor_capital": {
     "file_no": "VALİ-BAŞKENT-01",
-    "file_no_en": "GOVERNOR-CAPITAL-01",
     "observations": [
       "Başkentteki huzurun küçük işaretlerini toplar.",
       "Saray çevresindeki değişime hızlı karşılık verir."
@@ -121,7 +106,6 @@
   },
   "governor_industry": {
     "file_no": "VALİ-SANAYİ-01",
-    "file_no_en": "GOVERNOR-INDUSTRY-01",
     "observations": [
       "Üretim ve işçi temsilcileriyle temas kurar.",
       "Bölgesel talepleri merkeze taşır."
@@ -129,7 +113,6 @@
   },
   "governor_farmland": {
     "file_no": "VALİ-OVALAR-01",
-    "file_no_en": "GOVERNOR-PLAINS-01",
     "observations": [
       "Hasat ve pazar akışını gözler.",
       "Kırsal ihtiyaçları düzenli raporlar."
@@ -137,7 +120,6 @@
   },
   "governor_border": {
     "file_no": "VALİ-SINIR-01",
-    "file_no_en": "GOVERNOR-BORDER-01",
     "observations": [
       "Sınırdaki sükûnetin korunmasına çalışır.",
       "Yerel güvenlik işaretlerini merkeze bildirir."
@@ -145,7 +127,6 @@
   },
   "commander_capital": {
     "file_no": "ORDU-BAŞKENT-01",
-    "file_no_en": "ARMY-CAPITAL-01",
     "observations": [
       "Başkent nöbetlerinin düzenini korur.",
       "Saray muhafızlarıyla koordinasyonu sürdürür."
@@ -153,7 +134,6 @@
   },
   "commander_border": {
     "file_no": "ORDU-SINIR-01",
-    "file_no_en": "ARMY-BORDER-01",
     "observations": [
       "Sınır hattındaki hazırlığı takip eder.",
       "İkmal ve birliklerin uyumuna dikkat eder."
@@ -161,7 +141,6 @@
   },
   "commander_security": {
     "file_no": "ORDU-JANDARMA-01",
-    "file_no_en": "ARMY-GENDARMERIE-01",
     "observations": [
       "Kamu düzeni ile ölçülü güç arasında denge arar.",
       "Yerel güvenlik raporlarını inceler."
@@ -169,7 +148,6 @@
   },
   "crown": {
     "file_no": "TAHT-01",
-    "file_no_en": "CROWN-01",
     "observations": [
       "Sarayın farklı kanatlarından gelen işaretler birlikte okunur.",
       "Bu kayıt, hükümdarın kurumlar üzerindeki sorumluluğunu özetler."

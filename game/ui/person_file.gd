@@ -445,8 +445,6 @@ func _refresh_text() -> void:
 	var actor = Sim.actors[actor_id]
 	var entry: Dictionary = data.get(actor_id, {})
 	var serial := str(entry.get("file_no", "RECORD-01"))
-	if Loc.lang == "en":
-		serial = str(entry.get("file_no_en", serial))
 	var number_label := sheet.find_child("PersonFileNumber", true, false) as Label
 	if number_label != null:
 		number_label.text = UIKit.tr_upper(tr("GİZLİ SİCİL DOSYASI · NO: %s") % serial)

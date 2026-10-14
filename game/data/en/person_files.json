@@ -1,87 +1,76 @@
 {
   "arden": {
-    "file_no": "ORDU-01",
-    "file_no_en": "ARMY-01",
+    "file_no": "ARMY-01",
     "observations": [
       "Keeps the execution of orders measured.",
-      "Watches the guards’ readiness closely."
+      "Watches the guards' readiness closely."
     ]
   },
   "voss": {
-    "file_no": "İSTİHBARAT-01",
-    "file_no_en": "INTELLIGENCE-01",
+    "file_no": "INTELLIGENCE-01",
     "observations": [
       "He listens to the silences before asking directly.",
       "Takes care to protect the origin of his reports."
     ]
   },
   "kessler": {
-    "file_no": "MALİYE-01",
-    "file_no_en": "FINANCE-01",
+    "file_no": "FINANCE-01",
     "observations": [
       "Weighs decisions against both the accounts and their public cost.",
       "Brings fiscal reports to the council without delay."
     ]
   },
   "halden": {
-    "file_no": "MEDYA-01",
-    "file_no_en": "MEDIA-01",
+    "file_no": "MEDIA-01",
     "observations": [
       "Keeps a close eye on the direction of the news cycle.",
       "Treats his proximity to the palace as a bargaining point."
     ]
   },
   "lena": {
-    "file_no": "BASIN-01",
-    "file_no_en": "PRESS-01",
+    "file_no": "PRESS-01",
     "observations": [
       "Does not publish before protecting her source.",
       "Places public interest ahead of personal ties."
     ]
   },
   "dorn": {
-    "file_no": "SARAY-01",
-    "file_no_en": "PALACE-01",
+    "file_no": "PALACE-01",
     "observations": [
       "Tries to calm the mood within the palace.",
       "Watches over the standing of the ceremonies and the foundation."
     ]
   },
   "prens": {
-    "file_no": "HANEDAN-01",
-    "file_no_en": "ROYAL-01",
+    "file_no": "ROYAL-01",
     "observations": [
       "Looks for signs of support within the family.",
       "Works to preserve his place at court."
     ]
   },
   "brandt": {
-    "file_no": "MUHALEFET-01",
-    "file_no_en": "OPPOSITION-01",
+    "file_no": "OPPOSITION-01",
     "observations": [
       "Looks for allies in parliament.",
       "Stands behind his public words."
     ]
   },
   "falk": {
-    "file_no": "YARGI-01",
-    "file_no_en": "JUSTICE-01",
+    "file_no": "JUSTICE-01",
     "observations": [
       "Cares about the line between procedure and evidence.",
       "Watches the appearance of judicial independence."
     ]
   },
   "julian": {
-    "file_no": "HANEDAN-02",
-    "file_no_en": "ROYAL-02",
+    "file_no": "ROYAL-02",
     "observations": [
       "Treats each public appearance as a chance to learn.",
       "Tries to understand what the palace expects of him."
     ]
   },
   "elena": {
-    "file_no": "DIŞİŞLERİ-01",
-    "file_no_en": "FOREIGN-01",
+    "file_no": "FOREIGN-01",
     "observations": [
       "Weighs the reactions of allies and rivals together.",
       "Chooses the language of negotiations carefully."
@@ -89,7 +78,6 @@
   },
   "claire": {
     "file_no": "ASTERIA-01",
-    "file_no_en": "ASTERIA-01",
     "observations": [
       "Watches the signals of the host court.",
       "Keeps her public contacts measured."
@@ -97,7 +85,6 @@
   },
   "malenkov": {
     "file_no": "DRAKON-01",
-    "file_no_en": "DRAKON-01",
     "observations": [
       "Follows developments along the border closely.",
       "Weighs how each proposal serves his country."
@@ -105,74 +92,65 @@
   },
   "lucien": {
     "file_no": "SERAVIA-01",
-    "file_no_en": "SERAVIA-01",
     "observations": [
       "Watches the ties between trade and the ports.",
       "Looks for long-term interests in economic contacts."
     ]
   },
   "governor_capital": {
-    "file_no": "VALİ-BAŞKENT-01",
-    "file_no_en": "GOVERNOR-CAPITAL-01",
+    "file_no": "GOVERNOR-CAPITAL-01",
     "observations": [
       "Collects small signs of unrest in the capital.",
       "Responds quickly to changes around the palace."
     ]
   },
   "governor_industry": {
-    "file_no": "VALİ-SANAYİ-01",
-    "file_no_en": "GOVERNOR-INDUSTRY-01",
+    "file_no": "GOVERNOR-INDUSTRY-01",
     "observations": [
       "Keeps in contact with producers and worker representatives.",
       "Carries regional demands to the center."
     ]
   },
   "governor_farmland": {
-    "file_no": "VALİ-OVALAR-01",
-    "file_no_en": "GOVERNOR-PLAINS-01",
+    "file_no": "GOVERNOR-PLAINS-01",
     "observations": [
       "Watches the harvest and the flow of markets.",
       "Reports rural needs regularly."
     ]
   },
   "governor_border": {
-    "file_no": "VALİ-SINIR-01",
-    "file_no_en": "GOVERNOR-BORDER-01",
+    "file_no": "GOVERNOR-BORDER-01",
     "observations": [
       "Works to preserve calm along the border.",
       "Reports local security signals to the center."
     ]
   },
   "commander_capital": {
-    "file_no": "ORDU-BAŞKENT-01",
-    "file_no_en": "ARMY-CAPITAL-01",
+    "file_no": "ARMY-CAPITAL-01",
     "observations": [
       "Keeps the capital watch in order.",
       "Maintains coordination with the palace guard."
     ]
   },
   "commander_border": {
-    "file_no": "ORDU-SINIR-01",
-    "file_no_en": "ARMY-BORDER-01",
+    "file_no": "ARMY-BORDER-01",
     "observations": [
       "Tracks readiness along the frontier.",
       "Watches the alignment of supplies and units."
     ]
   },
   "commander_security": {
-    "file_no": "ORDU-JANDARMA-01",
-    "file_no_en": "ARMY-GENDARMERIE-01",
+    "file_no": "ARMY-GENDARMERIE-01",
     "observations": [
       "Seeks a balance between public order and measured force.",
       "Reviews local security reports."
     ]
   },
   "crown": {
-    "file_no": "TAHT-01",
-    "file_no_en": "CROWN-01",
+    "file_no": "CROWN-01",
     "observations": [
       "Signals from the different wings of the palace are read together.",
-      "This record summarizes the monarch’s responsibility toward the institutions."
+      "This record summarizes the monarch's responsibility toward the institutions."
     ]
   }
 }
