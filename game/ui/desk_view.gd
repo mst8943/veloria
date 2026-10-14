@@ -280,13 +280,13 @@ func _icon_for_id(id: String) -> String:
 		"kisiler":
 			return "defne"
 		"gunluk":
-			return "yildiz"
+			return "parsomen"
 		"gundem":
 			return "terazi"
 		"dosyalar":
-			return "goz"
+			return "klasor"
 		"medya":
-			return "anten"
+			return "gazete"
 	return "yildiz"
 
 
@@ -328,11 +328,14 @@ func _plate(id: String, title: String, area: Vector2) -> Control:
 	icon_box.custom_minimum_size = Vector2(24, 24)
 	icon_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var iname := _icon_for_id(id)
+	var icon_art := UIKit.icon(iname, Vector2(18, 18), UIKit.GOLD)
+	icon_art.position = Vector2(3, 3)
+	icon_art.size = Vector2(18, 18)
+	icon_box.add_child(icon_art)
 	icon_box.draw.connect(func() -> void:
 		var c := icon_box.size / 2.0
 		icon_box.draw_circle(c, 11.0, Color(0.12, 0.09, 0.06, 0.95))
 		icon_box.draw_arc(c, 11.0, 0.0, TAU, 28, Color(UIKit.GOLD, 0.85), 1.1, true)
-		UIKit.draw_icon(icon_box, iname, c, 14.0, UIKit.GOLD)
 	)
 	row.add_child(icon_box)
 

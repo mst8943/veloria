@@ -546,7 +546,7 @@ func _rebuild_agenda() -> void:
 	if host._report_box != null:
 		_fill_reports_compact(animated, texts)
 	else:
-		host._agenda.add_child(host._section(tr("BU HAFTANIN RAPORLARI"), tr("masana ulaşan: %d") % Sim.reports.size()))
+		host._agenda.add_child(host._section(tr("BU HAFTANIN RAPORLARI"), tr("masana ulaşan: %d") % Sim.reports.size(), "parsomen"))
 		var rgrid := GridContainer.new()
 		rgrid.columns = 1
 		rgrid.add_theme_constant_override("v_separation", 8)
@@ -766,7 +766,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		var banner_path := "res://art/ui/bu_hafta_banner.png"
 		var banner := TextureRect.new()
 		banner.name = "WeekBanner"
-		banner.custom_minimum_size.y = 100 if host.get_viewport_rect().size.y < 780 else 140
+		banner.custom_minimum_size.y = 70 if host.get_viewport_rect().size.y < 1000 else 90
 		banner.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		banner.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		banner.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -800,7 +800,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 	contents.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	contents.add_theme_constant_override("separation", 2)
 	report_frame.add_child(contents)
-	var reports_heading: Control = host._section(tr("Raporlar"))
+	var reports_heading: Control = host._section(tr("Raporlar"), "", "parsomen")
 	var reports_label := reports_heading.get_child(1) as Label
 	reports_label.add_theme_font_override("font", UIKit.serif())
 	reports_label.add_theme_font_size_override("font_size", host._fs(16))
@@ -840,7 +840,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 			if Sim.actors.has(source): host._open_person_file(source)
 			host._all_reports_popup.hide())
 		host._wire(entry)
-	var visible_count := 4 if host.get_viewport_rect().size.y >= 780 else 2
+	var visible_count := 3 if host.get_viewport_rect().size.y >= 1000 else 2
 	for report_index in mini(visible_count, Sim.reports.size()):
 		var r: Dictionary = Sim.reports[report_index]
 		var panel := PanelContainer.new()

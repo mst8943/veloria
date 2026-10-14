@@ -542,9 +542,10 @@ func _build_ui() -> void:
 		_mobile_report_tabs.set_tab_title(2, tr("Günlük"))
 		_tabs.add_child(_mobile_report_tabs)
 		_tabs.set_tab_title(1, tr("Raporlar"))
-	var tab_icons := ["rapor", "dosya", "gunluk"]
+	var tab_icons := ["zarf", "klasor", "parsomen"]
 	for i in (3 if not _mobile else 0):
-		var ti := _art("res://art/icons/%s.png" % tab_icons[i])
+		var premium_path := "res://art/ui/ikon_%s.png" % tab_icons[i]
+		var ti: Texture2D = load(premium_path) if ResourceLoader.exists(premium_path) else _art("res://art/icons/%s.png" % ["rapor", "dosya", "gunluk"][i])
 		if ti:
 			_tabs.set_tab_icon(i, ti)
 	if _mobile:
@@ -552,6 +553,7 @@ func _build_ui() -> void:
 	_tabs.add_theme_constant_override("icon_max_width", 22 if _mobile else 24)
 	var tab_bar: TabBar = _tabs.get_tab_bar()
 	tab_bar.custom_minimum_size.y = 44 if _mobile else 48
+	tab_bar.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	tab_bar.add_theme_font_override("font", UIKit.sans())
 	tab_bar.add_theme_font_size_override("font_size", _fs(17 if _mobile else 16))
 	if not _mobile:
@@ -612,7 +614,7 @@ func _build_ui() -> void:
 
 
 func _build_header(parent: Control) -> void:
-	if not _mobile and ResourceLoader.exists(HEADER_ART_TR):
+	if not _mobile and ResourceLoader.exists(HEADER_ART):
 		_build_header_art(parent)
 		return
 	var header := VBoxContainer.new()
@@ -805,16 +807,16 @@ func _build_header(parent: Control) -> void:
 	var sp := Control.new()
 	sp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(sp)
-	_header_nav(top, "desk", tr("Masa"), "building", _show_desk)
+	_header_nav(top, "desk", tr("Masa"), "bina", _show_desk)
 	(_buttons["desk"] as Button).tooltip_text = tr("Çalışma masası: gündem, gazete, kişiler, günlük, dosyalar, hanedan ve başkent haritası.")
 	top.add_child(_header_separator(32 if _mobile else 40))
-	_header_nav(top, "media", tr("Medya"), "newspaper", _open_media)
+	_header_nav(top, "media", tr("Medya"), "gazete", _open_media)
 	(_buttons["media"] as Button).tooltip_text = tr("Medya Merkezi: Sarne'nin gazetesi, Leyla'nın bağımsız gazetesi ve Sarne TV. İkisini karşılaştır; biri yalan söylüyor olabilir.")
 	top.add_child(_header_separator(32 if _mobile else 40))
-	var save_nav := _header_nav(top, "save", tr("Kaydet"), "hourglass" if not _mobile else "seal", _on_save)
+	var save_nav := _header_nav(top, "save", tr("Kaydet"), "kumsaati", _on_save)
 	var save_separator := _header_separator(32 if _mobile else 40)
 	top.add_child(save_separator)
-	_header_nav(top, "menu", tr("Menü"), "gear", _show_menu)
+	_header_nav(top, "menu", tr("Menü"), "disli", _show_menu)
 	if _mobile:
 		# Dar ekranda otomatik kayıt var; kısa gezinme etiketleri ve kral büstü kalır.
 		save_nav.visible = false
@@ -868,12 +870,47 @@ func _draw_week_plate(c: Control) -> void:
 	c.draw_polyline(inner, Color(UIKit.GOLD_DIM, 0.45), 1.0, true)
 
 
-const HEADER_ART_TR := "res://art/ui/header_tr.png"     # onaylı mockup başlığı (yazısı gömülü)
-const HEADER_ART_BASE := "res://art/ui/header_base.png" # aynı resim, unvan yazısı silinmiş (diğer diller)
-const HEADER_ART_W := 1492.0
-const HEADER_ART_H := 118.0
+const HEADER_ART := "res://art/ui/header_hi.png"
+const HEADER_ART_W := 1964.0
+# Crop below the main rail; the remaining side scroll tails cost vertical room in the game layout.
+const HEADER_ART_H := 210.0
+static var _header_art_tr: Texture2D
+static var _header_art_base: Texture2D
 var _header_art: TextureRect
 var _header_title: Label
+var _header_wealth_icon: Control
+
+
+static func _header_texture(english: bool) -> Texture2D:
+	if english and _header_art_base != null:
+		return _header_art_base
+	if not english and _header_art_tr != null:
+		return _header_art_tr
+	var source: Texture2D = load(HEADER_ART)
+	var image: Image = source.get_image().duplicate()
+	# Only the inner content rows are inpainted; the engraved separators and frames remain untouched.
+	for rect in [Rect2i(868, 123, 132, 46), Rect2i(1027, 121, 140, 50), Rect2i(1184, 121, 94, 50), Rect2i(1298, 121, 98, 50), Rect2i(1404, 121, 184, 50), Rect2i(1598, 121, 137, 50), Rect2i(1741, 121, 103, 50)]:
+		_fill_header_rect(image, rect)
+	if english:
+		image.fill_rect(Rect2i(390, 118, 430, 57), Color("080705"))
+	var texture := ImageTexture.create_from_image(image)
+	if english:
+		_header_art_base = texture
+	else:
+		_header_art_tr = texture
+	return texture
+
+
+static func _fill_header_rect(image: Image, rect: Rect2i) -> void:
+	var x0 := maxi(1, rect.position.x)
+	var x1 := mini(image.get_width() - 1, rect.end.x)
+	var y0 := maxi(0, rect.position.y)
+	var y1 := mini(image.get_height(), rect.end.y)
+	for y in range(y0, y1):
+		var left := image.get_pixel(x0 - 1, y)
+		var right := image.get_pixel(x1, y)
+		for x in range(x0, x1):
+			image.set_pixel(x, y, left.lerp(right, float(x - x0 + 1) / float(x1 - x0 + 1)))
 
 
 ## Masaüstü başlığı: mockup'ın kendisi (aslanlar, büst, arma, çerçeveler) resim olarak; değişen bilgiler
@@ -931,18 +968,32 @@ func _build_header_art(parent: Control) -> void:
 	_header_wealth.tooltip_text = tr("Kişisel servet: devlet bütçesinden ayrı, gizli işlerin için.")
 	_header_wealth.mouse_filter = Control.MOUSE_FILTER_STOP
 	_header_art.add_child(_header_wealth)
+	_header_wealth_icon = UIKit.icon("sandik", Vector2(30, 30), Color.WHITE)
+	_header_art.add_child(_header_wealth_icon)
 	# Gezinme: resimdeki simge + yazı alanını kaplayan saydam düğmeler; yazı simgenin sağından başlar.
 	var nav := [
-		["desk", tr("Masa"), _show_desk, 982.0, 1062.0, 1021.0],
-		["media", tr("Medya"), _open_media, 1074.0, 1220.0, 1112.0],
-		["save", tr("Kaydet"), _on_save, 1230.0, 1320.0, 1268.0],
-		["menu", tr("Menü"), _show_menu, 1332.0, 1412.0, 1371.0],
+		["desk", tr("Masa"), _show_desk, 1298.0, 1395.0, "bina"],
+		["media", tr("Medya"), _open_media, 1405.0, 1588.0, "gazete"],
+		["save", tr("Kaydet"), _on_save, 1599.0, 1734.0, "kumsaati"],
+		["menu", tr("Menü"), _show_menu, 1741.0, 1844.0, "disli"],
 	]
 	var hover := StyleBoxFlat.new()
 	hover.bg_color = Color(UIKit.GOLD, 0.08)
 	for item in nav:
 		var b := Button.new()
 		b.text = item[1]
+		var nav_icon := UIKit.icon(str(item[5]), Vector2(30, 30), Color.WHITE)
+		if nav_icon is TextureRect:
+			b.icon = (nav_icon as TextureRect).texture
+			nav_icon.free()
+		else:
+			b.add_child(nav_icon)
+			nav_icon.position = Vector2(7, 12)
+			nav_icon.size = Vector2(30, 30)
+			b.set_meta("icon_fallback", true)
+		b.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.expand_icon = false
+		b.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.flat = true
 		b.focus_mode = Control.FOCUS_ALL
@@ -953,7 +1004,7 @@ func _build_header_art(parent: Control) -> void:
 		b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 		b.add_theme_stylebox_override("hover", hover)
 		b.add_theme_stylebox_override("pressed", hover)
-		b.set_meta("art_span", Vector3(item[3], item[4], item[5]))
+		b.set_meta("art_span", Vector2(item[3], item[4]))
 		_wire(b)
 		b.pressed.connect(item[2])
 		_header_art.add_child(b)
@@ -969,37 +1020,50 @@ func _build_header_art(parent: Control) -> void:
 		_header_art.position = Vector2(-side, 0)
 		_header_art.size = Vector2(art_w, HEADER_ART_H * k)
 		var tr_title := Sfx.language != "en"
-		_header_art.texture = load(HEADER_ART_TR if tr_title else HEADER_ART_BASE)
+		var atlas := AtlasTexture.new()
+		atlas.atlas = _header_texture(not tr_title)
+		atlas.region = Rect2(0, 0, HEADER_ART_W, HEADER_ART_H)
+		_header_art.texture = atlas
+		_header_art.set_meta("english", not tr_title)
 		_header_title.visible = not tr_title
 		_header_title.text = tr("KRAL ADRİAN IV")
-		_header_title.add_theme_font_size_override("font_size", roundi(32 * k))
-		_header_title.position = Vector2(272, 62) * k
-		_header_title.size = Vector2(300, 38) * k
-		_header_week.add_theme_font_size_override("font_size", roundi(16 * k))
-		_header_week.position = Vector2(582, 72) * k
-		_header_week.size = Vector2(112, 22) * k
-		_header_progress.position = Vector2(579, 95.2) * k
-		_header_progress.size = Vector2(128, 1.6) * k
-		_mesai_box.position = Vector2(766, 75) * k
-		_header_wealth.add_theme_font_size_override("font_size", roundi(19 * k))
-		_header_wealth.position = Vector2(922, 72) * k
-		_header_wealth.size = Vector2(40, 26) * k
+		var title_font_size := roundi(44 * k)
+		while title_font_size > 12 and UIKit.serif().get_string_size(_header_title.text, HORIZONTAL_ALIGNMENT_LEFT, -1, title_font_size).x > 397 * k:
+			title_font_size -= 1
+		_header_title.add_theme_font_size_override("font_size", title_font_size)
+		_header_title.position = Vector2(398, 117) * k
+		_header_title.size = Vector2(405, 56) * k
+		_header_week.add_theme_font_size_override("font_size", roundi(20 * k))
+		_header_week.position = Vector2(868, 128) * k
+		_header_week.size = Vector2(132, 29) * k
+		_header_progress.position = Vector2(883, 162) * k
+		_header_progress.size = Vector2(106, 2) * k
+		_mesai_box.position = Vector2(1034, 130) * k
+		_header_wealth_icon.position = Vector2(1185, 126) * k
+		_header_wealth_icon.size = Vector2(31, 31) * k
+		_header_wealth.add_theme_font_size_override("font_size", roundi(25 * k))
+		_header_wealth.position = Vector2(1225, 128) * k
+		_header_wealth.size = Vector2(48, 30) * k
 		for key in ["desk", "media", "save", "menu"]:
 			var b := _buttons[key] as Button
-			var span: Vector3 = b.get_meta("art_span")
-			b.position = Vector2(span.x, 66) * k
-			b.size = Vector2(span.y - span.x, 42) * k
-			# Yazı simgeden sonraki alana sığmazsa küçülür (ör. "Medya · yeni sayı", İngilizce metinler).
-			var room := (span.y - span.z) * k - 4.0
-			var fsize := roundi(15.5 * k)
+			var span: Vector2 = b.get_meta("art_span")
+			b.position = Vector2(span.x, 120) * k
+			b.size = Vector2(span.y - span.x, 54) * k
+			b.add_theme_constant_override("h_separation", roundi(7 * k))
+			b.add_theme_constant_override("icon_max_width", roundi(30 * k))
+			# Narrow labels shrink before the icon or engraved field can collide.
+			var room := (span.y - span.x - 40.0) * k
+			var fsize := roundi(21 * k)
 			while fsize > 9 and UIKit.serif().get_string_size(b.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x > room:
 				fsize -= 1
 			b.add_theme_font_size_override("font_size", fsize)
 			var pad := StyleBoxEmpty.new()
-			pad.content_margin_left = (span.z - span.x) * k
+			pad.content_margin_left = (40 if b.get_meta("icon_fallback", false) else 5) * k
+			pad.content_margin_right = 2 * k
 			b.add_theme_stylebox_override("normal", pad)
 			var hv := hover.duplicate() as StyleBoxFlat
 			hv.content_margin_left = pad.content_margin_left
+			hv.content_margin_right = pad.content_margin_right
 			b.add_theme_stylebox_override("hover", hv)
 			b.add_theme_stylebox_override("pressed", hv)
 			b.add_theme_stylebox_override("focus", pad)
@@ -1061,11 +1125,21 @@ func _header_symbol(kind: String, icon_size: Vector2, color: Color, filled := fa
 
 func _header_nav(parent: Control, key: String, text: String, icon_kind: String, callback: Callable) -> HBoxContainer:
 	var group := HBoxContainer.new()
-	group.add_theme_constant_override("separation", 5 if _mobile else 8)
+	group.add_theme_constant_override("separation", 0)
 	group.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	group.add_child(_header_symbol(icon_kind, Vector2(26, 26) if not _mobile else Vector2(24, 24), UIKit.GOLD))
 	var button := Button.new()
 	button.text = text
+	var icon_node := UIKit.icon(icon_kind, Vector2(26, 26) if not _mobile else Vector2(24, 24), UIKit.GOLD)
+	var fallback_icon := not (icon_node is TextureRect)
+	if icon_node is TextureRect:
+		button.icon = (icon_node as TextureRect).texture
+		icon_node.free()
+		button.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		button.expand_icon = false
+	else:
+		button.add_child(icon_node)
+		icon_node.position = Vector2(7, 9)
+		icon_node.size = Vector2(24, 24)
 	button.theme_type_variation = "GhostButton"
 	button.custom_minimum_size = Vector2(44 if _mobile else 0, 44 if _mobile else 36)
 	button.size_flags_horizontal = Control.SIZE_SHRINK_END
@@ -1073,10 +1147,15 @@ func _header_nav(parent: Control, key: String, text: String, icon_kind: String, 
 	button.add_theme_font_override("font", UIKit.sans())
 	button.add_theme_font_size_override("font_size", _fs(14 if not _mobile else 13))
 	button.add_theme_color_override("font_color", UIKit.TEXT)
-	button.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+	button.add_theme_constant_override("icon_max_width", 26 if not _mobile else 24)
+	button.add_theme_constant_override("h_separation", 7)
+	var normal := StyleBoxEmpty.new()
+	if fallback_icon:
+		normal.content_margin_left = 38
+	button.add_theme_stylebox_override("normal", normal)
 	var nav_hover := StyleBoxFlat.new()
 	nav_hover.bg_color = Color(UIKit.GOLD, 0.08)
-	nav_hover.content_margin_left = 2
+	nav_hover.content_margin_left = 38 if fallback_icon else 2
 	nav_hover.content_margin_right = 2
 	button.add_theme_stylebox_override("hover", nav_hover)
 	button.add_theme_stylebox_override("pressed", nav_hover)
@@ -1112,7 +1191,7 @@ func _update_mesai_pips() -> void:
 	var want: int = Sim.mesai_max
 	while _mesai_box.get_child_count() < want:
 		# Kapsayıcılar çocuklarının dönüşünü sıfırlar; elması kapsayıcı olmayan bir tutucuya koy.
-		var s := 13 if not _mobile else 16
+		var s := (22 if _header_art != null else 13) if not _mobile else 16
 		var holder := Control.new()
 		holder.custom_minimum_size = Vector2(s + 4, s + 4)
 		holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -1273,24 +1352,27 @@ func _caption(t: String) -> Label:
 
 
 ## Bölüm başlığı: küçük altın elmas, aralıklı büyük harf, ince çizgi ve isteğe bağlı açıklama.
-func _section(title: String, helper := "") -> Control:
+func _section(title: String, helper := "", icon_name := "") -> Control:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
-	var holder := Control.new()
-	holder.custom_minimum_size = Vector2(10, 10)
-	holder.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var gem := Panel.new()
-	var gs := StyleBoxFlat.new()
-	gs.bg_color = UIKit.GOLD
-	gem.add_theme_stylebox_override("panel", gs)
-	gem.size = Vector2(6, 6)
-	gem.position = Vector2(2, 2)
-	gem.pivot_offset = Vector2(3, 3)
-	gem.rotation = deg_to_rad(45.0)
-	gem.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	holder.add_child(gem)
-	row.add_child(holder)
+	if icon_name != "":
+		row.add_child(UIKit.icon(icon_name, Vector2(20, 20), UIKit.GOLD))
+	else:
+		var holder := Control.new()
+		holder.custom_minimum_size = Vector2(10, 10)
+		holder.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var gem := Panel.new()
+		var gs := StyleBoxFlat.new()
+		gs.bg_color = UIKit.GOLD
+		gem.add_theme_stylebox_override("panel", gs)
+		gem.size = Vector2(6, 6)
+		gem.position = Vector2(2, 2)
+		gem.pivot_offset = Vector2(3, 3)
+		gem.rotation = deg_to_rad(45.0)
+		gem.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		holder.add_child(gem)
+		row.add_child(holder)
 	var l := Label.new()
 	l.text = title
 	l.add_theme_font_override("font", UIKit.caps())
@@ -2003,7 +2085,7 @@ func _refresh() -> void:
 	if _header_week == null or Sim.actors.is_empty():
 		return
 	_header_week.text = tr("HAFTA %d / %d") % [Sim.week, Sim.MAX_WEEKS]
-	if _header_art != null and _header_art.texture != load(HEADER_ART_TR if Sfx.language != "en" else HEADER_ART_BASE):
+	if _header_art != null and bool(_header_art.get_meta("english", false)) != (Sfx.language == "en"):
 		(_header_art.get_parent().get_meta("place") as Callable).call()   # dil değişti: unvan resmi/yazısı
 	if _fast() or _header_progress.value > Sim.week:
 		_header_progress.value = Sim.week

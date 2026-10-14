@@ -3,6 +3,7 @@ extends RefCounted
 
 const Loc := preload("res://game/core/loc.gd")
 const TOUCH_SCROLL := preload("res://game/ui/touch_scroll.gd")
+const ORNAMENT_ICON := preload("res://game/ui/ornament_icon.gd")
 
 # Nötrler sıcak kömür tonunda (kırmızı >= yeşil >= mavi): altın ve parşömenle çatışmaz (docs/ux/gorsel_dil_v2.md).
 const BG := Color("0e0c0a")
@@ -34,6 +35,33 @@ static func configure_accessibility(size: int, contrast: bool, motion: bool) -> 
 	font_scale = [1.0, 1.14, 1.28][clampi(size, 0, 2)]
 	high_contrast = contrast
 	reduce_motion = motion
+
+
+## Premium UI art with the original vector ornament as a missing-resource fallback.
+static func icon(name: String, size: Vector2, tint: Color = GOLD) -> Control:
+	var key := name.trim_prefix("ikon_")
+	var path := "res://art/ui/ikon_%s.png" % key
+	if ResourceLoader.exists(path):
+		var image := TextureRect.new()
+		image.texture = load(path)
+		image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		image.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		image.modulate = tint
+		image.custom_minimum_size = size
+		image.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		return image
+	var fallback := ORNAMENT_ICON.new()
+	fallback.kind = {
+		"zarf": "envelope", "klasor": "folder", "parsomen": "scroll", "bina": "building",
+		"gazete": "newspaper", "kumsaati": "hourglass", "disli": "gear", "sandik": "seal",
+		"terazi": "diamond", "tac": "lily", "meclis": "building", "altin": "seal",
+		"kilic": "diamond", "goz": "diamond", "pusula": "star", "defne": "flourish",
+	}.get(key, "diamond")
+	fallback.line_color = tint
+	fallback.custom_minimum_size = size
+	fallback.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return fallback
 
 
 ## Gövde fontu: gömülü IBM Plex Sans (değişken ağırlık). Metrikleri Godot'nun eski yedek fontuna
@@ -761,4 +789,3 @@ static func draw_icon(c: CanvasItem, icon_name: String, center: Vector2, size: f
 		_:
 			# Varsayılan: dolu altın baklava
 			_diamond(c, center, r * 0.5, col)
-

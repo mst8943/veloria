@@ -106,7 +106,7 @@ func build(right: VBoxContainer) -> void:
 	drawer_scroll.add_child(body)
 	var heading := HBoxContainer.new()
 	body.add_child(heading)
-	var title: Control = host._section(tr("DİVAN"))
+	var title: Control = host._section(tr("DİVAN"), "", "meclis")
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	heading.add_child(title)
 	var close_button := Button.new()
@@ -120,7 +120,7 @@ func build(right: VBoxContainer) -> void:
 	heading.add_child(close_button)
 	focus_button = close_button
 
-	var rep_sec: Control = host._section(tr("Raporlar"))
+	var rep_sec: Control = host._section(tr("Raporlar"), "", "parsomen")
 	body.add_child(rep_sec)
 	finance_label = Label.new()
 	finance_label.text = Sim.economy_journal_line()

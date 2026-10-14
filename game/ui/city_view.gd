@@ -583,13 +583,23 @@ func _make_site(id: String) -> void:
 	badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var icon_id: String = str(s.get("icon", "tac"))
+	var premium_icon := str({
+		"terazi": "terazi", "tac": "tac", "sutun": "meclis", "para": "altin",
+		"kilic": "kilic", "goz": "goz", "pusula": "pusula", "defne": "defne",
+	}.get(icon_id, ""))
+	if premium_icon != "":
+		var premium := UIKit.icon(premium_icon, Vector2(badge_size * 0.62, badge_size * 0.62), UIKit.GOLD)
+		premium.position = Vector2(badge_size * 0.19, badge_size * 0.19)
+		premium.size = Vector2(badge_size * 0.62, badge_size * 0.62)
+		badge.add_child(premium)
 	badge.draw.connect(func() -> void:
 		var c := badge.size * 0.5
 		var r := minf(c.x, c.y) - 1.0
 		badge.draw_circle(c, r, Color(0.035, 0.03, 0.025, 0.98))
 		badge.draw_arc(c, r, 0, TAU, 32, UIKit.GOLD, 1.5, true)
 		badge.draw_arc(c, r - 2.5, 0, TAU, 32, Color(UIKit.GOLD_DIM, 0.5), 1.0, true)
-		UIKit.draw_icon(badge, icon_id, c, r * 1.5, UIKit.GOLD)
+		if premium_icon == "":
+			UIKit.draw_icon(badge, icon_id, c, r * 1.5, UIKit.GOLD)
 	)
 	row.add_child(badge)
 

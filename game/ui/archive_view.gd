@@ -182,9 +182,9 @@ func _build_statistics(parent: VBoxContainer, records: Array) -> void:
 	row.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_theme_constant_override("separation", 8 if _mobile else 12)
 	parent.add_child(row)
-	_add_stat(row, "calendar", tr("Saltanat sayısı"), str(records.size()))
-	_add_stat(row, "hourglass", tr("Tahtta kalan"), str(survived))
-	_add_stat(row, "scroll", tr("En uzun saltanat"), best_text)
+	_add_stat(row, "altin", tr("Saltanat sayısı"), str(records.size()))
+	_add_stat(row, "tac", tr("Tahtta kalan"), str(survived))
+	_add_stat(row, "parsomen", tr("En uzun saltanat"), best_text)
 
 
 func _add_stat(parent: HBoxContainer, icon: String, heading: String, value: String) -> void:
@@ -202,7 +202,8 @@ func _add_stat(parent: HBoxContainer, icon: String, heading: String, value: Stri
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 7 if _mobile else 10)
 	margin.add_child(row)
-	_add_art_or_icon(row, "", icon, Vector2(27, 30) if _mobile else Vector2(34, 38))
+	var premium_icon := UIKit.icon(icon, Vector2(27, 30) if _mobile else Vector2(34, 38), Color("e4c46c"))
+	row.add_child(premium_icon)
 	var labels := VBoxContainer.new()
 	labels.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	labels.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -402,9 +403,14 @@ func _section_band(text: String, tint: Color, icon_kind: String) -> PanelContain
 	var content := HBoxContainer.new()
 	content.add_theme_constant_override("separation", 9)
 	band.add_child(content)
-	var icon := ArchiveDrawing.new()
-	icon.kind = icon_kind
-	icon.custom_minimum_size = Vector2(23, 24)
+	var icon: Control
+	if icon_kind == "laurel":
+		icon = UIKit.icon("defne", Vector2(23, 24), Color("e4c46c"))
+	else:
+		var drawing := ArchiveDrawing.new()
+		drawing.kind = icon_kind
+		drawing.custom_minimum_size = Vector2(23, 24)
+		icon = drawing
 	content.add_child(icon)
 	var heading := Label.new()
 	heading.name = "ArchiveSectionTitle"
