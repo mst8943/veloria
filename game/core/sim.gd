@@ -25,6 +25,7 @@ const DYNASTY_PATH := "user://dynasty.cfg"
 const DEFAULT_SAVE_PATH := "user://veloria_save.txt"
 const EXTENSION_SAVE_PATH := "user://veloria_extension_save.txt"
 const EXTENSION_ACHIEVEMENTS_PATH := "user://veloria_extension_achievements.txt"
+var extension_achievements_path := EXTENSION_ACHIEVEMENTS_PATH
 var save_path := "user://veloria_save.txt"   # testler kendi dosyasını kullanır, oyuncunun kaydına dokunmaz
 var dynasty_path := DYNASTY_PATH
 var chronicle_path := CHRONICLE_PATH
@@ -4336,11 +4337,12 @@ func historians(survived: bool) -> Array:
 
 ## Başarımlar: id -> [ad, açıklama]. Kalıcıdır, saltanatlar arası birikir.
 const ACHIEVEMENTS_PATH := "user://veloria_achievements.txt"
+var achievements_path := ACHIEVEMENTS_PATH
 var ACHIEVEMENTS: Dictionary = {}
 
 
 func load_achievements(extension := false) -> Dictionary:
-	var path := EXTENSION_ACHIEVEMENTS_PATH if extension else ACHIEVEMENTS_PATH
+	var path := extension_achievements_path if extension else achievements_path
 	if not FileAccess.file_exists(path):
 		return {}
 	var d: Variant = str_to_var(FileAccess.open(path, FileAccess.READ).get_as_text())
@@ -4432,7 +4434,7 @@ func _award_achievements(survived: bool, title: String, cause: String) -> Array:
 			have[id] = Time.get_date_string_from_system()
 			fresh.append(id)
 	if record_chronicle and not fresh.is_empty():
-		var path := EXTENSION_ACHIEVEMENTS_PATH if endless else ACHIEVEMENTS_PATH
+		var path := extension_achievements_path if endless else achievements_path
 		var f := FileAccess.open(path, FileAccess.WRITE)
 		if f:
 			f.store_string(var_to_str(have))

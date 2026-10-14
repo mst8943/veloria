@@ -4,6 +4,9 @@ const Loc := preload("res://game/core/loc.gd")
 var main: Control
 var sim: Node
 var archive: Control
+var chronicle_test_path := ""
+var achievements_test_path := ""
+var extension_achievements_test_path := ""
 
 
 func _initialize() -> void:
@@ -19,7 +22,14 @@ func _boot() -> void:
 	main = (load("res://game/ui/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
 	sim = root.get_node("Sim")
-	sim.set("chronicle_path", "user://archive_view_test.txt")
+	var temp_base := OS.get_temp_dir().path_join("Veloria_archive_view_%d" % Time.get_ticks_usec())
+	chronicle_test_path = temp_base + "_chronicle.txt"
+	achievements_test_path = temp_base + "_achievements.txt"
+	extension_achievements_test_path = temp_base + "_extension_achievements.txt"
+	sim.set("chronicle_path", chronicle_test_path)
+	sim.set("achievements_path", achievements_test_path)
+	sim.set("extension_achievements_path", extension_achievements_test_path)
+	_write_achievements({})
 	await _frames(20)
 	_run()
 
@@ -30,14 +40,27 @@ func _frames(count: int) -> void:
 
 
 func _fail(reason: String) -> void:
+	_cleanup_test_files()
 	printerr("ARCHIVE VIEW: ", reason)
 	quit(1)
 
 
 func _write_records(records: Array) -> void:
-	var file := FileAccess.open("user://archive_view_test.txt", FileAccess.WRITE)
+	var file := FileAccess.open(chronicle_test_path, FileAccess.WRITE)
 	file.store_string(var_to_str(records))
 	file.close()
+
+
+func _write_achievements(achievements: Dictionary) -> void:
+	var file := FileAccess.open(achievements_test_path, FileAccess.WRITE)
+	file.store_string(var_to_str(achievements))
+	file.close()
+
+
+func _cleanup_test_files() -> void:
+	for path in [chronicle_test_path, achievements_test_path, extension_achievements_test_path]:
+		if not path.is_empty() and FileAccess.file_exists(path):
+			DirAccess.remove_absolute(path)
 
 
 func _open() -> void:
@@ -143,6 +166,7 @@ func _run() -> void:
 			_fail("mobile archive target is below 44 px")
 			return
 	print("ARCHIVE VIEW: OK")
+	_cleanup_test_files()
 	main.queue_free()
 	await _frames(3)
 	quit(0)
