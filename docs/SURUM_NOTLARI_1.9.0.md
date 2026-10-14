@@ -1,35 +1,45 @@
-# Veloria 1.9.0 — Sürüm notları taslağı
+# Veloria 1.9.0 / Release notes
 
 ## Türkçe
 
 **Yeni: Bölgeler ve harita**
-- Krallık Başkent, Sanayi Kuşağı, Tarım Ovaları ve Sınır İlleri olarak dört bölgeye ayrıldı. Valiler, bölge raporları ve bölge krizleri eklendi.
-- Başkent haritasında renk dışında biçim ve dokuyla ayırt edilen bölge katmanı; yatırım, garnizon ve vali kararları.
+- Krallık Başkent, Sanayi Kuşağı, Tarım Ovaları ve Sınır İlleri olarak dört bölgeye ayrıldı; valiler, bölge raporları ve bölgesel krizler eklendi.
+- Başkent haritasında renk kullanmadan şekil ve dokuyla ayırt edilen bölge işaretleri, bölge paneli ve dokunarak yakınlaştırma/kaydırma var.
 
 **Yeni: Ordu iç yapısı ve darbeler**
-- Başkent garnizonu, sınır kolordusu ve jandarma/güvenlik birlikleri; komutan kartları ve nitel birlik raporları.
-- Subay tayini, garnizon hareketi, ikmal desteği ve komuta zinciri kararları.
-- Darbe alametleri birliklere ve bölgelere bağlandı. Darbe krizinde bastırma, pazarlık ya da başka birliği göreve çağırma seçeneği var.
+- Başkent garnizonu, sınır kolordusu ve jandarma/güvenlik birlikleri komutanları ve nitel raporlarıyla eklendi.
+- Subay atama, garnizon taşıma, ödenek/ikmal ve komuta zinciri kararları; darbe sırasında birliğe göre karar verme seçenekleri geldi.
+
+**Yeni: Kişi dosyaları ve Hükümdarlık Arşivi**
+- 21 kişi için sicil bilgileri ve mevcut eylemlere erişim sağlayan kişi dosyaları eklendi.
+- Hükümdarlık Arşivi yeni bir pencereye taşındı; kayıtlar İngilizce arayüzde çevrilir ve eski kayıtlar korunur.
+
+**Yeni: Sunum**
+- Ferah "Bu hafta" ve Raporlar panelleri, premium ikon seti, yüksek çözünürlüklü başlık ve mesai tüy kalemleri eklendi.
+- Yeni damga ve logo ile vali ve komutan portreleri geldi. Gövde yazı tipi Alegreya Sans oldu.
 
 **İyileştirmeler**
-- Dokunmatik cihazlarda kısa dokunuş bırakınca etkinleşiyor; kaydırma sırasında öğeler yanlışlıkla seçilmiyor. Fare hover sesi ve animasyonu dokunmada bastırılıyor.
-- Hükümdarlık Arşivi kayıtları İngilizce arayüzde çevriliyor; eski kayıtlar korunuyor.
-- Yeni damga ve logo sunumu ile vali ve komutan portreleri eklendi.
-- Testler geçici kullanıcı profillerinde çalışıyor; günlük kartı testi toplu headless koşulunda takılmıyor.
+- Dokunmatik cihazlarda kısa dokunuş bırakınca etkinleşir; parmak kaydırırken öğeler seçilmez ve hover efektleri çalışmaz.
+- Testler geçici kullanıcı profillerinde çalışır; gerçek oyuncu profili test verileriyle kirletilmez.
 
 ## English
 
 **New: regions and map**
-- The kingdom now has four regions: Capital, Industrial Belt, Farming Plains and Border Provinces. Governors, regional reports and regional crises have been added.
-- A Capital map layer uses shapes and textures as well as colour. Players can invest, move garrisons and make governor decisions.
+- The kingdom is divided into four regions: Capital, Industrial Belt, Farming Plains and Border Provinces. Governors, regional reports and regional crises have been added.
+- The Capital map has region markers distinguished by shape and texture rather than colour alone, a region panel, and touch zooming and panning.
 
 **New: army structure and coups**
-- The Capital Garrison, Border Corps and Gendarmerie/Security now have commanders and qualitative unit reports.
-- Appoint officers, move garrisons, provide supplies and split the chain of command.
-- Coup signs now identify the units and regions involved. During a coup, choose a loyal unit to suppress it, negotiate, or call another unit to duty.
+- The Capital Garrison, Border Corps and Gendarmerie/Security now have commanders and qualitative reports.
+- Appoint officers, redeploy garrisons, provide allowances/supplies and split the chain of command. Coup decisions can now be made for a specific unit.
+
+**New: personal dossiers and the Royal Archive**
+- Personal dossiers for 21 people provide biographical records and access to their existing actions.
+- The Royal Archive has a new window. Entries are translated in the English interface, and older records are preserved.
+
+**New: presentation**
+- The roomier "This Week" and Reports panels, premium icon set, high-resolution header and feather-shaped action markers have been added.
+- New seal and logo presentation, governor and commander portraits, and Alegreya Sans body typography.
 
 **Improvements**
-- On touch devices, a short tap activates on release; scrolling no longer selects items by accident. Mouse-hover sounds and animations are suppressed for touch.
-- Royal Archive entries are translated in the English interface while older records are preserved.
-- New seal and logo presentation, plus governor and commander portraits.
-- Tests use temporary user profiles, and the daily-card test no longer hangs in batch headless runs.
+- On touch devices, a short tap activates on release; scrolling no longer selects items by accident, and hover effects are suppressed.
+- Tests use temporary user profiles so test data does not pollute the player's profile.
