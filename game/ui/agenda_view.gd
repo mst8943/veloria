@@ -745,17 +745,19 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 	var week_frame := PanelContainer.new()
 	week_frame.name = "BuHaftaPaneli"
 	week_frame.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	week_frame.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	week_frame.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	week_frame.size_flags_stretch_ratio = 0.7
 	var week_style := UIKit.box(Color(UIKit.PANEL, 0.7), Color(UIKit.GOLD_DIM, 0.25), 8, 12)
 	week_style.set_border_width_all(0)
-	week_style.content_margin_top = 8
-	week_style.content_margin_bottom = 6
+	week_style.content_margin_top = 6
+	week_style.content_margin_bottom = 4
 	week_style.content_margin_left = 16
 	week_style.content_margin_right = 16
 	week_frame.add_theme_stylebox_override("panel", week_style)
 	UIKit.ornament(week_frame, Color(UIKit.GOLD, 0.8), 18, 1)
 	host._report_box.add_child(week_frame)
 	var week_contents := VBoxContainer.new()
+	week_contents.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	week_contents.add_theme_constant_override("separation", 4)
 	week_frame.add_child(week_contents)
 	_add_changes(animated, week_contents)
@@ -764,8 +766,9 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		var banner_path := "res://art/ui/bu_hafta_banner.png"
 		var banner := TextureRect.new()
 		banner.name = "WeekBanner"
-		banner.custom_minimum_size.y = 44 if host.get_viewport_rect().size.y < 780 else 60
+		banner.custom_minimum_size.y = 100 if host.get_viewport_rect().size.y < 780 else 140
 		banner.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		banner.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		banner.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		banner.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -783,10 +786,11 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 	report_frame.name = "RaporlarPaneli"
 	report_frame.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	report_frame.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	report_frame.size_flags_stretch_ratio = 1.3
 	var report_style := UIKit.box(Color(UIKit.PANEL, 0.7), Color(UIKit.GOLD_DIM, 0.25), 8, 12)
 	report_style.set_border_width_all(0)
-	report_style.content_margin_top = 6
-	report_style.content_margin_bottom = 4
+	report_style.content_margin_top = 4
+	report_style.content_margin_bottom = 2
 	report_style.content_margin_left = 16
 	report_style.content_margin_right = 16
 	report_frame.add_theme_stylebox_override("panel", report_style)
@@ -803,7 +807,7 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 	contents.add_child(reports_heading)
 	var report_rows := VBoxContainer.new()
 	report_rows.name = "ReportRows"
-	report_rows.add_theme_constant_override("separation", 2)
+	report_rows.add_theme_constant_override("separation", 1)
 	contents.add_child(report_rows)
 	var full_reports := PopupPanel.new()
 	host.add_child(full_reports)
@@ -845,8 +849,8 @@ func _fill_reports_compact(animated: Array[Control], texts: Array[RichTextLabel]
 		var band := clampi(int(r.get("band", 1)), 0, 2)
 		# Renk yalnızca sol çizgide: raporun söylediği durum. Kutu kenarı yok, liste sakin kalır.
 		var sb := UIKit.box(Color(UIKit.PANEL_HI, 0.42), Color(0, 0, 0, 0), 2, 6)
-		sb.content_margin_top = 2 if not host._mobile else 1
-		sb.content_margin_bottom = 2 if not host._mobile else 1
+		sb.content_margin_top = 1
+		sb.content_margin_bottom = 1
 		if not host._mobile:
 			sb.bg_color = Color(0, 0, 0, 0.32)
 		sb.border_width_left = 3
