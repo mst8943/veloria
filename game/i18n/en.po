@@ -5491,6 +5491,7 @@ msgstr "Sensitive and confidential details"
 
 msgid "Hükümdarla ilişki ve sicil"
 msgstr "Relationship with the Crown and record"
+
 msgid "Daha fazla eylem"
 msgstr "More actions below"
 
