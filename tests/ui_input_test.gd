@@ -441,6 +441,17 @@ func _operation_toggle_ok() -> bool:
 	main._update_info()
 	for _i in 2: await process_frame
 	var opened: bool = main._person_panel.operation_bar.visible
+	var operation_accessible := true
+	if main._mobile:
+		var scroll := main._person_panel._mobile_person_scroll as ScrollContainer
+		var operation_action := main._buttons.get("op_dikkat") as Button
+		if scroll == null or operation_action == null:
+			operation_accessible = false
+		else:
+			scroll.ensure_control_visible(operation_action)
+			await process_frame
+			operation_accessible = operation_action.get_global_rect().intersection(scroll.get_global_rect()).size.y >= 44
+			scroll.scroll_vertical = 0
 	var reports_fit := true
 	if not main._mobile and main._report_box != null:
 		var banner := main._report_box.find_child("WeekBanner", true, false) as Control
@@ -458,7 +469,7 @@ func _operation_toggle_ok() -> bool:
 	if not main._mobile and main._report_box != null:
 		var all_reports := main._report_box.find_child("AllReportsButton", true, false) as Button
 		normal_fits = all_reports != null and all_reports.get_global_rect().end.y <= root.get_visible_rect().end.y
-	return opened and reports_fit and normal_fits and not main._person_panel.operation_bar.visible
+	return opened and operation_accessible and reports_fit and normal_fits and not main._person_panel.operation_bar.visible
 
 
 func _check_city_dismiss() -> bool:
